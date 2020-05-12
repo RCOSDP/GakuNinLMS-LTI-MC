@@ -1,0 +1,20 @@
+<?php
+$consumer_list = array();
+$consumer_list = [
+    ['oauth_consumer_key' => 'key', 'oauth_signature' => 'signature']
+];
+
+$DB =  array(
+    'dbhost' => 'localhost',
+    'dbuser' => 'username',
+    'dbpass' => 'passowrd',
+    'dbname' => 'db'
+);
+$mysqli = new mysqli($DB['dbhost'], $DB['dbuser'], $DB['dbpass'], $DB['dbname']);
+if ($mysqli->connect_error) {
+    die('Connect Error (' . $mysqli->connect_errno . ') '
+            . $mysqli->connect_error);
+}
+//mysqli_close($mysqli);
+
+require_once(__DIR__.'/lib.php');
