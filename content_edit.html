@@ -1,53 +1,92 @@
-				<div style="height: 100%;">
-					<table class="main-container-edit">
-						<tbody>
-							<tr>
-								<!-- search -->
-								<td class="left-cell">
-									<div class="list-block">
-										<form action="#">
-											<div class="form-group">
-												マイクロコンテンツ検索 <input class="form-control" id="search-key" placeholder="キーワード" type="text"> <input name="dummy" style="display:none;" type="text">
-											</div>
-											<button class="btn btn-primary" id="search-exe" type="button">検索</button> 
-											<button class="btn btn-success" id="microcontent_new" type="button">新規登録</button>
-										</form>
-										<p id="pagination-here"></p>
-										<div class="list-div">
-											<ol class="list-area connected-sortable" id="search-result"></ol>
-										</div>
-									</div>
-								</td><!-- toc -->
-								<td class="middle-cell" id="toc">
-									<div class="list-block">
-										<form action="#">
-											<div class="form-group">
-												教材の情報 <input class="form-control" id="content_edit_title" placeholder="教材名" type="text" value=""> <input name="dummy" style="display:none;" type="text">
-											</div><button class="btn btn-primary" id="content_edit_update" onclick="return false;" type="button">更新</button>
-										</form>
-										<div class="toc-area connected-sortable"></div>
-									</div>
-								</td>
-								<!-- contents -->
-								<td></td>
-								<td class="right-cell">
-									<div class="carousel-inner" data-value="0">
-										<div id="mcedit-update-area" style="display:inline-block;float: right;"></div>
-										<div class="reuse-info">
-											<div class="reuse-title"></div>
-										</div>
-										<div class="item-info">
-											<div class="item-video" style="display:none;">
-												<video id="video_player_content_edit" class="video-js vjs-default-skin vjs-big-play-centered" data-setup='{"controls": true, "autoplay": true, "preload": "auto","fluid": true,"playbackRates": [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2],"nativeControlsForTouch": false}'></video>
-												<div class="item-text"></div>
-											</div>
-										</div>
-									</div>
-								</td>
-								<td></td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			<script src="static/js/content_edit.js"></script>
-			<script src="static/js/content_common.js"></script>
+<div style="height: 100%;">
+  <table class="main-container-edit">
+    <tbody>
+      <tr>
+        <!-- search -->
+        <td class="left-cell">
+          <div class="list-block">
+            <form action="#">
+              <div class="form-group">
+                マイクロコンテンツ検索
+                <input
+                  class="form-control"
+                  id="search-key"
+                  placeholder="キーワード"
+                  type="text"
+                />
+                <input name="dummy" style="display: none;" type="text" />
+              </div>
+              <button class="btn btn-primary" id="search-exe" type="button">
+                検索
+              </button>
+              <button
+                class="btn btn-success"
+                id="microcontent_new"
+                type="button"
+              >
+                新規登録
+              </button>
+            </form>
+            <p id="pagination-here"></p>
+            <div class="list-div">
+              <ol class="list-area connected-sortable" id="search-result"></ol>
+            </div>
+          </div>
+        </td>
+        <!-- toc -->
+        <td class="middle-cell" id="toc">
+          <div class="list-block">
+            <form action="#">
+              <div class="form-group">
+                教材の情報
+                <input
+                  class="form-control"
+                  id="content_edit_title"
+                  placeholder="教材名"
+                  type="text"
+                  value=""
+                />
+                <input name="dummy" style="display: none;" type="text" />
+              </div>
+              <button
+                class="btn btn-primary"
+                id="content_edit_update"
+                onclick="return false;"
+                type="button"
+              >
+                更新
+              </button>
+            </form>
+            <div class="toc-area connected-sortable"></div>
+          </div>
+        </td>
+        <!-- contents -->
+        <td></td>
+        <td class="right-cell">
+          <div class="carousel-inner" data-value="0">
+            <div
+              id="mcedit-update-area"
+              style="display: inline-block; float: right;"
+            ></div>
+            <div class="reuse-info">
+              <div class="reuse-title"></div>
+            </div>
+            <div class="item-info">
+              <div class="item-video" style="display: none;">
+                <video
+                  id="video_player_content_edit"
+                  class="video-js vjs-default-skin vjs-big-play-centered"
+                  data-setup='{"controls": true, "autoplay": true, "preload": "auto","fluid": true,"playbackRates": [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2],"nativeControlsForTouch": false}'
+                ></video>
+                <div class="item-text"></div>
+              </div>
+            </div>
+          </div>
+        </td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<script src="static/js/content_edit.js"></script>
+<script src="static/js/content_common.js"></script>
