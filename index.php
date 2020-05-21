@@ -1,5 +1,5 @@
-<?php 
-require_once(__DIR__.'/lti_new.php'); 
+<?php
+require_once(__DIR__.'/lti_session.php');
 
 if ( $context->valid ) {
     $key = $context->getConsumerKey();
@@ -126,19 +126,19 @@ if ( $context->valid ) {
 		</div>
 		<?php endif; ?>
 
-		<script src="static/js/config.js"></script> 
+		<script src="static/js/config.js"></script>
 		<script>const info = {key:'<?= $key; ?>',uid:'<?= $uid; ?>',cid:'<?= $cid; ?>',rid:'<?= $rid; ?>',nonce:'<?= $nonce; ?>',role:'<?= $role; ?>'};</script>
-		<script src="lib/jquery/jquery.min.js"></script> 
-		<script src="lib/jquery/jquery-ui.min.js"></script> 
-		<script src="lib/jquery/jquery.bootpag.min.js"></script> 
-		<script src="lib/bootstrap/bootstrap.min.js"></script> 
+		<script src="lib/jquery/jquery.min.js"></script>
+		<script src="lib/jquery/jquery-ui.min.js"></script>
+		<script src="lib/jquery/jquery.bootpag.min.js"></script>
+		<script src="lib/bootstrap/bootstrap.min.js"></script>
 		<script src="lib/videojs/video.min.js"></script>
 		<script src="lib/videojs/videojs-seek-buttons.min.js"></script>
 		<script src="lib/videojs/videojs.persistvolume.js"></script>
 		<script src="lib/videojs/Youtube.min.js"></script>
 		<script src="lib/mobile-detect.min.js"></script>
 		<script src="static/js/check.js"></script>
-		<script src="static/js/common.js"></script> 
+		<script src="static/js/common.js"></script>
 		<?php if ($context->isInstructor()) : ?>
 			<script src="static/js/instructor.js"></script>
 			<script src="static/js/video-instructor.js"></script>
