@@ -22,7 +22,7 @@ if ( $context->valid ) {
     <html>
     <head>
       <meta charset="utf-8" />
-      <?php if($title) echo '<title>'.$title.'</title>'."\n"; ?>
+      <?php if($title) echo '<title>'.htmlspecialchars($title).'</title>'."\n"; ?>
 	  <link href="static/img/favicon.ico" rel="icon" type="image/vnd.microsoft.icon">
 	  <link href="lib/jquery/jquery-ui.min.css" rel="stylesheet">
 	  <link href="lib/bootstrap/bootstrap.min.css" rel="stylesheet">
@@ -161,6 +161,6 @@ if ( $context->valid ) {
 
 <?php
 } else {
-    print "<p style=\"color:red\">Could not establish context: ".$context->message."<p>\n";
+    echo "<p style=\"color:red\">Could not establish context: ".htmlspecialchars($context->message)."<p>\n";
 }
 ?>

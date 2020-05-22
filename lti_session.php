@@ -39,8 +39,7 @@ $mysqli = new mysqli(
     DB_DATABASE
 );
 if ($mysqli->connect_error) {
-    die('Connect Error (' . $mysqli->connect_errno . ') '
-            . $mysqli->connect_error);
+    die(htmlspecialchars("Connect Error ({$mysqli->connect_errno}) {$mysqli->connect_error}"));
 }
 
 //error_reporting(E_ALL & ~E_NOTICE);
