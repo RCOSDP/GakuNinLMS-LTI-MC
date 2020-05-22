@@ -16,7 +16,7 @@ function blti_context(): BLTI {
     $context = NULL;
     $oauth_consumer_keys = array_column(OAUTH_CONSUMERS, 'oauth_consumer_key');
 
-    if ($_SERVER['SCRIPT_NAME'] === '/index.php' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (realpath($_SERVER['SCRIPT_FILENAME']) === __DIR__.'/index.php' && $_SERVER['REQUEST_METHOD'] === 'POST') {
         $index = array_search($_POST['oauth_consumer_key'], $oauth_consumer_keys);
     } elseif (isset($_SESSION['_basic_lti_context']) && isset($_SESSION['_basic_lti_context']['oauth_consumer_key'])) {
         $index = array_search($_SESSION['_basic_lti_context']['oauth_consumer_key'], $oauth_consumer_keys);
