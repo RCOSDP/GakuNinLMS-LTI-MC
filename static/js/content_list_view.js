@@ -9,41 +9,59 @@ $.ajax({
       item = itemInfo_content_list($e);
       tr = $("<tr>");
       tr.append(
-        '<td scope="col" style="width: 55%;"><a href="#" class="preview" data-id="' +
-          item.id +
-          '" data-title="' +
-          item.title +
-          '">' +
-          item.title +
-          "</a></td>"
-      );
-      tr.append(
-        '<td scope="col" style="width: 22%;"><span style="font-size: small;">' +
-          item.timemodified +
-          "</span></td>"
-      );
-      tr.append(
-        '<td scope="col" style="width: 13%;"><button type="button" class="btn btn-primary" data-id="' +
-          item.id +
-          '" data-title="' +
-          item.title +
-          '">登録する</button></td>'
+        $("<td>", {
+          scope: "col",
+          style: "width: 55%;",
+          html: $("<a>", {
+            href: "#",
+            class: "preview",
+            "data-id": item.id,
+            "data-title": item.title,
+            text: item.title,
+          }),
+        }),
+        $("<td>", {
+          scope: "col",
+          style: "width: 22%;",
+          html: $("<span>", {
+            style: "font-size: small;",
+            text: item.timemodified,
+          }),
+        }),
+        $("<td>", {
+          scope: "col",
+          style: "width: 13%;",
+          html: $("<button>", {
+            type: "button",
+            class: "btn btn-primary",
+            "data-id": item.id,
+            "data-title": item.title,
+            text: "登録する",
+          }),
+        })
       );
       if (info.role == "administrator" || item.uid == info.uid) {
         tr.append(
-          '<td scope="col" style="width: 10%;"> <span class="oi oi-pencil" style="display: inline;" data-id="' +
-            item.id +
-            '" data-title="' +
-            item.title +
-            '" data-uid="' +
-            item.uid +
-            '"></span>  <span class="oi oi-trash" style="display: inline;"data-id="' +
-            item.id +
-            '" data-title="' +
-            item.title +
-            '" data-uid="' +
-            item.uid +
-            '"></span></td>'
+          $("<td>", {
+            scope: "col",
+            style: "width: 10%;",
+          }).append(
+            $("<span>", {
+              class: "oi oi-pencil",
+              style: "display: inline;",
+              "data-id": item.id,
+              "data-title": item.title,
+              "data-uid": item.uid,
+            }),
+            " ",
+            $("<span>", {
+              class: "oi oi-trash",
+              style: "display: inline;",
+              "data-id": item.id,
+              "data-title": item.title,
+              "data-uid": item.uid,
+            })
+          )
         );
       } else {
         tr.append('<td scope="col" style="width: 10%;"></td>');
@@ -98,4 +116,4 @@ $.ajax({
   .always((data) => {});
 
 $("#bookTitle").empty();
-$("#content-list-view").html("LMSへの登録");
+$("#content-list-view").text("LMSへの登録");

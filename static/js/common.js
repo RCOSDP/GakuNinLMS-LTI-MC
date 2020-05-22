@@ -46,7 +46,7 @@ const listInfo_level = (item) => {
   if (item.checked == "checked") s.attr("checked", item.checked);
   m = $("<label>");
   m.attr("for", "level_" + item.id);
-  m.append(item.name);
+  m.text(item.name);
   l = $("<span>");
   l.attr("class", "d-inline-block pr-3");
   l.append(s);
@@ -63,7 +63,7 @@ const listInfo_task = (item) => {
   if (item.checked == "checked") s.attr("checked", item.checked);
   m = $("<label>");
   m.attr("for", "task_" + item.id);
-  m.append(item.name);
+  m.text(item.name);
   l = $("<span>");
   l.attr("class", "d-inline-block pr-3");
   l.append(s);
@@ -80,7 +80,7 @@ const listInfo_skill = (item) => {
   if (item.checked == "checked") s.attr("checked", item.checked);
   m = $("<label>");
   m.attr("for", "skill_" + item.id);
-  m.append(item.name);
+  m.text(item.name);
   l = $("<li>");
   l.append(s);
   l.append(m);
@@ -92,16 +92,19 @@ const listInfo_subtitle = (item) => {
   s.attr("data-id", item.id);
   s.attr("data-title", item.ctitle);
   s.attr("data-ctitle", item.ctitle);
-  s.append(item.ctitle);
+  s.text(item.ctitle);
   l = $("<li>");
   l.attr("data-id", item.id);
   l.append(s);
   l.append(
-    '<div class="toc-edit"><span class="oi oi-trash subtitle-trash" data-id="' +
-      item.id +
-      '" data-ctitle="' +
-      item.ctitle +
-      '"></span></div>'
+    $("<div>", {
+      class: "toc-edit",
+      html: $("<span>", {
+        class: "oi oi-trash subtitle-trash",
+        "data-id": item.id,
+        "data-ctitle": item.ctitle,
+      }),
+    })
   );
   return l;
 };
@@ -112,7 +115,7 @@ const listInfo_toc = (item) => {
   s.attr("data-id", item.id);
   s.attr("data-title", item.ctitle);
   s.attr("data-ctitle", item.ctitle);
-  s.append(item.ctitle);
+  s.text(item.ctitle);
   l = $("<li>");
   l.attr("data-id", item.id);
   l.append(s);
@@ -128,7 +131,7 @@ const listInfo_n = (item, display, i, num) => {
   s.attr("data-id", item.id);
   s.attr("data-title", item.title);
   s.attr("data-ctitle", item.title);
-  s.append(item.title);
+  s.text(item.title);
   l = $("<li>");
   l.attr("style", display);
   l.attr("data-id", item.id);
@@ -146,7 +149,7 @@ const listInfo = (item, display, i, num) => {
   s.attr("data-ctitle", item.ctitle);
   s.attr("data-value", i + 1);
   s.attr("id", i + 1);
-  s.append(item.ctitle);
+  s.text(item.ctitle);
   l = $("<li>");
   l.attr("class", "toc-group" + num);
   l.attr("style", display);
@@ -206,29 +209,33 @@ $(".main").on("click", ".list-text", function () {
         myPlayer = videojs("video_player_content_new");
       }
       if (content_edit_page >= 1 || content_new_page >= 1) {
+        $("#mcedit-update-area").empty();
+
         if (info.role == "administrator" || data.createdby == info.uid) {
-          $("#mcedit-update-area").html(
-            '<a href="#" class="oi oi-pencil" style="display: inline;" data-id="' +
-              microcontent_id +
-              '" data-name="' +
-              data.name +
-              '" data-uid="' +
-              data.createdby +
-              '"></a> <a href="#" class="oi oi-trash delete" style="display: inline;" data-id="' +
-              microcontent_id +
-              '" data-name="' +
-              data.name +
-              '" data-uid="' +
-              data.createdby +
-              '"></a>'
+          $("#mcedit-update-area").append(
+            $("<a>", {
+              href: "#",
+              class: "oi oi-pencil",
+              style: "display: inline;",
+              "data-id": microcontent_id,
+              "data-name": data.name,
+              "data-uid": data.createdby,
+            }),
+            " ",
+            $("<a>", {
+              href: "#",
+              class: "oi oi-trash delete",
+              style: "display: inline;",
+              "data-id": microcontent_id,
+              "data-name": data.name,
+              "data-uid": data.createdby,
+            })
           );
-        } else {
-          $("#mcedit-update-area").empty();
         }
       }
 
       $(".carousel-inner").data("value", $e.data("value"));
-      $(".reuse-title").html($e.text());
+      $(".reuse-title").text($e.text());
       $(".item-cover").css("display", "none");
       if (data.video) {
         info["video"] = data.video;
@@ -259,7 +266,7 @@ $(".main").on("click", ".list-text", function () {
             myPlayer.addRemoteTextTrack(track, false);
           });
         }
-        $(".item-text").html(data.description);
+        $(".item-text").text(data.description);
       }
     })
     .fail((data) => {
@@ -445,15 +452,13 @@ $(document).on("keypress", ".toc-form", function (e) {
     $e.css("color", "");
     $e.data("edit", false);
     $f.replaceWith(
-      '<span class="list-text" data-id=' +
-        $f.data("id") +
-        " data-title=" +
-        $f.data("title") +
-        " data-ctitle=" +
-        $f.val() +
-        ">" +
-        $f.val() +
-        "</span>"
+      $("<span>", {
+        class: "list-text",
+        "data-id": $f.data("id"),
+        "data-title": $f.data("title"),
+        "data-ctitle": $f.val(),
+        text: $f.val(),
+      })
     );
   }
 });
@@ -516,29 +521,26 @@ $(".main").on("click", "#toc .oi-pencil", function () {
     $e.css("color", "red");
     $e.data("edit", true);
     $f.replaceWith(
-      '<input type="text" class="form-control form-control-sm toc-form" data-id=' +
-        $f.data("id") +
-        " data-title=" +
-        $f.data("title") +
-        " data-ctitle=" +
-        $f.text() +
-        " value=" +
-        $f.text() +
-        "></input>"
+      $("<input>", {
+        type: "text",
+        class: "form-control form-control-sm toc-form",
+        "data-id": $f.data("id"),
+        "data-title": $f.data("title"),
+        "data-ctitle": $f.text(),
+        value: $f.text(),
+      })
     );
   } else {
     $e.css("color", "");
     $e.data("edit", false);
     $f.replaceWith(
-      '<span class="list-text" data-id=' +
-        $f.data("id") +
-        " data-title=" +
-        $f.data("title") +
-        " data-ctitle=" +
-        $f.val() +
-        ">" +
-        $f.val() +
-        "</span>"
+      $("<span>", {
+        class: "list-text",
+        "data-id": $f.data("id"),
+        "data-title": $f.data("title"),
+        "data-ctitle": $f.val(),
+        text: $f.val(),
+      })
     );
   }
 });
@@ -739,7 +741,7 @@ $("#microcontentModal").on("click", "#preview", function () {
             src: "./tmp/" + vtt,
           };
           microcontentPlayer.addRemoteTextTrack(track);
-          $(".microcontent-text").html(data.description);
+          $(".microcontent-text").text(data.description);
         }
       })
       .fail(function (data) {
@@ -765,7 +767,7 @@ $("#microcontentModal").on("click", "#preview", function () {
       while (i--) {
         microcontentPlayer.removeRemoteTextTrack(oldTracks[i]);
       }
-      $(".microcontent-text").html(data.description);
+      $(".microcontent-text").text(data.description);
     }
   }
 });
@@ -1005,7 +1007,7 @@ $("#contentModal").on("click", ".list-text", function () {
   })
     .done((data) => {
       $(".carousel-inner").data("value", $e.data("value"));
-      $(".reuse-title").html($e.text());
+      $(".reuse-title").text($e.text());
       $(".item-cover").css("display", "none");
       if (data.video) {
         info["video"] = data.video;
@@ -1036,7 +1038,7 @@ $("#contentModal").on("click", ".list-text", function () {
             contentPlayer.addRemoteTextTrack(track, false);
           });
         }
-        $(".item-text").html(data.description);
+        $(".item-text").text(data.description);
       }
     })
     .fail((data) => {

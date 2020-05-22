@@ -1,2 +1,2 @@
 $("#bookTitle").empty();
-$("#content-list-view").html("LMSへの登録");
+$("#content-list-view").text("LMSへの登録");
