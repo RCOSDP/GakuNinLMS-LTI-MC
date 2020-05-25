@@ -1,20 +1,30 @@
-<?php 
-require('../lti_session.php');
+<?php
+require_once(__DIR__.'/../lti_session.php');
 
-if ( $context->valid ) {
+if (!$context->valid) return;
 
-    $keyword = $_POST['keyword'];
+$db = require(__DIR__.'/../database.php');
 
-    $sql = "SELECT name,id FROM mc_microcontent WHERE (name like '%".$keyword."%' OR description like '%".$keyword."%') AND deleted = 0 ";
-    $stmt = $mysqli->query($sql);
-    $tocs = array();
-    foreach ($stmt as $row) {
-      $toc = array();
-      $toc['id'] = $row['id'];;
-      $toc['name'] = $row['name'];;
-      array_push($tocs,$toc);
-    }
-    $arr = array('title' => $keyword, 'contents' => $tocs);
-    echo json_encode($arr);
+$keyword = $_POST['keyword'];
+
+// NOTE: read mc_microcontent
+$sth = $db->prepare(<<<'SQL'
+  SELECT id, name FROM mc_microcontent
+  WHERE
+    (
+      name LIKE :keyword OR description LIKE :keyword
+    ) AND deleted=0
+SQL);
+
+$sth->execute([':keyword' => '%'.addcslashes($keyword, '\_%').'%']);
+
+$tocs = array();
+foreach ($sth as $row) {
+  $toc = array();
+  $toc['id'] = $row['id'];;
+  $toc['name'] = $row['name'];;
+  array_push($tocs, $toc);
 }
-?>
+
+$arr = array('title' => $keyword, 'contents' => $tocs);
+echo json_encode($arr);

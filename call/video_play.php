@@ -1,43 +1,59 @@
-<?php 
-require('../lti_session.php');
+<?php
+require_once(__DIR__.'/../lti_session.php');
 
-if ( $context->valid ) {
+if (!$context->valid) return;
 
-	include '../lang.php';
-    $microcontent_id = $_POST['microcontent_id'];
+$db = require(__DIR__.'/../database.php');
+$lang = require(__DIR__.'/../lang.php');
 
-    $sql = "SELECT name,video,description,createdby FROM mc_microcontent WHERE id = '".$microcontent_id."' AND deleted = 0";
-    $stmt = $mysqli->query($sql);
-    if($row = $stmt->fetch_assoc()){
-    
-    
-      $name = $row['name'];
-      $video = $row['video'];
-      $link = "//www.youtube.com/watch?v=".$video;
-      $videoquery = "v=".$video;
-      $description = $row['description'];
-      $createdby = $row['createdby'];
-      
-      $sql = "SELECT lang FROM mc_subtitle WHERE microcontentid = '".$microcontent_id."' AND deleted = 0";
-      $stmt = $mysqli->query($sql);
-      $tracks = array();
-      foreach ($stmt as $row) {
-          $track = array();
-          $track['srclang'] = $row['lang'];
-	      foreach ($lang as $v) {
-	          if($v[code] == $track['srclang']) {
-	              $track['label'] = $v[name];
-	          }
-	      }
-          array_push($tracks,$track);
-      }
+$microcontent_id = $_POST['microcontent_id'];
 
-      //$arr = array('name' => $name , 'video' => $video , 'description' => $description ,  'createdby' => $createdby , 'tracks' => $tracks);
-      $arr = array('name' => $name , 'video' => $link , 'videofile' => $video , 'videoquery' => $videoquery , 'description' => $description ,  'createdby' => $createdby , 'tracks' => $tracks);
-      echo json_encode($arr);
-    }else{
-      // microcontent not found 
-      echo "no_microcontent";
-    }
+// NOTE: read mc_microcontent
+$sth = $db->prepare(<<<'SQL'
+  SELECT name, video, description, createdby FROM mc_microcontent
+  WHERE
+    id=? AND deleted=0
+SQL);
+
+$sth->execute([$microcontent_id]);
+$row = $sth->fetch();
+
+// NOTE: microcontent not found
+if (!$row) {
+  echo "no_microcontent";
+  return;
 }
-?>
+
+$name = $row['name'];
+$video = $row['video'];
+$link = "//www.youtube.com/watch?v={$video}";
+$videoquery = "v={$video}";
+$description = $row['description'];
+$createdby = $row['createdby'];
+
+// NOTE: read mc_subtitle.lang
+$sth = $db->prepare(<<<'SQL'
+  SELECT lang FROM mc_subtitle
+  WHERE
+    microcontentid=? AND deleted=0
+  ORDER BY lang
+SQL);
+
+$sth->execute([$microcontent_id]);
+
+$tracks = array();
+foreach ($sth as $row) {
+  $track = array();
+  $track['srclang'] = $row['lang'];
+
+  foreach ($lang as $v) {
+    if ($v['code'] === $track['srclang']) {
+      $track['label'] = $v['name'];
+    }
+  }
+
+  array_push($tracks, $track);
+}
+
+$arr = array('name' => $name, 'video' => $link, 'videofile' => $video, 'videoquery' => $videoquery, 'description' => $description, 'createdby' => $createdby, 'tracks' => $tracks);
+echo json_encode($arr);

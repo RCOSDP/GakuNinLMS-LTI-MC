@@ -1,32 +1,46 @@
-<?php 
-require('../lti_session.php');
+<?php
+require_once(__DIR__.'/../lti_session.php');
 
-if ( $context->valid ) {
+if (!$context->valid) return;
 
-	$time = time();
-	$uid = $context->getUserKey();
+$db = require(__DIR__.'/../database.php');
 
-	$json = file_get_contents('php://input');
-	$arr = json_decode($json, true);
-	$title = $arr['title'];
-	$contentid = $arr['id'];
+$time = time();
+$uid = $context->getUserKey();
 
-    $sql = "UPDATE mc_content SET name = '".$title."' , timemodified = '".$time."' ,  modifiedby = '".$uid."' WHERE id = '".$contentid."'";
-    $mysqli->query($sql);
+$json = file_get_contents('php://input');
+$arr = json_decode($json, true);
+$title = $arr['title'];
+$contentid = $arr['id'];
 
-    $sql = "DELETE FROM mc_toc WHERE contentid = '".$contentid."'";
-    $mysqli->query($sql);
+$db->prepare(<<<'SQL'
+  UPDATE mc_content
+  SET
+    name=:title, timemodified=:time, modifiedby=:uid
+  WHERE
+    id=:contentid
+SQL)->execute([
+  ':title' => $title,
+  ':time' => $time,
+  ':uid' => $uid,
+  ':contentid' => $contentid
+]);
 
-	$i = 0;
-	foreach ($arr['contents'] as $row) {
-	  $sql = "INSERT INTO mc_toc (name,contentid,microcontentid,sort) VALUES ('".$row[1]."','".$contentid."','".$row[0]."','".$i."')";
-	  $mysqli->query($sql);
-	  $i++;
-	}
+$db->prepare(<<<'SQL'
+  DELETE FROM mc_toc
+  WHERE
+    contentid=?
+SQL)->execute([$contentid]);
 
-	echo "ok";
-
-}else{
-  // no context
+// NOTE: create mc_toc
+foreach ($arr['contents'] as $i => $row) {
+	$db->prepare(<<<'SQL'
+    INSERT INTO mc_toc
+      (name, contentid, microcontentid, sort)
+    VALUES
+      (?, ?, ?, ?)
+  SQL)->execute([
+    $row[1], $contentid, $row[0], $i]);
 }
 
+echo "ok";

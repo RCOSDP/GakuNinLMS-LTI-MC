@@ -1,20 +1,18 @@
-<?php 
-require('../lti_session.php');
+<?php
+require_once(__DIR__.'/../lti_session.php');
 
-if ( $context->valid ) {
+if (!$context->valid) return;
 
-    $sql = "SELECT * FROM mc_content WHERE deleted = 0";
-    $stmt = $mysqli->query($sql);
-    $contents = array();
-    foreach ($stmt as $row) {
-          $content = array();
-          $content['id'] = $row['id'];
-          $content['name'] = $row['name'];
-          $content['timemodified'] = date('Y/m/d H:i:s', $row['timemodified']);
-          $content['createdby'] = $row['createdby'];
-          array_push($contents,$content);
-    }
-    echo json_encode($contents);
+$db = require(__DIR__.'/../database.php');
 
+$contents = array();
+foreach ($db->query('SELECT * FROM mc_content WHERE deleted=0') as $row) {
+  $content = array();
+  $content['id'] = $row['id'];
+  $content['name'] = $row['name'];
+  $content['timemodified'] = date('Y/m/d H:i:s', $row['timemodified']);
+  $content['createdby'] = $row['createdby'];
+  array_push($contents, $content);
 }
-?>
+
+echo json_encode($contents);

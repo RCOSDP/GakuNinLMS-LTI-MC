@@ -1,53 +1,82 @@
-<?php 
-require('../lti_session.php');
+<?php
+require_once(__DIR__.'/../lti_session.php');
 
-if ( $context->valid ) {
+if (!$context->valid) return;
 
-	$uid = $context->getUserKey();
-	$time = time();
+$db = require(__DIR__.'/../database.php');
 
-	$json = file_get_contents('php://input');
-	$arr = json_decode($json, true);
-	$title = $arr['title'];
-	$video = $arr['video'];
-	$description = $arr['description'];
-	$skill = $arr['skill'];
-	$task = $arr['task'];
-	$level = $arr['level'];
+$uid = $context->getUserKey();
+$time = time();
 
-	$sql = "INSERT INTO mc_microcontent (name,video,description,timecreated,timemodified,createdby,modifiedby) VALUES ('".$title."','".$video."','".$description."','".$time."','".$time."','".$uid."','".$uid."')";
-	$mysqli->query($sql);
-	$microcontentid = $mysqli->insert_id;
+$json = file_get_contents('php://input');
+$arr = json_decode($json, true);
+$title = $arr['title'];
+$video = $arr['video'];
+$description = $arr['description'];
+$skill = $arr['skill'];
+$task = $arr['task'];
+$level = $arr['level'];
 
-	foreach ($skill as $row) {
-	  $sql = "INSERT INTO mc_microcontent_skill (microcontentid,skillid) VALUES ('".$microcontentid."','".$row[0]."')";
-	  $mysqli->query($sql);
-	}
+$db->prepare(<<<'SQL'
+  INSERT INTO mc_microcontent
+    (name, video, description, timecreated, timemodified, createdby, modifiedby)
+  VALUES
+    (:title, :video, :description, :time, :time, :uid, :uid)
+SQL)->execute([
+  ':title' => $title,
+  ':video' => $video,
+  ':description' => $description,
+  ':time' => $time,
+  ':uid' => $uid
+]);
 
-	foreach ($task as $row) {
-	  $sql = "INSERT INTO mc_microcontent_task (microcontentid,taskid) VALUES ('".$microcontentid."','".$row[0]."')";
-	  $mysqli->query($sql);
-	}
+$microcontentid = $db->lastInsertId();
 
-	foreach ($level as $row) {
-	  $sql = "INSERT INTO mc_microcontent_level (microcontentid,levelid) VALUES ('".$microcontentid."','".$row[0]."')";
-	  $mysqli->query($sql);
-	}
-
-	$lang = $arr['lang'];
-    if($lang){
-	  $sql = "INSERT INTO mc_subtitle (microcontentid,lang,timecreated,timemodified,createdby,modifiedby) VALUES  ('".$microcontentid."','".$lang."','".$time."','".$time."','".$uid."','".$uid."')";
-	  $mysqli->query($sql);
-		echo $microcontentid . "_" . $lang;
-		return;
-    }else{
-		echo "no_subtitle";
-		return;
-    }
-
-
-
-}else{
-  // no context
+foreach ($skill as $row) {
+  $db->prepare(<<<'SQL'
+    INSERT INTO mc_microcontent_skill
+      (microcontentid, skillid)
+    VALUES
+      (?, ?)
+  SQL)->execute([
+    $microcontentid, $row[0]]);
 }
 
+foreach ($task as $row) {
+  $db->prepare(<<<'SQL'
+    INSERT INTO mc_microcontent_task
+      (microcontentid, taskid)
+    VALUES
+      (?, ?)
+  SQL)->execute([
+    $microcontentid, $row[0]]);
+}
+
+foreach ($level as $row) {
+  $db->prepare(<<<'SQL'
+    INSERT INTO mc_microcontent_level
+      (microcontentid, levelid)
+    VALUES
+      (?, ?)
+  SQL)->execute([
+    $microcontentid, $row[0]]);
+}
+
+$lang = $arr['lang'];
+if ($lang) {
+  $db->prepare(<<<'SQL'
+    INSERT INTO mc_subtitle
+      (microcontentid, lang, timecreated, timemodified, createdby, modifiedby)
+    VALUES
+      (:microcontentid, :lang, :time, :time, :uid, :uid)
+  SQL)->execute([
+    ':microcontentid' => $microcontentid,
+    ':lang' => $lang,
+    ':time' => $time,
+    ':uid' => $uid
+  ]);
+
+  echo "{$microcontentid}_{$lang}";
+} else {
+  echo "no_subtitle";
+}

@@ -6,10 +6,6 @@ require_once(__DIR__.'/config.php');
 require_once(__DIR__.'/ims-blti/blti.php');
 
 use const Config\OAUTH_CONSUMERS;
-use const Config\DB_HOST;
-use const Config\DB_USERNAME;
-use const Config\DB_PASSWORD;
-use const Config\DB_DATABASE;
 
 function blti_context(): BLTI {
     $index = NULL;
@@ -30,16 +26,6 @@ function blti_context(): BLTI {
     }
 
     return $context;
-}
-
-$mysqli = new mysqli(
-    DB_HOST,
-    DB_USERNAME,
-    DB_PASSWORD,
-    DB_DATABASE
-);
-if ($mysqli->connect_error) {
-    die(htmlspecialchars("Connect Error ({$mysqli->connect_errno}) {$mysqli->connect_error}"));
 }
 
 //error_reporting(E_ALL & ~E_NOTICE);

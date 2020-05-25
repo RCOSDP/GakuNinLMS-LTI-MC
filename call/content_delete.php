@@ -1,19 +1,22 @@
-<?php 
-require('../lti_session.php');
+<?php
+require_once(__DIR__.'/../lti_session.php');
 
-if ( $context->valid ) {
+if (!$context->valid) return;
 
-	$time = time();
-	$uid = $context->getUserKey();
+$db = require(__DIR__.'/../database.php');
 
-    $content_id = $_POST['content_id'];
-    
-    $sql = "UPDATE mc_content SET timemodified = '".$time."' ,  modifiedby = '".$uid."' , deleted = '1' WHERE id = '".$content_id."'";
-    $mysqli->query($sql);
+$time = time();
+$uid = $context->getUserKey();
 
-	echo "ok";
+$content_id = $_POST['content_id'];
 
-}else{
-  // no context
-}
+$db->prepare(<<<'SQL'
+  UPDATE mc_content
+  SET
+    timemodified=:time, modifiedby=:uid, deleted=1
+  WHERE
+    id=:content_id
+SQL)->execute([
+  ':content_id' => $content_id, ':time' => $time, ':uid' => $uid]);
 
+echo "ok";

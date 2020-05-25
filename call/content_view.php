@@ -1,37 +1,60 @@
-<?php 
-require('../lti_session.php');
+<?php
+require_once(__DIR__.'/../lti_session.php');
 
-if ( $context->valid ) {
+if (!$context->valid) return;
 
-  $rid = $context->getResourceKey();
+$db = require(__DIR__.'/../database.php');
 
-  $sql = "SELECT contentid FROM mc_resource WHERE resourcelinkid = '".$rid."' AND deleted = 0";
-  $stmt = $mysqli->query($sql);
-  if($row = $stmt->fetch_assoc()){
-    $content_id = $row['contentid'];
+$rid = $context->getResourceKey();
 
-    $sql = "SELECT name FROM mc_content WHERE id = '".$content_id."' AND deleted = 0";
-    $stmt = $mysqli->query($sql);
-    if($row = $stmt->fetch_assoc()){
-      $content_name = $row['name'];
+// NOTE: read mc_resource.contentid
+$sth = $db->prepare(<<<'SQL'
+  SELECT contentid FROM mc_resource
+  WHERE
+    resourcelinkid=? AND deleted=0
+  LIMIT 1
+SQL);
 
-      $sql = "SELECT name,microcontentid FROM mc_toc WHERE contentid = '".$content_id."' ORDER by sort";
-      $stmt = $mysqli->query($sql);
-      $tocs = array();
-      foreach ($stmt as $row) {
-        $toc = array();
-        $toc['id'] = $row['microcontentid'];;
-        $toc['cname'] = $row['name'];;
-        array_push($tocs,$toc);
-      }
+$sth->execute([$rid]);
+$row = $sth->fetch();
 
-    $arr = array('title' => $content_name, 'contents' => $tocs);
-    echo json_encode($arr);
+// NOTE: resource not found
+if (!$row) return;
 
-    }else{
-    // content not found 
-    }
-  }else{
-    // resource not found 
-  }
+$content_id = $row['contentid'];
+
+// NOTE: read mc_content.name
+$sth = $db->prepare(<<<'SQL'
+  SELECT name FROM mc_content
+  WHERE
+    id=? AND deleted=0
+SQL);
+
+$sth->execute([$content_id]);
+$row = $sth->fetch();
+
+// NOTE: content not found
+if (!$row) return;
+
+$content_name = $row['name'];
+
+// NOTE: read mc_toc
+$sth = $db->prepare(<<<'SQL'
+  SELECT name, microcontentid FROM mc_toc
+  WHERE
+    contentid=?
+  ORDER BY sort
+SQL);
+
+$sth->execute([$content_id]);
+
+$tocs = array();
+foreach ($sth as $row) {
+  $toc = array();
+  $toc['id'] = $row['microcontentid'];
+  $toc['cname'] = $row['name'];
+  array_push($tocs, $toc);
 }
+
+$arr = array('title' => $content_name, 'contents' => $tocs);
+echo json_encode($arr);

@@ -1,18 +1,22 @@
-<?php 
-require('../lti_session.php');
+<?php
+require_once(__DIR__.'/../lti_session.php');
 
-if ( $context->valid ) {
+if (!$context->valid) return;
 
-	$uid = $context->getUserKey();
-	$time = time();
-    $microcontentid = $_POST['microcontentid'];
-    
-    $sql = "UPDATE mc_microcontent SET timemodified = '".$time."' , modifiedby = '".$uid."' , deleted = '1' WHERE id = '".$microcontentid."'";
-    $mysqli->query($sql);
+$db = require(__DIR__.'/../database.php');
 
-	echo "ok";
+$uid = $context->getUserKey();
+$time = time();
 
-}else{
-  // no context
-}
+$microcontentid = $_POST['microcontentid'];
 
+$db->prepare(<<<'SQL'
+  UPDATE mc_microcontent
+  SET
+    timemodified=:time, modifiedby=:uid, deleted=1
+  WHERE
+    id=:microcontentid
+SQL)->execute([
+  ':microcontentid' => $microcontentid, ':time' => $time, ':uid' => $uid]);
+
+echo "ok";

@@ -1,29 +1,36 @@
-<?php 
-require('../lti_session.php');
+<?php
+require_once(__DIR__.'/../lti_session.php');
 
-if ( $context->valid ) {
+if (!$context->valid) return;
 
-	$uid = $context->getUserKey();
-	$time = time();
+$db = require(__DIR__.'/../database.php');
 
-	$json = file_get_contents('php://input');
-	$arr = json_decode($json, true);
-	$title = $arr['title'];
+$uid = $context->getUserKey();
+$time = time();
 
-	$sql = "INSERT INTO mc_content (name,timecreated,timemodified,createdby,modifiedby) VALUES ('".$title."','".$time."','".$time."','".$uid."','".$uid."')";
-	$mysqli->query($sql);
-	$contentid = $mysqli->insert_id;
+$json = file_get_contents('php://input');
+$arr = json_decode($json, true);
+$title = $arr['title'];
 
-	$i = 0;
-	foreach ($arr['contents'] as $row) {
-	  $sql = "INSERT INTO mc_toc (name,contentid,microcontentid,sort) VALUES ('".$row[1]."','".$contentid."','".$row[0]."','".$i."')";
-	  $mysqli->query($sql);
-	  $i++;
-	}
+$db->prepare(<<<'SQL'
+  INSERT INTO mc_content
+    (name, timecreated, timemodified, createdby, modifiedby)
+  VALUES
+    (:title, :time, :time, :uid, :uid)
+  SQL)->execute([
+    ':title' => $title, ':time' => $time, ':uid' => $uid]);
 
-	echo "ok";
+$contentid = $db->lastInsertId();
 
-}else{
-  // no context
+// NOTE: create mc_toc
+foreach ($arr['contents'] as $i => $row) {
+  $db->prepare(<<<'SQL'
+    INSERT INTO mc_toc
+      (name, contentid, microcontentid, sort)
+    VALUES
+      (?, ?, ?, ?)
+  SQL)->execute([
+    $row[1], $contentid, $row[0], $i]);
 }
 
+echo "ok";
