@@ -62,7 +62,7 @@ SQL);
 $sth->execute([$microcontent_id]);
 
 foreach ($sth as $row) {
-  foreach ($skills as $skill) {
+  foreach ($skills as &$skill) {
     if ($skill['id'] === $row['skillid']) {
       $skill['checked'] = 'checked';
       break;
@@ -90,7 +90,7 @@ SQL);
 $sth->execute([$microcontent_id]);
 
 foreach ($sth as $row) {
-  foreach ($tasks as $task) {
+  foreach ($tasks as &$task) {
     if ($task['id'] === $row['taskid']) {
       $task['checked'] = 'checked';
       break;
@@ -118,7 +118,7 @@ SQL);
 $sth->execute([$microcontent_id]);
 
 foreach ($sth as $row) {
-  foreach ($levels as $level) {
+  foreach ($levels as &$level) {
     if ($level['id'] === $row['levelid']) {
       $level['checked'] = 'checked';
       break;
