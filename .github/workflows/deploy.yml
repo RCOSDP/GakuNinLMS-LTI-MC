@@ -6,6 +6,7 @@ jobs:
   main:
     runs-on: ubuntu-latest
     steps:
+      - run: install -m 700 -d ~/.ssh
       - run: install -m 600 <(echo '{{ secrets.DEPLOY_KEY }}') ~/.ssh/deploy_key
       - run: >
           ssh
