@@ -696,6 +696,7 @@ $("#microcontentModal").on("click", "#preview", function () {
     fd.append("id", edit_microcontent_id);
     fd.append("lang", $("#subtitle-lang").val());
     fd.append("tmp", "true");
+    fd.append("file", $("#subtitle-file").prop("files")[0]);
     var postData = {
       url: LTI_URL + "/call/microcontent_subtitle.php",
       type: "POST",
@@ -812,6 +813,7 @@ $("#microcontentModal").on("click", "#microcontent_edit_save", function () {
     fd = new FormData();
     fd.append("id", book.id);
     fd.append("lang", book.lang);
+    fd.append("file", $("#subtitle-file").prop("files")[0]);
   }
 
   if (window.confirm(book.title + " で保存しますか？")) {
@@ -894,6 +896,7 @@ $("#microcontentModal").on("click", "#microcontent_edit_update", function () {
     fd = new FormData();
     fd.append("id", book.id);
     fd.append("lang", book.lang);
+    fd.append("file", $("#subtitle-file").prop("files")[0]);
   }
 
   if (window.confirm("更新しますか？")) {
