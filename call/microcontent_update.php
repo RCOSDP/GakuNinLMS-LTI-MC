@@ -84,7 +84,7 @@ if (!$lang) {
   return;
 }
 
-$db->prepare(<<<'SQL'
+$sth = $db->prepare(<<<'SQL'
   SELECT id, lang FROM mc_subtitle
   WHERE
     microcontentid=? AND lang=?
