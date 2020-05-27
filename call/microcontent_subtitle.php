@@ -1,36 +1,41 @@
-<?php 
+<?php
+require_once(__DIR__.'/../lti_session.php');
 
-if (isset($_FILES["file"]["tmp_name"]) && file_exists($_FILES["file"]["tmp_name"]))
-{
+if (!$context->valid) return;
 
-	if($_POST['filename']){
-		$uploadFolder = "../track/";
-		$rnm = $_POST['filename'] . ".vtt";
-	}else{
-		$uploadFolder = "../tmp/";
-		$nm = $_FILES["file"]["name"];
-		$rnm = "";
-		if (file_exists($uploadFolder . $nm))
-		{
-			$i = 1;
-			$rnm = $nm;
-			while (file_exists($uploadFolder . $rnm))
-			{
-				$info = pathinfo($nm);
-				$rnm = $info["filename"] . "[". $i ."]" . "." . $info["extension"];
-				$i++;
-			}
-		}else{
-			$info = pathinfo($nm);
-			$rnm = $info["filename"] . "." . $info["extension"];
-		}
-	}
-	$uploadPath = $uploadFolder . ($rnm !== "" ? $rnm:$nm);
-	if (@move_uploaded_file($_FILES["file"]["tmp_name"],$uploadPath) === true)
-	{
-		echo $rnm;
-		return;
-	}	
+/**
+ * @var int Microcontent ID
+ * TODO: 権限の検証 #28
+ */
+$id = filter_var($_POST['id'], FILTER_VALIDATE_INT);
+/** @var string ファイル接頭辞 */
+$prefix = $id > 0 ? strval($id) : bin2hex(random_bytes(16));
+/** @var string[] 言語コード一覧 */
+$langs = array_column(require(__DIR__.'/../lang.php'), 'code');
+/** @var string 言語コード */
+$lang = in_array($_POST['lang'], $langs) ? $_POST['lang'] : 'und';
+/** @var bool 一時的なファイルか否か */
+$tmp = filter_var($_POST['tmp'], FILTER_VALIDATE_BOOLEAN);
+
+if (!isset($_FILES["file"]["tmp_name"])) {
+  // TODO: 適切なHTTPエラーステータスを返す
+  echo "アップロードに失敗しました";
+  return;
 }
-echo "アップロードに失敗しました";
-?>
+if (!file_exists($_FILES["file"]["tmp_name"])){
+  // TODO: 適切なHTTPエラーステータスを返す
+  echo "アップロードに失敗しました";
+  return;
+}
+
+/** @var string 保存先 */
+$dist = realpath(__DIR__.'/../'.($tmp ? 'tmp' : 'track'));
+/** @var string ファイル名 */
+$filename = basename("{$prefix}_{$lang}", '.vtt').'.vtt';
+
+if (move_uploaded_file($_FILES["file"]["tmp_name"], "{$dist}/{$filename}")) {
+  echo $filename;
+} else {
+  // TODO: 適切なHTTPエラーステータスを返す
+  echo "アップロードに失敗しました";
+}
