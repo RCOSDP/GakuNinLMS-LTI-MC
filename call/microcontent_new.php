@@ -1,7 +1,10 @@
 <?php
 require_once(__DIR__.'/../lti_session.php');
 
-if (!$context->valid) return;
+if (!$context->valid) {
+  http_response_code(401);
+  return;
+}
 
 $db = require(__DIR__.'/../database.php');
 
@@ -33,4 +36,5 @@ foreach ($db->query('SELECT id, name FROM mc_level') as $row) {
 }
 
 $arr = array('skills' => $skills, 'tasks' => $tasks, 'levels' => $levels);
+header('Content-Type: application/json');
 echo json_encode($arr);

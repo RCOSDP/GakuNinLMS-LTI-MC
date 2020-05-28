@@ -1,7 +1,10 @@
 <?php
 require_once(__DIR__.'/../lti_session.php');
 
-if (!$context->valid) return;
+if (!$context->valid) {
+  http_response_code(401);
+  return;
+}
 
 $db = require(__DIR__.'/../database.php');
 
@@ -80,6 +83,7 @@ foreach ($level as $row) {
 
 $lang = $arr['lang'];
 if (!$lang) {
+  http_response_code(400);
   echo "no_subtitle";
   return;
 }

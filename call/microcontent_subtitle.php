@@ -1,7 +1,10 @@
 <?php
 require_once(__DIR__.'/../lti_session.php');
 
-if (!$context->valid) return;
+if (!$context->valid) {
+  http_response_code(401);
+  return;
+}
 
 /**
  * @var int Microcontent ID
@@ -18,12 +21,12 @@ $lang = in_array($_POST['lang'], $langs) ? $_POST['lang'] : 'und';
 $tmp = filter_var($_POST['tmp'], FILTER_VALIDATE_BOOLEAN);
 
 if (!isset($_FILES["file"]["tmp_name"])) {
-  // TODO: 適切なHTTPエラーステータスを返す
+  http_response_code(400);
   echo "アップロードに失敗しました";
   return;
 }
 if (!file_exists($_FILES["file"]["tmp_name"])){
-  // TODO: 適切なHTTPエラーステータスを返す
+  http_response_code(400);
   echo "アップロードに失敗しました";
   return;
 }
@@ -36,6 +39,6 @@ $filename = basename("{$prefix}_{$lang}", '.vtt').'.vtt';
 if (move_uploaded_file($_FILES["file"]["tmp_name"], "{$dist}/{$filename}")) {
   echo $filename;
 } else {
-  // TODO: 適切なHTTPエラーステータスを返す
+  http_response_code(400);
   echo "アップロードに失敗しました";
 }

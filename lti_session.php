@@ -31,6 +31,6 @@ function blti_context(): BLTI {
 //error_reporting(E_ALL & ~E_NOTICE);
 //ini_set("display_errors", 1);
 session_start();
-header('Content-Type: text/html; charset=utf-8');
+header('Content-Type: text/plain');
 
 $context = blti_context();

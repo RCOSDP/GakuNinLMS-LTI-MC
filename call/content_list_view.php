@@ -1,7 +1,10 @@
 <?php
 require_once(__DIR__.'/../lti_session.php');
 
-if (!$context->valid) return;
+if (!$context->valid) {
+  http_response_code(401);
+  return;
+}
 
 $db = require(__DIR__.'/../database.php');
 
@@ -15,4 +18,5 @@ foreach ($db->query('SELECT * FROM mc_content WHERE deleted=0') as $row) {
   array_push($contents, $content);
 }
 
+header('Content-Type: application/json');
 echo json_encode($contents);

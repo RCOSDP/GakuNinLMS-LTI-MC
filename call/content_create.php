@@ -1,7 +1,10 @@
 <?php
 require_once(__DIR__.'/../lti_session.php');
 
-if (!$context->valid) return;
+if (!$context->valid) {
+  http_response_code(401);
+  return;
+}
 
 $db = require(__DIR__.'/../database.php');
 
@@ -33,4 +36,5 @@ foreach ($arr['contents'] as $i => $row) {
     $row[1], $contentid, $row[0], $i]);
 }
 
+http_response_code(201);
 echo "ok";

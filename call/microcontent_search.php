@@ -1,7 +1,10 @@
 <?php
 require_once(__DIR__.'/../lti_session.php');
 
-if (!$context->valid) return;
+if (!$context->valid) {
+  http_response_code(401);
+  return;
+}
 
 $db = require(__DIR__.'/../database.php');
 
@@ -27,4 +30,5 @@ foreach ($sth as $row) {
 }
 
 $arr = array('title' => $keyword, 'contents' => $tocs);
+header('Content-Type: application/json');
 echo json_encode($arr);
