@@ -6,6 +6,8 @@ if (!$context->valid) {
   return;
 }
 
+// TODO: Instructor と Administrator のみ
+
 $db = require(__DIR__.'/../database.php');
 
 $time = time();
@@ -23,9 +25,8 @@ $sth = $db->prepare(<<<'SQL'
 SQL);
 
 $sth->execute([$resource_link_id]);
-$row = $sth->fetch();
 
-if($row = $sth->fetch()){
+if ($row = $sth->fetch()) {
   $resource_id = $row['id'];
 
   $db->prepare(<<<'SQL'
