@@ -152,10 +152,6 @@ header('Content-Type: text/html');
 <?php if (isAdministrator($context)): ?>
   <script src="static/js/administrator.js"></script>
 <?php endif; ?>
-<?php if ($resource_exists): ?>
   <script src="static/js/content_view.js"></script>
-<?php else: ?>
-  <script>$('.main').load('content_list_view.html');</script>
-<?php endif; ?>
 </body>
 </html>
