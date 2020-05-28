@@ -7,12 +7,6 @@ if (!$context->valid) {
   return;
 }
 
-function isAdministrator($context) {
-  $roles = $context->info['roles'];
-  $roles = strtolower($roles);
-  return strpos($roles, "administrator") !== false;
-}
-
 header('Content-Type: text/html');
 ?>
 <!DOCTYPE html>
@@ -117,7 +111,7 @@ header('Content-Type: text/html');
   <script src="static/js/config.js"></script>
   <script>const info = <?= json_encode([
     'uid' => $context->getUserKey(),
-    'role' => isAdministrator($context) ? 'administrator' : ''
+    'role' => $context->isAdministrator() ? 'administrator' : ''
   ]); ?>;</script>
   <script src="lib/jquery/jquery.min.js"></script>
   <script src="lib/jquery/jquery-ui.min.js"></script>

@@ -30,7 +30,7 @@ class BLTI {
         // If this request is not an LTI Launch, either
         // give up or try to retrieve the context from session
         if ( ! is_basic_lti_request() ) {
-            if ( $usesession === false ) return;  
+            if ( $usesession === false ) return;
             if ( strlen(session_id()) > 0 ) {
                 $row = $_SESSION['_basiclti_lti_row'];
                 if ( isset($row) ) $this->row = $row;
@@ -99,7 +99,7 @@ class BLTI {
         $method = new OAuthSignatureMethod_HMAC_SHA1();
         $server->add_signature_method($method);
         $request = OAuthRequest::from_request();
-        
+
         $this->basestring = $request->get_signature_base_string();
 
         try {
@@ -159,6 +159,10 @@ class BLTI {
         return false;
     }
 
+    function isAdministrator() {
+        return strpos(strtolower($this->info['roles']), "administrator") !== false;
+    }
+
     function getUserEmail() {
         $email = $this->info['lis_person_contact_email_primary'];
         if ( strlen($email) > 0 ) return $email;
@@ -178,7 +182,7 @@ class BLTI {
         if ( strlen($familyname) > 0 ) return $familyname;
         return $this->getUserName();
     }
-  
+
     function getUserName() {
         $givenname = $this->info['lis_person_name_given'];
         $familyname = $this->info['lis_person_name_family'];
@@ -254,7 +258,7 @@ class BLTI {
             header("Location: $location");
     }
 
-    function dump() { 
+    function dump() {
         if ( ! $this->valid or $this->info == false ) return "Context not valid\n";
         $ret = "";
         if ( $this->isInstructor() ) {
