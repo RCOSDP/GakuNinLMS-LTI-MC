@@ -6,6 +6,8 @@ if (!$context->valid) {
   return;
 }
 
+// TODO: Instructor と Administrator のみ
+
 /**
  * @var int Microcontent ID
  * TODO: 権限の検証 #28

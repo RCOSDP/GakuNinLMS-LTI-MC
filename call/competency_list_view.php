@@ -6,4 +6,5 @@ if (!$context->valid) {
   return;
 }
 
+// TODO: Instructor と Administrator のみ
 // TODO: Unimplemented.
