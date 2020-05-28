@@ -7,15 +7,6 @@ if (!$context->valid) {
   return;
 }
 
-$db = require(__DIR__.'/database.php');
-
-$resource_exists = $db->prepare(<<<'SQL'
-  SELECT 1 FROM mc_resource
-  WHERE
-    resourcelinkid=? AND deleted=0
-  LIMIT 1
-SQL)->execute([$context->getResourceKey()]);
-
 header('Content-Type: text/html');
 ?>
 <!DOCTYPE html>
@@ -43,7 +34,6 @@ header('Content-Type: text/html');
     </div>
     <!-- main -->
     <div class="main">
-    <?php if ($resource_exists): ?>
       <div style="height: 100%;">
         <table class="main-container">
           <tbody>
@@ -92,12 +82,6 @@ header('Content-Type: text/html');
           </tbody>
         </table>
       </div>
-    <?php else: ?>
-      <div class="item-video" style="display:none;">
-        <video id="video_player" class="video-js vjs-default-skin vjs-big-play-centered" data-setup='{"controls": true, "autoplay": true, "preload": "auto","fluid": true,"playbackRates": [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2],"nativeControlsForTouch": false}'></video>
-        <div class="item-text"></div>
-      </div>
-    <?php endif; ?>
     </div>
   </div>
 <?php if ($context->isInstructor()): ?>
