@@ -9,19 +9,12 @@ if (!$context->valid) {
 
 $db = require(__DIR__.'/database.php');
 
-$key = $context->getConsumerKey();
-$uid = $context->getUserKey();
-$cid = $context->getCourseKey();
-$rid = $context->getResourceKey();
-$nonce = $_POST["oauth_nonce"];
-$role = isAdministrator($context) ? 'administrator' : '';
-
 $resource_exists = $db->prepare(<<<'SQL'
   SELECT 1 FROM mc_resource
   WHERE
     resourcelinkid=? AND deleted=0
   LIMIT 1
-SQL)->execute([$rid]);
+SQL)->execute([$context->getResourceKey()]);
 
 header('Content-Type: text/html');
 ?>
@@ -133,12 +126,8 @@ header('Content-Type: text/html');
 <?php endif; ?>
   <script src="static/js/config.js"></script>
   <script>const info = <?= json_encode([
-    'key' => $key,
-    'uid' => $uid,
-    'cid' => $cid,
-    'rid' => $rid,
-    'nonce' => $nonce,
-    'role' => $role
+    'uid' => $context->getUserKey(),
+    'role' => isAdministrator($context) ? 'administrator' : ''
   ]); ?>;</script>
   <script src="lib/jquery/jquery.min.js"></script>
   <script src="lib/jquery/jquery-ui.min.js"></script>

@@ -12,9 +12,9 @@ $db = require(__DIR__.'/../database.php');
 
 $time = time();
 $uid = $context->getUserKey();
+$resource_link_id = $context->getResourceKey();
 
 $content_id = $_POST['content_id'];
-$resource_link_id = $_POST['resource_link_id'];
 
 // NOTE: read mc_resource.id
 $sth = $db->prepare(<<<'SQL'

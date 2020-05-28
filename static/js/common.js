@@ -374,7 +374,6 @@ $(".main").on("click", "#content_list_area button", function () {
       type: "POST",
       data: {
         content_id: id,
-        resource_link_id: info.rid,
       },
       url: LTI_URL + "/call/content_regist.php",
     })

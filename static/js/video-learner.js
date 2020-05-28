@@ -22,11 +22,6 @@ function log_post(event, detail) {
       file: info["videofile"],
       query: info["videoquery"],
       current: myPlayer.currentTime(),
-      rid: info["rid"],
-      uid: info["uid"],
-      cid: info["cid"],
-      //key : info['key'],
-      nonce: info["nonce"],
     },
   });
 }
@@ -41,11 +36,6 @@ function change_page(event, detail) {
       file: "",
       query: "",
       current: "",
-      rid: info["rid"],
-      uid: info["uid"],
-      cid: info["cid"],
-      //key : info['key'],
-      nonce: info["nonce"],
     },
   });
 }

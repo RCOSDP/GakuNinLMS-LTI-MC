@@ -19,10 +19,9 @@ if (isset($_POST['event'])) {
     'current' => $_POST['current'],
     'ip' => $_SERVER['REMOTE_ADDR'],
     'ua' => $_SERVER['HTTP_USER_AGENT'],
-    'rid' => $_POST['rid'],
-    'uid' => $_POST['uid'],
-    'cid' => $_POST['cid'],
-    'nonce' => $_POST['nonce']
+    'rid' => $context->getResourceKey(),
+    'uid' => $context->getUserKey(),
+    'cid' => $context->getCourseKey()
   ];
   foreach ($arr as $value) {
     $data .= e($value) . "	";
