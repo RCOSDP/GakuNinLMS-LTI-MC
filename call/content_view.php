@@ -22,7 +22,10 @@ $sth->execute([$rid]);
 $row = $sth->fetch();
 
 // NOTE: resource not found
-if (!$row) return;
+if (!$row) {
+  http_response_code(404);
+  return;
+}
 
 $content_id = $row['contentid'];
 
@@ -37,7 +40,10 @@ $sth->execute([$content_id]);
 $row = $sth->fetch();
 
 // NOTE: content not found
-if (!$row) return;
+if (!$row) {
+  http_response_code(404);
+  return;
+}
 
 $content_name = $row['name'];
 
