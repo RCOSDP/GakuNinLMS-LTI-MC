@@ -7,6 +7,12 @@ if (!$context->valid) {
   return;
 }
 
+function isAdministrator($context) {
+  $roles = $context->info['roles'];
+  $roles = strtolower($roles);
+  return strpos($roles, "administrator") !== false;
+}
+
 header('Content-Type: text/html');
 ?>
 <!DOCTYPE html>
@@ -132,9 +138,6 @@ header('Content-Type: text/html');
   <script src="lib/datatables/dataTables.bootstrap4.min.js"></script>
 <?php else: ?>
   <script src="static/js/video-learner.js"></script>
-<?php endif; ?>
-<?php if (isAdministrator($context)): ?>
-  <script src="static/js/administrator.js"></script>
 <?php endif; ?>
   <script src="static/js/content_view.js"></script>
 </body>

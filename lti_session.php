@@ -1,5 +1,4 @@
 <?php
-require_once(__DIR__.'/lib.php');
 require_once(__DIR__.'/config.php');
 
 // Load up the LTI Support code

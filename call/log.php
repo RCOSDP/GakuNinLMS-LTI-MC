@@ -6,6 +6,14 @@ if (!$context->valid) {
   return;
 }
 
+function e($str) {
+  if (empty($str) && $str !== "0"){
+    return "-";
+  } else {
+    return $str;
+  }
+}
+
 if (isset($_POST['event'])) {
   date_default_timezone_set('Asia/Tokyo');
   $arr = [
