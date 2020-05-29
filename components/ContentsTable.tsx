@@ -31,11 +31,13 @@ export function ContentsTable(props: { data: ContentsRow[] }) {
           icon: Edit,
           tooltip: "編集する",
           disabled: !row.editable,
-          onClick: (_, row) =>
+          onClick: (e, row) => {
             router.push({
               pathname: "/contents",
               query: { id: (isArray(row) ? row[0] : row).id, action: "edit" },
-            }),
+            });
+            e.preventDefault();
+          },
         }),
         {
           icon: LibraryAdd,
@@ -50,6 +52,12 @@ export function ContentsTable(props: { data: ContentsRow[] }) {
             }),
         },
       ]}
+      onRowClick={(_, row) =>
+        router.push({
+          pathname: "/contents",
+          query: { id: (isArray(row) ? row[0] : row).id },
+        })
+      }
       data={props.data}
     />
   );

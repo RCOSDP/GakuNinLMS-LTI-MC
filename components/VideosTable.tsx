@@ -36,11 +36,13 @@ export function VideosTable(props: { data: VideosRow[] }) {
           icon: Edit,
           tooltip: "編集する",
           disabled: !row.editable,
-          onClick: (_, row) =>
+          onClick: (e, row) => {
             router.push({
               pathname: "/videos",
               query: { id: (isArray(row) ? row[0] : row).id, action: "edit" },
-            }),
+            });
+            e.preventDefault();
+          },
         }),
         {
           icon: LibraryAdd,
@@ -56,6 +58,12 @@ export function VideosTable(props: { data: VideosRow[] }) {
         },
       ]}
       data={props.data}
+      onRowClick={(_, row) =>
+        router.push({
+          pathname: "/videos",
+          query: { id: (isArray(row) ? row[0] : row).id },
+        })
+      }
     />
   );
 }
