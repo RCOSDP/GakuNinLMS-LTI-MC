@@ -14,7 +14,7 @@ $keyword = $_POST['keyword'];
 
 // NOTE: read mc_microcontent
 $sth = $db->prepare(<<<'SQL'
-  SELECT id, name FROM mc_microcontent
+  SELECT id, name, description FROM mc_microcontent
   WHERE
     (
       name LIKE :keyword OR description LIKE :keyword
@@ -28,6 +28,7 @@ foreach ($sth as $row) {
   $toc = array();
   $toc['id'] = $row['id'];;
   $toc['name'] = $row['name'];;
+  $toc['description'] = $row['description'];;
   array_push($tocs, $toc);
 }
 

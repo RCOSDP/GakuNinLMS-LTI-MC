@@ -13,4 +13,4 @@ jobs:
           -i ~/.ssh/deploy_key
           -o 'StrictHostKeyChecking no'
           ${{ secrets.DEPLOY_USER }}@lti.cccties.org
-          'bash -lc "cd /var/www/html/lti && git pull --rebase"'
+          'bash -lc "cd /var/www/html/lti && git pull --rebase && yarn && yarn build"'
