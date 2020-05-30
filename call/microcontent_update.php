@@ -85,7 +85,8 @@ foreach ($level as $row) {
 
 $lang = $arr['lang'];
 if (!$lang) {
-  http_response_code(400);
+  // FIXME: クライアント側の不具合
+  // http_response_code(400);
   echo "no_subtitle";
   return;
 }
