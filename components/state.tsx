@@ -7,13 +7,15 @@ import {
   ReactNode,
 } from "react";
 
+type VideoId = string;
+
 type State = {
   title: string;
-  videos: string[];
+  videos: VideoId[];
 };
 
 const initialState = {
-  title: "",
+  title: "学習コンテンツ管理",
   videos: [],
 };
 
@@ -41,3 +43,17 @@ export const StateProvider = (props: { children: ReactNode }) => {
     </StateContext.Provider>
   );
 };
+
+function makeDispatch<T extends keyof State>(key: T) {
+  function hook() {
+    const appDispatch = useDispatch();
+    function dispatch(value: State[T]) {
+      appDispatch((s) => (s[key] === value ? s : { ...s, [key]: value }));
+    }
+    return dispatch;
+  }
+  return hook;
+}
+
+export const useAppTitle = makeDispatch("title");
+export const useAppVideos = makeDispatch("videos");

@@ -4,7 +4,6 @@ import ChevronRight from "@material-ui/icons/ChevronRight";
 import Clear from "@material-ui/icons/Clear";
 import FirstPage from "@material-ui/icons/FirstPage";
 import LastPage from "@material-ui/icons/LastPage";
-import SaveAlt from "@material-ui/icons/SaveAlt";
 import Search from "@material-ui/icons/Search";
 import MaterialTable, { Column, MaterialTableProps } from "material-table";
 
@@ -35,7 +34,10 @@ export function Table<T extends object>(
           actions: "",
         },
       }}
-      components={{ Container: (props) => <div {...props} /> }}
+      components={{
+        Container: (props) => <div {...props} />,
+        ...props.components,
+      }}
       data={withIndex(props.data)}
       options={{
         sorting: true,
@@ -46,8 +48,8 @@ export function Table<T extends object>(
           const i = opts.findIndex((n) => rows <= n);
           return opts.slice(0, i >= 0 ? i + 1 : opts.length);
         })([10, 50, 100], props.data.length),
-        actionsColumnIndex: -1,
         actionsCellStyle: { padding: 0 },
+        ...props.options,
       }}
       icons={
         {
@@ -59,7 +61,6 @@ export function Table<T extends object>(
           ResetSearch: Clear,
           Search,
           SortArrow: ArrowDownward,
-          Export: SaveAlt,
         } as any
       }
     />

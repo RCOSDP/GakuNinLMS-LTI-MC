@@ -1,27 +1,20 @@
-import { Link } from "components/theme";
 import { useContents } from "components/hooks";
-import { useDispatch } from "components/state";
+import { useAppTitle } from "components/state";
+import { ContentsSelectorTable } from "components/ContentsTable";
+import { Typography } from "@material-ui/core";
 
 function Index() {
-  const title = "学習コンテンツの変更";
-  const description = "学習管理システムに紐付けるコンテンツを選んで下さい";
-  useDispatch()((s) => ({ ...s, title }));
   const { data, error } = useContents();
+  useAppTitle()("学習管理システム連携");
 
   if (error) return <div>failed to load</div>;
   if (!data) return <div>loading...</div>;
   return (
     <div>
-      <h1>{title}</h1>
-      <p>{description}</p>
-      {data.map(({ id, name }) => (
-        <div key={id}>
-          {id}:{" "}
-          <Link href={{ pathname: "/edit", query: { id } }}>
-            {name || "名称未設定"}
-          </Link>
-        </div>
-      ))}
+      <ContentsSelectorTable data={data} />
+      <Typography>
+        選択したコンテンツを学習管理システムに紐付けます。
+      </Typography>
     </div>
   );
 }

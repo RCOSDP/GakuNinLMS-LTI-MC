@@ -1,6 +1,6 @@
 import Edit from "@material-ui/icons/Edit";
 import LibraryAdd from "@material-ui/icons/LibraryAdd";
-import { useRouter } from "components/hooks";
+import { useRouter } from "components/router";
 import { isArray } from "util";
 import { Table } from "./Table";
 import { Column } from "material-table";
@@ -57,6 +57,9 @@ export function VideosTable(props: { data: VideosRow[] }) {
             }),
         },
       ]}
+      options={{
+        actionsColumnIndex: -1,
+      }}
       data={props.data}
       onRowClick={(_, row) =>
         router.push({

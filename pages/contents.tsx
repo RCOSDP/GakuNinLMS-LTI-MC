@@ -1,13 +1,13 @@
 import { useContents } from "components/hooks";
 import { ContentsTable } from "components/ContentsTable";
 import { ShowContent, ShowContentProps } from "components/ShowContents";
-import { useRouter } from "components/hooks";
+import { useRouter } from "components/router";
 import { ShowSession } from "components/ShowSession";
+import { useAppTitle } from "components/state";
 
 type Query = Partial<ShowContentProps> & { action?: "edit" | "new" };
 
 function Index() {
-  const title = "学習コンテンツの管理";
   const { data, error } = useContents();
 
   if (error) return <div>failed to load</div>;
@@ -15,7 +15,6 @@ function Index() {
 
   return (
     <div>
-      <h1>{title}</h1>
       <ContentsTable
         data={data.map(({ id, name }) => ({
           id,
@@ -34,6 +33,8 @@ const New = ShowSession;
 function Router() {
   const router = useRouter();
   const query: Query = router.query;
+
+  useAppTitle()("学習コンテンツ管理");
 
   if (!query.id) {
     switch (query.action) {

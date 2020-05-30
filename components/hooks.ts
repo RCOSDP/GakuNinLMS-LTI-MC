@@ -1,13 +1,12 @@
-import useSWR from "swr";
-import { useRouter as useNextRouter } from "next/router";
-import { validUrl } from "./url";
-import { UrlObject, format } from "url";
-import * as config from "next.config.js";
+import useSWR, { mutate } from "swr";
+import { useSnackbar } from "material-ui-snackbar-provider";
+import { useAppVideos } from "./state";
 
 const basePath = process.env.NEXT_PUBLIC_API_BASE_PATH || "";
 const sessionPath = `${basePath}/call/session.php`;
 const contentsPath = `${basePath}/call/content_list_view.php`;
 const videosPath = `${basePath}/call/microcontent_search.php`;
+const registContentsPath = `${basePath}/call/content_regist.php`;
 
 type SessionResponse = {
   id: string;
@@ -25,39 +24,86 @@ type VideosResponse = {
   contents: ReadonlyArray<{ id: string; name: string; description: string }>;
 };
 
-function jsonFetcher(url: string, init?: RequestInit) {
-  return fetch(url, init).then((r) => r.json());
+function jsonFetcher(input: RequestInfo, init?: RequestInit) {
+  return fetch(input, init).then((r) => r.json());
 }
 
-function useJsonFetcher<T>(url: string, init?: RequestInit) {
+function textFetcher(input: RequestInfo, init?: RequestInit) {
+  return fetch(input, init).then((r) => r.text());
+}
+
+const postForm = <T extends Function>(fetcher: T) => <U extends object>(
+  url: string,
+  params: U,
+  init?: RequestInit
+) => {
+  const form = new FormData();
+  Object.entries(params).forEach(([key, value]) => form.append(key, value));
+
+  return fetcher(url, {
+    method: "POST",
+    body: form,
+    ...init,
+  });
+};
+
+// TODO:
+// const postJson = (fetcher: typeof fetch) => <T extends object>(url: string, params: T, init?: RequestInit) => {
+//   return fetcher(url, {
+//     method: "POST",
+//     headers: {
+//       'Content-Type': 'application/json',
+//       ...(init?.headers || {})
+//     },
+//     body: JSON.stringify(params),
+//     ...init
+//   })
+// };
+
+type LinkedContentsResponse = {
+  id: string;
+  name: string;
+};
+
+export function registContents(id: string, name: string) {
+  mutate(registContentsPath, async () => {
+    const data = await postForm(textFetcher)(registContentsPath, {
+      content_id: id,
+    });
+    if (data !== "new" && data !== "update") throw new Error(data);
+    const res: LinkedContentsResponse = { id, name };
+    return res;
+  });
+}
+
+export function useShowRegistContents() {
+  const { showMessage } = useSnackbar();
+  const { data, error } = useSWR<LinkedContentsResponse>(registContentsPath);
+
+  if (error) {
+    console.error(error);
+    showMessage("問題が発生しました。");
+  } else if (data) {
+    showMessage(`「${data.name}」を紐づけました`);
+    mutate(registContentsPath, () => null);
+  }
+
+  return { data, error };
+}
+
+function useJsonFetcher<T>(url: string, init?: RequestInit, config?: any) {
   return useSWR<T>(
-    url,
-    init ? (url: any) => jsonFetcher(url, init) : jsonFetcher
+    [url, init],
+    init ? (url: any) => jsonFetcher(url, init) : jsonFetcher,
+    config
   );
 }
 
 export const useSession = () => useJsonFetcher<SessionResponse>(sessionPath);
-
 export const useContents = () => useJsonFetcher<ContentsResponse>(contentsPath);
-
-export const useVideos = () => useJsonFetcher<VideosResponse>(videosPath);
-
-export function useRouter() {
-  const router = useNextRouter();
-  const originalPush = router.push;
-  function push(urlOrPath: string | UrlObject) {
-    const url =
-      validUrl(urlOrPath)?.href ??
-      (typeof urlOrPath === "string"
-        ? `${config.experimental.basePath}${urlOrPath}.html`
-        : format({
-            ...urlOrPath,
-            pathname: `${config.experimental.basePath}${urlOrPath.pathname}.html`,
-          }));
-
-    return originalPush(urlOrPath, url);
-  }
-  router.push = push;
-
-  return router;
-}
+export const useVideos = () => {
+  const res = useJsonFetcher<VideosResponse>(videosPath);
+  const setVideos = useAppVideos();
+  if (!res.error && res.data) setVideos(res.data.contents.map(({ id }) => id));
+  return res;
+};

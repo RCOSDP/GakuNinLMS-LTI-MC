@@ -1,9 +1,9 @@
 import { useVideos } from "components/hooks";
-import { useDispatch } from "components/state";
+import { useAppTitle } from "components/state";
 import { VideosTable } from "components/VideosTable";
 import { ShowVideo, ShowVideoProps } from "components/ShowVideo";
-import { useRouter } from "components/hooks";
-import { Link } from "components/theme";
+import { useRouter } from "components/router";
+import { Link } from "components/router";
 import { useAppState } from "components/state";
 import { Divider } from "@material-ui/core";
 import { ShowSession } from "components/ShowSession";
@@ -11,22 +11,15 @@ import { ShowSession } from "components/ShowSession";
 type Query = Partial<ShowVideoProps> & { action?: "edit" | "new" };
 
 function Index() {
-  const title = "ビデオの管理";
-  const dispatch = useDispatch();
   const { data, error } = useVideos();
+
+  useAppTitle()("ビデオ管理");
 
   if (error) return <div>failed to load</div>;
   if (!data) return <div>loading...</div>;
 
-  dispatch((s) => ({
-    ...s,
-    title,
-    videos: data.contents.map(({ id }) => id),
-  }));
-
   return (
     <div>
-      <h1>{title}</h1>
       <VideosTable
         data={data.contents.map(({ id, name, description }) => ({
           id,

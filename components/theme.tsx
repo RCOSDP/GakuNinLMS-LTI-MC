@@ -5,16 +5,17 @@ import AppBar from "@material-ui/core/AppBar";
 import Box from "@material-ui/core/Box";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Container from "@material-ui/core/Container";
-import MuiLink from "@material-ui/core/Link";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
-import React, { ReactNode } from "react";
-import NextLink from "next/link";
+import Button from "@material-ui/core/Button";
+import MenuIcon from "@material-ui/icons/Menu";
+import { ReactNode } from "react";
+import { usePopupState, bindTrigger } from "material-ui-popup-state/hooks";
+import { SnackbarProvider } from "material-ui-snackbar-provider";
 import Head from "next/head";
-import * as config from "next.config.js";
-import { UrlObject, format } from "url";
+import { TopAppMenu } from "./TopAppMenu";
 import { useAppState } from "./state";
-import { validUrl } from "./url";
+import { useShowRegistContents } from "./hooks";
 
 export const theme = createMuiTheme({
   palette: {
@@ -30,51 +31,50 @@ export const theme = createMuiTheme({
   },
 });
 
-export const Link = (props: {
-  href: string | UrlObject;
-  children: ReactNode;
-}) => {
-  const url =
-    validUrl(props.href)?.href ??
-    (typeof props.href === "string"
-      ? `${config.experimental.basePath}${props.href}.html`
-      : format({
-          ...props.href,
-          pathname: `${config.experimental.basePath}${props.href.pathname}.html`,
-        }));
+function Title(props: { children: ReactNode }) {
+  return <Typography component="h1" variant="h6" color="inherit" {...props} />;
+}
+
+export const TopAppBar = (props: { title: string }) => {
+  useShowRegistContents();
+  const popupState = usePopupState({
+    variant: "popover",
+    popupId: "TopAppMenu",
+  });
 
   return (
-    <NextLink href={props.href} as={url}>
-      <MuiLink variant="body1" href={url}>
-        {props.children}
-      </MuiLink>
-    </NextLink>
+    <AppBar>
+      <Toolbar>
+        <Button
+          startIcon={<MenuIcon />}
+          color="inherit"
+          size="large"
+          style={{ marginRight: 24 }}
+          {...bindTrigger(popupState)}
+        >
+          メニュー
+        </Button>
+        <TopAppMenu popupState={popupState} />
+        <Box flexGrow={1} component={Title} children={props.title} />
+      </Toolbar>
+    </AppBar>
   );
 };
 
-export const TopAppBar = (props: { title: string }) => (
-  <AppBar>
-    <Toolbar>
-      <Typography variant="h6" color="inherit">
-        {props.title}
-      </Typography>
-    </Toolbar>
-  </AppBar>
-);
-
 export const MainTheme = (props: { children: ReactNode }) => {
-  const title = useAppState().title || "学習コンテンツ";
-
+  const title = useAppState().title;
   return (
     <ThemeProvider theme={theme}>
       <Head>
         <title>{title}</title>
       </Head>
       <CssBaseline />
-      <TopAppBar title={title} />
-      <Box pt={12} component={Container}>
-        {props.children}
-      </Box>
+      <SnackbarProvider SnackbarProps={{ autoHideDuration: 5e3 }}>
+        <TopAppBar title={title} />
+        <Box pt={12} component={Container}>
+          {props.children}
+        </Box>
+      </SnackbarProvider>
     </ThemeProvider>
   );
 };
