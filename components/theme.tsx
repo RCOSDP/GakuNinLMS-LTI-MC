@@ -9,7 +9,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import MenuIcon from "@material-ui/icons/Menu";
-import { ReactNode } from "react";
+import { ReactNode, useMemo } from "react";
 import { usePopupState, bindTrigger } from "material-ui-popup-state/hooks";
 import { SnackbarProvider } from "material-ui-snackbar-provider";
 import Head from "next/head";
@@ -17,7 +17,7 @@ import { TopAppMenu } from "./TopAppMenu";
 import { useAppState } from "./state";
 import { useShowRegistContents } from "./hooks";
 
-export const theme = createMuiTheme({
+export const mainTheme = {
   palette: {
     primary: {
       main: blue[800],
@@ -29,7 +29,7 @@ export const theme = createMuiTheme({
   typography: {
     fontFamily: "sans-serif",
   },
-});
+};
 
 function Title(props: { children: ReactNode }) {
   return <Typography component="h1" variant="h6" color="inherit" {...props} />;
@@ -62,6 +62,18 @@ export const TopAppBar = (props: { title: string }) => {
 };
 
 export const MainTheme = (props: { children: ReactNode }) => {
+  const prefersDarkMode = true; // TODO: useMediaQuery("(prefers-color-scheme: dark)");
+  const theme = useMemo(
+    () =>
+      createMuiTheme({
+        ...mainTheme,
+        palette: {
+          ...mainTheme.palette,
+          type: prefersDarkMode ? "dark" : "light",
+        },
+      }),
+    [prefersDarkMode]
+  );
   const title = useAppState().title;
   return (
     <ThemeProvider theme={theme}>
