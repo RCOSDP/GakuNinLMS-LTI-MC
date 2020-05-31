@@ -21,7 +21,7 @@ function Index() {
 
   return (
     <div>
-      <ContentsTable contentsIndex={contentsIndex} />
+      <ContentsTable {...contentsIndex} />
     </div>
   );
 }

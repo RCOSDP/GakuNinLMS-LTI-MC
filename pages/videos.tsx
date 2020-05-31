@@ -1,63 +1,29 @@
-import { useVideos } from "components/hooks";
+import { useVideos } from "components/video";
 import { useAppTitle } from "components/state";
 import { VideosTable } from "components/VideosTable";
-import { ShowVideo, ShowVideoProps } from "components/ShowVideo";
+import { ShowVideo } from "components/ShowVideo";
 import { useRouter } from "components/router";
-import { Link } from "components/router";
-import { useAppState } from "components/state";
-import { Divider } from "@material-ui/core";
 import { ShowSession } from "components/ShowSession";
 
-type Query = Partial<ShowVideoProps> & { action?: "edit" | "new" };
+type Query = { id?: string; action?: "edit" | "new" };
 
 function Index() {
-  const { data, error } = useVideos();
-
+  const videos = useVideos();
   useAppTitle()("ビデオ管理");
-
-  if (error) return <div>failed to load</div>;
-  if (!data) return <div>loading...</div>;
-
+  switch (videos.state) {
+    case "failure":
+      return <div>failed to load</div>;
+    case "pending":
+      return <div>loading...</div>;
+  }
   return (
     <div>
-      <VideosTable
-        data={data.contents.map(({ id, name, description }) => ({
-          id,
-          name,
-          description,
-          editable: true,
-        }))}
-      />
+      <VideosTable {...videos} />
     </div>
   );
 }
 
-function Show(props: ShowVideoProps) {
-  const videos = useAppState().videos;
-  const { prev, next } = videos.reduce(
-    (acc, id, index, array) => {
-      if (index <= array.length - 2 && id === props.id)
-        return { prev: array[index - 1], next: array[index + 1] };
-      return { ...acc };
-    },
-    { prev: null, next: null } as any
-  );
-
-  return (
-    <div>
-      <ShowVideo id={props.id} />
-      <Divider />
-      {prev && (
-        <Link href={{ pathname: "/videos", query: { id: prev } }}>前</Link>
-      )}
-      {prev && next && " | "}
-      {next && (
-        <Link href={{ pathname: "/videos", query: { id: next } }}>次</Link>
-      )}
-    </div>
-  );
-}
-
+const Show = ShowVideo;
 const Edit = ShowVideo;
 const New = ShowSession;
 

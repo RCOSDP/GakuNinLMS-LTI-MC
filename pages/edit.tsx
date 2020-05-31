@@ -14,7 +14,7 @@ function Index() {
   }
   return (
     <div>
-      <ContentsSelectorTable contentsIndex={contentsIndex} />
+      <ContentsSelectorTable {...contentsIndex} />
       <Typography>
         選択したコンテンツを学習管理システムに紐付けます。
       </Typography>

@@ -4,9 +4,9 @@ import LibraryAdd from "@material-ui/icons/LibraryAdd";
 import { Column } from "material-table";
 import { useRouter } from "components/router";
 import { Table } from "./Table";
-import { registContents } from "./hooks";
+import { registContents } from "./api";
 import { MouseEvent } from "react";
-import { ContentsIndexWithState } from "./contents";
+import { ContentsIndex } from "./contents";
 
 // TODO:
 function editable(_: any) {
@@ -19,9 +19,7 @@ type ContentsRow = {
   editable?: boolean;
 };
 
-export function ContentsTable(props: {
-  contentsIndex: ContentsIndexWithState;
-}) {
+export function ContentsTable(props: ContentsIndex) {
   const router = useRouter();
   function rowClickHandler<T>(event?: MouseEvent, row?: T) {
     const contents = Array.isArray(row) ? row[0] : row;
@@ -31,7 +29,7 @@ export function ContentsTable(props: {
     });
     event?.preventDefault();
   }
-  const data = props.contentsIndex.contents.map((contents) => ({
+  const data = props.contents.map((contents) => ({
     ...contents,
     editable: editable(contents.creator),
   }));
@@ -76,9 +74,7 @@ export function ContentsTable(props: {
   );
 }
 
-export function ContentsSelectorTable(props: {
-  contentsIndex: ContentsIndexWithState;
-}) {
+export function ContentsSelectorTable(props: ContentsIndex) {
   const router = useRouter();
   function rowClickHandler<T>(event?: MouseEvent, row?: T) {
     const contents = Array.isArray(row) ? row[0] : row;
@@ -86,7 +82,7 @@ export function ContentsSelectorTable(props: {
     router.push("/contents");
     event?.preventDefault();
   }
-  const data = props.contentsIndex.contents;
+  const data = props.contents;
   return (
     <Table
       title="学習コンテンツ一覧"

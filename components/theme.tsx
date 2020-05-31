@@ -15,7 +15,7 @@ import { SnackbarProvider } from "material-ui-snackbar-provider";
 import Head from "next/head";
 import { TopAppMenu } from "./TopAppMenu";
 import { useAppState } from "./state";
-import { useShowRegistContents } from "./hooks";
+import { useShowRegistContents } from "./api";
 
 export const mainTheme = {
   palette: {

@@ -1,19 +1,26 @@
-import Edit from "@material-ui/icons/Edit";
+import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import LibraryAdd from "@material-ui/icons/LibraryAdd";
 import { useRouter } from "components/router";
-import { isArray } from "util";
 import { Table } from "./Table";
+import { MouseEvent } from "react";
 import { Column } from "material-table";
+import { Videos } from "./video";
 
 type VideosRow = {
-  id: string;
-  name: string;
-  editable: boolean;
+  id: number;
+  title: string;
 };
 
-export function VideosTable(props: { data: VideosRow[] }) {
+export function VideosTable(props: Videos) {
   const router = useRouter();
-
+  function rowClickHandler<T>(event?: MouseEvent, row?: T) {
+    const video = Array.isArray(row) ? row[0] : row;
+    router.push({
+      pathname: "/videos",
+      query: { id: video.id },
+    });
+    event?.preventDefault();
+  }
   return (
     <Table
       title="ビデオ一覧"
@@ -22,7 +29,7 @@ export function VideosTable(props: { data: VideosRow[] }) {
           { title: "#", field: "id", width: "4rem" },
           {
             title: "名称",
-            field: "name",
+            field: "title",
             width: "20%",
           },
           {
@@ -32,18 +39,11 @@ export function VideosTable(props: { data: VideosRow[] }) {
         ] as Column<VideosRow>[]
       }
       actions={[
-        (row) => ({
-          icon: Edit,
-          tooltip: "編集する",
-          disabled: !row.editable,
-          onClick: (e, row) => {
-            router.push({
-              pathname: "/videos",
-              query: { id: (isArray(row) ? row[0] : row).id, action: "edit" },
-            });
-            e.preventDefault();
-          },
-        }),
+        {
+          icon: PlayArrowIcon,
+          tooltip: "再生する",
+          onClick: rowClickHandler,
+        },
         {
           icon: LibraryAdd,
           tooltip: "ビデオを追加する",
@@ -60,13 +60,8 @@ export function VideosTable(props: { data: VideosRow[] }) {
       options={{
         actionsColumnIndex: -1,
       }}
-      data={props.data}
-      onRowClick={(_, row) =>
-        router.push({
-          pathname: "/videos",
-          query: { id: (isArray(row) ? row[0] : row).id },
-        })
-      }
+      data={props.videos}
+      onRowClick={rowClickHandler}
     />
   );
 }

@@ -7,16 +7,11 @@ import {
   ReactNode,
 } from "react";
 
-type VideoId = string;
-
 type State = {
   title: string;
-  videos: VideoId[];
 };
-
 const initialState = {
   title: "学習コンテンツ管理",
-  videos: [],
 };
 
 export const StateContext = createContext<State>(initialState);
@@ -54,6 +49,4 @@ function makeDispatch<T extends keyof State>(key: T) {
   }
   return hook;
 }
-
 export const useAppTitle = makeDispatch("title");
-export const useAppVideos = makeDispatch("videos");

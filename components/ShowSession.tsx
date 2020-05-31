@@ -1,4 +1,4 @@
-import { useSession } from "./hooks";
+import { useSession } from "./api";
 
 export function ShowSession() {
   const { data, error } = useSession();
