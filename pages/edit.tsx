@@ -1,10 +1,10 @@
-import { useContents } from "components/hooks";
+import { useContentsIndex } from "components/hooks";
 import { useAppTitle } from "components/state";
 import { ContentsSelectorTable } from "components/ContentsTable";
 import { Typography } from "@material-ui/core";
 
 function Index() {
-  const { data, error } = useContents();
+  const { data, error } = useContentsIndex();
   useAppTitle()("学習管理システム連携");
 
   if (error) return <div>failed to load</div>;

@@ -34,7 +34,7 @@ export function ContentsTable(props: { data: ContentsRow[] }) {
       title="学習コンテンツ一覧"
       columns={
         [
-          { title: "#", field: "index", width: "4rem" },
+          { title: "#", field: "id", width: "4rem" },
           {
             title: "名称",
             field: "name",
@@ -85,7 +85,7 @@ export function ContentsSelectorTable(props: {
       title="学習コンテンツ一覧"
       columns={
         [
-          { title: "#", field: "index", width: "calc(4rem - 48px)" },
+          { title: "#", field: "id", width: "calc(4rem - 48px)" },
           {
             title: "名称",
             field: "name",

@@ -1,14 +1,16 @@
-import { useContents } from "components/hooks";
+import { useContentsIndex } from "components/hooks";
 import { ContentsTable } from "components/ContentsTable";
-import { ShowContent, ShowContentProps } from "components/ShowContents";
+import { NewContents } from "components/NewContents";
+import { ShowContents } from "components/ShowContents";
+import { EditContents } from "components/EditContents";
 import { useRouter } from "components/router";
-import { ShowSession } from "components/ShowSession";
 import { useAppTitle } from "components/state";
+import { useContents } from "components/contents";
 
-type Query = Partial<ShowContentProps> & { action?: "edit" | "new" };
+type Query = { id?: string; action?: "edit" | "new" };
 
 function Index() {
-  const { data, error } = useContents();
+  const { data, error } = useContentsIndex();
 
   if (error) return <div>failed to load</div>;
   if (!data) return <div>loading...</div>;
@@ -26,9 +28,18 @@ function Index() {
   );
 }
 
-const Show = ShowContent;
-const Edit = ShowContent;
-const New = ShowSession;
+function Show(props: { id: string }) {
+  const contents = useContents(Number(props.id));
+  return <ShowContents {...contents} />;
+}
+function Edit(props: { id: string }) {
+  const contents = useContents(Number(props.id));
+  return <EditContents {...contents} />;
+}
+function New() {
+  const contents = useContents();
+  return <NewContents {...contents} />;
+}
 
 function Router() {
   const router = useRouter();

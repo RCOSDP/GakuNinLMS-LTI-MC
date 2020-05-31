@@ -1,5 +1,5 @@
 import { ContentsWithState } from "components/contents";
 
-export function ShowContents(props: ContentsWithState) {
+export function NewContents(props: ContentsWithState) {
   return <pre>{JSON.stringify(props, null, 2) /* Debug */}</pre>;
 }

@@ -24,15 +24,15 @@ type VideosResponse = {
   contents: ReadonlyArray<{ id: string; name: string; description: string }>;
 };
 
-function jsonFetcher(input: RequestInfo, init?: RequestInit) {
+export function jsonFetcher(input: RequestInfo, init?: RequestInit) {
   return fetch(input, init).then((r) => r.json());
 }
 
-function textFetcher(input: RequestInfo, init?: RequestInit) {
+export function textFetcher(input: RequestInfo, init?: RequestInit) {
   return fetch(input, init).then((r) => r.text());
 }
 
-const postForm = <T extends Function>(fetcher: T) => <U extends object>(
+export const postForm = <T extends Function>(fetcher: T) => <U extends object>(
   url: string,
   params: U,
   init?: RequestInit
@@ -47,18 +47,21 @@ const postForm = <T extends Function>(fetcher: T) => <U extends object>(
   });
 };
 
-// TODO:
-// const postJson = (fetcher: typeof fetch) => <T extends object>(url: string, params: T, init?: RequestInit) => {
-//   return fetcher(url, {
-//     method: "POST",
-//     headers: {
-//       'Content-Type': 'application/json',
-//       ...(init?.headers || {})
-//     },
-//     body: JSON.stringify(params),
-//     ...init
-//   })
-// };
+export const postJson = <T extends Function>(fetcher: T) => <U extends object>(
+  url: string,
+  params: U,
+  init?: RequestInit
+) => {
+  return fetcher(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...(init?.headers || {}),
+    },
+    body: JSON.stringify(params),
+    ...init,
+  });
+};
 
 type LinkedContentsResponse = {
   id: string;
@@ -100,7 +103,8 @@ function useJsonFetcher<T>(url: string, init?: RequestInit, config?: any) {
 }
 
 export const useSession = () => useJsonFetcher<SessionResponse>(sessionPath);
-export const useContents = () => useJsonFetcher<ContentsResponse>(contentsPath);
+export const useContentsIndex = () =>
+  useJsonFetcher<ContentsResponse>(contentsPath);
 export const useVideos = () => {
   const res = useJsonFetcher<VideosResponse>(videosPath);
   const setVideos = useAppVideos();

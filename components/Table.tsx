@@ -7,9 +7,9 @@ import LastPage from "@material-ui/icons/LastPage";
 import Search from "@material-ui/icons/Search";
 import MaterialTable, { Column, MaterialTableProps } from "material-table";
 
-function withIndex<T>(data: T[]) {
-  return data.map((e, index) => ({ ...e, index: index + 1 /* one-based */ }));
-}
+// function withIndex<T>(data: T[]) {
+//   return data.map((e, index) => ({ ...e, index: index + 1 /* one-based */ }));
+// }
 
 export function Table<T extends object>(
   props: MaterialTableProps<T> & { data: T[] }
@@ -38,7 +38,7 @@ export function Table<T extends object>(
         Container: (props) => <div {...props} />,
         ...props.components,
       }}
-      data={withIndex(props.data)}
+      data={props.data}
       options={{
         sorting: true,
         tableLayout: "fixed",

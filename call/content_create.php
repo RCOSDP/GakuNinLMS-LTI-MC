@@ -39,4 +39,4 @@ foreach ($arr['contents'] as $i => $row) {
 }
 
 http_response_code(201);
-echo "ok";
+echo $contentid;

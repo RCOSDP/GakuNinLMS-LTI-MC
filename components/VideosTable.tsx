@@ -19,7 +19,7 @@ export function VideosTable(props: { data: VideosRow[] }) {
       title="ビデオ一覧"
       columns={
         [
-          { title: "#", field: "index", width: "4rem" },
+          { title: "#", field: "id", width: "4rem" },
           {
             title: "名称",
             field: "name",
