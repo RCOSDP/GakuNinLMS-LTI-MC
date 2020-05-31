@@ -1,17 +1,20 @@
-import { useContentsIndex } from "components/hooks";
+import { useContentsIndex } from "components/contents";
 import { useAppTitle } from "components/state";
 import { ContentsSelectorTable } from "components/ContentsTable";
 import { Typography } from "@material-ui/core";
 
 function Index() {
-  const { data, error } = useContentsIndex();
+  const contentsIndex = useContentsIndex();
   useAppTitle()("学習管理システム連携");
-
-  if (error) return <div>failed to load</div>;
-  if (!data) return <div>loading...</div>;
+  switch (contentsIndex.state) {
+    case "failure":
+      return <div>failed to load</div>;
+    case "pending":
+      return <div>loading...</div>;
+  }
   return (
     <div>
-      <ContentsSelectorTable data={data} />
+      <ContentsSelectorTable contentsIndex={contentsIndex} />
       <Typography>
         選択したコンテンツを学習管理システムに紐付けます。
       </Typography>

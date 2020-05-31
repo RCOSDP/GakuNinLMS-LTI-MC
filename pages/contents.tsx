@@ -1,4 +1,4 @@
-import { useContentsIndex } from "components/hooks";
+import { useContentsIndex } from "components/contents";
 import { ContentsTable } from "components/ContentsTable";
 import { NewContents } from "components/NewContents";
 import { ShowContents } from "components/ShowContents";
@@ -10,20 +10,18 @@ import { useContents } from "components/contents";
 type Query = { id?: string; action?: "edit" | "new" };
 
 function Index() {
-  const { data, error } = useContentsIndex();
+  const contentsIndex = useContentsIndex();
 
-  if (error) return <div>failed to load</div>;
-  if (!data) return <div>loading...</div>;
+  switch (contentsIndex.state) {
+    case "failure":
+      return <div>failed to load</div>;
+    case "pending":
+      return <div>loading...</div>;
+  }
 
   return (
     <div>
-      <ContentsTable
-        data={data.map(({ id, name }) => ({
-          id,
-          name,
-          editable: true,
-        }))}
-      />
+      <ContentsTable contentsIndex={contentsIndex} />
     </div>
   );
 }

@@ -4,7 +4,6 @@ import { useAppVideos } from "./state";
 
 const basePath = process.env.NEXT_PUBLIC_API_BASE_PATH || "";
 const sessionPath = `${basePath}/call/session.php`;
-const contentsPath = `${basePath}/call/content_list_view.php`;
 const videosPath = `${basePath}/call/microcontent_search.php`;
 const registContentsPath = `${basePath}/call/content_regist.php`;
 
@@ -12,13 +11,6 @@ type SessionResponse = {
   id: string;
   role: "administrator" | "instructor" | "";
 };
-
-type ContentsResponse = ReadonlyArray<{
-  id: string;
-  name: string;
-  timemodified: string;
-  createdby: string;
-}>;
 
 type VideosResponse = {
   contents: ReadonlyArray<{ id: string; name: string; description: string }>;
@@ -103,8 +95,6 @@ function useJsonFetcher<T>(url: string, init?: RequestInit, config?: any) {
 }
 
 export const useSession = () => useJsonFetcher<SessionResponse>(sessionPath);
-export const useContentsIndex = () =>
-  useJsonFetcher<ContentsResponse>(contentsPath);
 export const useVideos = () => {
   const res = useJsonFetcher<VideosResponse>(videosPath);
   const setVideos = useAppVideos();

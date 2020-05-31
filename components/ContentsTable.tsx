@@ -1,34 +1,40 @@
 import LinkIcon from "@material-ui/icons/Link";
 import Edit from "@material-ui/icons/Edit";
 import LibraryAdd from "@material-ui/icons/LibraryAdd";
-import { useRouter } from "components/router";
-import { isArray } from "util";
-import { Table } from "./Table";
 import { Column } from "material-table";
+import { useRouter } from "components/router";
+import { Table } from "./Table";
 import { registContents } from "./hooks";
 import { MouseEvent } from "react";
+import { ContentsIndexWithState } from "./contents";
+
+// TODO:
+function editable(_: any) {
+  return true;
+}
 
 type ContentsRow = {
-  id: string;
-  name: string;
-  editable: boolean;
+  id: number;
+  title: string;
+  editable?: boolean;
 };
 
-type ContentsSelectorRow = {
-  id: string;
-  name: string;
-};
-
-export function ContentsTable(props: { data: ContentsRow[] }) {
+export function ContentsTable(props: {
+  contentsIndex: ContentsIndexWithState;
+}) {
   const router = useRouter();
   function rowClickHandler<T>(event?: MouseEvent, row?: T) {
-    const contents = isArray(row) ? row[0] : row;
+    const contents = Array.isArray(row) ? row[0] : row;
     router.push({
       pathname: "/contents",
       query: { id: contents.id, action: "edit" },
     });
     event?.preventDefault();
   }
+  const data = props.contentsIndex.contents.map((contents) => ({
+    ...contents,
+    editable: editable(contents.creator),
+  }));
   return (
     <Table
       title="学習コンテンツ一覧"
@@ -37,7 +43,7 @@ export function ContentsTable(props: { data: ContentsRow[] }) {
           { title: "#", field: "id", width: "4rem" },
           {
             title: "名称",
-            field: "name",
+            field: "title",
           },
         ] as Column<ContentsRow>[]
       }
@@ -65,21 +71,22 @@ export function ContentsTable(props: { data: ContentsRow[] }) {
         actionsColumnIndex: -1,
       }}
       onRowClick={rowClickHandler}
-      data={props.data}
+      data={data}
     />
   );
 }
 
 export function ContentsSelectorTable(props: {
-  data: ReadonlyArray<ContentsSelectorRow>;
+  contentsIndex: ContentsIndexWithState;
 }) {
   const router = useRouter();
   function rowClickHandler<T>(event?: MouseEvent, row?: T) {
-    const contents = isArray(row) ? row[0] : row;
+    const contents = Array.isArray(row) ? row[0] : row;
     registContents(contents.id, contents.name);
     router.push("/contents");
     event?.preventDefault();
   }
+  const data = props.contentsIndex.contents;
   return (
     <Table
       title="学習コンテンツ一覧"
@@ -88,9 +95,9 @@ export function ContentsSelectorTable(props: {
           { title: "#", field: "id", width: "calc(4rem - 48px)" },
           {
             title: "名称",
-            field: "name",
+            field: "title",
           },
-        ] as Column<ContentsSelectorRow>[]
+        ] as Column<ContentsRow>[]
       }
       actions={[
         {
@@ -115,7 +122,7 @@ export function ContentsSelectorTable(props: {
         actionsColumnIndex: 1,
       }}
       onRowClick={rowClickHandler}
-      data={[...props.data]}
+      data={data}
     />
   );
 }

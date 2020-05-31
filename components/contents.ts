@@ -11,22 +11,31 @@ type Contents = {
     title: string;
   }>;
 };
-
-export type ContentsWithState = Contents & {
-  state: "pending" | "success" | "failure";
+type UserId = string; // NOTE: セッションに含まれる利用者のID
+type ContentsIndex = {
+  contents: Array<{
+    id: number;
+    title: string;
+    creator: UserId;
+    updateAt: Date;
+  }>;
 };
 
-const initialData: ContentsWithState = {
+const initialContents: ContentsWithState = {
   title: "",
   videos: [],
   state: "pending",
 };
+const initialContentsIndex: ContentsIndexWithState = {
+  contents: [],
+  state: "pending",
+};
 
-async function fetchTheContents(
+async function fetchContents(
   _: typeof key,
   id: number
 ): Promise<ContentsWithState> {
-  if (id == null) return initialData;
+  if (id == null) return initialContents;
   const url = `${process.env.NEXT_PUBLIC_API_BASE_PATH}/call/list_content_view.php`;
   const req: ShowContentsRequest = {
     content_id: id.toString(),
@@ -44,29 +53,65 @@ async function fetchTheContents(
     };
 
     return {
-      ...initialData,
+      ...initialContents,
       ...contents,
       state: "success",
     };
   } catch {
     return {
-      ...initialData,
+      ...initialContents,
+      state: "failure",
+    };
+  }
+}
+async function fetchContentsIndex(
+  _: typeof key
+): Promise<ContentsIndexWithState> {
+  const url = `${process.env.NEXT_PUBLIC_API_BASE_PATH}/call/content_list_view.php`;
+  try {
+    const res: ContentsIndexResponse = await jsonFetcher(url);
+    const contentsIndex: ContentsIndex = {
+      contents: res.map(({ id, name, timemodified, createdby }) => ({
+        id: Number(id),
+        title: name,
+        creator: createdby,
+        updateAt: new Date(timemodified),
+      })),
+    };
+
+    return {
+      ...initialContentsIndex,
+      ...contentsIndex,
+      state: "success",
+    };
+  } catch {
+    return {
+      ...initialContentsIndex,
       state: "failure",
     };
   }
 }
 
 export function useContents(id?: number) {
-  const { data, error } = useSWR<ContentsWithState>(
-    [key, id],
-    fetchTheContents
-  );
-  const contents = data || initialData;
+  const { data, error } = useSWR<ContentsWithState>([key, id], fetchContents);
+  const contents = data || initialContents;
   if (error) {
     const res: ContentsWithState = { ...contents, state: "failure" };
     return res;
   }
   return contents;
+}
+export function useContentsIndex() {
+  const { data, error } = useSWR<ContentsIndexWithState>(
+    key,
+    fetchContentsIndex
+  );
+  const contentsIndex = data || initialContentsIndex;
+  if (error) {
+    const res: ContentsIndexWithState = { ...contentsIndex, state: "failure" };
+    return res;
+  }
+  return contentsIndex;
 }
 
 export async function showContents(id: Contents["id"]) {
@@ -117,7 +162,7 @@ export async function destroyContents(id: Contents["id"]) {
   };
   try {
     await postForm(textFetcher)(url, req);
-    success({ ...initialData, id });
+    success({ ...initialContents, id });
   } catch {
     failure(id);
   }
@@ -125,7 +170,7 @@ export async function destroyContents(id: Contents["id"]) {
 
 function success(contents: Required<Contents>) {
   mutate([key, contents.id], (prev?: ContentsWithState) => ({
-    ...(prev || initialData),
+    ...(prev || initialContents),
     ...contents,
     state: "success",
   }));
@@ -133,18 +178,17 @@ function success(contents: Required<Contents>) {
 
 function failure(id: Contents["id"]) {
   mutate([key, id], (prev?: ContentsWithState) => ({
-    ...(prev || initialData),
+    ...(prev || initialContents),
     state: "failure",
   }));
 }
 
-// // NOTE: GET /call/content_list_view.php
-// type IndexContentsResponse = Array<{
-//   id: string;
-//   name: string;
-//   timemodified: Date;
-//   createdby: string;
-// }>;
+type ContentsIndexResponse = Array<{
+  id: string;
+  name: string;
+  timemodified: string;
+  createdby: string;
+}>;
 
 type CreateContentsRequest = {
   title: string;
@@ -165,3 +209,7 @@ type ShowContentsResponse = {
 type UpdateContentsRequest = { id: number } & CreateContentsRequest;
 
 type DestroyContentsRequest = ShowContentsRequest;
+
+type WithState<T> = T & { state: "pending" | "success" | "failure" };
+export type ContentsWithState = WithState<Contents>;
+export type ContentsIndexWithState = WithState<ContentsIndex>;
