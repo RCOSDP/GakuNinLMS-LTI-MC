@@ -810,7 +810,6 @@ $("#microcontentModal").on("click", "#microcontent_edit_save", function () {
   if ($("#subtitle-file").val() !== "") {
     book.lang = $("#subtitle-lang").val();
     fd = new FormData();
-    fd.append("id", book.id);
     fd.append("lang", book.lang);
     fd.append("file", $("#subtitle-file").prop("files")[0]);
   }
@@ -823,6 +822,7 @@ $("#microcontentModal").on("click", "#microcontent_edit_save", function () {
     })
       .done((data) => {
         if (data !== "no_subtitle") {
+          fd.append("id", data.split('_')[0]);
           var postData = {
             url: LTI_URL + "/call/microcontent_subtitle.php",
             type: "POST",
