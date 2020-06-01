@@ -88,11 +88,11 @@ export const useSession = () =>
 
 export type WithState<T> = T & { state: "pending" | "success" | "failure" };
 
-export function makeFetcher<T extends object>(
+export function makeFetcher<T extends object, U extends any[]>(
   fetcher: fetcherFn<T>,
   initialState: T
-): (...args: any[]) => Promise<WithState<T>> {
-  async function fetch(...args: any[]) {
+): (...args: U) => Promise<WithState<T>> {
+  async function fetch(...args: U) {
     try {
       const res = await fetcher(...args);
       const state: WithState<T> = {
@@ -112,9 +112,9 @@ export function makeFetcher<T extends object>(
   return fetch;
 }
 
-export function useApi<T extends object>(
+export function useApi<T extends object, U extends any[]>(
   key: keyInterface,
-  fetcher: (...args: any[]) => Promise<T>,
+  fetcher: (...args: U) => Promise<T>,
   initialState: WithState<T>
 ): WithState<T> {
   const fetch = useMemo(() => makeFetcher(fetcher, initialState), [
