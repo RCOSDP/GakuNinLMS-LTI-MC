@@ -1,6 +1,5 @@
 import { ThemeProvider } from "@material-ui/styles";
-import { createMuiTheme } from "@material-ui/core/styles";
-import { blue, deepOrange } from "@material-ui/core/colors";
+import { Theme } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Box from "@material-ui/core/Box";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -16,26 +15,13 @@ import Head from "next/head";
 import { TopAppMenu } from "./TopAppMenu";
 import { useAppState } from "./state";
 import { useShowRegistContents } from "./api";
-
-export const mainTheme = {
-  palette: {
-    primary: {
-      main: blue[800],
-    },
-    secondary: {
-      main: deepOrange[500],
-    },
-  },
-  typography: {
-    fontFamily: "sans-serif",
-  },
-};
+import { theme } from "./theme";
 
 function Title(props: { children: ReactNode }) {
   return <Typography component="h1" variant="h6" color="inherit" {...props} />;
 }
 
-export const TopAppBar = (props: { title: string }) => {
+const TopAppBar = (props: { title: string }) => {
   useShowRegistContents();
   const popupState = usePopupState({
     variant: "popover",
@@ -61,22 +47,21 @@ export const TopAppBar = (props: { title: string }) => {
   );
 };
 
-export const MainTheme = (props: { children: ReactNode }) => {
+export const AppThemeProvider = (props: { children: ReactNode }) => {
   const prefersDarkMode = true; // TODO: useMediaQuery("(prefers-color-scheme: dark)");
-  const theme = useMemo(
-    () =>
-      createMuiTheme({
-        ...mainTheme,
-        palette: {
-          ...mainTheme.palette,
-          type: prefersDarkMode ? "dark" : "light",
-        },
-      }),
+  const appTheme = useMemo<Theme>(
+    () => ({
+      ...theme,
+      palette: {
+        ...theme.palette,
+        type: prefersDarkMode ? "dark" : "light",
+      },
+    }),
     [prefersDarkMode]
   );
   const title = useAppState().title;
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={appTheme}>
       <Head>
         <title>{title}</title>
       </Head>

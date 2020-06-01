@@ -1,5 +1,5 @@
 import App from "next/app";
-import { MainTheme } from "components/theme";
+import { AppThemeProvider } from "components/AppThemeProvider";
 import { StateProvider } from "components/state";
 
 export default class extends App {
@@ -7,9 +7,9 @@ export default class extends App {
     const { Component, pageProps } = this.props;
     return (
       <StateProvider>
-        <MainTheme>
+        <AppThemeProvider>
           <Component {...pageProps} />
-        </MainTheme>
+        </AppThemeProvider>
       </StateProvider>
     );
   }

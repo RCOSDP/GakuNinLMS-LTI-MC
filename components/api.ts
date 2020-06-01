@@ -54,8 +54,8 @@ type LinkedContentsResponse = {
   name: string;
 };
 
-export function registContents(id: string, name: string) {
-  mutate(registContentsPath, async () => {
+export async function registContents(id: string, name: string) {
+  await mutate(registContentsPath, async () => {
     const data = await textFetcher(
       registContentsPath,
       postForm({

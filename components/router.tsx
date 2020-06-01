@@ -3,7 +3,8 @@ import NextLink from "next/link";
 import { UrlObject, format } from "url";
 import { ReactNode } from "react";
 import { useRouter as useNextRouter } from "next/router";
-import * as config from "next.config.js";
+
+const basePath = process.env.NEXT_PUBLIC_API_BASE_PATH || "";
 
 export const validUrl = (url: any) => {
   try {
@@ -20,10 +21,10 @@ export const Link = (props: {
   const url =
     validUrl(props.href)?.href ??
     (typeof props.href === "string"
-      ? `${config.experimental.basePath}${props.href}.html`
+      ? `${basePath}${props.href}.html`
       : format({
           ...props.href,
-          pathname: `${config.experimental.basePath}${props.href.pathname}.html`,
+          pathname: `${basePath}${props.href.pathname}.html`,
         }));
 
   return (
@@ -42,10 +43,10 @@ export function useRouter() {
     const url =
       validUrl(urlOrPath)?.href ??
       (typeof urlOrPath === "string"
-        ? `${config.experimental.basePath}${urlOrPath}.html`
+        ? `${basePath}${urlOrPath}.html`
         : format({
             ...urlOrPath,
-            pathname: `${config.experimental.basePath}${urlOrPath.pathname}.html`,
+            pathname: `${basePath}${urlOrPath.pathname}.html`,
           }));
 
     return originalPush(urlOrPath, url);

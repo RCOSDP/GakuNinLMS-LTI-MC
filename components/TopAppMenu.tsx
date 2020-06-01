@@ -1,21 +1,18 @@
 import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
 import TheatersIcon from "@material-ui/icons/Theaters";
-import Typography from "@material-ui/core/Typography";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
-import { PopupState, bindMenu } from "material-ui-popup-state/hooks";
+import { PopupState } from "material-ui-popup-state/hooks";
 import { useRouter } from "./router";
-import Divider from "@material-ui/core/Divider";
 import { UrlObject } from "url";
+import { Menu } from "./Menu";
 
-type Item = {
+type AppMenuItem = {
   title: string;
   icon?: JSX.Element;
   href: string | UrlObject;
 };
+type AppMenu = Array<AppMenuItem | "divider">;
 
-const menuItems: (Item | string)[] = [
+const menuItems: AppMenu = [
   {
     title: "学習コンテンツ管理",
     icon: <LibraryBooksIcon />,
@@ -55,22 +52,18 @@ export function TopAppMenu(props: { popupState: PopupState }) {
   const router = useRouter();
 
   return (
-    <Menu {...bindMenu(props.popupState)}>
-      {menuItems.map((item, i) => {
-        if (typeof item === "string") return <Divider key={i} />;
-        return (
-          <MenuItem
-            key={i}
-            onClick={() => {
-              props.popupState.close();
-              router.push(item.href);
-            }}
-          >
-            {item.icon && <ListItemIcon>{item.icon}</ListItemIcon>}
-            <Typography variant="inherit">{item.title}</Typography>
-          </MenuItem>
-        );
+    <Menu
+      popupState={props.popupState}
+      items={menuItems.map((item) => {
+        if (typeof item === "string") return item;
+        return {
+          label: item.title,
+          icon: item.icon,
+          onClick: () => {
+            router.push(item.href);
+          },
+        };
       })}
-    </Menu>
+    />
   );
 }
