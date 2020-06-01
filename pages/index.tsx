@@ -1,14 +1,13 @@
 import { useEffect } from "react";
 
+const path = process.env.NEXT_PUBLIC_API_BASE_PATH || "";
 export default function () {
-  const to = new URL(
-    process.env.NEXT_PUBLIC_API_BASE_PATH || "",
-    document.location.href
-  );
   useEffect(() => {
-    if (document.location.href !== to.href) {
-      document.location.replace(to.href);
+    if (typeof window === 'undefined') return;
+    const url = new URL(path, document.location.href).href
+    if (document.location.href !== url) {
+      document.location.replace(url);
     }
   }, []);
-  return <a href={to.href}>Redirect</a>;
+  return <a href={path}>Redirect</a>;
 }
