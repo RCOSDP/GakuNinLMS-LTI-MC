@@ -4,7 +4,10 @@ import { UrlObject, format } from "url";
 import { ReactNode } from "react";
 import { useRouter as useNextRouter } from "next/router";
 
-const basePath = process.env.NEXT_PUBLIC_API_BASE_PATH || "";
+const basePath =
+  (process.env.NEXT_PUBLIC_API_BASE_PATH &&
+    `${process.env.NEXT_PUBLIC_API_BASE_PATH}/beta`) ||
+  "";
 
 export const validUrl = (url: any) => {
   try {
