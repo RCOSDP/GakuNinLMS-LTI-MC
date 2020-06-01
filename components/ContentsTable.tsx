@@ -2,7 +2,7 @@ import LinkIcon from "@material-ui/icons/Link";
 import Edit from "@material-ui/icons/Edit";
 import LibraryAdd from "@material-ui/icons/LibraryAdd";
 import { Column } from "material-table";
-import { useRouter } from "components/router";
+import { useRouter } from "./router";
 import { Table } from "./Table";
 import { registContents } from "./api";
 import { MouseEvent } from "react";

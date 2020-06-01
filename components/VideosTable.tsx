@@ -1,6 +1,6 @@
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import LibraryAdd from "@material-ui/icons/LibraryAdd";
-import { useRouter } from "components/router";
+import { useRouter } from "./router";
 import { Table } from "./Table";
 import { MouseEvent } from "react";
 import { Column } from "material-table";
