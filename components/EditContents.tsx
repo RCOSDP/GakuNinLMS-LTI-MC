@@ -6,6 +6,7 @@ import { ReorderVideos } from "./ReorderVideos";
 import { Typography, IconButton, Tooltip, Box } from "@material-ui/core";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import SaveIcon from "@material-ui/icons/Save";
+import { useSnackbar } from "material-ui-snackbar-provider";
 import { useRouter } from "next/router";
 import { registContents } from "./api";
 import { AddVideosButton } from "./contents/AddVideosButton";
@@ -14,22 +15,37 @@ import { VideosRow } from "./contents/VideosSelectorTable";
 
 export function EditContents(props: { contents: Contents; videos: Videos }) {
   const [contents, setContents] = useState<Contents>(props.contents);
+  const titleRef = useRef<HTMLHeadingElement>(document.createElement("h2"));
   useEffect(() => {
     if (props.contents.state === "success") setContents(props.contents);
-  }, [props.contents.state]);
+  }, [props.contents]);
+  useEffect(() => {
+    setContents((prev: Contents) => {
+      if (prev.state === "success" && !prev.title) {
+        prev.title = "名称未設定";
+        prev.state = "pending";
+      }
+      titleRef.current.textContent = prev.title;
+      return { ...prev };
+    });
+  }, [titleRef, props.contents, setContents]);
+
   const router = useRouter();
-  const playHandler = useCallback(async () => {
-    // TODO: ヒモ付処理は本来不要にしたい
-    if (!contents.id) return;
-    await registContents(contents.id, contents.title);
-    router.push("/");
-  }, [contents]);
+  const { showMessage } = useSnackbar();
   const saveHandler = useCallback(() => {
     if (contents.id) updateContents(contents as Required<Contents>);
     if (typeof window !== "undefined") {
       window.onbeforeunload = null;
     }
+    showMessage(`保存しました`);
   }, [updateContents, contents]);
+  const playHandler = useCallback(async () => {
+    // TODO: ヒモ付処理は本来不要にしたい
+    if (!contents.id) return;
+    saveHandler();
+    await registContents(contents.id, contents.title);
+    router.push("/");
+  }, [saveHandler, contents]);
   const editContents = useCallback(
     (dispatch: (c: Contents) => Contents) => {
       setContents(dispatch({ ...contents, state: "pending" }));
@@ -51,7 +67,6 @@ export function EditContents(props: { contents: Contents; videos: Videos }) {
     },
     [editContents]
   );
-  const titleRef = useRef<HTMLHeadingElement>(document.createElement("h2"));
   const editTitleHandler = useCallback(
     (event: FormEvent<HTMLHeadingElement>) => {
       const title = (event.currentTarget.textContent || "").replace(/\s/g, " ");
@@ -59,15 +74,6 @@ export function EditContents(props: { contents: Contents; videos: Videos }) {
     },
     [editTitle]
   );
-  useEffect(() => {
-    setContents((prev: Contents) => {
-      if (prev.state === "success" && !prev.title) {
-        prev.title = "名称未設定";
-      }
-      titleRef.current.textContent = prev.title;
-      return { ...prev };
-    });
-  }, [titleRef, setContents]);
 
   const reorderVideo = useCallback(
     (source: number, destination: number) => {
@@ -143,6 +149,7 @@ export function EditContents(props: { contents: Contents; videos: Videos }) {
               marginBottom: 8,
             }}
             onClick={playHandler}
+            disabled={contents.state !== "success"}
           >
             <PlayArrowIcon />
           </IconButton>
