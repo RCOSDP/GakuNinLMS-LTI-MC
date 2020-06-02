@@ -33,6 +33,9 @@ export function Table<T extends object>(
         header: {
           actions: "",
         },
+        toolbar: {
+          nRowsSelected: "{0}つ選択されました",
+        },
       }}
       components={{
         Container: (props) => <div {...props} />,

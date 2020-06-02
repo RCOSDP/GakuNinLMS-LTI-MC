@@ -1,4 +1,3 @@
-import { useCallback } from "react";
 import {
   DragDropContext,
   DropResult,
@@ -30,14 +29,11 @@ export function ReorderVideos(props: {
   onEditVideo: (index: number) => void;
   onDeleteVideo: (index: number) => void;
 }) {
-  const onDragEnd = useCallback(
-    ({ source, destination }: DropResult) => {
-      if (!destination) return;
-      if (source === destination) return;
-      props.onVideoDragEnd(source.index, destination.index);
-    },
-    [props.onVideoDragEnd]
-  );
+  function onDragEnd({ source, destination }: DropResult) {
+    if (!destination) return;
+    if (source === destination) return;
+    props.onVideoDragEnd(source.index, destination.index);
+  }
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
@@ -47,8 +43,8 @@ export function ReorderVideos(props: {
             {props.videos.map((video, index) => (
               <DraggableVideo
                 index={index}
-                draggableId={String(video.id)}
-                key={video.id}
+                draggableId={`${index}#${video.id}`}
+                key={`${index}#${video.id}`}
                 video={video}
                 onEditVideo={props.onEditVideo}
                 onDeleteVideo={props.onDeleteVideo}

@@ -1,4 +1,4 @@
-import { useContentsIndex, updateContents } from "components/contents";
+import { useContentsIndex } from "components/contents";
 import { ContentsTable } from "components/ContentsTable";
 import { NewContents } from "components/NewContents";
 import { ShowContents } from "components/ShowContents";
@@ -6,6 +6,7 @@ import { EditContents } from "components/EditContents";
 import { useRouter } from "components/router";
 import { useAppTitle } from "components/state";
 import { useContents } from "components/contents";
+import { useVideos } from "components/video";
 
 type Query = { id?: string; action?: "edit" | "new" };
 
@@ -32,7 +33,8 @@ function Show(props: { id: string }) {
 }
 function Edit(props: { id: string }) {
   const contents = useContents(Number(props.id));
-  return <EditContents contents={contents} updateContents={updateContents} />;
+  const videos = useVideos();
+  return <EditContents contents={contents} videos={videos} />;
 }
 function New() {
   const contents = useContents();

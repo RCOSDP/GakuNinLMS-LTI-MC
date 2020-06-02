@@ -3,75 +3,122 @@ import { reorder } from "./reorder";
 import { produce } from "immer";
 import { Contents, updateContents } from "./contents";
 import { ReorderVideos } from "./ReorderVideos";
-import { Typography, IconButton, Tooltip, Box, Fab } from "@material-ui/core";
+import { Typography, IconButton, Tooltip, Box } from "@material-ui/core";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
-import AddIcon from "@material-ui/icons/Add";
 import SaveIcon from "@material-ui/icons/Save";
 import { useRouter } from "next/router";
 import { registContents } from "./api";
+import { AddVideosButton } from "./contents/AddVideosButton";
+import { Videos } from "./video";
+import { VideosRow } from "./contents/VideosSelectorTable";
 
-export function EditContents(props: {
-  contents: Contents;
-  updateContents(contents: Required<Contents>): void;
-}) {
+export function EditContents(props: { contents: Contents; videos: Videos }) {
   const [contents, setContents] = useState<Contents>(props.contents);
   useEffect(() => {
     if (props.contents.state === "success") setContents(props.contents);
   }, [props.contents.state]);
-
-  function onVideoDragEnd(source: number, destination: number) {
-    setContents((contents) =>
-      produce(contents, (draft) => {
-        draft.videos = reorder(draft.videos, source, destination);
-      })
-    );
-  }
-  function onEditVideo(index: number, title: string) {
-    setContents((contents) =>
-      produce(contents, (draft) => {
-        draft.videos[index].title = title;
-      })
-    );
-  }
-  function onDeleteVideo(index: number) {
-    setContents((contents) =>
-      produce(contents, (draft) => {
-        draft.videos.splice(index, 1);
-      })
-    );
-  }
-  function onEditTitle(title: string) {
-    setContents((contents) =>
-      produce(contents, (draft) => {
-        draft.title = title;
-      })
-    );
-  }
-
-  async function editVideoHandler(index: number) {
-    // TODO: promptは標準ではないので他の何らかのインタラクティブな入力方法に変更したい
-    const title = prompt(
-      "新しいタイトルを入力して下さい",
-      contents.videos[index].title
-    );
-    title && onEditVideo(index, title);
-  }
   const router = useRouter();
   const playHandler = useCallback(async () => {
     // TODO: ヒモ付処理は本来不要にしたい
     await registContents(String(contents.id), contents.title);
     router.push("/");
   }, [contents]);
-
   const saveHandler = useCallback(() => {
     if (contents.id) updateContents(contents as Required<Contents>);
+    if (typeof window !== "undefined") {
+      window.onbeforeunload = null;
+    }
   }, [updateContents, contents]);
-
-  // NOTE: onEditTitle
+  const editContents = useCallback(
+    (dispatch: (c: Contents) => Contents) => {
+      setContents(dispatch({ ...contents, state: "pending" }));
+      if (typeof window !== "undefined") {
+        window.onbeforeunload = function (e: BeforeUnloadEvent) {
+          e.returnValue = "";
+        };
+      }
+    },
+    [contents, setContents]
+  );
+  const editTitle = useCallback(
+    (title: string) => {
+      editContents((contents) =>
+        produce(contents, (draft) => {
+          draft.title = title;
+        })
+      );
+    },
+    [editContents]
+  );
   const titleRef = useRef<HTMLHeadingElement>(document.createElement("h2"));
+  const editTitleHandler = useCallback(
+    (event: FormEvent<HTMLHeadingElement>) => {
+      const title = (event.currentTarget.textContent || "").replace(/\s/g, " ");
+      editTitle(title);
+    },
+    [editTitle]
+  );
   useEffect(() => {
-    titleRef.current.textContent = contents.title;
-  }, [titleRef, contents.title]);
+    setContents((prev: Contents) => {
+      if (prev.state === "success" && !prev.title) {
+        prev.title = "名称未設定";
+      }
+      titleRef.current.textContent = prev.title;
+      return { ...prev };
+    });
+  }, [titleRef, setContents]);
+
+  const reorderVideo = useCallback(
+    (source: number, destination: number) => {
+      editContents((contents) =>
+        produce(contents, (draft) => {
+          draft.videos = reorder(draft.videos, source, destination);
+        })
+      );
+    },
+    [editContents]
+  );
+  const editVideoTitle = useCallback(
+    (index: number, title: string) => {
+      editContents((contents) =>
+        produce(contents, (draft) => {
+          draft.videos[index].title = title;
+        })
+      );
+    },
+    [editContents]
+  );
+  const deleteVideo = useCallback(
+    (index: number) => {
+      editContents((contents) =>
+        produce(contents, (draft) => {
+          draft.videos.splice(index, 1);
+        })
+      );
+    },
+    [editContents]
+  );
+  const addVideo = useCallback(
+    (selected: VideosRow[]) => {
+      editContents((contents) =>
+        produce(contents, (draft) => {
+          draft.videos = draft.videos.concat(selected);
+        })
+      );
+    },
+    [editContents]
+  );
+  const editVideoTitleHandler = useCallback(
+    (index: number) => {
+      // TODO: promptは標準ではないので他の何らかのインタラクティブな入力方法に変更したい
+      const title = prompt(
+        "新しいタイトルを入力して下さい",
+        contents.videos[index].title
+      );
+      title && editVideoTitle(index, title);
+    },
+    [editVideoTitle]
+  );
 
   return (
     <>
@@ -107,24 +154,21 @@ export function EditContents(props: {
             display: "inline",
           }}
           contentEditable
-          onInput={(event: FormEvent<HTMLHeadingElement>) => {
-            if (event.currentTarget.textContent)
-              onEditTitle(event.currentTarget.textContent);
-          }}
+          onInput={editTitleHandler}
         />
       </Box>
       <ReorderVideos
         videos={contents.videos}
-        onVideoDragEnd={onVideoDragEnd}
-        onEditVideo={editVideoHandler}
-        onDeleteVideo={onDeleteVideo}
+        onVideoDragEnd={reorderVideo}
+        onEditVideo={editVideoTitleHandler}
+        onDeleteVideo={deleteVideo}
       />
-      <Box mt={2} textAlign="center">
-        <Tooltip title="ビデオを追加する">
-          <Fab aria-label="add">
-            <AddIcon />
-          </Fab>
-        </Tooltip>
+      <Box mt={2} mb={4} textAlign="center">
+        <AddVideosButton
+          videos={props.videos}
+          onOpen={() => {}}
+          onClose={addVideo}
+        />
       </Box>
     </>
   );
