@@ -1,13 +1,14 @@
 import { useState, useCallback, FormEvent, useRef, useEffect } from "react";
 import { reorder } from "./reorder";
 import { produce } from "immer";
-import { Contents, updateContents } from "./contents";
+import { Contents, updateContents, createContents } from "./contents";
 import { ReorderVideos } from "./ReorderVideos";
 import { Typography, IconButton, Tooltip, Box } from "@material-ui/core";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import SaveIcon from "@material-ui/icons/Save";
 import { useSnackbar } from "material-ui-snackbar-provider";
-import { useRouter } from "next/router";
+import { useRouter } from "./router";
+import { useRouter as useNextRouter } from "next/router";
 import { registContents } from "./api";
 import { AddVideosButton } from "./contents/AddVideosButton";
 import { Videos } from "./video";
@@ -31,9 +32,22 @@ export function EditContents(props: { contents: Contents; videos: Videos }) {
   }, [titleRef, props.contents, setContents]);
 
   const router = useRouter();
+  const nextRouter = useNextRouter();
   const { showMessage } = useSnackbar();
-  const saveHandler = useCallback(() => {
-    if (contents.id) updateContents(contents as Required<Contents>);
+  const saveHandler = useCallback(async () => {
+    if (contents.id) {
+      await updateContents(contents as Required<Contents>);
+    } else {
+      const id = await createContents(contents);
+      if (!id) return;
+      router.push({
+        pathname: "/contents",
+        query: {
+          id,
+          action: "edit",
+        },
+      });
+    }
     if (typeof window !== "undefined") {
       window.onbeforeunload = null;
     }
@@ -44,7 +58,7 @@ export function EditContents(props: { contents: Contents; videos: Videos }) {
     if (!contents.id) return;
     saveHandler();
     await registContents(contents.id, contents.title);
-    router.push("/");
+    nextRouter.push("/");
   }, [saveHandler, contents]);
   const editContents = useCallback(
     (dispatch: (c: Contents) => Contents) => {
@@ -174,7 +188,7 @@ export function EditContents(props: { contents: Contents; videos: Videos }) {
       <Box mt={2} mb={4} textAlign="center">
         <AddVideosButton
           videos={props.videos}
-          onOpen={() => {}}
+          onOpen={() => { }}
           onClose={addVideo}
         />
       </Box>

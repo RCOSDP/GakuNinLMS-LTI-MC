@@ -1,6 +1,5 @@
 import { useContentsIndex } from "components/contents";
 import { ContentsTable } from "components/ContentsTable";
-import { NewContents } from "components/NewContents";
 import { ShowContents } from "components/ShowContents";
 import { EditContents } from "components/EditContents";
 import { useRouter } from "components/router";
@@ -38,7 +37,8 @@ function Edit(props: { id: string }) {
 }
 function New() {
   const contents = useContents();
-  return <NewContents {...contents} />;
+  const videos = useVideos();
+  return <EditContents contents={contents} videos={videos} />;
 }
 
 function Router() {

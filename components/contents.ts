@@ -119,10 +119,12 @@ export async function createContents(contents: ContentsSchema) {
     contents: contents.videos.map(({ id, title }) => [id, title]),
   };
   try {
-    const id = await textFetcher(url, postJson(req));
-    success({ ...contents, id: Number(id) });
+    const id = Number(await textFetcher(url, postJson(req)));
+    success({ ...contents, id });
+    return id;
   } catch {
     failure(contents.id);
+    return;
   }
 }
 
