@@ -50,11 +50,10 @@ export function postJson<T extends object>(
 }
 
 type LinkedContentsResponse = {
-  id: string;
+  id: number;
   name: string;
 };
-
-export async function registContents(id: string, name: string) {
+export async function registContents(id: number, name: string) {
   await mutate(registContentsPath, async () => {
     const data = await textFetcher(
       registContentsPath,

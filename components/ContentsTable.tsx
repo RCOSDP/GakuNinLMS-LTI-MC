@@ -76,9 +76,13 @@ export function ContentsTable(props: ContentsIndex) {
 
 export function ContentsSelectorTable(props: ContentsIndex) {
   const router = useRouter();
-  function rowClickHandler<T>(event?: MouseEvent, row?: T) {
+  function rowClickHandler(
+    event?: MouseEvent,
+    row?: ContentsRow | ContentsRow[]
+  ) {
     const contents = Array.isArray(row) ? row[0] : row;
-    registContents(contents.id, contents.name);
+    if (contents == null) return;
+    registContents(contents.id, contents.title);
     router.push("/contents");
     event?.preventDefault();
   }

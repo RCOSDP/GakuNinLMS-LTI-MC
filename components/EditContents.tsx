@@ -20,7 +20,8 @@ export function EditContents(props: { contents: Contents; videos: Videos }) {
   const router = useRouter();
   const playHandler = useCallback(async () => {
     // TODO: ヒモ付処理は本来不要にしたい
-    await registContents(String(contents.id), contents.title);
+    if (!contents.id) return;
+    await registContents(contents.id, contents.title);
     router.push("/");
   }, [contents]);
   const saveHandler = useCallback(() => {
