@@ -2,6 +2,7 @@ import { useContentsIndex } from "components/contents";
 import { ContentsTable } from "components/ContentsTable";
 import { ShowContents } from "components/ShowContents";
 import { EditContents } from "components/EditContents";
+import { NewContents } from "components/NewContents";
 import { useRouter } from "components/router";
 import { useAppTitle } from "components/state";
 import { useContents } from "components/contents";
@@ -38,7 +39,7 @@ function Edit(props: { id: string }) {
 function New() {
   const contents = useContents();
   const videos = useVideos();
-  return <EditContents contents={contents} videos={videos} />;
+  return <NewContents contents={contents} videos={videos} />;
 }
 
 function Router() {
