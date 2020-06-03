@@ -148,7 +148,7 @@ export async function destroyContents(id: ContentsSchema["id"]) {
     await failure(id);
     return;
   }
-  const url = `${process.env.NEXT_PUBLIC_API_BASE_PATH}/call/call/content_delete.php`;
+  const url = `${process.env.NEXT_PUBLIC_API_BASE_PATH}/call/content_delete.php`;
   const req: DestroyContentsRequest = {
     content_id: id.toString(),
   };
