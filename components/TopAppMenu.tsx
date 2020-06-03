@@ -46,6 +46,7 @@ const menuItems: AppMenu = [
       },
     },
   },
+  "divider",
   {
     title: "学習管理システム連携",
     href: "/edit",
