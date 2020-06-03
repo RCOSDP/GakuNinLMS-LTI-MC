@@ -84,13 +84,16 @@ foreach ($level as $row) {
 }
 
 $lang = $arr['lang'];
-if (!$lang) {
+$subtitles = $arr['subtitles'] ?: [$arr['lang']];
+
+if (!$lang || !$subtitles[0]) {
   // FIXME: クライアント側の不具合
   // http_response_code(400);
   echo "no_subtitle";
   return;
 }
 
+// FIXME: With subtitles
 $sth = $db->prepare(<<<'SQL'
   SELECT id, lang FROM mc_subtitle
   WHERE
@@ -99,6 +102,7 @@ SQL);
 
 $sth->execute([$microcontentid, $lang]);
 
+// FIXME: With subtitles
 if ($row = $sth->fetch()) {
   $subtitle_id = $row['id'];
 

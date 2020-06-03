@@ -68,7 +68,17 @@ foreach ($level as $row) {
 }
 
 $lang = $arr['lang'];
-if ($lang) {
+$subtitles = $arr['subtitles'] ?: [$arr['lang']];
+
+if (!$lang || !$subtitles[0]) {
+  // FIXME: クライアント側の不具合
+  // http_response_code(400);
+  echo "no_subtitle";
+  return;
+}
+
+foreach ($subtitles as $sub) {
+  if (!$sub['lang']) continue;
   $db->prepare(<<<'SQL'
     INSERT INTO mc_subtitle
       (microcontentid, lang, timecreated, timemodified, createdby, modifiedby)
@@ -76,15 +86,17 @@ if ($lang) {
       (:microcontentid, :lang, :time, :time, :uid, :uid)
   SQL)->execute([
     ':microcontentid' => $microcontentid,
-    ':lang' => $lang,
+    ':lang' => $sub['lang'],
     ':time' => $time,
     ':uid' => $uid
   ]);
+}
 
-  http_response_code(201);
+http_response_code(201);
+if ($lang) {
+  // NOTE: for static/js/common.js
   echo "{$microcontentid}_{$lang}";
 } else {
-  // FIXME: クライアント側の不具合
-  // http_response_code(400);
-  echo "no_subtitle";
+  // NOTE: for components/video.ts
+  echo $microcontentid;
 }
