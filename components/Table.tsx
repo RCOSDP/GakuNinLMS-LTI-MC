@@ -34,7 +34,7 @@ export function Table<T extends object>(
           actions: "",
         },
         toolbar: {
-          nRowsSelected: "{0}つ選択されました",
+          nRowsSelected: "{0}個選択されました",
         },
       }}
       components={{
