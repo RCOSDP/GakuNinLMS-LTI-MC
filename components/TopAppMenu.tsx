@@ -1,5 +1,7 @@
 import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
 import TheatersIcon from "@material-ui/icons/Theaters";
+import LibraryAddIcon from "@material-ui/icons/LibraryAdd";
+import AddCircleIcon from "@material-ui/icons/AddCircle";
 import { PopupState } from "material-ui-popup-state/hooks";
 import { useRouter } from "./router";
 import { UrlObject } from "url";
@@ -26,6 +28,7 @@ const menuItems: AppMenu = [
   "divider",
   {
     title: "学習コンテンツを作成する",
+    icon: <LibraryAddIcon />,
     href: {
       pathname: "/contents",
       query: {
@@ -35,6 +38,7 @@ const menuItems: AppMenu = [
   },
   {
     title: "ビデオを追加する",
+    icon: <AddCircleIcon />,
     href: {
       pathname: "/videos",
       query: {
