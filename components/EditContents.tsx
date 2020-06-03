@@ -188,7 +188,7 @@ export function EditContents(props: { contents: Contents; videos: Videos }) {
       <Box mt={2} mb={4} textAlign="center">
         <AddVideosButton
           videos={props.videos}
-          onOpen={() => { }}
+          onOpen={() => {}}
           onClose={addVideo}
         />
       </Box>
