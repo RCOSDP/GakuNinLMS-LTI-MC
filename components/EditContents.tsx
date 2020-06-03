@@ -52,14 +52,14 @@ export function EditContents(props: { contents: Contents; videos: Videos }) {
       window.onbeforeunload = null;
     }
     showMessage(`保存しました`);
-  }, [updateContents, contents]);
+  }, [contents, showMessage, router]);
   const playHandler = useCallback(async () => {
     // TODO: ヒモ付処理は本来不要にしたい
     if (!contents.id) return;
     saveHandler();
     await registContents(contents.id, contents.title);
     nextRouter.push("/");
-  }, [saveHandler, contents]);
+  }, [saveHandler, contents, nextRouter]);
   const editContents = useCallback(
     (dispatch: (c: Contents) => Contents) => {
       setContents(dispatch({ ...contents, state: "pending" }));
