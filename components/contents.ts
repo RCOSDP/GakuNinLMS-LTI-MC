@@ -106,8 +106,7 @@ export const useContents = (id?: number) =>
 
 export async function showContents(id: ContentsSchema["id"]) {
   if (id == null) {
-    failure(id);
-    return;
+    return failure(id);
   }
   return mutate([key, id]);
 }
@@ -123,7 +122,7 @@ export async function createContents(contents: ContentsSchema) {
     await success({ ...contents, id });
     return id;
   } catch {
-    await failure(contents.id);
+    failure(contents.id);
     return;
   }
 }
@@ -137,16 +136,15 @@ export async function updateContents(contents: Required<ContentsSchema>) {
   };
   try {
     await textFetcher(url, postJson(req));
-    await success(contents);
+    return await success(contents);
   } catch {
-    await failure(contents.id);
+    return await failure(contents.id);
   }
 }
 
 export async function destroyContents(id: ContentsSchema["id"]) {
   if (id == null) {
-    await failure(id);
-    return;
+    return await failure(id);
   }
   const url = `${process.env.NEXT_PUBLIC_API_BASE_PATH}/call/content_delete.php`;
   const req: DestroyContentsRequest = {
@@ -154,25 +152,29 @@ export async function destroyContents(id: ContentsSchema["id"]) {
   };
   try {
     await textFetcher(url, postForm(req));
-    await success({ ...initialContents, id });
+    return await success({ ...initialContents, id });
   } catch {
-    await failure(id);
+    return await failure(id);
   }
 }
 
-function success(contents: Required<ContentsSchema>) {
-  return mutate([key, contents.id], (prev?: Contents) => ({
+async function success(contents: Required<ContentsSchema>) {
+  await mutate([key, contents.id], (prev?: Contents) => ({
     ...(prev || initialContents),
     ...contents,
     state: "success",
   }));
+  await mutate(key);
+  return true;
 }
 
-function failure(id: ContentsSchema["id"]) {
-  return mutate([key, id], (prev?: Contents) => ({
+async function failure(id: ContentsSchema["id"]) {
+  await mutate([key, id], (prev?: Contents) => ({
     ...(prev || initialContents),
     state: "failure",
   }));
+  await mutate(key);
+  return false;
 }
 
 type CreateContentsRequest = {

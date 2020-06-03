@@ -148,12 +148,10 @@ export async function createVideo(video: VideoSchema, subtitles: Array<File>) {
     id = Number(await textFetcher(url, postJson(req)));
   } catch {}
   if (!id) {
-    await failure(video.id);
-    return;
+    return await failure(video.id);
   }
   if (video.subtitles.length === 0) {
-    await success({ ...video, id });
-    return;
+    return await success({ ...video, id });
   }
 
   // NOTE: With subtitle files
@@ -168,11 +166,9 @@ export async function createVideo(video: VideoSchema, subtitles: Array<File>) {
   });
   try {
     await Promise.all(createSubtitles);
-    await success({ ...video, id });
-    return;
+    return await success({ ...video, id });
   } catch {
-    await failure(video.id);
-    return;
+    return await failure(video.id);
   }
 }
 type CreateVideoRequest = {
@@ -209,17 +205,16 @@ export async function updateVideo(
     id = Number(await textFetcher(url, postJson(req)));
   } catch {}
   if (!id) {
-    await failure(video.id);
-    return;
+    return await failure(video.id);
   }
   if (video.subtitles.length === 0) {
-    await success({ ...video, id });
-    return;
+    return await success({ ...video, id });
   }
 
   // TODO: With subtitle files
   // POST /call/microcontent_subtitle.php
   // type UpdateVideoSubtitleRequest = CreateVideoSubtitleRequest;
+  return true;
 }
 type UpdateVideoRequest = {
   id: number;
@@ -227,8 +222,7 @@ type UpdateVideoRequest = {
 
 export async function destroyVideo(id: VideoSchema["id"]) {
   if (id == null) {
-    await failure(id);
-    return;
+    return await failure(id);
   }
   const url = `${process.env.NEXT_PUBLIC_API_BASE_PATH}/call/microcontent_delete.php`;
   const req: DestroyVideoRequest = {
@@ -236,26 +230,30 @@ export async function destroyVideo(id: VideoSchema["id"]) {
   };
   try {
     await textFetcher(url, postForm(req));
-    await success({ ...initialVideo, id });
+    return await success({ ...initialVideo, id });
   } catch {
-    await failure(id);
+    return await failure(id);
   }
 }
 type DestroyVideoRequest = {
   microcontentid: string;
 };
 
-function success(video: Required<VideoSchema>) {
-  return mutate([key, video.id], (prev?: Video) => ({
+async function success(video: Required<VideoSchema>) {
+  await mutate([key, video.id], (prev?: Video) => ({
     ...(prev || initialVideo),
     ...video,
     state: "success",
   }));
+  await mutate(key);
+  return true;
 }
 
-function failure(id: VideoSchema["id"]) {
-  return mutate([key, id], (prev?: Video) => ({
+async function failure(id: VideoSchema["id"]) {
+  await mutate([key, id], (prev?: Video) => ({
     ...(prev || initialVideo),
     state: "failure",
   }));
+  await mutate(key);
+  return true;
 }
