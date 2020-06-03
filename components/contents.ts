@@ -109,7 +109,7 @@ export async function showContents(id: ContentsSchema["id"]) {
     failure(id);
     return;
   }
-  mutate([key, id]);
+  return mutate([key, id]);
 }
 
 export async function createContents(contents: ContentsSchema) {
@@ -120,10 +120,10 @@ export async function createContents(contents: ContentsSchema) {
   };
   try {
     const id = Number(await textFetcher(url, postJson(req)));
-    success({ ...contents, id });
+    await success({ ...contents, id });
     return id;
   } catch {
-    failure(contents.id);
+    await failure(contents.id);
     return;
   }
 }
@@ -137,15 +137,15 @@ export async function updateContents(contents: Required<ContentsSchema>) {
   };
   try {
     await textFetcher(url, postJson(req));
-    success(contents);
+    await success(contents);
   } catch {
-    failure(contents.id);
+    await failure(contents.id);
   }
 }
 
 export async function destroyContents(id: ContentsSchema["id"]) {
   if (id == null) {
-    failure(id);
+    await failure(id);
     return;
   }
   const url = `${process.env.NEXT_PUBLIC_API_BASE_PATH}/call/call/content_delete.php`;
@@ -154,14 +154,14 @@ export async function destroyContents(id: ContentsSchema["id"]) {
   };
   try {
     await textFetcher(url, postForm(req));
-    success({ ...initialContents, id });
+    await success({ ...initialContents, id });
   } catch {
-    failure(id);
+    await failure(id);
   }
 }
 
 function success(contents: Required<ContentsSchema>) {
-  mutate([key, contents.id], (prev?: Contents) => ({
+  return mutate([key, contents.id], (prev?: Contents) => ({
     ...(prev || initialContents),
     ...contents,
     state: "success",
@@ -169,7 +169,7 @@ function success(contents: Required<ContentsSchema>) {
 }
 
 function failure(id: ContentsSchema["id"]) {
-  mutate([key, id], (prev?: Contents) => ({
+  return mutate([key, id], (prev?: Contents) => ({
     ...(prev || initialContents),
     state: "failure",
   }));
