@@ -24,16 +24,6 @@ export function EditVideo(props: { video: Video }) {
   useEffect(() => {
     if (props.video.state === "success") setVideo(props.video);
   }, [props.video]);
-  useEffect(() => {
-    setVideo((prev: Video) => {
-      if (prev.state === "success" && !prev.title) {
-        prev.title = "名称未設定";
-        prev.state = "pending";
-      }
-      return { ...prev };
-    });
-  }, [props.video, setVideo]);
-
   const router = useRouter();
   const { showMessage } = useSnackbar();
   const saveHandler = useCallback(async () => {
@@ -70,7 +60,7 @@ export function EditVideo(props: { video: Video }) {
     },
     [video, setVideo]
   );
-  const inputHandler = useCallback(
+  const onChangeHandler = useCallback(
     (event: FormEvent<HTMLFormElement>) => {
       const form = new FormData(event.currentTarget);
       edit((video) =>
@@ -129,7 +119,7 @@ export function EditVideo(props: { video: Video }) {
   );
 
   return (
-    <form onInput={inputHandler} onSubmit={submitHandler}>
+    <form onChange={onChangeHandler} onSubmit={submitHandler}>
       <Box my={2}>
         <TextField
           name="title"
@@ -142,7 +132,10 @@ export function EditVideo(props: { video: Video }) {
       </Box>
       <Box my={2}>
         <Box my={1}>
-          <Player youtubeVideoId={video.youtubeVideoId} />
+          <Player
+            youtubeVideoId={video.youtubeVideoId}
+            subtitles={video.subtitles}
+          />
         </Box>
         <TextField
           name="youtubeVideoId"

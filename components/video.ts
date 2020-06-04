@@ -78,7 +78,7 @@ const initialVideo: Video = {
   state: "pending",
 };
 const fetchVideo = makeFetcher(async (_: typeof key, id: number) => {
-  if (id == null) return initialVideo;
+  if (id == null) return (await fetchInitialVideo()) || initialVideo;
   const url = `${process.env.NEXT_PUBLIC_API_BASE_PATH}/call/microcontent_edit.php`;
   const req: ShowVideoRequest = {
     microcontent_id: id.toString(),
@@ -90,6 +90,11 @@ const fetchVideo = makeFetcher(async (_: typeof key, id: number) => {
     id,
     ...video,
   };
+}, initialVideo);
+const fetchInitialVideo = makeFetcher(async (_: typeof key) => {
+  const url = `${process.env.NEXT_PUBLIC_API_BASE_PATH}/call/microcontent_new.php`;
+  const video: VideoSchema = await jsonFetcher(url).then(initialVideoHandler);
+  return video;
 }, initialVideo);
 function showVideoHandler(res: ShowVideoResponse): VideoSchema {
   return {
@@ -117,6 +122,26 @@ function showVideoHandler(res: ShowVideoResponse): VideoSchema {
     })),
   };
 }
+function initialVideoHandler(res: InitialVideoResponse): VideoSchema {
+  return {
+    ...initialVideo,
+    skills: res.skills.map(({ id, name }) => ({
+      id: Number(id),
+      name,
+      has: false,
+    })),
+    tasks: res.tasks.map(({ id, name }) => ({
+      id: Number(id),
+      name,
+      has: false,
+    })),
+    levels: res.levels.map(({ id, name }) => ({
+      id: Number(id),
+      name,
+      has: false,
+    })),
+  };
+}
 type ShowVideoRequest = {
   microcontent_id: string;
 };
@@ -128,6 +153,11 @@ type ShowVideoResponse = {
   skills: Array<{ id: string; name: string; checked: "" | "checked" }>;
   tasks: Array<{ id: string; name: string; checked: "" | "checked" }>;
   levels: Array<{ id: string; name: string; checked: "" | "checked" }>;
+};
+type InitialVideoResponse = {
+  skills: Array<{ id: string; name: string }>;
+  tasks: Array<{ id: string; name: string }>;
+  levels: Array<{ id: string; name: string }>;
 };
 export const useVideo = (id?: number) =>
   useApi([key, id], fetchVideo, initialVideo);
@@ -193,9 +223,7 @@ type CreateVideoSubtitleRequest = {
   file: File;
 };
 
-export async function updateVideo(
-  video: Required<VideoSchema> /* TODO:, subtitles: Array<File> */
-) {
+export async function updateVideo(video: Required<VideoSchema>) {
   const url = `${process.env.NEXT_PUBLIC_API_BASE_PATH}/call/microcontent_update.php`;
   const req: UpdateVideoRequest = {
     id: video.id,
