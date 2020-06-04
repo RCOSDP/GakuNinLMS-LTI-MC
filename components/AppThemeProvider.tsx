@@ -16,6 +16,7 @@ import { TopAppMenu } from "./TopAppMenu";
 import { useAppState } from "./state";
 import { useShowRegistContents } from "./api";
 import { theme } from "./theme";
+import { useLmsSession, isLmsInstructor } from "./session";
 
 function Title(props: { children: ReactNode }) {
   return <Typography component="h1" variant="h6" color="inherit" {...props} />;
@@ -48,6 +49,8 @@ const TopAppBar = (props: { title: string }) => {
 };
 
 export const AppThemeProvider = (props: { children: ReactNode }) => {
+  const session = useLmsSession();
+  const isInstructor = useMemo(() => isLmsInstructor(session), [session]);
   const prefersDarkMode = true; // TODO: useMediaQuery("(prefers-color-scheme: dark)");
   const appTheme = useMemo<Theme>(
     () => ({
@@ -67,8 +70,8 @@ export const AppThemeProvider = (props: { children: ReactNode }) => {
       </Head>
       <CssBaseline />
       <SnackbarProvider SnackbarProps={{ autoHideDuration: 5e3 }}>
-        <TopAppBar title={title} />
-        <Box pt={12} component={Container}>
+        {isInstructor && <TopAppBar title={title} />}
+        <Box pt={isInstructor ? 12 : 0} component={Container}>
           {props.children}
         </Box>
       </SnackbarProvider>
