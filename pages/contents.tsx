@@ -7,10 +7,12 @@ import { useRouter } from "components/router";
 import { useAppTitle } from "components/state";
 import { useContents } from "components/contents";
 import { useVideos } from "components/video";
+import { useLmsSession, useLmsInstructor } from "components/session";
 
 type Query = { id?: string; action?: "edit" | "new" };
 
 function Index() {
+  useLmsInstructor();
   const contentsIndex = useContentsIndex();
 
   switch (contentsIndex.state) {
@@ -28,15 +30,18 @@ function Index() {
 }
 
 function Show(props: { id: string }) {
+  useLmsSession();
   const contents = useContents(Number(props.id));
   return <ShowContents contents={contents} />;
 }
 function Edit(props: { id: string }) {
+  useLmsInstructor();
   const contents = useContents(Number(props.id));
   const videos = useVideos();
   return <EditContents contents={contents} videos={videos} />;
 }
 function New() {
+  useLmsInstructor();
   const contents = useContents();
   const videos = useVideos();
   return <NewContents contents={contents} videos={videos} />;

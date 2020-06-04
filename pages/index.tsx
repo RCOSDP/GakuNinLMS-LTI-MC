@@ -1,16 +1,15 @@
-import { useSession } from "components/api";
+import { useLmsSession } from "components/session";
 import { useRouter } from "components/router";
 
 export default function () {
-  const { data, error } = useSession();
+  const sesssion = useLmsSession();
   const router = useRouter();
 
-  if (error) return <div>failed to load</div>;
-  if (data?.contents) {
+  if (sesssion?.contents) {
     router.replace({
       pathname: "/contents",
       query: {
-        id: data.contents,
+        id: sesssion.contents,
         action: "show",
       },
     });

@@ -1,6 +1,7 @@
 import { useVideos, useVideo } from "components/video";
 import { useAppTitle } from "components/state";
 import { useRouter } from "components/router";
+import { useLmsInstructor } from "components/session";
 import { VideosTable } from "components/VideosTable";
 import { ShowVideo } from "components/ShowVideo";
 import { EditVideo } from "components/EditVideo";
@@ -38,6 +39,7 @@ function New() {
 }
 
 function Router() {
+  useLmsInstructor();
   const router = useRouter();
   const query: Query = router.query;
 

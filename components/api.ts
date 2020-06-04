@@ -7,7 +7,7 @@ const basePath = process.env.NEXT_PUBLIC_API_BASE_PATH || "";
 const sessionPath = `${basePath}/call/session.php`;
 const registContentsPath = `${basePath}/call/content_regist.php`;
 
-type SessionResponse = {
+export type SessionResponse = {
   id: string;
   role: "administrator" | "instructor" | "";
   contents?: number;

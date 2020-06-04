@@ -1,9 +1,11 @@
 import { useContentsIndex } from "components/contents";
 import { useAppTitle } from "components/state";
+import { useLmsInstructor } from "components/session";
 import { ContentsSelectorTable } from "components/ContentsTable";
 import { Typography } from "@material-ui/core";
 
 function Index() {
+  useLmsInstructor();
   const contentsIndex = useContentsIndex();
   useAppTitle()("学習管理システム連携");
   switch (contentsIndex.state) {
