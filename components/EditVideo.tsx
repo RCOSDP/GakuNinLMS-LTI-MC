@@ -115,7 +115,6 @@ export function EditVideo(props: { video: Video }) {
               draft.subtitles.push({ lang, ...sub })
             );
           }
-          console.log(video.subtitles);
         })
       );
     },
