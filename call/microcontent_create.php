@@ -68,14 +68,16 @@ foreach ($level as $row) {
 }
 
 $lang = $arr['lang'];
-$subtitles = $arr['subtitles'] ?: [$arr['lang']];
+$subtitles = $arr['subtitles'];
 
-if (!$lang || !$subtitles[0]) {
+if (!$lang && !is_array($subtitles)) {
   // FIXME: クライアント側の不具合
   // http_response_code(400);
   echo "no_subtitle";
   return;
 }
+
+$subtitles[] = $lang;
 
 foreach ($subtitles as $sub) {
   if (!$sub['lang']) continue;
