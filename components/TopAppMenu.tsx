@@ -2,6 +2,7 @@ import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
 import TheatersIcon from "@material-ui/icons/Theaters";
 import LibraryAddIcon from "@material-ui/icons/LibraryAdd";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
+import LinkIcon from "@material-ui/icons/Link";
 import { PopupState } from "material-ui-popup-state/hooks";
 import { useRouter } from "./router";
 import { UrlObject } from "url";
@@ -49,6 +50,7 @@ const menuItems: AppMenu = [
   "divider",
   {
     title: "学習管理システム連携",
+    icon: <LinkIcon />,
     href: "/edit",
   },
 ];
