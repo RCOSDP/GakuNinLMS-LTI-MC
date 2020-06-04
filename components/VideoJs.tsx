@@ -1,6 +1,7 @@
 import React from "react";
 import videojs, { VideoJsPlayer } from "video.js";
 import "videojs-youtube";
+import "videojs-seek-buttons";
 import { useAppState, useAppPlayer } from "./state";
 
 export function VideoJs(props: {
@@ -14,6 +15,11 @@ export function VideoJs(props: {
     element.classList.add("vjs-big-play-centered");
     ref.current.appendChild(element);
     const player = videojs(element, props.options);
+    // @ts-ignore
+    player.seekButtons({
+      forward: 15,
+      back: 15,
+    });
     setPlayer(player);
     return () => {
       setPlayer(undefined);
