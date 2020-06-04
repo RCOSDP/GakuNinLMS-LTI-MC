@@ -2,12 +2,16 @@ import React from "react";
 import ISO6391 from "iso-639-1";
 import { VideoJs } from "./VideoJs";
 import { Subtitle } from "./video/subtitle";
+import { VideoJsPlayerOptions } from "video.js";
 
-export function Player(props: {
+export type PlayerProps = {
   youtubeVideoId: string;
   subtitles: Subtitle[];
-}) {
-  const options = React.useMemo(
+  autoplay?: boolean;
+};
+
+export function Player(props: PlayerProps) {
+  const options: VideoJsPlayerOptions = React.useMemo(
     () => ({
       techOrder: ["youtube"],
       sources: [
@@ -18,8 +22,9 @@ export function Player(props: {
       ],
       controls: true,
       fluid: true,
+      autoplay: props.autoplay,
     }),
-    [props.youtubeVideoId]
+    [props.youtubeVideoId, props.autoplay]
   );
   const tracks = React.useMemo(() => props.subtitles.map(track), [
     props.subtitles,

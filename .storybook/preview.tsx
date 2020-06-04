@@ -4,6 +4,7 @@ import { ThemeProvider } from "@material-ui/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Container from "@material-ui/core/Container";
 import { SnackbarProvider } from "material-ui-snackbar-provider";
+import { StateProvider } from "../components/state";
 import { theme } from "../components/theme";
 // NOTE: For VideoJs components.
 import "video.js/dist/video-js.css";
@@ -13,10 +14,12 @@ import "video.js/dist/video-js.css";
 nextRouter.useRouter = () => ({ route: "/" });
 
 addDecorator((story) => (
-  <ThemeProvider theme={theme}>
-    <CssBaseline />
-    <SnackbarProvider>
-      <Container>{story()}</Container>
-    </SnackbarProvider>
-  </ThemeProvider>
+  <StateProvider>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <SnackbarProvider>
+        <Container>{story()}</Container>
+      </SnackbarProvider>
+    </ThemeProvider>
+  </StateProvider>
 ));

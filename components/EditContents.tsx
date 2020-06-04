@@ -8,8 +8,6 @@ import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import SaveIcon from "@material-ui/icons/Save";
 import { useSnackbar } from "material-ui-snackbar-provider";
 import { useRouter } from "./router";
-import { useRouter as useNextRouter } from "next/router";
-import { registContents } from "./api";
 import { AddVideosButton } from "./contents/AddVideosButton";
 import { Videos } from "./video";
 import { VideosRow } from "./contents/VideosSelectorTable";
@@ -32,7 +30,6 @@ export function EditContents(props: { contents: Contents; videos: Videos }) {
   }, [titleRef, props.contents, setContents]);
 
   const router = useRouter();
-  const nextRouter = useNextRouter();
   const { showMessage } = useSnackbar();
   const saveHandler = useCallback(async () => {
     if (contents.id) {
@@ -54,12 +51,15 @@ export function EditContents(props: { contents: Contents; videos: Videos }) {
     showMessage(`保存しました`);
   }, [contents, showMessage, router]);
   const playHandler = useCallback(async () => {
-    // TODO: ヒモ付処理は本来不要にしたい
     if (!contents.id) return;
-    saveHandler();
-    await registContents(contents.id, contents.title);
-    nextRouter.push("/");
-  }, [saveHandler, contents, nextRouter]);
+    router.push({
+      pathname: "/contents",
+      query: {
+        id: contents.id,
+        action: "show",
+      },
+    });
+  }, [saveHandler, contents, router]);
   const editContents = useCallback(
     (dispatch: (c: Contents) => Contents) => {
       setContents(dispatch({ ...contents, state: "pending" }));
@@ -167,7 +167,7 @@ export function EditContents(props: { contents: Contents; videos: Videos }) {
               marginBottom: 8,
             }}
             onClick={playHandler}
-            disabled={contents.state !== "success"}
+            disabled={contents.id == null && contents.state !== "success"}
           >
             <PlayArrowIcon />
           </IconButton>

@@ -30,6 +30,21 @@ function contentsHandler(contents: ContentsIndex["contents"]): ContentsRow[] {
 
 export function ContentsTable(props: ContentsIndex) {
   const router = useRouter();
+  const showHandler = useCallback(
+    (event?: MouseEvent, row?: ContentsRow | ContentsRow[]) => {
+      const contents = Array.isArray(row) ? row[0] : row;
+      if (contents == null) return;
+      router.push({
+        pathname: "/contents",
+        query: {
+          id: contents.id,
+          action: "show",
+        },
+      });
+      event?.preventDefault();
+    },
+    [router]
+  );
   const newHandler = useCallback(() => {
     router.push({
       pathname: "/contents",
@@ -108,6 +123,7 @@ export function ContentsTable(props: ContentsIndex) {
       options={{
         actionsColumnIndex: -1,
       }}
+      onRowClick={showHandler}
       data={data}
     />
   );
@@ -122,6 +138,7 @@ export function ContentsSelectorTable(props: ContentsIndex) {
     const contents = Array.isArray(row) ? row[0] : row;
     if (contents == null) return;
     registContents(contents.id, contents.title);
+    // TODO: ホントは紐づけた先に戻りたい
     router.push("/contents");
     event?.preventDefault();
   }

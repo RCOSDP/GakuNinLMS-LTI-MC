@@ -29,7 +29,7 @@ function Index() {
 
 function Show(props: { id: string }) {
   const contents = useContents(Number(props.id));
-  return <ShowContents {...contents} />;
+  return <ShowContents contents={contents} />;
 }
 function Edit(props: { id: string }) {
   const contents = useContents(Number(props.id));
