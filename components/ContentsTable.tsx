@@ -3,12 +3,14 @@ import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import LibraryAdd from "@material-ui/icons/LibraryAdd";
 import LinkIcon from "@material-ui/icons/Link";
+import LinkOffIcon from "@material-ui/icons/LinkOff";
 import { Column } from "material-table";
 import { useSnackbar } from "material-ui-snackbar-provider";
 import { registContents } from "./api";
 import { useRouter } from "./router";
 import { Table } from "./Table";
 import { ContentsIndex, destroyContents } from "./contents";
+import { useLmsInstructor } from "./session";
 
 // TODO:
 function editable(_: any) {
@@ -147,8 +149,20 @@ export function ContentsSelectorTable(props: ContentsIndex) {
     },
     [router]
   );
-  const data = props.contents;
 
+  const session = useLmsInstructor();
+  const linkAction = useCallback(
+    (row: ContentsRow) => {
+      return {
+        icon: row.id === session?.contents ? LinkIcon : LinkOffIcon,
+        tooltip: "学習管理システムに紐付ける",
+        onClick: showHandler,
+      };
+    },
+    [router, showHandler, session]
+  );
+
+  const data = props.contents;
   return (
     <Table
       title="学習コンテンツ一覧"
@@ -162,11 +176,7 @@ export function ContentsSelectorTable(props: ContentsIndex) {
         ] as Column<ContentsRow>[]
       }
       actions={[
-        {
-          icon: LinkIcon,
-          tooltip: "学習管理システムに紐付ける",
-          onClick: showHandler,
-        },
+        linkAction,
         {
           icon: LibraryAdd,
           tooltip: "学習コンテンツを作成する",
