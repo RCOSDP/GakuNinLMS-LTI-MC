@@ -27,6 +27,7 @@ function Index() {
 
 function Show(props: { id: string }) {
   const video = useVideo(Number(props.id));
+  useAppTitle()(video.title);
   return <ShowVideo {...video} />;
 }
 function Edit(props: { id: string }) {

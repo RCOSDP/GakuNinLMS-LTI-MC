@@ -7,7 +7,11 @@ import { useRouter } from "components/router";
 import { useAppTitle } from "components/state";
 import { useContents } from "components/contents";
 import { useVideos } from "components/video";
-import { useLmsSession, useLmsInstructor } from "components/session";
+import {
+  useLmsSession,
+  useLmsInstructor,
+  isLmsInstructor,
+} from "components/session";
 
 type Query = { id?: string; action?: "edit" | "new" };
 
@@ -30,8 +34,14 @@ function Index() {
 }
 
 function Show(props: { id: string }) {
-  useLmsSession();
+  const session = useLmsSession();
   const contents = useContents(Number(props.id));
+  const setTitle = useAppTitle();
+  if (isLmsInstructor(session)) {
+    setTitle("学習コンテンツ管理");
+  } else {
+    setTitle(contents.title || "学習コンテンツ");
+  }
   return <ShowContents contents={contents} />;
 }
 function Edit(props: { id: string }) {
