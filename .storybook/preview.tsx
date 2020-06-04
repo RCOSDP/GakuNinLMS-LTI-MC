@@ -5,6 +5,8 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import Container from "@material-ui/core/Container";
 import { SnackbarProvider } from "material-ui-snackbar-provider";
 import { theme } from "../components/theme";
+// NOTE: For VideoJs components.
+import "video.js/dist/video-js.css";
 
 // NOTE: Mock useRouter
 // @ts-ignore
