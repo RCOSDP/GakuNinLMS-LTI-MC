@@ -6,31 +6,26 @@ import LinkIcon from "@material-ui/icons/Link";
 import LinkOffIcon from "@material-ui/icons/LinkOff";
 import { Column } from "material-table";
 import { useSnackbar } from "material-ui-snackbar-provider";
-import { registContents } from "./api";
+import { registContents, SessionResponse } from "./api";
 import { useRouter } from "./router";
 import { Table } from "./Table";
 import { ContentsIndex, destroyContents } from "./contents";
 import { useLmsInstructor } from "./session";
 
-// TODO:
-function editable(_: any) {
-  return true;
-}
-
 type ContentsRow = {
   id: number;
   title: string;
-  editable?: boolean;
+  creator: string;
 };
 
-function contentsHandler(contents: ContentsIndex["contents"]): ContentsRow[] {
-  return contents.map((contents) => ({
-    ...contents,
-    editable: editable(contents.creator),
-  }));
+function editable(row: ContentsRow, session?: SessionResponse) {
+  return (
+    session && (session.role === "administrator" || row.creator === session.id)
+  );
 }
 
 export function ContentsTable(props: ContentsIndex) {
+  const session = useLmsInstructor();
   const router = useRouter();
   const showHandler = useCallback(
     (event?: MouseEvent, row?: ContentsRow | ContentsRow[]) => {
@@ -81,25 +76,32 @@ export function ContentsTable(props: ContentsIndex) {
   );
 
   const editAction = useCallback(
-    (row: ContentsRow) => ({
-      icon: EditIcon,
-      tooltip: "編集する",
-      disabled: !row.editable,
-      onClick: editHandler,
-    }),
-    [editHandler]
+    (row: ContentsRow) => {
+      const disabled = !editable(row, session);
+      return {
+        tooltip: disabled ? "権限がありません" : "編集する",
+        icon: EditIcon,
+        disabled,
+        onClick: editHandler,
+      };
+    },
+    [editHandler, session]
   );
   const destroyAction = useCallback(
-    (row: ContentsRow) => ({
-      tooltip: "削除する",
-      icon: DeleteIcon,
-      editable: !row.editable,
-      onClick: destroyHandler,
-    }),
-    [destroyHandler]
+    (row: ContentsRow) => {
+      const disabled = !editable(row, session);
+      return {
+        tooltip: disabled ? "権限がありません" : "削除する",
+        icon: DeleteIcon,
+        disabled,
+        onClick: destroyHandler,
+      };
+    },
+    [destroyHandler, session]
   );
 
-  const data = contentsHandler(props.contents);
+  const data = props.contents;
+
   return (
     <Table
       title="学習コンテンツ一覧"
