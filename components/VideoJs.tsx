@@ -1,9 +1,12 @@
 import React from "react";
-import videojs from "video.js";
+import videojs, { VideoJsPlayer } from "video.js";
 import "videojs-youtube";
 import { useAppState, useAppPlayer } from "./state";
 
-export function VideoJs(props: { options: videojs.PlayerOptions }) {
+export function VideoJs(props: {
+  options: videojs.PlayerOptions;
+  tracks?: videojs.TextTrackOptions[];
+}) {
   const ref = React.useRef(document.createElement("div"));
   const setPlayer = useAppPlayer();
   React.useEffect(() => {
@@ -17,6 +20,23 @@ export function VideoJs(props: { options: videojs.PlayerOptions }) {
       player.dispose();
     };
   }, [props.options]);
+  const tracksRef = React.useRef<HTMLTrackElement[]>([]);
+  React.useEffect(() => {
+    if (!props.tracks || props.tracks.length === 0) return;
+    const player: VideoJsPlayer | undefined = ref.current.querySelector(
+      "video-js"
+      // @ts-ignore
+    )?.player;
+    if (!player) return;
+    player.ready(() => {
+      tracksRef.current.forEach((track) => {
+        player.removeRemoteTextTrack(track);
+      });
+      tracksRef.current = (props.tracks
+        ?.map((track) => track && player.addRemoteTextTrack(track, false))
+        .filter(Boolean) ?? []) as HTMLTrackElement[];
+    });
+  }, [props.tracks]);
   return <div ref={ref} />;
 }
 

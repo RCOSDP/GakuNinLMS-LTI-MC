@@ -84,7 +84,7 @@ const fetchVideo = makeFetcher(async (_: typeof key, id: number) => {
     microcontent_id: id.toString(),
   };
   const video: VideoSchema = await jsonFetcher(url, postForm(req)).then(
-    showVideoHandler
+    showVideoHandler(id)
   );
   return {
     id,
@@ -96,8 +96,10 @@ const fetchInitialVideo = makeFetcher(async (_: typeof key) => {
   const video: VideoSchema = await jsonFetcher(url).then(initialVideoHandler);
   return video;
 }, initialVideo);
-function showVideoHandler(res: ShowVideoResponse): VideoSchema {
-  return {
+function showVideoHandler(
+  videoId: Video["id"]
+): (res: ShowVideoResponse) => VideoSchema {
+  return (res) => ({
     title: res.title,
     description: res.description,
     youtubeVideoId: res.video,
@@ -117,10 +119,11 @@ function showVideoHandler(res: ShowVideoResponse): VideoSchema {
       has: checked === "checked",
     })),
     subtitles: res.subtitles.map(({ id, cname }) => ({
+      id: Number(id),
       lang: cname,
-      file: new File([], `${id}_${cname}.vtt`),
+      file: new File([], `${videoId}_${cname}.vtt`),
     })),
-  };
+  });
 }
 function initialVideoHandler(res: InitialVideoResponse): VideoSchema {
   return {
