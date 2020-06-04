@@ -50,7 +50,7 @@ foreach ($skill as $row) {
       (microcontentid, skillid)
     VALUES
       (?, ?)
-  SQL)->execute([$microcontentid, $row[0]]);
+  SQL)->execute([$microcontentid, $row]);
 }
 
 $db->prepare(<<<'SQL'
@@ -65,7 +65,7 @@ foreach ($task as $row) {
       (microcontentid, taskid)
     VALUES
       (?, ?)
-  SQL)->execute([$microcontentid, $row[0]]);
+  SQL)->execute([$microcontentid, $row]);
 }
 
 $db->prepare(<<<'SQL'
@@ -80,7 +80,7 @@ foreach ($level as $row) {
       (microcontentid, levelid)
     VALUES
       (?, ?)
-  SQL)->execute([$microcontentid, $row[0]]);
+  SQL)->execute([$microcontentid, $row]);
 }
 
 $lang = $arr['lang'];
