@@ -1,4 +1,5 @@
 import { MouseEvent, useCallback } from "react";
+import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import LibraryAdd from "@material-ui/icons/LibraryAdd";
@@ -115,6 +116,11 @@ export function ContentsTable(props: ContentsIndex) {
         ] as Column<ContentsRow>[]
       }
       actions={[
+        {
+          icon: PlayArrowIcon,
+          tooltip: "再生する",
+          onClick: showHandler,
+        },
         editAction,
         destroyAction,
         {
