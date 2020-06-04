@@ -78,7 +78,7 @@ export function useShowRegistContents() {
 
   if (error) {
     console.error(error);
-    showMessage("問題が発生しました。");
+    showMessage("問題が発生しました");
   } else if (data) {
     showMessage(`「${data.name}」を紐づけました`);
     mutate(registContentsPath, () => null);

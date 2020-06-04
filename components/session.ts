@@ -1,29 +1,30 @@
 import { useSession, SessionResponse } from "./api";
-import { useRouter } from "./router";
-import { useSnackbar } from "material-ui-snackbar-provider";
 
 const lmsUrl = process.env.NEXT_PUBLIC_LMS_URL || "";
 
 export function useLmsSession(): SessionResponse | undefined {
   const { data, error } = useSession();
-  if (error && typeof window !== "undefined") {
-    document.location.href = lmsUrl;
+  if (error) {
+    redirectToLms();
     return;
   }
   return data;
 }
 
 export function useLmsInstructor(): SessionResponse | undefined {
-  const { data, error } = useSession();
-  const router = useRouter();
-  const { showMessage } = useSnackbar();
-  if (error && typeof window !== "undefined") {
-    document.location.href = lmsUrl;
+  const session = useLmsSession();
+  if (session && !isLmsInstructor(session)) {
+    redirectToLms();
     return;
   }
-  if (data && !["instructor", "administrator"].includes(data.role)) {
-    router.replace("/");
-    showMessage("アクセス権限がありません");
-  }
-  return data;
+  return session;
+}
+
+export function redirectToLms() {
+  if (typeof window !== "undefined") document.location.href = lmsUrl;
+}
+
+export function isLmsInstructor(session?: SessionResponse): boolean {
+  if (!session) return false;
+  return ["instructor", "administrator"].includes(session.role);
 }

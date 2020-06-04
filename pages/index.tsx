@@ -1,19 +1,34 @@
-import { useLmsSession } from "components/session";
-import { useRouter } from "components/router";
+import {
+  useLmsSession,
+  redirectToLms,
+  isLmsInstructor,
+} from "components/session";
+import { useRouter, Link } from "components/router";
+import { useSnackbar } from "material-ui-snackbar-provider";
 
 export default function () {
-  const sesssion = useLmsSession();
+  const session = useLmsSession();
   const router = useRouter();
+  const { showMessage } = useSnackbar();
 
-  if (sesssion?.contents) {
-    router.replace({
+  if (!session) return <div>Loading...</div>;
+  if (session.contents) {
+    const href = {
       pathname: "/contents",
       query: {
-        id: sesssion.contents,
+        id: session.contents,
         action: "show",
       },
-    });
+    };
+    router.replace(href);
+    return <Link href={href}>#{session.contents}</Link>;
+  } else {
+    if (!isLmsInstructor(session)) redirectToLms();
+    const href = "/edit";
+    router.replace(href);
+    const message =
+      "まだ学習管理システムに紐付いていません。紐付ける学習コンテンツを選択してください。";
+    showMessage(message);
+    return <Link href={href}>{message}</Link>;
   }
-
-  return <div>Loading...</div>;
 }
