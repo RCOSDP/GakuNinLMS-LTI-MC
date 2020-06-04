@@ -22,6 +22,9 @@ const iso6391 = ISO6391.getLanguages(ISO6391.getAllCodes());
 export function EditVideo(props: { video: Video }) {
   const [video, setVideo] = useState<Video>(props.video);
   useEffect(() => {
+    if (props.video.state === "success") setVideo(props.video);
+  }, [props.video]);
+  useEffect(() => {
     setVideo((prev: Video) => {
       if (prev.state === "success" && !prev.title) {
         prev.title = "名称未設定";
