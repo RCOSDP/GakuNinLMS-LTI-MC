@@ -116,7 +116,7 @@ function VideoMoreMenu(props: {
       icon: <PlayArrowIcon />,
       onClick() {
         router.push({
-          href: "/videos",
+          pathname: "/videos",
           query: {
             id: props.video.id,
             action: "edit",
