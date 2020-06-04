@@ -12,6 +12,23 @@ export default class extends App {
       <StateProvider>
         <AppThemeProvider>
           <Component {...pageProps} />
+          <footer>
+            <a
+              href={process.env.NEXT_PUBLIC_API_BASE_PATH}
+              onClick={(e) => {
+                e.preventDefault();
+                sessionStorage.setItem("以前のバージョンを使う", "true");
+                document.location.href = e.currentTarget.href;
+              }}
+              style={{
+                position: "absolute",
+                right: 0,
+                bottom: 0,
+              }}
+            >
+              以前のバージョンに戻す
+            </a>
+          </footer>
         </AppThemeProvider>
       </StateProvider>
     );

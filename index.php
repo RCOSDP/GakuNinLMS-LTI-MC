@@ -22,6 +22,9 @@ header('Content-Type: text/html');
   <link href="lib/videojs/videojs-seek-buttons.css" rel="stylesheet" />
   <link href="static/css/common.css" rel="stylesheet" type="text/css" />
   <link href="static/css/video.css" rel="stylesheet" type="text/css" />
+  <script type="module">
+    if (!sessionStorage.getItem("以前のバージョンを使う")) document.location.href = "beta";
+  </script>
 </head>
 <body>
   <div class="wrapper view-wrapper">
