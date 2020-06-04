@@ -10,6 +10,7 @@ const registContentsPath = `${basePath}/call/content_regist.php`;
 type SessionResponse = {
   id: string;
   role: "administrator" | "instructor" | "";
+  contents?: number;
 };
 
 export function jsonFetcher(input: RequestInfo, init?: RequestInit) {
@@ -65,6 +66,10 @@ export async function registContents(id: number, name: string) {
     const res: LinkedContentsResponse = { id, name };
     return res;
   });
+  await mutate(sessionPath, (prev: SessionResponse) => ({
+    ...prev,
+    contents: id,
+  }));
 }
 
 export function useShowRegistContents() {

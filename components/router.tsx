@@ -1,7 +1,7 @@
 import MuiLink from "@material-ui/core/Link";
 import NextLink from "next/link";
 import { UrlObject, format } from "url";
-import { ReactNode } from "react";
+import { ReactNode, useCallback } from "react";
 import { useRouter as useNextRouter } from "next/router";
 
 const basePath =
@@ -9,13 +9,25 @@ const basePath =
     `${process.env.NEXT_PUBLIC_API_BASE_PATH}/beta`) ||
   "";
 
-export const validUrl = (url: any) => {
+const validUrl = (url: any) => {
   try {
     return new URL(url);
   } catch {
     return null;
   }
 };
+
+function urlHandler(urlOrPath: string | UrlObject) {
+  return (
+    validUrl(urlOrPath)?.href ??
+    (typeof urlOrPath === "string"
+      ? `${basePath}${urlOrPath}.html`
+      : format({
+          ...urlOrPath,
+          pathname: `${basePath}${urlOrPath.pathname}.html`,
+        }))
+  );
+}
 
 export const Link = (props: {
   href: string | UrlObject;
@@ -41,20 +53,22 @@ export const Link = (props: {
 
 export function useRouter() {
   const router = useNextRouter();
-  const originalPush = router.push;
-  function push(urlOrPath: string | UrlObject) {
-    const url =
-      validUrl(urlOrPath)?.href ??
-      (typeof urlOrPath === "string"
-        ? `${basePath}${urlOrPath}.html`
-        : format({
-            ...urlOrPath,
-            pathname: `${basePath}${urlOrPath.pathname}.html`,
-          }));
 
-    return originalPush(urlOrPath, url);
-  }
-  router.push = push;
+  const originalPush = router.push;
+  router.push = useCallback(
+    (urlOrPath: string | UrlObject) => {
+      return originalPush(urlOrPath, urlHandler(urlOrPath));
+    },
+    [originalPush]
+  );
+
+  const originalReplace = router.replace;
+  router.replace = useCallback(
+    (urlOrPath: string | UrlObject) => {
+      return originalReplace(urlOrPath, urlHandler(urlOrPath));
+    },
+    [originalReplace]
+  );
 
   return router;
 }

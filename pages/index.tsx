@@ -1,13 +1,20 @@
-import { useEffect } from "react";
+import { useSession } from "components/api";
+import { useRouter } from "components/router";
 
-const path = process.env.NEXT_PUBLIC_API_BASE_PATH || "";
 export default function () {
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const url = new URL(path, document.location.href).href;
-    if (document.location.href !== url) {
-      document.location.replace(url);
-    }
-  }, []);
-  return <a href={path}>Redirect</a>;
+  const { data, error } = useSession();
+  const router = useRouter();
+
+  if (error) return <div>failed to load</div>;
+  if (data?.contents) {
+    router.replace({
+      pathname: "/contents",
+      query: {
+        id: data.contents,
+        action: "show",
+      },
+    });
+  }
+
+  return <div>Loading...</div>;
 }

@@ -32,7 +32,7 @@ export function EditVideo(props: { video: Video }) {
     } else {
       const id = await createVideo(video);
       if (!id) return;
-      router.push({
+      router.replace({
         pathname: "/videos",
         query: {
           id,

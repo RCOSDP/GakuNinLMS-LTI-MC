@@ -1,14 +1,14 @@
+import { MouseEvent, useCallback } from "react";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import LibraryAdd from "@material-ui/icons/LibraryAdd";
 import LinkIcon from "@material-ui/icons/Link";
 import { Column } from "material-table";
+import { useSnackbar } from "material-ui-snackbar-provider";
+import { registContents } from "./api";
 import { useRouter } from "./router";
 import { Table } from "./Table";
-import { registContents } from "./api";
-import { MouseEvent, useCallback } from "react";
 import { ContentsIndex, destroyContents } from "./contents";
-import { useSnackbar } from "material-ui-snackbar-provider";
 
 // TODO:
 function editable(_: any) {
@@ -131,17 +131,22 @@ export function ContentsTable(props: ContentsIndex) {
 
 export function ContentsSelectorTable(props: ContentsIndex) {
   const router = useRouter();
-  function rowClickHandler(
-    event?: MouseEvent,
-    row?: ContentsRow | ContentsRow[]
-  ) {
-    const contents = Array.isArray(row) ? row[0] : row;
-    if (contents == null) return;
-    registContents(contents.id, contents.title);
-    // TODO: ホントは紐づけた先に戻りたい
-    router.push("/contents");
-    event?.preventDefault();
-  }
+  const showHandler = useCallback(
+    async (event?: MouseEvent, row?: ContentsRow | ContentsRow[]) => {
+      const contents = Array.isArray(row) ? row[0] : row;
+      if (contents == null) return;
+      await registContents(contents.id, contents.title);
+      router.push({
+        pathname: "/contents",
+        query: {
+          id: contents.id,
+          action: "show",
+        },
+      });
+      event?.preventDefault();
+    },
+    [router]
+  );
   const data = props.contents;
 
   return (
@@ -160,7 +165,7 @@ export function ContentsSelectorTable(props: ContentsIndex) {
         {
           icon: LinkIcon,
           tooltip: "学習管理システムに紐付ける",
-          onClick: rowClickHandler,
+          onClick: showHandler,
         },
         {
           icon: LibraryAdd,
@@ -178,7 +183,7 @@ export function ContentsSelectorTable(props: ContentsIndex) {
       options={{
         actionsColumnIndex: 1,
       }}
-      onRowClick={rowClickHandler}
+      onRowClick={showHandler}
       data={data}
     />
   );

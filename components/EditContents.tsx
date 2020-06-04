@@ -37,7 +37,7 @@ export function EditContents(props: { contents: Contents; videos: Videos }) {
     } else {
       const id = await createContents(contents);
       if (!id) return;
-      router.push({
+      router.replace({
         pathname: "/contents",
         query: {
           id,
