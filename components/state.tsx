@@ -9,6 +9,7 @@ import {
 
 type State = {
   title: string;
+  player?: videojs.VideoJsPlayer;
 };
 const initialState = {
   title: "学習コンテンツ管理",
@@ -50,3 +51,4 @@ function makeDispatch<T extends keyof State>(key: T) {
   return hook;
 }
 export const useAppTitle = makeDispatch("title");
+export const useAppPlayer = makeDispatch("player");

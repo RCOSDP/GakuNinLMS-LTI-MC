@@ -1,11 +1,5 @@
-export type ShowVideoProps = { id: string };
+import { Video } from "./video";
 
-export function ShowVideo(props: ShowVideoProps) {
-  const title = `ビデオ: ${props.id}`;
-
-  return (
-    <div>
-      <h1>{title}</h1>
-    </div>
-  );
+export function ShowVideo(props: Video) {
+  return <pre>{JSON.stringify(props, null, 2) /* Debug */}</pre>;
 }

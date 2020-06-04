@@ -112,13 +112,14 @@ function VideoMoreMenu(props: {
   const router = useRouter();
   const menuItems: MenuItems = [
     {
-      label: "再生する",
+      label: "確認する",
       icon: <PlayArrowIcon />,
       onClick() {
         router.push({
           href: "/videos",
           query: {
             id: props.video.id,
+            action: "edit",
           },
         });
       },

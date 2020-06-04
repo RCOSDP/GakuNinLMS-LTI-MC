@@ -112,8 +112,8 @@ function showVideoHandler(res: ShowVideoResponse): VideoSchema {
       has: checked === "checked",
     })),
     subtitles: res.subtitles.map(({ id, cname }) => ({
-      filename: `${id}_${cname}.vtt`,
       lang: cname,
+      file: new File([], `${id}_${cname}.vtt`),
     })),
   };
 }
@@ -132,7 +132,9 @@ type ShowVideoResponse = {
 export const useVideo = (id?: number) =>
   useApi([key, id], fetchVideo, initialVideo);
 
-export async function createVideo(video: VideoSchema, subtitles: Array<File>) {
+export async function createVideo(
+  video: VideoSchema
+): Promise<number | undefined> {
   const url = `${process.env.NEXT_PUBLIC_API_BASE_PATH}/call/microcontent_create.php`;
   const req: CreateVideoRequest = {
     title: video.title,
@@ -148,27 +150,32 @@ export async function createVideo(video: VideoSchema, subtitles: Array<File>) {
     id = Number(await textFetcher(url, postJson(req)));
   } catch {}
   if (!id) {
-    return await failure(video.id);
+    await failure(video.id);
+    return;
   }
   if (video.subtitles.length === 0) {
-    return await success({ ...video, id });
+    await success({ ...video, id });
+    return id;
   }
 
   // NOTE: With subtitle files
   const createSubtitleUrl = `${process.env.NEXT_PUBLIC_API_BASE_PATH}/call/microcontent_subtitle.php`;
-  const createSubtitles = video.subtitles.map(({ lang }, index) => {
+  const createSubtitles = video.subtitles.map(({ lang, file }) => {
     const req: CreateVideoSubtitleRequest = {
       id: String(id),
       lang,
-      file: subtitles[index],
+      file,
     };
-    return textFetcher(createSubtitleUrl, postForm(req));
+    if (file.size > 0) return textFetcher(createSubtitleUrl, postForm(req));
+    else return Promise.resolve("");
   });
   try {
     await Promise.all(createSubtitles);
-    return await success({ ...video, id });
+    await success({ ...video, id });
+    return id;
   } catch {
-    return await failure(video.id);
+    await failure(video.id);
+    return;
   }
 }
 type CreateVideoRequest = {
