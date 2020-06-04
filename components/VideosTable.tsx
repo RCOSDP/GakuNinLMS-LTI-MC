@@ -25,14 +25,14 @@ export function VideosTable(props: Videos) {
     });
   }, [router]);
   const editHandler = useCallback(
-    (event: MouseEvent, row: VideosRow | VideosRow[]) => {
-      event.preventDefault();
-      if (!row) return;
-      if (Array.isArray(row)) return;
+    (event?: MouseEvent, row?: VideosRow | VideosRow[]) => {
+      const video = Array.isArray(row) ? row[0] : row;
+      if (video == null) return;
       router.push({
         pathname: "/videos",
-        query: { id: row.id, action: "edit" },
+        query: { id: video.id, action: "edit" },
       });
+      event?.preventDefault();
     },
     [router]
   );
@@ -83,6 +83,7 @@ export function VideosTable(props: Videos) {
       options={{
         actionsColumnIndex: -1,
       }}
+      onRowClick={editHandler}
       data={props.videos}
     />
   );
