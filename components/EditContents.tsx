@@ -65,7 +65,11 @@ export function EditContents(props: { contents: Contents; videos: Videos }) {
       setContents(dispatch({ ...contents, state: "pending" }));
       if (typeof window !== "undefined") {
         window.onbeforeunload = function (e: BeforeUnloadEvent) {
-          e.returnValue = "";
+          // NOTE: 作成(new)・編集(edit)画面での離脱防止
+          const action = new URL(document.location.href).searchParams.get(
+            "action"
+          );
+          if (action && ["new", "edit"].includes(action)) e.returnValue = "";
         };
       }
     },
