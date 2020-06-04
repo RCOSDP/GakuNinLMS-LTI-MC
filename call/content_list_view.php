@@ -11,7 +11,7 @@ if (!$context->valid) {
 $db = require(__DIR__.'/../database.php');
 
 $contents = array();
-foreach ($db->query('SELECT * FROM mc_content WHERE deleted=0') as $row) {
+foreach ($db->query('SELECT * FROM mc_content WHERE deleted=0 ORDER BY id DESC') as $row) {
   $content = array();
   $content['id'] = $row['id'];
   $content['name'] = $row['name'];

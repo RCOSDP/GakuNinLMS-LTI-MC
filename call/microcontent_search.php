@@ -19,6 +19,7 @@ $sth = $db->prepare(<<<'SQL'
     (
       name LIKE :keyword OR description LIKE :keyword
     ) AND deleted=0
+  ORDER BY id DESC
 SQL);
 
 $sth->execute([':keyword' => '%'.addcslashes($keyword, '\_%').'%']);
