@@ -5,6 +5,8 @@ import Divider from "@material-ui/core/Divider";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import { Contents } from "./contents";
 import { Video } from "./video";
 import { PlayerProps, Player } from "./Player";
@@ -118,23 +120,32 @@ export function ContentsPlayer(props: {
       </Box>
       <Divider />
       <List component="nav" aria-label="secondary mailbox folders">
-        {props.playlist.map(({ id, title, description }, index) => (
-          <ListItem
-            key={index}
-            button
-            selected={playerState?.index === index}
-            onClick={playlistClickHandler(index)}
-          >
-            <ListItemText
-              primary={title}
-              secondary={`#${id} : ${description}`}
-              style={{
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-              }}
-            />
-          </ListItem>
-        ))}
+        {props.playlist.map(({ id, title, description }, index) => {
+          const playing = playerState?.index === index;
+          return (
+            <ListItem
+              key={index}
+              button
+              selected={playing}
+              onClick={playlistClickHandler(index)}
+            >
+              {playing && (
+                <ListItemIcon>
+                  <PlayArrowIcon />
+                </ListItemIcon>
+              )}
+              <ListItemText
+                primary={title}
+                secondary={`#${id} : ${description}`}
+                style={{
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                }}
+                inset={!playing}
+              />
+            </ListItem>
+          );
+        })}
       </List>
     </>
   );
