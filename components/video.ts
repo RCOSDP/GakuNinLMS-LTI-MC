@@ -203,9 +203,9 @@ export async function updateVideo(
     video: video.youtubeVideoId,
     description: video.description,
     subtitles: video.subtitles,
-    skill: video.skills.map(({ id }) => id.toString()),
-    task: video.tasks.map(({ id }) => id.toString()),
-    level: video.levels.map(({ id }) => id.toString()),
+    skill: video.skills.flatMap(({ id, has }) => (has ? [id.toString()] : [])),
+    task: video.tasks.flatMap(({ id, has }) => (has ? [id.toString()] : [])),
+    level: video.levels.flatMap(({ id, has }) => (has ? [id.toString()] : [])),
   };
   let id: VideoSchema["id"];
   try {
