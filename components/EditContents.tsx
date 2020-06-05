@@ -167,7 +167,7 @@ export function EditContents(props: { contents: Contents; videos: Videos }) {
               marginBottom: 8,
             }}
             onClick={playHandler}
-            disabled={contents.id == null && contents.state !== "success"}
+            disabled={contents.id == null || contents.state !== "success"}
           >
             <PlayArrowIcon />
           </IconButton>
