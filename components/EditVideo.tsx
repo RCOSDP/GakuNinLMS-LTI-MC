@@ -13,9 +13,11 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Button from "@material-ui/core/Button";
 import SaveIcon from "@material-ui/icons/Save";
 import Box from "@material-ui/core/Box";
-import { Subtitle } from "./video/subtitle";
+import Chip from "@material-ui/core/Chip";
+import Typography from "@material-ui/core/Typography";
+import { Subtitle, destroySubtitle } from "./video/subtitle";
 import { useRouter } from "./router";
-import { Video, updateVideo, createVideo } from "./video";
+import { Video, updateVideo, createVideo, mutateVideo } from "./video";
 
 const iso6391 = ISO6391.getLanguages(ISO6391.getAllCodes());
 
@@ -83,8 +85,7 @@ export function EditVideo(props: { video: Video }) {
             name,
             has: Boolean(form.get(`level-${id}`)),
           }));
-          const uploadSubtitleLang =
-            (form.get("upload-subtitle-lang") as string) || "und";
+          const uploadSubtitleLang = form.get("upload-subtitle-lang") as string;
           const uploadSubtitleFile = form.get("upload-subtitle-file") as
             | File
             | undefined;
@@ -94,15 +95,18 @@ export function EditVideo(props: { video: Video }) {
               file: uploadSubtitleFile,
             });
             const subtitles: Map<
-              Subtitle["lang"],
-              { file: File }
+              Subtitle["id"],
+              {
+                lang: string;
+                file: File;
+              }
             > = draft.subtitles.reduce(
-              (prev, { lang, file }) => prev.set(lang, { file }),
+              (prev, { id, lang, file }) => prev.set(id, { lang, file }),
               new Map()
             );
             draft.subtitles = [];
-            Array.from(subtitles).forEach(([lang, sub]) =>
-              draft.subtitles.push({ lang, ...sub })
+            Array.from(subtitles).forEach(([id, sub]) =>
+              draft.subtitles.push({ id, ...sub })
             );
           }
         })
@@ -118,13 +122,29 @@ export function EditVideo(props: { video: Video }) {
     [saveHandler]
   );
 
-  const [addSubtitle, setAddSubtitle] = useState<string>();
-  const changeAddSubtitleHandler = useCallback(
+  const [subtitleLang, setSubtitleLang] = useState<string>("und");
+  const changesubtitleLangHandler = useCallback(
     (event: FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       const lang = event.currentTarget.value;
-      if (lang !== "und") setAddSubtitle(lang);
+      if (lang !== "und") setSubtitleLang(lang);
     },
-    [setAddSubtitle]
+    [setSubtitleLang]
+  );
+  const destroySubtitleHandler = useCallback(
+    (lang: string, id?: number) => async (_: MouseEvent) => {
+      if (!id) return;
+      // TODO: confirm やめたい
+      if (!confirm(`字幕「${lang}」を削除します。よろしいですか？`)) return;
+      try {
+        await destroySubtitle(id);
+        const videoDispatch = (video: Video) =>
+          produce(video, (draft) => {
+            draft.subtitles = draft.subtitles.filter((sub) => sub.id !== id);
+          });
+        await mutateVideo(id, videoDispatch);
+      } catch {}
+    },
+    [edit]
   );
 
   return (
@@ -231,6 +251,25 @@ export function EditVideo(props: { video: Video }) {
           </FormControl>
         </Box>
         <Box my={2}>
+          <Box m={1}>
+            <Box my={1}>
+              <Typography variant="subtitle1">字幕</Typography>
+            </Box>
+            {video.subtitles.map(
+              ({ id, lang }) =>
+                id && (
+                  <Chip
+                    key={id}
+                    label={ISO6391.getNativeName(lang)}
+                    onDelete={destroySubtitleHandler(
+                      ISO6391.getNativeName(lang),
+                      id
+                    )}
+                    style={{ margin: 8 }}
+                  />
+                )
+            )}
+          </Box>
           <Box my={1}>
             <TextField
               select
@@ -240,7 +279,7 @@ export function EditVideo(props: { video: Video }) {
               variant="filled"
               fullWidth
               color="secondary"
-              onChange={changeAddSubtitleHandler}
+              onChange={changesubtitleLangHandler}
             >
               <MenuItem value="und">未選択</MenuItem>
               {iso6391.map(({ code, nativeName }) => (
@@ -250,7 +289,7 @@ export function EditVideo(props: { video: Video }) {
               ))}
             </TextField>
           </Box>
-          {addSubtitle !== "und" && (
+          {subtitleLang !== "und" && (
             <input type="file" name="upload-subtitle-file" />
           )}
         </Box>
