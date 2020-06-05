@@ -11,6 +11,8 @@ import { Contents } from "./contents";
 import { Video } from "./video";
 import { PlayerProps, Player } from "./Player";
 import { usePlayer } from "./VideoJs";
+import { sendVideoId, trackingStart } from "./log";
+import { useLmsSession, isLmsInstructor } from "./session";
 
 /**
  * playlist を順番に再生するコンポーネント
@@ -19,6 +21,14 @@ export function ContentsPlayer(props: {
   contents: Contents;
   playlist: Video[];
 }) {
+  const player = usePlayer();
+
+  // NOTE: トラッキング用
+  const session = useLmsSession();
+  React.useEffect(() => {
+    if (!isLmsInstructor(session) && player) trackingStart(player);
+  }, [session, player]);
+
   const [playerState, setPlayerState] = React.useState<
     {
       index: number; // NOTE: playlist index number
@@ -30,7 +40,6 @@ export function ContentsPlayer(props: {
     const { youtubeVideoId, subtitles } = props.playlist[index];
     setPlayerState({ index, youtubeVideoId, subtitles, autoplay: true });
   }, [setPlayerState, props.playlist]);
-  const player = usePlayer();
   const endedHandler = React.useCallback(() => {
     setPlayerState((prev) => {
       if (!prev) return prev;
@@ -58,12 +67,15 @@ export function ContentsPlayer(props: {
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => void = React.useCallback(
     (index: number) => {
+      const video = props.playlist[index];
+
+      // NOTE: トラッキング用
+      if (!isLmsInstructor(session) && player) sendVideoId(player, video.id);
+
       return () =>
-        setPlayerState(
-          (prev) => prev && { index, ...props.playlist[index], autoplay: true }
-        );
+        setPlayerState((prev) => prev && { index, ...video, autoplay: true });
     },
-    [setPlayerState, props.playlist]
+    [setPlayerState, props.playlist, session, player]
   );
 
   return (
