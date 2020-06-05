@@ -60,7 +60,7 @@ export function EditVideo(props: { video: Video }) {
     },
     [video, setVideo]
   );
-  const onChangeHandler = useCallback(
+  const onInputHandler = useCallback(
     (event: FormEvent<HTMLFormElement>) => {
       const form = new FormData(event.currentTarget);
       edit((video) =>
@@ -118,8 +118,17 @@ export function EditVideo(props: { video: Video }) {
     [saveHandler]
   );
 
+  const [addSubtitle, setAddSubtitle] = useState<string>();
+  const changeAddSubtitleHandler = useCallback(
+    (event: FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      const lang = event.currentTarget.value;
+      if (lang !== "und") setAddSubtitle(lang);
+    },
+    [setAddSubtitle]
+  );
+
   return (
-    <form onChange={onChangeHandler} onSubmit={submitHandler}>
+    <form onInput={onInputHandler} onSubmit={submitHandler}>
       <Box my={2}>
         <TextField
           name="title"
@@ -231,6 +240,7 @@ export function EditVideo(props: { video: Video }) {
               variant="filled"
               fullWidth
               color="secondary"
+              onChange={changeAddSubtitleHandler}
             >
               <MenuItem value="und">未選択</MenuItem>
               {iso6391.map(({ code, nativeName }) => (
@@ -240,7 +250,9 @@ export function EditVideo(props: { video: Video }) {
               ))}
             </TextField>
           </Box>
-          <input type="file" name="upload-subtitle-file" />
+          {addSubtitle !== "und" && (
+            <input type="file" name="upload-subtitle-file" />
+          )}
         </Box>
       </Box>
       <Box mt={2} mb={4}>
