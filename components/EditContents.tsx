@@ -32,6 +32,13 @@ export function EditContents(props: { contents: Contents; videos: Videos }) {
   const router = useRouter();
   const { showMessage } = useSnackbar();
   const saveHandler = useCallback(async () => {
+    // NOTE: バリデーション
+    if (contents.title === "") {
+      // TODO: alert やめたい
+      alert("タイトルを入力して下さい");
+      return;
+    }
+
     if (contents.id) {
       await updateContents(contents as Required<Contents>);
     } else {
@@ -88,6 +95,7 @@ export function EditContents(props: { contents: Contents; videos: Videos }) {
   const editTitleHandler = useCallback(
     (event: FormEvent<HTMLHeadingElement>) => {
       const title = (event.currentTarget.textContent || "").replace(/\s/g, " ");
+      event.currentTarget.textContent = title;
       editTitle(title);
     },
     [editTitle]
