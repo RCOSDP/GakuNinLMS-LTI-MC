@@ -77,7 +77,7 @@ if (!$lang && !is_array($subtitles)) {
   return;
 }
 
-$subtitles[] = $lang;
+$subtitles[] = ['lang' => $lang];
 
 foreach ($subtitles as $sub) {
   if (!$sub['lang']) continue;

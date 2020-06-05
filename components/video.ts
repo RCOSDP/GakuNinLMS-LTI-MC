@@ -10,7 +10,7 @@ import {
 import { Skill } from "./video/skill";
 import { Task } from "./video/task";
 import { Level } from "./video/level";
-import { Subtitle } from "./video/subtitle";
+import { Subtitle, createSubtitle } from "./video/subtitle";
 import { mutate } from "swr";
 
 const key = "/api/video";
@@ -186,24 +186,15 @@ export async function createVideo(
     await failure(video.id);
     return;
   }
+
   if (video.subtitles.length === 0) {
     await success({ ...video, id });
     return id;
   }
 
   // NOTE: With subtitle files
-  const createSubtitleUrl = `${process.env.NEXT_PUBLIC_API_BASE_PATH}/call/microcontent_subtitle.php`;
-  const createSubtitles = video.subtitles.map(({ lang, file }) => {
-    const req: CreateVideoSubtitleRequest = {
-      id: String(id),
-      lang,
-      file,
-    };
-    if (file.size > 0) return textFetcher(createSubtitleUrl, postForm(req));
-    else return Promise.resolve("");
-  });
   try {
-    await Promise.all(createSubtitles);
+    await Promise.all(video.subtitles.map(createSubtitle(id)));
     await success({ ...video, id });
     return id;
   } catch {
@@ -219,11 +210,6 @@ type CreateVideoRequest = {
   skill: string[];
   task: string[];
   level: string[];
-};
-type CreateVideoSubtitleRequest = {
-  id: string;
-  lang: string;
-  file: File;
 };
 
 export async function updateVideo(video: Required<VideoSchema>) {
@@ -245,14 +231,18 @@ export async function updateVideo(video: Required<VideoSchema>) {
   if (!id) {
     return await failure(video.id);
   }
+
   if (video.subtitles.length === 0) {
     return await success({ ...video, id });
   }
 
-  // TODO: With subtitle files
-  // POST /call/microcontent_subtitle.php
-  // type UpdateVideoSubtitleRequest = CreateVideoSubtitleRequest;
-  return true;
+  // NOTE: With subtitle files
+  try {
+    await Promise.all(video.subtitles.map(createSubtitle(id)));
+    return await success({ ...video, id });
+  } catch {
+    return await failure(video.id);
+  }
 }
 type UpdateVideoRequest = {
   id: number;

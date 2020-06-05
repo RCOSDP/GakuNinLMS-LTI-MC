@@ -86,51 +86,60 @@ foreach ($level as $row) {
 $lang = $arr['lang'];
 $subtitles = $arr['subtitles'] ?: [$arr['lang']];
 
-if (!$lang || !$subtitles[0]) {
+if (!$lang && !is_array($subtitles)) {
   // FIXME: クライアント側の不具合
   // http_response_code(400);
   echo "no_subtitle";
   return;
 }
 
-// FIXME: With subtitles
-$sth = $db->prepare(<<<'SQL'
-  SELECT id, lang FROM mc_subtitle
-  WHERE
-    microcontentid=? AND lang=?
-SQL);
+$subtitles[] = ['lang' => $lang];
 
-$sth->execute([$microcontentid, $lang]);
-
-// FIXME: With subtitles
-if ($row = $sth->fetch()) {
-  $subtitle_id = $row['id'];
-
-  $db->prepare(<<<'SQL'
-    UPDATE mc_subtitle
-    SET
-      timemodified=:time,
-      modifiedby=:uid,
-      deleted=0
+foreach ($subtitles as $sub) {
+  if (!$sub['lang']) continue;
+  $sth = $db->prepare(<<<'SQL'
+    SELECT id, lang FROM mc_subtitle
     WHERE
-      id=:subtitle_id
-  SQL)->execute([
-    ':time' => $time,
-    ':uid' => $uid,
-    ':subtitle_id' => $subtitle_id
-  ]);
-} else {
-  $db->prepare(<<<'SQL'
-    INSERT INTO mc_subtitle
-      (microcontentid, lang, timecreated, timemodified, createdby, modifiedby)
-    VALUES
-      (:microcontentid, :lang, :time, :time, :uid, :uid)
-  SQL)->execute([
-    ':microcontentid' => $microcontentid,
-    ':lang' => $lang,
-    ':time' => $time,
-    ':uid' => $uid
-  ]);
+      microcontentid=? AND lang=? AND deleted=0
+  SQL);
+
+  $sth->execute([$microcontentid, $sub['lang']]);
+
+  if ($row = $sth->fetch()) {
+    $subtitle_id = $row['id'];
+
+    $db->prepare(<<<'SQL'
+      UPDATE mc_subtitle
+      SET
+        timemodified=:time,
+        modifiedby=:uid,
+        deleted=0
+      WHERE
+        id=:subtitle_id
+    SQL)->execute([
+      ':time' => $time,
+      ':uid' => $uid,
+      ':subtitle_id' => $subtitle_id
+    ]);
+  } else {
+    $db->prepare(<<<'SQL'
+      INSERT INTO mc_subtitle
+        (microcontentid, lang, timecreated, timemodified, createdby, modifiedby)
+      VALUES
+        (:microcontentid, :lang, :time, :time, :uid, :uid)
+    SQL)->execute([
+      ':microcontentid' => $microcontentid,
+      ':lang' => $sub['lang'],
+      ':time' => $time,
+      ':uid' => $uid
+    ]);
+  }
 }
 
-echo "{$microcontentid}_{$lang}";
+if ($lang) {
+  // NOTE: for static/js/common.js
+  echo "{$microcontentid}_{$lang}";
+} else {
+  // NOTE: for components/video.ts
+  echo $microcontentid;
+}
