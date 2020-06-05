@@ -15,6 +15,7 @@ import SaveIcon from "@material-ui/icons/Save";
 import Box from "@material-ui/core/Box";
 import Chip from "@material-ui/core/Chip";
 import Typography from "@material-ui/core/Typography";
+import InputAdornment from "@material-ui/core/InputAdornment";
 import { Subtitle, destroySubtitle } from "./video/subtitle";
 import { useRouter } from "./router";
 import { Video, updateVideo, createVideo } from "./video";
@@ -22,9 +23,10 @@ import { validUrl } from "./validUrl";
 
 const iso6391 = ISO6391.getLanguages(ISO6391.getAllCodes());
 const parseVideoId = (youtubeUrlOrVideoId: string) => {
-  if (validUrl(youtubeUrlOrVideoId))
-    return new URL(youtubeUrlOrVideoId).searchParams.get("v") ?? "";
-  return youtubeUrlOrVideoId;
+  if (!validUrl(youtubeUrlOrVideoId)) return youtubeUrlOrVideoId;
+  return (
+    new URL(youtubeUrlOrVideoId).searchParams.get("v") ?? youtubeUrlOrVideoId
+  );
 };
 
 export function EditVideo(props: { video: Video }) {
@@ -181,6 +183,13 @@ export function EditVideo(props: { video: Video }) {
           required
           fullWidth
           color="secondary"
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                https://www.youtube.com/watch?v=
+              </InputAdornment>
+            ),
+          }}
         />
       </Box>
       <TextField
