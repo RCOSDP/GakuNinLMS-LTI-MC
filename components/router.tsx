@@ -3,19 +3,12 @@ import NextLink from "next/link";
 import { UrlObject, format } from "url";
 import { ReactNode, useCallback } from "react";
 import { useRouter as useNextRouter } from "next/router";
+import { validUrl } from "./validUrl";
 
 const basePath =
   (process.env.NEXT_PUBLIC_API_BASE_PATH &&
     `${process.env.NEXT_PUBLIC_API_BASE_PATH}/beta`) ||
   "";
-
-const validUrl = (url: any) => {
-  try {
-    return new URL(url);
-  } catch {
-    return null;
-  }
-};
 
 function urlHandler(urlOrPath: string | UrlObject) {
   return (

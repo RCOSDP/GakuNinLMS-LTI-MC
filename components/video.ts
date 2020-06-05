@@ -165,9 +165,6 @@ type InitialVideoResponse = {
 export const useVideo = (id?: number) =>
   useApi([key, id], fetchVideo, initialVideo);
 
-export const mutateVideo = (id: number, dispatch: (video: Video) => Video) =>
-  mutate([key, id], dispatch);
-
 export async function createVideo(
   video: VideoSchema
 ): Promise<number | undefined> {

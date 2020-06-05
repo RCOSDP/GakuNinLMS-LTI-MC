@@ -17,9 +17,15 @@ import Chip from "@material-ui/core/Chip";
 import Typography from "@material-ui/core/Typography";
 import { Subtitle, destroySubtitle } from "./video/subtitle";
 import { useRouter } from "./router";
-import { Video, updateVideo, createVideo, mutateVideo } from "./video";
+import { Video, updateVideo, createVideo } from "./video";
+import { validUrl } from "./validUrl";
 
 const iso6391 = ISO6391.getLanguages(ISO6391.getAllCodes());
+const parseVideoId = (youtubeUrlOrVideoId: string) => {
+  if (validUrl(youtubeUrlOrVideoId))
+    return new URL(youtubeUrlOrVideoId).searchParams.get("v") ?? "";
+  return youtubeUrlOrVideoId;
+};
 
 export function EditVideo(props: { video: Video }) {
   const [video, setVideo] = useState<Video>(props.video);
@@ -69,7 +75,8 @@ export function EditVideo(props: { video: Video }) {
         produce(video, (draft) => {
           draft.title = form.get("title") as string;
           draft.description = form.get("description") as string;
-          draft.youtubeVideoId = form.get("youtubeVideoId") as string;
+          const youtubeUrlOrVideoId = form.get("youtubeVideoId") as string;
+          draft.youtubeVideoId = parseVideoId(youtubeUrlOrVideoId);
           draft.skills = draft.skills.map(({ id, name }) => ({
             id,
             name,
@@ -141,7 +148,7 @@ export function EditVideo(props: { video: Video }) {
           produce(video, (draft) => {
             draft.subtitles = draft.subtitles.filter((sub) => sub.id !== id);
           });
-        await mutateVideo(id, videoDispatch);
+        edit(videoDispatch);
       } catch {}
     },
     [edit]
@@ -168,7 +175,7 @@ export function EditVideo(props: { video: Video }) {
         </Box>
         <TextField
           name="youtubeVideoId"
-          label="YouTube Video ID"
+          label="YouTube 動画の URL またはビデオ ID"
           value={video.youtubeVideoId}
           variant="filled"
           required
