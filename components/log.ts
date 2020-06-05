@@ -111,7 +111,9 @@ export function trackingStart(player: VideoJsPlayer) {
     sendLog("ended", player);
   });
 
-  if ("__trackingStart" in window) return;
+  // TODO: Window オブジェクトを介さない排他制御にしたい
+  // @ts-ignore
+  if ("__trackingStart" in window && player === window.__trackingStart) return;
   window.addEventListener("beforeunload", function () {
     sendLog("beforeunload-ended", player);
   });
@@ -126,12 +128,10 @@ export function trackingStart(player: VideoJsPlayer) {
       sendLog("hidden-ended", player);
     }
   });
-  window.addEventListener("DOMContentLoaded", () => {
-    setInterval(function () {
-      sendLog("current-time", player);
-    }, 10000);
-  });
+  setInterval(function () {
+    sendLog("current-time", player);
+  }, 10000);
   // TODO: Window オブジェクトを介さない排他制御にしたい
   // @ts-ignore
-  window.__trackingStart = true;
+  window.__trackingStart = player;
 }

@@ -68,12 +68,12 @@ export function ContentsPlayer(props: {
   ) => void = React.useCallback(
     (index: number) => {
       const video = props.playlist[index];
+      return () => {
+        // NOTE: トラッキング用
+        if (!isLmsInstructor(session) && player) sendVideoId(player, video.id);
 
-      // NOTE: トラッキング用
-      if (!isLmsInstructor(session) && player) sendVideoId(player, video.id);
-
-      return () =>
         setPlayerState((prev) => prev && { index, ...video, autoplay: true });
+      };
     },
     [setPlayerState, props.playlist, session, player]
   );
