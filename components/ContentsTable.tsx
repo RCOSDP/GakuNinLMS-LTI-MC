@@ -133,7 +133,6 @@ export function ContentsTable(props: ContentsIndex) {
       options={{
         actionsColumnIndex: -1,
       }}
-      onRowClick={showHandler}
       data={data}
     />
   );
@@ -201,7 +200,6 @@ export function ContentsSelectorTable(props: ContentsIndex) {
       options={{
         actionsColumnIndex: 1,
       }}
-      onRowClick={showHandler}
       data={data}
     />
   );

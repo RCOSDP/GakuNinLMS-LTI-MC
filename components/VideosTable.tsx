@@ -114,7 +114,6 @@ export function VideosTable(props: Videos) {
       options={{
         actionsColumnIndex: -1,
       }}
-      onRowClick={editHandler}
       data={props.videos}
     />
   );
