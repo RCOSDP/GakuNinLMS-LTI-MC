@@ -1,6 +1,6 @@
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
-import AddIcon from "@material-ui/icons/Add";
+import AddCircleIcon from "@material-ui/icons/AddCircle";
 import { useRouter } from "./router";
 import { Table } from "./Table";
 import { MouseEvent, useCallback } from "react";
@@ -75,7 +75,7 @@ export function VideosTable(props: Videos) {
         { tooltip: "削除する", icon: DeleteIcon, onClick: destroyHandler },
         {
           tooltip: "ビデオを追加する",
-          icon: AddIcon,
+          icon: AddCircleIcon,
           onClick: newHandler,
           isFreeAction: true,
         },
