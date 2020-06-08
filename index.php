@@ -7,4 +7,4 @@ if (!$context->valid) {
   return;
 }
 
-header("Location: beta");
+header("Location: v1");

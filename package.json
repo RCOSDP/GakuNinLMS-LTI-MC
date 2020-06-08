@@ -30,7 +30,7 @@
     "videojs-youtube": "^2.6.1"
   },
   "scripts": {
-    "build": "next build && next export -o beta",
+    "build": "next build && next export -o v1",
     "format": "prettier --write components pages",
     "lint": "tsc",
     "storybook": "start-storybook"
