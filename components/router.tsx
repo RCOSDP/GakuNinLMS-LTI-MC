@@ -5,10 +5,7 @@ import { ReactNode, useCallback } from "react";
 import { useRouter as useNextRouter } from "next/router";
 import { validUrl } from "./validUrl";
 
-const basePath =
-  (process.env.NEXT_PUBLIC_API_BASE_PATH &&
-    `${process.env.NEXT_PUBLIC_API_BASE_PATH}/beta`) ||
-  "";
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
 
 function urlHandler(urlOrPath: string | UrlObject) {
   return (

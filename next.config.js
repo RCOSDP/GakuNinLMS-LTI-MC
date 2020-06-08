@@ -1,5 +1,5 @@
 module.exports = {
   experimental: {
-    basePath: `${process.env.NEXT_PUBLIC_API_BASE_PATH}/v1`
+    basePath: process.env.NEXT_PUBLIC_BASE_PATH || ""
   }
 }

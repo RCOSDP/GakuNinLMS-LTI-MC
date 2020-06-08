@@ -40,3 +40,4 @@ API の接続先の情報を変更する場合 .env を適宜書き換える必�
 | `NEXT_PUBLIC_API_BASE_PATH`       | API の URL のベースとなるパス     |
 | `NEXT_PUBLIC_SUBTITLE_STORE_PATH` | 字幕ファイルの保存先の URL のパス |
 | `NEXT_PUBLIC_LMS_URL`             | 学習管理システムの URL            |
+| `NEXT_PUBLIC_BASE_PATH`           | 静的コンテンツの URL のベースとなるパス |
