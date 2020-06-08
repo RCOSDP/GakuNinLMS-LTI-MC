@@ -12,6 +12,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import MenuItem from "@material-ui/core/MenuItem";
 import Button from "@material-ui/core/Button";
 import SaveIcon from "@material-ui/icons/Save";
+import CloseIcon from "@material-ui/icons/Close";
 import Box from "@material-ui/core/Box";
 import Chip from "@material-ui/core/Chip";
 import Typography from "@material-ui/core/Typography";
@@ -54,7 +55,14 @@ export function EditVideo(props: { video: Video }) {
       window.onbeforeunload = null;
     }
     showMessage(`保存しました`);
+    router.push("/videos");
   }, [video, showMessage, router]);
+  const closeHandler = useCallback(() => {
+    if (typeof window !== "undefined") {
+      window.onbeforeunload = null;
+    }
+    router.push("/videos");
+  }, [router]);
 
   const edit = useCallback(
     (dispatch: (v: Video) => Video) => {
@@ -310,7 +318,17 @@ export function EditVideo(props: { video: Video }) {
           )}
         </Box>
       </Box>
-      <Box mt={2} mb={4}>
+      <Box mt={2} mb={4} display="flex">
+        <Button
+          variant="contained"
+          size="large"
+          startIcon={<CloseIcon />}
+          onClick={closeHandler}
+          fullWidth
+          style={{ margin: 16 }}
+        >
+          保存せずビデオ一覧に戻る
+        </Button>
         <Button
           type="submit"
           name="submit"
@@ -318,8 +336,9 @@ export function EditVideo(props: { video: Video }) {
           size="large"
           startIcon={<SaveIcon />}
           fullWidth
+          style={{ margin: 16 }}
         >
-          保存する
+          保存してビデオ一覧に戻る
         </Button>
       </Box>
     </form>

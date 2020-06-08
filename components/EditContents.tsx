@@ -11,6 +11,7 @@ import {
   Button,
 } from "@material-ui/core";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
+import CloseIcon from "@material-ui/icons/Close";
 import SaveIcon from "@material-ui/icons/Save";
 import { useSnackbar } from "material-ui-snackbar-provider";
 import { useRouter } from "./router";
@@ -62,7 +63,14 @@ export function EditContents(props: { contents: Contents; videos: Videos }) {
       window.onbeforeunload = null;
     }
     showMessage(`保存しました`);
+    router.push("/contents");
   }, [contents, showMessage, router]);
+  const closeHandler = useCallback(() => {
+    if (typeof window !== "undefined") {
+      window.onbeforeunload = null;
+    }
+    router.push("/videos");
+  }, [router]);
   const playHandler = useCallback(async () => {
     if (!contents.id) return;
     router.push({
@@ -201,7 +209,17 @@ export function EditContents(props: { contents: Contents; videos: Videos }) {
           onClose={addVideo}
         />
       </Box>
-      <Box mt={2} mb={4}>
+      <Box mt={2} mb={4} display="flex">
+        <Button
+          variant="contained"
+          size="large"
+          startIcon={<CloseIcon />}
+          onClick={closeHandler}
+          fullWidth
+          style={{ margin: 16 }}
+        >
+          保存せず学習コンテンツ一覧に戻る
+        </Button>
         <Button
           type="submit"
           name="submit"
@@ -210,8 +228,9 @@ export function EditContents(props: { contents: Contents; videos: Videos }) {
           startIcon={<SaveIcon />}
           onClick={saveHandler}
           fullWidth
+          style={{ margin: 16 }}
         >
-          保存する
+          保存して学習コンテンツ一覧に戻る
         </Button>
       </Box>
     </>
