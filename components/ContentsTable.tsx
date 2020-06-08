@@ -4,7 +4,6 @@ import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import LibraryAdd from "@material-ui/icons/LibraryAdd";
 import LinkIcon from "@material-ui/icons/Link";
-import LinkOffIcon from "@material-ui/icons/LinkOff";
 import { Column } from "material-table";
 import { useSnackbar } from "material-ui-snackbar-provider";
 import { registContents, SessionResponse } from "./api";
@@ -161,9 +160,10 @@ export function ContentsSelectorTable(props: ContentsIndex) {
   const linkAction = useCallback(
     (row: ContentsRow) => {
       return {
-        icon: row.id === session?.contents ? LinkIcon : LinkOffIcon,
+        icon: LinkIcon,
         tooltip: "学習管理システムに紐付ける",
         onClick: showHandler,
+        disabled: row.id === session?.contents,
       };
     },
     [router, showHandler, session]
