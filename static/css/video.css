@@ -1,9 +1,0 @@
-.vjs-audio-button,
-.vjs-picture-in-picture-control,
-.vjs-seek-to-live-control,
-.vjs-poster {
-  display: none !important;
-}
-.vjs-menu-content {
-  max-height: unset !important;
-}
