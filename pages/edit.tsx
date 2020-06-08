@@ -2,7 +2,7 @@ import { useContentsIndex } from "components/contents";
 import { useAppTitle } from "components/state";
 import { useLmsInstructor } from "components/session";
 import { ContentsSelectorTable } from "components/ContentsTable";
-import { Typography } from "@material-ui/core";
+import Alert from "@material-ui/lab/Alert";
 
 function Index() {
   useLmsInstructor();
@@ -16,9 +16,9 @@ function Index() {
   }
   return (
     <div>
-      <Typography>
+      <Alert severity="info">
         選択したコンテンツを学習管理システムに紐付けます。紐付ける学習コンテンツを選択してください。
-      </Typography>
+      </Alert>
       <ContentsSelectorTable {...contentsIndex} />
     </div>
   );

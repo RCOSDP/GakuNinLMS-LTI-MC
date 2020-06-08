@@ -6,6 +6,7 @@
   "devDependencies": {
     "@material-ui/core": "^4.10.0",
     "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "^4.0.0-alpha.55",
     "@material-ui/styles": "^4.10.0",
     "@storybook/react": "^5.3.19",
     "@types/node": "^14.0.5",
