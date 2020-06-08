@@ -1,4 +1,6 @@
 import React from "react";
+import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
+import Paper from "@material-ui/core/Paper";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
@@ -13,6 +15,32 @@ import { PlayerProps, Player } from "./Player";
 import { usePlayer } from "./VideoJs";
 import { sendVideoId, trackingStart } from "./log";
 import { useLmsSession, isLmsInstructor } from "./session";
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    flex: {
+      [theme.breakpoints.up("md")]: {
+        display: "flex",
+      },
+    },
+    player: {
+      [theme.breakpoints.up("md")]: {
+        order: 2,
+        flexGrow: 1,
+      },
+    },
+    playList: {
+      [theme.breakpoints.up("md")]: {
+        order: 1,
+        flexBasis: "320px",
+        flexShrink: 0,
+        maxHeight: "calc(100vh - 72px)",
+        marginRight: theme.spacing(1),
+        overflowY: "auto",
+      },
+    },
+  })
+);
 
 /**
  * playlist を順番に再生するコンポーネント
@@ -78,6 +106,7 @@ export function ContentsPlayer(props: {
     [setPlayerState, props.playlist, session, player]
   );
 
+  const classes = useStyles();
   return (
     <>
       <Box my={2}>
@@ -85,80 +114,85 @@ export function ContentsPlayer(props: {
           {props.contents.title}
         </Typography>
       </Box>
-      <Box my={2}>{playerState && <Player {...playerState} />}</Box>
-      <Box my={2}>
-        <Typography component="h3" variant="h6" style={{ marginBottom: 8 }}>
-          {playerState && props.playlist[playerState.index].title}
-        </Typography>
-        <Typography>
-          {playerState && props.playlist[playerState.index].description}
-        </Typography>
+      <Box className={classes.flex}>
+        <Box className={classes.player}>
+          {playerState && <Player {...playerState} />}
+          <Box my={2}>
+            <Typography component="h3" variant="h6" style={{ marginBottom: 8 }}>
+              {playerState && props.playlist[playerState.index].title}
+            </Typography>
+            <Typography>
+              {playerState && props.playlist[playerState.index].description}
+            </Typography>
+          </Box>
+          <Divider />
+          <Box
+            my={2}
+            component="dl"
+            display="grid"
+            gridTemplateColumns="4rem 1fr"
+            gridColumnGap="1rem"
+          >
+            <Typography component="dt">スキル</Typography>
+            <Typography component="dd">
+              {(playerState &&
+                props.playlist[playerState.index].skills
+                  .filter(({ has }) => has)
+                  .map(({ name }) => name)
+                  .join(", ")) ||
+                "-"}
+            </Typography>
+            <Typography component="dt">職種</Typography>
+            <Typography component="dd">
+              {(playerState &&
+                props.playlist[playerState.index].tasks
+                  .filter(({ has }) => has)
+                  .map(({ name }) => name)
+                  .join(", ")) ||
+                "-"}
+            </Typography>
+            <Typography component="dt">レベル</Typography>
+            <Typography component="dd">
+              {(playerState &&
+                props.playlist[playerState.index].levels
+                  .filter(({ has }) => has)
+                  .map(({ name }) => name)
+                  .join(", ")) ||
+                "-"}
+            </Typography>
+          </Box>
+        </Box>
+        <Paper className={classes.playList}>
+          <List component="nav" aria-label="secondary mailbox folders">
+            {props.playlist.map(({ id, title, description }, index) => {
+              const playing = playerState?.index === index;
+              return (
+                <ListItem
+                  key={index}
+                  button
+                  selected={playing}
+                  onClick={playlistClickHandler(index)}
+                >
+                  {playing && (
+                    <ListItemIcon>
+                      <PlayArrowIcon />
+                    </ListItemIcon>
+                  )}
+                  <ListItemText
+                    primary={title}
+                    secondary={`#${id} : ${description}`}
+                    style={{
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                    }}
+                    inset={!playing}
+                  />
+                </ListItem>
+              );
+            })}
+          </List>
+        </Paper>
       </Box>
-      <Divider />
-      <Box
-        my={2}
-        component="dl"
-        display="grid"
-        gridTemplateColumns="4rem 1fr"
-        gridColumnGap="1rem"
-      >
-        <Typography component="dt">スキル</Typography>
-        <Typography component="dd">
-          {(playerState &&
-            props.playlist[playerState.index].skills
-              .filter(({ has }) => has)
-              .map(({ name }) => name)
-              .join(", ")) ||
-            "-"}
-        </Typography>
-        <Typography component="dt">職種</Typography>
-        <Typography component="dd">
-          {(playerState &&
-            props.playlist[playerState.index].tasks
-              .filter(({ has }) => has)
-              .map(({ name }) => name)
-              .join(", ")) ||
-            "-"}
-        </Typography>
-        <Typography component="dt">レベル</Typography>
-        <Typography component="dd">
-          {(playerState &&
-            props.playlist[playerState.index].levels
-              .filter(({ has }) => has)
-              .map(({ name }) => name)
-              .join(", ")) ||
-            "-"}
-        </Typography>
-      </Box>
-      <Divider />
-      <List component="nav" aria-label="secondary mailbox folders">
-        {props.playlist.map(({ id, title, description }, index) => {
-          const playing = playerState?.index === index;
-          return (
-            <ListItem
-              key={index}
-              button
-              selected={playing}
-              onClick={playlistClickHandler(index)}
-            >
-              {playing && (
-                <ListItemIcon>
-                  <PlayArrowIcon />
-                </ListItemIcon>
-              )}
-              <ListItemText
-                primary={title}
-                secondary={`#${id} : ${description}`}
-                style={{
-                  whiteSpace: "nowrap",
-                  overflow: "hidden",
-                }}
-                inset={!playing}
-              />
-            </ListItem>
-          );
-        })}
-      </List>
     </>
   );
 }
