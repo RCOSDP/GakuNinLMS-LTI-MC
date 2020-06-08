@@ -16,10 +16,10 @@ function Index() {
   }
   return (
     <div>
-      <ContentsSelectorTable {...contentsIndex} />
       <Typography>
-        選択したコンテンツを学習管理システムに紐付けます。
+        選択したコンテンツを学習管理システムに紐付けます。紐付ける学習コンテンツを選択してください。
       </Typography>
+      <ContentsSelectorTable {...contentsIndex} />
     </div>
   );
 }
