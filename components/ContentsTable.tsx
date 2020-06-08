@@ -169,7 +169,11 @@ export function ContentsSelectorTable(props: ContentsIndex) {
     [router, showHandler, session]
   );
 
-  const data = props.contents;
+  const linked = props.contents.find(({ id }) => id === session?.contents);
+  const data = [
+    ...(linked ? [linked] : []),
+    ...props.contents.filter(({ id }) => id !== linked?.id),
+  ];
   return (
     <Table
       title="学習コンテンツ一覧"
