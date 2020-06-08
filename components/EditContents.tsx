@@ -94,7 +94,9 @@ export function EditContents(props: { contents: Contents; videos: Videos }) {
   );
   const editTitleHandler = useCallback(
     (event: FormEvent<HTMLHeadingElement>) => {
-      const title = (event.currentTarget.textContent || "").replace(/\s/g, " ");
+      const title = (event.currentTarget.textContent || "")
+        .replace(/\s/g, " ")
+        .trim();
       event.currentTarget.textContent = title;
       editTitle(title);
     },
