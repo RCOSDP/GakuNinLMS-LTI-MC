@@ -3,7 +3,13 @@ import { reorder } from "./reorder";
 import { produce } from "immer";
 import { Contents, updateContents, createContents } from "./contents";
 import { ReorderVideos } from "./ReorderVideos";
-import { Typography, IconButton, Tooltip, Box } from "@material-ui/core";
+import {
+  Typography,
+  IconButton,
+  Tooltip,
+  Box,
+  Button,
+} from "@material-ui/core";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import SaveIcon from "@material-ui/icons/Save";
 import { useSnackbar } from "material-ui-snackbar-provider";
@@ -158,17 +164,6 @@ export function EditContents(props: { contents: Contents; videos: Videos }) {
   return (
     <>
       <Box my={2}>
-        <Tooltip title="保存する">
-          <IconButton
-            area-label="save"
-            style={{
-              marginBottom: 8,
-            }}
-            onClick={saveHandler}
-          >
-            <SaveIcon />
-          </IconButton>
-        </Tooltip>
         <Tooltip title="再生する">
           <IconButton
             area-label="play"
@@ -205,6 +200,19 @@ export function EditContents(props: { contents: Contents; videos: Videos }) {
           onOpen={() => {}}
           onClose={addVideo}
         />
+      </Box>
+      <Box mt={2} mb={4}>
+        <Button
+          type="submit"
+          name="submit"
+          variant="contained"
+          size="large"
+          startIcon={<SaveIcon />}
+          onClick={saveHandler}
+          fullWidth
+        >
+          保存する
+        </Button>
       </Box>
     </>
   );
