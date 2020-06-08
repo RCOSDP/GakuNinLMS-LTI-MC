@@ -21,7 +21,7 @@ export default class extends App {
                 document.location.href = e.currentTarget.href;
               }}
               style={{
-                position: "absolute",
+                position: "fixed",
                 right: 0,
                 bottom: 0,
               }}
