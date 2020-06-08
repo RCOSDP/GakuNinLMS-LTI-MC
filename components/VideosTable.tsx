@@ -7,14 +7,24 @@ import { MouseEvent, useCallback } from "react";
 import { Column } from "material-table";
 import { Videos, destroyVideo } from "./video";
 import { useSnackbar } from "material-ui-snackbar-provider";
+import { SessionResponse } from "./api";
+import { useLmsInstructor } from "./session";
 
 type VideosRow = {
   id: number;
   title: string;
   description: string;
+  creator: string;
 };
 
+function editable(row: VideosRow, session?: SessionResponse) {
+  return (
+    session && (session.role === "administrator" || row.creator === session.id)
+  );
+}
+
 export function VideosTable(props: Videos) {
+  const session = useLmsInstructor();
   const router = useRouter();
   const newHandler = useCallback(() => {
     router.push({
@@ -49,6 +59,31 @@ export function VideosTable(props: Videos) {
     [showMessage]
   );
 
+  const editAction = useCallback(
+    (row: VideosRow) => {
+      const disabled = !editable(row, session);
+      return {
+        tooltip: disabled ? "権限がありません" : "編集する",
+        icon: EditIcon,
+        disabled,
+        onClick: editHandler,
+      };
+    },
+    [editHandler, session]
+  );
+  const destroyAction = useCallback(
+    (row: VideosRow) => {
+      const disabled = !editable(row, session);
+      return {
+        tooltip: disabled ? "権限がありません" : "削除する",
+        icon: DeleteIcon,
+        disabled,
+        onClick: destroyHandler,
+      };
+    },
+    [destroyHandler, session]
+  );
+
   return (
     <Table
       title="ビデオ一覧"
@@ -67,12 +102,8 @@ export function VideosTable(props: Videos) {
         ] as Column<VideosRow>[]
       }
       actions={[
-        {
-          tooltip: "編集する",
-          icon: EditIcon,
-          onClick: editHandler,
-        },
-        { tooltip: "削除する", icon: DeleteIcon, onClick: destroyHandler },
+        editAction,
+        destroyAction,
         {
           tooltip: "ビデオを追加する",
           icon: AddCircleIcon,

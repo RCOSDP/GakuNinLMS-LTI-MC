@@ -5,8 +5,10 @@ if (!$context->valid) {
   http_response_code(401);
   return;
 }
-
-// TODO: Instructor と Administrator のみ
+if (!$context->isInstructor()) {
+  http_response_code(403);
+  return;
+}
 
 $db = require(__DIR__.'/../database.php');
 

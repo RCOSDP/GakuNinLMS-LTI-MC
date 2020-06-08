@@ -10,6 +10,7 @@ const videos: Videos = {
     id,
     title: `Sample Video ${id}`,
     description: `Sample Description ${id}`,
+    creator: `user${id}`,
   })),
   state: "success",
 };

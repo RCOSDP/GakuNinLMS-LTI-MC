@@ -6,8 +6,6 @@ if (!$context->valid) {
   return;
 }
 
-// TODO: Instructor と Administrator のみ
-
 $db = require(__DIR__.'/../database.php');
 
 $content_id = $_POST['content_id'];

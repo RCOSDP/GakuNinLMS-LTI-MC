@@ -5,8 +5,10 @@ if (!$context->valid) {
   http_response_code(401);
   return;
 }
-
-// TODO: Instructor と Administrator のみ
+if (!$context->isInstructor()) {
+  http_response_code(403);
+  return;
+}
 
 $db = require(__DIR__.'/../database.php');
 
@@ -17,6 +19,11 @@ $json = file_get_contents('php://input');
 $arr = json_decode($json, true);
 $title = $arr['title'];
 $contentid = $arr['id'];
+
+if (!$context->isAdministrator() && createdby($db, $contentid) !== $context->getUserKey()) {
+  http_response_code(403);
+  return;
+}
 
 $db->prepare(<<<'SQL'
   UPDATE mc_content

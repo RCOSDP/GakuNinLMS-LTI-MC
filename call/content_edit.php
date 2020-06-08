@@ -5,12 +5,19 @@ if (!$context->valid) {
   http_response_code(401);
   return;
 }
-
-// TODO: Instructor と Administrator のみ
+if (!$context->isInstructor()) {
+  http_response_code(403);
+  return;
+}
 
 $db = require(__DIR__.'/../database.php');
 
 $content_id = $_POST['content_id'];
+
+if (!$context->isAdministrator() && createdby($db, $content_id) !== $context->getUserKey()) {
+  http_response_code(403);
+  return;
+}
 
 $sth = $db->prepare(<<<'SQL'
   SELECT name FROM mc_content

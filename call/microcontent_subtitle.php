@@ -5,14 +5,23 @@ if (!$context->valid) {
   http_response_code(401);
   return;
 }
+if (!$context->isInstructor()) {
+  http_response_code(403);
+  return;
+}
 
-// TODO: Instructor と Administrator のみ
+$db = require(__DIR__.'/../database.php');
 
 /**
  * @var int Microcontent ID
- * TODO: 権限の検証 #28
  */
 $id = filter_var($_POST['id'], FILTER_VALIDATE_INT);
+
+if (!$context->isAdministrator() && video_createdby($db, $id) !== $context->getUserKey()) {
+  http_response_code(403);
+  return;
+}
+
 /** @var string ファイル接頭辞 */
 $prefix = $id > 0 ? strval($id) : bin2hex(random_bytes(16));
 /** @var string[] 言語コード一覧 */

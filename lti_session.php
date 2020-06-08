@@ -27,6 +27,30 @@ function blti_context(): BLTI {
     return $context;
 }
 
+function createdby(PDO $db, int $content_id): string {
+    $sth = $db->prepare(<<<'SQL'
+        SELECT createdby FROM mc_content
+        WHERE
+            id=? AND deleted=0
+        LIMIT 1
+        SQL);
+    $sth->execute([$content_id]);
+    $row = $sth->fetch();
+    return $row['createdby'];
+}
+
+function video_createdby(PDO $db, int $id): string {
+    $sth = $db->prepare(<<<'SQL'
+        SELECT createdby FROM mc_microcontent
+        WHERE
+            id=? AND deleted=0
+        LIMIT 1
+        SQL);
+    $sth->execute([$id]);
+    $row = $sth->fetch();
+    return $row['createdby'];
+}
+
 //error_reporting(E_ALL & ~E_NOTICE);
 //ini_set("display_errors", 1);
 session_start();

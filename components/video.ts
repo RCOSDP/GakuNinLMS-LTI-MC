@@ -27,11 +27,13 @@ type VideoSchema = {
   subtitles: Subtitle[];
 };
 
+type UserId = string; // NOTE: セッションに含まれる利用者のID
 type VideosSchema = {
   videos: Array<{
     id: number;
     title: string;
     description: string;
+    creator: UserId;
   }>;
 };
 
@@ -54,14 +56,16 @@ type VideosResponse = {
     id: string;
     name: string;
     description: string;
+    createdby: string;
   }>;
 };
 function videosHandler(res: VideosResponse): VideosSchema {
   return {
-    videos: res.contents.map(({ id, name, description }) => ({
+    videos: res.contents.map(({ id, name, description, createdby }) => ({
       id: Number(id),
       title: name,
       description,
+      creator: createdby,
     })),
   };
 }

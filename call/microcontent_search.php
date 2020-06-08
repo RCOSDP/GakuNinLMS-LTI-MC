@@ -5,8 +5,10 @@ if (!$context->valid) {
   http_response_code(401);
   return;
 }
-
-// TODO: Instructor と Administrator のみ
+if (!$context->isInstructor()) {
+  http_response_code(403);
+  return;
+}
 
 $db = require(__DIR__.'/../database.php');
 
@@ -14,7 +16,7 @@ $keyword = $_POST['keyword'];
 
 // NOTE: read mc_microcontent
 $sth = $db->prepare(<<<'SQL'
-  SELECT id, name, description FROM mc_microcontent
+  SELECT id, name, description, createdby FROM mc_microcontent
   WHERE
     (
       name LIKE :keyword OR description LIKE :keyword
@@ -27,9 +29,10 @@ $sth->execute([':keyword' => '%'.addcslashes($keyword, '\_%').'%']);
 $tocs = array();
 foreach ($sth as $row) {
   $toc = array();
-  $toc['id'] = $row['id'];;
-  $toc['name'] = $row['name'];;
-  $toc['description'] = $row['description'];;
+  $toc['id'] = $row['id'];
+  $toc['name'] = $row['name'];
+  $toc['description'] = $row['description'];
+  $toc['createdby'] = $row['createdby'];
   array_push($tocs, $toc);
 }
 
