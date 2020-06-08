@@ -171,7 +171,14 @@ export function ContentsSelectorTable(props: ContentsIndex) {
 
   const linked = props.contents.find(({ id }) => id === session?.contents);
   const data = [
-    ...(linked ? [linked] : []),
+    ...(linked
+      ? [
+          {
+            ...linked,
+            title: `${linked.title} (学習管理システムに紐付いています)`,
+          },
+        ]
+      : []),
     ...props.contents.filter(({ id }) => id !== linked?.id),
   ];
   return (
