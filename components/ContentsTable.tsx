@@ -195,21 +195,7 @@ export function ContentsSelectorTable(props: ContentsIndex) {
           },
         ] as Column<ContentsRow>[]
       }
-      actions={[
-        linkAction,
-        {
-          icon: LibraryAdd,
-          tooltip: "学習コンテンツを作成する",
-          isFreeAction: true,
-          onClick: () =>
-            router.push({
-              pathname: "/contents",
-              query: {
-                action: "new",
-              },
-            }),
-        },
-      ]}
+      actions={[linkAction]}
       options={{
         actionsColumnIndex: 1,
       }}
