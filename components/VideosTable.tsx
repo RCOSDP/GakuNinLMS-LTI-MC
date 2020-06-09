@@ -58,6 +58,17 @@ export function VideosTable(props: Videos) {
     },
     [showMessage]
   );
+  const previewHandler = useCallback(
+    (_: any, row?: VideosRow) => {
+      router.push({
+        pathname: "/videos",
+        query: {
+          preview: row?.id,
+        },
+      });
+    },
+    [router]
+  );
 
   const editAction = useCallback(
     (row: VideosRow) => {
@@ -114,6 +125,7 @@ export function VideosTable(props: Videos) {
       options={{
         actionsColumnIndex: -1,
       }}
+      onRowClick={previewHandler}
       data={props.videos}
     />
   );

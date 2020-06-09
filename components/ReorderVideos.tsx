@@ -116,10 +116,10 @@ function VideoMoreMenu(props: {
       icon: <PlayArrowIcon />,
       onClick() {
         router.push({
-          pathname: "/videos",
+          pathname: "/contents",
           query: {
-            id: props.video.id,
-            action: "edit",
+            ...router.query,
+            preview: props.video.id,
           },
         });
       },

@@ -1,4 +1,6 @@
+import React from "react";
 import { useVideos, useVideo } from "components/video";
+import { PreviewDialog } from "components/video/PreviewDialog";
 import { useAppTitle } from "components/state";
 import { useRouter } from "components/router";
 import { useLmsInstructor } from "components/session";
@@ -7,19 +9,31 @@ import { ShowVideo } from "components/ShowVideo";
 import { EditVideo } from "components/EditVideo";
 import { NewVideo } from "components/NewVideo";
 
-type Query = { id?: string; action?: "edit" | "new" };
+type Query = { id?: string; action?: "edit" | "new"; preview?: string };
 
-function Index() {
+function Index(props: { preview?: string }) {
   const videos = useVideos();
+  const previewVideo = useVideo(Number(props.preview));
+  const router = useRouter();
+  const closePreviewHandler = React.useCallback(() => {
+    router.push("/videos");
+  }, [router]);
+
   switch (videos.state) {
     case "failure":
       return <div>failed to load</div>;
     case "pending":
       return <div>loading...</div>;
   }
+
   return (
     <div>
       <VideosTable {...videos} />
+      <PreviewDialog
+        open={Boolean(props.preview)}
+        onClose={closePreviewHandler}
+        video={previewVideo}
+      />
     </div>
   );
 }
@@ -47,7 +61,7 @@ function Router() {
   if (!query.id) {
     switch (query.action) {
       default:
-        return <Index />;
+        return <Index preview={query.preview} />;
       case "new":
         return <New />;
     }

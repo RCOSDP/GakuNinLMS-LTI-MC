@@ -69,7 +69,7 @@ export function EditContents(props: { contents: Contents; videos: Videos }) {
     if (typeof window !== "undefined") {
       window.onbeforeunload = null;
     }
-    router.push("/videos");
+    router.push("/contents");
   }, [router]);
   const playHandler = useCallback(async () => {
     if (!contents.id) return;

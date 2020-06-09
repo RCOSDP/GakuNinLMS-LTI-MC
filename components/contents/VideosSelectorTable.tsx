@@ -1,6 +1,7 @@
 import { useCallback, useRef, useEffect } from "react";
 import { Column } from "material-table";
 import PlaylistAddCheckIcon from "@material-ui/icons/PlaylistAddCheck";
+import { useRouter } from "../router";
 import { Table } from "../Table";
 
 export type VideosRow = {
@@ -27,6 +28,21 @@ export function VideosSelectorTable(props: {
     },
     [props.onSelect]
   );
+  const router = useRouter();
+  const previewHandler = useCallback(
+    (_: any, row?: VideosRow) => {
+      router.push({
+        pathname: "/contents",
+        query: {
+          id: router.query.id,
+          action: router.query.action,
+          preview: row?.id,
+        },
+      });
+    },
+    [router]
+  );
+
   return (
     <Table
       tableRef={tableRef}
@@ -55,6 +71,7 @@ export function VideosSelectorTable(props: {
       options={{
         selection: true,
       }}
+      onRowClick={previewHandler}
       data={props.rows}
     />
   );
