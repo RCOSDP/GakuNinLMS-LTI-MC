@@ -1,5 +1,6 @@
 import { Video } from "./video";
+import { VideoPlayer } from "./VideoPlayer";
 
 export function ShowVideo(props: Video) {
-  return <pre>{JSON.stringify(props, null, 2) /* Debug */}</pre>;
+  return <VideoPlayer {...props} />;
 }

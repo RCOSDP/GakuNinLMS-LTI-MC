@@ -3,7 +3,6 @@ import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
-import Divider from "@material-ui/core/Divider";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -11,10 +10,11 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import { Contents } from "./contents";
 import { Video } from "./video";
-import { PlayerProps, Player } from "./Player";
+import { PlayerProps } from "./Player";
 import { usePlayer } from "./VideoJs";
 import { sendVideoId, trackingStart } from "./log";
 import { useLmsSession, isLmsInstructor } from "./session";
+import { VideoPlayerProps, VideoPlayer } from "./VideoPlayer";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -107,6 +107,10 @@ export function ContentsPlayer(props: {
   );
 
   const classes = useStyles();
+  const videoPlayerProps: VideoPlayerProps | undefined = playerState && {
+    ...playerState,
+    ...props.playlist[playerState.index],
+  };
   return (
     <>
       <Box my={2}>
@@ -116,51 +120,7 @@ export function ContentsPlayer(props: {
       </Box>
       <Box className={classes.flex}>
         <Box className={classes.player}>
-          {playerState && <Player {...playerState} />}
-          <Box my={2}>
-            <Typography component="h3" variant="h6" style={{ marginBottom: 8 }}>
-              {playerState && props.playlist[playerState.index].title}
-            </Typography>
-            <Typography>
-              {playerState && props.playlist[playerState.index].description}
-            </Typography>
-          </Box>
-          <Divider />
-          <Box
-            my={2}
-            component="dl"
-            display="grid"
-            gridTemplateColumns="4rem 1fr"
-            gridColumnGap="1rem"
-          >
-            <Typography component="dt">スキル</Typography>
-            <Typography component="dd">
-              {(playerState &&
-                props.playlist[playerState.index].skills
-                  .filter(({ has }) => has)
-                  .map(({ name }) => name)
-                  .join(", ")) ||
-                "-"}
-            </Typography>
-            <Typography component="dt">職種</Typography>
-            <Typography component="dd">
-              {(playerState &&
-                props.playlist[playerState.index].tasks
-                  .filter(({ has }) => has)
-                  .map(({ name }) => name)
-                  .join(", ")) ||
-                "-"}
-            </Typography>
-            <Typography component="dt">レベル</Typography>
-            <Typography component="dd">
-              {(playerState &&
-                props.playlist[playerState.index].levels
-                  .filter(({ has }) => has)
-                  .map(({ name }) => name)
-                  .join(", ")) ||
-                "-"}
-            </Typography>
-          </Box>
+          {videoPlayerProps && <VideoPlayer {...videoPlayerProps} />}
         </Box>
         <Paper className={classes.playList}>
           <List component="nav" aria-label="secondary mailbox folders">

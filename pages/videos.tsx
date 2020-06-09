@@ -11,7 +11,6 @@ type Query = { id?: string; action?: "edit" | "new" };
 
 function Index() {
   const videos = useVideos();
-  useAppTitle()("ビデオ管理");
   switch (videos.state) {
     case "failure":
       return <div>failed to load</div>;
@@ -27,7 +26,6 @@ function Index() {
 
 function Show(props: { id: string }) {
   const video = useVideo(Number(props.id));
-  useAppTitle()(video.title);
   return <ShowVideo {...video} />;
 }
 function Edit(props: { id: string }) {
@@ -43,6 +41,8 @@ function Router() {
   useLmsInstructor();
   const router = useRouter();
   const query: Query = router.query;
+
+  useAppTitle()("ビデオ管理");
 
   if (!query.id) {
     switch (query.action) {

@@ -16,7 +16,7 @@ import { mutate } from "swr";
 const key = "/api/video";
 
 type YouTubeVideoId = string;
-type VideoSchema = {
+export type VideoSchema = {
   id?: number;
   title: string;
   description: string;
