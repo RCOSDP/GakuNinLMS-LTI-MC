@@ -13,13 +13,19 @@ import {
   useLmsInstructor,
   isLmsInstructor,
 } from "components/session";
+import { PreviewContentsDialog } from "components/contents/PreviewContentsDialog";
 import { PreviewDialog } from "components/video/PreviewDialog";
 
 type Query = { id?: string; action?: "edit" | "new"; preview?: string };
 
-function Index() {
+function Index(props: { preview?: string }) {
   useLmsInstructor();
   const contentsIndex = useContentsIndex();
+  const previewContents = useContents(Number(props.preview));
+  const router = useRouter();
+  const closePreviewHandler = React.useCallback(() => {
+    router.push("/contents");
+  }, [router]);
 
   switch (contentsIndex.state) {
     case "failure":
@@ -31,6 +37,11 @@ function Index() {
   return (
     <div>
       <ContentsTable {...contentsIndex} />
+      <PreviewContentsDialog
+        open={Boolean(props.preview)}
+        onClose={closePreviewHandler}
+        contents={previewContents}
+      />
     </div>
   );
 }
@@ -65,9 +76,14 @@ function Edit(props: { id: string; preview?: string }) {
     <div>
       <EditContents contents={contents} videos={videos} />
       <PreviewDialog
-        open={Boolean(props.preview)}
+        open={Boolean(props.preview) && props.preview !== "all"}
         onClose={closePreviewHandler}
         video={previewVideo}
+      />
+      <PreviewContentsDialog
+        open={props.preview === "all"}
+        onClose={closePreviewHandler}
+        contents={contents}
       />
     </div>
   );
@@ -107,7 +123,7 @@ function Router() {
   if (!query.id) {
     switch (query.action) {
       default:
-        return <Index />;
+        return <Index preview={query.preview} />;
       case "new":
         return <New preview={query.preview} />;
     }

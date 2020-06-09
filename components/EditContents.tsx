@@ -71,16 +71,17 @@ export function EditContents(props: { contents: Contents; videos: Videos }) {
     }
     router.push("/contents");
   }, [router]);
-  const playHandler = useCallback(async () => {
-    if (!contents.id) return;
+  const previewHandler = useCallback(() => {
     router.push({
       pathname: "/contents",
       query: {
-        id: contents.id,
-        action: "show",
+        id: router.query.id,
+        action: router.query.action,
+        preview: "all",
       },
     });
-  }, [saveHandler, contents, router]);
+  }, [router]);
+
   const editContents = useCallback(
     (dispatch: (c: Contents) => Contents) => {
       setContents(dispatch({ ...contents, state: "pending" }));
@@ -179,8 +180,7 @@ export function EditContents(props: { contents: Contents; videos: Videos }) {
               marginRight: 16,
               marginBottom: 8,
             }}
-            onClick={playHandler}
-            disabled={contents.id == null || contents.state !== "success"}
+            onClick={previewHandler}
           >
             <PlayArrowIcon />
           </IconButton>

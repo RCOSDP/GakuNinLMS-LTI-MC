@@ -1,5 +1,4 @@
 import { MouseEvent, useCallback } from "react";
-import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import LibraryAdd from "@material-ui/icons/LibraryAdd";
@@ -27,21 +26,6 @@ function editable(row: ContentsRow, session?: SessionResponse) {
 export function ContentsTable(props: ContentsIndex) {
   const session = useLmsInstructor();
   const router = useRouter();
-  const showHandler = useCallback(
-    (event?: MouseEvent, row?: ContentsRow | ContentsRow[]) => {
-      const contents = Array.isArray(row) ? row[0] : row;
-      if (contents == null) return;
-      router.push({
-        pathname: "/contents",
-        query: {
-          id: contents.id,
-          action: "show",
-        },
-      });
-      event?.preventDefault();
-    },
-    [router]
-  );
   const newHandler = useCallback(() => {
     router.push({
       pathname: "/contents",
@@ -73,6 +57,17 @@ export function ContentsTable(props: ContentsIndex) {
       showMessage(`「${contents.title}」を削除しました`);
     },
     [showMessage]
+  );
+  const previewHandler = useCallback(
+    (_: any, row?: ContentsRow) => {
+      router.push({
+        pathname: "/contents",
+        query: {
+          preview: row?.id,
+        },
+      });
+    },
+    [router]
   );
 
   const editAction = useCallback(
@@ -115,11 +110,6 @@ export function ContentsTable(props: ContentsIndex) {
         ] as Column<ContentsRow>[]
       }
       actions={[
-        {
-          icon: PlayArrowIcon,
-          tooltip: "再生する",
-          onClick: showHandler,
-        },
         editAction,
         destroyAction,
         {
@@ -132,6 +122,7 @@ export function ContentsTable(props: ContentsIndex) {
       options={{
         actionsColumnIndex: -1,
       }}
+      onRowClick={previewHandler}
       data={data}
     />
   );
@@ -152,6 +143,17 @@ export function ContentsSelectorTable(props: ContentsIndex) {
         },
       });
       event?.preventDefault();
+    },
+    [router]
+  );
+  const previewHandler = useCallback(
+    (_: any, row?: ContentsRow) => {
+      router.push({
+        pathname: "/edit",
+        query: {
+          preview: row?.id,
+        },
+      });
     },
     [router]
   );
@@ -211,6 +213,7 @@ export function ContentsSelectorTable(props: ContentsIndex) {
       options={{
         actionsColumnIndex: 1,
       }}
+      onRowClick={previewHandler}
       data={data}
     />
   );

@@ -1,12 +1,20 @@
-import { useContentsIndex } from "components/contents";
+import React from "react";
+import { useContentsIndex, useContents } from "components/contents";
 import { useAppTitle } from "components/state";
 import { useLmsInstructor } from "components/session";
 import { ContentsSelectorTable } from "components/ContentsTable";
 import Alert from "@material-ui/lab/Alert";
+import { PreviewContentsDialog } from "components/contents/PreviewContentsDialog";
+import { useRouter } from "components/router";
 
-function Index() {
+function Edit() {
   useLmsInstructor();
   const contentsIndex = useContentsIndex();
+  const router = useRouter();
+  const closePreviewHandler = React.useCallback(() => {
+    router.push("/edit");
+  }, [router]);
+  const previewContents = useContents(Number(router.query.preview));
   useAppTitle()("学習管理システム連携");
   switch (contentsIndex.state) {
     case "failure":
@@ -20,8 +28,13 @@ function Index() {
         選択したコンテンツを学習管理システムに紐付けます。紐付ける学習コンテンツを選択してください。
       </Alert>
       <ContentsSelectorTable {...contentsIndex} />
+      <PreviewContentsDialog
+        open={Boolean(previewContents.id)}
+        onClose={closePreviewHandler}
+        contents={previewContents}
+      />
     </div>
   );
 }
 
-export default Index;
+export default Edit;
