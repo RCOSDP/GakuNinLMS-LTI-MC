@@ -4,6 +4,7 @@ import { useAppTitle } from "components/state";
 import { useLmsInstructor } from "components/session";
 import { ContentsSelectorTable } from "components/ContentsTable";
 import Alert from "@material-ui/lab/Alert";
+import LinkIcon from "@material-ui/icons/Link";
 import { PreviewContentsDialog } from "components/contents/PreviewContentsDialog";
 import { useRouter } from "components/router";
 
@@ -25,7 +26,9 @@ function Edit() {
   return (
     <div>
       <Alert severity="info">
-        選択したコンテンツを学習管理システムに紐付けます。紐付ける学習コンテンツを選択してください。
+        選択したコンテンツを学習管理システムに紐付けます。紐付ける学習コンテンツの右のリンクアイコン{" "}
+        <LinkIcon style={{ verticalAlign: "middle" }} />{" "}
+        をクリックしてください。
       </Alert>
       <ContentsSelectorTable {...contentsIndex} />
       <PreviewContentsDialog

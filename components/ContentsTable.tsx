@@ -161,11 +161,14 @@ export function ContentsSelectorTable(props: ContentsIndex) {
   const session = useLmsInstructor();
   const linkAction = useCallback(
     (row: ContentsRow) => {
+      const linked = row.id === session?.contents;
       return {
         icon: LinkIcon,
-        tooltip: "学習管理システムに紐付ける",
+        tooltip: linked
+          ? "すでに学習管理システムに紐付いています"
+          : "学習管理システムに紐付ける",
         onClick: showHandler,
-        disabled: row.id === session?.contents,
+        disabled: linked,
       };
     },
     [router, showHandler, session]
@@ -177,7 +180,7 @@ export function ContentsSelectorTable(props: ContentsIndex) {
       ? [
           {
             ...linked,
-            title: `${linked.title} (学習管理システムに紐付いています)`,
+            title: `${linked.title} (現在、学習管理システムに紐付いています)`,
           },
         ]
       : []),
