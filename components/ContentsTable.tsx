@@ -188,7 +188,7 @@ export function ContentsSelectorTable(props: ContentsIndex) {
       title="学習コンテンツ一覧"
       columns={
         [
-          { title: "#", field: "id", width: "calc(4rem - 48px)" },
+          { title: "#", field: "id", width: "4rem" },
           {
             title: "名称",
             field: "title",
@@ -197,7 +197,7 @@ export function ContentsSelectorTable(props: ContentsIndex) {
       }
       actions={[linkAction]}
       options={{
-        actionsColumnIndex: 1,
+        actionsColumnIndex: -1,
       }}
       onRowClick={previewHandler}
       data={data}
