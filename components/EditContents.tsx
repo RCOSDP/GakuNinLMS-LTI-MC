@@ -1,15 +1,9 @@
-import { useState, useCallback, FormEvent, useRef, useEffect } from "react";
+import { useState, useCallback, FormEvent, useEffect } from "react";
 import { reorder } from "./reorder";
 import { produce } from "immer";
 import { Contents, updateContents, createContents } from "./contents";
 import { ReorderVideos } from "./ReorderVideos";
-import {
-  Typography,
-  IconButton,
-  Tooltip,
-  Box,
-  Button,
-} from "@material-ui/core";
+import { IconButton, Tooltip, Box, Button, TextField } from "@material-ui/core";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import CloseIcon from "@material-ui/icons/Close";
 import SaveIcon from "@material-ui/icons/Save";
@@ -21,31 +15,15 @@ import { VideosRow } from "./contents/VideosSelectorTable";
 
 export function EditContents(props: { contents: Contents; videos: Videos }) {
   const [contents, setContents] = useState<Contents>(props.contents);
-  const titleRef = useRef<HTMLHeadingElement>(document.createElement("h2"));
   useEffect(() => {
     if (props.contents.state === "success") setContents(props.contents);
   }, [props.contents]);
-  useEffect(() => {
-    setContents((prev: Contents) => {
-      if (prev.state === "success" && !prev.title) {
-        prev.title = "名称未設定";
-        prev.state = "pending";
-      }
-      titleRef.current.textContent = prev.title;
-      return { ...prev };
-    });
-  }, [titleRef, props.contents, setContents]);
-
   const router = useRouter();
   const { showMessage } = useSnackbar();
   const saveHandler = useCallback(async () => {
-    // NOTE: バリデーション
-    if (contents.title === "") {
-      // TODO: alert やめたい
-      alert("タイトルを入力して下さい");
-      return;
+    if (typeof window !== "undefined") {
+      window.onbeforeunload = null;
     }
-
     if (contents.id) {
       await updateContents(contents as Required<Contents>);
     } else {
@@ -59,12 +37,16 @@ export function EditContents(props: { contents: Contents; videos: Videos }) {
         },
       });
     }
-    if (typeof window !== "undefined") {
-      window.onbeforeunload = null;
-    }
     showMessage(`保存しました`);
     router.push("/contents");
   }, [contents, showMessage, router]);
+  const submitHandler = useCallback(
+    (event: FormEvent) => {
+      event.preventDefault();
+      saveHandler();
+    },
+    [saveHandler]
+  );
   const closeHandler = useCallback(() => {
     if (typeof window !== "undefined") {
       window.onbeforeunload = null;
@@ -108,13 +90,8 @@ export function EditContents(props: { contents: Contents; videos: Videos }) {
     [editContents]
   );
   const editTitleHandler = useCallback(
-    (event: FormEvent<HTMLHeadingElement>) => {
-      const title = (event.currentTarget.textContent || "")
-        .replace(/\s/g, " ")
-        .trim();
-      event.currentTarget.textContent = title;
-      editTitle(title);
-    },
+    (event: FormEvent) =>
+      editTitle((event.target as HTMLInputElement).value || ""),
     [editTitle]
   );
 
@@ -171,29 +148,30 @@ export function EditContents(props: { contents: Contents; videos: Videos }) {
   );
 
   return (
-    <>
-      <Box my={2}>
+    <form onSubmit={submitHandler}>
+      <Box my={2} display="flex">
         <Tooltip title="再生する">
           <IconButton
             area-label="play"
             style={{
               marginRight: 16,
-              marginBottom: 8,
             }}
             onClick={previewHandler}
           >
             <PlayArrowIcon />
           </IconButton>
         </Tooltip>
-        <Typography
-          ref={titleRef}
-          component="h2"
-          variant="h5"
-          style={{
-            display: "inline",
-          }}
-          contentEditable
+        <TextField
+          name="title"
+          label="タイトル"
+          value={contents.title}
+          required
+          fullWidth
           onInput={editTitleHandler}
+          color="secondary"
+          style={{
+            marginBottom: 8,
+          }}
         />
       </Box>
       <ReorderVideos
@@ -226,13 +204,12 @@ export function EditContents(props: { contents: Contents; videos: Videos }) {
           variant="contained"
           size="large"
           startIcon={<SaveIcon />}
-          onClick={saveHandler}
           fullWidth
           style={{ margin: 16 }}
         >
           保存して学習コンテンツ一覧に戻る
         </Button>
       </Box>
-    </>
+    </form>
   );
 }
