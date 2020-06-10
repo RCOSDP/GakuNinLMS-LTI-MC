@@ -18,7 +18,9 @@ export function VideoPlayer(props: VideoPlayerProps) {
         <Typography component="h3" variant="h6" style={{ marginBottom: 8 }}>
           {props.title}
         </Typography>
-        <Typography>{props.description}</Typography>
+        {props.description.split("\n").map((text, i) => (
+          <Typography key={i}>{text}</Typography>
+        ))}
       </Box>
       <Divider />
       <Box
