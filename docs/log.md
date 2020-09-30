@@ -47,5 +47,5 @@
 | forward                                                             | なし                             | 早送り実行時                                   | 
 | back                                                                | なし                             | 巻き戻し実行時                                 | 
 | eforeunload-ended<br>pagehide-ended<br>unload-ended<br>hidden-ended | なし                             | 学習ページから離れた時                         | 
-| current-time                                                        | なし                             | 学習ページを開いている間，定期的に取得(10秒毎) | 
+| current-time                                                        | なし                             | 一定周期ごと（10 秒）に，ビデオの再生位置（currenttime）を記録 | 
 | changepage                                                          | 切り替え先のマイクロコンテンツID | マイクロコンテンツ切り替え時                   | 
