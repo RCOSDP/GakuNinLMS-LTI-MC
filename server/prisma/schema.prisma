@@ -1,0 +1,167 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+/// 教育用外部リソース
+model Resource {
+  id     Int     @id @default(autoincrement())
+  topics Topic[]
+  /// 外部リソースのアドレス
+  url    String  @unique
+
+  @@map(name: "resources")
+}
+
+/// トピック
+model Topic {
+  id          Int       @id @default(autoincrement())
+  resource    Resource  @relation(fields: [resourceId], references: [id])
+  resourceId  Int       @map(name: "resource_id")
+  tags        Tag[]     @relation(references: [id])
+  sections    Section[]
+  /// トピック名称
+  name        String
+  /// 説明
+  description String?
+  /// 著作者
+  author      String?
+  /// ライセンス
+  licence     String?
+  /// 作成者
+  creator     User      @relation(fields: [creatorId], references: [id])
+  creatorId   Int       @map(name: "creator_id")
+  /// 作成日
+  createdAt   DateTime  @default(now()) @map(name: "created_at")
+  /// 更新日
+  updatedAt   DateTime  @default(now()) @map(name: "updated_at")
+
+  @@index([resourceId], name: "resourceId")
+  @@map(name: "topics")
+}
+
+/// 主題
+model Subject {
+  id        Int       @id @default(autoincrement())
+  chapters  Chapter[]
+  /// 題名
+  name      String
+  /// 概要
+  abstruct  String?
+  /// 作成者
+  creator   User      @relation(fields: [creatorId], references: [id])
+  creatorId Int       @map(name: "creator_id")
+  /// 作成日
+  createdAt DateTime  @default(now()) @map(name: "created_at")
+  /// 更新日
+  updatedAt DateTime  @default(now()) @map(name: "updated_at")
+
+  @@index([creatorId], name: "creatorId")
+  @@map(name: "subjects")
+}
+
+/// 章
+model Chapter {
+  id        Int       @id @default(autoincrement())
+  subject   Subject   @relation(fields: [subjectId], references: [id])
+  subjectId Int       @map(name: "subject_id")
+  sections  Section[]
+  /// 章題
+  name      String
+  /// 順番 (昇順)
+  order     Int
+
+  @@index([subjectId], name: "subjectId")
+  @@map(name: "chapters")
+}
+
+/// 項
+model Section {
+  id        Int     @id @default(autoincrement())
+  chapter   Chapter @relation(fields: [chapterId], references: [id])
+  chapterId Int     @map(name: "chapter_id")
+  topic     Topic   @relation(fields: [topicId], references: [id])
+  topicId   Int     @map(name: "topic_id")
+  /// 項題
+  name      String
+  /// 順番 (昇順)
+  order     Int
+
+  @@index([chapterId], name: "chapterId")
+  @@index([topicId], name: "topicId")
+  @@map(name: "sections")
+}
+
+/// タグ
+model Tag {
+  id     Int     @id @default(autoincrement())
+  topics Topic[] @relation(references: [id])
+  /// タグ名称
+  name   String  @unique
+
+  @@map(name: "tags")
+}
+
+// NOTE: For NextAuth.js
+model Account {
+  id                 Int       @id @default(autoincrement())
+  compoundId         String    @unique @map(name: "compound_id")
+  userId             Int       @map(name: "user_id")
+  providerType       String    @map(name: "provider_type")
+  providerId         String    @map(name: "provider_id")
+  providerAccountId  String    @map(name: "provider_account_id")
+  refreshToken       String?   @map(name: "refresh_token")
+  accessToken        String?   @map(name: "access_token")
+  accessTokenExpires DateTime? @map(name: "access_token_expires")
+  createdAt          DateTime  @default(now()) @map(name: "created_at")
+  updatedAt          DateTime  @default(now()) @map(name: "updated_at")
+
+  @@index([providerAccountId], name: "providerAccountId")
+  @@index([providerId], name: "providerId")
+  @@index([userId], name: "userId")
+  @@map(name: "accounts")
+}
+
+// NOTE: For NextAuth.js
+model Session {
+  id           Int      @id @default(autoincrement())
+  userId       Int      @map(name: "user_id")
+  expires      DateTime
+  sessionToken String   @unique @map(name: "session_token")
+  accessToken  String   @unique @map(name: "access_token")
+  createdAt    DateTime @default(now()) @map(name: "created_at")
+  updatedAt    DateTime @default(now()) @map(name: "updated_at")
+
+  @@map(name: "sessions")
+}
+
+// NOTE: For NextAuth.js
+model User {
+  id            Int       @id @default(autoincrement())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime? @map(name: "email_verified")
+  image         String?
+  createdAt     DateTime  @default(now()) @map(name: "created_at")
+  updatedAt     DateTime  @default(now()) @map(name: "updated_at")
+  topics        Topic[]
+  subjects      Subject[]
+
+  @@map(name: "users")
+}
+
+// NOTE: For NextAuth.js
+model VerificationRequest {
+  id         Int      @id @default(autoincrement())
+  identifier String
+  token      String   @unique
+  expires    DateTime
+  createdAt  DateTime @default(now()) @map(name: "created_at")
+  updatedAt  DateTime @default(now()) @map(name: "updated_at")
+
+  @@map(name: "verification_requests")
+}
