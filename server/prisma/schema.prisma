@@ -7,161 +7,194 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// Resource Objects
+
 /// 教育用外部リソース
 model Resource {
-  id     Int     @id @default(autoincrement())
-  topics Topic[]
+  id      Int     @id @default(autoincrement())
+  topics  Topic[]
+  video   Video?  @relation(fields: [videoId], references: [id])
+  videoId Int?    @map(name: "video_id")
   /// 外部リソースのアドレス
-  url    String  @unique
+  url     String  @unique
+  /// 詳細
+  details Json
 
   @@map(name: "resources")
 }
 
+/// ビデオ
+model Video {
+  id          Int      @id @default(autoincrement())
+  resource    Resource
+  tracks      Track[]
+  /// 動画プロバイダーの識別子: "https://www.youtube.com/" | "https://vimeo.com/"
+  providerUrl String?  @map(name: "provider_url")
+
+  @@map(name: "videos")
+}
+
+/// ビデオのトラック (字幕・キャプション)
+model Track {
+  id       Int    @id @default(autoincrement())
+  video    Video  @relation(fields: [videoId], references: [id])
+  videoId  Int    @map(name: "video_id")
+  /// 種別 "subtitles": 字幕
+  kind     String @default("subtitles")
+  /// 言語 ISO 639-1 code
+  language String
+
+  @@map(name: "tracks")
+}
+
+// Topic Objects
+
 /// トピック
 model Topic {
-  id          Int       @id @default(autoincrement())
-  resource    Resource  @relation(fields: [resourceId], references: [id])
-  resourceId  Int       @map(name: "resource_id")
-  tags        Tag[]     @relation(references: [id])
-  sections    Section[]
+  id           Int            @id @default(autoincrement())
+  resource     Resource       @relation(fields: [resourceId], references: [id])
+  resourceId   Int            @map(name: "resource_id")
+  keywords     Keyword[]      @relation(references: [id])
+  topicSection TopicSection[]
+  activities   Activity[]
   /// トピック名称
-  name        String
+  name         String
   /// 説明
-  description String?
-  /// 著作者
-  author      String?
-  /// ライセンス
-  licence     String?
+  description  String
+  /// 学習所要時間 (秒)
+  timeRequired Int            @map(name: "time_required")
   /// 作成者
-  creator     User      @relation(fields: [creatorId], references: [id])
-  creatorId   Int       @map(name: "creator_id")
+  creator      User           @relation(fields: [creatorId], references: [id])
+  creatorId    Int            @map(name: "creator_id")
   /// 作成日
-  createdAt   DateTime  @default(now()) @map(name: "created_at")
+  createdAt    DateTime       @default(now()) @map(name: "created_at")
   /// 更新日
-  updatedAt   DateTime  @default(now()) @map(name: "updated_at")
+  updatedAt    DateTime       @default(now()) @map(name: "updated_at")
+  /// 詳細
+  details      Json
 
-  @@index([resourceId], name: "resourceId")
   @@map(name: "topics")
 }
 
-/// 主題
-model Subject {
-  id        Int       @id @default(autoincrement())
-  chapters  Chapter[]
+/// キーワード
+model Keyword {
+  id     Int     @id @default(autoincrement())
+  topics Topic[] @relation(references: [id])
+  books  Book[]  @relation(references: [id])
+  /// 名称 (カンマ "," を含めない)
+  name   String  @unique
+
+  @@map(name: "keywords")
+}
+
+// Map Objects/Learning Contents
+
+/// LTI Context
+model LtiContext {
+  id            String            @id
+  resourceLinks LtiResourceLink[]
+  title         String
+
+  @@map(name: "lti_context")
+}
+
+/// LTI ResourceLink
+model LtiResourceLink {
+  id        String     @id
+  context   LtiContext @relation(fields: [contextId], references: [id])
+  contextId String     @map(name: "context_id")
+  title     String
+  book      Book       @relation(fields: [bookId], references: [id])
+  bookId    Int        @map(name: "book_id")
+
+  @@map(name: "lti_resource_link")
+}
+
+/// ブック
+model Book {
+  id               Int               @id @default(autoincrement())
+  keywords         Keyword[]         @relation(references: [id])
+  sections         Section[]
+  ltiResourceLinks LtiResourceLink[]
   /// 題名
-  name      String
+  name             String
   /// 概要
-  abstruct  String?
-  /// 作成者
-  creator   User      @relation(fields: [creatorId], references: [id])
-  creatorId Int       @map(name: "creator_id")
+  abstruct         String
+  /// 著作者
+  author           User              @relation(fields: [authorId], references: [id])
+  authorId         Int               @map(name: "author_id")
+  /// 公開日
+  publishedAt      DateTime          @default(now()) @map(name: "published_at")
   /// 作成日
-  createdAt DateTime  @default(now()) @map(name: "created_at")
+  createdAt        DateTime          @default(now()) @map(name: "created_at")
   /// 更新日
-  updatedAt DateTime  @default(now()) @map(name: "updated_at")
+  updatedAt        DateTime          @default(now()) @map(name: "updated_at")
+  /// 詳細
+  details          Json
 
-  @@index([creatorId], name: "creatorId")
-  @@map(name: "subjects")
+  @@index([authorId], name: "author_id")
+  @@map(name: "books")
 }
 
-/// 章
-model Chapter {
-  id        Int       @id @default(autoincrement())
-  subject   Subject   @relation(fields: [subjectId], references: [id])
-  subjectId Int       @map(name: "subject_id")
-  sections  Section[]
-  /// 章題
-  name      String
-  /// 順番 (昇順)
-  order     Int
-
-  @@index([subjectId], name: "subjectId")
-  @@map(name: "chapters")
-}
-
-/// 項
+/// セクション
 model Section {
-  id        Int     @id @default(autoincrement())
-  chapter   Chapter @relation(fields: [chapterId], references: [id])
-  chapterId Int     @map(name: "chapter_id")
-  topic     Topic   @relation(fields: [topicId], references: [id])
-  topicId   Int     @map(name: "topic_id")
-  /// 項題
-  name      String
+  id            Int            @id @default(autoincrement())
+  book          Book           @relation(fields: [bookId], references: [id])
+  bookId        Int            @map(name: "book_id")
+  topicSections TopicSection[]
   /// 順番 (昇順)
-  order     Int
+  order         Int
+  /// 名称 (nullならば匿名のトピックの集まり)
+  name          String?
 
-  @@index([chapterId], name: "chapterId")
-  @@index([topicId], name: "topicId")
+  @@index([bookId], name: "book_id")
   @@map(name: "sections")
 }
 
-/// タグ
-model Tag {
-  id     Int     @id @default(autoincrement())
-  topics Topic[] @relation(references: [id])
-  /// タグ名称
-  name   String  @unique
+/// セクション内トピック
+model TopicSection {
+  id        Int     @id @default(autoincrement())
+  section   Section @relation(fields: [sectionId], references: [id])
+  sectionId Int     @map(name: "section_id")
+  topic     Topic   @relation(fields: [topicId], references: [id])
+  topicId   Int     @map(name: "topic_id")
+  /// 順番 (昇順)
+  order     Int
 
-  @@map(name: "tags")
+  @@index([sectionId], name: "section_id")
+  @@map(name: "topic_sections")
 }
 
-// NOTE: For NextAuth.js
-model Account {
-  id                 Int       @id @default(autoincrement())
-  compoundId         String    @unique @map(name: "compound_id")
-  userId             Int       @map(name: "user_id")
-  providerType       String    @map(name: "provider_type")
-  providerId         String    @map(name: "provider_id")
-  providerAccountId  String    @map(name: "provider_account_id")
-  refreshToken       String?   @map(name: "refresh_token")
-  accessToken        String?   @map(name: "access_token")
-  accessTokenExpires DateTime? @map(name: "access_token_expires")
-  createdAt          DateTime  @default(now()) @map(name: "created_at")
-  updatedAt          DateTime  @default(now()) @map(name: "updated_at")
+// Actors
 
-  @@index([providerAccountId], name: "providerAccountId")
-  @@index([providerId], name: "providerId")
-  @@index([userId], name: "userId")
-  @@map(name: "accounts")
-}
-
-// NOTE: For NextAuth.js
-model Session {
-  id           Int      @id @default(autoincrement())
-  userId       Int      @map(name: "user_id")
-  expires      DateTime
-  sessionToken String   @unique @map(name: "session_token")
-  accessToken  String   @unique @map(name: "access_token")
-  createdAt    DateTime @default(now()) @map(name: "created_at")
-  updatedAt    DateTime @default(now()) @map(name: "updated_at")
-
-  @@map(name: "sessions")
-}
-
-// NOTE: For NextAuth.js
+/// 利用者
 model User {
-  id            Int       @id @default(autoincrement())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime? @map(name: "email_verified")
-  image         String?
-  createdAt     DateTime  @default(now()) @map(name: "created_at")
-  updatedAt     DateTime  @default(now()) @map(name: "updated_at")
-  topics        Topic[]
-  subjects      Subject[]
+  id            Int        @id @default(autoincrement())
+  createdTopics Topic[]
+  writtenBooks  Book[]
+  ltiUserId     String     @map(name: "lti_user_id")
+  activities    Activity[]
+  /// 氏名
+  name          String
 
   @@map(name: "users")
 }
 
-// NOTE: For NextAuth.js
-model VerificationRequest {
-  id         Int      @id @default(autoincrement())
-  identifier String
-  token      String   @unique
-  expires    DateTime
-  createdAt  DateTime @default(now()) @map(name: "created_at")
-  updatedAt  DateTime @default(now()) @map(name: "updated_at")
+/// 学習活動
+model Activity {
+  id        Int      @id @default(autoincrement())
+  topic     Topic    @relation(fields: [topicId], references: [id])
+  topicId   Int      @map(name: "topic_id")
+  learner   User     @relation(fields: [learnerId], references: [id])
+  learnerId Int      @map(name: "learner_id")
+  /// 学習活動種別: "viewed" | "completed"
+  type      String
+  /// 作成日
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  /// 更新日
+  updatedAt DateTime @default(now()) @map(name: "updated_at")
 
-  @@map(name: "verification_requests")
+  @@index([topicId], name: "topic_id")
+  @@index([learnerId], name: "learner_id")
+  @@map(name: "activities")
 }
