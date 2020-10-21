@@ -6,16 +6,18 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "build": "run-s migrate build:prisma",
+    "build": "run-s migrate build:prisma seed",
     "build:prisma": "prisma generate",
     "migrate": "run-s migrate:save migrate:up",
     "migrate:save": "prisma migrate save --experimental",
     "migrate:up": "prisma migrate up --experimental",
-    "migrate:down": "prisma migrate down --experimental"
+    "migrate:down": "prisma migrate down --experimental",
+    "seed": "ts-node-transpile-only -O '{\"module\":\"commonjs\"}' prisma/seed.ts"
   },
   "devDependencies": {
     "@prisma/cli": "^2.8.1",
-    "@prisma/client": "^2.8.1",
-    "npm-run-all": "^4.1.5"
+    "@prisma/client": "^2.9.0",
+    "npm-run-all": "^4.1.5",
+    "ts-node": "^9.0.0"
   }
 }
