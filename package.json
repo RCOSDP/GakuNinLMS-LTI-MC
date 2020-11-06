@@ -41,5 +41,8 @@
     "format": "prettier --write components pages types",
     "lint": "tsc",
     "storybook": "start-storybook"
+  },
+  "engines": {
+    "node": ">=14.15.0"
   }
 }
