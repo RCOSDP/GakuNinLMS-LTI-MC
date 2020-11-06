@@ -9,6 +9,8 @@ jobs:
           path: ${{ github.workspace }}
           key: ${{ github.sha }}
       - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with: { node-version: 14 }
       - id: yarn_cache
         run: echo "::set-output name=dir::$(yarn cache dir)"
       - uses: actions/cache@v1
@@ -25,6 +27,8 @@ jobs:
         with:
           path: ${{ github.workspace }}
           key: ${{ github.sha }}
+      - uses: actions/setup-node@v1
+        with: { node-version: 14 }
       - run: yarn format
       - id: git_status
         run: echo "::set-output name=mod::$(git status --porcelain)"
@@ -40,4 +44,6 @@ jobs:
         with:
           path: ${{ github.workspace }}
           key: ${{ github.sha }}
+      - uses: actions/setup-node@v1
+        with: { node-version: 14 }
       - run: yarn build
