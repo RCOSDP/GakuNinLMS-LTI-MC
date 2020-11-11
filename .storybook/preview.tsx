@@ -6,7 +6,7 @@ import Container from "@material-ui/core/Container";
 import { ConfirmProvider } from "material-ui-confirm";
 import { SnackbarProvider } from "material-ui-snackbar-provider";
 import { StateProvider } from "../components/state";
-import { theme } from "../components/theme";
+import theme from "../theme";
 // NOTE: For VideoJs components.
 import "video.js/dist/video-js.css";
 import "videojs-seek-buttons/dist/videojs-seek-buttons.css";
