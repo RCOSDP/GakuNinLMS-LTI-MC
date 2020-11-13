@@ -22,7 +22,13 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "downlevelIteration" : true,
-    "baseUrl": "."
+    "baseUrl": ".",
+    "paths": {
+      "@theme": ["theme/*"],
+      "@atoms/*": ["components/atoms/*"],
+      "@molecules/*": ["components/molecules/*"],
+      "@organisms/*": ["components/organisms/*"]
+    }
   },
   "exclude": [
     "node_modules"
