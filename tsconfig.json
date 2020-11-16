@@ -20,10 +20,9 @@
     "downlevelIteration": true,
     "baseUrl": ".",
     "paths": {
-      "@theme": ["theme/*"],
-      "@atoms/*": ["components/atoms/*"],
-      "@molecules/*": ["components/molecules/*"],
-      "@organisms/*": ["components/organisms/*"]
+      "atoms/*": ["components/atoms/*"],
+      "molecules/*": ["components/molecules/*"],
+      "organisms/*": ["components/organisms/*"]
     }
   },
   "exclude": ["node_modules"],
