@@ -8,6 +8,14 @@ export const Default = () => (
   <TextField defaultValue="customized text field" label="customized label" />
 );
 
+export const Required = () => (
+  <TextField
+    defaultValue="customized text field"
+    label="customized label"
+    required
+  />
+);
+
 export const Select = () => {
   const options = [{ value: "a" }, { value: "b" }, { value: "c" }] as const;
   const [value, setValue] = useState("a");
