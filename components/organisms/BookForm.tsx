@@ -4,10 +4,12 @@ import Checkbox from "@material-ui/core/Checkbox";
 import Button from "@material-ui/core/Button";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
+import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "atoms/TextField";
 import useCardStyles from "styles/card";
 import useInputLabelStyles from "styles/inputLabel";
+import gray from "theme/colors/gray";
 
 const languages = [
   {
@@ -23,8 +25,12 @@ const languages = [
 const useStyles = makeStyles((theme) => ({
   margin: {
     "& > :not(:first-child)": {
-      marginTop: `${theme.spacing(2.5)}px`,
+      marginTop: theme.spacing(2.5),
     },
+  },
+  labelDescription: {
+    marginLeft: theme.spacing(0.75),
+    color: gray[600],
   },
 }));
 
@@ -38,7 +44,23 @@ export default function BookForms() {
   };
   return (
     <Card classes={cardClasses} className={classes.margin}>
-      <TextField id="title" label="タイトル" required fullWidth />
+      <TextField
+        id="title"
+        label={
+          <span>
+            タイトル
+            <Typography
+              className={classes.labelDescription}
+              variant="caption"
+              component="span"
+            >
+              学習者が学習範囲を簡潔に理解できるタイトルを設定できます
+            </Typography>
+          </span>
+        }
+        required
+        fullWidth
+      />
       <div>
         <InputLabel classes={inputLabelClasses} htmlFor="share">
           他の編集者に共有
