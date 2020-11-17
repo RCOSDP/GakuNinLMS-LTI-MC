@@ -18,7 +18,7 @@ const languages = [
     value: "en",
     label: "英語",
   },
-];
+] as const;
 
 const useStyles = makeStyles((theme) => ({
   margin: {

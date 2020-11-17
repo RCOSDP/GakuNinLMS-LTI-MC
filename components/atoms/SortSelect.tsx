@@ -29,7 +29,7 @@ const options = [
     value: "updated-at-ascend",
     label: "更新日順（古い）",
   },
-];
+] as const;
 
 export default function Select() {
   const selectClasses = useSelectStyles();

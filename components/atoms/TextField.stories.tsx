@@ -9,7 +9,7 @@ export const Default = () => (
 );
 
 export const Select = () => {
-  const options = [{ value: "a" }, { value: "b" }, { value: "c" }];
+  const options = [{ value: "a" }, { value: "b" }, { value: "c" }] as const;
   const [value, setValue] = useState("a");
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value);
