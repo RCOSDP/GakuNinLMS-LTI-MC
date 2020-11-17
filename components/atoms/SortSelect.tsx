@@ -1,4 +1,4 @@
-import { useState, ChangeElement } from "react";
+import { useState, ChangeEvent } from "react";
 import MenuItem from "@material-ui/core/MenuItem";
 import MuiSelect from "@material-ui/core/Select";
 import useSelectStyles from "styles/select";
@@ -35,7 +35,7 @@ export default function Select() {
   const selectClasses = useSelectStyles();
   const inputClasses = useInputStyles();
   const [value, setValue] = useState("name-descend");
-  const handleChange = (event: ChangeElement<HTMLInputElement>) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value);
   };
   return (
