@@ -35,8 +35,8 @@ export default function Select() {
   const selectClasses = useSelectStyles();
   const inputClasses = useInputStyles();
   const [value, setValue] = useState("name-descend");
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setValue(event.target.value);
+  const handleChange = (event: ChangeEvent<{ value: unknown }>) => {
+    setValue(event.target.value as string);
   };
   return (
     <MuiSelect
