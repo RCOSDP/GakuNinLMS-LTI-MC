@@ -54,7 +54,11 @@ export default function TopicEditDialog(props: ComponentProps<typeof Dialog>) {
       <DialogContent classes={dialogContentClasses}>
         <Container classes={containerClasses} maxWidth="md">
           <header className={classes.header}>
-            <IconButton color="inherit" onClick={onClose} aria-label="close">
+            <IconButton
+              color="inherit"
+              onClick={onClose as () => void}
+              aria-label="close"
+            >
               <CloseIcon />
             </IconButton>
           </header>
