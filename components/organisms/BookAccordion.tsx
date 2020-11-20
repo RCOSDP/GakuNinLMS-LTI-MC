@@ -90,7 +90,7 @@ export default function BookAccordion() {
             </ListItemText>
           </ListItem>
           <List disablePadding>
-            {[...Array(2)].map((value, key) => (
+            {[...Array(2)].map(({}, key) => (
               <ListItem key={key}>
                 <ListItemText>
                   リンゴに夢中のレッサーパンダ
