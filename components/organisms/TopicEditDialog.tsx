@@ -1,4 +1,10 @@
-import { forwardRef, ReactElement, Ref, ComponentProps } from "react";
+import {
+  forwardRef,
+  ReactElement,
+  Ref,
+  ComponentProps,
+  MouseEvent,
+} from "react";
 import IconButton from "@material-ui/core/IconButton";
 import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -43,6 +49,9 @@ export default function TopicEditDialog(props: ComponentProps<typeof Dialog>) {
   const dialogContentClasses = useDialogContentStyles();
   const containerClasses = useContainerStyles();
   const { open, onClose } = props;
+  const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
+    if (onClose) onClose(event, "backdropClick");
+  };
 
   return (
     <Dialog
@@ -56,7 +65,7 @@ export default function TopicEditDialog(props: ComponentProps<typeof Dialog>) {
           <header className={classes.header}>
             <IconButton
               color="inherit"
-              onClick={onClose as () => void}
+              onClick={handleClick}
               aria-label="close"
             >
               <CloseIcon />
