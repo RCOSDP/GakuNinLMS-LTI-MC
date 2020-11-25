@@ -90,7 +90,7 @@ function Edit(props: { id?: string; preview?: string; video?: string }) {
       <EditContents contents={contents} videos={videos} />
       <PreviewDialog
         open={
-          !Boolean(props.video) &&
+          !props.video &&
           Boolean(props.preview) &&
           props.preview !== "all"
         }
