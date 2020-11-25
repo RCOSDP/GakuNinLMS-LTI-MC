@@ -26,6 +26,8 @@ jobs:
         with:
           path: ${{ github.workspace }}
           key: ${{ github.sha }}
+      # TODO: あとで消す
+      - uses: mxschmitt/action-tmate@v3
       - run: yarn format
       - id: git_status
         run: echo "::set-output name=mod::$(git status --porcelain)"
