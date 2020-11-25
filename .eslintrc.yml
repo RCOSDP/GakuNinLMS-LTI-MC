@@ -22,6 +22,6 @@ rules:
   react/react-in-jsx-scope: off
 overrides:
   - files:
-    - next.config.js
+      - next.config.js
     env:
       node: true
