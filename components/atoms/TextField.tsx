@@ -1,6 +1,6 @@
 import { ComponentProps } from "react";
 import MuiTextField from "@material-ui/core/TextField";
-import RequiredDot from "atoms/RequiredDot";
+import RequiredDot from "$atoms/RequiredDot";
 import useTextFieldStyles from "styles/textField";
 import useInputStyles from "styles/input";
 import useInputLabelStyles from "styles/inputLabel";

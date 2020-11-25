@@ -14,8 +14,8 @@ import Container from "@material-ui/core/Container";
 import { TransitionProps } from "@material-ui/core/transitions";
 import { makeStyles } from "@material-ui/core/styles";
 import CloseIcon from "@material-ui/icons/Close";
-import TopicForm from "organisms/TopicForm";
-import RequiredDot from "atoms/RequiredDot";
+import TopicForm from "$organisms/TopicForm";
+import RequiredDot from "$atoms/RequiredDot";
 import useDialogContentStyles from "styles/dialogContent";
 import useContainerStyles from "styles/container";
 

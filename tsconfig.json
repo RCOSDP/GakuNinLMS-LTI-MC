@@ -21,9 +21,9 @@
     "experimentalDecorators": true,
     "baseUrl": ".",
     "paths": {
-      "atoms/*": ["components/atoms/*"],
-      "molecules/*": ["components/molecules/*"],
-      "organisms/*": ["components/organisms/*"],
+      "$atoms/*": ["components/atoms/*"],
+      "$molecules/*": ["components/molecules/*"],
+      "$organisms/*": ["components/organisms/*"],
       "$prisma/*": ["./node_modules/.prisma/*"],
       "$server/*": ["./server/*"]
     }
