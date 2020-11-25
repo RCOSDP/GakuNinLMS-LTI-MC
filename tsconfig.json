@@ -22,6 +22,7 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "downlevelIteration": true,
+    "experimentalDecorators": true,
     "baseUrl": ".",
     "paths": {
       "atoms/*": ["components/atoms/*"],

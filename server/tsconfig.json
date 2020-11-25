@@ -1,6 +1,1 @@
-{
-  "extends": "../tsconfig.json",
-  "compilerOptions": {
-    "experimentalDecorators": true
-  }
-}
+{ "extends": "../tsconfig.json" }
