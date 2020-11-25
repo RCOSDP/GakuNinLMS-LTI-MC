@@ -1,6 +1,6 @@
 import { FastifyInstance, FastifyRequest, FastifyReply } from "fastify";
 import { validateOrReject } from "class-validator";
-import { User } from "@prisma/client";
+import { User } from "~prisma/client";
 import { upsertUser } from "~server/utils/user";
 import Method from "~server/types/method";
 import prisma from "~server/utils/prisma";

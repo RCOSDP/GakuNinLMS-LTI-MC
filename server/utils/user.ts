@@ -1,4 +1,4 @@
-import { User } from "@prisma/client";
+import { User } from "~prisma/client";
 import jsonSchema from "~server/prisma/json-schema.json";
 import prisma from "./prisma";
 
