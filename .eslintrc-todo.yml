@@ -1,0 +1,69 @@
+overrides:
+  - files: .storybook/preview.tsx
+    rules:
+      "@typescript-eslint/ban-ts-comment": "warn"
+  - files: components/AppThemeProvider.tsx
+    rules:
+      "react/no-children-prop": "warn"
+  - files: components/ContentsTable.tsx
+    rules:
+      "no-empty": "warn"
+  - files: components/EditContents.tsx
+    rules:
+      "@typescript-eslint/no-empty-function": "warn"
+  - files: components/EditVideo.tsx
+    rules:
+      "no-empty": "warn"
+  - files: components/ShowContents.tsx
+    rules:
+      "react-hooks/rules-of-hooks": "warn"
+  - files: components/Table.tsx
+    rules:
+      "no-empty": "warn"
+      "@typescript-eslint/ban-types": "warn"
+      "react/display-name": "warn"
+  - files: components/VideoJs.tsx
+    rules:
+      "@typescript-eslint/ban-ts-comment": "warn"
+  - files: components/VideosTable.tsx
+    rules:
+      "no-empty": "warn"
+  - files: components/api.ts
+    rules:
+      "@typescript-eslint/ban-types": "warn"
+  - files: components/contents/AddVideosButton.stories.tsx
+    rules:
+      "@typescript-eslint/no-empty-function": "warn"
+  - files: components/contents/VideosSelectorTable.tsx
+    rules:
+      "@typescript-eslint/ban-ts-comment": "warn"
+  - files: components/log.ts
+    rules:
+      "@typescript-eslint/ban-ts-comment": "warn"
+  - files: components/player.ts
+    rules:
+      "@typescript-eslint/ban-ts-comment": "warn"
+  - files: components/player/volume.ts
+    rules:
+      "@typescript-eslint/ban-ts-comment": "warn"
+  - files: components/session.ts
+    rules:
+      "react-hooks/rules-of-hooks": "warn"
+  - files: components/state.tsx
+    rules:
+      "@typescript-eslint/no-empty-function": "warn"
+      "react-hooks/rules-of-hooks": "warn"
+  - files: "components/video.ts"
+    rules:
+      "no-empty": "warn"
+  - files: pages/contents.tsx
+    rules:
+      "no-extra-boolean-cast": "warn"
+
+  - files: "server/jest.config.js"
+    env: { node: true }
+    rules:
+      "@typescript-eslint/no-var-requires": "warn"
+  - files: "server/utils/handler.ts"
+    rules:
+      "@typescript-eslint/no-explicit-any": "warn"
