@@ -207,7 +207,7 @@
         "name": {
           "type": "string"
         },
-        "abstruct": {
+        "abstract": {
           "type": "string"
         },
         "author": {
