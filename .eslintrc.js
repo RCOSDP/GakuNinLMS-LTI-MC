@@ -21,7 +21,7 @@ module.exports = {
     "plugin:react/recommended",
     "prettier",
     "prettier/@typescript-eslint",
-    "./.eslintrc-todo.yml"
+    "./.eslintrc-todo.yml",
   ],
   rules: {
     "@typescript-eslint/explicit-module-boundary-types": "off",
