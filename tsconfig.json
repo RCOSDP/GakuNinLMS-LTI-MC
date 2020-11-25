@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -28,14 +24,10 @@
       "atoms/*": ["components/atoms/*"],
       "molecules/*": ["components/molecules/*"],
       "organisms/*": ["components/organisms/*"],
-      "~prisma/*": ["./node_modules/.prisma/*"],
-      "~server/*": ["./server/*"]
+      "$prisma/*": ["./node_modules/.prisma/*"],
+      "$server/*": ["./server/*"]
     }
   },
   "exclude": ["node_modules"],
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx"
-  ]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"]
 }

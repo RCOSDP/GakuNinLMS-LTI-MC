@@ -8,7 +8,7 @@ import auth from "fastify-auth";
 import formbody from "fastify-formbody";
 import multipart from "fastify-multipart";
 import addHours from "date-fns/addHours";
-import pkg from "~server/package.json";
+import pkg from "$server/package.json";
 import routes, { Options as RoutesOptions } from "./routes";
 
 export type Options = RoutesOptions & {

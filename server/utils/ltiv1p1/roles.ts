@@ -1,5 +1,5 @@
-import roles from "~server/config/roles";
-import LtiLaunchBody from "~server/validators/ltiLaunchBody";
+import roles from "$server/config/roles";
+import LtiLaunchBody from "$server/validators/ltiLaunchBody";
 
 /**
  * ロールが管理者か否か

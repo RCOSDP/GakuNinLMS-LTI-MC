@@ -1,5 +1,5 @@
 import { FastifyRequest, FastifyReply } from "fastify";
-import Controller from "~server/types/controller";
+import Controller from "$server/types/controller";
 
 const handler = <K extends keyof Controller>(
   method: Required<Controller>[K]

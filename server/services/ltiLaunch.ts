@@ -1,16 +1,16 @@
 import { FastifyInstance, FastifyRequest, FastifyReply } from "fastify";
 import { validateOrReject } from "class-validator";
-import { User } from "~prisma/client";
-import { upsertUser } from "~server/utils/user";
-import Method from "~server/types/method";
-import prisma from "~server/utils/prisma";
+import { User } from "$prisma/client";
+import { upsertUser } from "$server/utils/user";
+import Method from "$server/types/method";
+import prisma from "$server/utils/prisma";
 import {
   FRONTEND_URL,
   OAUTH_CONSUMER_KEY,
   OAUTH_CONSUMER_SECRET,
-} from "~server/utils/env";
-import { auth, valid } from "~server/utils/ltiv1p1/oauth";
-import LtiLaunchBody, { schema } from "~server/validators/ltiLaunchBody";
+} from "$server/utils/env";
+import { auth, valid } from "$server/utils/ltiv1p1/oauth";
+import LtiLaunchBody, { schema } from "$server/validators/ltiLaunchBody";
 declare module "fastify" {
   interface Session {
     ltiLaunchBody?: LtiLaunchBody;

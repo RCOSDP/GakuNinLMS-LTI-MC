@@ -1,7 +1,9 @@
 import { FastifyInstance } from "fastify";
-import handler from "~server/utils/handler";
-import ltiLaunch, { method as ltiLaunchMethod } from "~server/services/ltiLaunch";
-import session, { method as sessionMethod } from "~server/services/session";
+import handler from "$server/utils/handler";
+import ltiLaunch, {
+  method as ltiLaunchMethod,
+} from "$server/services/ltiLaunch";
+import session, { method as sessionMethod } from "$server/services/session";
 
 export type Options = { basePath: string };
 
