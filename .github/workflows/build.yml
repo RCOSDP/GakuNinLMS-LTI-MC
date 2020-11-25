@@ -16,11 +16,24 @@ jobs:
           restore-keys: yarn-
       - name: install
         run: yarn
+      - name: lint
+        run: yarn lint:report
+        continue-on-error: true
+      - run: yarn lint:fix
+        continue-on-error: true
+      - id: lint_git_status
+        run: echo "::set-output name=mod::$(git status --porcelain)"
+      - if: steps.lint_git_status.outputs.mod != ''
+        run: |
+          git -c "user.name=bot" -c "user.email=bot@example" commit -a -m "bot: lint:fix"
+          git push origin HEAD
+      - uses: ataylorme/eslint-annotate-action@1.0.4
+        with: { repo-token: "${{ github.token }}" }
       - name: format
         run: yarn format
-      - id: git_status
+      - id: format_git_status
         run: echo "::set-output name=mod::$(git status --porcelain)"
-      - if: steps.git_status.outputs.mod != ''
+      - if: steps.format_git_status.outputs.mod != ''
         run: |
           git -c "user.name=bot" -c "user.email=bot@example" commit -a -m "bot: format"
           git push origin HEAD
