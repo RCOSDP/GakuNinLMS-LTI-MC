@@ -1,8 +1,8 @@
 overrides:
-  - files: "server/jest.config.js"
+  - files: "jest.config.js"
     env: { node: true }
     rules:
       "@typescript-eslint/no-var-requires": "off"
-  - files: "server/utils/handler.ts"
+  - files: "utils/handler.ts"
     rules:
       "@typescript-eslint/no-explicit-any": "off"
