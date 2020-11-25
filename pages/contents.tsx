@@ -89,11 +89,7 @@ function Edit(props: { id?: string; preview?: string; video?: string }) {
     <div>
       <EditContents contents={contents} videos={videos} />
       <PreviewDialog
-        open={
-          !Boolean(props.video) &&
-          Boolean(props.preview) &&
-          props.preview !== "all"
-        }
+        open={!props.video && Boolean(props.preview) && props.preview !== "all"}
         onClose={closePreviewHandler}
         video={editOrPreviewVideo}
       />

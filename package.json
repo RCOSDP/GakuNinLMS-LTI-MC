@@ -50,7 +50,9 @@
   "scripts": {
     "build": "yarn --cwd server build:prisma && next build && next export -o v1",
     "format": "prettier --write .",
-    "lint": "tsc",
+    "lint": "eslint --ext .js,.jsx,.ts,.tsx .",
+    "lint:fix": "yarn lint --fix",
+    "lint:report": "yarn lint --output-file eslint_report.json --format json",
     "storybook": "start-storybook"
   },
   "engines": {
