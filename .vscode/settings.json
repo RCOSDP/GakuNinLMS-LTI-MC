@@ -19,5 +19,6 @@
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "prettier.enable": true
+  "prettier.enable": true,
+  "typescript.tsdk": "node_modules/typescript/lib"
 }

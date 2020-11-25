@@ -1,15 +1,10 @@
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url = "***"
 }
 
 generator client {
   provider = "prisma-client-js"
-}
-
-generator jsonSchema {
-  provider = "prisma-json-schema-generator"
-  output = "."
 }
 
 // Resource Objects
@@ -177,7 +172,7 @@ model User {
   id            Int        @id @default(autoincrement())
   createdTopics Topic[]
   writtenBooks  Book[]
-  ltiUserId     String     @unique @map(name: "lti_user_id")
+  ltiUserId     String     @map(name: "lti_user_id")
   activities    Activity[]
   /// 氏名
   name          String

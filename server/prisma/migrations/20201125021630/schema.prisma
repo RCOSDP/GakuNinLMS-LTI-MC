@@ -1,15 +1,10 @@
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url = "***"
 }
 
 generator client {
   provider = "prisma-client-js"
-}
-
-generator jsonSchema {
-  provider = "prisma-json-schema-generator"
-  output = "."
 }
 
 // Resource Objects
