@@ -3,3 +3,24 @@ node_modules/
 /.next/
 /v1/
 /server/dist/
+
+# NOTE: 古いバージョンのときの残骸なので対応しない
+.storybook/preview.tsx
+components/AppThemeProvider.tsx
+components/ContentsTable.tsx
+components/EditContents.tsx
+components/EditVideo.tsx
+components/ShowContents.tsx
+components/Table.tsx
+components/VideoJs.tsx
+components/VideosTable.tsx
+components/api.ts
+components/contents/AddVideosButton.stories.tsx
+components/contents/VideosSelectorTable.tsx
+components/log.ts
+components/player.ts
+components/player/volume.ts
+components/session.ts
+components/state.tsx
+components/video.ts
+pages/contents.tsx
