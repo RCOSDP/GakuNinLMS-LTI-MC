@@ -7,6 +7,11 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator jsonSchema {
+  provider = "prisma-json-schema-generator"
+  output   = "."
+}
+
 // Resource Objects
 
 /// 教育用外部リソース
@@ -119,7 +124,7 @@ model Book {
   /// 題名
   name             String
   /// 概要
-  abstruct         String
+  abstract         String
   /// 著作者
   author           User              @relation(fields: [authorId], references: [id])
   authorId         Int               @map(name: "author_id")
@@ -172,7 +177,7 @@ model User {
   id            Int        @id @default(autoincrement())
   createdTopics Topic[]
   writtenBooks  Book[]
-  ltiUserId     String     @map(name: "lti_user_id")
+  ltiUserId     String     @unique @map(name: "lti_user_id")
   activities    Activity[]
   /// 氏名
   name          String
@@ -197,4 +202,26 @@ model Activity {
   @@index([topicId], name: "topic_id")
   @@index([learnerId], name: "learner_id")
   @@map(name: "activities")
+}
+
+// Etc.
+
+/// セッションストア
+model Session {
+  id      String   @id
+  sid     String   @unique @default(cuid())
+  data    String
+  expires DateTime
+
+  @@map(name: "sessions")
+}
+
+/// OAuth Account
+model Account {
+  id        Int    @id @default(autoincrement())
+  nonce     String
+  timestamp Int
+
+  @@unique([nonce, timestamp])
+  @@map(name: "accounts")
 }

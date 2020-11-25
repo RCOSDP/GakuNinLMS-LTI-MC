@@ -42,13 +42,13 @@
     "react-dom": "^16.13.1",
     "strict-event-emitter-types": "^2.0.0",
     "swr": "^0.3.2",
-    "typescript": "^4.0.2",
+    "typescript": "^4.1.2",
     "video.js": "^7.8.4",
     "videojs-seek-buttons": "^1.6.0",
     "videojs-youtube": "^2.6.1"
   },
   "scripts": {
-    "build": "next build && next export -o v1",
+    "build": "yarn --cwd server build:prisma && next build && next export -o v1",
     "format": "prettier --write components pages types",
     "lint": "tsc",
     "storybook": "start-storybook"
