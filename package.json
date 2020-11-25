@@ -49,7 +49,7 @@
   },
   "scripts": {
     "build": "yarn --cwd server build:prisma && next build && next export -o v1",
-    "format": "prettier --write components pages types",
+    "format": "prettier --write .",
     "lint": "tsc",
     "storybook": "start-storybook"
   },
