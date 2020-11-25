@@ -21,10 +21,10 @@ docker-compose up -d
 
 デフォルトでは URL `postgresql://postgres:password@localhost/postgres` で接続可能な PostgreSQL データベースが構築されます。
 
-prisma/.env.sample を参照し、書き換えてデータベースへの接続情報を書き込みます。
+.env.sample を参照し、書き換えてデータベースへの接続情報を書き込みます。
 
 ```sh
-cp prisma/.env.sample prisma/.env
+cp .env.sample .env
 ```
 
 依存パッケージ群をインストールします。
