@@ -19,8 +19,8 @@
     "start": "NODE_ENV=production node dist/index.js"
   },
   "devDependencies": {
-    "@prisma/cli": "^2.8.1",
-    "@prisma/client": "^2.9.0",
+    "@prisma/cli": "^2.12.0",
+    "@prisma/client": "^2.12.0",
     "@quixo3/prisma-session-store": "^1.1.0",
     "@types/strict-uri-encode": "^2.0.0",
     "@vercel/ncc": "^0.25.1",
