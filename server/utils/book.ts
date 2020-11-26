@@ -1,9 +1,10 @@
-import { Topic, Section, TopicSection } from "$prisma/client";
+import { Book, Topic, Section, TopicSection } from "$prisma/client";
 import { TopicProps } from "$server/models/topic";
-import { BookProps } from "$server/models/book";
+import { BookProps, BookSchema } from "$server/models/book";
 import { SectionProps } from "$server/models/book/section";
 import prisma from "./prisma";
 import { parse } from "./videoResource";
+import { bookIncludingTopicsArg, bookToBookSchema } from "./bookToBookSchema";
 
 const topicSectionCreateInput = (creatorId: Topic["creatorId"]) => (
   topic: TopicProps,
@@ -66,4 +67,16 @@ export async function createBook(book: BookProps) {
       },
     },
   });
+}
+
+export async function findBook(
+  bookId: Book["id"]
+): Promise<BookSchema | undefined> {
+  const book = await prisma.book.findUnique({
+    where: { id: bookId },
+    include: bookIncludingTopicsArg,
+  });
+  if (book == null) return;
+
+  return bookToBookSchema(book);
 }
