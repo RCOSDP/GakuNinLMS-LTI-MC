@@ -255,7 +255,7 @@
       "model": "Video",
       "field": "resource",
       "type": "Resource",
-      "arity": "Required"
+      "arity": "Optional"
     },
     {
       "tag": "CreateField",
