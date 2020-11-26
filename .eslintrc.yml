@@ -18,8 +18,8 @@ extends:
   - prettier
   - prettier/@typescript-eslint
 rules:
-  "@typescript-eslint/explicit-module-boundary-types": off
-  react/react-in-jsx-scope: off
+  "@typescript-eslint/explicit-module-boundary-types": "off"
+  react/react-in-jsx-scope: "off"
 overrides:
   - files:
       - next.config.js
