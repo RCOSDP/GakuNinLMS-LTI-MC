@@ -5,7 +5,7 @@ module.exports = {
   preset: "ts-jest",
   testEnvironment: "node",
   moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {
-    prefix: "../",
+    prefix: require("path").resolve("../"),
   }),
   globals: {
     "ts-jest": {
