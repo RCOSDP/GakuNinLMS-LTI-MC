@@ -1,8 +1,7 @@
-import { User } from "$prisma/client";
+import { UserProps } from "$server/models/user";
 
-const users: readonly User[] = [
+const users: readonly UserProps[] = [
   {
-    id: 1,
     ltiUserId: "2",
     name: "Admin User",
   },
