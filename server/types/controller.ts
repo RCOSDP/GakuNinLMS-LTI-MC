@@ -1,8 +1,21 @@
-import { FastifyRequest, HTTPMethods } from "fastify";
+import {
+  FastifyRequest,
+  HTTPMethods,
+  RawRequestDefaultExpression,
+  RawServerBase,
+  RawServerDefault,
+} from "fastify";
+import { RouteGenericInterface } from "fastify/types/route";
 
-type Controller = {
+type Controller<
+  RouteGeneric extends RouteGenericInterface = RouteGenericInterface,
+  RawServer extends RawServerBase = RawServerDefault,
+  RawRequest extends RawRequestDefaultExpression<
+    RawServer
+  > = RawRequestDefaultExpression<RawServer>
+> = {
   [K in Lowercase<HTTPMethods>]?: (
-    req: FastifyRequest
+    req: FastifyRequest<RouteGeneric, RawServer, RawRequest>
   ) => Promise<{
     status: number;
     body?: unknown;
