@@ -9,19 +9,20 @@ import formbody from "fastify-formbody";
 import multipart from "fastify-multipart";
 import addHours from "date-fns/addHours";
 import pkg from "$server/package.json";
-import routes, { Options as RoutesOptions } from "./routes";
+import routes from "./routes";
 
-export type Options = RoutesOptions & {
+export type Options = {
+  basePath: string;
   sessionSecret: string;
   sessionStore: session.SessionStore;
 };
 
 async function app(fastify: FastifyInstance, options: Options) {
-  const { sessionSecret, sessionStore } = options;
+  const { basePath, sessionSecret, sessionStore } = options;
 
   await Promise.all([
     fastify.register(swagger, {
-      routePrefix: `${options.basePath}/swagger`,
+      routePrefix: `${basePath}/swagger`,
       swagger: {
         info: {
           title: pkg.name,
@@ -51,7 +52,7 @@ async function app(fastify: FastifyInstance, options: Options) {
     }),
   ]);
 
-  await fastify.register(routes, options);
+  await fastify.register(routes, { prefix: basePath });
 }
 
 export default app;
