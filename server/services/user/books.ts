@@ -1,38 +1,22 @@
 import { FastifyInstance } from "fastify";
 import Method from "$server/types/method";
 import { bookSchema } from "$server/models/book";
+import { UserParams, userParamsSchema } from "$server/validators/userParams";
+import {
+  PaginationProps,
+  paginationPropsSchema,
+} from "$server/validators/paginationProps";
 import { isInstructor } from "$server/utils/session";
 import { findWrittenBooks } from "$server/utils/user";
 
-export type Query = {
-  page?: number;
-  per_page?: number;
-};
-
-export type Params = {
-  user_id: number;
-};
+export type Query = PaginationProps;
+export type Params = UserParams;
 
 export const method: Method = {
   get: {
     description: "作成したブックの一覧",
-    querystring: {
-      type: "object",
-      properties: {
-        page: {
-          type: "integer",
-        },
-        per_page: {
-          type: "integer",
-        },
-      },
-    },
-    params: {
-      type: "object",
-      properties: {
-        user_id: { type: "integer" },
-      },
-    },
+    querystring: paginationPropsSchema,
+    params: userParamsSchema,
     response: {
       200: {
         description: "成功時",
@@ -54,7 +38,7 @@ export const method: Method = {
   },
 };
 
-async function get({ query, params }: { query: Query; params: Params }) {
+export async function get({ query, params }: { query: Query; params: Params }) {
   const page = query.page ?? 0;
   const perPage = query.per_page ?? 100;
   const { user_id: userId } = params;
@@ -66,7 +50,7 @@ async function get({ query, params }: { query: Query; params: Params }) {
   };
 }
 
-function preHandler(fastify: FastifyInstance) {
+export function preHandler(fastify: FastifyInstance) {
   return fastify.auth([
     async ({ session }) => {
       const authorized = isInstructor(session);
@@ -74,8 +58,3 @@ function preHandler(fastify: FastifyInstance) {
     },
   ]);
 }
-
-export default {
-  get,
-  preHandler,
-};
