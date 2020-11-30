@@ -1,14 +1,12 @@
-import {
-  Book,
-  Resource,
-  Section,
-  Topic,
-  TopicSection,
-  Video,
-} from "$prisma/client";
+import { Book, Section, TopicSection } from "$prisma/client";
 import { BookSchema } from "$server/models/book";
 import { SectionSchema } from "$server/models/book/section";
 import { TopicSchema } from "$server/models/topic";
+import {
+  topicsWithResourcesArg,
+  topicToTopicSchema,
+  TopicWithResource,
+} from "./topicToTopicSchema";
 
 export const bookIncludingTopicsArg = {
   sections: {
@@ -21,7 +19,7 @@ export const bookIncludingTopicsArg = {
           order: "asc",
         },
         include: {
-          topic: { include: { resource: { include: { video: true } } } },
+          topic: { include: topicsWithResourcesArg },
         },
       },
     },
@@ -29,11 +27,7 @@ export const bookIncludingTopicsArg = {
 } as const;
 
 type TopicSectionWithTopic = TopicSection & {
-  topic: Topic & {
-    resource: Resource & {
-      video: Video | null;
-    };
-  };
+  topic: TopicWithResource;
 };
 
 type SectionWithTopics = Section & {
@@ -63,10 +57,6 @@ function topicSectionToTopicSchema(
 ): TopicSchema {
   return {
     ...topicSection,
-    ...topicSection.topic,
-    resource: {
-      ...topicSection.topic.resource.video,
-      ...topicSection.topic.resource,
-    },
+    ...topicToTopicSchema(topicSection.topic),
   };
 }

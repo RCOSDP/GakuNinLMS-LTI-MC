@@ -1,29 +1,26 @@
 import Method from "$server/types/method";
-import { bookSchema } from "$server/models/book";
-import { UserParams, userParamsSchema } from "$server/validators/userParams";
+import { topicSchema } from "$server/models/topic";
 import {
   PaginationProps,
   paginationPropsSchema,
 } from "$server/validators/paginationProps";
-import { findWrittenBooks } from "$server/utils/user";
+import { findTopics } from "$server/utils/topic";
 import { authInstructorHandler } from "$server/utils/authInstructorHandler";
 
-export type Query = PaginationProps;
-export type Params = UserParams;
+export type IndexQuery = PaginationProps;
 
-export const method: Method = {
+const indexMethod: Method = {
   get: {
-    description: "作成したブックの一覧",
+    description: "トピック一覧",
     querystring: paginationPropsSchema,
-    params: userParamsSchema,
     response: {
       200: {
         description: "成功時",
         type: "object",
         properties: {
-          books: {
+          topics: {
             type: "array",
-            items: bookSchema,
+            items: topicSchema,
           },
           page: paginationPropsSchema.properties?.page,
           perPage: paginationPropsSchema.properties?.per_page,
@@ -33,16 +30,19 @@ export const method: Method = {
   },
 };
 
-export async function get({ query, params }: { query: Query; params: Params }) {
+async function index({ query }: { query: IndexQuery }) {
   const page = query.page ?? 0;
   const perPage = query.per_page ?? 100;
-  const { user_id: userId } = params;
-  const books = await findWrittenBooks(userId, page, perPage);
+  const topics = await findTopics(page, perPage);
 
   return {
     status: 200,
-    body: { books, page, perPage },
+    body: { topics, page, perPage },
   };
 }
 
-export const preHandler = authInstructorHandler;
+export const indexService = {
+  method: indexMethod,
+  get: index,
+  preHandler: authInstructorHandler,
+};
