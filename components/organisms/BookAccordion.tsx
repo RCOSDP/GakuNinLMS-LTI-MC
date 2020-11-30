@@ -4,7 +4,6 @@ import AccordionSummary from "@material-ui/core/AccordionSummary";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
-import Chip from "@material-ui/core/Chip";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -13,6 +12,7 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import { makeStyles } from "@material-ui/core/styles";
+import CourseChip from "$atoms/CourseChip";
 import Item from "$atoms/Item";
 import useAccordionStyle from "styles/accordion";
 import useAccordionSummaryStyle from "styles/accordionSummary";
@@ -67,12 +67,7 @@ export default function BookAccordion() {
       </AccordionSummary>
       <AccordionDetails classes={accordionDetailClasses}>
         <div className={classes.chips}>
-          <Chip
-            label="2020年度 ○○コース"
-            variant="outlined"
-            color="primary"
-            onClick={handleChipClick}
-          />
+          <CourseChip label="2020年度 ○○コース" onClick={handleChipClick} />
         </div>
         <div className={classes.items}>
           <Item itemKey="作成日" value="2020.11.19" />
