@@ -1,7 +1,7 @@
 import { FastifyRequest } from "fastify";
 import Method from "$server/types/method";
 import { schema as ltiLaunchBodySchema } from "$server/validators/ltiLaunchBody";
-import { schema as userSchema } from "$server/utils/user";
+import userSchema from "$server/models/user";
 
 export const method: Method = {
   get: {

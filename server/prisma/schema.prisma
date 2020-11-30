@@ -31,7 +31,7 @@ model Resource {
 /// ビデオ
 model Video {
   id          Int      @id @default(autoincrement())
-  resource    Resource
+  resource    Resource?
   tracks      Track[]
   /// 動画プロバイダーの識別子: "https://www.youtube.com/" | "https://vimeo.com/"
   providerUrl String?  @map(name: "provider_url")

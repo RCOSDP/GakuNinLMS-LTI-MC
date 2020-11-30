@@ -11,12 +11,15 @@ export function isAdministrator(ltiLaunchBody: LtiLaunchBody) {
 }
 
 /**
- * ロールが教員か否か
+ * ロールが教員・管理者か否か
  * @param ltiLaunchBody LTI v1.1 起動時リクエストボディ
- * @return 教員の場合 true、それ以外の場合 false
+ * @return 教員または管理者の場合 true、それ以外の場合 false
  */
 export function isInstructor(ltiLaunchBody: LtiLaunchBody) {
-  return hasRole(ltiLaunchBody.roles, roles.instructor);
+  return hasRole(ltiLaunchBody.roles, [
+    ...roles.instructor,
+    ...roles.administrator,
+  ]);
 }
 
 /**

@@ -23,9 +23,9 @@ export function isAdministrator(session: FastifyRequest["session"]) {
 }
 
 /**
- * セッションが教員のものであるか否か
+ * セッションが教員・管理者のものであるか否か
  * @param session セッション
- * @return セッションが教員のものの場合 true、それ以外の場合 false
+ * @return セッションが教員または管理者のものの場合 true、それ以外の場合 false
  */
 export function isInstructor(session: FastifyRequest["session"]) {
   return hasRole(session, ltiRoles.isInstructor);
