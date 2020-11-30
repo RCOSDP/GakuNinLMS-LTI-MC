@@ -4,7 +4,7 @@ import * as service from "$server/services/user/books";
 
 export async function books(fastify: FastifyInstance) {
   fastify.get<{ Querystring: service.Query; Params: service.Params }>(
-    "/:user_id/books",
+    "/user/:user_id/books",
     { schema: service.method.get, preHandler: service.preHandler(fastify) },
     handler(service.get)
   );

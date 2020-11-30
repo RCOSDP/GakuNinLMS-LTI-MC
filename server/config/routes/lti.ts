@@ -4,7 +4,7 @@ import service, { method } from "$server/services/ltiLaunch";
 
 export async function launch(fastify: FastifyInstance) {
   fastify.post(
-    "/launch",
+    "/lti/launch",
     {
       schema: method.post,
       preValidation: service.preValidation(),
