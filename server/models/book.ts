@@ -1,9 +1,9 @@
-import { Book, BookCreateWithoutAuthorInput, User } from "$prisma/client";
+import { Book, Prisma } from "$prisma/client";
 import jsonSchema from "$server/prisma/json-schema.json";
 import { SectionProps, SectionSchema, sectionSchema } from "./book/section";
 
 export type BookProps = Omit<
-  BookCreateWithoutAuthorInput,
+  Prisma.BookCreateWithoutAuthorInput,
   "details" | "sections"
 > & {
   authorId: User["id"];
