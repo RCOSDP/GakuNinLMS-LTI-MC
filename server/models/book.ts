@@ -1,4 +1,4 @@
-import { Book, Prisma } from "$prisma/client";
+import { User, Book, Prisma } from "$prisma/client";
 import jsonSchema from "$server/prisma/json-schema.json";
 import { SectionProps, SectionSchema, sectionSchema } from "./book/section";
 
