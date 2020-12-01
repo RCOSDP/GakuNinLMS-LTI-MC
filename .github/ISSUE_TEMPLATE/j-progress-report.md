@@ -1,5 +1,5 @@
 ---
-name: Progress Report for Japanese Language
+name: 機能単位進捗確認
 about: 機能単位に進捗を確認するためのIssue
 title: ''
 labels: ''
@@ -15,4 +15,6 @@ assignees: ''
 * [ ] 機能要件がFixしており、着手した。
 * [ ] コーディング完了した。
 * [ ] 単体テスト完了した。
-* [ ] 結合テスト完了した。
+
+
+* 結合テストに関しては、CCC Tiesの事務方の人が触って確認とするので、ここに書かなくても良い。
