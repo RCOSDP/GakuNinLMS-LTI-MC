@@ -25,6 +25,7 @@
       "$molecules/*": ["components/molecules/*"],
       "$organisms/*": ["components/organisms/*"],
       "$prisma/*": ["./node_modules/.prisma/*"],
+      "$openapi/*": ["./openapi/*"],
       "$server/*": ["./server/*"]
     }
   },
