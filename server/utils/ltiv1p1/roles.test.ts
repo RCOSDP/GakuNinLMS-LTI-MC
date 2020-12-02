@@ -1,5 +1,5 @@
 import { isInstructor } from "./roles";
-import LtiLaunchBody from "$server/validators/ltiLaunchBody";
+import { LtiLaunchBody } from "$server/validators/ltiLaunchBody";
 
 describe("isInstructor()", function () {
   test("ロールが管理者", function () {

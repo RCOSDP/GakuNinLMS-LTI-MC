@@ -65,14 +65,15 @@ docker-compose down
 
 ## 環境変数
 
-| 名称                    | 説明                                                |
-| ----------------------- | --------------------------------------------------- |
-| `PORT`                  | ポート (デフォルト: `8080`)                         |
-| `BASE_PATH`             | ベースとなるパス (例: `/api/v2` )                   |
-| `FRONTEND_URL`          | フロントエンドの URL (例: `http://localhost:3000/`) |
-| `SESSION_SECRET`        | セッションストアの秘密鍵                            |
-| `OAUTH_CONSUMER_KEY`    | LMS に登録されている OAuth Consumer Key             |
-| `OAUTH_CONSUMER_SECRET` | LMS に登録されている OAuth Consumer Secret          |
-| `DATABASE_URL`          | [PostgreSQL 接続 URL][database_connection_url]      |
+| 名称                    | 説明                                                           |
+| ----------------------- | -------------------------------------------------------------- |
+| `PORT`                  | ポート (デフォルト: `8080`)                                    |
+| `BASE_PATH`             | ベースとなるパス (例: `/api/v2` )                              |
+| `FRONTEND_ORIGIN`       | フロントエンドのオリジン (例: `http://localhost:3000`)         |
+| `FRONTEND_PATH`         | フロントエンドのパス (例: `http://localhost:3000/` ならば `/`) |
+| `SESSION_SECRET`        | セッションストアの秘密鍵                                       |
+| `OAUTH_CONSUMER_KEY`    | LMS に登録されている OAuth Consumer Key                        |
+| `OAUTH_CONSUMER_SECRET` | LMS に登録されている OAuth Consumer Secret                     |
+| `DATABASE_URL`          | [PostgreSQL 接続 URL][database_connection_url]                 |
 
 [database_connection_url]: https://www.prisma.io/docs/reference/database-connectors/connection-urls/

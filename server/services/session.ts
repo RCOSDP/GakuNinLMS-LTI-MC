@@ -1,20 +1,12 @@
 import { FastifyRequest } from "fastify";
 import Method from "$server/types/method";
-import { schema as ltiLaunchBodySchema } from "$server/validators/ltiLaunchBody";
-import userSchema from "$server/models/user";
+import { sessionSchema } from "$server/models/session";
 
 export const method: Method = {
   get: {
     description: "セッション情報",
     response: {
-      200: {
-        description: "ltiLaunchBody",
-        type: "object",
-        properties: {
-          ltiLaunchBody: ltiLaunchBodySchema,
-          user: userSchema,
-        },
-      },
+      200: sessionSchema,
     },
   },
 };
