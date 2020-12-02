@@ -9,6 +9,7 @@ import gray from "theme/colors/gray";
 
 const useOutlinedInputStyles = makeStyles((theme) => ({
   root: {
+    backgroundColor: "#fff",
     borderRadius: "1.25rem",
     paddingRight: `${theme.spacing(2)}px`,
     "&:hover $notchedOutline": {

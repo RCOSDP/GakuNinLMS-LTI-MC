@@ -1,19 +1,19 @@
 import { MouseEvent } from "react";
+import { format } from "date-fns";
 import Accordion from "@material-ui/core/Accordion";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
-import Chip from "@material-ui/core/Chip";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
 import Divider from "@material-ui/core/Divider";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import { makeStyles } from "@material-ui/core/styles";
+import BookAccordionChildren from "$molecules/BookAccordionChildren";
+import CourseChip from "$atoms/CourseChip";
 import Item from "$atoms/Item";
+import { Book } from "types/bookAccordion";
 import useAccordionStyle from "styles/accordion";
 import useAccordionSummaryStyle from "styles/accordionSummary";
 import useAccordionDetailStyle from "styles/accordionDetail";
@@ -36,7 +36,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function BookAccordion() {
+type Props = Book;
+
+export default function BookAccordion(props: Props) {
+  const { name, author, createdAt, updatedAt, sections } = props;
   const classes = useStyles();
   const accordionClasses = useAccordionStyle();
   const accordionSummaryClasses = useAccordionSummaryStyle();
@@ -57,7 +60,7 @@ export default function BookAccordion() {
         IconButtonProps={{ edge: "start" }}
         expandIcon={<ExpandMoreIcon />}
       >
-        <Typography variant="h6">コンピュータ・サイエンス</Typography>
+        <Typography variant="h6">{name}</Typography>
         <IconButton onClick={handleInfoClick}>
           <InfoOutlinedIcon />
         </IconButton>
@@ -67,49 +70,15 @@ export default function BookAccordion() {
       </AccordionSummary>
       <AccordionDetails classes={accordionDetailClasses}>
         <div className={classes.chips}>
-          <Chip
-            label="2020年度 ○○コース"
-            variant="outlined"
-            color="primary"
-            onClick={handleChipClick}
-          />
+          <CourseChip label="2020年度 ○○コース" onClick={handleChipClick} />
         </div>
         <div className={classes.items}>
-          <Item itemKey="作成日" value="2020.11.19" />
-          <Item itemKey="更新日" value="2020.11.19" />
-          <Item itemKey="著者" value="山田太郎" />
+          <Item itemKey="作成日" value={format(createdAt, "yyyy.MM.dd")} />
+          <Item itemKey="更新日" value={format(updatedAt, "yyyy.MM.dd")} />
+          <Item itemKey="著者" value={author.name} />
         </div>
         <Divider />
-        <List disablePadding>
-          <ListItem>
-            <ListItemText>
-              情報のデジタルコンテンツ化
-              <IconButton color="primary" onClick={handleEditClick}>
-                <EditOutlinedIcon />
-              </IconButton>
-            </ListItemText>
-          </ListItem>
-          <List disablePadding>
-            {[...Array(2)].map((value) => (
-              <ListItem key={value}>
-                <ListItemText>
-                  リンゴに夢中のレッサーパンダ
-                  <IconButton color="primary" onClick={handleEditClick}>
-                    <EditOutlinedIcon />
-                  </IconButton>
-                </ListItemText>
-              </ListItem>
-            ))}
-          </List>
-          <ListItem>
-            <ListItemText>
-              デジタルとアナログの相違点
-              <IconButton color="primary" onClick={handleEditClick}>
-                <EditOutlinedIcon />
-              </IconButton>
-            </ListItemText>
-          </ListItem>
-        </List>
+        <BookAccordionChildren sections={sections} />
       </AccordionDetails>
     </Accordion>
   );
