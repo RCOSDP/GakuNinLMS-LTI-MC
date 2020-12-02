@@ -21,7 +21,7 @@ import {
 } from './';
 
 /**
- * 成功時
+ * 作成したブックの一覧
  * @export
  * @interface InlineResponse200
  */

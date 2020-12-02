@@ -25,7 +25,7 @@ import {
 } from './';
 
 /**
- * ltiLaunchBody
+ * セッション情報
  * @export
  * @interface InlineResponse2003
  */
