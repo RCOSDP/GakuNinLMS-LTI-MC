@@ -1,6 +1,6 @@
 import { BookProps } from "$server/models/book";
 
-const books: readonly Omit<BookProps, "authorId">[] = [
+const books: readonly Omit<BookProps, "author">[] = [
   // CC-BY https://dev.chilos.jp/book/uncompress/cb00301
   {
     name: "さまざまな関数",

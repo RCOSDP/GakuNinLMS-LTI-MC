@@ -51,16 +51,16 @@ const sectionCreateInput = (creatorId: Topic["creatorId"]) => (
 };
 
 export async function createBook(book: BookProps) {
-  const { authorId, ...props } = book;
+  const { author, ...props } = book;
 
-  const sectionsCreateInput = book.sections.map(sectionCreateInput(authorId));
+  const sectionsCreateInput = book.sections.map(sectionCreateInput(author.id));
 
   await prisma.book.create({
     data: {
       ...props,
       details: {},
       author: {
-        connect: { id: authorId },
+        connect: { id: author.id },
       },
       sections: {
         create: sectionsCreateInput,

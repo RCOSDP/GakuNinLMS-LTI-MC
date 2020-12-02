@@ -15,7 +15,7 @@ async function main() {
 
     await Promise.all(
       books
-        .map((book) => ({ ...book, authorId: createdUsers[0].id }))
+        .map((book) => ({ ...book, author: { id: createdUsers[0].id } }))
         .map(createBook)
     );
   } catch (error) {
