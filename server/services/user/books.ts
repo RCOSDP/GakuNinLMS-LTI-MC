@@ -1,5 +1,4 @@
 import Method from "$server/types/method";
-import { bookSchema } from "$server/models/book";
 import { UserParams, userParamsSchema } from "$server/validators/userParams";
 import {
   PaginationProps,
@@ -7,6 +6,7 @@ import {
 } from "$server/validators/paginationProps";
 import { findWrittenBooks } from "$server/utils/user";
 import { authInstructorHandler } from "$server/utils/authInstructorHandler";
+import { userBooksSchema } from "$server/models/userBooks";
 
 export type Query = PaginationProps;
 export type Params = UserParams;
@@ -17,18 +17,7 @@ export const method: Method = {
     querystring: paginationPropsSchema,
     params: userParamsSchema,
     response: {
-      200: {
-        description: "成功時",
-        type: "object",
-        properties: {
-          books: {
-            type: "array",
-            items: bookSchema,
-          },
-          page: paginationPropsSchema.properties?.page,
-          perPage: paginationPropsSchema.properties?.per_page,
-        },
-      },
+      200: userBooksSchema,
     },
   },
 };
