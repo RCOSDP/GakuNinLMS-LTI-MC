@@ -1,14 +1,14 @@
 import { BookProps } from "$server/models/book";
 
 const books: readonly Omit<BookProps, "author">[] = [
-  // CC-BY https://dev.chilos.jp/book/uncompress/cb00301
+  // © 2015 NPO CCC-TIES, 行木孝夫 / CC-BY https://dev.chilos.jp/book/uncompress/cb00301
   {
     name: "さまざまな関数",
     abstract: "入門微分積分学共通	第1章",
     sections: [
       {
         topics: [
-          // CC-BY https://dev.chilos.jp/book/uncompress/cb00301/OEBPS/vol-1/text/vol-001-011.xhtml
+          // © 2015 NPO CCC-TIES, 行木孝夫 / CC-BY https://dev.chilos.jp/book/uncompress/cb00301/OEBPS/vol-1/text/vol-001-011.xhtml
           {
             name: "分数関数",
             timeRequired: 60,
@@ -36,7 +36,7 @@ x軸方向へ+1、y軸方向へ+1平行移動したグラフになります。
       },
       {
         topics: [
-          // CC-BY https://dev.chilos.jp/book/uncompress/cb00301/OEBPS/vol-1/text/vol-001-012.xhtml
+          // © 2015 NPO CCC-TIES, 行木孝夫 / CC-BY https://dev.chilos.jp/book/uncompress/cb00301/OEBPS/vol-1/text/vol-001-012.xhtml
           {
             name: "無理関数",
             timeRequired: 49,
@@ -58,7 +58,7 @@ y= - √x の場合は符号が反転しているため、y=√xのグラフをx
       },
       {
         topics: [
-          // CC-BY https://dev.chilos.jp/book/uncompress/cb00301/OEBPS/vol-1/text/vol-001-013.xhtml
+          // © 2015 NPO CCC-TIES, 行木孝夫 / CC-BY https://dev.chilos.jp/book/uncompress/cb00301/OEBPS/vol-1/text/vol-001-013.xhtml
           {
             name: "三角関数",
             timeRequired: 49,
@@ -80,7 +80,7 @@ y=cos xのグラフは、y=sin xのグラフをx軸方向に-π/2だけ平行移
       },
       {
         topics: [
-          // CC-BY https://dev.chilos.jp/book/uncompress/cb00301/OEBPS/vol-1/text/vol-001-014.xhtml
+          // © 2015 NPO CCC-TIES, 行木孝夫 / CC-BY https://dev.chilos.jp/book/uncompress/cb00301/OEBPS/vol-1/text/vol-001-014.xhtml
           {
             name: "指数関数",
             timeRequired: 82,
@@ -106,7 +106,7 @@ f(x+y)=ax+y+axay=f(x)f(y)
       },
       {
         topics: [
-          // CC-BY https://dev.chilos.jp/book/uncompress/cb00301/OEBPS/vol-1/text/vol-001-015.xhtml
+          // © 2015 NPO CCC-TIES, 行木孝夫 / CC-BY https://dev.chilos.jp/book/uncompress/cb00301/OEBPS/vol-1/text/vol-001-015.xhtml
           {
             name: "対数関数",
             timeRequired: 49,
