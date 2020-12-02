@@ -2,10 +2,10 @@ import { FastifyInstance } from "fastify";
 import * as lti from "./lti";
 import * as user from "./user";
 import * as book from "./book";
-import * as topic from "./topic";
+import * as topics from "./topics";
 import session from "./session";
 
-const resources = [lti, user, book, topic];
+const resources = [lti, user, book, topics];
 
 async function routes(fastify: FastifyInstance) {
   for (const router of resources) {
