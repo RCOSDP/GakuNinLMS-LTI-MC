@@ -23,6 +23,7 @@
     "@typescript-eslint/parser": "^4.7.0",
     "@vimeo/player": "^2.13.0",
     "babel-loader": "^8.1.0",
+    "date-fns": "^2.16.1",
     "eslint": "^7.13.0",
     "eslint-config-prettier": "^6.15.0",
     "eslint-plugin-jsx-a11y": "^6.4.1",

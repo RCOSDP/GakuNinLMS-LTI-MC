@@ -1,12 +1,8 @@
-export default { title: "organisms/BookAccordion" };
+export default { title: "molecules/BookAccordionChildren" };
 
-import BookAccordion from "./BookAccordion";
+import BookAccordionChildren from "./BookAccordionChildren";
 
 const props = {
-  name: "コンピュータ・サイエンス",
-  author: { name: "山田太郎" },
-  createdAt: new Date(),
-  updatedAt: new Date(),
   sections: [
     {
       name: "情報のデジタルコンテンツ化",
@@ -37,9 +33,7 @@ const props = {
 export const Default = () => {
   return (
     <div>
-      {[...Array(10)].map((_value, index) => (
-        <BookAccordion key={index} {...props} />
-      ))}
+      <BookAccordionChildren {...props} />
     </div>
   );
 };
