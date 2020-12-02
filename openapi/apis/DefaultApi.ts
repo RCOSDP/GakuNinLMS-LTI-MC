@@ -40,7 +40,7 @@ export interface ApiV2LtiLaunchPostRequest {
     body?: InlineObject;
 }
 
-export interface ApiV2TopicGetRequest {
+export interface ApiV2TopicsGetRequest {
     page?: number;
     perPage?: number;
 }
@@ -143,7 +143,7 @@ export class DefaultApi extends runtime.BaseAPI {
     /**
      * トピック一覧
      */
-    async apiV2TopicGetRaw(requestParameters: ApiV2TopicGetRequest): Promise<runtime.ApiResponse<InlineResponse2002>> {
+    async apiV2TopicsGetRaw(requestParameters: ApiV2TopicsGetRequest): Promise<runtime.ApiResponse<InlineResponse2002>> {
         const queryParameters: runtime.HTTPQuery = {};
 
         if (requestParameters.page !== undefined) {
@@ -157,7 +157,7 @@ export class DefaultApi extends runtime.BaseAPI {
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/api/v2/topic`,
+            path: `/api/v2/topics`,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -169,8 +169,8 @@ export class DefaultApi extends runtime.BaseAPI {
     /**
      * トピック一覧
      */
-    async apiV2TopicGet(requestParameters: ApiV2TopicGetRequest): Promise<InlineResponse2002> {
-        const response = await this.apiV2TopicGetRaw(requestParameters);
+    async apiV2TopicsGet(requestParameters: ApiV2TopicsGetRequest): Promise<InlineResponse2002> {
+        const response = await this.apiV2TopicsGetRaw(requestParameters);
         return await response.value();
     }
 

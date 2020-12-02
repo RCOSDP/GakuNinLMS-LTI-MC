@@ -4,7 +4,7 @@ export * from './InlineResponse2001';
 export * from './InlineResponse2002';
 export * from './InlineResponse2003';
 export * from './InlineResponse2003LtiLaunchBody';
-export * from './InlineResponse2003User';
+export * from './InlineResponse200Author';
 export * from './InlineResponse200Books';
 export * from './InlineResponse200Sections';
 export * from './InlineResponse200Topics';
