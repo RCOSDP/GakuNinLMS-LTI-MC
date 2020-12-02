@@ -18,10 +18,10 @@ import {
     InlineResponse2003LtiLaunchBodyFromJSON,
     InlineResponse2003LtiLaunchBodyFromJSONTyped,
     InlineResponse2003LtiLaunchBodyToJSON,
-    InlineResponse2003User,
-    InlineResponse2003UserFromJSON,
-    InlineResponse2003UserFromJSONTyped,
-    InlineResponse2003UserToJSON,
+    InlineResponse200Author,
+    InlineResponse200AuthorFromJSON,
+    InlineResponse200AuthorFromJSONTyped,
+    InlineResponse200AuthorToJSON,
 } from './';
 
 /**
@@ -38,10 +38,10 @@ export interface InlineResponse2003 {
     ltiLaunchBody?: InlineResponse2003LtiLaunchBody;
     /**
      * 
-     * @type {InlineResponse2003User}
+     * @type {InlineResponse200Author}
      * @memberof InlineResponse2003
      */
-    user?: InlineResponse2003User;
+    user?: InlineResponse200Author;
 }
 
 export function InlineResponse2003FromJSON(json: any): InlineResponse2003 {
@@ -55,7 +55,7 @@ export function InlineResponse2003FromJSONTyped(json: any, ignoreDiscriminator: 
     return {
         
         'ltiLaunchBody': !exists(json, 'ltiLaunchBody') ? undefined : InlineResponse2003LtiLaunchBodyFromJSON(json['ltiLaunchBody']),
-        'user': !exists(json, 'user') ? undefined : InlineResponse2003UserFromJSON(json['user']),
+        'user': !exists(json, 'user') ? undefined : InlineResponse200AuthorFromJSON(json['user']),
     };
 }
 
@@ -69,7 +69,7 @@ export function InlineResponse2003ToJSON(value?: InlineResponse2003 | null): any
     return {
         
         'ltiLaunchBody': InlineResponse2003LtiLaunchBodyToJSON(value.ltiLaunchBody),
-        'user': InlineResponse2003UserToJSON(value.user),
+        'user': InlineResponse200AuthorToJSON(value.user),
     };
 }
 

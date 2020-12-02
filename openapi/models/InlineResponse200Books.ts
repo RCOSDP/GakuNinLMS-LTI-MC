@@ -14,6 +14,10 @@
 
 import { exists, mapValues } from '../runtime';
 import {
+    InlineResponse200Author,
+    InlineResponse200AuthorFromJSON,
+    InlineResponse200AuthorFromJSONTyped,
+    InlineResponse200AuthorToJSON,
     InlineResponse200Sections,
     InlineResponse200SectionsFromJSON,
     InlineResponse200SectionsFromJSONTyped,
@@ -70,10 +74,10 @@ export interface InlineResponse200Books {
     details?: object;
     /**
      * 
-     * @type {number}
+     * @type {InlineResponse200Author}
      * @memberof InlineResponse200Books
      */
-    authorId?: number;
+    author?: InlineResponse200Author;
     /**
      * 
      * @type {Array<InlineResponse200Sections>}
@@ -99,7 +103,7 @@ export function InlineResponse200BooksFromJSONTyped(json: any, ignoreDiscriminat
         'createdAt': !exists(json, 'createdAt') ? undefined : (new Date(json['createdAt'])),
         'updatedAt': !exists(json, 'updatedAt') ? undefined : (new Date(json['updatedAt'])),
         'details': !exists(json, 'details') ? undefined : json['details'],
-        'authorId': !exists(json, 'authorId') ? undefined : json['authorId'],
+        'author': !exists(json, 'author') ? undefined : InlineResponse200AuthorFromJSON(json['author']),
         'sections': !exists(json, 'sections') ? undefined : ((json['sections'] as Array<any>).map(InlineResponse200SectionsFromJSON)),
     };
 }
@@ -120,7 +124,7 @@ export function InlineResponse200BooksToJSON(value?: InlineResponse200Books | nu
         'createdAt': value.createdAt === undefined ? undefined : (value.createdAt.toISOString()),
         'updatedAt': value.updatedAt === undefined ? undefined : (value.updatedAt.toISOString()),
         'details': value.details,
-        'authorId': value.authorId,
+        'author': InlineResponse200AuthorToJSON(value.author),
         'sections': value.sections === undefined ? undefined : ((value.sections as Array<any>).map(InlineResponse200SectionsToJSON)),
     };
 }
