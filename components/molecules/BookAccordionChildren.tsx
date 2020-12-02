@@ -1,4 +1,4 @@
-import { MouseEvent, ComponentProps } from "react";
+import { MouseEvent, Fragment } from "react";
 import IconButton from "@material-ui/core/IconButton";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -7,28 +7,28 @@ import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import { Section } from "types/bookAccordion";
 
-type Props = Omit<ComponentProps<typeof List>, "children"> & {
+type Props = {
   sections: Section[];
 };
 
 export default function BookAccordionChildren(props: Props) {
-  const { sections, ...other } = props;
+  const { sections } = props;
   const handleEditClick = (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
   };
   return (
-    <List disablePadding {...other}>
+    <List disablePadding>
       {sections.map((section, sectionIndex) => (
-        <>
+        <Fragment key={section.id}>
           {section.name && (
-            <ListItem key={sectionIndex} button>
+            <ListItem button>
               <ListItemText>
                 {sectionIndex + 1} {section.name}
               </ListItemText>
             </ListItem>
           )}
           {section.topics.map((topic, topicIndex) => (
-            <ListItem key={topicIndex} button>
+            <ListItem key={topic.id} button>
               <ListItemText>
                 {sectionIndex + 1}
                 {section.name ? `.${topicIndex + 1}` : ""} {topic.name}
@@ -40,7 +40,7 @@ export default function BookAccordionChildren(props: Props) {
               </ListItemSecondaryAction>
             </ListItem>
           ))}
-        </>
+        </Fragment>
       ))}
     </List>
   );

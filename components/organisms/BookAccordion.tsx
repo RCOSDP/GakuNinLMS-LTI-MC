@@ -1,4 +1,4 @@
-import { MouseEvent, ComponentProps } from "react";
+import { MouseEvent } from "react";
 import { format } from "date-fns";
 import Accordion from "@material-ui/core/Accordion";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
@@ -36,10 +36,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-type Props = Omit<ComponentProps<typeof Accordion>, "children"> & Book;
+type Props = Book;
 
 export default function BookAccordion(props: Props) {
-  const { name, author, createdAt, updatedAt, sections, ...other } = props;
+  const { name, author, createdAt, updatedAt, sections } = props;
   const classes = useStyles();
   const accordionClasses = useAccordionStyle();
   const accordionSummaryClasses = useAccordionSummaryStyle();
@@ -54,7 +54,7 @@ export default function BookAccordion(props: Props) {
     event.stopPropagation();
   };
   return (
-    <Accordion classes={accordionClasses} {...other}>
+    <Accordion classes={accordionClasses}>
       <AccordionSummary
         classes={accordionSummaryClasses}
         IconButtonProps={{ edge: "start" }}

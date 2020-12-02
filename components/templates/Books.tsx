@@ -66,8 +66,8 @@ export default function Books(props: Props) {
           <SearchTextField placeholder="ブック・トピック検索" />
         </div>
         <div>
-          {books.map((book, index) => (
-            <BookAccordion key={index} {...book} />
+          {books.map((book) => (
+            <BookAccordion key={book.id} {...book} />
           ))}
         </div>
       </Container>
