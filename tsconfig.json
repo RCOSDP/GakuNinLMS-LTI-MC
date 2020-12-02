@@ -7,8 +7,6 @@
     "strict": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitReturns": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
     "esModuleInterop": true,
@@ -26,7 +24,7 @@
       "$organisms/*": ["components/organisms/*"],
       "$templates/*": ["components/templates/*"],
       "$prisma/*": ["./node_modules/.prisma/*"],
-      "$server/*": ["./server/*"]
+      "$*": ["*"]
     }
   },
   "exclude": ["node_modules"],

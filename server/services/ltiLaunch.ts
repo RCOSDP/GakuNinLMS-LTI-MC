@@ -4,20 +4,27 @@ import { upsertUser } from "$server/utils/user";
 import Method from "$server/types/method";
 import prisma from "$server/utils/prisma";
 import {
-  FRONTEND_URL,
+  FRONTEND_ORIGIN,
+  FRONTEND_PATH,
   OAUTH_CONSUMER_KEY,
   OAUTH_CONSUMER_SECRET,
 } from "$server/utils/env";
 import { auth, valid } from "$server/utils/ltiv1p1/oauth";
-import LtiLaunchBody, { schema } from "$server/validators/ltiLaunchBody";
+import {
+  LtiLaunchBody,
+  ltiLaunchBodySchema,
+} from "$server/validators/ltiLaunchBody";
+
+const frontendUrl = `${FRONTEND_ORIGIN}${FRONTEND_PATH}`;
 
 export const method: Method = {
   post: {
     description: "LTI ツールとして指定するエンドポイント",
-    body: schema,
+    body: ltiLaunchBodySchema,
     response: {
       302: {
-        description: "成功時 `FRONTEND_URL` にリダイレクト",
+        description:
+          "成功時 `${FRONTEND_ORIGIN}${FRONTEND_PATH}` にリダイレクト",
         type: "null",
       },
     },
@@ -37,7 +44,7 @@ async function post({ session }: FastifyRequest) {
   return {
     status: 302,
     headers: {
-      location: FRONTEND_URL,
+      location: frontendUrl,
     },
   };
 }

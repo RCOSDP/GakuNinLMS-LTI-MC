@@ -1,7 +1,7 @@
 import { IsNotEmpty, IsOptional, IsString } from "class-validator";
 import { validationMetadatasToSchemas } from "class-validator-jsonschema";
 
-class LtiLaunchBody {
+export class LtiLaunchBody {
   @IsNotEmpty()
   @IsString()
   oauth_version!: string;
@@ -62,6 +62,5 @@ class LtiLaunchBody {
   @IsString()
   lis_person_name_full?: string;
 }
-export default LtiLaunchBody;
 
-export const schema = validationMetadatasToSchemas().LtiLaunchBody;
+export const ltiLaunchBodySchema = validationMetadatasToSchemas().LtiLaunchBody;

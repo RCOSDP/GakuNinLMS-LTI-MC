@@ -1,4 +1,4 @@
-import { Book, Section, TopicSection } from "$prisma/client";
+import { Book, Section, TopicSection, User } from "$prisma/client";
 import { BookSchema } from "$server/models/book";
 import { SectionSchema } from "$server/models/book/section";
 import { TopicSchema } from "$server/models/topic";
@@ -9,6 +9,7 @@ import {
 } from "./topicToTopicSchema";
 
 export const bookIncludingTopicsArg = {
+  author: true,
   sections: {
     orderBy: {
       order: "asc",
@@ -35,12 +36,14 @@ type SectionWithTopics = Section & {
 };
 
 type BookWithTopics = Book & {
+  author: User;
   sections: SectionWithTopics[];
 };
 
 export function bookToBookSchema(book: BookWithTopics): BookSchema {
   return {
     ...book,
+    author: book.author,
     sections: book.sections.map(sectionToSectionSchema),
   };
 }

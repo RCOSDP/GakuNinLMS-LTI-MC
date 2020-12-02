@@ -7,18 +7,18 @@ import cookie from "fastify-cookie";
 import auth from "fastify-auth";
 import formbody from "fastify-formbody";
 import multipart from "fastify-multipart";
-import addHours from "date-fns/addHours";
 import pkg from "$server/package.json";
 import routes from "./routes";
 
 export type Options = {
   basePath: string;
+  allowOrigin: string[];
   sessionSecret: string;
   sessionStore: session.SessionStore;
 };
 
 async function app(fastify: FastifyInstance, options: Options) {
-  const { basePath, sessionSecret, sessionStore } = options;
+  const { basePath, allowOrigin, sessionSecret, sessionStore } = options;
 
   await fastify.register(swagger, {
     routePrefix: `${basePath}/swagger`,
@@ -43,15 +43,15 @@ async function app(fastify: FastifyInstance, options: Options) {
   });
 
   await Promise.all([
-    fastify.register(cors),
+    fastify.register(cors, {
+      origin: allowOrigin,
+      credentials: true,
+    }),
     fastify.register(cookie),
     fastify.register(session, {
       secret: sessionSecret,
       store: sessionStore,
-      cookie: {
-        secure: "auto",
-        maxAge: addHours(0, 1).getTime(),
-      },
+      cookie: { secure: "auto" },
     }),
     fastify.register(auth),
     fastify.register(formbody),

@@ -1,16 +1,18 @@
-import { User, Book, Prisma } from "$prisma/client";
+import { Book, Prisma } from "$prisma/client";
 import jsonSchema from "$server/prisma/json-schema.json";
+import { UserSchema, userSchema } from "./user";
 import { SectionProps, SectionSchema, sectionSchema } from "./book/section";
 
 export type BookProps = Omit<
   Prisma.BookCreateWithoutAuthorInput,
   "details" | "sections"
 > & {
-  authorId: User["id"];
+  author: Pick<UserSchema, "id">;
   sections: Array<SectionProps>;
 };
 
-export type BookSchema = Book & {
+export type BookSchema = Omit<Book, "authorId"> & {
+  author: UserSchema;
   sections: SectionSchema[];
 };
 
@@ -33,9 +35,7 @@ export const bookSchema = {
     createdAt,
     updatedAt,
     details,
-    authorId: {
-      type: "integer",
-    },
+    author: userSchema,
     sections: {
       type: "array",
       items: sectionSchema,
