@@ -1,7 +1,9 @@
 import { User } from "@prisma/client";
-import { FastifyRequest } from "fastify";
+import { SessionScheme } from "$server/models/session";
 import { LtiLaunchBody } from "$server/validators/ltiLaunchBody";
 import * as ltiRoles from "./ltiv1p1/roles";
+
+export type Session = Partial<SessionScheme>;
 
 /**
  * セッションが利用者のものであるか否か
@@ -9,7 +11,7 @@ import * as ltiRoles from "./ltiv1p1/roles";
  * @param user 対象の利用者
  * @return セッションが利用者のものの場合 true、それ以外の場合 false
  */
-export function verify(session: FastifyRequest["session"], user: User) {
+export function verify(session: Session, user: User) {
   return session.user?.id === user.id;
 }
 
@@ -18,7 +20,7 @@ export function verify(session: FastifyRequest["session"], user: User) {
  * @param session セッション
  * @return セッションが管理者のものの場合 true、それ以外の場合 false
  */
-export function isAdministrator(session: FastifyRequest["session"]) {
+export function isAdministrator(session: Session) {
   return hasRole(session, ltiRoles.isAdministrator);
 }
 
@@ -27,7 +29,7 @@ export function isAdministrator(session: FastifyRequest["session"]) {
  * @param session セッション
  * @return セッションが教員または管理者のものの場合 true、それ以外の場合 false
  */
-export function isInstructor(session: FastifyRequest["session"]) {
+export function isInstructor(session: Session) {
   return hasRole(session, ltiRoles.isInstructor);
 }
 
@@ -38,7 +40,7 @@ export function isInstructor(session: FastifyRequest["session"]) {
  * @return 対象のロールを持っている場合 true、それ以外の場合 false
  */
 function hasRole(
-  session: FastifyRequest["session"],
+  session: Session,
   roleToFind: (ltiLaunchBody: LtiLaunchBody) => boolean
 ) {
   return session.ltiLaunchBody != null && roleToFind(session.ltiLaunchBody);
