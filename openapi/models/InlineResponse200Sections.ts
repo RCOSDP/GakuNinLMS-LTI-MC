@@ -28,6 +28,12 @@ import {
 export interface InlineResponse200Sections {
     /**
      * 
+     * @type {number}
+     * @memberof InlineResponse200Sections
+     */
+    id?: number;
+    /**
+     * 
      * @type {Array<InlineResponse200Topics>}
      * @memberof InlineResponse200Sections
      */
@@ -44,6 +50,7 @@ export function InlineResponse200SectionsFromJSONTyped(json: any, ignoreDiscrimi
     }
     return {
         
+        'id': !exists(json, 'id') ? undefined : json['id'],
         'topics': !exists(json, 'topics') ? undefined : ((json['topics'] as Array<any>).map(InlineResponse200TopicsFromJSON)),
     };
 }
@@ -57,6 +64,7 @@ export function InlineResponse200SectionsToJSON(value?: InlineResponse200Section
     }
     return {
         
+        'id': value.id,
         'topics': value.topics === undefined ? undefined : ((value.topics as Array<any>).map(InlineResponse200TopicsToJSON)),
     };
 }

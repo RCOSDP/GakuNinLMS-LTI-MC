@@ -7,14 +7,15 @@ export type SectionProps = {
   topics: Array<TopicProps>;
 };
 
-export type SectionSchema = Pick<Section, "name"> & {
+export type SectionSchema = Pick<Section, "id" | "name"> & {
   topics: TopicSchema[];
 };
 
-const { name } = jsonSchema.definitions.Section.properties;
+const { id, name } = jsonSchema.definitions.Section.properties;
 export const sectionSchema = {
   type: "object",
   properties: {
+    id,
     name,
     topics: {
       type: "array",
