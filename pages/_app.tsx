@@ -8,6 +8,7 @@ function App({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
+        <title>ChibiCHiLO</title>
         <meta name="viewport" content="width=device-width" />
         <meta name="theme-color" content={theme.palette.primary.main} />
       </Head>
