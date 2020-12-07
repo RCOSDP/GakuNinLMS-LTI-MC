@@ -5,13 +5,13 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
-import { Section } from "types/books";
+import { Section } from "types/book";
 
 type Props = {
   sections: Section[];
 };
 
-export default function BookAccordionChildren(props: Props) {
+export default function BookChildren(props: Props) {
   const { sections } = props;
   const handleEditClick = (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();

@@ -30,7 +30,7 @@ function load(): Volume | undefined {
 
 async function intoVimeo(player: VimeoPlayer) {
   player.on("volumechange", async function (event: { volume: number }) {
-    const muted = await (player.getMuted() as Promise<boolean>);
+    const muted = await player.getMuted();
     save({ volume: event.volume, muted });
   });
 

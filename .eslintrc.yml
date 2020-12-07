@@ -26,3 +26,7 @@ overrides:
       - next.config.js
     env:
       node: true
+  - files:
+      - samples/**
+    rules:
+      no-irregular-whitespace: "off"

@@ -1,27 +1,21 @@
+import { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
+import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
-import AddIcon from "@material-ui/icons/Add";
+import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
+import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import LinkIcon from "@material-ui/icons/Link";
 import AppBar from "$organisms/AppBar";
-import BookAccordion from "$organisms/BookAccordion";
-import SortSelect from "$atoms/SortSelect";
-import SearchTextField from "$atoms/SearchTextField";
-import { Book } from "types/books";
+import BookChildren from "$organisms/BookChildren";
+import TopicViewer from "$organisms/TopicViewer";
+import { Book, Topic } from "types/book";
 import useContainerStyles from "styles/container";
 
 const useStyles = makeStyles((theme) => ({
   container: {
     marginTop: theme.spacing(4),
-  },
-  line: {
-    display: "flex",
-    alignItems: "center",
-    marginBottom: theme.spacing(2),
-    "&> :not(:last-child)": {
-      marginRight: theme.spacing(2),
-    },
   },
   title: {
     marginBottom: theme.spacing(4),
@@ -35,11 +29,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type Props = {
-  books: Book[];
+  book: Book;
 };
 
 export default function Books(props: Props) {
-  const { books } = props;
+  const { book } = props;
+  const [topic] = useState<Topic>(book.sections[0].topics[0]);
   const classes = useStyles();
   const containerClasses = useContainerStyles();
   return (
@@ -51,25 +46,20 @@ export default function Books(props: Props) {
         maxWidth="md"
       >
         <Typography className={classes.title} variant="h4" gutterBottom={true}>
-          マイブック
-          <Button size="small" color="primary">
-            <AddIcon className={classes.icon} />
-            ブックの作成
-          </Button>
+          {book.name}
+          <IconButton>
+            <InfoOutlinedIcon />
+          </IconButton>
+          <IconButton color="primary">
+            <EditOutlinedIcon />
+          </IconButton>
           <Button size="small" color="primary">
             <LinkIcon className={classes.icon} />
-            LTIリンク「〇〇」と連携
+            LTIリンクの再連携
           </Button>
         </Typography>
-        <div className={classes.line}>
-          <SortSelect />
-          <SearchTextField placeholder="ブック・トピック検索" />
-        </div>
-        <div>
-          {books.map((book) => (
-            <BookAccordion key={book.id} {...book} />
-          ))}
-        </div>
+        <TopicViewer {...topic} />
+        <BookChildren sections={book.sections} />
       </Container>
     </>
   );
