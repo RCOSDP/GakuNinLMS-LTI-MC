@@ -16,70 +16,70 @@ import { exists, mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface InlineResponse200Topics
+ * @interface InlineResponse2001Topics
  */
-export interface InlineResponse200Topics {
+export interface InlineResponse2001Topics {
     /**
      * 
      * @type {number}
-     * @memberof InlineResponse200Topics
+     * @memberof InlineResponse2001Topics
      */
     id?: number;
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse200Topics
+     * @memberof InlineResponse2001Topics
      */
     name?: string;
     /**
      * 
      * @type {number}
-     * @memberof InlineResponse200Topics
+     * @memberof InlineResponse2001Topics
      */
     timeRequired?: number;
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse200Topics
+     * @memberof InlineResponse2001Topics
      */
     description?: string;
     /**
      * 
      * @type {Date}
-     * @memberof InlineResponse200Topics
+     * @memberof InlineResponse2001Topics
      */
     createdAt?: Date;
     /**
      * 
      * @type {Date}
-     * @memberof InlineResponse200Topics
+     * @memberof InlineResponse2001Topics
      */
     updatedAt?: Date;
     /**
      * 
      * @type {object}
-     * @memberof InlineResponse200Topics
+     * @memberof InlineResponse2001Topics
      */
     details?: object;
     /**
      * 
      * @type {number}
-     * @memberof InlineResponse200Topics
+     * @memberof InlineResponse2001Topics
      */
     creatorId?: number;
     /**
      * 
      * @type {object}
-     * @memberof InlineResponse200Topics
+     * @memberof InlineResponse2001Topics
      */
     resource?: object;
 }
 
-export function InlineResponse200TopicsFromJSON(json: any): InlineResponse200Topics {
-    return InlineResponse200TopicsFromJSONTyped(json, false);
+export function InlineResponse2001TopicsFromJSON(json: any): InlineResponse2001Topics {
+    return InlineResponse2001TopicsFromJSONTyped(json, false);
 }
 
-export function InlineResponse200TopicsFromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse200Topics {
+export function InlineResponse2001TopicsFromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse2001Topics {
     if ((json === undefined) || (json === null)) {
         return json;
     }
@@ -97,7 +97,7 @@ export function InlineResponse200TopicsFromJSONTyped(json: any, ignoreDiscrimina
     };
 }
 
-export function InlineResponse200TopicsToJSON(value?: InlineResponse200Topics | null): any {
+export function InlineResponse2001TopicsToJSON(value?: InlineResponse2001Topics | null): any {
     if (value === undefined) {
         return undefined;
     }

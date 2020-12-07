@@ -21,48 +21,41 @@ import {
 } from './';
 
 /**
- * 成功時
+ * 
  * @export
- * @interface InlineResponse2003
+ * @interface InlineResponse2001Sections
  */
-export interface InlineResponse2003 {
+export interface InlineResponse2001Sections {
+    /**
+     * 
+     * @type {number}
+     * @memberof InlineResponse2001Sections
+     */
+    id?: number;
     /**
      * 
      * @type {Array<InlineResponse2001Topics>}
-     * @memberof InlineResponse2003
+     * @memberof InlineResponse2001Sections
      */
     topics?: Array<InlineResponse2001Topics>;
-    /**
-     * 
-     * @type {number}
-     * @memberof InlineResponse2003
-     */
-    page?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof InlineResponse2003
-     */
-    perPage?: number;
 }
 
-export function InlineResponse2003FromJSON(json: any): InlineResponse2003 {
-    return InlineResponse2003FromJSONTyped(json, false);
+export function InlineResponse2001SectionsFromJSON(json: any): InlineResponse2001Sections {
+    return InlineResponse2001SectionsFromJSONTyped(json, false);
 }
 
-export function InlineResponse2003FromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse2003 {
+export function InlineResponse2001SectionsFromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse2001Sections {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
+        'id': !exists(json, 'id') ? undefined : json['id'],
         'topics': !exists(json, 'topics') ? undefined : ((json['topics'] as Array<any>).map(InlineResponse2001TopicsFromJSON)),
-        'page': !exists(json, 'page') ? undefined : json['page'],
-        'perPage': !exists(json, 'perPage') ? undefined : json['perPage'],
     };
 }
 
-export function InlineResponse2003ToJSON(value?: InlineResponse2003 | null): any {
+export function InlineResponse2001SectionsToJSON(value?: InlineResponse2001Sections | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -71,9 +64,8 @@ export function InlineResponse2003ToJSON(value?: InlineResponse2003 | null): any
     }
     return {
         
+        'id': value.id,
         'topics': value.topics === undefined ? undefined : ((value.topics as Array<any>).map(InlineResponse2001TopicsToJSON)),
-        'page': value.page,
-        'perPage': value.perPage,
     };
 }
 
