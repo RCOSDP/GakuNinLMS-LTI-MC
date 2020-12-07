@@ -3,7 +3,7 @@ import { VimeoPlayer } from "./VimeoPlayer";
 import { WowzaPlayer } from "./WowzaPlayer";
 
 type VideoProps = VideoLocation & {
-  className: string;
+  className?: string;
   subtitles: Subtitle[];
   autoplay?: boolean;
   onEnded?: () => void;

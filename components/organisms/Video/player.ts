@@ -3,7 +3,7 @@ import { StrictEventEmitter } from "strict-event-emitter-types";
 import { EventEmitter } from "events";
 import { VideoJsPlayer } from "video.js";
 import VimeoPlayer from "@vimeo/player";
-import { useAppPlayerTracker, useAppState } from "../../state";
+import { useAppPlayerTracker, useAppState } from "./state";
 
 const basicEventsMap = [
   "ended",
