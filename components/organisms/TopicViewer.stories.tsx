@@ -1,6 +1,6 @@
-export default { title: "organisms/TopicPlayer" };
+export default { title: "organisms/TopicViewer" };
 
-import TopicPlayer from "./TopicPlayer";
+import TopicPlayer from "./TopicViewer";
 import bookProps from "samples/bookProps";
 
 const {
