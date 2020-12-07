@@ -10,7 +10,7 @@ export type VideoResourcePropsSchema = Pick<VideoResource, "url">;
 export type VideoResourceSchema = Resource & Pick<VideoResource, "providerUrl">;
 
 const { id, url, details } = jsonSchema.definitions.Resource.properties;
-const { id: videoId, providerUrl } = jsonSchema.definitions.Video.properties;
+const { providerUrl } = jsonSchema.definitions.Video.properties;
 
 export const videoResourcePropsSchema = {
   type: "object",
@@ -23,7 +23,6 @@ export const videoResourceSchema = {
   type: "object",
   properties: {
     id,
-    videoId,
     url,
     details,
     providerUrl,
