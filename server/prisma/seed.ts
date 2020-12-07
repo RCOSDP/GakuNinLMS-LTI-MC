@@ -3,7 +3,7 @@ import prisma from "$server/utils/prisma";
 import users from "$server/config/seeds/users";
 import books from "$server/config/seeds/books";
 import { upsertUser } from "$server/utils/user";
-import { createBook } from "$server/utils/book";
+import createBook from "$server/utils/book/createBook";
 
 dotenv.config();
 

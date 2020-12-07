@@ -2,7 +2,10 @@ import { User } from "@prisma/client";
 import { UserProps } from "$server/models/user";
 import { BookSchema } from "$server/models/book";
 import prisma from "./prisma";
-import { bookIncludingTopicsArg, bookToBookSchema } from "./bookToBookSchema";
+import {
+  bookIncludingTopicsArg,
+  bookToBookSchema,
+} from "./book/bookToBookSchema";
 
 export async function upsertUser(user: UserProps) {
   return await prisma.user.upsert({
