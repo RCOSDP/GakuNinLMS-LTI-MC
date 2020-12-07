@@ -18,6 +18,9 @@ import {
     InlineObject,
     InlineObjectFromJSON,
     InlineObjectToJSON,
+    InlineObject1,
+    InlineObject1FromJSON,
+    InlineObject1ToJSON,
     InlineResponse200,
     InlineResponse200FromJSON,
     InlineResponse200ToJSON,
@@ -30,6 +33,9 @@ import {
     InlineResponse2003,
     InlineResponse2003FromJSON,
     InlineResponse2003ToJSON,
+    InlineResponse2004,
+    InlineResponse2004FromJSON,
+    InlineResponse2004ToJSON,
 } from '../models';
 
 export interface ApiV2BookBookIdGetRequest {
@@ -38,6 +44,19 @@ export interface ApiV2BookBookIdGetRequest {
 
 export interface ApiV2LtiLaunchPostRequest {
     body?: InlineObject;
+}
+
+export interface ApiV2LtiResourceLinkLtiResourceLinkIdDeleteRequest {
+    ltiResourceLinkId: string;
+}
+
+export interface ApiV2LtiResourceLinkLtiResourceLinkIdGetRequest {
+    ltiResourceLinkId: string;
+}
+
+export interface ApiV2LtiResourceLinkLtiResourceLinkIdPostRequest {
+    ltiResourceLinkId: string;
+    body?: InlineObject1;
 }
 
 export interface ApiV2TopicsGetRequest {
@@ -59,7 +78,7 @@ export class DefaultApi extends runtime.BaseAPI {
     /**
      * ブックの詳細の取得
      */
-    async apiV2BookBookIdGetRaw(requestParameters: ApiV2BookBookIdGetRequest): Promise<runtime.ApiResponse<InlineResponse2001>> {
+    async apiV2BookBookIdGetRaw(requestParameters: ApiV2BookBookIdGetRequest): Promise<runtime.ApiResponse<InlineResponse2002>> {
         if (requestParameters.bookId === null || requestParameters.bookId === undefined) {
             throw new runtime.RequiredError('bookId','Required parameter requestParameters.bookId was null or undefined when calling apiV2BookBookIdGet.');
         }
@@ -75,13 +94,13 @@ export class DefaultApi extends runtime.BaseAPI {
             query: queryParameters,
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2001FromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2002FromJSON(jsonValue));
     }
 
     /**
      * ブックの詳細の取得
      */
-    async apiV2BookBookIdGet(requestParameters: ApiV2BookBookIdGetRequest): Promise<InlineResponse2001> {
+    async apiV2BookBookIdGet(requestParameters: ApiV2BookBookIdGetRequest): Promise<InlineResponse2002> {
         const response = await this.apiV2BookBookIdGetRaw(requestParameters);
         return await response.value();
     }
@@ -115,9 +134,102 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
+     * LTI Resource Link の削除
+     */
+    async apiV2LtiResourceLinkLtiResourceLinkIdDeleteRaw(requestParameters: ApiV2LtiResourceLinkLtiResourceLinkIdDeleteRequest): Promise<runtime.ApiResponse<object>> {
+        if (requestParameters.ltiResourceLinkId === null || requestParameters.ltiResourceLinkId === undefined) {
+            throw new runtime.RequiredError('ltiResourceLinkId','Required parameter requestParameters.ltiResourceLinkId was null or undefined when calling apiV2LtiResourceLinkLtiResourceLinkIdDelete.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/api/v2/lti/resource_link/{lti_resource_link_id}`.replace(`{${"lti_resource_link_id"}}`, encodeURIComponent(String(requestParameters.ltiResourceLinkId))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse<any>(response);
+    }
+
+    /**
+     * LTI Resource Link の削除
+     */
+    async apiV2LtiResourceLinkLtiResourceLinkIdDelete(requestParameters: ApiV2LtiResourceLinkLtiResourceLinkIdDeleteRequest): Promise<object> {
+        const response = await this.apiV2LtiResourceLinkLtiResourceLinkIdDeleteRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * LTI Resource Link の取得
+     */
+    async apiV2LtiResourceLinkLtiResourceLinkIdGetRaw(requestParameters: ApiV2LtiResourceLinkLtiResourceLinkIdGetRequest): Promise<runtime.ApiResponse<InlineResponse200>> {
+        if (requestParameters.ltiResourceLinkId === null || requestParameters.ltiResourceLinkId === undefined) {
+            throw new runtime.RequiredError('ltiResourceLinkId','Required parameter requestParameters.ltiResourceLinkId was null or undefined when calling apiV2LtiResourceLinkLtiResourceLinkIdGet.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/api/v2/lti/resource_link/{lti_resource_link_id}`.replace(`{${"lti_resource_link_id"}}`, encodeURIComponent(String(requestParameters.ltiResourceLinkId))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse200FromJSON(jsonValue));
+    }
+
+    /**
+     * LTI Resource Link の取得
+     */
+    async apiV2LtiResourceLinkLtiResourceLinkIdGet(requestParameters: ApiV2LtiResourceLinkLtiResourceLinkIdGetRequest): Promise<InlineResponse200> {
+        const response = await this.apiV2LtiResourceLinkLtiResourceLinkIdGetRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * LTI Resource Link の更新
+     */
+    async apiV2LtiResourceLinkLtiResourceLinkIdPostRaw(requestParameters: ApiV2LtiResourceLinkLtiResourceLinkIdPostRequest): Promise<runtime.ApiResponse<InlineResponse200>> {
+        if (requestParameters.ltiResourceLinkId === null || requestParameters.ltiResourceLinkId === undefined) {
+            throw new runtime.RequiredError('ltiResourceLinkId','Required parameter requestParameters.ltiResourceLinkId was null or undefined when calling apiV2LtiResourceLinkLtiResourceLinkIdPost.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/api/v2/lti/resource_link/{lti_resource_link_id}`.replace(`{${"lti_resource_link_id"}}`, encodeURIComponent(String(requestParameters.ltiResourceLinkId))),
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: InlineObject1ToJSON(requestParameters.body),
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse200FromJSON(jsonValue));
+    }
+
+    /**
+     * LTI Resource Link の更新
+     */
+    async apiV2LtiResourceLinkLtiResourceLinkIdPost(requestParameters: ApiV2LtiResourceLinkLtiResourceLinkIdPostRequest): Promise<InlineResponse200> {
+        const response = await this.apiV2LtiResourceLinkLtiResourceLinkIdPostRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
      * セッション情報
      */
-    async apiV2SessionGetRaw(): Promise<runtime.ApiResponse<InlineResponse2003>> {
+    async apiV2SessionGetRaw(): Promise<runtime.ApiResponse<InlineResponse2004>> {
         const queryParameters: runtime.HTTPQuery = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -129,13 +241,13 @@ export class DefaultApi extends runtime.BaseAPI {
             query: queryParameters,
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2003FromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2004FromJSON(jsonValue));
     }
 
     /**
      * セッション情報
      */
-    async apiV2SessionGet(): Promise<InlineResponse2003> {
+    async apiV2SessionGet(): Promise<InlineResponse2004> {
         const response = await this.apiV2SessionGetRaw();
         return await response.value();
     }
@@ -143,7 +255,7 @@ export class DefaultApi extends runtime.BaseAPI {
     /**
      * トピック一覧
      */
-    async apiV2TopicsGetRaw(requestParameters: ApiV2TopicsGetRequest): Promise<runtime.ApiResponse<InlineResponse2002>> {
+    async apiV2TopicsGetRaw(requestParameters: ApiV2TopicsGetRequest): Promise<runtime.ApiResponse<InlineResponse2003>> {
         const queryParameters: runtime.HTTPQuery = {};
 
         if (requestParameters.page !== undefined) {
@@ -163,13 +275,13 @@ export class DefaultApi extends runtime.BaseAPI {
             query: queryParameters,
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2002FromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2003FromJSON(jsonValue));
     }
 
     /**
      * トピック一覧
      */
-    async apiV2TopicsGet(requestParameters: ApiV2TopicsGetRequest): Promise<InlineResponse2002> {
+    async apiV2TopicsGet(requestParameters: ApiV2TopicsGetRequest): Promise<InlineResponse2003> {
         const response = await this.apiV2TopicsGetRaw(requestParameters);
         return await response.value();
     }
@@ -177,7 +289,7 @@ export class DefaultApi extends runtime.BaseAPI {
     /**
      * 作成したブックの一覧
      */
-    async apiV2UserUserIdBooksGetRaw(requestParameters: ApiV2UserUserIdBooksGetRequest): Promise<runtime.ApiResponse<InlineResponse200>> {
+    async apiV2UserUserIdBooksGetRaw(requestParameters: ApiV2UserUserIdBooksGetRequest): Promise<runtime.ApiResponse<InlineResponse2001>> {
         if (requestParameters.userId === null || requestParameters.userId === undefined) {
             throw new runtime.RequiredError('userId','Required parameter requestParameters.userId was null or undefined when calling apiV2UserUserIdBooksGet.');
         }
@@ -201,13 +313,13 @@ export class DefaultApi extends runtime.BaseAPI {
             query: queryParameters,
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse200FromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2001FromJSON(jsonValue));
     }
 
     /**
      * 作成したブックの一覧
      */
-    async apiV2UserUserIdBooksGet(requestParameters: ApiV2UserUserIdBooksGetRequest): Promise<InlineResponse200> {
+    async apiV2UserUserIdBooksGet(requestParameters: ApiV2UserUserIdBooksGetRequest): Promise<InlineResponse2001> {
         const response = await this.apiV2UserUserIdBooksGetRaw(requestParameters);
         return await response.value();
     }

@@ -14,83 +14,83 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    InlineResponse200Author,
-    InlineResponse200AuthorFromJSON,
-    InlineResponse200AuthorFromJSONTyped,
-    InlineResponse200AuthorToJSON,
-    InlineResponse200Sections,
-    InlineResponse200SectionsFromJSON,
-    InlineResponse200SectionsFromJSONTyped,
-    InlineResponse200SectionsToJSON,
+    InlineResponse2001Author,
+    InlineResponse2001AuthorFromJSON,
+    InlineResponse2001AuthorFromJSONTyped,
+    InlineResponse2001AuthorToJSON,
+    InlineResponse2001Sections,
+    InlineResponse2001SectionsFromJSON,
+    InlineResponse2001SectionsFromJSONTyped,
+    InlineResponse2001SectionsToJSON,
 } from './';
 
 /**
  * 
  * @export
- * @interface InlineResponse200Books
+ * @interface InlineResponse2001Books
  */
-export interface InlineResponse200Books {
+export interface InlineResponse2001Books {
     /**
      * 
      * @type {number}
-     * @memberof InlineResponse200Books
+     * @memberof InlineResponse2001Books
      */
     id?: number;
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse200Books
+     * @memberof InlineResponse2001Books
      */
     name?: string;
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse200Books
+     * @memberof InlineResponse2001Books
      */
     _abstract?: string;
     /**
      * 
      * @type {Date}
-     * @memberof InlineResponse200Books
+     * @memberof InlineResponse2001Books
      */
     publishedAt?: Date;
     /**
      * 
      * @type {Date}
-     * @memberof InlineResponse200Books
+     * @memberof InlineResponse2001Books
      */
     createdAt?: Date;
     /**
      * 
      * @type {Date}
-     * @memberof InlineResponse200Books
+     * @memberof InlineResponse2001Books
      */
     updatedAt?: Date;
     /**
      * 
      * @type {object}
-     * @memberof InlineResponse200Books
+     * @memberof InlineResponse2001Books
      */
     details?: object;
     /**
      * 
-     * @type {InlineResponse200Author}
-     * @memberof InlineResponse200Books
+     * @type {InlineResponse2001Author}
+     * @memberof InlineResponse2001Books
      */
-    author?: InlineResponse200Author;
+    author?: InlineResponse2001Author;
     /**
      * 
-     * @type {Array<InlineResponse200Sections>}
-     * @memberof InlineResponse200Books
+     * @type {Array<InlineResponse2001Sections>}
+     * @memberof InlineResponse2001Books
      */
-    sections?: Array<InlineResponse200Sections>;
+    sections?: Array<InlineResponse2001Sections>;
 }
 
-export function InlineResponse200BooksFromJSON(json: any): InlineResponse200Books {
-    return InlineResponse200BooksFromJSONTyped(json, false);
+export function InlineResponse2001BooksFromJSON(json: any): InlineResponse2001Books {
+    return InlineResponse2001BooksFromJSONTyped(json, false);
 }
 
-export function InlineResponse200BooksFromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse200Books {
+export function InlineResponse2001BooksFromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse2001Books {
     if ((json === undefined) || (json === null)) {
         return json;
     }
@@ -103,12 +103,12 @@ export function InlineResponse200BooksFromJSONTyped(json: any, ignoreDiscriminat
         'createdAt': !exists(json, 'createdAt') ? undefined : (new Date(json['createdAt'])),
         'updatedAt': !exists(json, 'updatedAt') ? undefined : (new Date(json['updatedAt'])),
         'details': !exists(json, 'details') ? undefined : json['details'],
-        'author': !exists(json, 'author') ? undefined : InlineResponse200AuthorFromJSON(json['author']),
-        'sections': !exists(json, 'sections') ? undefined : ((json['sections'] as Array<any>).map(InlineResponse200SectionsFromJSON)),
+        'author': !exists(json, 'author') ? undefined : InlineResponse2001AuthorFromJSON(json['author']),
+        'sections': !exists(json, 'sections') ? undefined : ((json['sections'] as Array<any>).map(InlineResponse2001SectionsFromJSON)),
     };
 }
 
-export function InlineResponse200BooksToJSON(value?: InlineResponse200Books | null): any {
+export function InlineResponse2001BooksToJSON(value?: InlineResponse2001Books | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -124,8 +124,8 @@ export function InlineResponse200BooksToJSON(value?: InlineResponse200Books | nu
         'createdAt': value.createdAt === undefined ? undefined : (value.createdAt.toISOString()),
         'updatedAt': value.updatedAt === undefined ? undefined : (value.updatedAt.toISOString()),
         'details': value.details,
-        'author': InlineResponse200AuthorToJSON(value.author),
-        'sections': value.sections === undefined ? undefined : ((value.sections as Array<any>).map(InlineResponse200SectionsToJSON)),
+        'author': InlineResponse2001AuthorToJSON(value.author),
+        'sections': value.sections === undefined ? undefined : ((value.sections as Array<any>).map(InlineResponse2001SectionsToJSON)),
     };
 }
 

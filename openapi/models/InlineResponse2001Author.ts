@@ -16,34 +16,34 @@ import { exists, mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface InlineResponse2003User
+ * @interface InlineResponse2001Author
  */
-export interface InlineResponse2003User {
+export interface InlineResponse2001Author {
     /**
      * 
      * @type {number}
-     * @memberof InlineResponse2003User
+     * @memberof InlineResponse2001Author
      */
     id?: number;
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse2003User
+     * @memberof InlineResponse2001Author
      */
     ltiUserId?: string;
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse2003User
+     * @memberof InlineResponse2001Author
      */
     name?: string;
 }
 
-export function InlineResponse2003UserFromJSON(json: any): InlineResponse2003User {
-    return InlineResponse2003UserFromJSONTyped(json, false);
+export function InlineResponse2001AuthorFromJSON(json: any): InlineResponse2001Author {
+    return InlineResponse2001AuthorFromJSONTyped(json, false);
 }
 
-export function InlineResponse2003UserFromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse2003User {
+export function InlineResponse2001AuthorFromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse2001Author {
     if ((json === undefined) || (json === null)) {
         return json;
     }
@@ -55,7 +55,7 @@ export function InlineResponse2003UserFromJSONTyped(json: any, ignoreDiscriminat
     };
 }
 
-export function InlineResponse2003UserToJSON(value?: InlineResponse2003User | null): any {
+export function InlineResponse2001AuthorToJSON(value?: InlineResponse2001Author | null): any {
     if (value === undefined) {
         return undefined;
     }

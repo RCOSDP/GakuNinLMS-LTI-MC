@@ -6,7 +6,7 @@ import {
   topicsWithResourcesArg,
   topicToTopicSchema,
   TopicWithResource,
-} from "./topicToTopicSchema";
+} from "$server/utils/topicToTopicSchema";
 
 export const bookIncludingTopicsArg = {
   author: true,

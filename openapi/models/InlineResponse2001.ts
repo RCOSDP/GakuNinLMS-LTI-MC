@@ -14,24 +14,36 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    InlineResponse200Books,
-    InlineResponse200BooksFromJSON,
-    InlineResponse200BooksFromJSONTyped,
-    InlineResponse200BooksToJSON,
+    InlineResponse2001Books,
+    InlineResponse2001BooksFromJSON,
+    InlineResponse2001BooksFromJSONTyped,
+    InlineResponse2001BooksToJSON,
 } from './';
 
 /**
- * 成功時
+ * 作成したブックの一覧
  * @export
  * @interface InlineResponse2001
  */
 export interface InlineResponse2001 {
     /**
      * 
-     * @type {InlineResponse200Books}
+     * @type {Array<InlineResponse2001Books>}
      * @memberof InlineResponse2001
      */
-    book?: InlineResponse200Books;
+    books?: Array<InlineResponse2001Books>;
+    /**
+     * 
+     * @type {number}
+     * @memberof InlineResponse2001
+     */
+    page?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof InlineResponse2001
+     */
+    perPage?: number;
 }
 
 export function InlineResponse2001FromJSON(json: any): InlineResponse2001 {
@@ -44,7 +56,9 @@ export function InlineResponse2001FromJSONTyped(json: any, ignoreDiscriminator: 
     }
     return {
         
-        'book': !exists(json, 'book') ? undefined : InlineResponse200BooksFromJSON(json['book']),
+        'books': !exists(json, 'books') ? undefined : ((json['books'] as Array<any>).map(InlineResponse2001BooksFromJSON)),
+        'page': !exists(json, 'page') ? undefined : json['page'],
+        'perPage': !exists(json, 'perPage') ? undefined : json['perPage'],
     };
 }
 
@@ -57,7 +71,9 @@ export function InlineResponse2001ToJSON(value?: InlineResponse2001 | null): any
     }
     return {
         
-        'book': InlineResponse200BooksToJSON(value.book),
+        'books': value.books === undefined ? undefined : ((value.books as Array<any>).map(InlineResponse2001BooksToJSON)),
+        'page': value.page,
+        'perPage': value.perPage,
     };
 }
 

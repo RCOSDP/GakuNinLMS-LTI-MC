@@ -17,7 +17,7 @@ import {
 
 const frontendUrl = `${FRONTEND_ORIGIN}${FRONTEND_PATH}`;
 
-export const method: Method = {
+const method: Method = {
   post: {
     description: "LTI ツールとして指定するエンドポイント",
     body: ltiLaunchBodySchema,
@@ -86,7 +86,8 @@ function preHandler(fastify: FastifyInstance) {
   ]);
 }
 
-export default {
+export const ltiLaunchService = {
+  method,
   post,
   preValidation,
   preHandler,

@@ -16,52 +16,45 @@ import { exists, mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface InlineResponse200
+ * @interface InlineObject1
  */
-export interface InlineResponse200 {
+export interface InlineObject1 {
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse200
-     */
-    id: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineResponse200
+     * @memberof InlineObject1
      */
     contextId: string;
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse200
+     * @memberof InlineObject1
      */
     contextTitle: string;
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse200
+     * @memberof InlineObject1
      */
     title: string;
     /**
      * 
      * @type {number}
-     * @memberof InlineResponse200
+     * @memberof InlineObject1
      */
     bookId: number;
 }
 
-export function InlineResponse200FromJSON(json: any): InlineResponse200 {
-    return InlineResponse200FromJSONTyped(json, false);
+export function InlineObject1FromJSON(json: any): InlineObject1 {
+    return InlineObject1FromJSONTyped(json, false);
 }
 
-export function InlineResponse200FromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse200 {
+export function InlineObject1FromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineObject1 {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
-        'id': json['id'],
         'contextId': json['contextId'],
         'contextTitle': json['contextTitle'],
         'title': json['title'],
@@ -69,7 +62,7 @@ export function InlineResponse200FromJSONTyped(json: any, ignoreDiscriminator: b
     };
 }
 
-export function InlineResponse200ToJSON(value?: InlineResponse200 | null): any {
+export function InlineObject1ToJSON(value?: InlineObject1 | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -78,7 +71,6 @@ export function InlineResponse200ToJSON(value?: InlineResponse200 | null): any {
     }
     return {
         
-        'id': value.id,
         'contextId': value.contextId,
         'contextTitle': value.contextTitle,
         'title': value.title,
