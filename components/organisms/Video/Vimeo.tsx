@@ -1,4 +1,4 @@
-import React from "react";
+import { useEffect, useRef } from "react";
 import Player, { Options } from "@vimeo/player";
 import { usePlayerTracking } from "./player";
 import { volumePersister } from "./volume";
@@ -13,10 +13,11 @@ const defaultOptions: Options = {
 };
 
 export function Vimeo(props: VimeoProps) {
-  const ref = React.useRef(document.createElement("div"));
+  const ref = useRef(document.createElement("div"));
   const tracking = usePlayerTracking();
-  React.useEffect(() => {
-    const player = new Player(ref.current, {
+  useEffect(() => {
+    const { current } = ref;
+    const player = new Player(current, {
       ...defaultOptions,
       ...props.options,
     });
@@ -26,8 +27,8 @@ export function Vimeo(props: VimeoProps) {
     return () => {
       player.destroy();
       // NOTE: destroy() してもゴミが残るので新しい空の要素にしておく
-      ref.current.textContent = "";
+      current.textContent = "";
     };
-  }, [props.options, props.onEnded]);
+  }, [props.options, props.onEnded, tracking]);
   return <div ref={ref} />;
 }

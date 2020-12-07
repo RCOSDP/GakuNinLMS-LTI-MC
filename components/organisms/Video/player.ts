@@ -102,7 +102,7 @@ export class PlayerTracker extends (EventEmitter as {
 }
 
 function videoJsStats(player: VideoJsPlayer): PlayerEvent {
-  // @ts-expect-error
+  // @ts-expect-error: @types/video.js@^7.3.11 Unsupported
   if (player.isDisposed()) return nullEvent;
 
   return {

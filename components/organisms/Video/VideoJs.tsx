@@ -1,4 +1,4 @@
-import React from "react";
+import { useEffect, useRef } from "react";
 import videojs, { VideoJsPlayer, VideoJsPlayerOptions } from "video.js";
 import ja from "video.js/dist/lang/ja.json";
 import "videojs-youtube";
@@ -17,7 +17,7 @@ const defaultOptions: VideoJsPlayerOptions = {
   fluid: true,
   controlBar: {
     // FIXME: https://github.com/videojs/videojs-youtube/issues/562
-    // @ts-expect-error
+    // @ts-expect-error: @types/video.js@^7.3.11 Unsupported
     pictureInPictureToggle: false,
   },
   playbackRates: [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2],
@@ -26,14 +26,14 @@ const defaultOptions: VideoJsPlayerOptions = {
 };
 
 export function VideoJs(props: VideoJsProps) {
-  const ref = React.useRef(document.createElement("div"));
+  const ref = useRef(document.createElement("div"));
   const tracking = usePlayerTracking();
-  React.useEffect(() => {
+  useEffect(() => {
     const element = document.createElement("video-js");
     element.classList.add("vjs-big-play-centered");
     ref.current.appendChild(element);
     const player = videojs(element, { ...defaultOptions, ...props.options });
-    // @ts-expect-error
+    // @ts-expect-error: @types/video.js@^7.3.11 Unsupported
     player.seekButtons({
       forward: 15,
       back: 15,
@@ -42,13 +42,13 @@ export function VideoJs(props: VideoJsProps) {
     volumePersister(player);
     if (props.onEnded) player.on("ended", props.onEnded);
     return () => player.dispose();
-  }, [props.options, props.onEnded]);
-  const tracksRef = React.useRef<HTMLTrackElement[]>([]);
-  React.useEffect(() => {
+  }, [props.options, props.onEnded, tracking]);
+  const tracksRef = useRef<HTMLTrackElement[]>([]);
+  useEffect(() => {
     if (!props.tracks || props.tracks.length === 0) return;
     const player: VideoJsPlayer | undefined = ref.current.querySelector(
       "video-js"
-      // @ts-expect-error
+      // @ts-expect-error: @types/video.js@^7.3.11 Unsupported
     )?.player;
     if (!player) return;
     player.ready(() => {

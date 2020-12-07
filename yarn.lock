@@ -3420,15 +3420,15 @@
   resolved "https://registry.yarnpkg.com/@types/validator/-/validator-13.0.0.tgz#365f1bf936aeaddd0856fc41aa1d6f82d88ee5b3"
   integrity sha512-WAy5txG7aFX8Vw3sloEKp5p/t/Xt8jD3GRD9DacnFv6Vo8ubudAsRTXgxpQwU0mpzY/H8U4db3roDuCMjShBmw==
 
-"@types/video.js@^7.3.10":
-  version "7.3.10"
-  resolved "https://registry.yarnpkg.com/@types/video.js/-/video.js-7.3.10.tgz#95e563f5f21821d4f4bccf7343c359093e81895d"
-  integrity sha512-RJKdtmUMb8WFDe+btAeBW9NVUJ/nksb+/1S+Tca7HNwnRv9iEwt802hgRSAcFj6+sL/eNi264zcBjbBHP5yQVw==
+"@types/video.js@^7.3.11":
+  version "7.3.11"
+  resolved "https://registry.yarnpkg.com/@types/video.js/-/video.js-7.3.11.tgz#b1749fcc733c608ede4d10c9a570ebafc4ec2486"
+  integrity sha512-9KpJkt6zsy6xRiHZjzjKxCEySqt3TgPgl0XegszwJfaLO4+n4rELS5rbsHUgLJxZaMgbJtyTPXk1HkCsJ5kRiA==
 
-"@types/vimeo__player@^2.9.0":
-  version "2.9.0"
-  resolved "https://registry.yarnpkg.com/@types/vimeo__player/-/vimeo__player-2.9.0.tgz#47f70c2e9788670e64c6e2186b0f9c9e2e96f34f"
-  integrity sha512-KLcx6GR+iXfLKnP2ecnK808rX6uf+y/aPOzOw4+lQBc8SqlMn4xv6cX6eXgKBaZgau8qNbNLzbS4RyW5ojrJhg==
+"@types/vimeo__player@^2.10.0":
+  version "2.10.0"
+  resolved "https://registry.yarnpkg.com/@types/vimeo__player/-/vimeo__player-2.10.0.tgz#dee8934c59d0a01a4252e6fb143c8807d3235502"
+  integrity sha512-uhKJDgEfQiEhKHw9bP7+wZSvXTyN4iw4Yb+7Omo76jCJZp1NZkWfZYaaobXrkiuFT6k2ld2eqaXKSpvqfmDUPQ==
 
 "@types/webpack-env@^1.15.3":
   version "1.15.3"
