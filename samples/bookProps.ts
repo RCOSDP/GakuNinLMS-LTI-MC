@@ -3,12 +3,13 @@ import outdent from "outdent";
 const resource = {
   id: 1,
   videoId: 1,
-  url: "",
+  url: "YzVwrvbz_XA",
   details: {},
 };
 
 const topic = {
   id: 1,
+  resourceId: 1,
   name: "リンゴに夢中のレッサーパンダ",
   description: outdent`円山動物園のレッサーパンダ
 
@@ -30,6 +31,7 @@ const topic = {
   createdAt: new Date(),
   updatedAt: new Date(),
   details: {},
+  creator: { name: "山田太郎" },
   resource,
 };
 

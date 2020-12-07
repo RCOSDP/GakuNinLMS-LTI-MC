@@ -9,6 +9,7 @@ export type Section = Pick<Prisma.Section, "id" | "name"> & {
 };
 
 export type Topic = Prisma.Topic & {
+  creator: { name: string };
   resource: Resource;
 };
 
