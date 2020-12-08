@@ -27,13 +27,13 @@ function resourceInput(resource: ResourceProps) {
   };
 }
 
-function topicInput(topic: TopicProps & { creatorId: User["id"] }) {
-  const { creatorId, ...props } = topic;
+function topicInput(topic: TopicProps) {
+  const { creator, ...props } = topic;
 
   return {
     ...props,
     details: {},
-    creator: { connect: { id: creatorId } },
+    creator: { connect: { id: creator.id } },
   };
 }
 

@@ -2,7 +2,7 @@ import { Prisma } from "@prisma/client";
 import { TopicSchema } from "$server/models/topic";
 
 export const topicsWithResourcesArg = {
-  include: { resource: { include: { video: true } } },
+  include: { creator: true, resource: { include: { video: true } } },
 } as const;
 
 export type TopicWithResource = Prisma.TopicGetPayload<
