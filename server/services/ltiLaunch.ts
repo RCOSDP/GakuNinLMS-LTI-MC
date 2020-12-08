@@ -14,6 +14,7 @@ import {
   LtiLaunchBody,
   ltiLaunchBodySchema,
 } from "$server/validators/ltiLaunchBody";
+import { findLtiResourceLink } from "$server/utils/ltiResourceLink";
 
 const frontendUrl = `${FRONTEND_ORIGIN}${FRONTEND_PATH}`;
 
@@ -34,11 +35,16 @@ const method: Method = {
 async function post({ session }: FastifyRequest) {
   const { ltiLaunchBody } = session;
   if (ltiLaunchBody != null) {
+    const ltiResourceLink = await findLtiResourceLink(
+      ltiLaunchBody.resource_link_id
+    );
+
     const user = await upsertUser({
       ltiUserId: ltiLaunchBody.user_id,
       name: ltiLaunchBody.lis_person_name_full ?? "",
     });
-    session.user = user;
+
+    Object.assign(session, { ltiResourceLink, user });
   }
 
   return {

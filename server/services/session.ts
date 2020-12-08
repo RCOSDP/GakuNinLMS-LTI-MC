@@ -13,12 +13,13 @@ export const method: Method = {
 
 export default {
   async get({ session }: FastifyRequest) {
-    const { ltiLaunchBody, user } = session;
+    const { ltiLaunchBody, ltiResourceLink, user } = session;
 
     return {
       status: 200,
       body: {
         ltiLaunchBody,
+        ltiResourceLink,
         user,
       },
     };

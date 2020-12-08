@@ -14,6 +14,10 @@
 
 import { exists, mapValues } from '../runtime';
 import {
+    InlineResponse200,
+    InlineResponse200FromJSON,
+    InlineResponse200FromJSONTyped,
+    InlineResponse200ToJSON,
     InlineResponse2001Author,
     InlineResponse2001AuthorFromJSON,
     InlineResponse2001AuthorFromJSONTyped,
@@ -38,6 +42,12 @@ export interface InlineResponse2004 {
     ltiLaunchBody?: InlineResponse2004LtiLaunchBody;
     /**
      * 
+     * @type {InlineResponse200}
+     * @memberof InlineResponse2004
+     */
+    ltiResourceLink?: InlineResponse200;
+    /**
+     * 
      * @type {InlineResponse2001Author}
      * @memberof InlineResponse2004
      */
@@ -55,6 +65,7 @@ export function InlineResponse2004FromJSONTyped(json: any, ignoreDiscriminator: 
     return {
         
         'ltiLaunchBody': !exists(json, 'ltiLaunchBody') ? undefined : InlineResponse2004LtiLaunchBodyFromJSON(json['ltiLaunchBody']),
+        'ltiResourceLink': !exists(json, 'ltiResourceLink') ? undefined : InlineResponse200FromJSON(json['ltiResourceLink']),
         'user': !exists(json, 'user') ? undefined : InlineResponse2001AuthorFromJSON(json['user']),
     };
 }
@@ -69,6 +80,7 @@ export function InlineResponse2004ToJSON(value?: InlineResponse2004 | null): any
     return {
         
         'ltiLaunchBody': InlineResponse2004LtiLaunchBodyToJSON(value.ltiLaunchBody),
+        'ltiResourceLink': InlineResponse200ToJSON(value.ltiResourceLink),
         'user': InlineResponse2001AuthorToJSON(value.user),
     };
 }
