@@ -33,7 +33,19 @@ export const Default = () => {
         <AddIcon className={classes.icon} />
         ブックの作成
       </Button>
+      <Button size="small" variant="contained" color="primary">
+        <AddIcon className={classes.icon} />
+        ブックの作成
+      </Button>
+      <Button size="small" variant="outlined" color="primary">
+        <AddIcon className={classes.icon} />
+        ブックの作成
+      </Button>
       <Button size="small" color="primary">
+        <LinkIcon className={classes.icon} />
+        LTIリンク「〇〇」と連携
+      </Button>
+      <Button size="small" variant="contained" color="primary">
         <LinkIcon className={classes.icon} />
         LTIリンク「〇〇」と連携
       </Button>
