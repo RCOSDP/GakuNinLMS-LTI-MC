@@ -27,11 +27,10 @@ const topic = {
 
   実体参照テスト: &nbsp; てすと`,
   timeRequired: 60,
-  creatorId: 1,
   createdAt: new Date(),
   updatedAt: new Date(),
   details: {},
-  creator: { name: "山田太郎" },
+  creator: { id: 1, name: "山田太郎" },
   resource,
 };
 
