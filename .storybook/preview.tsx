@@ -10,7 +10,7 @@ import theme from "../theme";
 // NOTE: For VideoJs components.
 import "video.js/dist/video-js.css";
 import "videojs-seek-buttons/dist/videojs-seek-buttons.css";
-import "../components/VideoJs.css";
+import "../styles/video-js.css";
 
 // NOTE: Mock useRouter
 // @ts-expect-error
