@@ -34,9 +34,13 @@ type Props = {
 
 export default function Books(props: Props) {
   const { book } = props;
-  const [topic] = useState<Topic>(book.sections[0].topics[0]);
+  const [topic, setTopic] = useState<Topic>(book.sections[0].topics[0]);
   const classes = useStyles();
   const containerClasses = useContainerStyles();
+  const handleItemClick = (
+    _: never,
+    [sectionIndex, topicIndex]: [number, number]
+  ) => setTopic(book.sections[sectionIndex].topics[topicIndex]);
   return (
     <>
       <AppBar position="sticky" />
@@ -59,7 +63,7 @@ export default function Books(props: Props) {
           </Button>
         </Typography>
         <TopicViewer {...topic} />
-        <BookChildren sections={book.sections} />
+        <BookChildren sections={book.sections} onItemClick={handleItemClick} />
       </Container>
     </>
   );
