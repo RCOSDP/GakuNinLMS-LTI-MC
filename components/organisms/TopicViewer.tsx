@@ -47,8 +47,8 @@ export default function TopicPlaer(props: Props) {
     <Card classes={cardClasses}>
       <Video
         className={classes.video}
-        type="youtube"
-        src={resource.url}
+        providerUrl="https://www.youtube.com/" // TODO: resource が video ならば video.providerUrl を使いたい
+        url={resource.url}
         subtitles={[]}
       />
       <Typography className={classes.title} variant="h5">

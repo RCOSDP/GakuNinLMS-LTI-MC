@@ -3,7 +3,7 @@ import { VideoJs } from "./VideoJs";
 import { buildTracks } from "./subtitle";
 
 type PlayerProps = {
-  src: string;
+  url: string;
   subtitles: Subtitle[];
   autoplay?: boolean;
   onEnded?: () => void;
@@ -17,7 +17,7 @@ function YouTubePlayerBase(props: PlayerProps) {
         sources: [
           {
             type: "video/youtube",
-            src: `watch?v=${props.src}`,
+            src: props.url,
           },
         ],
         autoplay: props.autoplay,
