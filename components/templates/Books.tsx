@@ -36,10 +36,12 @@ const useStyles = makeStyles((theme) => ({
 
 type Props = {
   books: Book[];
+  onBookClick(book: Book): void;
 };
 
 export default function Books(props: Props) {
-  const { books } = props;
+  const { books, onBookClick } = props;
+  const handleTopicClick = (book: Book) => () => onBookClick(book);
   const classes = useStyles();
   const containerClasses = useContainerStyles();
   return (
@@ -67,7 +69,11 @@ export default function Books(props: Props) {
         </div>
         <div>
           {books.map((book) => (
-            <BookAccordion key={book.id} {...book} />
+            <BookAccordion
+              key={book.id}
+              {...book}
+              onTopicClick={handleTopicClick(book)}
+            />
           ))}
         </div>
       </Container>
