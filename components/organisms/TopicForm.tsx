@@ -86,7 +86,7 @@ export default function TopicForm(props: Props) {
             </Typography>
           </span>
         }
-        defaultValue={topic.name}
+        defaultValue={topic.resource.url}
         required
         fullWidth
       />
