@@ -110,7 +110,11 @@ export default function BookPreview(props: Props) {
         </Button>
       </div>
       <div className={classes.right}>
-        <Video type="youtube" src={topic.resource.url} subtitles={[]} />
+        <Video
+          providerUrl="https://www.youtube.com/"
+          url={topic.resource.url}
+          subtitles={[]}
+        />
       </div>
     </Card>
   );

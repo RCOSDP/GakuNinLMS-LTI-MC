@@ -4,5 +4,6 @@ import Books from "./Books";
 import { books } from "samples";
 
 const props = { books };
+const onBookClick = console.log;
 
-export const Default = () => <Books {...props} />;
+export const Default = () => <Books {...props} onBookClick={onBookClick} />;

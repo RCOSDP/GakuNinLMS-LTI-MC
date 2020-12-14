@@ -41,7 +41,6 @@ type BookWithTopics = Prisma.BookGetPayload<typeof bookIncludingTopicsArg>;
 export function bookToBookSchema(book: BookWithTopics): BookSchema {
   return {
     ...book,
-    author: book.author,
     ltiResourceLinks: book.ltiResourceLinks.map(ltiResourceLinkToSchema),
     sections: book.sections.map(sectionToSectionSchema),
   };

@@ -1,11 +1,17 @@
 import { Topic } from "types/book";
-import { format } from "date-fns";
+import { format, formatDuration, intervalToDuration } from "date-fns";
+import { ja } from "date-fns/locale";
 import Card from "@material-ui/core/Card";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Video from "$organisms/Video";
 import Item from "$atoms/Item";
 import useCardStyles from "styles/card";
+
+function formatInterval(start: Date | number, end: Date | number) {
+  const duration = intervalToDuration({ start, end });
+  return formatDuration(duration, { locale: ja });
+}
 
 const useStyles = makeStyles((theme) => ({
   video: {
@@ -29,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-type Props = Topic;
+type Props = Topic & { onEnded?: () => void };
 
 export default function TopicPlaer(props: Props) {
   const classes = useStyles();
@@ -42,21 +48,24 @@ export default function TopicPlaer(props: Props) {
     updatedAt,
     creator,
     description,
+    onEnded,
   } = props;
   return (
     <Card classes={cardClasses}>
       <Video
         className={classes.video}
-        type="youtube"
-        src={resource.url}
+        providerUrl="https://www.youtube.com/" // TODO: resource が video ならば video.providerUrl を使いたい
+        url={resource.url}
         subtitles={[]}
+        onEnded={onEnded}
+        autoplay
       />
       <Typography className={classes.title} variant="h5">
         {name}
       </Typography>
       <div className={classes.items}>
         <Typography className={classes.title} variant="h6">
-          学習時間{timeRequired}分
+          学習時間 {formatInterval(0, timeRequired * 1000) || "10秒未満"}
         </Typography>
         <Typography className={classes.title} variant="h6">
           日本語

@@ -4,14 +4,14 @@ import { buildTracks } from "./subtitle";
 import { useWowzaResource } from "./wowza";
 
 type PlayerProps = {
-  src: string;
+  url: string;
   subtitles: Subtitle[];
   autoplay?: boolean;
   onEnded?: () => void;
 };
 
 function WowzaPlayerBase(props: PlayerProps) {
-  const resource = useWowzaResource(props.src);
+  const resource = useWowzaResource(props.url);
   const sources =
     resource.state === "success"
       ? [

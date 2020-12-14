@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
@@ -10,7 +9,7 @@ import LinkIcon from "@material-ui/icons/Link";
 import AppBar from "$organisms/AppBar";
 import BookChildren from "$organisms/BookChildren";
 import TopicViewer from "$organisms/TopicViewer";
-import { Book as BookType, Topic } from "types/book";
+import type * as Types from "types/book";
 import useContainerStyles from "styles/container";
 
 const useStyles = makeStyles((theme) => ({
@@ -29,14 +28,25 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type Props = {
-  book: BookType;
+  book: Types.Book;
+  index: [number, number];
+  onTopicEnded(): void;
+  onItemClick(index: [number, number]): void;
 };
 
 export default function Book(props: Props) {
-  const { book } = props;
-  const [topic] = useState<Topic>(book.sections[0].topics[0]);
+  const {
+    book,
+    index: [sectionIndex, topicIndex],
+    onTopicEnded,
+    onItemClick,
+  } = props;
+  const topic = book.sections[sectionIndex].topics[topicIndex];
   const classes = useStyles();
   const containerClasses = useContainerStyles();
+  const handleItemClick = (_: never, index: [number, number]) => {
+    onItemClick(index);
+  };
   return (
     <>
       <AppBar position="sticky" />
@@ -58,8 +68,8 @@ export default function Book(props: Props) {
             LTIリンクの再連携
           </Button>
         </Typography>
-        <TopicViewer {...topic} />
-        <BookChildren sections={book.sections} />
+        <TopicViewer {...topic} onEnded={onTopicEnded} />
+        <BookChildren sections={book.sections} onItemClick={handleItemClick} />
       </Container>
     </>
   );

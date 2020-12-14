@@ -9,10 +9,15 @@ import { Section } from "types/books";
 
 type Props = {
   sections: Section[];
+  onItemClick(event: MouseEvent<HTMLElement>, index: [number, number]): void;
 };
 
 export default function BookAccordionChildren(props: Props) {
-  const { sections } = props;
+  const { sections, onItemClick } = props;
+  const handleItemClick = (event: MouseEvent<HTMLElement>) => {
+    const { section, topic } = event.currentTarget.dataset;
+    onItemClick(event, [section, topic].map(Number) as [number, number]);
+  };
   const handleEditClick = (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
   };
@@ -28,7 +33,13 @@ export default function BookAccordionChildren(props: Props) {
             </ListItem>
           )}
           {section.topics.map((topic, topicIndex) => (
-            <ListItem key={topic.id} button>
+            <ListItem
+              key={topic.id}
+              button
+              data-section={sectionIndex}
+              data-topic={topicIndex}
+              onClick={handleItemClick}
+            >
               <ListItemText>
                 {sectionIndex + 1}
                 {section.name ? `.${topicIndex + 1}` : ""} {topic.name}

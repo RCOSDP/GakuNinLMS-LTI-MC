@@ -1,26 +1,26 @@
 const path = require("path");
+const glob = require("glob");
 
 module.exports = {
   webpackFinal: async (config) => {
-    config.resolve.alias["theme"] = path.resolve(__dirname, "../theme");
-    config.resolve.alias["styles"] = path.resolve(__dirname, "../styles");
-    config.resolve.alias["samples"] = path.resolve(__dirname, "../samples");
-    config.resolve.alias["$atoms"] = path.resolve(
-      __dirname,
-      "../components/atoms"
-    );
-    config.resolve.alias["$molecules"] = path.resolve(
-      __dirname,
-      "../components/molecules"
-    );
-    config.resolve.alias["$organisms"] = path.resolve(
-      __dirname,
-      "../components/organisms"
-    );
-    config.resolve.alias["$templates"] = path.resolve(
-      __dirname,
-      "../components/templates"
-    );
+    glob
+      .sync(`../*/`, { cwd: __dirname })
+      .map((path) => path.basename(path))
+      .forEach((dir) => {
+        config.resolve.alias[dir] = path.resolve(__dirname, "..", dir);
+        config.resolve.alias[`$${dir}`] = path.resolve(__dirname, "..", dir);
+      });
+    glob
+      .sync(`../components/*/`, { cwd: __dirname })
+      .map((path) => path.basename(path))
+      .forEach((dir) => {
+        config.resolve.alias[`$${dir}`] = path.resolve(
+          __dirname,
+          "..",
+          "components",
+          dir
+        );
+      });
     return config;
   },
   stories: ["../components/**/*.stories.tsx"],

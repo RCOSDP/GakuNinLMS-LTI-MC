@@ -1,9 +1,9 @@
 import { Configuration } from "$openapi/runtime";
 import { DefaultApi } from "$openapi/apis";
+import { NEXT_PUBLIC_API_BASE_PATH } from "./env";
 
-const basePath = process.env.NEXT_PUBLIC_API_BASE_PATH ?? "";
 const config = new Configuration({
-  basePath,
+  basePath: NEXT_PUBLIC_API_BASE_PATH,
   credentials: "include" /* TODO: 同一オリジンなら `same-origin` をつかう */,
 });
 
