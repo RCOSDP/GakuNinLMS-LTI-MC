@@ -52,6 +52,7 @@ export default function TopicPlaer(props: Props) {
         url={resource.url}
         subtitles={[]}
         onEnded={onEnded}
+        autoplay
       />
       <Typography className={classes.title} variant="h5">
         {name}
