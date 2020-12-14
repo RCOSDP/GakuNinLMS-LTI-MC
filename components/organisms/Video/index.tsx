@@ -1,8 +1,9 @@
+import { VideoResourceSchema } from "$server/models/videoResource";
 import { YouTubePlayer } from "./YouTubePlayer";
 import { VimeoPlayer } from "./VimeoPlayer";
 import { WowzaPlayer } from "./WowzaPlayer";
 
-type VideoProps = VideoLocation & {
+type VideoProps = Pick<VideoResourceSchema, "providerUrl" | "url"> & {
   className?: string;
   subtitles: Subtitle[];
   autoplay?: boolean;
@@ -11,20 +12,19 @@ type VideoProps = VideoLocation & {
 
 export default function Video(props: VideoProps) {
   const { className, ...other } = props;
-  switch (props.type) {
-    case "youtube":
+  switch (props.providerUrl) {
+    case "https://www.youtube.com/":
       return (
         <div className={className}>
           <YouTubePlayer {...other} />
         </div>
       );
-    case "vimeo":
+    case "https://vimeo.com/":
       return (
         <div className={className}>
           <VimeoPlayer {...other} />
         </div>
       );
-    case "wowza":
     default:
       return (
         <div className={className}>

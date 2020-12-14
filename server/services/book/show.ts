@@ -7,13 +7,7 @@ export const showSchema: FastifySchema = {
   description: "ブックの詳細の取得",
   params: bookParamsSchema,
   response: {
-    200: {
-      description: "成功時",
-      type: "object",
-      properties: {
-        book: bookSchema,
-      },
-    },
+    200: bookSchema,
   },
 };
 
@@ -23,6 +17,6 @@ export async function show({ params }: { params: BookParams }) {
 
   return {
     status: 200,
-    body: { book },
+    body: book,
   };
 }

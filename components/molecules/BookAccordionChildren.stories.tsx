@@ -7,7 +7,12 @@ const {
   books: [{ sections }],
 } = booksProps;
 
-const props = { sections };
+const props = {
+  sections,
+  onItemClick(_: never, index: [number, number]) {
+    console.log({ index });
+  },
+};
 
 export const Default = () => {
   return (

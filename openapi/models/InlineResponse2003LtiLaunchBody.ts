@@ -16,106 +16,106 @@ import { exists, mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface InlineResponse2004LtiLaunchBody
+ * @interface InlineResponse2003LtiLaunchBody
  */
-export interface InlineResponse2004LtiLaunchBody {
+export interface InlineResponse2003LtiLaunchBody {
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse2004LtiLaunchBody
+     * @memberof InlineResponse2003LtiLaunchBody
      */
     oauthVersion: string;
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse2004LtiLaunchBody
+     * @memberof InlineResponse2003LtiLaunchBody
      */
     oauthNonce: string;
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse2004LtiLaunchBody
+     * @memberof InlineResponse2003LtiLaunchBody
      */
     oauthTimestamp: string;
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse2004LtiLaunchBody
+     * @memberof InlineResponse2003LtiLaunchBody
      */
     oauthConsumerKey: string;
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse2004LtiLaunchBody
+     * @memberof InlineResponse2003LtiLaunchBody
      */
     oauthSignatureMethod: string;
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse2004LtiLaunchBody
+     * @memberof InlineResponse2003LtiLaunchBody
      */
     oauthSignature: string;
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse2004LtiLaunchBody
+     * @memberof InlineResponse2003LtiLaunchBody
      */
     ltiMessageType: string;
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse2004LtiLaunchBody
+     * @memberof InlineResponse2003LtiLaunchBody
      */
     ltiVersion: string;
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse2004LtiLaunchBody
+     * @memberof InlineResponse2003LtiLaunchBody
      */
     resourceLinkId: string;
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse2004LtiLaunchBody
+     * @memberof InlineResponse2003LtiLaunchBody
      */
     userId: string;
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse2004LtiLaunchBody
+     * @memberof InlineResponse2003LtiLaunchBody
      */
     roles: string;
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse2004LtiLaunchBody
+     * @memberof InlineResponse2003LtiLaunchBody
      */
     contextId: string;
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse2004LtiLaunchBody
+     * @memberof InlineResponse2003LtiLaunchBody
      */
     resourceLinkTitle?: string;
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse2004LtiLaunchBody
+     * @memberof InlineResponse2003LtiLaunchBody
      */
     contextTitle?: string;
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse2004LtiLaunchBody
+     * @memberof InlineResponse2003LtiLaunchBody
      */
     lisPersonNameFull?: string;
 }
 
-export function InlineResponse2004LtiLaunchBodyFromJSON(json: any): InlineResponse2004LtiLaunchBody {
-    return InlineResponse2004LtiLaunchBodyFromJSONTyped(json, false);
+export function InlineResponse2003LtiLaunchBodyFromJSON(json: any): InlineResponse2003LtiLaunchBody {
+    return InlineResponse2003LtiLaunchBodyFromJSONTyped(json, false);
 }
 
-export function InlineResponse2004LtiLaunchBodyFromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse2004LtiLaunchBody {
+export function InlineResponse2003LtiLaunchBodyFromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse2003LtiLaunchBody {
     if ((json === undefined) || (json === null)) {
         return json;
     }
@@ -139,7 +139,7 @@ export function InlineResponse2004LtiLaunchBodyFromJSONTyped(json: any, ignoreDi
     };
 }
 
-export function InlineResponse2004LtiLaunchBodyToJSON(value?: InlineResponse2004LtiLaunchBody | null): any {
+export function InlineResponse2003LtiLaunchBodyToJSON(value?: InlineResponse2003LtiLaunchBody | null): any {
     if (value === undefined) {
         return undefined;
     }

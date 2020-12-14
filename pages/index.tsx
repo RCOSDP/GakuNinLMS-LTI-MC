@@ -2,6 +2,8 @@ import { UrlObject } from "url";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { isInstructor, useSession } from "$utils/session";
+import { NEXT_PUBLIC_LMS_URL } from "$utils/env";
+import { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
 
 function Replace(props: { href: string | UrlObject }) {
   const router = useRouter();
@@ -9,16 +11,26 @@ function Replace(props: { href: string | UrlObject }) {
   return <Link href={props.href}>Link</Link>; // TODO: プレースホルダーがいい加減
 }
 
-function Index() {
+function ReplaceToBook(props: { ltiResourceLink: LtiResourceLinkSchema }) {
+  const url = {
+    pathname: "/book",
+    query: { id: props.ltiResourceLink.bookId },
+  };
+
+  return <Replace href={url} />;
+}
+
+function Router() {
   const session = useSession();
 
   if (!session.data) return <div>Loading...</div>; // TODO: プレースホルダーがいい加減
-
-  // TODO: エラーハンドリング
-
   if (isInstructor(session.data)) return <Replace href="/books" />;
+  if (!session.data.ltiResourceLink) {
+    // TODO: https://github.com/npocccties/ChibiCHiLO/issues/3
+    return <Replace href={NEXT_PUBLIC_LMS_URL} />;
+  }
 
-  return <Replace href="/books" />; // TODO: LTI Resource Link に応じてルーティング
+  return <ReplaceToBook ltiResourceLink={session.data.ltiResourceLink} />;
 }
 
-export default Index;
+export default Router;

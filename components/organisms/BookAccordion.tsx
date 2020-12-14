@@ -13,7 +13,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import BookAccordionChildren from "$molecules/BookAccordionChildren";
 import CourseChip from "$atoms/CourseChip";
 import Item from "$atoms/Item";
-import { Book } from "types/books";
+import { Book, Topic } from "types/books";
 import useAccordionStyle from "styles/accordion";
 import useAccordionSummaryStyle from "styles/accordionSummary";
 import useAccordionDetailStyle from "styles/accordionDetail";
@@ -36,14 +36,20 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-type Props = Book;
+type Props = Book & {
+  onTopicClick(topic: Topic): void;
+};
 
 export default function BookAccordion(props: Props) {
-  const { name, author, createdAt, updatedAt, sections } = props;
+  const { name, author, createdAt, updatedAt, sections, onTopicClick } = props;
   const classes = useStyles();
   const accordionClasses = useAccordionStyle();
   const accordionSummaryClasses = useAccordionSummaryStyle();
   const accordionDetailClasses = useAccordionDetailStyle();
+  const handleItemClick = (
+    _: never,
+    [sectionIndex, topicIndex]: [number, number]
+  ) => onTopicClick(sections[sectionIndex].topics[topicIndex]);
   const handleInfoClick = (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
   };
@@ -78,7 +84,10 @@ export default function BookAccordion(props: Props) {
           <Item itemKey="著者" value={author.name} />
         </div>
         <Divider />
-        <BookAccordionChildren sections={sections} />
+        <BookAccordionChildren
+          sections={sections}
+          onItemClick={handleItemClick}
+        />
       </AccordionDetails>
     </Accordion>
   );

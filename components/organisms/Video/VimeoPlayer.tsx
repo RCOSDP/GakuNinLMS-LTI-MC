@@ -2,7 +2,7 @@ import { memo } from "react";
 import { Vimeo } from "./Vimeo";
 
 type PlayerProps = {
-  src: string;
+  url: string;
   autoplay?: boolean;
   onEnded?: () => void;
 };
@@ -11,7 +11,7 @@ function VimeoPlayerBase(props: PlayerProps) {
   return (
     <Vimeo
       options={{
-        id: Number(props.src),
+        url: props.url,
         autoplay: props.autoplay,
       }}
       onEnded={props.onEnded}

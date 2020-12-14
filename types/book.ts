@@ -12,8 +12,8 @@ export type Section = Pick<Prisma.Section, "id" | "name"> & {
   topics: Topic[];
 };
 
-export type Topic = Prisma.Topic & {
-  creator: Pick<Prisma.User, "name">;
+export type Topic = Omit<Prisma.Topic, "creatorId"> & {
+  creator: { id: number; name: string };
   resource: Resource;
 };
 

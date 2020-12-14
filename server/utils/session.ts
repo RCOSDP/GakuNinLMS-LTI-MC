@@ -1,9 +1,10 @@
+import type { FastifyRequest } from "fastify";
 import { User } from "@prisma/client";
 import { SessionScheme } from "$server/models/session";
 import { LtiLaunchBody } from "$server/validators/ltiLaunchBody";
 import * as ltiRoles from "./ltiv1p1/roles";
 
-export type Session = Partial<SessionScheme>;
+export type Session = Pick<FastifyRequest["session"], keyof SessionScheme>;
 
 /**
  * セッションが利用者のものであるか否か

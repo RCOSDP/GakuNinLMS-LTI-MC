@@ -27,15 +27,15 @@ import {
     InlineResponse2001,
     InlineResponse2001FromJSON,
     InlineResponse2001ToJSON,
+    InlineResponse2001Books,
+    InlineResponse2001BooksFromJSON,
+    InlineResponse2001BooksToJSON,
     InlineResponse2002,
     InlineResponse2002FromJSON,
     InlineResponse2002ToJSON,
     InlineResponse2003,
     InlineResponse2003FromJSON,
     InlineResponse2003ToJSON,
-    InlineResponse2004,
-    InlineResponse2004FromJSON,
-    InlineResponse2004ToJSON,
 } from '../models';
 
 export interface ApiV2BookBookIdGetRequest {
@@ -78,7 +78,7 @@ export class DefaultApi extends runtime.BaseAPI {
     /**
      * ブックの詳細の取得
      */
-    async apiV2BookBookIdGetRaw(requestParameters: ApiV2BookBookIdGetRequest): Promise<runtime.ApiResponse<InlineResponse2002>> {
+    async apiV2BookBookIdGetRaw(requestParameters: ApiV2BookBookIdGetRequest): Promise<runtime.ApiResponse<InlineResponse2001Books>> {
         if (requestParameters.bookId === null || requestParameters.bookId === undefined) {
             throw new runtime.RequiredError('bookId','Required parameter requestParameters.bookId was null or undefined when calling apiV2BookBookIdGet.');
         }
@@ -94,13 +94,13 @@ export class DefaultApi extends runtime.BaseAPI {
             query: queryParameters,
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2002FromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2001BooksFromJSON(jsonValue));
     }
 
     /**
      * ブックの詳細の取得
      */
-    async apiV2BookBookIdGet(requestParameters: ApiV2BookBookIdGetRequest): Promise<InlineResponse2002> {
+    async apiV2BookBookIdGet(requestParameters: ApiV2BookBookIdGetRequest): Promise<InlineResponse2001Books> {
         const response = await this.apiV2BookBookIdGetRaw(requestParameters);
         return await response.value();
     }
@@ -229,7 +229,7 @@ export class DefaultApi extends runtime.BaseAPI {
     /**
      * セッション情報
      */
-    async apiV2SessionGetRaw(): Promise<runtime.ApiResponse<InlineResponse2004>> {
+    async apiV2SessionGetRaw(): Promise<runtime.ApiResponse<InlineResponse2003>> {
         const queryParameters: runtime.HTTPQuery = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -241,13 +241,13 @@ export class DefaultApi extends runtime.BaseAPI {
             query: queryParameters,
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2004FromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2003FromJSON(jsonValue));
     }
 
     /**
      * セッション情報
      */
-    async apiV2SessionGet(): Promise<InlineResponse2004> {
+    async apiV2SessionGet(): Promise<InlineResponse2003> {
         const response = await this.apiV2SessionGetRaw();
         return await response.value();
     }
@@ -255,7 +255,7 @@ export class DefaultApi extends runtime.BaseAPI {
     /**
      * トピック一覧
      */
-    async apiV2TopicsGetRaw(requestParameters: ApiV2TopicsGetRequest): Promise<runtime.ApiResponse<InlineResponse2003>> {
+    async apiV2TopicsGetRaw(requestParameters: ApiV2TopicsGetRequest): Promise<runtime.ApiResponse<InlineResponse2002>> {
         const queryParameters: runtime.HTTPQuery = {};
 
         if (requestParameters.page !== undefined) {
@@ -275,13 +275,13 @@ export class DefaultApi extends runtime.BaseAPI {
             query: queryParameters,
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2003FromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2002FromJSON(jsonValue));
     }
 
     /**
      * トピック一覧
      */
-    async apiV2TopicsGet(requestParameters: ApiV2TopicsGetRequest): Promise<InlineResponse2003> {
+    async apiV2TopicsGet(requestParameters: ApiV2TopicsGetRequest): Promise<InlineResponse2002> {
         const response = await this.apiV2TopicsGetRaw(requestParameters);
         return await response.value();
     }

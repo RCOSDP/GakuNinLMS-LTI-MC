@@ -15,9 +15,7 @@ async function main() {
   try {
     const createdUsers = await Promise.all(users.map(upsertUser));
     const createdBooks = await Promise.all(
-      books
-        .map((book) => ({ ...book, author: { id: createdUsers[0].id } }))
-        .map(upsertBook)
+      books(createdUsers[0].id).map(upsertBook)
     );
 
     await Promise.all(

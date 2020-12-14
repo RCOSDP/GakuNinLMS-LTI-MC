@@ -1,18 +1,19 @@
-import { BookProps } from "$server/models/book";
+import { UserSchema } from "$server/models/user";
 
-const books: readonly Omit<BookProps, "author">[] = [
-  // © 2015 NPO CCC-TIES, 行木孝夫 / CC-BY https://dev.chilos.jp/book/uncompress/cb00301
-  {
-    name: "さまざまな関数",
-    abstract: "入門微分積分学共通	第1章",
-    sections: [
-      {
-        topics: [
-          // © 2015 NPO CCC-TIES, 行木孝夫 / CC-BY https://dev.chilos.jp/book/uncompress/cb00301/OEBPS/vol-1/text/vol-001-011.xhtml
-          {
-            name: "分数関数",
-            timeRequired: 60,
-            description: `基本的な分数関数は次の関数で定義されます。
+const books = (authorId: UserSchema["id"]) =>
+  [
+    // © 2015 NPO CCC-TIES, 行木孝夫 / CC-BY https://dev.chilos.jp/book/uncompress/cb00301
+    {
+      name: "さまざまな関数",
+      abstract: "入門微分積分学共通	第1章",
+      sections: [
+        {
+          topics: [
+            // © 2015 NPO CCC-TIES, 行木孝夫 / CC-BY https://dev.chilos.jp/book/uncompress/cb00301/OEBPS/vol-1/text/vol-001-011.xhtml
+            {
+              name: "分数関数",
+              timeRequired: 60,
+              description: `基本的な分数関数は次の関数で定義されます。
 
 1-1
 
@@ -30,17 +31,18 @@ x軸方向へ+1、y軸方向へ+1平行移動したグラフになります。
 
 このように変形させると計算が簡単になることが多いので、覚えておきましょう。
 `,
-            resource: { url: "https://www.youtube.com/watch?v=KxNMj61Rgnc" },
-          },
-        ],
-      },
-      {
-        topics: [
-          // © 2015 NPO CCC-TIES, 行木孝夫 / CC-BY https://dev.chilos.jp/book/uncompress/cb00301/OEBPS/vol-1/text/vol-001-012.xhtml
-          {
-            name: "無理関数",
-            timeRequired: 49,
-            description: `無理関数の基本的な形は次のとおりです。
+              creator: { id: authorId },
+              resource: { url: "https://www.youtube.com/watch?v=KxNMj61Rgnc" },
+            },
+          ],
+        },
+        {
+          topics: [
+            // © 2015 NPO CCC-TIES, 行木孝夫 / CC-BY https://dev.chilos.jp/book/uncompress/cb00301/OEBPS/vol-1/text/vol-001-012.xhtml
+            {
+              name: "無理関数",
+              timeRequired: 49,
+              description: `無理関数の基本的な形は次のとおりです。
 
 4-2
 
@@ -52,17 +54,18 @@ y=√x のグラフは、原点から始まり、放物線を-90° 回転した�
 
 y= - √x の場合は符号が反転しているため、y=√xのグラフをx軸に対して、反転したグラフが得られます。
 `,
-            resource: { url: "https://www.youtube.com/watch?v=OAG9FApdp3A" },
-          },
-        ],
-      },
-      {
-        topics: [
-          // © 2015 NPO CCC-TIES, 行木孝夫 / CC-BY https://dev.chilos.jp/book/uncompress/cb00301/OEBPS/vol-1/text/vol-001-013.xhtml
-          {
-            name: "三角関数",
-            timeRequired: 49,
-            description: `三角関数はsin x、及びcos xが基本的な関数です。
+              creator: { id: authorId },
+              resource: { url: "https://www.youtube.com/watch?v=OAG9FApdp3A" },
+            },
+          ],
+        },
+        {
+          topics: [
+            // © 2015 NPO CCC-TIES, 行木孝夫 / CC-BY https://dev.chilos.jp/book/uncompress/cb00301/OEBPS/vol-1/text/vol-001-013.xhtml
+            {
+              name: "三角関数",
+              timeRequired: 49,
+              description: `三角関数はsin x、及びcos xが基本的な関数です。
 
 sin2x　とcos2x　の和が1になります。
 
@@ -74,17 +77,18 @@ sin xの値はx=0、x=π と x=2πで、0をとります。
 
 y=cos xのグラフは、y=sin xのグラフをx軸方向に-π/2だけ平行移動すると得られます。
 `,
-            resource: { url: "https://www.youtube.com/watch?v=wfSJoAopdMs" },
-          },
-        ],
-      },
-      {
-        topics: [
-          // © 2015 NPO CCC-TIES, 行木孝夫 / CC-BY https://dev.chilos.jp/book/uncompress/cb00301/OEBPS/vol-1/text/vol-001-014.xhtml
-          {
-            name: "指数関数",
-            timeRequired: 82,
-            description: `指数関数は、f(x)=2x、f(x)=1/2x、aを定数とした f(x)=ax など、変数 x が指数の位置に来ている関数の総称です。
+              creator: { id: authorId },
+              resource: { url: "https://www.youtube.com/watch?v=wfSJoAopdMs" },
+            },
+          ],
+        },
+        {
+          topics: [
+            // © 2015 NPO CCC-TIES, 行木孝夫 / CC-BY https://dev.chilos.jp/book/uncompress/cb00301/OEBPS/vol-1/text/vol-001-014.xhtml
+            {
+              name: "指数関数",
+              timeRequired: 82,
+              description: `指数関数は、f(x)=2x、f(x)=1/2x、aを定数とした f(x)=ax など、変数 x が指数の位置に来ている関数の総称です。
 
 例えば、y=2x
 
@@ -100,17 +104,18 @@ f(x+y)=ax+y+axay=f(x)f(y)
 
 という関係式が常に成立します。
 `,
-            resource: { url: "https://www.youtube.com/watch?v=yZKWFOwP4XE" },
-          },
-        ],
-      },
-      {
-        topics: [
-          // © 2015 NPO CCC-TIES, 行木孝夫 / CC-BY https://dev.chilos.jp/book/uncompress/cb00301/OEBPS/vol-1/text/vol-001-015.xhtml
-          {
-            name: "対数関数",
-            timeRequired: 49,
-            description: `対数関数は、f(x)=log2x（x>0）という対数によって定義される関数です。
+              creator: { id: authorId },
+              resource: { url: "https://www.youtube.com/watch?v=yZKWFOwP4XE" },
+            },
+          ],
+        },
+        {
+          topics: [
+            // © 2015 NPO CCC-TIES, 行木孝夫 / CC-BY https://dev.chilos.jp/book/uncompress/cb00301/OEBPS/vol-1/text/vol-001-015.xhtml
+            {
+              name: "対数関数",
+              timeRequired: 49,
+              description: `対数関数は、f(x)=log2x（x>0）という対数によって定義される関数です。
 
 y=log2x
 
@@ -120,12 +125,13 @@ y=log2x
 
 これは、対数の定義から解る関係式です。
 `,
-            resource: { url: "https://www.youtube.com/watch?v=zgjfuCXSTPw" },
-          },
-        ],
-      },
-    ],
-  },
-];
+              creator: { id: authorId },
+              resource: { url: "https://www.youtube.com/watch?v=zgjfuCXSTPw" },
+            },
+          ],
+        },
+      ],
+    },
+  ].map((book) => ({ ...book, author: { id: authorId } }));
 
 export default books;
