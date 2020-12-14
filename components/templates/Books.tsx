@@ -8,7 +8,7 @@ import AppBar from "$organisms/AppBar";
 import BookAccordion from "$organisms/BookAccordion";
 import SortSelect from "$atoms/SortSelect";
 import SearchTextField from "$atoms/SearchTextField";
-import { Book } from "types/book";
+import { Book } from "types/books";
 import useContainerStyles from "styles/container";
 
 const useStyles = makeStyles((theme) => ({
