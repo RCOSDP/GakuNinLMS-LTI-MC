@@ -5,6 +5,7 @@ module.exports = {
     config.resolve.alias["theme"] = path.resolve(__dirname, "../theme");
     config.resolve.alias["styles"] = path.resolve(__dirname, "../styles");
     config.resolve.alias["samples"] = path.resolve(__dirname, "../samples");
+    config.resolve.alias["$store"] = path.resolve(__dirname, "../store");
     config.resolve.alias["$atoms"] = path.resolve(
       __dirname,
       "../components/atoms"

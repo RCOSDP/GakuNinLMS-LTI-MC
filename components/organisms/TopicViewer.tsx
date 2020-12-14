@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-type Props = Topic;
+type Props = Topic & { onEnded?: () => void };
 
 export default function TopicPlaer(props: Props) {
   const classes = useStyles();
@@ -42,6 +42,7 @@ export default function TopicPlaer(props: Props) {
     updatedAt,
     creator,
     description,
+    onEnded,
   } = props;
   return (
     <Card classes={cardClasses}>
@@ -50,6 +51,7 @@ export default function TopicPlaer(props: Props) {
         providerUrl="https://www.youtube.com/" // TODO: resource が video ならば video.providerUrl を使いたい
         url={resource.url}
         subtitles={[]}
+        onEnded={onEnded}
       />
       <Typography className={classes.title} variant="h5">
         {name}

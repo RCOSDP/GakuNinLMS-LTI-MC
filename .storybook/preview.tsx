@@ -1,11 +1,11 @@
 import * as nextRouter from "next/router";
 import { addDecorator } from "@storybook/react";
+import { Provider } from "jotai";
 import { ThemeProvider } from "@material-ui/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Container from "@material-ui/core/Container";
 import { ConfirmProvider } from "material-ui-confirm";
 import { SnackbarProvider } from "material-ui-snackbar-provider";
-import { StateProvider } from "../components/state";
 import theme from "../theme";
 // NOTE: For VideoJs components.
 import "video.js/dist/video-js.css";
@@ -17,7 +17,7 @@ import "../styles/video-js.css";
 nextRouter.useRouter = () => ({ route: "/", query: {} });
 
 addDecorator((story) => (
-  <StateProvider>
+  <Provider>
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <ConfirmProvider>
@@ -26,5 +26,5 @@ addDecorator((story) => (
         </SnackbarProvider>
       </ConfirmProvider>
     </ThemeProvider>
-  </StateProvider>
+  </Provider>
 ));

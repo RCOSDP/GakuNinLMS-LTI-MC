@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
@@ -30,17 +29,24 @@ const useStyles = makeStyles((theme) => ({
 
 type Props = {
   book: Types.Book;
+  index: [number, number];
+  onTopicEnded(): void;
+  onItemClick(index: [number, number]): void;
 };
 
 export default function Book(props: Props) {
-  const { book } = props;
-  const [topic, setTopic] = useState<Types.Topic>(book.sections[0].topics[0]);
+  const {
+    book,
+    index: [sectionIndex, topicIndex],
+    onTopicEnded,
+    onItemClick,
+  } = props;
+  const topic = book.sections[sectionIndex].topics[topicIndex];
   const classes = useStyles();
   const containerClasses = useContainerStyles();
-  const handleItemClick = (
-    _: never,
-    [sectionIndex, topicIndex]: [number, number]
-  ) => setTopic(book.sections[sectionIndex].topics[topicIndex]);
+  const handleItemClick = (_: never, index: [number, number]) => {
+    onItemClick(index);
+  };
   return (
     <>
       <AppBar position="sticky" />
@@ -62,7 +68,7 @@ export default function Book(props: Props) {
             LTIリンクの再連携
           </Button>
         </Typography>
-        <TopicViewer {...topic} />
+        <TopicViewer {...topic} onEnded={onTopicEnded} />
         <BookChildren sections={book.sections} onItemClick={handleItemClick} />
       </Container>
     </>
