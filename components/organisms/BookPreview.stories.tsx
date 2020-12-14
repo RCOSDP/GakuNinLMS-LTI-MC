@@ -2,7 +2,7 @@ export default { title: "organisms/BookPreview" };
 
 import { makeStyles } from "@material-ui/core/styles";
 import BookPreview from "./BookPreview";
-import bookProps from "samples/bookProps";
+import { book } from "samples";
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const { book: props } = bookProps;
+const props = book;
 
 export const Default = () => {
   const classes = useStyles();

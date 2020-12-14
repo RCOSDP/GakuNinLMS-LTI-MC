@@ -1,11 +1,9 @@
 export default { title: "organisms/BookAccordion" };
 
 import BookAccordion from "./BookAccordion";
-import booksProps from "samples/booksProps";
+import { book } from "samples";
 
-const {
-  books: [props],
-} = booksProps;
+const props = book;
 
 export const Default = () => {
   return (

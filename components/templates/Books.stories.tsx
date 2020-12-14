@@ -1,6 +1,8 @@
 export default { title: "templates/Books" };
 
 import Books from "./Books";
-import booksProps from "samples/booksProps";
+import { books } from "samples";
 
-export const Default = () => <Books {...booksProps} />;
+const props = { books };
+
+export const Default = () => <Books {...props} />;

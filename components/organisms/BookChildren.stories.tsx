@@ -1,11 +1,8 @@
 export default { title: "organisms/BookChildren" };
 
 import BookChildren from "./BookChildren";
-import bookProps from "samples/bookProps";
+import { sections } from "samples";
 
-const {
-  book: { sections },
-} = bookProps;
 const props = { sections };
 
 export const Default = () => <BookChildren {...props} />;
