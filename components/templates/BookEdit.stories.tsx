@@ -1,6 +1,6 @@
 export default { title: "templates/BookEdit" };
 
-import BookEdit from "./BookNew";
+import BookEdit from "./BookEdit";
 import { book } from "samples";
 
 const props = { book };
