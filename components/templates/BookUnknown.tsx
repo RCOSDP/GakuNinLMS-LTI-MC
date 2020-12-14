@@ -26,7 +26,8 @@ export default function BookUnknown() {
         </Typography>
         <Typography variant="body1">
           LTIリンクがどのブックとも連携していません。担当教員にお問い合わせください。
-          <a>LMSに戻る</a>
+          <br />
+          LMSに戻る
         </Typography>
       </Container>
     </>
