@@ -10,6 +10,7 @@ import TextField from "$atoms/TextField";
 import useCardStyles from "styles/card";
 import useInputLabelStyles from "styles/inputLabel";
 import gray from "theme/colors/gray";
+import { Book } from "types/book";
 
 const languages = [
   {
@@ -34,7 +35,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function BookForms() {
+type Props = { book: Book; submitLabel?: string };
+
+export default function BookForm(props: Props) {
+  const { book, submitLabel = "更新" } = props;
   const cardClasses = useCardStyles();
   const inputLabelClasses = useInputLabelStyles();
   const classes = useStyles();
@@ -58,6 +62,7 @@ export default function BookForms() {
             </Typography>
           </span>
         }
+        defaultValue={book.name}
         required
         fullWidth
       />
@@ -83,7 +88,7 @@ export default function BookForms() {
       <TextField id="timeRequired" label="学習時間" />
       <TextField id="description" label="解説" fullWidth multiline />
       <Button variant="contained" color="primary">
-        送信
+        {submitLabel}
       </Button>
     </Card>
   );

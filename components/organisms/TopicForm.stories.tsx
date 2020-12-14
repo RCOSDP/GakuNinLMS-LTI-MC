@@ -1,5 +1,8 @@
 import TopicForm from "./TopicForm";
+import { topic } from "samples";
 
 export default { title: "organisms/TopicForm" };
 
-export const Default = () => <TopicForm />;
+const props = { topic };
+
+export const Default = () => <TopicForm {...props} />;

@@ -18,9 +18,10 @@ const useStyles = makeStyles((theme) => ({
   line: {
     display: "flex",
     alignItems: "center",
-    marginBottom: theme.spacing(2),
-    "&> :not(:last-child)": {
+    flexWrap: "wrap",
+    "& > *": {
       marginRight: theme.spacing(2),
+      marginBottom: theme.spacing(2),
     },
   },
   title: {

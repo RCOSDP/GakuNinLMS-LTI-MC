@@ -1,16 +1,8 @@
 export default { title: "organisms/TopicViewer" };
 
 import TopicPlayer from "./TopicViewer";
-import bookProps from "samples/bookProps";
+import { topic } from "samples";
 
-const {
-  book: {
-    sections: [
-      {
-        topics: [props],
-      },
-    ],
-  },
-} = bookProps;
+const props = topic;
 
 export const Default = () => <TopicPlayer {...props} />;

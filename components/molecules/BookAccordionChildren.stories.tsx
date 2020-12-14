@@ -1,11 +1,7 @@
 export default { title: "molecules/BookAccordionChildren" };
 
 import BookAccordionChildren from "./BookAccordionChildren";
-import booksProps from "samples/booksProps";
-
-const {
-  books: [{ sections }],
-} = booksProps;
+import { sections } from "samples";
 
 const props = {
   sections,
