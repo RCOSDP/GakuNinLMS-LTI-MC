@@ -13,7 +13,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import BookAccordionChildren from "$molecules/BookAccordionChildren";
 import CourseChip from "$atoms/CourseChip";
 import Item from "$atoms/Item";
-import { Book } from "types/books";
+import { Book } from "types/book";
 import useAccordionStyle from "styles/accordion";
 import useAccordionSummaryStyle from "styles/accordionSummary";
 import useAccordionDetailStyle from "styles/accordionDetail";
