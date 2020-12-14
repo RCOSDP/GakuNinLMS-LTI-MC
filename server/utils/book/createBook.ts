@@ -9,7 +9,7 @@ const topicSectionCreateInput = (creatorId: Topic["creatorId"]) => (
   topic: TopicProps | TopicSchema,
   order: TopicSection["order"]
 ) => {
-  const topicInput = topicCreateInput({ ...topic, creatorId });
+  const topicInput = topicCreateInput({ ...topic, creator: { id: creatorId } });
 
   if (!("id" in topic)) {
     return {

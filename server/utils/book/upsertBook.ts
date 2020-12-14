@@ -14,7 +14,7 @@ const topicUpsertInput = (creatorId: Topic["creatorId"]) => (
   const topicId = topic.id;
   const topicInput = {
     ...topic,
-    creatorId,
+    creator: { id: creatorId },
   };
   const input = {
     order,

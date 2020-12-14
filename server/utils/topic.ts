@@ -38,7 +38,7 @@ function topicInput(topic: TopicProps) {
 }
 
 export function topicCreateInput(
-  topic: TopicProps & { creatorId: User["id"] }
+  topic: TopicProps & { creator: { id: User["id"] } }
 ) {
   const { where, create } = resourceInput(topic.resource);
   const topicCreateInput = {
