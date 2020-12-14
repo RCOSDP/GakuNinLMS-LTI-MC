@@ -10,7 +10,7 @@ import LinkIcon from "@material-ui/icons/Link";
 import AppBar from "$organisms/AppBar";
 import BookChildren from "$organisms/BookChildren";
 import TopicViewer from "$organisms/TopicViewer";
-import { Book, Topic } from "types/book";
+import { Book as BookType, Topic } from "types/book";
 import useContainerStyles from "styles/container";
 
 const useStyles = makeStyles((theme) => ({
@@ -29,10 +29,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type Props = {
-  book: Book;
+  book: BookType;
 };
 
-export default function Books(props: Props) {
+export default function Book(props: Props) {
   const { book } = props;
   const [topic] = useState<Topic>(book.sections[0].topics[0]);
   const classes = useStyles();

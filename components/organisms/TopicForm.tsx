@@ -10,6 +10,7 @@ import TextField from "$atoms/TextField";
 import useCardStyles from "styles/card";
 import useInputLabelStyles from "styles/inputLabel";
 import gray from "theme/colors/gray";
+import { Topic } from "types/book";
 
 const languages = [
   {
@@ -20,7 +21,7 @@ const languages = [
     value: "en",
     label: "英語",
   },
-];
+] as const;
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -34,7 +35,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function BookForms() {
+type Props = { topic: Topic; submitLabel?: string };
+
+export default function TopicForm(props: Props) {
+  const { topic, submitLabel = "更新" } = props;
   const cardClasses = useCardStyles();
   const inputLabelClasses = useInputLabelStyles();
   const classes = useStyles();
@@ -58,6 +62,7 @@ export default function BookForms() {
             </Typography>
           </span>
         }
+        defaultValue={topic.name}
         required
         fullWidth
       />
@@ -81,6 +86,7 @@ export default function BookForms() {
             </Typography>
           </span>
         }
+        defaultValue={topic.name}
         required
         fullWidth
       />
@@ -97,10 +103,20 @@ export default function BookForms() {
           </MenuItem>
         ))}
       </TextField>
-      <TextField id="timeRequired" label="学習時間" />
-      <TextField id="description" label="解説" fullWidth multiline />
+      <TextField
+        id="timeRequired"
+        label="学習時間"
+        defaultValue={topic.timeRequired}
+      />
+      <TextField
+        id="description"
+        label="解説"
+        defaultValue={topic.description}
+        fullWidth
+        multiline
+      />
       <Button variant="contained" color="primary">
-        送信
+        {submitLabel}
       </Button>
     </Card>
   );
