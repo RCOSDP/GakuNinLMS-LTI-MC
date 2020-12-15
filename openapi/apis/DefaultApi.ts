@@ -21,6 +21,18 @@ import {
     InlineObject1,
     InlineObject1FromJSON,
     InlineObject1ToJSON,
+    InlineObject2,
+    InlineObject2FromJSON,
+    InlineObject2ToJSON,
+    InlineObject3,
+    InlineObject3FromJSON,
+    InlineObject3ToJSON,
+    InlineObject4,
+    InlineObject4FromJSON,
+    InlineObject4ToJSON,
+    InlineObject5,
+    InlineObject5FromJSON,
+    InlineObject5ToJSON,
     InlineResponse200,
     InlineResponse200FromJSON,
     InlineResponse200ToJSON,
@@ -30,6 +42,9 @@ import {
     InlineResponse2001Books,
     InlineResponse2001BooksFromJSON,
     InlineResponse2001BooksToJSON,
+    InlineResponse2001Topics,
+    InlineResponse2001TopicsFromJSON,
+    InlineResponse2001TopicsToJSON,
     InlineResponse2002,
     InlineResponse2002FromJSON,
     InlineResponse2002ToJSON,
@@ -38,8 +53,21 @@ import {
     InlineResponse2003ToJSON,
 } from '../models';
 
+export interface ApiV2BookBookIdDeleteRequest {
+    bookId: number;
+}
+
 export interface ApiV2BookBookIdGetRequest {
     bookId: number;
+}
+
+export interface ApiV2BookBookIdPutRequest {
+    bookId: number;
+    body?: InlineObject2;
+}
+
+export interface ApiV2BookPostRequest {
+    body?: InlineObject3;
 }
 
 export interface ApiV2LtiLaunchPostRequest {
@@ -59,6 +87,23 @@ export interface ApiV2LtiResourceLinkLtiResourceLinkIdPostRequest {
     body?: InlineObject1;
 }
 
+export interface ApiV2TopicPostRequest {
+    body?: InlineObject5;
+}
+
+export interface ApiV2TopicTopicIdDeleteRequest {
+    topicId: number;
+}
+
+export interface ApiV2TopicTopicIdGetRequest {
+    topicId: number;
+}
+
+export interface ApiV2TopicTopicIdPutRequest {
+    topicId: number;
+    body?: InlineObject4;
+}
+
 export interface ApiV2TopicsGetRequest {
     page?: number;
     perPage?: number;
@@ -74,6 +119,36 @@ export interface ApiV2UserUserIdBooksGetRequest {
  * 
  */
 export class DefaultApi extends runtime.BaseAPI {
+
+    /**
+     * ブックの削除
+     */
+    async apiV2BookBookIdDeleteRaw(requestParameters: ApiV2BookBookIdDeleteRequest): Promise<runtime.ApiResponse<object>> {
+        if (requestParameters.bookId === null || requestParameters.bookId === undefined) {
+            throw new runtime.RequiredError('bookId','Required parameter requestParameters.bookId was null or undefined when calling apiV2BookBookIdDelete.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/api/v2/book/{book_id}`.replace(`{${"book_id"}}`, encodeURIComponent(String(requestParameters.bookId))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse<any>(response);
+    }
+
+    /**
+     * ブックの削除
+     */
+    async apiV2BookBookIdDelete(requestParameters: ApiV2BookBookIdDeleteRequest): Promise<object> {
+        const response = await this.apiV2BookBookIdDeleteRaw(requestParameters);
+        return await response.value();
+    }
 
     /**
      * ブックの詳細の取得
@@ -102,6 +177,68 @@ export class DefaultApi extends runtime.BaseAPI {
      */
     async apiV2BookBookIdGet(requestParameters: ApiV2BookBookIdGetRequest): Promise<InlineResponse2001Books> {
         const response = await this.apiV2BookBookIdGetRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * ブックの更新
+     */
+    async apiV2BookBookIdPutRaw(requestParameters: ApiV2BookBookIdPutRequest): Promise<runtime.ApiResponse<InlineResponse2001Books>> {
+        if (requestParameters.bookId === null || requestParameters.bookId === undefined) {
+            throw new runtime.RequiredError('bookId','Required parameter requestParameters.bookId was null or undefined when calling apiV2BookBookIdPut.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/api/v2/book/{book_id}`.replace(`{${"book_id"}}`, encodeURIComponent(String(requestParameters.bookId))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: InlineObject2ToJSON(requestParameters.body),
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2001BooksFromJSON(jsonValue));
+    }
+
+    /**
+     * ブックの更新
+     */
+    async apiV2BookBookIdPut(requestParameters: ApiV2BookBookIdPutRequest): Promise<InlineResponse2001Books> {
+        const response = await this.apiV2BookBookIdPutRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * ブックの作成
+     */
+    async apiV2BookPostRaw(requestParameters: ApiV2BookPostRequest): Promise<runtime.ApiResponse<InlineResponse2001Books>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/api/v2/book`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: InlineObject3ToJSON(requestParameters.body),
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2001BooksFromJSON(jsonValue));
+    }
+
+    /**
+     * ブックの作成
+     */
+    async apiV2BookPost(requestParameters: ApiV2BookPostRequest): Promise<InlineResponse2001Books> {
+        const response = await this.apiV2BookPostRaw(requestParameters);
         return await response.value();
     }
 
@@ -249,6 +386,128 @@ export class DefaultApi extends runtime.BaseAPI {
      */
     async apiV2SessionGet(): Promise<InlineResponse2003> {
         const response = await this.apiV2SessionGetRaw();
+        return await response.value();
+    }
+
+    /**
+     * トピックの作成
+     */
+    async apiV2TopicPostRaw(requestParameters: ApiV2TopicPostRequest): Promise<runtime.ApiResponse<InlineResponse2001Topics>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/api/v2/topic`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: InlineObject5ToJSON(requestParameters.body),
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2001TopicsFromJSON(jsonValue));
+    }
+
+    /**
+     * トピックの作成
+     */
+    async apiV2TopicPost(requestParameters: ApiV2TopicPostRequest): Promise<InlineResponse2001Topics> {
+        const response = await this.apiV2TopicPostRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * トピックの削除
+     */
+    async apiV2TopicTopicIdDeleteRaw(requestParameters: ApiV2TopicTopicIdDeleteRequest): Promise<runtime.ApiResponse<object>> {
+        if (requestParameters.topicId === null || requestParameters.topicId === undefined) {
+            throw new runtime.RequiredError('topicId','Required parameter requestParameters.topicId was null or undefined when calling apiV2TopicTopicIdDelete.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/api/v2/topic/{topic_id}`.replace(`{${"topic_id"}}`, encodeURIComponent(String(requestParameters.topicId))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse<any>(response);
+    }
+
+    /**
+     * トピックの削除
+     */
+    async apiV2TopicTopicIdDelete(requestParameters: ApiV2TopicTopicIdDeleteRequest): Promise<object> {
+        const response = await this.apiV2TopicTopicIdDeleteRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * トピックの詳細の取得
+     */
+    async apiV2TopicTopicIdGetRaw(requestParameters: ApiV2TopicTopicIdGetRequest): Promise<runtime.ApiResponse<InlineResponse2001Topics>> {
+        if (requestParameters.topicId === null || requestParameters.topicId === undefined) {
+            throw new runtime.RequiredError('topicId','Required parameter requestParameters.topicId was null or undefined when calling apiV2TopicTopicIdGet.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/api/v2/topic/{topic_id}`.replace(`{${"topic_id"}}`, encodeURIComponent(String(requestParameters.topicId))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2001TopicsFromJSON(jsonValue));
+    }
+
+    /**
+     * トピックの詳細の取得
+     */
+    async apiV2TopicTopicIdGet(requestParameters: ApiV2TopicTopicIdGetRequest): Promise<InlineResponse2001Topics> {
+        const response = await this.apiV2TopicTopicIdGetRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * トピックの更新
+     */
+    async apiV2TopicTopicIdPutRaw(requestParameters: ApiV2TopicTopicIdPutRequest): Promise<runtime.ApiResponse<InlineResponse2001Topics>> {
+        if (requestParameters.topicId === null || requestParameters.topicId === undefined) {
+            throw new runtime.RequiredError('topicId','Required parameter requestParameters.topicId was null or undefined when calling apiV2TopicTopicIdPut.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/api/v2/topic/{topic_id}`.replace(`{${"topic_id"}}`, encodeURIComponent(String(requestParameters.topicId))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: InlineObject4ToJSON(requestParameters.body),
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2001TopicsFromJSON(jsonValue));
+    }
+
+    /**
+     * トピックの更新
+     */
+    async apiV2TopicTopicIdPut(requestParameters: ApiV2TopicTopicIdPutRequest): Promise<InlineResponse2001Topics> {
+        const response = await this.apiV2TopicTopicIdPutRaw(requestParameters);
         return await response.value();
     }
 
