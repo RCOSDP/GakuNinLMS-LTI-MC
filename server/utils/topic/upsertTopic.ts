@@ -12,7 +12,7 @@ import topicCreateInput from "./topicCreateInput";
 function topicUpdateInput(creatorId: User["id"], topic: TopicProps) {
   const input = {
     ...topicInput(creatorId, topic),
-    resource: { upsert: resourceCreateInput(topic.resource) },
+    resource: resourceCreateInput(topic.resource),
   };
 
   return input;
@@ -20,16 +20,16 @@ function topicUpdateInput(creatorId: User["id"], topic: TopicProps) {
 
 async function upsertTopic(
   creatorId: User["id"],
-  topic: TopicProps & { id: Topic["id"] }
+  { id, ...topic }: TopicProps & { id: Topic["id"] }
 ): Promise<TopicSchema | undefined> {
   const upsert = prisma.topic.upsert({
-    where: { id: topic.id },
+    where: { id },
     create: topicCreateInput(creatorId, topic),
     update: topicUpdateInput(creatorId, topic),
   });
   const find = prisma.topic.findUnique({
     ...topicsWithResourcesArg,
-    where: { id: topic.id },
+    where: { id },
   });
   const [, created] = await prisma.$transaction([upsert, find]);
 

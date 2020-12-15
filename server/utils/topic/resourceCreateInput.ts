@@ -13,11 +13,7 @@ function resourceCreateInput(resource: ResourceProps) {
     video: videoCreateInput,
   };
 
-  return {
-    where: { url: resourceInput.url },
-    create: resourceInput,
-    update: resourceInput,
-  };
+  return { create: resourceInput };
 }
 
 export default resourceCreateInput;

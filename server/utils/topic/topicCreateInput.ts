@@ -4,10 +4,12 @@ import topicInput from "./topicInput";
 import resourceCreateInput from "./resourceCreateInput";
 
 function topicCreateInput(creatorId: User["id"], topic: TopicProps) {
-  const { where, create } = resourceCreateInput(topic.resource);
+  const { create } = resourceCreateInput(topic.resource);
   const input = {
     ...topicInput(creatorId, topic),
-    resource: { connectOrCreate: { where, create } },
+    resource: {
+      connectOrCreate: { where: { url: topic.resource.url }, create },
+    },
   };
 
   return input;
