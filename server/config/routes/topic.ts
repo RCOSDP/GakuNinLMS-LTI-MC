@@ -1,10 +1,10 @@
 import { FastifyInstance } from "fastify";
 import handler from "$server/utils/handler";
-import * as service from "$server/services/book";
+import * as service from "$server/services/topic";
 
-export async function book(fastify: FastifyInstance) {
-  const basePath = "/book";
-  const pathWithParams = `${basePath}/:book_id`;
+export async function topic(fastify: FastifyInstance) {
+  const basePath = "/topic";
+  const pathWithParams = `${basePath}/:topic_id`;
   const { method, show, create, update, destroy } = service;
   const preHandler = service.preHandler(fastify);
 

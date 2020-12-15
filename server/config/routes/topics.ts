@@ -1,6 +1,6 @@
 import { FastifyInstance } from "fastify";
 import handler from "$server/utils/handler";
-import { IndexQuery, indexService } from "$server/services/topic";
+import { IndexQuery, indexService } from "$server/services/topics";
 
 export async function topics(fastify: FastifyInstance) {
   fastify.get<{

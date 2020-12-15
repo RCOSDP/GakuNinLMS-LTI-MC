@@ -8,6 +8,7 @@ export const showSchema: FastifySchema = {
   params: bookParamsSchema,
   response: {
     200: bookSchema,
+    404: {},
   },
 };
 
@@ -16,7 +17,7 @@ export async function show({ params }: { params: BookParams }) {
   const book = await findBook(bookId);
 
   return {
-    status: 200,
+    status: book == null ? 404 : 200,
     body: book,
   };
 }

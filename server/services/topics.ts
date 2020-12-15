@@ -4,7 +4,7 @@ import {
   PaginationProps,
   paginationPropsSchema,
 } from "$server/validators/paginationProps";
-import { findTopics } from "$server/utils/topic";
+import findTopics from "$server/utils/topic/findTopics";
 import { authInstructorHandler } from "$server/utils/authInstructorHandler";
 
 export type IndexQuery = PaginationProps;

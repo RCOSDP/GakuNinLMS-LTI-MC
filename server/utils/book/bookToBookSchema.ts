@@ -6,7 +6,7 @@ import {
   topicsWithResourcesArg,
   topicToTopicSchema,
   TopicWithResource,
-} from "$server/utils/topicToTopicSchema";
+} from "$server/utils/topic/topicToTopicSchema";
 import {
   ltiResourceLinkIncludingContextArg,
   ltiResourceLinkToSchema,

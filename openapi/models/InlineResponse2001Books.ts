@@ -54,6 +54,18 @@ export interface InlineResponse2001Books {
     _abstract?: string;
     /**
      * 
+     * @type {string}
+     * @memberof InlineResponse2001Books
+     */
+    language?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof InlineResponse2001Books
+     */
+    shared?: boolean;
+    /**
+     * 
      * @type {Date}
      * @memberof InlineResponse2001Books
      */
@@ -109,6 +121,8 @@ export function InlineResponse2001BooksFromJSONTyped(json: any, ignoreDiscrimina
         'id': !exists(json, 'id') ? undefined : json['id'],
         'name': !exists(json, 'name') ? undefined : json['name'],
         '_abstract': !exists(json, 'abstract') ? undefined : json['abstract'],
+        'language': !exists(json, 'language') ? undefined : json['language'],
+        'shared': !exists(json, 'shared') ? undefined : json['shared'],
         'publishedAt': !exists(json, 'publishedAt') ? undefined : (new Date(json['publishedAt'])),
         'createdAt': !exists(json, 'createdAt') ? undefined : (new Date(json['createdAt'])),
         'updatedAt': !exists(json, 'updatedAt') ? undefined : (new Date(json['updatedAt'])),
@@ -131,6 +145,8 @@ export function InlineResponse2001BooksToJSON(value?: InlineResponse2001Books | 
         'id': value.id,
         'name': value.name,
         'abstract': value._abstract,
+        'language': value.language,
+        'shared': value.shared,
         'publishedAt': value.publishedAt === undefined ? undefined : (value.publishedAt.toISOString()),
         'createdAt': value.createdAt === undefined ? undefined : (value.createdAt.toISOString()),
         'updatedAt': value.updatedAt === undefined ? undefined : (value.updatedAt.toISOString()),
