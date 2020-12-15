@@ -1,40 +1,17 @@
 import { Topic, Section, TopicSection } from "@prisma/client";
-import { TopicProps, TopicSchema } from "$server/models/topic";
+import { UserSchema } from "$server/models/user";
 import { BookProps } from "$server/models/book";
 import { SectionProps } from "$server/models/book/section";
 import prisma from "$server/utils/prisma";
-import { topicCreateInput } from "$server/utils/topic";
 
-const topicSectionCreateInput = (creatorId: Topic["creatorId"]) => (
-  topic: TopicProps | TopicSchema,
+const topicSectionCreateInput = (
+  topicId: Topic["id"],
   order: TopicSection["order"]
-) => {
-  const topicInput = topicCreateInput({ ...topic, creator: { id: creatorId } });
+) => ({ order, topic: { connect: { id: topicId } } });
 
-  if (!("id" in topic)) {
-    return {
-      order: order,
-      topic: { create: topicInput },
-    };
-  }
-
-  return {
-    order: order,
-    topic: {
-      connectOrCreate: {
-        where: { id: topic.id },
-        create: topicInput,
-      },
-    },
-  };
-};
-
-const sectionCreateInput = (creatorId: Topic["creatorId"]) => (
-  section: SectionProps,
-  order: Section["order"]
-) => {
-  const topicSectionsCreateInput = section.topics.map(
-    topicSectionCreateInput(creatorId)
+const sectionCreateInput = (section: SectionProps, order: Section["order"]) => {
+  const topicSectionsCreateInput = section.topicIds.map(
+    topicSectionCreateInput
   );
 
   return {
@@ -46,16 +23,14 @@ const sectionCreateInput = (creatorId: Topic["creatorId"]) => (
   };
 };
 
-async function createBook(book: BookProps) {
-  const { author, ...props } = book;
-
-  const sectionsCreateInput = book.sections.map(sectionCreateInput(author.id));
+async function createBook(authorId: UserSchema["id"], book: BookProps) {
+  const sectionsCreateInput = book.sections.map(sectionCreateInput);
 
   const { id } = await prisma.book.create({
     data: {
-      ...props,
+      ...book,
       details: {},
-      author: { connect: { id: author.id } },
+      author: { connect: { id: authorId } },
       sections: { create: sectionsCreateInput },
     },
   });

@@ -1,10 +1,25 @@
-import { Section } from "@prisma/client";
+import { Section, Topic } from "@prisma/client";
 import jsonSchema from "$server/prisma/json-schema.json";
-import { TopicProps, TopicSchema, topicSchema } from "$server/models/topic";
+import { TopicSchema, topicSchema } from "$server/models/topic";
 
 export type SectionProps = {
   name?: Section["name"];
-  topics: Array<TopicProps>;
+  topicIds: Array<Topic["id"]>;
+};
+
+const { id: topicId } = jsonSchema.definitions.Topic.properties;
+export const sectionPropsSchema = {
+  type: "object",
+  properties: {
+    name: {
+      type: "string",
+      nullable: true,
+    },
+    topicIds: {
+      type: "array",
+      items: topicId,
+    },
+  },
 };
 
 export type SectionSchema = Pick<Section, "id" | "name"> & {

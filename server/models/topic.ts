@@ -1,13 +1,12 @@
-import { Topic } from "@prisma/client";
+import { Topic, Prisma } from "@prisma/client";
 import jsonSchema from "$server/prisma/json-schema.json";
 import { ResourceProps, ResourceSchema, resourceSchema } from "./resource";
 import { UserSchema, userSchema } from "./user";
 
 export type TopicProps = Pick<
-  Topic,
+  Prisma.TopicCreateWithoutCreatorInput,
   "name" | "timeRequired" | "description"
 > & {
-  creator: Pick<UserSchema, "id">;
   resource: ResourceProps;
 };
 

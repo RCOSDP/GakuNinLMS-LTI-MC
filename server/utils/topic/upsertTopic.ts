@@ -1,12 +1,8 @@
-import { User } from "@prisma/client";
-import { TopicProps, TopicSchema } from "$server/models/topic";
+import { User, Topic } from "@prisma/client";
+import { TopicProps } from "$server/models/topic";
 import { ResourceProps } from "$server/models/resource";
 import { parse } from "$server/utils/videoResource";
-import prisma from "./prisma";
-import {
-  topicsWithResourcesArg,
-  topicToTopicSchema,
-} from "./topicToTopicSchema";
+import prisma from "../prisma";
 
 function resourceInput(resource: ResourceProps) {
   const videoProviderUrl = parse(resource.url)?.providerUrl;
@@ -27,46 +23,42 @@ function resourceInput(resource: ResourceProps) {
   };
 }
 
-function topicInput(topic: TopicProps) {
-  const { creator, ...props } = topic;
-
+function topicInput(creatorId: User["id"], topic: TopicProps) {
   return {
-    ...props,
+    ...topic,
     details: {},
-    creator: { connect: { id: creator.id } },
+    creator: { connect: { id: creatorId } },
   };
 }
 
-export function topicCreateInput(
-  topic: TopicProps & { creator: { id: User["id"] } }
-) {
+function topicCreateInput(creatorId: User["id"], topic: TopicProps) {
   const { where, create } = resourceInput(topic.resource);
   const topicCreateInput = {
-    ...topicInput(topic),
+    ...topicInput(creatorId, topic),
     resource: { connectOrCreate: { where, create } },
   };
 
   return topicCreateInput;
 }
 
-export function topicUpdateInput(topic: TopicSchema) {
+function topicUpdateInput(creatorId: User["id"], topic: TopicProps) {
   const input = {
-    ...topicInput(topic),
+    ...topicInput(creatorId, topic),
     resource: { upsert: resourceInput(topic.resource) },
   };
 
   return input;
 }
 
-export async function findTopics(
-  page: number,
-  perPage: number
-): Promise<TopicSchema[]> {
-  const topics = await prisma.topic.findMany({
-    ...topicsWithResourcesArg,
-    skip: page * perPage,
-    take: perPage,
+async function upsertTopic(
+  creatorId: User["id"],
+  topic: TopicProps & { id: Topic["id"] }
+) {
+  prisma.topic.upsert({
+    where: { id: topic.id },
+    create: topicCreateInput(creatorId, topic),
+    update: topicUpdateInput(creatorId, topic),
   });
-
-  return topics.map(topicToTopicSchema);
 }
+
+export default upsertTopic;
