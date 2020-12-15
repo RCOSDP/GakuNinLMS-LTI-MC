@@ -1,4 +1,4 @@
-import { Book, Prisma } from "@prisma/client";
+import { Book } from "@prisma/client";
 import prisma from "$server/utils/prisma";
 
 async function cleanupSections(id: Book["id"]) {
@@ -11,9 +11,9 @@ async function cleanupSections(id: Book["id"]) {
     sections.flatMap(({ id }) => {
       return [
         prisma.topicSection.deleteMany({ where: { sectionId: id } }),
-        prisma.section.delete({ where: { id } }),
+        prisma.section.deleteMany({ where: { id } }),
       ];
-    }) as Promise<Prisma.BatchPayload>[]
+    })
   );
 }
 
