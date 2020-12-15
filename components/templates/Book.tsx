@@ -41,7 +41,9 @@ export default function Book(props: Props) {
     onTopicEnded,
     onItemClick,
   } = props;
-  const topic = book.sections[sectionIndex].topics[topicIndex];
+  const topic = book.sections
+    ? book.sections[sectionIndex].topics[topicIndex]
+    : null;
   const classes = useStyles();
   const containerClasses = useContainerStyles();
   const handleItemClick = (_: never, index: [number, number]) => {
@@ -68,8 +70,11 @@ export default function Book(props: Props) {
             LTIリンクの再連携
           </Button>
         </Typography>
-        <TopicViewer {...topic} onEnded={onTopicEnded} />
-        <BookChildren sections={book.sections} onItemClick={handleItemClick} />
+        {topic && <TopicViewer {...topic} onEnded={onTopicEnded} />}
+        <BookChildren
+          sections={book.sections ?? []}
+          onItemClick={handleItemClick}
+        />
       </Container>
     </>
   );
