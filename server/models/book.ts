@@ -38,7 +38,7 @@ const {
   details,
 } = jsonSchema.definitions.Book.properties;
 
-export const bookCreatePropsSchema = {
+export const bookPropsSchema = {
   type: "object",
   properties: {
     name,

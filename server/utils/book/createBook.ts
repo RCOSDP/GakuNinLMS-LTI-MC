@@ -1,29 +1,13 @@
-import { Topic, Section, TopicSection } from "@prisma/client";
 import { UserSchema } from "$server/models/user";
-import { BookProps } from "$server/models/book";
-import { SectionProps } from "$server/models/book/section";
+import { BookProps, BookSchema } from "$server/models/book";
 import prisma from "$server/utils/prisma";
+import findBook from "./findBook";
+import sectionCreateInput from "./sectionCreateInput";
 
-const topicSectionCreateInput = (
-  topicId: Topic["id"],
-  order: TopicSection["order"]
-) => ({ order, topic: { connect: { id: topicId } } });
-
-const sectionCreateInput = (section: SectionProps, order: Section["order"]) => {
-  const topicSectionsCreateInput = section.topicIds.map(
-    topicSectionCreateInput
-  );
-
-  return {
-    order,
-    name: section.name,
-    topicSections: {
-      create: topicSectionsCreateInput,
-    },
-  };
-};
-
-async function createBook(authorId: UserSchema["id"], book: BookProps) {
+async function createBook(
+  authorId: UserSchema["id"],
+  book: BookProps
+): Promise<BookSchema | undefined> {
   const sectionsCreateInput = book.sections.map(sectionCreateInput);
 
   const { id } = await prisma.book.create({
@@ -35,10 +19,7 @@ async function createBook(authorId: UserSchema["id"], book: BookProps) {
     },
   });
 
-  return {
-    ...book,
-    id,
-  };
+  return findBook(id);
 }
 
 export default createBook;

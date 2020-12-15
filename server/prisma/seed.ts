@@ -1,5 +1,6 @@
 import dotenv from "dotenv";
 import prisma from "$server/utils/prisma";
+import { BookSchema } from "$server/models/book";
 import users from "$server/config/seeds/users";
 import topics from "$server/config/seeds/topics";
 import books from "$server/config/seeds/books";
@@ -20,9 +21,9 @@ async function main() {
 
     await Promise.all(topics.map((topic) => upsertTopic(authorId, topic)));
 
-    const createdBooks = await Promise.all(
+    const createdBooks = (await Promise.all(
       books.map((book) => createBook(authorId, book))
-    );
+    )) as BookSchema[];
 
     await Promise.all(
       ltiResourceLinks
