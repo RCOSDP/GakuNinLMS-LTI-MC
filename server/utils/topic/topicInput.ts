@@ -6,6 +6,7 @@ function topicInput(creatorId: User["id"], topic: TopicProps) {
     ...topic,
     details: {},
     creator: { connect: { id: creatorId } },
+    updatedAt: new Date(),
   };
 }
 
