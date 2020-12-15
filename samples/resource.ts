@@ -1,7 +1,7 @@
 const resource = {
   id: 1,
   videoId: 1,
-  url: "YzVwrvbz_XA",
+  url: "https://www.youtube.com/watch?v=YzVwrvbz_XA",
   details: {},
 };
 
