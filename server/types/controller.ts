@@ -10,9 +10,7 @@ import { RouteGenericInterface } from "fastify/types/route";
 type Controller<
   RouteGeneric extends RouteGenericInterface = RouteGenericInterface,
   RawServer extends RawServerBase = RawServerDefault,
-  RawRequest extends RawRequestDefaultExpression<
-    RawServer
-  > = RawRequestDefaultExpression<RawServer>
+  RawRequest extends RawRequestDefaultExpression<RawServer> = RawRequestDefaultExpression<RawServer>
 > = {
   [K in Lowercase<HTTPMethods>]?: (
     req: FastifyRequest<RouteGeneric, RawServer, RawRequest>
