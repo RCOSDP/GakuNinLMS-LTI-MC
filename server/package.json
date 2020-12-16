@@ -7,8 +7,10 @@
   "private": true,
   "scripts": {
     "test": "jest",
-    "dev": "nodemon --ext js,ts,json --exec 'ncc run -t | pino-pretty'",
-    "build": "run-s migrate build:prisma seed build:app",
+    "dev": "run-p dev:*",
+    "dev:app": "nodemon --ext js,ts,json --exec 'ncc run -t | pino-pretty'",
+    "dev:db": "run-s migrate seed",
+    "build": "run-s build:prisma build:app",
     "build:app": "ncc build -t --target es2020",
     "build:prisma": "prisma generate",
     "migrate": "prisma migrate dev --preview-feature",

@@ -35,7 +35,7 @@ services:
       OAUTH_CONSUMER_KEY: test
       OAUTH_CONSUMER_SECRET: test
       DATABASE_URL: postgresql://postgres:password@db/postgres
-    command: "sh -c 'cd /app && yarn && yarn --cwd server build && yarn dev'"
+    command: "sh -c 'cd /app && yarn && yarn dev'"
     volumes: ["./:/app"]
     ports:
       - "3000:3000"
