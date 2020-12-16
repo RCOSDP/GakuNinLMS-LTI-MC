@@ -5,7 +5,10 @@ import cleanupSections from "./cleanupSections";
 async function destroyBook(id: Book["id"]) {
   try {
     await cleanupSections(id);
-    await prisma.book.delete({ where: { id } });
+    await prisma.$transaction([
+      prisma.ltiResourceLink.deleteMany({ where: { bookId: id } }),
+      prisma.book.deleteMany({ where: { id } }),
+    ]);
   } catch {
     return;
   }
