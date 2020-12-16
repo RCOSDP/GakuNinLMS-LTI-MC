@@ -38,7 +38,7 @@ export const Empty = wrap(() => {
 
   return (
     <Book
-      book={{} as Types.Book}
+      book={null}
       index={index}
       onTopicEnded={handleTopicEnded}
       onItemClick={handleItemClick}

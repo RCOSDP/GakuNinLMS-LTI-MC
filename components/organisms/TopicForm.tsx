@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-type Props = { topic: Topic; submitLabel?: string };
+type Props = { topic: Topic | null; submitLabel?: string };
 
 export default function TopicForm(props: Props) {
   const { topic, submitLabel = "更新" } = props;
@@ -62,7 +62,7 @@ export default function TopicForm(props: Props) {
             </Typography>
           </span>
         }
-        defaultValue={topic.name}
+        defaultValue={topic?.name}
         required
         fullWidth
       />
@@ -86,7 +86,7 @@ export default function TopicForm(props: Props) {
             </Typography>
           </span>
         }
-        defaultValue={topic.resource?.url ?? ""}
+        defaultValue={topic?.resource.url}
         required
         fullWidth
       />
@@ -106,12 +106,12 @@ export default function TopicForm(props: Props) {
       <TextField
         id="timeRequired"
         label="学習時間"
-        defaultValue={topic.timeRequired}
+        defaultValue={topic?.timeRequired}
       />
       <TextField
         id="description"
         label="解説"
-        defaultValue={topic.description}
+        defaultValue={topic?.description}
         fullWidth
         multiline
       />

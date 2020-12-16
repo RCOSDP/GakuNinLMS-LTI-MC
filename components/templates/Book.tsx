@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type Props = {
-  book: Types.Book;
+  book: Types.Book | null;
   index: [number, number];
   onTopicEnded(): void;
   onItemClick(index: [number, number]): void;
@@ -41,9 +41,7 @@ export default function Book(props: Props) {
     onTopicEnded,
     onItemClick,
   } = props;
-  const topic = book.sections
-    ? book.sections[sectionIndex].topics[topicIndex]
-    : null;
+  const topic = book?.sections[sectionIndex].topics[topicIndex];
   const classes = useStyles();
   const containerClasses = useContainerStyles();
   const handleItemClick = (_: never, index: [number, number]) => {
@@ -58,7 +56,7 @@ export default function Book(props: Props) {
         maxWidth="md"
       >
         <Typography className={classes.title} variant="h4" gutterBottom={true}>
-          {book.name}
+          {book?.name}
           <IconButton>
             <InfoOutlinedIcon />
           </IconButton>
@@ -72,7 +70,7 @@ export default function Book(props: Props) {
         </Typography>
         {topic && <TopicViewer {...topic} onEnded={onTopicEnded} />}
         <BookChildren
-          sections={book.sections ?? []}
+          sections={book?.sections ?? []}
           onItemClick={handleItemClick}
         />
       </Container>

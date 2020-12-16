@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-type Props = { book: Book; submitLabel?: string };
+type Props = { book: Book | null; submitLabel?: string };
 
 export default function BookForm(props: Props) {
   const { book, submitLabel = "更新" } = props;
@@ -62,7 +62,7 @@ export default function BookForm(props: Props) {
             </Typography>
           </span>
         }
-        defaultValue={book.name}
+        defaultValue={book?.name}
         required
         fullWidth
       />
