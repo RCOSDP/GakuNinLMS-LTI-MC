@@ -3,7 +3,7 @@ import fastifyStatic from "fastify-static";
 import path from "path";
 import {
   PORT,
-  BASE_PATH,
+  API_BASE_PATH,
   SESSION_SECRET,
   FRONTEND_ORIGIN,
   FRONTEND_PATH,
@@ -20,7 +20,7 @@ fastify({ logger: isDev })
     extensions: ["html"],
   })
   .register(app, {
-    basePath: BASE_PATH,
+    basePath: API_BASE_PATH,
     allowOrigin: [FRONTEND_ORIGIN],
     sessionSecret: SESSION_SECRET,
     sessionStore: sessionStore as Options["sessionStore"],
