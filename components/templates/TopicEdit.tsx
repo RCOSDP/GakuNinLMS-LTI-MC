@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-type Props = { topic: Topic };
+type Props = { topic: Topic | null };
 
 export default function TopicEdit(props: Props) {
   const { topic } = props;

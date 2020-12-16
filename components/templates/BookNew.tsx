@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-type Props = { book: Book };
+type Props = { book: Book | null };
 
 export default function BookNew(props: Props) {
   const { book } = props;

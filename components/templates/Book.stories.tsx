@@ -29,3 +29,18 @@ export const Default = wrap(() => {
     />
   );
 });
+
+export const Empty = wrap(() => {
+  const [index, nextItemIndex] = useAtom(nextItemIndexAtom);
+  const handleTopicEnded = () => nextItemIndex();
+  const handleItemClick = nextItemIndex;
+
+  return (
+    <Book
+      book={null}
+      index={index}
+      onTopicEnded={handleTopicEnded}
+      onItemClick={handleItemClick}
+    />
+  );
+});
