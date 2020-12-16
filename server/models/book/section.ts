@@ -3,7 +3,8 @@ import jsonSchema from "$server/prisma/json-schema.json";
 import { TopicSchema, topicSchema } from "$server/models/topic";
 
 export type SectionProps = {
-  name?: Section["name"];
+  // NOTE: Section<"name"> を使うと openapi-generator によって生成される型と整合せず
+  name?: string;
   topicIds: Array<Topic["id"]>;
 };
 
