@@ -2,7 +2,6 @@ export default { title: "templates/Book" };
 
 import { useAtom } from "jotai";
 import { nextItemIndexAtom } from "$store/book";
-import type * as Types from "types/book";
 import Book from "./Book";
 import { book } from "samples";
 
