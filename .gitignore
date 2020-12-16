@@ -2,7 +2,7 @@
 /track/
 /config.php
 /.next/
-/v1/
 /eslint_report.json
 node_modules/
 .env
+/server/static/

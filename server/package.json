@@ -33,6 +33,7 @@
     "fastify-helmet": "^5.0.3",
     "fastify-multipart": "^3.3.1",
     "fastify-session": "^5.2.1",
+    "fastify-static": "^3.3.0",
     "fastify-swagger": "^3.5.0",
     "jest": "^26.6.3",
     "nodemon": "^2.0.6",
