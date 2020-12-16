@@ -33,5 +33,4 @@ export async function destroyLtiResourceLink(id: LtiResourceLinkSchema["id"]) {
   await api.apiV2LtiResourceLinkLtiResourceLinkIdDelete({
     ltiResourceLinkId: id,
   });
-  await mutate([key, id], undefined);
 }
