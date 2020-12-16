@@ -7,3 +7,5 @@ const props = { books };
 const onBookClick = console.log;
 
 export const Default = () => <Books {...props} onBookClick={onBookClick} />;
+
+export const Empty = () => <Books books={[]} onBookClick={onBookClick} />;

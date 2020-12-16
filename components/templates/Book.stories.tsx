@@ -2,6 +2,7 @@ export default { title: "templates/Book" };
 
 import { useAtom } from "jotai";
 import { nextItemIndexAtom } from "$store/book";
+import type * as Types from "types/book";
 import Book from "./Book";
 import { book } from "samples";
 
@@ -23,6 +24,21 @@ export const Default = wrap(() => {
   return (
     <Book
       {...props}
+      index={index}
+      onTopicEnded={handleTopicEnded}
+      onItemClick={handleItemClick}
+    />
+  );
+});
+
+export const Empty = wrap(() => {
+  const [index, nextItemIndex] = useAtom(nextItemIndexAtom);
+  const handleTopicEnded = () => nextItemIndex();
+  const handleItemClick = nextItemIndex;
+
+  return (
+    <Book
+      book={{} as Types.Book}
       index={index}
       onTopicEnded={handleTopicEnded}
       onItemClick={handleItemClick}
