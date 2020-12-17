@@ -5,6 +5,7 @@ import AppBar from "$organisms/AppBar";
 import BookForm from "$organisms/BookForm";
 import RequiredDot from "$atoms/RequiredDot";
 import useContainerStyles from "styles/container";
+import { BookProps } from "$server/models/book";
 import { Book } from "types/book";
 
 const useStyles = makeStyles((theme) => ({
@@ -28,10 +29,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-type Props = { book: Book | null };
+type Props = { book: Book | null; onSubmit?: (book: BookProps) => void };
 
 export default function BookNew(props: Props) {
-  const { book } = props;
+  const { book, onSubmit } = props;
   const classes = useStyles();
   const containerClasses = useContainerStyles();
 
@@ -50,7 +51,7 @@ export default function BookNew(props: Props) {
             は必須項目です
           </Typography>
         </Typography>
-        <BookForm book={book} submitLabel="作成" />
+        <BookForm book={book} submitLabel="作成" onSubmit={onSubmit} />
       </Container>
     </>
   );

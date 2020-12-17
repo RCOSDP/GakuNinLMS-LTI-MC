@@ -2,7 +2,14 @@ import type * as Prisma from "@prisma/client";
 
 export type Book = Pick<
   Prisma.Book,
-  "id" | "name" | "createdAt" | "updatedAt"
+  | "id"
+  | "name"
+  | "abstract"
+  | "language"
+  | "timeRequired"
+  | "shared"
+  | "createdAt"
+  | "updatedAt"
 > & {
   author: Pick<Prisma.User, "name">;
   sections: Section[];

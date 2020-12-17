@@ -1,4 +1,3 @@
-import { useState, ChangeEvent } from "react";
 import Card from "@material-ui/core/Card";
 import Checkbox from "@material-ui/core/Checkbox";
 import Button from "@material-ui/core/Button";
@@ -6,10 +5,12 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
+import { useForm, Controller } from "react-hook-form";
 import TextField from "$atoms/TextField";
 import useCardStyles from "styles/card";
 import useInputLabelStyles from "styles/inputLabel";
 import gray from "theme/colors/gray";
+import { BookProps } from "$server/models/book";
 import { Book } from "types/book";
 
 const languages = [
@@ -35,21 +36,38 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-type Props = { book: Book | null; submitLabel?: string };
+type Props = {
+  book: Book | null;
+  submitLabel?: string;
+  onSubmit?: (book: BookProps) => void;
+};
 
 export default function BookForm(props: Props) {
-  const { book, submitLabel = "更新" } = props;
+  const { book, submitLabel = "更新", onSubmit = () => undefined } = props;
   const cardClasses = useCardStyles();
   const inputLabelClasses = useInputLabelStyles();
   const classes = useStyles();
-  const [language, setLanguage] = useState("ja");
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setLanguage(event.target.value);
+  const defaultValues = {
+    name: book?.name,
+    shared: book?.shared ?? true,
+    language: book?.language ?? languages[0].value,
+    timeRequired: book?.timeRequired,
+    abstract: book?.abstract ?? "",
   };
+  const { handleSubmit, register, control } = useForm<BookProps>({
+    defaultValues,
+  });
+
   return (
-    <Card classes={cardClasses} className={classes.margin}>
+    <Card
+      classes={cardClasses}
+      className={classes.margin}
+      component="form"
+      onSubmit={handleSubmit(onSubmit)}
+    >
       <TextField
-        id="title"
+        name="name"
+        inputRef={register}
         label={
           <span>
             タイトル
@@ -62,32 +80,55 @@ export default function BookForm(props: Props) {
             </Typography>
           </span>
         }
-        defaultValue={book?.name}
         required
         fullWidth
       />
       <div>
-        <InputLabel classes={inputLabelClasses} htmlFor="share">
+        <InputLabel classes={inputLabelClasses} htmlFor="shared">
           他の編集者に共有
         </InputLabel>
-        <Checkbox id="share" color="primary" />
+        <Checkbox
+          id="shared"
+          name="shared"
+          inputRef={register}
+          defaultChecked={defaultValues.shared}
+          color="primary"
+        />
       </div>
+      <Controller
+        name="language"
+        control={control}
+        defaultValue={defaultValues.language}
+        render={(props) => (
+          <TextField label="教材の主要な言語" select inputProps={props}>
+            {languages.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>
+        )}
+      />
       <TextField
-        id="inLanguage"
-        label="教材の主要な言語"
-        select
-        value={language}
-        onChange={handleChange}
-      >
-        {languages.map((option) => (
-          <MenuItem key={option.value} value={option.value}>
-            {option.label}
-          </MenuItem>
-        ))}
-      </TextField>
-      <TextField id="timeRequired" label="学習時間" />
-      <TextField id="description" label="解説" fullWidth multiline />
-      <Button variant="contained" color="primary">
+        label="学習時間 (秒)"
+        name="timeRequired"
+        type="number"
+        inputProps={{
+          ref: register({
+            setValueAs: (value) => (value === "" ? null : +value),
+            min: 0,
+          }),
+          min: 0,
+        }}
+      />
+      <TextField
+        label="解説"
+        fullWidth
+        multiline
+        name="abstract"
+        inputRef={register}
+      />
+      <Button variant="contained" color="primary" type="submit">
         {submitLabel}
       </Button>
     </Card>
