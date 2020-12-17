@@ -119,6 +119,7 @@ model LtiResourceLink {
   @@map("lti_resource_link")
 }
 
+// TODO: abstract は description/概要 に改名すべし
 /// ブック
 model Book {
   id               Int               @id @default(autoincrement())
