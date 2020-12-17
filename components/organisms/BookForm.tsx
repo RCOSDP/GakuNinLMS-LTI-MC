@@ -47,7 +47,16 @@ export default function BookForm(props: Props) {
   const cardClasses = useCardStyles();
   const inputLabelClasses = useInputLabelStyles();
   const classes = useStyles();
-  const { handleSubmit, control } = useForm<BookProps>();
+  const defaultValues = {
+    name: book?.name,
+    shared: book?.shared ?? true,
+    language: book?.language ?? languages[0].value,
+    timeRequired: book?.timeRequired,
+    abstract: book?.abstract ?? "",
+  };
+  const { handleSubmit, register, control } = useForm<BookProps>({
+    defaultValues,
+  });
 
   return (
     <Card
@@ -56,55 +65,40 @@ export default function BookForm(props: Props) {
       component="form"
       onSubmit={handleSubmit(onSubmit)}
     >
-      <Controller
+      <TextField
         name="name"
-        control={control}
-        defaultValue={book?.name}
-        render={(props) => (
-          <TextField
-            label={
-              <span>
-                タイトル
-                <Typography
-                  className={classes.labelDescription}
-                  variant="caption"
-                  component="span"
-                >
-                  学習者が学習範囲を簡潔に理解できるタイトルを設定できます
-                </Typography>
-              </span>
-            }
-            required
-            fullWidth
-            inputProps={props}
-          />
-        )}
+        inputRef={register}
+        label={
+          <span>
+            タイトル
+            <Typography
+              className={classes.labelDescription}
+              variant="caption"
+              component="span"
+            >
+              学習者が学習範囲を簡潔に理解できるタイトルを設定できます
+            </Typography>
+          </span>
+        }
+        required
+        fullWidth
       />
-
-      <Controller
-        name="shared"
-        control={control}
-        defaultValue={book?.shared ?? true}
-        render={({ value, onChange, ...props }) => (
-          <div>
-            <InputLabel classes={inputLabelClasses} htmlFor="shared">
-              他の編集者に共有
-            </InputLabel>
-            <Checkbox
-              id="shared"
-              color="primary"
-              {...props}
-              checked={value}
-              onChange={(e) => onChange(e.target.checked)}
-            />
-          </div>
-        )}
-      />
-
+      <div>
+        <InputLabel classes={inputLabelClasses} htmlFor="shared">
+          他の編集者に共有
+        </InputLabel>
+        <Checkbox
+          id="shared"
+          name="shared"
+          inputRef={register}
+          defaultChecked={defaultValues.shared}
+          color="primary"
+        />
+      </div>
       <Controller
         name="language"
         control={control}
-        defaultValue={book?.language ?? languages[0].value}
+        defaultValue={defaultValues.language}
         render={(props) => (
           <TextField label="教材の主要な言語" select inputProps={props}>
             {languages.map((option) => (
@@ -115,33 +109,25 @@ export default function BookForm(props: Props) {
           </TextField>
         )}
       />
-
-      <Controller
+      <TextField
+        label="学習時間 (秒)"
         name="timeRequired"
-        control={control}
-        defaultValue={String(book?.timeRequired ?? "")}
-        rules={{
-          setValueAs: (value) => (value === "" ? null : +value),
+        type="number"
+        inputProps={{
+          ref: register({
+            setValueAs: (value) => (value === "" ? null : +value),
+            min: 0,
+          }),
           min: 0,
         }}
-        render={(props) => (
-          <TextField
-            label="学習時間 (秒)"
-            type="number"
-            inputProps={{ ...props, min: 0 }}
-          />
-        )}
       />
-
-      <Controller
+      <TextField
+        label="解説"
+        fullWidth
+        multiline
         name="abstract"
-        control={control}
-        defaultValue={book?.abstract ?? ""}
-        render={(props) => (
-          <TextField label="解説" fullWidth multiline inputProps={props} />
-        )}
+        inputRef={register}
       />
-
       <Button variant="contained" color="primary" type="submit">
         {submitLabel}
       </Button>
