@@ -134,7 +134,7 @@ export default function BookForm(props: Props) {
       />
 
       <Controller
-        name="description"
+        name="abstract"
         control={control}
         defaultValue={book?.abstract ?? ""}
         render={(props) => (
