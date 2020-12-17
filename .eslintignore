@@ -2,6 +2,7 @@ node_modules/
 /.next/
 /server/dist/
 /openapi/
+public/
 
 # NOTE: 古いバージョンのときの残骸なので対応しない
 /v1/

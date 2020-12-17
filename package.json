@@ -58,13 +58,14 @@
     "dev": "run-p dev:*",
     "dev:app": "next",
     "dev:server": "yarn --cwd server dev",
-    "build": "run-s build:prisma build:next build:export build:server",
+    "build": "run-s build:prisma build:next build:server",
     "build:prisma": "yarn --cwd server build:prisma",
     "build:next": "next build",
-    "build:export": "next export -o server/static",
+    "build:export": "next export -o server/public",
     "build:server": "yarn --cwd server build",
     "build:openapi": "openapi-generator-cli generate -i http://localhost:8080/api/v2/swagger/json -g typescript-fetch -o openapi",
     "start": "NODE_ENV=production node server/dist/index.js",
+    "vercel-build": "yarn build && rm -rf public/api/v2/swagger && mkdir -p public/api/v2/swagger && cp -a server/dist/static public/api/v2/swagger/static",
     "format": "prettier --write .",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx .",
     "lint:fix": "yarn lint --fix",
@@ -72,6 +73,6 @@
     "storybook": "start-storybook"
   },
   "engines": {
-    "node": ">=14.15.0"
+    "node": ">=12"
   }
 }

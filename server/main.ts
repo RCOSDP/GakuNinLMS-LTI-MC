@@ -14,15 +14,15 @@ import { sessionStore } from "$server/utils/prisma";
 import app, { Options } from "$server/config/app";
 
 const isDev = process.env.NODE_ENV !== "production";
-const options = { logger: isDev };
+const options = {};
 
 if (HTTPS_CERT && HTTPS_KEY) {
   Object.assign(options, { https: { cert: HTTPS_CERT, key: HTTPS_KEY } });
 }
 
-fastify(options)
+fastify({ logger: isDev, trustProxy: true, ...options })
   .register(fastifyStatic, {
-    root: path.resolve(__dirname, "static"),
+    root: path.resolve(__dirname, "public"),
     prefix: FRONTEND_PATH,
     extensions: ["html"],
   })
