@@ -2,7 +2,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
-import AppBar from "$organisms/AppBar";
 import BookPreview from "$organisms/BookPreview";
 import SortSelect from "$atoms/SortSelect";
 import SearchTextField from "$atoms/SearchTextField";
@@ -29,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
   },
   header: {
     position: "sticky",
-    top: 64,
+    top: 0,
     zIndex: 1,
     backgroundColor: gray[50],
     paddingTop: theme.spacing(4),
@@ -54,34 +53,27 @@ export default function BookImport(props: Props) {
   const classes = useStyles();
   const containerClasses = useContainerStyles();
   return (
-    <>
-      <AppBar position="sticky" />
-      <Container classes={containerClasses} maxWidth="md">
-        <div className={classes.header}>
-          <Typography
-            className={classes.title}
-            variant="h4"
-            gutterBottom={true}
-          >
-            ブックのインポート
-            <Typography variant="body1">
-              インポートしたいブックを選んでください
-            </Typography>
+    <Container classes={containerClasses} maxWidth="md">
+      <div className={classes.header}>
+        <Typography className={classes.title} variant="h4" gutterBottom={true}>
+          ブックのインポート
+          <Typography variant="body1">
+            インポートしたいブックを選んでください
           </Typography>
-          <div className={classes.line}>
-            <Button color="primary" size="large" variant="contained">
-              ブックをインポート
-            </Button>
-            <SortSelect />
-            <SearchTextField placeholder="ブック・トピック検索" />
-          </div>
+        </Typography>
+        <div className={classes.line}>
+          <Button color="primary" size="large" variant="contained">
+            ブックをインポート
+          </Button>
+          <SortSelect />
+          <SearchTextField placeholder="ブック・トピック検索" />
         </div>
-        <div className={classes.books}>
-          {books.map((book) => (
-            <BookPreview key={book.id} {...book} />
-          ))}
-        </div>
-      </Container>
-    </>
+      </div>
+      <div className={classes.books}>
+        {books.map((book) => (
+          <BookPreview key={book.id} {...book} />
+        ))}
+      </div>
+    </Container>
   );
 }
