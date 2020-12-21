@@ -2,8 +2,6 @@ import type * as Prisma from "@prisma/client";
 import { BookSchema } from "$server/models/book";
 
 export type Book = Omit<BookSchema, "sections"> & {
-  id: number;
-  author: Pick<Prisma.User, "name">;
   sections: Section[];
 };
 
