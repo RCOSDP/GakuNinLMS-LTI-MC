@@ -9,7 +9,7 @@
     "test": "jest",
     "dev": "run-p dev:*",
     "dev:app": "nodemon --ext js,ts,json --exec 'ncc run -t | pino-pretty'",
-    "dev:db": "run-s migrate:dev seed",
+    "dev:db": "run-s build:prisma migrate:dev seed",
     "build": "run-s build:prisma build:app",
     "build:app": "ncc build -t --target es2020",
     "build:prisma": "prisma generate",
