@@ -1,7 +1,6 @@
 export default { title: "atoms/CourseChip" };
 
 import CourseChip from "./CourseChip";
+import { ltiResourceLink } from "$samples";
 
-export const Default = () => (
-  <CourseChip courseId="R30023001" courseName="2020年度　〇〇コース" />
-);
+export const Default = () => <CourseChip ltiResourceLink={ltiResourceLink} />;

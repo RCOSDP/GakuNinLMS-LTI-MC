@@ -5,7 +5,7 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
-import { Section } from "types/books";
+import { Section } from "types/book";
 
 type Props = {
   sections: Section[];

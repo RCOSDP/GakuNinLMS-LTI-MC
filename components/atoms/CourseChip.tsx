@@ -2,6 +2,7 @@ import { MouseEvent, useState } from "react";
 import Chip from "@material-ui/core/Chip";
 import Popover from "@material-ui/core/Popover";
 import { makeStyles } from "@material-ui/core/styles";
+import { LtiResourceLinkProps } from "$server/models/ltiResourceLink";
 
 const useStyles = makeStyles((theme) => ({
   popover: {
@@ -14,14 +15,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type Props = {
-  courseId: string;
-  courseName: string;
+  ltiResourceLink: LtiResourceLinkProps;
   onClick?: React.MouseEventHandler;
 };
 
 export default function CourseChip(props: Props) {
   const classes = useStyles();
-  const { courseId, courseName, onClick } = props;
+  const { ltiResourceLink, onClick } = props;
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const open = Boolean(anchorEl);
   const handlePopoverOpen = (event: MouseEvent<HTMLElement>) => {
@@ -38,7 +38,7 @@ export default function CourseChip(props: Props) {
         variant="outlined"
         size="small"
         color="primary"
-        label={courseId}
+        label={ltiResourceLink.contextId}
         onClick={onClick}
         onMouseEnter={handlePopoverOpen}
         onMouseLeave={handlePopoverClose}
@@ -59,7 +59,7 @@ export default function CourseChip(props: Props) {
         }}
         disableRestoreFocus
       >
-        {courseName}
+        {ltiResourceLink.contextTitle}
       </Popover>
     </>
   );

@@ -1,3 +1,4 @@
+import ltiResourceLink from "./ltiResourceLink";
 import sections from "./sections";
 
 const book = {
@@ -8,6 +9,7 @@ const book = {
   timeRequired: null,
   shared: true,
   author: { name: "山田太郎" },
+  ltiResourceLinks: [ltiResourceLink],
   createdAt: new Date(),
   updatedAt: new Date(),
   sections,

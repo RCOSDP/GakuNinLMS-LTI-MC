@@ -1,4 +1,5 @@
 export { default as resouce } from "./resource";
+export { default as ltiResourceLink } from "./ltiResourceLink";
 export { default as topic } from "./topic";
 export { default as section } from "./section";
 export { default as sections } from "./sections";

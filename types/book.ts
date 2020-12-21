@@ -1,17 +1,10 @@
 import type * as Prisma from "@prisma/client";
+import { BookProps } from "$server/models/book";
+import { LtiResourceLinkProps } from "$server/models/ltiResourceLink";
 
-export type Book = Pick<
-  Prisma.Book,
-  | "id"
-  | "name"
-  | "abstract"
-  | "language"
-  | "timeRequired"
-  | "shared"
-  | "createdAt"
-  | "updatedAt"
-> & {
+export type Book = Omit<BookProps, "sections"> & {
   author: Pick<Prisma.User, "name">;
+  ltiResourceLinks: LtiResourceLinkProps[];
   sections: Section[];
 };
 
