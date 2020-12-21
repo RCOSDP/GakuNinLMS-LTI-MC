@@ -44,3 +44,18 @@ export const Empty = wrap(() => {
     />
   );
 });
+
+export const EmptySection = wrap(() => {
+  const [index, nextItemIndex] = useAtom(nextItemIndexAtom);
+  const handleTopicEnded = () => nextItemIndex();
+  const handleItemClick = nextItemIndex;
+
+  return (
+    <Book
+      book={{ ...props.book, sections: [] }}
+      index={index}
+      onTopicEnded={handleTopicEnded}
+      onItemClick={handleItemClick}
+    />
+  );
+});

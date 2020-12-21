@@ -40,7 +40,7 @@ export default function Book(props: Props) {
     onTopicEnded,
     onItemClick,
   } = props;
-  const topic = book?.sections[sectionIndex].topics[topicIndex];
+  const topic = book?.sections[sectionIndex]?.topics[topicIndex];
   const classes = useStyles();
   const containerClasses = useContainerStyles();
   const handleItemClick = (_: never, index: [number, number]) => {
