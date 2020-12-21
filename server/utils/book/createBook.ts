@@ -8,7 +8,7 @@ async function createBook(
   authorId: UserSchema["id"],
   book: BookProps
 ): Promise<BookSchema | undefined> {
-  const sectionsCreateInput = book.sections.map(sectionCreateInput);
+  const sectionsCreateInput = book.sections?.map(sectionCreateInput) ?? [];
 
   const { id } = await prisma.book.create({
     data: {

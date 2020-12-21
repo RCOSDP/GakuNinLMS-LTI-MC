@@ -22,7 +22,7 @@ async function updateBook(
   { sections, ...book }: Pick<Book, "id"> & BookProps
 ): Promise<BookSchema | undefined> {
   const cleanup = cleanupSections(book.id);
-  const upsert = upsertSections(book.id, sections);
+  const upsert = upsertSections(book.id, sections ?? []);
   const update = prisma.book.update({
     where: { id: book.id },
     data: {
