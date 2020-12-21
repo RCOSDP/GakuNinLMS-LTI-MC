@@ -79,7 +79,7 @@ export default function BookLink(props: Props) {
       </div>
       <div className={classes.books}>
         {books.map((book) => (
-          <BookPreview key={book.id} {...book} />
+          <BookPreview key={book.id} book={book} />
         ))}
       </div>
     </Container>

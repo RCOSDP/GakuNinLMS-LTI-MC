@@ -1,8 +1,8 @@
 export default { title: "organisms/TopicViewer" };
 
-import TopicPlayer from "./TopicViewer";
+import TopicViewer from "./TopicViewer";
 import { topic } from "samples";
 
-const props = topic;
+const props = { topic };
 
-export const Default = () => <TopicPlayer {...props} />;
+export const Default = () => <TopicViewer {...props} />;

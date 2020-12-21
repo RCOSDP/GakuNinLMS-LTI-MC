@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const props = book;
+const props = { book };
 
 export const Default = () => {
   const classes = useStyles();

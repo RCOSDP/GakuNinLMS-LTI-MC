@@ -65,7 +65,7 @@ export default function Book(props: Props) {
           LTIリンクの再連携
         </Button>
       </Typography>
-      {topic && <TopicViewer {...topic} onEnded={onTopicEnded} />}
+      {topic && <TopicViewer topic={topic} onEnded={onTopicEnded} />}
       <BookChildren
         sections={book?.sections ?? []}
         onItemClick={handleItemClick}
