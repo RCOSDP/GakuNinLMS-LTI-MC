@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type Props = {
-  book: Book | null;
+  book?: Book | null;
   submitLabel?: string;
   onSubmit?: (book: BookProps) => void;
 };
