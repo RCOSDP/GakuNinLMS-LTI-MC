@@ -49,10 +49,10 @@ export default function BookForm(props: Props) {
   const classes = useStyles();
   const defaultValues = {
     name: book?.name,
+    description: book?.description ?? "",
     shared: book?.shared ?? true,
     language: book?.language ?? languages[0].value,
     timeRequired: book?.timeRequired,
-    abstract: book?.abstract ?? "",
   };
   const { handleSubmit, register, control } = useForm<BookProps>({
     defaultValues,
