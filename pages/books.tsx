@@ -4,14 +4,12 @@ import { useSession } from "$utils/session";
 import { useUserBooks } from "$utils/userBooks";
 import Books from "$templates/Books";
 
-function UserBooks(props: {
-  userId: User["id"];
-  onBookClick: (book: { id: Book["id"] }) => void;
-}) {
+function UserBooks(
+  props: Omit<Parameters<typeof Books>[0], "books"> & { userId: User["id"] }
+) {
   const userBooks = useUserBooks(props.userId);
   const books = userBooks.data?.books ?? [];
-
-  return <Books books={books} onBookClick={props.onBookClick} />;
+  return <Books {...props} books={books} />;
 }
 
 function Index() {
@@ -24,11 +22,24 @@ function Index() {
       query: { id: book.id },
     });
   };
+  const handleBookNewClick = () => router.replace("/book/new");
 
   if (userId == null) {
-    return <Books books={[]} onBookClick={handleBookClick} />; // TODO: プレースホルダーがいい加減
+    return (
+      <Books
+        books={[]}
+        onBookClick={handleBookClick}
+        onBookNewClick={handleBookNewClick}
+      />
+    );
   } else {
-    return <UserBooks userId={userId} onBookClick={handleBookClick} />;
+    return (
+      <UserBooks
+        userId={userId}
+        onBookClick={handleBookClick}
+        onBookNewClick={handleBookNewClick}
+      />
+    );
   }
 }
 
