@@ -1,5 +1,6 @@
 import outdent from "outdent";
 import resource from "./resource";
+import user from "./user";
 
 const topic = {
   id: 1,
@@ -24,7 +25,7 @@ const topic = {
   createdAt: new Date(),
   updatedAt: new Date(),
   details: {},
-  creator: { id: 1, name: "山田太郎" },
+  creator: user,
   resource,
 };
 

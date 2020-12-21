@@ -7,7 +7,7 @@ import LinkIcon from "@material-ui/icons/Link";
 import BookAccordion from "$organisms/BookAccordion";
 import SortSelect from "$atoms/SortSelect";
 import SearchTextField from "$atoms/SearchTextField";
-import { Book } from "types/books";
+import { Book } from "types/book";
 import useContainerStyles from "styles/container";
 
 const useStyles = makeStyles((theme) => ({

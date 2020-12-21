@@ -1,17 +1,7 @@
 import type * as Prisma from "@prisma/client";
+import { BookSchema } from "$server/models/book";
 
-export type Book = Pick<
-  Prisma.Book,
-  | "id"
-  | "name"
-  | "abstract"
-  | "language"
-  | "timeRequired"
-  | "shared"
-  | "createdAt"
-  | "updatedAt"
-> & {
-  author: Pick<Prisma.User, "name">;
+export type Book = Omit<BookSchema, "sections"> & {
   sections: Section[];
 };
 

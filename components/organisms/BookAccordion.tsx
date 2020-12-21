@@ -13,7 +13,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import BookAccordionChildren from "$molecules/BookAccordionChildren";
 import CourseChip from "$atoms/CourseChip";
 import Item from "$atoms/Item";
-import { Book, Topic } from "types/books";
+import { Book, Topic } from "types/book";
 import useAccordionStyle from "styles/accordion";
 import useAccordionSummaryStyle from "styles/accordionSummary";
 import useAccordionDetailStyle from "styles/accordionDetail";
@@ -41,7 +41,15 @@ type Props = Book & {
 };
 
 export default function BookAccordion(props: Props) {
-  const { name, author, createdAt, updatedAt, sections, onTopicClick } = props;
+  const {
+    name,
+    author,
+    createdAt,
+    updatedAt,
+    sections,
+    ltiResourceLinks,
+    onTopicClick,
+  } = props;
   const classes = useStyles();
   const accordionClasses = useAccordionStyle();
   const accordionSummaryClasses = useAccordionSummaryStyle();
@@ -76,11 +84,13 @@ export default function BookAccordion(props: Props) {
       </AccordionSummary>
       <AccordionDetails classes={accordionDetailClasses}>
         <div className={classes.chips}>
-          <CourseChip
-            courseId="R30023001"
-            courseName="2020年度　〇〇コース"
-            onClick={handleChipClick}
-          />
+          {ltiResourceLinks.map((ltiResourceLink) => (
+            <CourseChip
+              key={ltiResourceLink.contextId}
+              ltiResourceLink={ltiResourceLink}
+              onClick={handleChipClick}
+            />
+          ))}
         </div>
         <div className={classes.items}>
           <Item itemKey="作成日" value={format(createdAt, "yyyy.MM.dd")} />

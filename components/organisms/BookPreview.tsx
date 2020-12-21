@@ -57,7 +57,14 @@ type Props = Book;
 export default function BookPreview(props: Props) {
   const cardClasses = useCardStyle();
   const classes = useStyles();
-  const { name, author, createdAt, updatedAt, sections } = props;
+  const {
+    name,
+    author,
+    createdAt,
+    updatedAt,
+    sections,
+    ltiResourceLinks,
+  } = props;
   const [checkBox, setCheckBox] = useState(false);
   const [topic] = useState<Topic>(sections[0].topics[0]);
   const handleCheckBoxClick = () => {
@@ -83,7 +90,12 @@ export default function BookPreview(props: Props) {
           </IconButton>
         </Typography>
         <div className={classes.chips}>
-          <CourseChip courseId="R30023001" courseName="2020年度 ○○コース" />
+          {ltiResourceLinks.map((ltiResourceLink) => (
+            <CourseChip
+              key={ltiResourceLink.contextId}
+              ltiResourceLink={ltiResourceLink}
+            />
+          ))}
         </div>
         <div className={classes.items}>
           <Item itemKey="作成日" value={format(createdAt, "yyyy.MM.dd")} />
