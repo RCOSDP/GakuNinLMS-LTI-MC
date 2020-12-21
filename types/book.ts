@@ -3,6 +3,7 @@ import { BookProps } from "$server/models/book";
 import { LtiResourceLinkProps } from "$server/models/ltiResourceLink";
 
 export type Book = Omit<BookProps, "sections"> & {
+  id: number;
   author: Pick<Prisma.User, "name">;
   ltiResourceLinks: LtiResourceLinkProps[];
   sections: Section[];
