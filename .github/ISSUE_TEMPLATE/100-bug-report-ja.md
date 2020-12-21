@@ -1,10 +1,9 @@
 ---
-name:  バグ報告
+name: バグ報告
 about: バグ報告
-title: ''
+title: ""
 labels: bug
-assignees: ''
-
+assignees: ""
 ---
 
 **そのバグについて**
@@ -12,6 +11,7 @@ assignees: ''
 
 **再現手順**
 可能なら、(最小)再現手順を書いてください:
+
 1. Go to '...'
 2. Click on '....'
 3. Scroll down to '....'
@@ -24,15 +24,17 @@ assignees: ''
 できうるなら、バグの説明のためにスクリーンショットを付けてください。
 
 **発生した環境 (下記をうめてください):**
- - OS: [e.g. iOS]
- - ブラウザ [e.g. chrome, safari]
- - Version [e.g. 22]
 
-**発生したSmartphoneの環境 (下記をうめてください):**
- - デバイス: [e.g. iPhone6]
- - OS: [e.g. iOS8.1]
- - ブラウザ [e.g.  付属のブラウザ, safari]
- - Version [e.g. 22]
+- OS: [e.g. iOS]
+- ブラウザ [e.g. chrome, safari]
+- Version [e.g. 22]
+
+**発生した Smartphone の環境 (下記をうめてください):**
+
+- デバイス: [e.g. iPhone6]
+- OS: [e.g. iOS8.1]
+- ブラウザ [e.g. 付属のブラウザ, safari]
+- Version [e.g. 22]
 
 **追記**
- 追記することがあれば。
+追記することがあれば。
