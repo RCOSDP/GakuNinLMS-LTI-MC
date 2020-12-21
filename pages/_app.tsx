@@ -4,6 +4,7 @@ import Head from "next/head";
 import { ThemeProvider } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import theme from "$theme";
+import AppBar from "$organisms/AppBar";
 // NOTE: For VideoJs components.
 import "video.js/dist/video-js.css";
 import "videojs-seek-buttons/dist/videojs-seek-buttons.css";
@@ -19,6 +20,7 @@ function App({ Component, pageProps }: AppProps) {
       </Head>
       <ThemeProvider theme={theme}>
         <CssBaseline />
+        <AppBar position="sticky" />
         <Component {...pageProps} />
       </ThemeProvider>
     </Provider>

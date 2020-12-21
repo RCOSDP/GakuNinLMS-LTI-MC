@@ -83,7 +83,7 @@ export default function BookPreview(props: Props) {
           </IconButton>
         </Typography>
         <div className={classes.chips}>
-          <CourseChip label="2020年度 ○○コース" />
+          <CourseChip courseId="R30023001" courseName="2020年度 ○○コース" />
         </div>
         <div className={classes.items}>
           <Item itemKey="作成日" value={format(createdAt, "yyyy.MM.dd")} />

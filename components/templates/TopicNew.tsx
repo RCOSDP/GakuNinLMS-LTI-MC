@@ -1,7 +1,6 @@
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import { makeStyles } from "@material-ui/core/styles";
-import AppBar from "$organisms/AppBar";
 import TopicForm from "$organisms/TopicForm";
 import RequiredDot from "$atoms/RequiredDot";
 import useContainerStyles from "styles/container";
@@ -36,22 +35,19 @@ export default function TopicNew(props: Props) {
   const containerClasses = useContainerStyles();
 
   return (
-    <>
-      <AppBar position="sticky" />
-      <Container
-        classes={containerClasses}
-        className={classes.container}
-        maxWidth="md"
-      >
-        <Typography className={classes.title} variant="h4">
-          トピックの作成
-          <Typography variant="caption" component="span" aria-hidden="true">
-            <RequiredDot />
-            は必須項目です
-          </Typography>
+    <Container
+      classes={containerClasses}
+      className={classes.container}
+      maxWidth="md"
+    >
+      <Typography className={classes.title} variant="h4">
+        トピックの作成
+        <Typography variant="caption" component="span" aria-hidden="true">
+          <RequiredDot />
+          は必須項目です
         </Typography>
-        <TopicForm topic={topic} submitLabel="作成" />
-      </Container>
-    </>
+      </Typography>
+      <TopicForm topic={topic} submitLabel="作成" />
+    </Container>
   );
 }

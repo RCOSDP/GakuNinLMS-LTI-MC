@@ -6,7 +6,6 @@ import Container from "@material-ui/core/Container";
 import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import LinkIcon from "@material-ui/icons/Link";
-import AppBar from "$organisms/AppBar";
 import BookChildren from "$organisms/BookChildren";
 import TopicViewer from "$organisms/TopicViewer";
 import type * as Types from "types/book";
@@ -48,32 +47,29 @@ export default function Book(props: Props) {
     onItemClick(index);
   };
   return (
-    <>
-      <AppBar position="sticky" />
-      <Container
-        classes={containerClasses}
-        className={classes.container}
-        maxWidth="md"
-      >
-        <Typography className={classes.title} variant="h4" gutterBottom={true}>
-          {book?.name}
-          <IconButton>
-            <InfoOutlinedIcon />
-          </IconButton>
-          <IconButton color="primary">
-            <EditOutlinedIcon />
-          </IconButton>
-          <Button size="small" color="primary">
-            <LinkIcon className={classes.icon} />
-            LTIリンクの再連携
-          </Button>
-        </Typography>
-        {topic && <TopicViewer {...topic} onEnded={onTopicEnded} />}
-        <BookChildren
-          sections={book?.sections ?? []}
-          onItemClick={handleItemClick}
-        />
-      </Container>
-    </>
+    <Container
+      classes={containerClasses}
+      className={classes.container}
+      maxWidth="md"
+    >
+      <Typography className={classes.title} variant="h4" gutterBottom={true}>
+        {book?.name}
+        <IconButton>
+          <InfoOutlinedIcon />
+        </IconButton>
+        <IconButton color="primary">
+          <EditOutlinedIcon />
+        </IconButton>
+        <Button size="small" color="primary">
+          <LinkIcon className={classes.icon} />
+          LTIリンクの再連携
+        </Button>
+      </Typography>
+      {topic && <TopicViewer {...topic} onEnded={onTopicEnded} />}
+      <BookChildren
+        sections={book?.sections ?? []}
+        onItemClick={handleItemClick}
+      />
+    </Container>
   );
 }

@@ -76,7 +76,11 @@ export default function BookAccordion(props: Props) {
       </AccordionSummary>
       <AccordionDetails classes={accordionDetailClasses}>
         <div className={classes.chips}>
-          <CourseChip label="2020年度 ○○コース" onClick={handleChipClick} />
+          <CourseChip
+            courseId="R30023001"
+            courseName="2020年度　〇〇コース"
+            onClick={handleChipClick}
+          />
         </div>
         <div className={classes.items}>
           <Item itemKey="作成日" value={format(createdAt, "yyyy.MM.dd")} />

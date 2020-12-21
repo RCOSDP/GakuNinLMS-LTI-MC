@@ -51,7 +51,7 @@ export default function TopicForm(props: Props) {
       <TextField
         id="title"
         label={
-          <span>
+          <>
             タイトル
             <Typography
               className={classes.labelDescription}
@@ -60,7 +60,7 @@ export default function TopicForm(props: Props) {
             >
               学習者が学習範囲を簡潔に理解できるタイトルを設定できます
             </Typography>
-          </span>
+          </>
         }
         defaultValue={topic?.name}
         required
@@ -75,7 +75,7 @@ export default function TopicForm(props: Props) {
       <TextField
         id="contentURL"
         label={
-          <span>
+          <>
             動画のURL
             <Typography
               className={classes.labelDescription}
@@ -84,7 +84,7 @@ export default function TopicForm(props: Props) {
             >
               YouTube, Vimeo, Wowzaに対応しています
             </Typography>
-          </span>
+          </>
         }
         defaultValue={topic?.resource.url}
         required

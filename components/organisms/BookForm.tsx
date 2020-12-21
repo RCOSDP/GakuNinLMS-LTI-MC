@@ -69,7 +69,7 @@ export default function BookForm(props: Props) {
         name="name"
         inputRef={register}
         label={
-          <span>
+          <>
             タイトル
             <Typography
               className={classes.labelDescription}
@@ -78,7 +78,7 @@ export default function BookForm(props: Props) {
             >
               学習者が学習範囲を簡潔に理解できるタイトルを設定できます
             </Typography>
-          </span>
+          </>
         }
         required
         fullWidth
