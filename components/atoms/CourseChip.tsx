@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
 type Props = {
   courseId: string;
   courseName: string;
-  onClick?: () => void;
+  onClick?: React.MouseEventHandler;
 };
 
 export default function CourseChip(props: Props) {
