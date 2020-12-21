@@ -1,0 +1,11 @@
+overrides:
+  - files: "jest.config.js"
+    env: { node: true }
+    rules:
+      "@typescript-eslint/no-var-requires": "off"
+  - files: "utils/handler.ts"
+    rules:
+      "@typescript-eslint/no-explicit-any": "off"
+  - files: "config/seeds/*"
+    rules:
+      no-irregular-whitespace: "off"

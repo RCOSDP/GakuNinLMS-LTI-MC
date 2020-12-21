@@ -41,7 +41,7 @@ export const postFormFetchText = makeFetch((res) => res.text(), postForm);
 export const postJsonFetchText = makeFetch((res) => res.text(), postJson);
 
 function withState<T extends object, U extends any[]>(
-  fetcher: fetcherFn<T>,
+  fetcher: (...args: any) => T | Promise<T>,
   initialState: T
 ): (...args: U) => Promise<WithState<T>> {
   async function fetch(...args: U) {

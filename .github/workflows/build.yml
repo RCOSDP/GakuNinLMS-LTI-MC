@@ -1,50 +1,43 @@
 name: build
 on: pull_request
 jobs:
-  install:
+  main:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/cache@v1
-        with:
-          path: ${{ github.workspace }}
-          key: ${{ github.sha }}
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-        with: { node-version: 14 }
+        with:
+          ref: ${{ github.head_ref }}
       - id: yarn_cache
         run: echo "::set-output name=dir::$(yarn cache dir)"
-      - uses: actions/cache@v1
+      - uses: actions/cache@v2
         with:
           path: ${{ steps.yarn_cache.outputs.dir }}
           key: yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: yarn-
-      - run: yarn
-  format:
-    needs: install
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/cache@v1
-        with:
-          path: ${{ github.workspace }}
-          key: ${{ github.sha }}
-      - uses: actions/setup-node@v1
-        with: { node-version: 14 }
-      - run: yarn format
-      - id: git_status
+      - name: install
+        run: yarn
+      - name: lint
+        run: yarn lint:report
+        continue-on-error: true
+      - run: yarn lint:fix
+        continue-on-error: true
+      - id: lint_git_status
         run: echo "::set-output name=mod::$(git status --porcelain)"
-      - if: steps.git_status.outputs.mod != ''
+      - if: steps.lint_git_status.outputs.mod != ''
+        run: |
+          git -c "user.name=bot" -c "user.email=bot@example" commit -a -m "bot: lint:fix"
+          git push origin HEAD
+      - uses: ataylorme/eslint-annotate-action@1.1.2
+        with: { repo-token: "${{ github.token }}" }
+      - name: format
+        run: yarn format
+      - id: format_git_status
+        run: echo "::set-output name=mod::$(git status --porcelain)"
+      - if: steps.format_git_status.outputs.mod != ''
         run: |
           git -c "user.name=bot" -c "user.email=bot@example" commit -a -m "bot: format"
           git push origin HEAD
-  build:
-    needs: [install, format]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/cache@v1
-        with:
-          path: ${{ github.workspace }}
-          key: ${{ github.sha }}
-      - uses: actions/setup-node@v1
-        with: { node-version: 14 }
-      - run: yarn build
+      - name: test
+        run: yarn test
+      - name: build
+        run: yarn build

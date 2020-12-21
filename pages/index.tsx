@@ -1,42 +1,36 @@
-import {
-  useLmsSession,
-  redirectToLms,
-  isLmsInstructor,
-} from "components/session";
-import { useRouter, Link } from "components/router";
-import { saveSessionInStorage } from "components/session";
-import { useSnackbar } from "material-ui-snackbar-provider";
+import { UrlObject } from "url";
+import { useRouter } from "next/router";
+import Link from "next/link";
+import { isInstructor, useSession } from "$utils/session";
+import { NEXT_PUBLIC_LMS_URL } from "$utils/env";
+import { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
 
-export default function () {
-  const session = useLmsSession();
+function Replace(props: { href: string | UrlObject }) {
   const router = useRouter();
-  const { showMessage } = useSnackbar();
-
-  if (!session) return <div>Loading...</div>;
-
-  const nonce = router.query.nonce;
-  saveSessionInStorage({
-    ...session,
-    nonce: Array.isArray(nonce) ? nonce[0] : nonce,
-  });
-
-  if (session.contents) {
-    const href = {
-      pathname: "/contents",
-      query: {
-        id: session.contents,
-        action: "show",
-      },
-    };
-    router.replace(href);
-    return <Link href={href}>#{session.contents}</Link>;
-  } else {
-    if (!isLmsInstructor(session)) redirectToLms();
-    const href = "/edit";
-    router.replace(href);
-    const message =
-      "まだ学習管理システムに紐付いていません。紐付ける学習コンテンツを選択してください。";
-    showMessage(message);
-    return <Link href={href}>{message}</Link>;
-  }
+  router.replace(props.href);
+  return <Link href={props.href}>Link</Link>; // TODO: プレースホルダーがいい加減
 }
+
+function ReplaceToBook(props: { ltiResourceLink: LtiResourceLinkSchema }) {
+  const url = {
+    pathname: "/book",
+    query: { id: props.ltiResourceLink.bookId },
+  };
+
+  return <Replace href={url} />;
+}
+
+function Router() {
+  const session = useSession();
+
+  if (!session.data) return <div>Loading...</div>; // TODO: プレースホルダーがいい加減
+  if (isInstructor(session.data)) return <Replace href="/books" />;
+  if (!session.data.ltiResourceLink) {
+    // TODO: https://github.com/npocccties/ChibiCHiLO/issues/3
+    return <Replace href={NEXT_PUBLIC_LMS_URL} />;
+  }
+
+  return <ReplaceToBook ltiResourceLink={session.data.ltiResourceLink} />;
+}
+
+export default Router;

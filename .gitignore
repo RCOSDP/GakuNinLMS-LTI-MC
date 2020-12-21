@@ -1,6 +1,9 @@
 /tmp/
 /track/
 /config.php
-/node_modules/
 /.next/
-/v1/
+/.vercel/
+/eslint_report.json
+node_modules/
+.env
+public/

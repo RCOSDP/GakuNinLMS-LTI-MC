@@ -1,0 +1,9 @@
+/tmp/
+/track/
+/config.php
+/.next/
+/v1/
+/openapi/
+node_modules/
+/server/dist/
+/server/prisma/migrations/

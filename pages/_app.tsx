@@ -1,20 +1,28 @@
-import App from "next/app";
-import { AppThemeProvider } from "components/AppThemeProvider";
-import { StateProvider } from "components/state";
+import { Provider } from "jotai";
+import type { AppProps } from "next/app";
+import Head from "next/head";
+import { ThemeProvider } from "@material-ui/core/styles";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import theme from "$theme";
 // NOTE: For VideoJs components.
 import "video.js/dist/video-js.css";
 import "videojs-seek-buttons/dist/videojs-seek-buttons.css";
-import "components/VideoJs.css";
+import "$styles/video-js.css";
 
-export default class extends App {
-  render() {
-    const { Component, pageProps } = this.props;
-    return (
-      <StateProvider>
-        <AppThemeProvider>
-          <Component {...pageProps} />
-        </AppThemeProvider>
-      </StateProvider>
-    );
-  }
+function App({ Component, pageProps }: AppProps) {
+  return (
+    <Provider>
+      <Head>
+        <title>ChibiCHiLO</title>
+        <meta name="viewport" content="width=device-width" />
+        <meta name="theme-color" content={theme.palette.primary.main} />
+      </Head>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Component {...pageProps} />
+      </ThemeProvider>
+    </Provider>
+  );
 }
+
+export default App;
