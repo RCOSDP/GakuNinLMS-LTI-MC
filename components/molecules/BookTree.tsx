@@ -1,9 +1,9 @@
-import { Fragment } from "react";
 import IconButton from "@material-ui/core/IconButton";
 import TreeItem from "@material-ui/lab/TreeItem";
 import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import CourseChip from "$atoms/CourseChip";
+import BookChildrenTree from "$molecules/BookChildrenTree";
 import { Book } from "$types/book";
 
 type Props = {
@@ -19,7 +19,7 @@ export default function BookTree(props: Props) {
   };
   return (
     <TreeItem
-      nodeId={book.id.toString()}
+      nodeId={`${book.id}`}
       label={
         <>
           {book.name}
@@ -38,50 +38,11 @@ export default function BookTree(props: Props) {
         </>
       }
     >
-      {book.sections.map((section, sectionIndex) => (
-        <Fragment key={section.id}>
-          {(section.name && (
-            <TreeItem
-              nodeId={`${book.id}-${section.id}`}
-              label={
-                <>
-                  {sectionIndex + 1} {section.name}
-                </>
-              }
-            >
-              {section.topics.map((topic, topicIndex) => (
-                <TreeItem
-                  key={topic.id}
-                  nodeId={`${book.id}-${section.id}-${topic.id}`}
-                  label={
-                    <>
-                      {sectionIndex + 1}
-                      {section.name ? `.${topicIndex + 1}` : ""} {topic.name}
-                    </>
-                  }
-                  onClick={handleItemClick}
-                />
-              ))}
-            </TreeItem>
-          )) || (
-            <>
-              {section.topics.map((topic, topicIndex) => (
-                <TreeItem
-                  key={topic.id}
-                  nodeId={`${book.id}-${section.id}-${topic.id}`}
-                  label={
-                    <>
-                      {sectionIndex + 1}
-                      {section.name ? `.${topicIndex + 1}` : ""} {topic.name}
-                    </>
-                  }
-                  onClick={handleItemClick}
-                />
-              ))}
-            </>
-          )}
-        </Fragment>
-      ))}
+      <BookChildrenTree
+        bookId={book.id}
+        sections={book.sections}
+        onItemClick={handleItemClick}
+      />
     </TreeItem>
   );
 }
