@@ -1,11 +1,15 @@
 import { makeStyles } from "@material-ui/core/styles";
 
-const accordionSummary = makeStyles({
+const accordionSummary = makeStyles((theme) => ({
   root: {
     flexDirection: "row-reverse",
   },
   content: {
     alignItems: "center",
+    margin: `${theme.spacing(1)}px 0`,
+    "&$expanded": {
+      margin: `${theme.spacing(1)}px 0`,
+    },
   },
   expanded: {},
   expandIcon: {
@@ -14,6 +18,6 @@ const accordionSummary = makeStyles({
       transform: "rotate(0deg)",
     },
   },
-});
+}));
 
 export default accordionSummary;

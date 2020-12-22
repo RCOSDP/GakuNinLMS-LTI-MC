@@ -125,7 +125,7 @@ export default function BookForm(props: Props) {
         label="解説"
         fullWidth
         multiline
-        name="abstract"
+        name="description"
         inputRef={register}
       />
       <Button variant="contained" color="primary" type="submit">

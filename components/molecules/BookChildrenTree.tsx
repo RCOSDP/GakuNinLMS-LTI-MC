@@ -1,0 +1,64 @@
+import { Fragment } from "react";
+import TreeItem from "@material-ui/lab/TreeItem";
+import { Section } from "$types/book";
+
+type Props = {
+  sections: Section[];
+  onItemClick(event: React.MouseEvent, index: [number, number]): void;
+};
+
+export default function BookChildrenTree(props: Props) {
+  const { sections, onItemClick } = props;
+  const handleItemClick = (event: React.MouseEvent<HTMLElement>) => {
+    const { section, topic } = event.currentTarget.dataset;
+    onItemClick(event, [section, topic].map(Number) as [number, number]);
+  };
+  return (
+    <>
+      {sections.map((section, sectionIndex) => (
+        <Fragment key={section.id}>
+          {(section.name && (
+            <TreeItem
+              nodeId={section.id.toString()}
+              label={
+                <>
+                  {sectionIndex + 1} {section.name}
+                </>
+              }
+            >
+              {section.topics.map((topic, topicIndex) => (
+                <TreeItem
+                  key={topic.id}
+                  nodeId={`${section.id}-${topic.id}`}
+                  label={
+                    <>
+                      {sectionIndex + 1}
+                      {section.name ? `.${topicIndex + 1}` : ""} {topic.name}
+                    </>
+                  }
+                  onClick={handleItemClick}
+                />
+              ))}
+            </TreeItem>
+          )) || (
+            <>
+              {section.topics.map((topic, topicIndex) => (
+                <TreeItem
+                  key={topic.id}
+                  nodeId={`${section.id}-${topic.id}`}
+                  label={
+                    <>
+                      {sectionIndex + 1}
+                      {section.name ? `.${topicIndex + 1}` : ""} {topic.name}
+                    </>
+                  }
+                  onClick={handleItemClick}
+                />
+              ))}
+            </>
+          )}
+        </Fragment>
+      ))}
+    </>
+  );
+}
