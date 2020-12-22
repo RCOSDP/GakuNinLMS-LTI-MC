@@ -2,12 +2,15 @@ import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
-import BookPreview from "$organisms/BookPreview";
+import TreeView from "@material-ui/lab/TreeView";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import BookTree from "$molecules/BookTree";
 import SortSelect from "$atoms/SortSelect";
 import SearchTextField from "$atoms/SearchTextField";
-import { Book } from "types/book";
-import { gray } from "theme/colors";
-import useContainerStyles from "styles/container";
+import { Book, Topic } from "$types/book";
+import { gray } from "$theme/colors";
+import useContainerStyles from "$styles/container";
 
 const useStyles = makeStyles((theme) => ({
   line: {
@@ -46,10 +49,11 @@ const useStyles = makeStyles((theme) => ({
 
 type Props = {
   books: Book[];
+  onTopicClick(topic: Topic): void;
 };
 
 export default function BookImport(props: Props) {
-  const { books } = props;
+  const { books, onTopicClick } = props;
   const classes = useStyles();
   const containerClasses = useContainerStyles();
   return (
@@ -69,11 +73,20 @@ export default function BookImport(props: Props) {
           <SearchTextField placeholder="ブック・トピック検索" />
         </div>
       </div>
-      <div className={classes.books}>
-        {books.map((book) => (
-          <BookPreview key={book.id} book={book} />
-        ))}
-      </div>
+      <TreeView
+        defaultCollapseIcon={<ExpandMoreIcon />}
+        defaultExpandIcon={<ChevronRightIcon />}
+      >
+        {books.map((book) => {
+          const handleItemClick = ([sectionIndex, topicIndex]: [
+            number,
+            number
+          ]) => onTopicClick(book.sections[sectionIndex].topics[topicIndex]);
+          return (
+            <BookTree key={book.id} book={book} onItemClick={handleItemClick} />
+          );
+        })}
+      </TreeView>
     </Container>
   );
 }

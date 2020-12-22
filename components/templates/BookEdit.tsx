@@ -1,10 +1,11 @@
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import { makeStyles } from "@material-ui/core/styles";
+import BookEditChildren from "$organisms/BookEditChildren";
 import BookForm from "$organisms/BookForm";
 import RequiredDot from "$atoms/RequiredDot";
 import useContainerStyles from "styles/container";
-import { Book } from "types/book";
+import { Book, Topic } from "types/book";
 
 const useStyles = makeStyles((theme) => ({
   header: {
@@ -25,14 +26,18 @@ const useStyles = makeStyles((theme) => ({
       marginLeft: theme.spacing(2),
     },
   },
+  children: {
+    marginBottom: theme.spacing(2),
+  },
 }));
 
-type Props = { book: Book | null };
+type Props = { book: Book | null; onTopicClick(topic: Topic): void };
 
 export default function BookEdit(props: Props) {
-  const { book } = props;
+  const { book, onTopicClick } = props;
   const classes = useStyles();
   const containerClasses = useContainerStyles();
+  const handleTopicClick = (topic: Topic) => onTopicClick(topic);
 
   return (
     <Container
@@ -47,6 +52,11 @@ export default function BookEdit(props: Props) {
           は必須項目です
         </Typography>
       </Typography>
+      <BookEditChildren
+        className={classes.children}
+        sections={book?.sections ?? []}
+        onTopicClick={handleTopicClick}
+      />
       <BookForm book={book} />
     </Container>
   );
