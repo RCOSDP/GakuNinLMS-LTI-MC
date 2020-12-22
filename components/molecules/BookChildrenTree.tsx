@@ -37,8 +37,6 @@ export default function BookChildrenTree(props: Props) {
                         {section.name ? `.${topicIndex + 1}` : ""} {topic.name}
                       </>
                     }
-                    data-section={sectionIndex}
-                    data-topic={topicIndex}
                     onClick={handleItemClick}
                   />
                 );
@@ -60,8 +58,6 @@ export default function BookChildrenTree(props: Props) {
                         {section.name ? `.${topicIndex + 1}` : ""} {topic.name}
                       </>
                     }
-                    data-section={sectionIndex}
-                    data-topic={topicIndex}
                     onClick={handleItemClick}
                   />
                 );
