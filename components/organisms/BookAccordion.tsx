@@ -53,10 +53,8 @@ export default function BookAccordion(props: Props) {
   const accordionClasses = useAccordionStyle();
   const accordionSummaryClasses = useAccordionSummaryStyle();
   const accordionDetailClasses = useAccordionDetailStyle();
-  const handleItemClick = (
-    _: never,
-    [sectionIndex, topicIndex]: [number, number]
-  ) => onTopicClick(book.sections[sectionIndex].topics[topicIndex]);
+  const handleItemClick = ([sectionIndex, topicIndex]: [number, number]) =>
+    onTopicClick(book.sections[sectionIndex].topics[topicIndex]);
   const handleInfoClick = (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
   };

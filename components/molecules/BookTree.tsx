@@ -8,15 +8,11 @@ import { Book } from "$types/book";
 
 type Props = {
   book: Book;
-  onItemClick(event: React.MouseEvent, index: [number, number]): void;
+  onItemClick(index: [number, number]): void;
 };
 
 export default function BookTree(props: Props) {
   const { book, onItemClick } = props;
-  const handleItemClick = (event: React.MouseEvent<HTMLElement>) => {
-    const { section, topic } = event.currentTarget.dataset;
-    onItemClick(event, [section, topic].map(Number) as [number, number]);
-  };
   return (
     <TreeItem
       nodeId={`${book.id}`}
@@ -41,7 +37,7 @@ export default function BookTree(props: Props) {
       <BookChildrenTree
         bookId={book.id}
         sections={book.sections}
-        onItemClick={handleItemClick}
+        onItemClick={onItemClick}
       />
     </TreeItem>
   );

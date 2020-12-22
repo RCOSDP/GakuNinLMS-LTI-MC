@@ -78,10 +78,10 @@ export default function BookImport(props: Props) {
         defaultExpandIcon={<ChevronRightIcon />}
       >
         {books.map((book) => {
-          const handleItemClick = (
-            _: never,
-            [sectionIndex, topicIndex]: [number, number]
-          ) => onTopicClick(book.sections[sectionIndex].topics[topicIndex]);
+          const handleItemClick = ([sectionIndex, topicIndex]: [
+            number,
+            number
+          ]) => onTopicClick(book.sections[sectionIndex].topics[topicIndex]);
           return (
             <BookTree key={book.id} book={book} onItemClick={handleItemClick} />
           );

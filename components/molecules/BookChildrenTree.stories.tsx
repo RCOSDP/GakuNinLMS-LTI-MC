@@ -8,7 +8,7 @@ import { sections } from "$samples";
 
 const props = {
   sections,
-  onItemClick(_: never, index: [number, number]) {
+  onItemClick(index: [number, number]) {
     console.log({ index });
   },
 };

@@ -8,7 +8,7 @@ import { book } from "$samples";
 
 const props = {
   book,
-  onItemClick(_: never, index: [number, number]) {
+  onItemClick(index: [number, number]) {
     console.log({ index });
   },
 };
