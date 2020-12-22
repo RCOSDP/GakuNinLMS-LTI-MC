@@ -14,4 +14,5 @@ export * from './InlineResponse2001Sections';
 export * from './InlineResponse2001Topics';
 export * from './InlineResponse2002';
 export * from './InlineResponse2003';
-export * from './InlineResponse2003LtiLaunchBody';
+export * from './InlineResponse2004';
+export * from './InlineResponse2004LtiLaunchBody';

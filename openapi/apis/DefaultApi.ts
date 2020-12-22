@@ -51,6 +51,9 @@ import {
     InlineResponse2003,
     InlineResponse2003FromJSON,
     InlineResponse2003ToJSON,
+    InlineResponse2004,
+    InlineResponse2004FromJSON,
+    InlineResponse2004ToJSON,
 } from '../models';
 
 export interface ApiV2BookBookIdDeleteRequest {
@@ -85,6 +88,11 @@ export interface ApiV2LtiResourceLinkLtiResourceLinkIdGetRequest {
 export interface ApiV2LtiResourceLinkLtiResourceLinkIdPutRequest {
     ltiResourceLinkId: string;
     body?: InlineObject1;
+}
+
+export interface ApiV2ResourcesGetRequest {
+    page?: number;
+    perPage?: number;
 }
 
 export interface ApiV2TopicPostRequest {
@@ -364,9 +372,43 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
+     * トピック一覧
+     */
+    async apiV2ResourcesGetRaw(requestParameters: ApiV2ResourcesGetRequest): Promise<runtime.ApiResponse<InlineResponse2003>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        if (requestParameters.page !== undefined) {
+            queryParameters['page'] = requestParameters.page;
+        }
+
+        if (requestParameters.perPage !== undefined) {
+            queryParameters['per_page'] = requestParameters.perPage;
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/api/v2/resources`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2003FromJSON(jsonValue));
+    }
+
+    /**
+     * トピック一覧
+     */
+    async apiV2ResourcesGet(requestParameters: ApiV2ResourcesGetRequest): Promise<InlineResponse2003> {
+        const response = await this.apiV2ResourcesGetRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
      * セッション情報
      */
-    async apiV2SessionGetRaw(): Promise<runtime.ApiResponse<InlineResponse2003>> {
+    async apiV2SessionGetRaw(): Promise<runtime.ApiResponse<InlineResponse2004>> {
         const queryParameters: runtime.HTTPQuery = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -378,13 +420,13 @@ export class DefaultApi extends runtime.BaseAPI {
             query: queryParameters,
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2003FromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2004FromJSON(jsonValue));
     }
 
     /**
      * セッション情報
      */
-    async apiV2SessionGet(): Promise<InlineResponse2003> {
+    async apiV2SessionGet(): Promise<InlineResponse2004> {
         const response = await this.apiV2SessionGetRaw();
         return await response.value();
     }
