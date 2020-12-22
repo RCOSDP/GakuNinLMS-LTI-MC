@@ -37,11 +37,13 @@ const useStyles = makeStyles((theme) => ({
 type Props = {
   books: Book[];
   onBookClick(book: Book): void;
+  onBookNewClick(): void;
 };
 
 export default function Books(props: Props) {
-  const { books, onBookClick } = props;
+  const { books, onBookClick, onBookNewClick } = props;
   const handleTopicClick = (book: Book) => () => onBookClick(book);
+  const handleBookNewClick = () => onBookNewClick();
   const classes = useStyles();
   const containerClasses = useContainerStyles();
   return (
@@ -52,7 +54,7 @@ export default function Books(props: Props) {
     >
       <Typography className={classes.title} variant="h4" gutterBottom={true}>
         マイブック
-        <Button size="small" color="primary">
+        <Button size="small" color="primary" onClick={handleBookNewClick}>
           <AddIcon className={classes.icon} />
           ブックの作成
         </Button>

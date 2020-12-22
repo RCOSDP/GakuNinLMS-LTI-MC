@@ -5,7 +5,7 @@ import sections from "./sections";
 const book = {
   id: 1,
   name: "コンピュータ・サイエンス",
-  abstract: "",
+  description: "",
   language: "ja",
   timeRequired: null,
   shared: true,

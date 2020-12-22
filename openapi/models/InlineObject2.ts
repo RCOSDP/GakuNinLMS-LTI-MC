@@ -37,7 +37,7 @@ export interface InlineObject2 {
      * @type {string}
      * @memberof InlineObject2
      */
-    _abstract?: string;
+    description?: string;
     /**
      * 
      * @type {string}
@@ -69,7 +69,7 @@ export function InlineObject2FromJSONTyped(json: any, ignoreDiscriminator: boole
     return {
         
         'name': !exists(json, 'name') ? undefined : json['name'],
-        '_abstract': !exists(json, 'abstract') ? undefined : json['abstract'],
+        'description': !exists(json, 'description') ? undefined : json['description'],
         'language': !exists(json, 'language') ? undefined : json['language'],
         'shared': !exists(json, 'shared') ? undefined : json['shared'],
         'sections': !exists(json, 'sections') ? undefined : ((json['sections'] as Array<any>).map(ApiV2BookBookIdSectionsFromJSON)),
@@ -86,7 +86,7 @@ export function InlineObject2ToJSON(value?: InlineObject2 | null): any {
     return {
         
         'name': value.name,
-        'abstract': value._abstract,
+        'description': value.description,
         'language': value.language,
         'shared': value.shared,
         'sections': value.sections === undefined ? undefined : ((value.sections as Array<any>).map(ApiV2BookBookIdSectionsToJSON)),

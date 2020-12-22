@@ -51,7 +51,7 @@ export interface InlineResponse2001Books {
      * @type {string}
      * @memberof InlineResponse2001Books
      */
-    _abstract?: string;
+    description?: string;
     /**
      * 
      * @type {string}
@@ -120,7 +120,7 @@ export function InlineResponse2001BooksFromJSONTyped(json: any, ignoreDiscrimina
         
         'id': !exists(json, 'id') ? undefined : json['id'],
         'name': !exists(json, 'name') ? undefined : json['name'],
-        '_abstract': !exists(json, 'abstract') ? undefined : json['abstract'],
+        'description': !exists(json, 'description') ? undefined : json['description'],
         'language': !exists(json, 'language') ? undefined : json['language'],
         'shared': !exists(json, 'shared') ? undefined : json['shared'],
         'publishedAt': !exists(json, 'publishedAt') ? undefined : (new Date(json['publishedAt'])),
@@ -144,7 +144,7 @@ export function InlineResponse2001BooksToJSON(value?: InlineResponse2001Books | 
         
         'id': value.id,
         'name': value.name,
-        'abstract': value._abstract,
+        'description': value.description,
         'language': value.language,
         'shared': value.shared,
         'publishedAt': value.publishedAt === undefined ? undefined : (value.publishedAt.toISOString()),

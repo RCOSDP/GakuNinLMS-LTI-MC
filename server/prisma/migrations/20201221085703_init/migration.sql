@@ -73,7 +73,7 @@ CREATE TABLE "lti_resource_link" (
 CREATE TABLE "books" (
 "id" SERIAL,
     "name" TEXT NOT NULL,
-    "abstract" TEXT NOT NULL,
+    "description" TEXT NOT NULL DEFAULT E'',
     "language" TEXT NOT NULL DEFAULT E'ja',
     "time_required" INTEGER,
     "shared" BOOLEAN NOT NULL DEFAULT true,

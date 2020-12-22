@@ -119,7 +119,6 @@ model LtiResourceLink {
   @@map("lti_resource_link")
 }
 
-// TODO: abstract は description/概要 に改名すべし
 /// ブック
 model Book {
   id               Int               @id @default(autoincrement())
@@ -129,7 +128,7 @@ model Book {
   /// 題名
   name             String
   /// 概要
-  abstract         String
+  description      String            @default("")
   /// 言語 ISO 639-1 code
   language         String            @default("ja")
   /// 学習所要時間 (秒)

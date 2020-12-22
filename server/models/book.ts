@@ -16,7 +16,7 @@ export type BookProps = Omit<
   Prisma.BookCreateWithoutAuthorInput,
   "details" | "sections"
 > & {
-  sections: SectionProps[];
+  sections?: SectionProps[];
 };
 
 export type BookSchema = Omit<Book, "authorId"> & {
@@ -28,7 +28,7 @@ export type BookSchema = Omit<Book, "authorId"> & {
 const {
   id,
   name,
-  abstract,
+  description,
   language,
   timeRequired,
   shared,
@@ -42,7 +42,7 @@ export const bookPropsSchema = {
   type: "object",
   properties: {
     name,
-    abstract,
+    description,
     language: { ...language, nullable: true },
     timeRequired: { ...timeRequired, nullable: true },
     shared: { ...shared, nullable: true },
@@ -58,7 +58,7 @@ export const bookSchema = {
   properties: {
     id,
     name,
-    abstract,
+    description,
     language,
     timeRequired,
     shared,

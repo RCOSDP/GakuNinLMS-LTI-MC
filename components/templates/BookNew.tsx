@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-type Props = { book: Book | null; onSubmit?: (book: BookProps) => void };
+type Props = { book?: Book | null; onSubmit: (book: BookProps) => void };
 
 export default function BookNew(props: Props) {
   const { book, onSubmit } = props;
