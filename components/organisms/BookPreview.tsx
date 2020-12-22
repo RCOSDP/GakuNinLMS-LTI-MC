@@ -52,21 +52,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-type Props = Book;
+type Props = { book: Book };
 
 export default function BookPreview(props: Props) {
   const cardClasses = useCardStyle();
   const classes = useStyles();
-  const {
-    name,
-    author,
-    createdAt,
-    updatedAt,
-    sections,
-    ltiResourceLinks,
-  } = props;
+  const { book } = props;
   const [checkBox, setCheckBox] = useState(false);
-  const [topic] = useState<Topic>(sections[0].topics[0]);
+  const [topic] = useState<Topic>(book.sections[0].topics[0]);
   const handleCheckBoxClick = () => {
     setCheckBox(!checkBox);
   };
@@ -84,13 +77,13 @@ export default function BookPreview(props: Props) {
           >
             {checkBox ? <CheckBoxOutlinedIcon /> : <CheckBoxOutlineBlonkIcon />}
           </IconButton>
-          {name}
+          {book.name}
           <IconButton color="primary">
             <EditOutlinedIcon />
           </IconButton>
         </Typography>
         <div className={classes.chips}>
-          {ltiResourceLinks.map((ltiResourceLink) => (
+          {book.ltiResourceLinks.map((ltiResourceLink) => (
             <CourseChip
               key={ltiResourceLink.contextId}
               ltiResourceLink={ltiResourceLink}
@@ -98,11 +91,11 @@ export default function BookPreview(props: Props) {
           ))}
         </div>
         <div className={classes.items}>
-          <Item itemKey="作成日" value={format(createdAt, "yyyy.MM.dd")} />
-          <Item itemKey="更新日" value={format(updatedAt, "yyyy.MM.dd")} />
-          <Item itemKey="著者" value={author.name} />
+          <Item itemKey="作成日" value={format(book.createdAt, "yyyy.MM.dd")} />
+          <Item itemKey="更新日" value={format(book.updatedAt, "yyyy.MM.dd")} />
+          <Item itemKey="著者" value={book.author.name} />
         </div>
-        {sections.map((section, sectionIndex) => (
+        {book.sections.map((section, sectionIndex) => (
           <Fragment key={section.id}>
             {section.name && (
               <p>

@@ -36,20 +36,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-type Props = Book & {
+type Props = {
+  book: Book;
   onTopicClick(topic: Topic): void;
 };
 
 export default function BookAccordion(props: Props) {
-  const {
-    name,
-    author,
-    createdAt,
-    updatedAt,
-    sections,
-    ltiResourceLinks,
-    onTopicClick,
-  } = props;
+  const { book, onTopicClick } = props;
   const classes = useStyles();
   const accordionClasses = useAccordionStyle();
   const accordionSummaryClasses = useAccordionSummaryStyle();
@@ -57,7 +50,7 @@ export default function BookAccordion(props: Props) {
   const handleItemClick = (
     _: never,
     [sectionIndex, topicIndex]: [number, number]
-  ) => onTopicClick(sections[sectionIndex].topics[topicIndex]);
+  ) => onTopicClick(book.sections[sectionIndex].topics[topicIndex]);
   const handleInfoClick = (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
   };
@@ -74,7 +67,7 @@ export default function BookAccordion(props: Props) {
         IconButtonProps={{ edge: "start" }}
         expandIcon={<ExpandMoreIcon />}
       >
-        <Typography variant="h6">{name}</Typography>
+        <Typography variant="h6">{book.name}</Typography>
         <IconButton onClick={handleInfoClick}>
           <InfoOutlinedIcon />
         </IconButton>
@@ -84,7 +77,7 @@ export default function BookAccordion(props: Props) {
       </AccordionSummary>
       <AccordionDetails classes={accordionDetailClasses}>
         <div className={classes.chips}>
-          {ltiResourceLinks.map((ltiResourceLink) => (
+          {book.ltiResourceLinks.map((ltiResourceLink) => (
             <CourseChip
               key={ltiResourceLink.contextId}
               ltiResourceLink={ltiResourceLink}
@@ -93,13 +86,13 @@ export default function BookAccordion(props: Props) {
           ))}
         </div>
         <div className={classes.items}>
-          <Item itemKey="作成日" value={format(createdAt, "yyyy.MM.dd")} />
-          <Item itemKey="更新日" value={format(updatedAt, "yyyy.MM.dd")} />
-          <Item itemKey="著者" value={author.name} />
+          <Item itemKey="作成日" value={format(book.createdAt, "yyyy.MM.dd")} />
+          <Item itemKey="更新日" value={format(book.updatedAt, "yyyy.MM.dd")} />
+          <Item itemKey="著者" value={book.author.name} />
         </div>
         <Divider />
         <BookAccordionChildren
-          sections={sections}
+          sections={book.sections}
           onItemClick={handleItemClick}
         />
       </AccordionDetails>

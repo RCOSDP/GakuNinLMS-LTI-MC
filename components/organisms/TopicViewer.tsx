@@ -35,37 +35,31 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-type Props = Topic & { onEnded?: () => void };
+type Props = {
+  topic: Topic;
+  onEnded?: () => void;
+};
 
 export default function TopicPlaer(props: Props) {
   const classes = useStyles();
   const cardClasses = useCardStyles();
-  const {
-    name,
-    resource,
-    timeRequired,
-    createdAt,
-    updatedAt,
-    creator,
-    description,
-    onEnded,
-  } = props;
+  const { topic, onEnded } = props;
   return (
     <Card classes={cardClasses}>
       <Video
         className={classes.video}
         providerUrl="https://www.youtube.com/" // TODO: resource が video ならば video.providerUrl を使いたい
-        url={resource.url}
+        url={topic.resource.url}
         subtitles={[]}
         onEnded={onEnded}
         autoplay
       />
       <Typography className={classes.title} variant="h5">
-        {name}
+        {topic.name}
       </Typography>
       <div className={classes.items}>
         <Typography className={classes.title} variant="h6">
-          学習時間 {formatInterval(0, timeRequired * 1000) || "10秒未満"}
+          学習時間 {formatInterval(0, topic.timeRequired * 1000) || "10秒未満"}
         </Typography>
         <Typography className={classes.title} variant="h6">
           日本語
@@ -75,11 +69,11 @@ export default function TopicPlaer(props: Props) {
         </Typography>
       </div>
       <div className={classes.items}>
-        <Item itemKey="作成日" value={format(createdAt, "yyyy.MM.dd")} />
-        <Item itemKey="更新日" value={format(updatedAt, "yyyy.MM.dd")} />
-        <Item itemKey="著者" value={creator.name} />
+        <Item itemKey="作成日" value={format(topic.createdAt, "yyyy.MM.dd")} />
+        <Item itemKey="更新日" value={format(topic.updatedAt, "yyyy.MM.dd")} />
+        <Item itemKey="著者" value={topic.creator.name} />
       </div>
-      <p className={classes.description}>{description}</p>
+      <p className={classes.description}>{topic.description}</p>
     </Card>
   );
 }

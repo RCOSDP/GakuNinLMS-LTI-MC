@@ -3,7 +3,7 @@ export default { title: "organisms/BookAccordion" };
 import BookAccordion from "./BookAccordion";
 import { book } from "samples";
 
-const props = book;
+const props = { book };
 
 const handleTopicClick = console.log;
 

@@ -71,7 +71,7 @@ export default function Books(props: Props) {
         {books.map((book) => (
           <BookAccordion
             key={book.id}
-            {...book}
+            book={book}
             onTopicClick={handleTopicClick(book)}
           />
         ))}
