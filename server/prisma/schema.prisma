@@ -48,6 +48,8 @@ model Track {
   kind     String @default("subtitles")
   /// 言語 ISO 639-1 code
   language String
+  /// WebVTT ファイルの実体
+  content  String
 
   @@map("tracks")
 }

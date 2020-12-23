@@ -5,9 +5,10 @@ import * as book from "./book";
 import * as topics from "./topics";
 import * as topic from "./topic";
 import * as resources from "./resources";
+import * as resource from "./resource";
 import session from "./session";
 
-const routers = [lti, user, book, topics, topic, resources];
+const routers = [lti, user, book, topics, topic, resources, resource];
 
 async function routes(fastify: FastifyInstance) {
   for (const router of routers) {
