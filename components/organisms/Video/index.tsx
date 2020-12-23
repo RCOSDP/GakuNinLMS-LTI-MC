@@ -3,7 +3,10 @@ import { YouTubePlayer } from "./YouTubePlayer";
 import { VimeoPlayer } from "./VimeoPlayer";
 import { WowzaPlayer } from "./WowzaPlayer";
 
-type VideoProps = Pick<VideoResourceSchema, "providerUrl" | "url" | "tracks"> & {
+type VideoProps = Pick<
+  VideoResourceSchema,
+  "providerUrl" | "url" | "tracks"
+> & {
   className?: string;
   autoplay?: boolean;
   onEnded?: () => void;
