@@ -35,7 +35,6 @@
     "fastify-cors": "^5.1.0",
     "fastify-formbody": "^5.0.0",
     "fastify-helmet": "^5.0.3",
-    "fastify-multipart": "^3.3.1",
     "fastify-session": "^5.2.1",
     "fastify-static": "^3.3.0",
     "fastify-swagger": "^3.5.0",
