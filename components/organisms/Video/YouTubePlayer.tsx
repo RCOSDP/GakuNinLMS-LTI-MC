@@ -1,10 +1,11 @@
 import { memo } from "react";
 import { VideoJs } from "./VideoJs";
-import { buildTracks } from "./subtitle";
+import buildTracks from "./buildTracks";
+import { VideoTrackSchema } from "$server/models/videoTrack";
 
 type PlayerProps = {
   url: string;
-  subtitles: Subtitle[];
+  tracks: VideoTrackSchema[];
   autoplay?: boolean;
   onEnded?: () => void;
 };
@@ -22,7 +23,7 @@ function YouTubePlayerBase(props: PlayerProps) {
         ],
         autoplay: props.autoplay,
       }}
-      tracks={buildTracks(props.subtitles)}
+      tracks={buildTracks(props.tracks)}
       onEnded={props.onEnded}
     />
   );

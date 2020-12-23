@@ -46,14 +46,14 @@ export default function TopicPlaer(props: Props) {
   const { topic, onEnded } = props;
   return (
     <Card classes={cardClasses}>
-      <Video
-        className={classes.video}
-        providerUrl="https://www.youtube.com/" // TODO: resource が video ならば video.providerUrl を使いたい
-        url={topic.resource.url}
-        subtitles={[]}
-        onEnded={onEnded}
-        autoplay
-      />
+      {"providerUrl" in topic.resource && (
+        <Video
+          className={classes.video}
+          {...topic.resource}
+          onEnded={onEnded}
+          autoplay
+        />
+      )}
       <Typography className={classes.title} variant="h5">
         {topic.name}
       </Typography>

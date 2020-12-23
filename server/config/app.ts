@@ -6,7 +6,6 @@ import session from "fastify-session";
 import cookie from "fastify-cookie";
 import auth from "fastify-auth";
 import formbody from "fastify-formbody";
-import multipart from "fastify-multipart";
 import pkg from "$server/package.json";
 import routes from "./routes";
 
@@ -55,10 +54,6 @@ async function app(fastify: FastifyInstance, options: Options) {
     }),
     fastify.register(auth),
     fastify.register(formbody),
-    fastify.register(multipart, {
-      attachFieldsToBody: true,
-      limits: { fileSize: 1024 ** 3 },
-    }),
   ]);
 
   await fastify.register(routes, { prefix: basePath });

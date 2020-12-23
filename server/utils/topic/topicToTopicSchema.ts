@@ -1,8 +1,12 @@
 import { Prisma } from "@prisma/client";
 import { TopicSchema } from "$server/models/topic";
+import {
+  resourceWithVideoArg,
+  resourceToResourceSchema,
+} from "$server/utils/resource/toSchema";
 
 export const topicsWithResourcesArg = {
-  include: { creator: true, resource: { include: { video: true } } },
+  include: { creator: true, resource: resourceWithVideoArg },
 } as const;
 
 export type TopicWithResource = Prisma.TopicGetPayload<
@@ -10,11 +14,5 @@ export type TopicWithResource = Prisma.TopicGetPayload<
 >;
 
 export function topicToTopicSchema(topic: TopicWithResource): TopicSchema {
-  return {
-    ...topic,
-    resource: {
-      ...topic.resource.video,
-      ...topic.resource,
-    },
-  };
+  return { ...topic, resource: resourceToResourceSchema(topic.resource) };
 }

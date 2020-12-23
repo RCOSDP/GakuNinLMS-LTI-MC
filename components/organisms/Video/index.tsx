@@ -3,9 +3,11 @@ import { YouTubePlayer } from "./YouTubePlayer";
 import { VimeoPlayer } from "./VimeoPlayer";
 import { WowzaPlayer } from "./WowzaPlayer";
 
-type VideoProps = Pick<VideoResourceSchema, "providerUrl" | "url"> & {
+type VideoProps = Pick<
+  VideoResourceSchema,
+  "providerUrl" | "url" | "tracks"
+> & {
   className?: string;
-  subtitles: Subtitle[];
   autoplay?: boolean;
   onEnded?: () => void;
 };

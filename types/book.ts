@@ -1,5 +1,6 @@
 import type * as Prisma from "@prisma/client";
 import { BookSchema } from "$server/models/book";
+import { ResourceSchema } from "$server/models/resource";
 
 export type Book = Omit<BookSchema, "sections"> & {
   sections: Section[];
@@ -14,4 +15,4 @@ export type Topic = Omit<Prisma.Topic, "creatorId" | "language" | "shared"> & {
   resource: Resource;
 };
 
-export type Resource = Prisma.Resource;
+export type Resource = ResourceSchema;

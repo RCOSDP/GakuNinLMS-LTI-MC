@@ -9,7 +9,11 @@ const hostMatch = (url: URL) => (matcher: VideoResourceMatcher): boolean =>
 function match(url: URL): VideoResource | undefined {
   const location = providerMatchers.find(hostMatch(url));
   return (
-    location && { providerUrl: location.providerUrl, url: location.url(url) }
+    location && {
+      providerUrl: location.providerUrl,
+      url: location.url(url),
+      tracks: [],
+    }
   );
 }
 

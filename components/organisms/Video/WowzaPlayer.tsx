@@ -1,11 +1,12 @@
 import { memo } from "react";
+import { VideoTrackSchema } from "$server/models/videoTrack";
 import { VideoJs } from "./VideoJs";
-import { buildTracks } from "./subtitle";
 import { useWowzaResource } from "./wowza";
+import buildTracks from "./buildTracks";
 
 type PlayerProps = {
   url: string;
-  subtitles: Subtitle[];
+  tracks: VideoTrackSchema[];
   autoplay?: boolean;
   onEnded?: () => void;
 };
@@ -28,7 +29,7 @@ function WowzaPlayerBase(props: PlayerProps) {
         sources,
         autoplay: props.autoplay,
       }}
-      tracks={buildTracks(props.subtitles)}
+      tracks={buildTracks(props.tracks)}
       onEnded={props.onEnded}
     />
   );

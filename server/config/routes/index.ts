@@ -4,12 +4,14 @@ import * as user from "./user";
 import * as book from "./book";
 import * as topics from "./topics";
 import * as topic from "./topic";
+import * as resources from "./resources";
+import * as resource from "./resource";
 import session from "./session";
 
-const resources = [lti, user, book, topics, topic];
+const routers = [lti, user, book, topics, topic, resources, resource];
 
 async function routes(fastify: FastifyInstance) {
-  for (const router of resources) {
+  for (const router of routers) {
     for (const route of Object.values(router)) {
       await fastify.register(route);
     }
