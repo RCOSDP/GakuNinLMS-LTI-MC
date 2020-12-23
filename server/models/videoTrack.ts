@@ -6,7 +6,9 @@ export type VideoTrackProps = Pick<
   "language" | "content"
 >;
 
-export type VideoTrackSchema = Pick<Track, "id" | "kind" | "language">;
+export type VideoTrackSchema = Pick<Track, "id" | "kind" | "language"> & {
+  url: string;
+};
 
 const { id, kind, language, content } = jsonSchema.definitions.Track.properties;
 
@@ -17,5 +19,5 @@ export const videoTrackPropsSchema = {
 
 export const videoTrackSchema = {
   type: "object",
-  properties: { id, kind, language },
+  properties: { id, kind, language, url: { type: "string" } },
 };

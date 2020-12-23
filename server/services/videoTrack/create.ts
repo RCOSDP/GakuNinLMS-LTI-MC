@@ -1,4 +1,4 @@
-import type { FastifySchema } from "fastify";
+import type { FastifyRequest, FastifySchema } from "fastify";
 import {
   VideoTrackProps,
   videoTrackPropsSchema,
@@ -22,14 +22,14 @@ export const createSchema: FastifySchema = {
   },
 };
 
-export async function create({
-  params,
-  body,
-}: {
-  params: ResourceParams;
-  body: CreateBody;
-}) {
-  const created = await createVideoTrack(params.resource_id, body);
+export async function create(
+  req: FastifyRequest<{
+    Params: ResourceParams;
+    Body: CreateBody;
+  }>
+) {
+  const url = `${req.protocol}://${req.hostname}${req.url}`;
+  const created = await createVideoTrack(url, req.params.resource_id, req.body);
 
   return {
     status: created == null ? 400 : 201,

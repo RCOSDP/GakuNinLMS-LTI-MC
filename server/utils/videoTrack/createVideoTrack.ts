@@ -3,6 +3,7 @@ import { VideoTrackProps, VideoTrackSchema } from "$server/models/videoTrack";
 import prisma from "$server/utils/prisma";
 
 async function createVideoTrack(
+  createRequestUrl: string,
   resourceId: Resource["id"],
   videoTrack: VideoTrackProps
 ): Promise<undefined | VideoTrackSchema> {
@@ -21,7 +22,8 @@ async function createVideoTrack(
     },
     select: { id: true, kind: true, language: true },
   });
-  return created;
+
+  return { ...created, url: `${createRequestUrl}/${created.id}/vtt` };
 }
 
 export default createVideoTrack;
