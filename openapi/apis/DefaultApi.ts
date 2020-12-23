@@ -33,6 +33,9 @@ import {
     InlineObject5,
     InlineObject5FromJSON,
     InlineObject5ToJSON,
+    InlineObject6,
+    InlineObject6FromJSON,
+    InlineObject6ToJSON,
     InlineResponse200,
     InlineResponse200FromJSON,
     InlineResponse200ToJSON,
@@ -54,6 +57,9 @@ import {
     InlineResponse2004,
     InlineResponse2004FromJSON,
     InlineResponse2004ToJSON,
+    InlineResponse201,
+    InlineResponse201FromJSON,
+    InlineResponse201ToJSON,
 } from '../models';
 
 export interface ApiV2BookBookIdDeleteRequest {
@@ -88,6 +94,21 @@ export interface ApiV2LtiResourceLinkLtiResourceLinkIdGetRequest {
 export interface ApiV2LtiResourceLinkLtiResourceLinkIdPutRequest {
     ltiResourceLinkId: string;
     body?: InlineObject1;
+}
+
+export interface ApiV2ResourceResourceIdVideoTrackPostRequest {
+    resourceId: number;
+    body?: InlineObject6;
+}
+
+export interface ApiV2ResourceResourceIdVideoTrackVideoTrackIdDeleteRequest {
+    videoTrackId: number;
+    resourceId: number;
+}
+
+export interface ApiV2ResourceResourceIdVideoTrackVideoTrackIdVttGetRequest {
+    videoTrackId: number;
+    resourceId: number;
 }
 
 export interface ApiV2ResourcesGetRequest {
@@ -368,6 +389,107 @@ export class DefaultApi extends runtime.BaseAPI {
      */
     async apiV2LtiResourceLinkLtiResourceLinkIdPut(requestParameters: ApiV2LtiResourceLinkLtiResourceLinkIdPutRequest): Promise<InlineResponse200> {
         const response = await this.apiV2LtiResourceLinkLtiResourceLinkIdPutRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * 字幕ファイルのアップロード
+     */
+    async apiV2ResourceResourceIdVideoTrackPostRaw(requestParameters: ApiV2ResourceResourceIdVideoTrackPostRequest): Promise<runtime.ApiResponse<InlineResponse201>> {
+        if (requestParameters.resourceId === null || requestParameters.resourceId === undefined) {
+            throw new runtime.RequiredError('resourceId','Required parameter requestParameters.resourceId was null or undefined when calling apiV2ResourceResourceIdVideoTrackPost.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/api/v2/resource/{resource_id}/video_track`.replace(`{${"resource_id"}}`, encodeURIComponent(String(requestParameters.resourceId))),
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: InlineObject6ToJSON(requestParameters.body),
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse201FromJSON(jsonValue));
+    }
+
+    /**
+     * 字幕ファイルのアップロード
+     */
+    async apiV2ResourceResourceIdVideoTrackPost(requestParameters: ApiV2ResourceResourceIdVideoTrackPostRequest): Promise<InlineResponse201> {
+        const response = await this.apiV2ResourceResourceIdVideoTrackPostRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * 字幕の削除
+     */
+    async apiV2ResourceResourceIdVideoTrackVideoTrackIdDeleteRaw(requestParameters: ApiV2ResourceResourceIdVideoTrackVideoTrackIdDeleteRequest): Promise<runtime.ApiResponse<object>> {
+        if (requestParameters.videoTrackId === null || requestParameters.videoTrackId === undefined) {
+            throw new runtime.RequiredError('videoTrackId','Required parameter requestParameters.videoTrackId was null or undefined when calling apiV2ResourceResourceIdVideoTrackVideoTrackIdDelete.');
+        }
+
+        if (requestParameters.resourceId === null || requestParameters.resourceId === undefined) {
+            throw new runtime.RequiredError('resourceId','Required parameter requestParameters.resourceId was null or undefined when calling apiV2ResourceResourceIdVideoTrackVideoTrackIdDelete.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/api/v2/resource/{resource_id}/video_track/{video_track_id}`.replace(`{${"video_track_id"}}`, encodeURIComponent(String(requestParameters.videoTrackId))).replace(`{${"resource_id"}}`, encodeURIComponent(String(requestParameters.resourceId))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse<any>(response);
+    }
+
+    /**
+     * 字幕の削除
+     */
+    async apiV2ResourceResourceIdVideoTrackVideoTrackIdDelete(requestParameters: ApiV2ResourceResourceIdVideoTrackVideoTrackIdDeleteRequest): Promise<object> {
+        const response = await this.apiV2ResourceResourceIdVideoTrackVideoTrackIdDeleteRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * 字幕の取得
+     */
+    async apiV2ResourceResourceIdVideoTrackVideoTrackIdVttGetRaw(requestParameters: ApiV2ResourceResourceIdVideoTrackVideoTrackIdVttGetRequest): Promise<runtime.ApiResponse<object>> {
+        if (requestParameters.videoTrackId === null || requestParameters.videoTrackId === undefined) {
+            throw new runtime.RequiredError('videoTrackId','Required parameter requestParameters.videoTrackId was null or undefined when calling apiV2ResourceResourceIdVideoTrackVideoTrackIdVttGet.');
+        }
+
+        if (requestParameters.resourceId === null || requestParameters.resourceId === undefined) {
+            throw new runtime.RequiredError('resourceId','Required parameter requestParameters.resourceId was null or undefined when calling apiV2ResourceResourceIdVideoTrackVideoTrackIdVttGet.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/api/v2/resource/{resource_id}/video_track/{video_track_id}/vtt`.replace(`{${"video_track_id"}}`, encodeURIComponent(String(requestParameters.videoTrackId))).replace(`{${"resource_id"}}`, encodeURIComponent(String(requestParameters.resourceId))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse<any>(response);
+    }
+
+    /**
+     * 字幕の取得
+     */
+    async apiV2ResourceResourceIdVideoTrackVideoTrackIdVttGet(requestParameters: ApiV2ResourceResourceIdVideoTrackVideoTrackIdVttGetRequest): Promise<object> {
+        const response = await this.apiV2ResourceResourceIdVideoTrackVideoTrackIdVttGetRaw(requestParameters);
         return await response.value();
     }
 
