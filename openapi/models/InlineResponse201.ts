@@ -37,6 +37,12 @@ export interface InlineResponse201 {
      * @memberof InlineResponse201
      */
     language?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineResponse201
+     */
+    url?: string;
 }
 
 export function InlineResponse201FromJSON(json: any): InlineResponse201 {
@@ -52,6 +58,7 @@ export function InlineResponse201FromJSONTyped(json: any, ignoreDiscriminator: b
         'id': !exists(json, 'id') ? undefined : json['id'],
         'kind': !exists(json, 'kind') ? undefined : json['kind'],
         'language': !exists(json, 'language') ? undefined : json['language'],
+        'url': !exists(json, 'url') ? undefined : json['url'],
     };
 }
 
@@ -67,6 +74,7 @@ export function InlineResponse201ToJSON(value?: InlineResponse201 | null): any {
         'id': value.id,
         'kind': value.kind,
         'language': value.language,
+        'url': value.url,
     };
 }
 
