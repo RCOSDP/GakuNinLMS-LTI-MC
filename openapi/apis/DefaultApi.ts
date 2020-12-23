@@ -494,7 +494,7 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * トピック一覧
+     * リソース一覧
      */
     async apiV2ResourcesGetRaw(requestParameters: ApiV2ResourcesGetRequest): Promise<runtime.ApiResponse<InlineResponse2003>> {
         const queryParameters: runtime.HTTPQuery = {};
@@ -520,7 +520,7 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * トピック一覧
+     * リソース一覧
      */
     async apiV2ResourcesGet(requestParameters: ApiV2ResourcesGetRequest): Promise<InlineResponse2003> {
         const response = await this.apiV2ResourcesGetRaw(requestParameters);

@@ -11,7 +11,7 @@ export type Query = PaginationProps;
 
 export const method: Method = {
   get: {
-    description: "トピック一覧",
+    description: "リソース一覧",
     querystring: paginationPropsSchema,
     response: {
       200: {
