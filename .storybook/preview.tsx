@@ -1,4 +1,3 @@
-import * as nextRouter from "next/router";
 import { addDecorator } from "@storybook/react";
 import { Provider } from "jotai";
 import { ThemeProvider } from "@material-ui/styles";
@@ -9,10 +8,6 @@ import theme from "../theme";
 import "video.js/dist/video-js.css";
 import "videojs-seek-buttons/dist/videojs-seek-buttons.css";
 import "../styles/video-js.css";
-
-// NOTE: Mock useRouter
-// @ts-expect-error
-nextRouter.useRouter = () => ({ route: "/", query: {} });
 
 addDecorator((story) => (
   <Provider>
