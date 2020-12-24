@@ -1,7 +1,6 @@
 import { memo } from "react";
 import { VideoTrackSchema } from "$server/models/videoTrack";
 import { VideoJs } from "./VideoJs";
-import { useWowzaResource } from "./wowza";
 import buildTracks from "./buildTracks";
 
 type PlayerProps = {
@@ -11,22 +10,21 @@ type PlayerProps = {
   onEnded?: () => void;
 };
 
+/** @todo 未実装 */
+function useWowzaResource(url: string) {
+  return {
+    type: "application/vnd.apple.mpegurl",
+    src: url,
+  };
+}
+
 function WowzaPlayerBase(props: PlayerProps) {
   const resource = useWowzaResource(props.url);
-  const sources =
-    resource.state === "success"
-      ? [
-          {
-            type: "application/vnd.apple.mpegurl",
-            src: resource.url,
-          },
-        ]
-      : [];
 
   return (
     <VideoJs
       options={{
-        sources,
+        sources: [resource],
         autoplay: props.autoplay,
       }}
       tracks={buildTracks(props.tracks)}

@@ -43,12 +43,11 @@ When changing the information of the connection destination of API, .env must be
 
 .env:
 
-| Environment variable              | Explanation                       |
-| --------------------------------- | --------------------------------- |
-| `NEXT_PUBLIC_API_BASE_PATH`       | Base path for API URLs            |
-| `NEXT_PUBLIC_SUBTITLE_STORE_PATH` | URL path for saved subtitle files |
-| `NEXT_PUBLIC_LMS_URL`             | Learning management system URL    |
-| `NEXT_PUBLIC_BASE_PATH`           | Base path for static content URLs |
+| Environment variable        | Explanation                       |
+| --------------------------- | --------------------------------- |
+| `NEXT_PUBLIC_API_BASE_PATH` | Base path for API URLs            |
+| `NEXT_PUBLIC_LMS_URL`       | Learning management system URL    |
+| `NEXT_PUBLIC_BASE_PATH`     | Base path for static content URLs |
 
 ## Build front-ends
 
