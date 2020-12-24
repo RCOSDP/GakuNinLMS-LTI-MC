@@ -3,14 +3,22 @@ import { BookProps, BookSchema } from "$server/models/book";
 import BookEdit from "$templates/BookEdit";
 import { updateBook, useBook } from "$utils/book";
 
-type Query = {
+export type Query = {
   id?: string;
+  prev?: "/books";
 };
 
-function Edit({ id }: Pick<BookSchema, "id">) {
+function Edit({ id, prev }: Pick<BookSchema, "id"> & Pick<Query, "prev">) {
   const book = useBook(id);
+  const router = useRouter();
   async function handleSubmit(props: BookProps) {
     await updateBook({ id, ...props });
+    switch (prev) {
+      case "/books":
+        return router.push(prev);
+      default:
+        return router.push({ pathname: "/book", query: { id } });
+    }
   }
   function handleTopicClick() {
     // TODO: どうあるべきなんだっけ? あとでやる
@@ -34,7 +42,7 @@ function Router() {
 
   if (!Number.isFinite(id)) return <p>Not Found</p>; // TODO: エラーページを用意
 
-  return <Edit id={id} />;
+  return <Edit id={id} prev={query.prev} />;
 }
 
 export default Router;

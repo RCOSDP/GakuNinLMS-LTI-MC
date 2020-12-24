@@ -4,7 +4,7 @@ import { useNextItemIndexAtom } from "$store/book";
 import Book from "$templates/Book";
 import { useBook } from "$utils/book";
 
-type Query = {
+export type Query = {
   id?: string;
 };
 
