@@ -37,11 +37,13 @@ const useStyles = makeStyles((theme) => ({
 type Props = {
   books: Book[];
   onBookClick(book: Book): void;
+  onBookEditClick(book: Book): void;
   onBookNewClick(): void;
 };
 
 export default function Books(props: Props) {
-  const { books, onBookClick, onBookNewClick } = props;
+  const { books, onBookClick, onBookEditClick, onBookNewClick } = props;
+  const handleBookEditClick = (book: Book) => () => onBookEditClick(book);
   const handleTopicClick = (book: Book) => () => onBookClick(book);
   const handleBookNewClick = () => onBookNewClick();
   const classes = useStyles();
@@ -72,6 +74,7 @@ export default function Books(props: Props) {
           <BookAccordion
             key={book.id}
             book={book}
+            onEditClick={handleBookEditClick(book)}
             onTopicClick={handleTopicClick(book)}
           />
         ))}

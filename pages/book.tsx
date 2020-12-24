@@ -1,19 +1,22 @@
-import { useAtom } from "jotai";
 import { useRouter } from "next/router";
 import { BookSchema } from "$server/models/book";
-import { nextItemIndexAtom } from "$store/book";
+import { useNextItemIndexAtom } from "$store/book";
 import Book from "$templates/Book";
 import { useBook } from "$utils/book";
 
-type Query = {
+export type Query = {
   id?: string;
 };
 
 function Show(props: Pick<BookSchema, "id">) {
   const book = useBook(props.id);
-  const [index, nextItemIndex] = useAtom(nextItemIndexAtom);
+  const [index, nextItemIndex] = useNextItemIndexAtom();
   const handleTopicEnded = () => nextItemIndex();
   const handleItemClick = nextItemIndex;
+  const router = useRouter();
+  const handleBookEditClick = () => {
+    router.push({ pathname: "/book/edit", query: props });
+  };
 
   if (!book) return <p>Loading...</p>; // TODO: プレースホルダーがいい加減
 
@@ -21,6 +24,7 @@ function Show(props: Pick<BookSchema, "id">) {
     <Book
       book={book}
       index={index}
+      onBookEditClick={handleBookEditClick}
       onTopicEnded={handleTopicEnded}
       onItemClick={handleItemClick}
     />

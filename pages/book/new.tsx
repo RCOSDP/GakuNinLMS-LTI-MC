@@ -7,9 +7,8 @@ function New() {
   const router = useRouter();
   const handleSubmit = async (book: BookProps) => {
     const { id } = await createBook(book);
-    // TODO: ブック編集画面への遷移にあとで(#97)直すべし
     await router.replace({
-      pathname: "/book",
+      pathname: "/book/edit",
       query: { id },
     });
   };

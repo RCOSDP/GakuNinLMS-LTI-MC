@@ -4,11 +4,11 @@ const books = [
     name: "さまざまな関数",
     description: "入門微分積分学共通	第1章",
     sections: [
-      { topicIds: [1] },
-      { topicIds: [2] },
-      { topicIds: [3] },
-      { topicIds: [4] },
-      { topicIds: [5] },
+      { topics: [{ id: 1 }] },
+      { topics: [{ id: 2 }] },
+      { topics: [{ id: 3 }] },
+      { topics: [{ id: 4 }] },
+      { topics: [{ id: 5 }] },
     ],
   },
 ];

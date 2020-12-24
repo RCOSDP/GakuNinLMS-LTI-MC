@@ -53,6 +53,7 @@ export default function BookForm(props: Props) {
     shared: book?.shared ?? true,
     language: book?.language ?? languages[0].value,
     timeRequired: book?.timeRequired,
+    sections: book?.sections,
   };
   const { handleSubmit, register, control } = useForm<BookProps>({
     defaultValues,
@@ -63,7 +64,9 @@ export default function BookForm(props: Props) {
       classes={cardClasses}
       className={classes.margin}
       component="form"
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={handleSubmit((values) => {
+        onSubmit({ ...defaultValues, ...values });
+      })}
     >
       <TextField
         name="name"
