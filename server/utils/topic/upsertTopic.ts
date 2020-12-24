@@ -6,13 +6,13 @@ import {
   topicToTopicSchema,
 } from "./topicToTopicSchema";
 import topicInput from "./topicInput";
-import resourceCreateInput from "./resourceCreateInput";
+import resourceConnectOrCreateInput from "./resourceConnectOrCreateInput";
 import topicCreateInput from "./topicCreateInput";
 
 function topicUpdateInput(creatorId: User["id"], topic: TopicProps) {
   const input = {
     ...topicInput(creatorId, topic),
-    resource: resourceCreateInput(topic.resource),
+    resource: resourceConnectOrCreateInput(topic.resource),
   };
 
   return input;

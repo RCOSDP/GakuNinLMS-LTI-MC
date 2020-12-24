@@ -1,7 +1,7 @@
 import { ResourceProps } from "$server/models/resource";
 import { parse } from "$server/utils/videoResource";
 
-function resourceCreateInput(resource: ResourceProps) {
+function resourceConnectOrCreateInput(resource: ResourceProps) {
   const videoProviderUrl = parse(resource.url)?.providerUrl;
   const videoCreateInput =
     videoProviderUrl == null
@@ -13,7 +13,7 @@ function resourceCreateInput(resource: ResourceProps) {
     video: videoCreateInput,
   };
 
-  return { create: resourceInput };
+  return { connectOrCreate: { where: { url: resource.url }, create: resourceInput } };
 }
 
-export default resourceCreateInput;
+export default resourceConnectOrCreateInput;
