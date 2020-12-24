@@ -21,7 +21,7 @@ function Edit({ id, prev }: Pick<BookSchema, "id"> & Pick<Query, "prev">) {
     }
   }
   function handleTopicClick() {
-    // TODO: どうあるべきなんだっけ? あとでやる
+    // TODO: TopicViewer/トピックのプレビュー画面が実装されればそれを表示しましょう
   }
 
   if (!book) return <p>Loading...</p>; // TODO: プレースホルダーがいい加減
