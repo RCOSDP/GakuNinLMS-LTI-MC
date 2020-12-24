@@ -4,11 +4,20 @@ import BookEdit from "./BookEdit";
 import { book } from "samples";
 
 const handleTopicClick = console.log;
+const handleSubmit = console.log;
 
 export const Default = () => (
-  <BookEdit book={book} onTopicClick={handleTopicClick} />
+  <BookEdit
+    book={book}
+    onSubmit={handleSubmit}
+    onTopicClick={handleTopicClick}
+  />
 );
 
 export const Empty = () => (
-  <BookEdit book={null} onTopicClick={handleTopicClick} />
+  <BookEdit
+    book={null}
+    onSubmit={handleSubmit}
+    onTopicClick={handleTopicClick}
+  />
 );

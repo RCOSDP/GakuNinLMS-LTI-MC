@@ -5,6 +5,7 @@ import BookEditChildren from "$organisms/BookEditChildren";
 import BookForm from "$organisms/BookForm";
 import RequiredDot from "$atoms/RequiredDot";
 import useContainerStyles from "styles/container";
+import { BookProps } from "$server/models/book";
 import { Book, Topic } from "types/book";
 
 const useStyles = makeStyles((theme) => ({
@@ -31,10 +32,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-type Props = { book: Book | null; onTopicClick(topic: Topic): void };
+type Props = {
+  book: Book | null;
+  onSubmit(book: BookProps): void;
+  onTopicClick(topic: Topic): void;
+};
 
 export default function BookEdit(props: Props) {
-  const { book, onTopicClick } = props;
+  const { book, onSubmit, onTopicClick } = props;
   const classes = useStyles();
   const containerClasses = useContainerStyles();
   const handleTopicClick = (topic: Topic) => onTopicClick(topic);
@@ -57,7 +62,7 @@ export default function BookEdit(props: Props) {
         sections={book?.sections ?? []}
         onTopicClick={handleTopicClick}
       />
-      <BookForm book={book} />
+      <BookForm book={book} onSubmit={onSubmit} />
     </Container>
   );
 }
