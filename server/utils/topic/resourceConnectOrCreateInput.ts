@@ -13,7 +13,9 @@ function resourceConnectOrCreateInput(resource: ResourceProps) {
     video: videoCreateInput,
   };
 
-  return { connectOrCreate: { where: { url: resource.url }, create: resourceInput } };
+  return {
+    connectOrCreate: { where: { url: resource.url }, create: resourceInput },
+  };
 }
 
 export default resourceConnectOrCreateInput;
