@@ -15,7 +15,7 @@ const basicEventsMap = [
 ] as const;
 
 type CustomEvents = {
-  nextvideo: PlayerEvent & { video: VideoSchema["id"] };
+  nextvideo: PlayerEvent & { video: number };
 };
 
 const nullEvent = {
@@ -44,7 +44,7 @@ export class PlayerTracker extends (EventEmitter as {
     }
   }
 
-  async next(video: VideoSchema["id"]) {
+  async next(video: number) {
     this.emit("nextvideo", { ...(await this.stats()), video });
   }
 

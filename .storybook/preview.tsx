@@ -4,8 +4,6 @@ import { Provider } from "jotai";
 import { ThemeProvider } from "@material-ui/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Container from "@material-ui/core/Container";
-import { ConfirmProvider } from "material-ui-confirm";
-import { SnackbarProvider } from "material-ui-snackbar-provider";
 import theme from "../theme";
 // NOTE: For VideoJs components.
 import "video.js/dist/video-js.css";
@@ -20,11 +18,7 @@ addDecorator((story) => (
   <Provider>
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <ConfirmProvider>
-        <SnackbarProvider SnackbarProps={{ autoHideDuration: 5e3 }}>
-          <Container>{story()}</Container>
-        </SnackbarProvider>
-      </ConfirmProvider>
+      <Container>{story()}</Container>
     </ThemeProvider>
   </Provider>
 ));

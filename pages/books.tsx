@@ -1,5 +1,5 @@
 import { User, Book } from "@prisma/client";
-import { useRouter } from "$components/router";
+import { useRouter } from "next/router";
 import { useSession } from "$utils/session";
 import { useUserBooks } from "$utils/userBooks";
 import Books from "$templates/Books";
