@@ -33,7 +33,7 @@ async function main() {
   try {
     console.log("Seeding...");
     await seed();
-    console.log("Completed.");
+    console.log("Seeding completed.");
     exitCode = 0;
   } catch (error) {
     console.error(error.stack ?? error.message);
