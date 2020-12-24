@@ -1,4 +1,5 @@
 export * from './ApiV2BookBookIdSections';
+export * from './ApiV2BookBookIdTopics';
 export * from './ApiV2TopicTopicIdResource';
 export * from './InlineObject';
 export * from './InlineObject1';

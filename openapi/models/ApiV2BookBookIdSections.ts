@@ -13,6 +13,13 @@
  */
 
 import { exists, mapValues } from '../runtime';
+import {
+    ApiV2BookBookIdTopics,
+    ApiV2BookBookIdTopicsFromJSON,
+    ApiV2BookBookIdTopicsFromJSONTyped,
+    ApiV2BookBookIdTopicsToJSON,
+} from './';
+
 /**
  * 
  * @export
@@ -27,10 +34,10 @@ export interface ApiV2BookBookIdSections {
     name?: string;
     /**
      * 
-     * @type {Array<number>}
+     * @type {Array<ApiV2BookBookIdTopics>}
      * @memberof ApiV2BookBookIdSections
      */
-    topicIds?: Array<number>;
+    topics?: Array<ApiV2BookBookIdTopics>;
 }
 
 export function ApiV2BookBookIdSectionsFromJSON(json: any): ApiV2BookBookIdSections {
@@ -44,7 +51,7 @@ export function ApiV2BookBookIdSectionsFromJSONTyped(json: any, ignoreDiscrimina
     return {
         
         'name': !exists(json, 'name') ? undefined : json['name'],
-        'topicIds': !exists(json, 'topicIds') ? undefined : json['topicIds'],
+        'topics': !exists(json, 'topics') ? undefined : ((json['topics'] as Array<any>).map(ApiV2BookBookIdTopicsFromJSON)),
     };
 }
 
@@ -58,7 +65,7 @@ export function ApiV2BookBookIdSectionsToJSON(value?: ApiV2BookBookIdSections | 
     return {
         
         'name': value.name,
-        'topicIds': value.topicIds,
+        'topics': value.topics === undefined ? undefined : ((value.topics as Array<any>).map(ApiV2BookBookIdTopicsToJSON)),
     };
 }
 

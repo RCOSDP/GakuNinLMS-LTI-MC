@@ -2,14 +2,12 @@ import { Topic, Section, TopicSection } from "@prisma/client";
 import { SectionProps } from "$server/models/book/section";
 
 const topicSectionCreateInput = (
-  topicId: Topic["id"],
+  topic: Pick<Topic, "id">,
   order: TopicSection["order"]
-) => ({ order, topic: { connect: { id: topicId } } });
+) => ({ order, topic: { connect: { id: topic.id } } });
 
 const sectionCreateInput = (section: SectionProps, order: Section["order"]) => {
-  const topicSectionsCreateInput = section.topicIds.map(
-    topicSectionCreateInput
-  );
+  const topicSectionsCreateInput = section.topics.map(topicSectionCreateInput);
 
   return {
     order,

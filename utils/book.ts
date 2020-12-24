@@ -21,6 +21,7 @@ export function useBook(id: BookSchema["id"]) {
 }
 
 export async function createBook(body: BookProps): Promise<BookSchema> {
+  // @ts-expect-error NOTE: body.sections[].topics[].name のUnion型に null 含むか否か異なる
   const res = await api.apiV2BookPost({ body });
   await mutate([key, res.id], res);
   return res as BookSchema;
@@ -30,6 +31,7 @@ export async function updateBook({
   id,
   ...body
 }: BookProps & { id: BookSchema["id"] }): Promise<BookSchema> {
+  // @ts-expect-error NOTE: body.sections[].topics[].name のUnion型に null 含むか否か異なる
   const res = await api.apiV2BookBookIdPut({ bookId: id, body });
   await mutate([key, res.id], res);
   return res as BookSchema;
