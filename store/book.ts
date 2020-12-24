@@ -1,4 +1,5 @@
-import { atom } from "jotai";
+import { atom, useAtom } from "jotai";
+import { useUpdateAtom } from "jotai/utils";
 import { BookSchema } from "$server/models/book";
 
 type ItemIndex = [number, number];
@@ -6,17 +7,15 @@ type ItemIndex = [number, number];
 const bookAtom = atom<BookSchema | undefined>(undefined);
 const itemIndexAtom = atom<ItemIndex>([0, 0]);
 
-export const changeBookAtom = atom<BookSchema | undefined, BookSchema>(
+const updateBookAtom = atom<BookSchema | undefined, BookSchema>(
   (get) => get(bookAtom),
-  (_, set, arg) => {
-    set(bookAtom, () => {
-      set(itemIndexAtom, [0, 0]);
-      return arg;
-    });
+  (get, set, book) => {
+    if (get(bookAtom) !== book) set(bookAtom, book);
+    if (get(itemIndexAtom).some((i) => i !== 0)) set(itemIndexAtom, [0, 0]);
   }
 );
 
-export const nextItemIndexAtom = atom<ItemIndex, ItemIndex | undefined>(
+const nextItemIndexAtom = atom<ItemIndex, ItemIndex | undefined>(
   (get) => get(itemIndexAtom),
   (get, set, arg) => {
     const book = get(bookAtom);
@@ -31,3 +30,14 @@ export const nextItemIndexAtom = atom<ItemIndex, ItemIndex | undefined>(
     if (sectionExists) return set(itemIndexAtom, [sectionIndex, 0]);
   }
 );
+
+export function useUpdateBookAtom() {
+  useAtom(bookAtom);
+  useAtom(itemIndexAtom);
+  return useUpdateAtom(updateBookAtom);
+}
+
+export function useNextItemIndexAtom() {
+  useAtom(itemIndexAtom);
+  return useAtom(nextItemIndexAtom);
+}

@@ -34,7 +34,7 @@
     "glob": "^7.1.6",
     "immer": "^8.0.0",
     "iso-639-1": "^2.1.4",
-    "jotai": "^0.11.3",
+    "jotai": "^0.12.2",
     "material-table": "^1.69.2",
     "material-ui-confirm": "^2.1.1",
     "material-ui-popup-state": "^1.7.1",

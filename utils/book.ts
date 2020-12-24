@@ -1,8 +1,8 @@
-import { useAtom } from "jotai";
+import { useEffect } from "react";
 import useSWR, { mutate } from "swr";
+import { useUpdateBookAtom } from "$store/book";
 import { api } from "./api";
 import { BookProps, BookSchema } from "$server/models/book";
-import { changeBookAtom } from "$store/book";
 
 const key = "/api/v2/book/{book_id}";
 
@@ -13,8 +13,10 @@ async function fetchBook(_: typeof key, id: BookSchema["id"]) {
 
 export function useBook(id: BookSchema["id"]) {
   const { data } = useSWR<BookSchema>([key, id], fetchBook);
-  const changeBook = useAtom(changeBookAtom)[1];
-  if (data) changeBook(data);
+  const updateBook = useUpdateBookAtom();
+  useEffect(() => {
+    if (data) updateBook(data);
+  }, [data, updateBook]);
   return data;
 }
 

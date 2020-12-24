@@ -1,7 +1,6 @@
 export default { title: "templates/Book" };
 
-import { useAtom } from "jotai";
-import { nextItemIndexAtom } from "$store/book";
+import { useNextItemIndexAtom } from "$store/book";
 import Book from "./Book";
 import { book } from "samples";
 
@@ -16,7 +15,7 @@ function wrap(WrappedComponent: React.FC) {
 }
 
 export const Default = wrap(() => {
-  const [index, nextItemIndex] = useAtom(nextItemIndexAtom);
+  const [index, nextItemIndex] = useNextItemIndexAtom();
   const handleTopicEnded = () => nextItemIndex();
   const handleItemClick = nextItemIndex;
 
@@ -31,7 +30,7 @@ export const Default = wrap(() => {
 });
 
 export const Empty = wrap(() => {
-  const [index, nextItemIndex] = useAtom(nextItemIndexAtom);
+  const [index, nextItemIndex] = useNextItemIndexAtom();
   const handleTopicEnded = () => nextItemIndex();
   const handleItemClick = nextItemIndex;
 
@@ -46,7 +45,7 @@ export const Empty = wrap(() => {
 });
 
 export const EmptySection = wrap(() => {
-  const [index, nextItemIndex] = useAtom(nextItemIndexAtom);
+  const [index, nextItemIndex] = useNextItemIndexAtom();
   const handleTopicEnded = () => nextItemIndex();
   const handleItemClick = nextItemIndex;
 
