@@ -6,6 +6,7 @@ import { books } from "samples";
 const props = {
   books,
   onBookClick: console.log,
+  onBookEditClick: console.log,
   onBookNewClick() {
     console.log("onBookNewClick");
   },
@@ -17,6 +18,7 @@ export const Empty = () => (
   <Books
     books={[]}
     onBookClick={props.onBookClick}
+    onBookEditClick={props.onBookEditClick}
     onBookNewClick={props.onBookNewClick}
   />
 );

@@ -44,11 +44,12 @@ const useStyles = makeStyles((theme) => ({
 
 type Props = {
   book: Book;
+  onEditClick(book: Book): void;
   onTopicClick(topic: Topic): void;
 };
 
 export default function BookAccordion(props: Props) {
-  const { book, onTopicClick } = props;
+  const { book, onEditClick, onTopicClick } = props;
   const classes = useStyles();
   const accordionClasses = useAccordionStyle();
   const accordionSummaryClasses = useAccordionSummaryStyle();
@@ -60,6 +61,7 @@ export default function BookAccordion(props: Props) {
   };
   const handleEditClick = (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
+    onEditClick(book);
   };
   const handleChipClick = (event: MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();

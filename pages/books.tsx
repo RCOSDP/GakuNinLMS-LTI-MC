@@ -16,31 +16,22 @@ function Index() {
   const router = useRouter();
   const session = useSession();
   const userId = session.data?.user?.id;
-  const handleBookClick = (book: { id: Book["id"] }) => {
-    router.push({
-      pathname: "/book",
-      query: { id: book.id },
-    });
+  const handleBookClick = (pathname: `/book${"" | "/edit"}`) => (
+    query: Pick<Book, "id">
+  ) => router.push({ pathname, query });
+  const handlers = {
+    onBookClick: handleBookClick("/book"),
+    onBookEditClick: handleBookClick("/book/edit"),
+    onBookNewClick() {
+      router.push("/book/new");
+    },
   };
-  const handleBookNewClick = () => router.push("/book/new");
 
   if (userId == null) {
-    return (
-      <Books
-        books={[]}
-        onBookClick={handleBookClick}
-        onBookNewClick={handleBookNewClick}
-      />
-    );
-  } else {
-    return (
-      <UserBooks
-        userId={userId}
-        onBookClick={handleBookClick}
-        onBookNewClick={handleBookNewClick}
-      />
-    );
+    return <Books books={[]} {...handlers} />;
   }
+
+  return <UserBooks userId={userId} {...handlers} />;
 }
 
 export default Index;

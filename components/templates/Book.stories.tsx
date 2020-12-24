@@ -4,7 +4,7 @@ import { useNextItemIndexAtom } from "$store/book";
 import Book from "./Book";
 import { book } from "samples";
 
-const props = { book };
+const props = { book, onBookEditClick: console.log };
 
 // TODO: Please use <Provider> の問題の回避。なぜか回避できる。
 function wrap(WrappedComponent: React.FC) {
@@ -38,6 +38,7 @@ export const Empty = wrap(() => {
     <Book
       book={null}
       index={index}
+      onBookEditClick={props.onBookEditClick}
       onTopicEnded={handleTopicEnded}
       onItemClick={handleItemClick}
     />
@@ -53,6 +54,7 @@ export const EmptySection = wrap(() => {
     <Book
       book={{ ...props.book, sections: [] }}
       index={index}
+      onBookEditClick={props.onBookEditClick}
       onTopicEnded={handleTopicEnded}
       onItemClick={handleItemClick}
     />

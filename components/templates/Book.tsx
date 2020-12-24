@@ -29,6 +29,7 @@ const useStyles = makeStyles((theme) => ({
 type Props = {
   book: Types.Book | null;
   index: [number, number];
+  onBookEditClick(book: Types.Book): void;
   onTopicEnded(): void;
   onItemClick(index: [number, number]): void;
 };
@@ -37,12 +38,14 @@ export default function Book(props: Props) {
   const {
     book,
     index: [sectionIndex, topicIndex],
+    onBookEditClick,
     onTopicEnded,
     onItemClick,
   } = props;
   const topic = book?.sections[sectionIndex]?.topics[topicIndex];
   const classes = useStyles();
   const containerClasses = useContainerStyles();
+  const handleEditClick = () => book && onBookEditClick(book);
   const handleItemClick = (_: never, index: [number, number]) => {
     onItemClick(index);
   };
@@ -57,7 +60,7 @@ export default function Book(props: Props) {
         <IconButton>
           <InfoOutlinedIcon />
         </IconButton>
-        <IconButton color="primary">
+        <IconButton color="primary" onClick={handleEditClick}>
           <EditOutlinedIcon />
         </IconButton>
         <Button size="small" color="primary">

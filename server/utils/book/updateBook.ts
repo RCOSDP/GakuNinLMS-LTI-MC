@@ -37,11 +37,7 @@ async function updateBook(
     },
   }) as unknown) as Promise<Prisma.BatchPayload>;
 
-  await prisma.$transaction([
-    ...cleanup,
-    ...upsert,
-    update,
-  ]);
+  await prisma.$transaction([...cleanup, ...upsert, update]);
 
   return findBook(id);
 }
