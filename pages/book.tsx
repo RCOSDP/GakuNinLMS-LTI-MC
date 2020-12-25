@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import { BookSchema } from "$server/models/book";
 import { useNextItemIndexAtom } from "$store/book";
 import Book from "$templates/Book";
+import Unknown from "$templates/Unkown";
 import { useBook } from "$utils/book";
 
 export type Query = {
@@ -36,7 +37,12 @@ function Router() {
   const query: Query = router.query;
   const id = Number(query.id);
 
-  if (!Number.isFinite(id)) return <p>Not Found</p>; // TODO: エラーページを用意
+  if (!Number.isFinite(id))
+    return (
+      <Unknown header="ブックがありません">
+        ブックが見つかりませんでした
+      </Unknown>
+    );
 
   return <Show id={id} />;
 }

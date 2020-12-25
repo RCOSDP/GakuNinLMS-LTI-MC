@@ -11,8 +11,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function BookUnknown() {
+type Props = { children?: Node };
+
+export default function BookUnknown(props: Props) {
   const classes = useStyles();
+  const { children } = props;
   const containerClasses = useContainerStyles();
   return (
     <Container
@@ -24,7 +27,7 @@ export default function BookUnknown() {
         ブックが未連携です
       </Typography>
       <Typography variant="body1">
-        LTIリンクがどのブックとも連携していません。担当教員にお問い合わせください。
+        {children}
         <br />
         <Link href={NEXT_PUBLIC_LMS_URL}>LMSに戻る</Link>
       </Typography>
