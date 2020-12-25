@@ -3,8 +3,8 @@ export default { title: "templates/TopicNew" };
 import TopicNew from "./TopicNew";
 import { topic } from "samples";
 
-const props = { topic };
+const props = { topic, onSubmit: console.log, onDeleteSubtitle: console.log };
 
 export const Default = () => <TopicNew {...props} />;
 
-export const Empty = () => <TopicNew topic={null} />;
+export const Empty = () => <TopicNew {...{ ...props, topic: null }} />;

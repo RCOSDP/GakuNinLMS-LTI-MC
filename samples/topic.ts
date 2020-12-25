@@ -26,6 +26,8 @@ const topic = {
   updatedAt: new Date(),
   details: {},
   creator: user,
+  shared: true,
+  language: "ja",
   resource,
 };
 

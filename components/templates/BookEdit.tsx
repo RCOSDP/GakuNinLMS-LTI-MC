@@ -1,5 +1,7 @@
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
+import Button from "@material-ui/core/Button";
+import { DeleteOutlined } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import BookEditChildren from "$organisms/BookEditChildren";
 import BookForm from "$organisms/BookForm";
@@ -28,6 +30,9 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   children: {
+    marginBottom: theme.spacing(2),
+  },
+  form: {
     marginBottom: theme.spacing(2),
   },
 }));
@@ -62,7 +67,11 @@ export default function BookEdit(props: Props) {
         sections={book?.sections ?? []}
         onTopicClick={handleTopicClick}
       />
-      <BookForm book={book} onSubmit={onSubmit} />
+      <BookForm className={classes.form} book={book} onSubmit={onSubmit} />
+      <Button size="small" color="primary">
+        <DeleteOutlined />
+        ブックを削除
+      </Button>
     </Container>
   );
 }

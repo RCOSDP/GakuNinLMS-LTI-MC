@@ -1,4 +1,3 @@
-import { useState, ChangeEvent } from "react";
 import Card from "@material-ui/core/Card";
 import Checkbox from "@material-ui/core/Checkbox";
 import Button from "@material-ui/core/Button";
@@ -6,50 +5,79 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
+import { useForm, Controller } from "react-hook-form";
 import TextField from "$atoms/TextField";
+import SubtitleChip from "$atoms/SubtitleChip";
+import Video from "$organisms/Video";
 import useCardStyles from "styles/card";
 import useInputLabelStyles from "styles/inputLabel";
 import gray from "theme/colors/gray";
-import { Topic } from "types/book";
-
-const languages = [
-  {
-    value: "ja",
-    label: "日本語",
-  },
-  {
-    value: "en",
-    label: "英語",
-  },
-] as const;
+import { TopicProps, TopicSchema } from "$server/models/topic";
+import { VideoTrackSchema } from "$server/models/videoTrack";
+import languages from "$utils/languages";
 
 const useStyles = makeStyles((theme) => ({
   margin: {
-    "& > :not(:first-child)": {
-      marginTop: theme.spacing(2.5),
+    "& > :not(:last-child)": {
+      marginBottom: theme.spacing(2.5),
     },
   },
   labelDescription: {
     marginLeft: theme.spacing(0.75),
     color: gray[600],
   },
+  subtitles: {
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(1),
+    "& > *": {
+      marginRight: theme.spacing(1.75),
+      marginBottom: theme.spacing(1),
+    },
+  },
 }));
 
-type Props = { topic: Topic | null; submitLabel?: string };
+type Props = {
+  topic: TopicSchema | null;
+  className?: string;
+  submitLabel?: string;
+  onSubmit?: (topic: TopicProps) => void;
+  onDeleteSubtitle: (videoTrack: VideoTrackSchema) => void;
+};
 
 export default function TopicForm(props: Props) {
-  const { topic, submitLabel = "更新" } = props;
+  const {
+    topic,
+    className,
+    submitLabel = "更新",
+    onSubmit = () => undefined,
+    onDeleteSubtitle,
+  } = props;
   const cardClasses = useCardStyles();
   const inputLabelClasses = useInputLabelStyles();
   const classes = useStyles();
-  const [language, setLanguage] = useState("ja");
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setLanguage(event.target.value);
+  const defaultValues = {
+    name: topic?.name,
+    description: topic?.description ?? "",
+    shared: topic?.shared ?? true,
+    language: topic?.language ?? Object.getOwnPropertyNames(languages)[0],
+    timeRequired: topic?.timeRequired,
+    resource: topic?.resource,
   };
+  const { handleSubmit, register, control } = useForm<TopicProps>({
+    defaultValues,
+  });
   return (
-    <Card classes={cardClasses} className={classes.margin}>
+    <Card
+      classes={cardClasses}
+      className={`${classes.margin} ${className}`}
+      component="form"
+      onSubmit={handleSubmit((values) => {
+        onSubmit({ ...defaultValues, ...values });
+      })}
+    >
       <TextField
-        id="title"
+        name="name"
+        inputRef={register}
         label={
           <>
             タイトル
@@ -67,10 +95,16 @@ export default function TopicForm(props: Props) {
         fullWidth
       />
       <div>
-        <InputLabel classes={inputLabelClasses} htmlFor="share">
+        <InputLabel classes={inputLabelClasses} htmlFor="shared">
           他の編集者に共有
         </InputLabel>
-        <Checkbox id="share" color="primary" />
+        <Checkbox
+          id="shared"
+          name="shared"
+          inputRef={register}
+          defaultChecked={defaultValues.shared}
+          color="primary"
+        />
       </div>
       <TextField
         id="contentURL"
@@ -90,32 +124,58 @@ export default function TopicForm(props: Props) {
         required
         fullWidth
       />
-      <TextField
-        id="inLanguage"
-        label="教材の主要な言語"
-        select
-        value={language}
-        onChange={handleChange}
-      >
-        {languages.map((option) => (
-          <MenuItem key={option.value} value={option.value}>
-            {option.label}
-          </MenuItem>
-        ))}
-      </TextField>
-      <TextField
-        id="timeRequired"
-        label="学習時間"
-        defaultValue={topic?.timeRequired}
+      {topic && "tracks" in topic.resource && <Video {...topic.resource} />}
+      <Controller
+        name="language"
+        control={control}
+        defaultValue={defaultValues.language}
+        render={(props) => (
+          <TextField label="教材の主要な言語" select inputProps={props}>
+            {Object.entries(languages).map(([value, label]) => (
+              <MenuItem key={value} value={value}>
+                {label}
+              </MenuItem>
+            ))}
+          </TextField>
+        )}
       />
       <TextField
-        id="description"
+        name="timeRequired"
+        label="学習時間 (秒)"
+        type="number"
+        inputProps={{
+          ref: register({
+            setValueAs: (value) => (value === "" ? null : +value),
+            min: 0,
+          }),
+          min: 0,
+        }}
+      />
+      <div>
+        <InputLabel classes={inputLabelClasses}>字幕</InputLabel>
+        <div className={classes.subtitles}>
+          {topic &&
+            "tracks" in topic.resource &&
+            topic.resource.tracks.map((track) => (
+              <SubtitleChip
+                key={track.id}
+                videoTrack={track}
+                onDelete={onDeleteSubtitle}
+              />
+            ))}
+        </div>
+        <Button variant="outlined" color="primary">
+          字幕を追加
+        </Button>
+      </div>
+      <TextField
         label="解説"
-        defaultValue={topic?.description}
         fullWidth
         multiline
+        name="description"
+        inputRef={register}
       />
-      <Button variant="contained" color="primary">
+      <Button variant="contained" color="primary" type="submit">
         {submitLabel}
       </Button>
     </Card>

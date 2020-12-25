@@ -3,6 +3,6 @@ import { topic } from "samples";
 
 export default { title: "organisms/TopicForm" };
 
-const props = { topic };
+const props = { topic, onSubmit: console.log, onDeleteSubtitle: console.log };
 
 export const Default = () => <TopicForm {...props} />;

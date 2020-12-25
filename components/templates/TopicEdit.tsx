@@ -1,10 +1,13 @@
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
+import Button from "@material-ui/core/Button";
+import { DeleteOutlined } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import TopicForm from "$organisms/TopicForm";
 import RequiredDot from "$atoms/RequiredDot";
 import useContainerStyles from "styles/container";
-import { Topic } from "types/book";
+import { TopicProps, TopicSchema } from "$server/models/topic";
+import { VideoTrackSchema } from "$server/models/videoTrack";
 
 const useStyles = makeStyles((theme) => ({
   header: {
@@ -25,12 +28,19 @@ const useStyles = makeStyles((theme) => ({
       marginLeft: theme.spacing(2),
     },
   },
+  form: {
+    marginBottom: theme.spacing(2),
+  },
 }));
 
-type Props = { topic: Topic | null };
+type Props = {
+  topic: TopicSchema | null;
+  onSubmit(topic: TopicProps): void;
+  onDeleteSubtitle(videoTrack: VideoTrackSchema): void;
+};
 
 export default function TopicEdit(props: Props) {
-  const { topic } = props;
+  const { topic, onSubmit, onDeleteSubtitle } = props;
   const classes = useStyles();
   const containerClasses = useContainerStyles();
 
@@ -47,7 +57,16 @@ export default function TopicEdit(props: Props) {
           は必須項目です
         </Typography>
       </Typography>
-      <TopicForm topic={topic} />
+      <TopicForm
+        className={classes.form}
+        topic={topic}
+        onSubmit={onSubmit}
+        onDeleteSubtitle={onDeleteSubtitle}
+      />
+      <Button size="small" color="primary">
+        <DeleteOutlined />
+        トピックを削除
+      </Button>
     </Container>
   );
 }
