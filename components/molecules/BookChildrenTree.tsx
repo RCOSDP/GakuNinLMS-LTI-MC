@@ -34,7 +34,7 @@ export default function BookChildrenTree(props: Props) {
                     label={
                       <>
                         {sectionIndex + 1}
-                        {section.name ? `.${topicIndex + 1}` : ""} {topic.name}
+                        {section.name && `.${topicIndex + 1}`} {topic.name}
                       </>
                     }
                     onClick={handleItemClick}
@@ -55,7 +55,7 @@ export default function BookChildrenTree(props: Props) {
                     label={
                       <>
                         {sectionIndex + 1}
-                        {section.name ? `.${topicIndex + 1}` : ""} {topic.name}
+                        {section.name && `.${topicIndex + 1}`} {topic.name}
                       </>
                     }
                     onClick={handleItemClick}

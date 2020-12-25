@@ -75,7 +75,7 @@ export default function BookPreview(props: Props) {
   return (
     <Card
       classes={cardClasses}
-      className={`${classes.root} ${checkBox ? classes.selected : ""}`}
+      className={`${classes.root} ${checkBox && classes.selected}`}
     >
       <div className={classes.left}>
         <Typography variant="h6" className={classes.title}>
@@ -117,7 +117,7 @@ export default function BookPreview(props: Props) {
             {section.topics.map((topic, topicIndex) => (
               <p key={topic.id}>
                 {sectionIndex + 1}
-                {section.name ? `.${topicIndex + 1}` : ""} {topic.name}
+                {section.name && `.${topicIndex + 1}`} {topic.name}
               </p>
             ))}
           </Fragment>

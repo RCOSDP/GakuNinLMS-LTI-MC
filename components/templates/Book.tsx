@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import { useTheme, makeStyles } from "@material-ui/core/styles";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
@@ -26,6 +27,28 @@ const useStyles = makeStyles((theme) => ({
   icon: {
     marginRight: theme.spacing(0.5),
   },
+  inner: {
+    display: "grid",
+    gap: `${theme.spacing(2)}px`,
+  },
+  innerDesktop: {
+    gridTemplateAreas: `
+      "bookChildren topicViewer"
+    `,
+    gridTemplateColumns: "30% 1fr",
+  },
+  innerMobile: {
+    gridTemplateAreas: `
+      "topicViewer"
+      "bookChildren"
+    `,
+  },
+  topicViewer: {
+    gridArea: "topicViewer",
+  },
+  bookChildren: {
+    gridArea: "bookChildren",
+  },
 }));
 
 type Props = {
@@ -47,6 +70,8 @@ export default function Book(props: Props) {
   const topic = book?.sections[sectionIndex]?.topics[topicIndex];
   const classes = useStyles();
   const containerClasses = useContainerStyles();
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up("md"));
   const [open, setOpen] = useState(false);
   const handleInfoClick = () => {
     setOpen(true);
@@ -62,7 +87,7 @@ export default function Book(props: Props) {
     <Container
       classes={containerClasses}
       className={classes.container}
-      maxWidth="md"
+      maxWidth="lg"
     >
       <Typography className={classes.title} variant="h4" gutterBottom={true}>
         {book?.name}
@@ -77,11 +102,24 @@ export default function Book(props: Props) {
           LTIリンクの再連携
         </Button>
       </Typography>
-      {topic && <TopicViewer topic={topic} onEnded={onTopicEnded} />}
-      <BookChildren
-        sections={book?.sections ?? []}
-        onItemClick={handleItemClick}
-      />
+      <div
+        className={`${classes.inner} ${
+          matches ? classes.innerDesktop : classes.innerMobile
+        }`}
+      >
+        {topic && (
+          <TopicViewer
+            className={classes.topicViewer}
+            topic={topic}
+            onEnded={onTopicEnded}
+          />
+        )}
+        <BookChildren
+          className={classes.bookChildren}
+          sections={book?.sections ?? []}
+          onItemClick={handleItemClick}
+        />
+      </div>
       {book && <BookItemDialog open={open} onClose={handleClose} book={book} />}
     </Container>
   );
