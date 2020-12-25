@@ -10,34 +10,37 @@ import upsertTopic from "$server/utils/topic/upsertTopic";
 import createBook from "$server/utils/book/createBook";
 import { upsertLtiResourceLink } from "$server/utils/ltiResourceLink";
 
-dotenv.config();
+async function seed() {
+  const createdUsers = await Promise.all(users.map(upsertUser));
+  const authorId = createdUsers[0].id;
+
+  await Promise.all(topics.map((topic) => upsertTopic(authorId, topic)));
+
+  const createdBooks = (await Promise.all(
+    books.map((book) => createBook(authorId, book))
+  )) as BookSchema[];
+
+  await Promise.all(
+    ltiResourceLinks
+      .map((link) => ({ ...link, bookId: createdBooks[0].id }))
+      .map(upsertLtiResourceLink)
+  );
+}
 
 async function main() {
-  console.log("Seeding...");
-
+  dotenv.config();
+  let exitCode = 1;
   try {
-    const createdUsers = await Promise.all(users.map(upsertUser));
-    const authorId = createdUsers[0].id;
-
-    await Promise.all(topics.map((topic) => upsertTopic(authorId, topic)));
-
-    const createdBooks = (await Promise.all(
-      books.map((book) => createBook(authorId, book))
-    )) as BookSchema[];
-
-    await Promise.all(
-      ltiResourceLinks
-        .map((link) => ({ ...link, bookId: createdBooks[0].id }))
-        .map(upsertLtiResourceLink)
-    );
+    console.log("Seeding...");
+    await seed();
+    console.log("Seeding completed.");
+    exitCode = 0;
   } catch (error) {
     console.error(error.stack ?? error.message);
+  } finally {
+    await prisma.$disconnect();
+    process.exit(exitCode);
   }
-
-  await prisma.$disconnect();
-
-  console.log("Completed.");
-  process.exit();
 }
 
 main();

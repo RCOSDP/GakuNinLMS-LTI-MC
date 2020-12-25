@@ -1,15 +1,12 @@
 import { User } from "@prisma/client";
 import { TopicProps } from "$server/models/topic";
 import topicInput from "./topicInput";
-import resourceCreateInput from "./resourceCreateInput";
+import resourceConnectOrCreateInput from "./resourceConnectOrCreateInput";
 
 function topicCreateInput(creatorId: User["id"], topic: TopicProps) {
-  const { create } = resourceCreateInput(topic.resource);
   const input = {
     ...topicInput(creatorId, topic),
-    resource: {
-      connectOrCreate: { where: { url: topic.resource.url }, create },
-    },
+    resource: resourceConnectOrCreateInput(topic.resource),
   };
 
   return input;
