@@ -22,7 +22,7 @@ const resource = {
       ),
     },
     {
-      id: 1,
+      id: 2,
       kind: "subtitles",
       language: "en",
       url: URL.createObjectURL(

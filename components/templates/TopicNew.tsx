@@ -5,7 +5,7 @@ import TopicForm from "$organisms/TopicForm";
 import RequiredDot from "$atoms/RequiredDot";
 import useContainerStyles from "styles/container";
 import { TopicProps, TopicSchema } from "$server/models/topic";
-import { VideoTrackSchema } from "$server/models/videoTrack";
+import { VideoTrackProps, VideoTrackSchema } from "$server/models/videoTrack";
 
 const useStyles = makeStyles((theme) => ({
   header: {
@@ -32,10 +32,11 @@ type Props = {
   topic: TopicSchema | null;
   onSubmit(topic: TopicProps): void;
   onDeleteSubtitle(videoTrack: VideoTrackSchema): void;
+  onSubmitSubtitle(videoTrack: VideoTrackProps): void;
 };
 
 export default function TopicNew(props: Props) {
-  const { topic, onSubmit, onDeleteSubtitle } = props;
+  const { topic, onSubmit, onDeleteSubtitle, onSubmitSubtitle } = props;
   const classes = useStyles();
   const containerClasses = useContainerStyles();
 
@@ -57,6 +58,7 @@ export default function TopicNew(props: Props) {
         submitLabel="作成"
         onSubmit={onSubmit}
         onDeleteSubtitle={onDeleteSubtitle}
+        onSubmitSubtitle={onSubmitSubtitle}
       />
     </Container>
   );

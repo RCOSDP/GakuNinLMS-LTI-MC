@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Card from "@material-ui/core/Card";
 import Checkbox from "@material-ui/core/Checkbox";
 import Button from "@material-ui/core/Button";
@@ -8,12 +9,13 @@ import { makeStyles } from "@material-ui/core/styles";
 import { useForm, Controller } from "react-hook-form";
 import TextField from "$atoms/TextField";
 import SubtitleChip from "$atoms/SubtitleChip";
+import SubtitleUploadDialog from "$organisms/SubtitleUploadDialog";
 import Video from "$organisms/Video";
 import useCardStyles from "styles/card";
 import useInputLabelStyles from "styles/inputLabel";
 import gray from "theme/colors/gray";
 import { TopicProps, TopicSchema } from "$server/models/topic";
-import { VideoTrackSchema } from "$server/models/videoTrack";
+import { VideoTrackProps, VideoTrackSchema } from "$server/models/videoTrack";
 import languages from "$utils/languages";
 
 const useStyles = makeStyles((theme) => ({
@@ -42,6 +44,7 @@ type Props = {
   submitLabel?: string;
   onSubmit?: (topic: TopicProps) => void;
   onDeleteSubtitle: (videoTrack: VideoTrackSchema) => void;
+  onSubmitSubtitle: (videoTrack: VideoTrackProps) => void;
 };
 
 export default function TopicForm(props: Props) {
@@ -51,10 +54,21 @@ export default function TopicForm(props: Props) {
     submitLabel = "更新",
     onSubmit = () => undefined,
     onDeleteSubtitle,
+    onSubmitSubtitle,
   } = props;
   const cardClasses = useCardStyles();
   const inputLabelClasses = useInputLabelStyles();
   const classes = useStyles();
+  const [open, setOpen] = useState(false);
+  const handleClickSubtitle = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const handleSubmitSubtitle = (videoTrack: VideoTrackProps) => {
+    onSubmitSubtitle(videoTrack);
+  };
   const defaultValues = {
     name: topic?.name,
     description: topic?.description ?? "",
@@ -164,9 +178,18 @@ export default function TopicForm(props: Props) {
               />
             ))}
         </div>
-        <Button variant="outlined" color="primary">
+        <Button
+          variant="outlined"
+          color="primary"
+          onClick={handleClickSubtitle}
+        >
           字幕を追加
         </Button>
+        <SubtitleUploadDialog
+          open={open}
+          onClose={handleClose}
+          onSubmit={handleSubmitSubtitle}
+        />
       </div>
       <TextField
         label="解説"
