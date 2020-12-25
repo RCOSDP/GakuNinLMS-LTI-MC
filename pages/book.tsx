@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { BookSchema } from "$server/models/book";
 import { useNextItemIndexAtom } from "$store/book";
 import Book from "$templates/Book";
-import Unknown from "$templates/Unkown";
+import Unknown from "$templates/Unknown";
 import { useBook } from "$utils/book";
 
 export type Query = {

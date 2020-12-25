@@ -11,12 +11,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-type Props = { children?: Node };
+type Props = { header: Node | string; children?: Node | string };
 
 export default function BookUnknown(props: Props) {
   const classes = useStyles();
-  const { children } = props;
   const containerClasses = useContainerStyles();
+  const { header, children } = props;
   return (
     <Container
       classes={containerClasses}
@@ -24,7 +24,7 @@ export default function BookUnknown(props: Props) {
       maxWidth="md"
     >
       <Typography variant="h4" gutterBottom={true}>
-        ブックが未連携です
+        {header}
       </Typography>
       <Typography variant="body1">
         {children}
