@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
@@ -5,6 +6,7 @@ import Container from "@material-ui/core/Container";
 import TreeView from "@material-ui/lab/TreeView";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import BookItemDialog from "$organisms/BookItemDialog";
 import BookTree from "$molecules/BookTree";
 import SortSelect from "$atoms/SortSelect";
 import SearchTextField from "$atoms/SearchTextField";
@@ -57,6 +59,11 @@ export default function BookImport(props: Props) {
   const { books, onTopicClick } = props;
   const classes = useStyles();
   const containerClasses = useContainerStyles();
+  const [open, setOpen] = useState(false);
+  const [book, setBook] = useState<BookSchema | null>(null);
+  const handleClose = () => {
+    setOpen(false);
+  };
   return (
     <Container classes={containerClasses} maxWidth="md">
       <div className={classes.header}>
@@ -83,11 +90,21 @@ export default function BookImport(props: Props) {
             number,
             number
           ]) => onTopicClick(book.sections[sectionIndex].topics[topicIndex]);
+          const handleInfoClick = () => {
+            setBook(book);
+            setOpen(true);
+          };
           return (
-            <BookTree key={book.id} book={book} onItemClick={handleItemClick} />
+            <BookTree
+              key={book.id}
+              book={book}
+              onItemClick={handleItemClick}
+              onInfoClick={handleInfoClick}
+            />
           );
         })}
       </TreeView>
+      {book && <BookItemDialog open={open} onClose={handleClose} book={book} />}
     </Container>
   );
 }

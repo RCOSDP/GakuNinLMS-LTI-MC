@@ -6,11 +6,12 @@ import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import CheckBoxOutlineBlonkIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import CheckBoxOutlinedIcon from "@material-ui/icons/CheckBoxOutlined";
-import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
+import { InfoOutlined, EditOutlined } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import Video from "$organisms/Video";
 import CourseChip from "$atoms/CourseChip";
 import Item from "$atoms/Item";
+import BookItemDialog from "$organisms/BookItemDialog";
 import useCardStyle from "styles/card";
 import { BookSchema } from "$server/models/book";
 import { TopicSchema } from "$server/models/topic";
@@ -61,6 +62,13 @@ export default function BookPreview(props: Props) {
   const { book } = props;
   const [checkBox, setCheckBox] = useState(false);
   const [topic] = useState<TopicSchema>(book.sections[0].topics[0]);
+  const [open, setOpen] = useState(false);
+  const handleInfoClick = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
   const handleCheckBoxClick = () => {
     setCheckBox(!checkBox);
   };
@@ -79,8 +87,11 @@ export default function BookPreview(props: Props) {
             {checkBox ? <CheckBoxOutlinedIcon /> : <CheckBoxOutlineBlonkIcon />}
           </IconButton>
           {book.name}
+          <IconButton onClick={handleInfoClick}>
+            <InfoOutlined />
+          </IconButton>
           <IconButton color="primary">
-            <EditOutlinedIcon />
+            <EditOutlined />
           </IconButton>
         </Typography>
         <div className={classes.chips}>
@@ -118,6 +129,7 @@ export default function BookPreview(props: Props) {
       <div className={classes.right}>
         {"providerUrl" in topic.resource && <Video {...topic.resource} />}
       </div>
+      {book && <BookItemDialog open={open} onClose={handleClose} book={book} />}
     </Card>
   );
 }
