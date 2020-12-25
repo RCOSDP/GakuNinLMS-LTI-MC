@@ -13,6 +13,8 @@ function formatInterval(start: Date | number, end: Date | number) {
 
 const useStyles = makeStyles((theme) => ({
   video: {
+    position: "sticky",
+    top: theme.spacing(-2),
     marginTop: theme.spacing(-2),
     marginRight: theme.spacing(-3),
     marginBottom: theme.spacing(2),
