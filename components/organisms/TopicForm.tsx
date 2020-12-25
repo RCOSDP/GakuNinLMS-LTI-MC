@@ -43,8 +43,8 @@ type Props = {
   className?: string;
   submitLabel?: string;
   onSubmit?: (topic: TopicProps) => void;
-  onDeleteSubtitle: (videoTrack: VideoTrackSchema) => void;
-  onSubmitSubtitle: (videoTrack: VideoTrackProps) => void;
+  onSubtitleDelete: (videoTrack: VideoTrackSchema) => void;
+  onSubtitleSubmit: (videoTrack: VideoTrackProps) => void;
 };
 
 export default function TopicForm(props: Props) {
@@ -53,8 +53,8 @@ export default function TopicForm(props: Props) {
     className,
     submitLabel = "更新",
     onSubmit = () => undefined,
-    onDeleteSubtitle,
-    onSubmitSubtitle,
+    onSubtitleDelete,
+    onSubtitleSubmit,
   } = props;
   const cardClasses = useCardStyles();
   const inputLabelClasses = useInputLabelStyles();
@@ -67,7 +67,7 @@ export default function TopicForm(props: Props) {
     setOpen(false);
   };
   const handleSubmitSubtitle = (videoTrack: VideoTrackProps) => {
-    onSubmitSubtitle(videoTrack);
+    onSubtitleSubmit(videoTrack);
   };
   const defaultValues = {
     name: topic?.name,
@@ -174,7 +174,7 @@ export default function TopicForm(props: Props) {
               <SubtitleChip
                 key={track.id}
                 videoTrack={track}
-                onDelete={onDeleteSubtitle}
+                onDelete={onSubtitleDelete}
               />
             ))}
         </div>

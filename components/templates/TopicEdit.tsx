@@ -36,12 +36,12 @@ const useStyles = makeStyles((theme) => ({
 type Props = {
   topic: TopicSchema | null;
   onSubmit(topic: TopicProps): void;
-  onDeleteSubtitle(videoTrack: VideoTrackSchema): void;
-  onSubmitSubtitle(videoTrack: VideoTrackProps): void;
+  onSubtitleDelete(videoTrack: VideoTrackSchema): void;
+  onSubtitleSubmit(videoTrack: VideoTrackProps): void;
 };
 
 export default function TopicEdit(props: Props) {
-  const { topic, onSubmit, onDeleteSubtitle, onSubmitSubtitle } = props;
+  const { topic, onSubmit, onSubtitleDelete, onSubtitleSubmit } = props;
   const classes = useStyles();
   const containerClasses = useContainerStyles();
 
@@ -62,8 +62,8 @@ export default function TopicEdit(props: Props) {
         className={classes.form}
         topic={topic}
         onSubmit={onSubmit}
-        onDeleteSubtitle={onDeleteSubtitle}
-        onSubmitSubtitle={onSubmitSubtitle}
+        onSubtitleDelete={onSubtitleDelete}
+        onSubtitleSubmit={onSubtitleSubmit}
       />
       <Button size="small" color="primary">
         <DeleteOutlined />
