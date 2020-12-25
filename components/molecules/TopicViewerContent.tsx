@@ -1,4 +1,4 @@
-import { Topic } from "types/book";
+import { TopicSchema } from "$server/models/topic";
 import { format, formatDuration, intervalToDuration } from "date-fns";
 import { ja } from "date-fns/locale";
 import Typography from "@material-ui/core/Typography";
@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type Props = {
-  topic: Topic;
+  topic: TopicSchema;
   onEnded?: () => void;
 };
 

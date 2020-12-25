@@ -29,7 +29,7 @@ type Props = {
   onSubmit?(videoTrack: VideoTrackProps): void;
 };
 
-export default function TopicPreviewDialog(props: Props) {
+export default function SubtitleUploadDialog(props: Props) {
   const classes = useStyles();
   const { open, onClose, onSubmit = () => undefined } = props;
   const cardClasses = useCardStyles();

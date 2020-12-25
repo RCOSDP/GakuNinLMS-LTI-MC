@@ -8,7 +8,7 @@ import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import LinkIcon from "@material-ui/icons/Link";
 import BookChildren from "$organisms/BookChildren";
 import TopicViewer from "$organisms/TopicViewer";
-import type * as Types from "types/book";
+import { BookSchema } from "$server/models/book";
 import useContainerStyles from "styles/container";
 
 const useStyles = makeStyles((theme) => ({
@@ -27,9 +27,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type Props = {
-  book: Types.Book | null;
+  book: BookSchema | null;
   index: [number, number];
-  onBookEditClick(book: Types.Book): void;
+  onBookEditClick(book: BookSchema): void;
   onTopicEnded(): void;
   onItemClick(index: [number, number]): void;
 };

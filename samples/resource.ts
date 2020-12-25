@@ -14,10 +14,10 @@ const resource = {
       url: URL.createObjectURL(
         new Blob([
           outdent`
-        WEBVTT
+            WEBVTT
 
-        00:01.000 --> 00:04.000
-        液体窒素は飲み物ではありません。`,
+            00:01.000 --> 00:04.000
+            液体窒素は飲み物ではありません。`,
         ])
       ),
     },
@@ -28,10 +28,10 @@ const resource = {
       url: URL.createObjectURL(
         new Blob([
           outdent`
-        WEBVTT
+            WEBVTT
 
-        00:01.000 --> 00:04.000
-        液体窒素は飲み物ではありません。`,
+            00:01.000 --> 00:04.000
+            液体窒素は飲み物ではありません。`,
         ])
       ),
     },

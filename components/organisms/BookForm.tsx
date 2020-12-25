@@ -10,8 +10,7 @@ import TextField from "$atoms/TextField";
 import useCardStyles from "styles/card";
 import useInputLabelStyles from "styles/inputLabel";
 import gray from "theme/colors/gray";
-import { BookProps } from "$server/models/book";
-import { Book } from "types/book";
+import { BookProps, BookSchema } from "$server/models/book";
 import languages from "$utils/languages";
 
 const useStyles = makeStyles((theme) => ({
@@ -27,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type Props = {
-  book?: Book | null;
+  book?: BookSchema | null;
   className?: string;
   submitLabel?: string;
   onSubmit?: (book: BookProps) => void;

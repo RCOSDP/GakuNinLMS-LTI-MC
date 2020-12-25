@@ -5,10 +5,10 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
-import { Section } from "types/book";
+import { SectionSchema } from "$server/models/book/section";
 
 type Props = {
-  sections: Section[];
+  sections: SectionSchema[];
   onItemClick(event: MouseEvent<HTMLElement>, index: [number, number]): void;
 };
 

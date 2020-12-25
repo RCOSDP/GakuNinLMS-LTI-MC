@@ -1,10 +1,10 @@
-import { Topic } from "types/book";
+import { TopicSchema } from "$server/models/topic";
 import Card from "@material-ui/core/Card";
 import TopicViewerContent from "$molecules/TopicViewerContent";
 import useCardStyles from "styles/card";
 
 type Props = {
-  topic: Topic;
+  topic: TopicSchema;
   onEnded?: () => void;
 };
 

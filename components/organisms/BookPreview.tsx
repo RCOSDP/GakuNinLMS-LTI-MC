@@ -12,7 +12,8 @@ import Video from "$organisms/Video";
 import CourseChip from "$atoms/CourseChip";
 import Item from "$atoms/Item";
 import useCardStyle from "styles/card";
-import { Book, Topic } from "$types/book";
+import { BookSchema } from "$server/models/book";
+import { TopicSchema } from "$server/models/topic";
 import { primary } from "theme/colors";
 
 const useStyles = makeStyles((theme) => ({
@@ -52,14 +53,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-type Props = { book: Book };
+type Props = { book: BookSchema };
 
 export default function BookPreview(props: Props) {
   const cardClasses = useCardStyle();
   const classes = useStyles();
   const { book } = props;
   const [checkBox, setCheckBox] = useState(false);
-  const [topic] = useState<Topic>(book.sections[0].topics[0]);
+  const [topic] = useState<TopicSchema>(book.sections[0].topics[0]);
   const handleCheckBoxClick = () => {
     setCheckBox(!checkBox);
   };

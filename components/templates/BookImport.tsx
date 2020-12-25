@@ -8,7 +8,8 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import BookTree from "$molecules/BookTree";
 import SortSelect from "$atoms/SortSelect";
 import SearchTextField from "$atoms/SearchTextField";
-import { Book, Topic } from "$types/book";
+import { BookSchema } from "$server/models/book";
+import { TopicSchema } from "$server/models/topic";
 import { gray } from "$theme/colors";
 import useContainerStyles from "$styles/container";
 
@@ -48,8 +49,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type Props = {
-  books: Book[];
-  onTopicClick(topic: Topic): void;
+  books: BookSchema[];
+  onTopicClick(topic: TopicSchema): void;
 };
 
 export default function BookImport(props: Props) {

@@ -1,10 +1,10 @@
 import { Fragment } from "react";
 import TreeItem from "@material-ui/lab/TreeItem";
-import { Section } from "$types/book";
+import { SectionSchema } from "$server/models/book/section";
 
 type Props = {
   bookId?: string | number;
-  sections: Section[];
+  sections: SectionSchema[];
   onItemClick(index: [number, number]): void;
 };
 

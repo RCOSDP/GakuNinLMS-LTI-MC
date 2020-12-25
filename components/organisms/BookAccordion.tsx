@@ -15,7 +15,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import BookChildrenTree from "$molecules/BookChildrenTree";
 import CourseChip from "$atoms/CourseChip";
 import Item from "$atoms/Item";
-import { Book, Topic } from "types/book";
+import { BookSchema } from "$server/models/book";
+import { TopicSchema } from "$server/models/topic";
 import useAccordionStyle from "styles/accordion";
 import useAccordionSummaryStyle from "styles/accordionSummary";
 import useAccordionDetailStyle from "styles/accordionDetail";
@@ -43,9 +44,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type Props = {
-  book: Book;
-  onEditClick(book: Book): void;
-  onTopicClick(topic: Topic): void;
+  book: BookSchema;
+  onEditClick(book: BookSchema): void;
+  onTopicClick(topic: TopicSchema): void;
 };
 
 export default function BookAccordion(props: Props) {

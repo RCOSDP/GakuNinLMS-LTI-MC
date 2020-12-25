@@ -4,10 +4,10 @@ import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import CourseChip from "$atoms/CourseChip";
 import BookChildrenTree from "$molecules/BookChildrenTree";
-import { Book } from "$types/book";
+import { BookSchema } from "$server/models/book";
 
 type Props = {
-  book: Book;
+  book: BookSchema;
   onItemClick(index: [number, number]): void;
 };
 
