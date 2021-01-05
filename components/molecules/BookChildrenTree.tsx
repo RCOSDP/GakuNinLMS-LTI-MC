@@ -1,10 +1,10 @@
 import { Fragment } from "react";
 import TreeItem from "@material-ui/lab/TreeItem";
-import { Section } from "$types/book";
+import { SectionSchema } from "$server/models/book/section";
 
 type Props = {
   bookId?: string | number;
-  sections: Section[];
+  sections: SectionSchema[];
   onItemClick(index: [number, number]): void;
 };
 
@@ -34,7 +34,7 @@ export default function BookChildrenTree(props: Props) {
                     label={
                       <>
                         {sectionIndex + 1}
-                        {section.name ? `.${topicIndex + 1}` : ""} {topic.name}
+                        {section.name && `.${topicIndex + 1}`} {topic.name}
                       </>
                     }
                     onClick={handleItemClick}
@@ -55,7 +55,7 @@ export default function BookChildrenTree(props: Props) {
                     label={
                       <>
                         {sectionIndex + 1}
-                        {section.name ? `.${topicIndex + 1}` : ""} {topic.name}
+                        {section.name && `.${topicIndex + 1}`} {topic.name}
                       </>
                     }
                     onClick={handleItemClick}

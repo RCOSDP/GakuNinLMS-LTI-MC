@@ -7,7 +7,7 @@ import LinkIcon from "@material-ui/icons/Link";
 import BookAccordion from "$organisms/BookAccordion";
 import SortSelect from "$atoms/SortSelect";
 import SearchTextField from "$atoms/SearchTextField";
-import { Book } from "types/book";
+import { BookSchema } from "$server/models/book";
 import useContainerStyles from "styles/container";
 
 const useStyles = makeStyles((theme) => ({
@@ -35,16 +35,16 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type Props = {
-  books: Book[];
-  onBookClick(book: Book): void;
-  onBookEditClick(book: Book): void;
+  books: BookSchema[];
+  onBookClick(book: BookSchema): void;
+  onBookEditClick(book: BookSchema): void;
   onBookNewClick(): void;
 };
 
 export default function Books(props: Props) {
   const { books, onBookClick, onBookEditClick, onBookNewClick } = props;
-  const handleBookEditClick = (book: Book) => () => onBookEditClick(book);
-  const handleTopicClick = (book: Book) => () => onBookClick(book);
+  const handleBookEditClick = (book: BookSchema) => () => onBookEditClick(book);
+  const handleTopicClick = (book: BookSchema) => () => onBookClick(book);
   const handleBookNewClick = () => onBookNewClick();
   const classes = useStyles();
   const containerClasses = useContainerStyles();

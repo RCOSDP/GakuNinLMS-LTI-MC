@@ -6,6 +6,7 @@ const input = makeStyles((theme) => ({
     backgroundColor: theme.palette.common.white,
     border: `1px solid ${gray[500]}`,
     borderRadius: "6px",
+    height: "100%",
     fontSize: "1rem",
     padding: `${theme.spacing(1.25)}px ${theme.spacing(1.75)}px`,
     transition: theme.transitions.create(["border-color"]),

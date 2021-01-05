@@ -4,8 +4,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import BookForm from "$organisms/BookForm";
 import RequiredDot from "$atoms/RequiredDot";
 import useContainerStyles from "styles/container";
-import { BookProps } from "$server/models/book";
-import { Book } from "types/book";
+import { BookProps, BookSchema } from "$server/models/book";
 
 const useStyles = makeStyles((theme) => ({
   header: {
@@ -28,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-type Props = { book?: Book | null; onSubmit: (book: BookProps) => void };
+type Props = { book?: BookSchema | null; onSubmit: (book: BookProps) => void };
 
 export default function BookNew(props: Props) {
   const { book, onSubmit } = props;

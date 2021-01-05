@@ -9,7 +9,8 @@ import GetAppIcon from "@material-ui/icons/GetApp";
 import DragIndicatorIcon from "@material-ui/icons/DragIndicator";
 import { makeStyles } from "@material-ui/core/styles";
 import BookChildrenTree from "$molecules/BookChildrenTree";
-import { Section, Topic } from "$types/book";
+import { SectionSchema } from "$server/models/book/section";
+import { TopicSchema } from "$server/models/topic";
 import useCardStyles from "$styles/card";
 
 const useStyles = makeStyles((theme) => ({
@@ -29,14 +30,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type Props = {
-  sections: Section[];
+  sections: SectionSchema[];
   className?: string;
   onBookImportClick?(): void;
   onTopicImportClick?(): void;
   onTopicNewClick?(): void;
   onSectionNewClick?(): void;
   onSortableChange?(): void;
-  onTopicClick(topic: Topic): void;
+  onTopicClick(topic: TopicSchema): void;
 };
 
 export default function BookEditChildren(props: Props) {

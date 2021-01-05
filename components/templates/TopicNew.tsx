@@ -4,7 +4,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import TopicForm from "$organisms/TopicForm";
 import RequiredDot from "$atoms/RequiredDot";
 import useContainerStyles from "styles/container";
-import { Topic } from "types/book";
+import { TopicProps, TopicSchema } from "$server/models/topic";
+import { VideoTrackProps, VideoTrackSchema } from "$server/models/videoTrack";
 
 const useStyles = makeStyles((theme) => ({
   header: {
@@ -27,10 +28,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-type Props = { topic: Topic | null };
+type Props = {
+  topic: TopicSchema | null;
+  onSubmit(topic: TopicProps): void;
+  onSubtitleDelete(videoTrack: VideoTrackSchema): void;
+  onSubtitleSubmit(videoTrack: VideoTrackProps): void;
+};
 
 export default function TopicNew(props: Props) {
-  const { topic } = props;
+  const { topic, onSubmit, onSubtitleDelete, onSubtitleSubmit } = props;
   const classes = useStyles();
   const containerClasses = useContainerStyles();
 
@@ -47,7 +53,13 @@ export default function TopicNew(props: Props) {
           は必須項目です
         </Typography>
       </Typography>
-      <TopicForm topic={topic} submitLabel="作成" />
+      <TopicForm
+        topic={topic}
+        submitLabel="作成"
+        onSubmit={onSubmit}
+        onSubtitleDelete={onSubtitleDelete}
+        onSubtitleSubmit={onSubtitleSubmit}
+      />
     </Container>
   );
 }

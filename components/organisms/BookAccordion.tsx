@@ -1,4 +1,4 @@
-import { MouseEvent } from "react";
+import { MouseEvent, useState } from "react";
 import { format } from "date-fns";
 import Accordion from "@material-ui/core/Accordion";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
@@ -15,7 +15,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import BookChildrenTree from "$molecules/BookChildrenTree";
 import CourseChip from "$atoms/CourseChip";
 import Item from "$atoms/Item";
-import { Book, Topic } from "types/book";
+import BookItemDialog from "$organisms/BookItemDialog";
+import { BookSchema } from "$server/models/book";
+import { TopicSchema } from "$server/models/topic";
 import useAccordionStyle from "styles/accordion";
 import useAccordionSummaryStyle from "styles/accordionSummary";
 import useAccordionDetailStyle from "styles/accordionDetail";
@@ -43,9 +45,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type Props = {
-  book: Book;
-  onEditClick(book: Book): void;
-  onTopicClick(topic: Topic): void;
+  book: BookSchema;
+  onEditClick(book: BookSchema): void;
+  onTopicClick(topic: TopicSchema): void;
 };
 
 export default function BookAccordion(props: Props) {
@@ -54,11 +56,16 @@ export default function BookAccordion(props: Props) {
   const accordionClasses = useAccordionStyle();
   const accordionSummaryClasses = useAccordionSummaryStyle();
   const accordionDetailClasses = useAccordionDetailStyle();
-  const handleItemClick = ([sectionIndex, topicIndex]: [number, number]) =>
-    onTopicClick(book.sections[sectionIndex].topics[topicIndex]);
+  const [open, setOpen] = useState(false);
   const handleInfoClick = (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
+    setOpen(true);
   };
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const handleItemClick = ([sectionIndex, topicIndex]: [number, number]) =>
+    onTopicClick(book.sections[sectionIndex].topics[topicIndex]);
   const handleEditClick = (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
     onEditClick(book);
@@ -108,6 +115,7 @@ export default function BookAccordion(props: Props) {
           />
         </TreeView>
       </AccordionDetails>
+      <BookItemDialog open={open} onClose={handleClose} book={book} />
     </Accordion>
   );
 }

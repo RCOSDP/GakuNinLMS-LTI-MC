@@ -6,13 +6,15 @@ import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import CheckBoxOutlineBlonkIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import CheckBoxOutlinedIcon from "@material-ui/icons/CheckBoxOutlined";
-import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
+import { InfoOutlined, EditOutlined } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import Video from "$organisms/Video";
 import CourseChip from "$atoms/CourseChip";
 import Item from "$atoms/Item";
+import BookItemDialog from "$organisms/BookItemDialog";
 import useCardStyle from "styles/card";
-import { Book, Topic } from "$types/book";
+import { BookSchema } from "$server/models/book";
+import { TopicSchema } from "$server/models/topic";
 import { primary } from "theme/colors";
 
 const useStyles = makeStyles((theme) => ({
@@ -52,21 +54,28 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-type Props = { book: Book };
+type Props = { book: BookSchema };
 
 export default function BookPreview(props: Props) {
   const cardClasses = useCardStyle();
   const classes = useStyles();
   const { book } = props;
   const [checkBox, setCheckBox] = useState(false);
-  const [topic] = useState<Topic>(book.sections[0].topics[0]);
+  const [topic] = useState<TopicSchema>(book.sections[0].topics[0]);
+  const [open, setOpen] = useState(false);
+  const handleInfoClick = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
   const handleCheckBoxClick = () => {
     setCheckBox(!checkBox);
   };
   return (
     <Card
       classes={cardClasses}
-      className={`${classes.root} ${checkBox ? classes.selected : ""}`}
+      className={`${classes.root} ${checkBox && classes.selected}`}
     >
       <div className={classes.left}>
         <Typography variant="h6" className={classes.title}>
@@ -78,8 +87,11 @@ export default function BookPreview(props: Props) {
             {checkBox ? <CheckBoxOutlinedIcon /> : <CheckBoxOutlineBlonkIcon />}
           </IconButton>
           {book.name}
+          <IconButton onClick={handleInfoClick}>
+            <InfoOutlined />
+          </IconButton>
           <IconButton color="primary">
-            <EditOutlinedIcon />
+            <EditOutlined />
           </IconButton>
         </Typography>
         <div className={classes.chips}>
@@ -105,7 +117,7 @@ export default function BookPreview(props: Props) {
             {section.topics.map((topic, topicIndex) => (
               <p key={topic.id}>
                 {sectionIndex + 1}
-                {section.name ? `.${topicIndex + 1}` : ""} {topic.name}
+                {section.name && `.${topicIndex + 1}`} {topic.name}
               </p>
             ))}
           </Fragment>
@@ -117,6 +129,7 @@ export default function BookPreview(props: Props) {
       <div className={classes.right}>
         {"providerUrl" in topic.resource && <Video {...topic.resource} />}
       </div>
+      {book && <BookItemDialog open={open} onClose={handleClose} book={book} />}
     </Card>
   );
 }

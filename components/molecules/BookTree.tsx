@@ -4,22 +4,27 @@ import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import CourseChip from "$atoms/CourseChip";
 import BookChildrenTree from "$molecules/BookChildrenTree";
-import { Book } from "$types/book";
+import { BookSchema } from "$server/models/book";
 
 type Props = {
-  book: Book;
+  book: BookSchema;
   onItemClick(index: [number, number]): void;
+  onInfoClick?(): void;
 };
 
 export default function BookTree(props: Props) {
-  const { book, onItemClick } = props;
+  const { book, onItemClick, onInfoClick = () => undefined } = props;
+  const handleInfoClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
+    onInfoClick();
+  };
   return (
     <TreeItem
       nodeId={`${book.id}`}
       label={
         <>
           {book.name}
-          <IconButton size="small">
+          <IconButton size="small" onClick={handleInfoClick}>
             <InfoOutlinedIcon />
           </IconButton>
           <IconButton size="small">

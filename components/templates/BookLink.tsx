@@ -6,7 +6,7 @@ import AddIcon from "@material-ui/icons/Add";
 import BookPreview from "$organisms/BookPreview";
 import SortSelect from "$atoms/SortSelect";
 import SearchTextField from "$atoms/SearchTextField";
-import { Book } from "types/book";
+import { BookSchema } from "$server/models/book";
 import { gray } from "theme/colors";
 import useContainerStyles from "styles/container";
 
@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type Props = {
-  books: Book[];
+  books: BookSchema[];
 };
 
 export default function BookLink(props: Props) {

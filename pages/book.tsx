@@ -2,6 +2,8 @@ import { useRouter } from "next/router";
 import { BookSchema } from "$server/models/book";
 import { useNextItemIndexAtom } from "$store/book";
 import Book from "$templates/Book";
+import Placeholder from "$templates/Placeholder";
+import Unknown from "$templates/Unknown";
 import { useBook } from "$utils/book";
 
 export type Query = {
@@ -18,7 +20,7 @@ function Show(props: Pick<BookSchema, "id">) {
     router.push({ pathname: "/book/edit", query: props });
   };
 
-  if (!book) return <p>Loading...</p>; // TODO: プレースホルダーがいい加減
+  if (!book) return <Placeholder />;
 
   return (
     <Book
@@ -36,7 +38,12 @@ function Router() {
   const query: Query = router.query;
   const id = Number(query.id);
 
-  if (!Number.isFinite(id)) return <p>Not Found</p>; // TODO: エラーページを用意
+  if (!Number.isFinite(id))
+    return (
+      <Unknown header="ブックがありません">
+        ブックが見つかりませんでした
+      </Unknown>
+    );
 
   return <Show id={id} />;
 }

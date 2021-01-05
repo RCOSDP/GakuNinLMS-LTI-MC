@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { isInstructor, useSession } from "$utils/session";
 import { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
-import BookUnknown from "$templates/BookUnknown";
+import Unknown from "$templates/Unknown";
 
 function Replace(props: { href: string | UrlObject }) {
   const router = useRouter();
@@ -26,7 +26,12 @@ function Router() {
   // TODO: https://github.com/npocccties/ChibiCHiLO/issues/3
   if (!session.data) return <div>Loading...</div>; // TODO: プレースホルダーがいい加減
   if (isInstructor(session.data)) return <Replace href="/books" />;
-  if (!session.data.ltiResourceLink) return <BookUnknown />;
+  if (!session.data.ltiResourceLink)
+    return (
+      <Unknown header="ブックが未連携です">
+        LTIリンクがどのブックとも連携されていません。担当教員にお問い合わせください
+      </Unknown>
+    );
 
   return <ReplaceToBook ltiResourceLink={session.data.ltiResourceLink} />;
 }

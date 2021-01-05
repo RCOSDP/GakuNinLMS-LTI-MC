@@ -10,19 +10,8 @@ import TextField from "$atoms/TextField";
 import useCardStyles from "styles/card";
 import useInputLabelStyles from "styles/inputLabel";
 import gray from "theme/colors/gray";
-import { BookProps } from "$server/models/book";
-import { Book } from "types/book";
-
-const languages = [
-  {
-    value: "ja",
-    label: "日本語",
-  },
-  {
-    value: "en",
-    label: "英語",
-  },
-] as const;
+import { BookProps, BookSchema } from "$server/models/book";
+import languages from "$utils/languages";
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -37,13 +26,19 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type Props = {
-  book?: Book | null;
+  book?: BookSchema | null;
+  className?: string;
   submitLabel?: string;
   onSubmit?: (book: BookProps) => void;
 };
 
 export default function BookForm(props: Props) {
-  const { book, submitLabel = "更新", onSubmit = () => undefined } = props;
+  const {
+    book,
+    className,
+    submitLabel = "更新",
+    onSubmit = () => undefined,
+  } = props;
   const cardClasses = useCardStyles();
   const inputLabelClasses = useInputLabelStyles();
   const classes = useStyles();
@@ -51,7 +46,7 @@ export default function BookForm(props: Props) {
     name: book?.name,
     description: book?.description ?? "",
     shared: book?.shared ?? true,
-    language: book?.language ?? languages[0].value,
+    language: book?.language ?? Object.getOwnPropertyNames(languages)[0],
     timeRequired: book?.timeRequired,
     sections: book?.sections,
   };
@@ -62,7 +57,7 @@ export default function BookForm(props: Props) {
   return (
     <Card
       classes={cardClasses}
-      className={classes.margin}
+      className={`${classes.margin} ${className}`}
       component="form"
       onSubmit={handleSubmit((values) => {
         onSubmit({ ...defaultValues, ...values });
@@ -104,9 +99,9 @@ export default function BookForm(props: Props) {
         defaultValue={defaultValues.language}
         render={(props) => (
           <TextField label="教材の主要な言語" select inputProps={props}>
-            {languages.map((option) => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
+            {Object.entries(languages).map(([value, label]) => (
+              <MenuItem key={value} value={value}>
+                {label}
               </MenuItem>
             ))}
           </TextField>

@@ -1,4 +1,6 @@
-import { makeStyles } from "@material-ui/core/styles";
+import { useState } from "react";
+import { useTheme, makeStyles } from "@material-ui/core/styles";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
@@ -7,8 +9,9 @@ import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import LinkIcon from "@material-ui/icons/Link";
 import BookChildren from "$organisms/BookChildren";
+import BookItemDialog from "$organisms/BookItemDialog";
 import TopicViewer from "$organisms/TopicViewer";
-import type * as Types from "types/book";
+import { BookSchema } from "$server/models/book";
 import useContainerStyles from "styles/container";
 
 const useStyles = makeStyles((theme) => ({
@@ -24,12 +27,34 @@ const useStyles = makeStyles((theme) => ({
   icon: {
     marginRight: theme.spacing(0.5),
   },
+  inner: {
+    display: "grid",
+    gap: `${theme.spacing(2)}px`,
+  },
+  innerDesktop: {
+    gridTemplateAreas: `
+      "bookChildren topicViewer"
+    `,
+    gridTemplateColumns: "30% 1fr",
+  },
+  innerMobile: {
+    gridTemplateAreas: `
+      "topicViewer"
+      "bookChildren"
+    `,
+  },
+  topicViewer: {
+    gridArea: "topicViewer",
+  },
+  bookChildren: {
+    gridArea: "bookChildren",
+  },
 }));
 
 type Props = {
-  book: Types.Book | null;
+  book: BookSchema | null;
   index: [number, number];
-  onBookEditClick(book: Types.Book): void;
+  onBookEditClick(book: BookSchema): void;
   onTopicEnded(): void;
   onItemClick(index: [number, number]): void;
 };
@@ -45,6 +70,15 @@ export default function Book(props: Props) {
   const topic = book?.sections[sectionIndex]?.topics[topicIndex];
   const classes = useStyles();
   const containerClasses = useContainerStyles();
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up("md"));
+  const [open, setOpen] = useState(false);
+  const handleInfoClick = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
   const handleEditClick = () => book && onBookEditClick(book);
   const handleItemClick = (_: never, index: [number, number]) => {
     onItemClick(index);
@@ -53,11 +87,11 @@ export default function Book(props: Props) {
     <Container
       classes={containerClasses}
       className={classes.container}
-      maxWidth="md"
+      maxWidth="lg"
     >
       <Typography className={classes.title} variant="h4" gutterBottom={true}>
         {book?.name}
-        <IconButton>
+        <IconButton onClick={handleInfoClick}>
           <InfoOutlinedIcon />
         </IconButton>
         <IconButton color="primary" onClick={handleEditClick}>
@@ -68,11 +102,25 @@ export default function Book(props: Props) {
           LTIリンクの再連携
         </Button>
       </Typography>
-      {topic && <TopicViewer topic={topic} onEnded={onTopicEnded} />}
-      <BookChildren
-        sections={book?.sections ?? []}
-        onItemClick={handleItemClick}
-      />
+      <div
+        className={`${classes.inner} ${
+          matches ? classes.innerDesktop : classes.innerMobile
+        }`}
+      >
+        {topic && (
+          <TopicViewer
+            className={classes.topicViewer}
+            topic={topic}
+            onEnded={onTopicEnded}
+          />
+        )}
+        <BookChildren
+          className={classes.bookChildren}
+          sections={book?.sections ?? []}
+          onItemClick={handleItemClick}
+        />
+      </div>
+      {book && <BookItemDialog open={open} onClose={handleClose} book={book} />}
     </Container>
   );
 }
