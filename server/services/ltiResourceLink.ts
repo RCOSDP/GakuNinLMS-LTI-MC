@@ -40,7 +40,7 @@ export const method: Method = {
     description: "LTI Resource Link の削除",
     params: ltiResourceLinkParamsSchema,
     response: {
-      204: {},
+      204: { type: "null", description: "成功" },
     },
   },
 };

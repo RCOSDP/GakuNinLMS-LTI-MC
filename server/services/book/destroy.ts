@@ -6,7 +6,7 @@ export const destroySchema: FastifySchema = {
   description: "ブックの削除",
   params: bookParamsSchema,
   response: {
-    204: {},
+    204: { type: "null", description: "成功" },
   },
 };
 
