@@ -9,7 +9,7 @@ export const destroySchema: FastifySchema = {
   description: "字幕の削除",
   params: videoTrackParamsSchema,
   response: {
-    204: {},
+    204: { type: "null", description: "成功" },
   },
 };
 

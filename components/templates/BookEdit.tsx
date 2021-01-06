@@ -9,6 +9,7 @@ import RequiredDot from "$atoms/RequiredDot";
 import useContainerStyles from "styles/container";
 import { BookProps, BookSchema } from "$server/models/book";
 import { TopicSchema } from "$server/models/topic";
+import { useConfirm } from "material-ui-confirm";
 
 const useStyles = makeStyles((theme) => ({
   header: {
@@ -41,13 +42,24 @@ type Props = {
   book: BookSchema | null;
   onSubmit(book: BookProps): void;
   onTopicClick(topic: TopicSchema): void;
+  onDelete(book: BookSchema): void;
 };
 
 export default function BookEdit(props: Props) {
-  const { book, onSubmit, onTopicClick } = props;
+  const { book, onSubmit, onTopicClick, onDelete } = props;
   const classes = useStyles();
   const containerClasses = useContainerStyles();
+  const confirm = useConfirm();
   const handleTopicClick = (topic: TopicSchema) => onTopicClick(topic);
+  const handleDeleteButtonClick = async () => {
+    if (!book) return;
+    await confirm({
+      title: `ブック「${book.name}」を削除します。よろしいですか？`,
+      cancellationText: "キャンセル",
+      confirmationText: "OK",
+    });
+    onDelete(book);
+  };
 
   return (
     <Container
@@ -68,7 +80,7 @@ export default function BookEdit(props: Props) {
         onTopicClick={handleTopicClick}
       />
       <BookForm className={classes.form} book={book} onSubmit={onSubmit} />
-      <Button size="small" color="primary">
+      <Button size="small" color="primary" onClick={handleDeleteButtonClick}>
         <DeleteOutlined />
         ブックを削除
       </Button>

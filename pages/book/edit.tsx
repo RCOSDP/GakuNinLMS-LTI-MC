@@ -6,7 +6,7 @@ import TopicPreviewDialog from "$organisms/TopicPreviewDialog";
 import BookEdit from "$templates/BookEdit";
 import Placeholder from "$templates/Placeholder";
 import Unknown from "$templates/Unknown";
-import { updateBook, useBook } from "$utils/book";
+import { destroyBook, updateBook, useBook } from "$utils/book";
 
 export type Query = {
   id?: string;
@@ -34,6 +34,10 @@ function Edit({ id, prev }: Pick<BookSchema, "id"> & Pick<Query, "prev">) {
   const handleClose = () => {
     setOpen(false);
   };
+  async function handleDelete({ id }: Pick<BookSchema, "id">) {
+    await destroyBook(id);
+    return router.push("/books");
+  }
 
   if (!book) return <Placeholder />;
 
@@ -43,6 +47,7 @@ function Edit({ id, prev }: Pick<BookSchema, "id"> & Pick<Query, "prev">) {
         book={book}
         onSubmit={handleSubmit}
         onTopicClick={handleTopicClick}
+        onDelete={handleDelete}
       />
       {topic && (
         <TopicPreviewDialog open={open} onClose={handleClose} topic={topic} />

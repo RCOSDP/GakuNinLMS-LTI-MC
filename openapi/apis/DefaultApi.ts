@@ -163,7 +163,7 @@ export class DefaultApi extends runtime.BaseAPI {
     /**
      * ブックの削除
      */
-    async apiV2BookBookIdDeleteRaw(requestParameters: ApiV2BookBookIdDeleteRequest): Promise<runtime.ApiResponse<object>> {
+    async apiV2BookBookIdDeleteRaw(requestParameters: ApiV2BookBookIdDeleteRequest): Promise<runtime.ApiResponse<void>> {
         if (requestParameters.bookId === null || requestParameters.bookId === undefined) {
             throw new runtime.RequiredError('bookId','Required parameter requestParameters.bookId was null or undefined when calling apiV2BookBookIdDelete.');
         }
@@ -179,15 +179,14 @@ export class DefaultApi extends runtime.BaseAPI {
             query: queryParameters,
         });
 
-        return new runtime.JSONApiResponse<any>(response);
+        return new runtime.VoidApiResponse(response);
     }
 
     /**
      * ブックの削除
      */
-    async apiV2BookBookIdDelete(requestParameters: ApiV2BookBookIdDeleteRequest): Promise<object> {
-        const response = await this.apiV2BookBookIdDeleteRaw(requestParameters);
-        return await response.value();
+    async apiV2BookBookIdDelete(requestParameters: ApiV2BookBookIdDeleteRequest): Promise<void> {
+        await this.apiV2BookBookIdDeleteRaw(requestParameters);
     }
 
     /**
@@ -433,7 +432,7 @@ export class DefaultApi extends runtime.BaseAPI {
     /**
      * LTI Resource Link の削除
      */
-    async apiV2LtiResourceLinkLtiResourceLinkIdDeleteRaw(requestParameters: ApiV2LtiResourceLinkLtiResourceLinkIdDeleteRequest): Promise<runtime.ApiResponse<object>> {
+    async apiV2LtiResourceLinkLtiResourceLinkIdDeleteRaw(requestParameters: ApiV2LtiResourceLinkLtiResourceLinkIdDeleteRequest): Promise<runtime.ApiResponse<void>> {
         if (requestParameters.ltiResourceLinkId === null || requestParameters.ltiResourceLinkId === undefined) {
             throw new runtime.RequiredError('ltiResourceLinkId','Required parameter requestParameters.ltiResourceLinkId was null or undefined when calling apiV2LtiResourceLinkLtiResourceLinkIdDelete.');
         }
@@ -449,15 +448,14 @@ export class DefaultApi extends runtime.BaseAPI {
             query: queryParameters,
         });
 
-        return new runtime.JSONApiResponse<any>(response);
+        return new runtime.VoidApiResponse(response);
     }
 
     /**
      * LTI Resource Link の削除
      */
-    async apiV2LtiResourceLinkLtiResourceLinkIdDelete(requestParameters: ApiV2LtiResourceLinkLtiResourceLinkIdDeleteRequest): Promise<object> {
-        const response = await this.apiV2LtiResourceLinkLtiResourceLinkIdDeleteRaw(requestParameters);
-        return await response.value();
+    async apiV2LtiResourceLinkLtiResourceLinkIdDelete(requestParameters: ApiV2LtiResourceLinkLtiResourceLinkIdDeleteRequest): Promise<void> {
+        await this.apiV2LtiResourceLinkLtiResourceLinkIdDeleteRaw(requestParameters);
     }
 
     /**
@@ -559,7 +557,7 @@ export class DefaultApi extends runtime.BaseAPI {
     /**
      * 字幕の削除
      */
-    async apiV2ResourceResourceIdVideoTrackVideoTrackIdDeleteRaw(requestParameters: ApiV2ResourceResourceIdVideoTrackVideoTrackIdDeleteRequest): Promise<runtime.ApiResponse<object>> {
+    async apiV2ResourceResourceIdVideoTrackVideoTrackIdDeleteRaw(requestParameters: ApiV2ResourceResourceIdVideoTrackVideoTrackIdDeleteRequest): Promise<runtime.ApiResponse<void>> {
         if (requestParameters.videoTrackId === null || requestParameters.videoTrackId === undefined) {
             throw new runtime.RequiredError('videoTrackId','Required parameter requestParameters.videoTrackId was null or undefined when calling apiV2ResourceResourceIdVideoTrackVideoTrackIdDelete.');
         }
@@ -579,15 +577,14 @@ export class DefaultApi extends runtime.BaseAPI {
             query: queryParameters,
         });
 
-        return new runtime.JSONApiResponse<any>(response);
+        return new runtime.VoidApiResponse(response);
     }
 
     /**
      * 字幕の削除
      */
-    async apiV2ResourceResourceIdVideoTrackVideoTrackIdDelete(requestParameters: ApiV2ResourceResourceIdVideoTrackVideoTrackIdDeleteRequest): Promise<object> {
-        const response = await this.apiV2ResourceResourceIdVideoTrackVideoTrackIdDeleteRaw(requestParameters);
-        return await response.value();
+    async apiV2ResourceResourceIdVideoTrackVideoTrackIdDelete(requestParameters: ApiV2ResourceResourceIdVideoTrackVideoTrackIdDeleteRequest): Promise<void> {
+        await this.apiV2ResourceResourceIdVideoTrackVideoTrackIdDeleteRaw(requestParameters);
     }
 
     /**
@@ -716,7 +713,7 @@ export class DefaultApi extends runtime.BaseAPI {
     /**
      * トピックの削除
      */
-    async apiV2TopicTopicIdDeleteRaw(requestParameters: ApiV2TopicTopicIdDeleteRequest): Promise<runtime.ApiResponse<object>> {
+    async apiV2TopicTopicIdDeleteRaw(requestParameters: ApiV2TopicTopicIdDeleteRequest): Promise<runtime.ApiResponse<void>> {
         if (requestParameters.topicId === null || requestParameters.topicId === undefined) {
             throw new runtime.RequiredError('topicId','Required parameter requestParameters.topicId was null or undefined when calling apiV2TopicTopicIdDelete.');
         }
@@ -732,15 +729,14 @@ export class DefaultApi extends runtime.BaseAPI {
             query: queryParameters,
         });
 
-        return new runtime.JSONApiResponse<any>(response);
+        return new runtime.VoidApiResponse(response);
     }
 
     /**
      * トピックの削除
      */
-    async apiV2TopicTopicIdDelete(requestParameters: ApiV2TopicTopicIdDeleteRequest): Promise<object> {
-        const response = await this.apiV2TopicTopicIdDeleteRaw(requestParameters);
-        return await response.value();
+    async apiV2TopicTopicIdDelete(requestParameters: ApiV2TopicTopicIdDeleteRequest): Promise<void> {
+        await this.apiV2TopicTopicIdDeleteRaw(requestParameters);
     }
 
     /**
