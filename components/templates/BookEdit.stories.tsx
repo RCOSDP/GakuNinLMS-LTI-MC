@@ -8,6 +8,7 @@ import { TopicSchema } from "$server/models/topic";
 
 const handleTopicClick = console.log;
 const handleSubmit = console.log;
+const handleDelete = console.log;
 
 export const Default = () => {
   const [open, setOpen] = useState(false);
@@ -25,6 +26,7 @@ export const Default = () => {
         book={book}
         onSubmit={handleSubmit}
         onTopicClick={handleTopicClick}
+        onDelete={handleDelete}
       />
       {topic && (
         <TopicPreviewDialog open={open} onClose={handleClose} topic={topic} />
@@ -38,5 +40,6 @@ export const Empty = () => (
     book={null}
     onSubmit={handleSubmit}
     onTopicClick={handleTopicClick}
+    onDelete={handleDelete}
   />
 );
