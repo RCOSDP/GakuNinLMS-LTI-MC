@@ -34,6 +34,12 @@ export interface InlineResponse2001Sections {
     id?: number;
     /**
      * 
+     * @type {string}
+     * @memberof InlineResponse2001Sections
+     */
+    name?: string;
+    /**
+     * 
      * @type {Array<InlineResponse2001Topics>}
      * @memberof InlineResponse2001Sections
      */
@@ -51,6 +57,7 @@ export function InlineResponse2001SectionsFromJSONTyped(json: any, ignoreDiscrim
     return {
         
         'id': !exists(json, 'id') ? undefined : json['id'],
+        'name': !exists(json, 'name') ? undefined : json['name'],
         'topics': !exists(json, 'topics') ? undefined : ((json['topics'] as Array<any>).map(InlineResponse2001TopicsFromJSON)),
     };
 }
@@ -65,6 +72,7 @@ export function InlineResponse2001SectionsToJSON(value?: InlineResponse2001Secti
     return {
         
         'id': value.id,
+        'name': value.name,
         'topics': value.topics === undefined ? undefined : ((value.topics as Array<any>).map(InlineResponse2001TopicsToJSON)),
     };
 }

@@ -8,13 +8,12 @@ export type SectionProps = {
 };
 
 const { id: topicId } = jsonSchema.definitions.Topic.properties;
+const nameSchema = { type: "string", nullable: true };
+
 export const sectionPropsSchema = {
   type: "object",
   properties: {
-    name: {
-      type: "string",
-      nullable: true,
-    },
+    name: nameSchema,
     topics: {
       type: "array",
       items: { type: "object", properties: { id: topicId } },
@@ -26,12 +25,12 @@ export type SectionSchema = Pick<Section, "id" | "name"> & {
   topics: TopicSchema[];
 };
 
-const { id, name } = jsonSchema.definitions.Section.properties;
+const { id } = jsonSchema.definitions.Section.properties;
 export const sectionSchema = {
   type: "object",
   properties: {
     id,
-    name,
+    name: nameSchema,
     topics: {
       type: "array",
       items: topicSchema,
