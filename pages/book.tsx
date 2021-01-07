@@ -5,6 +5,7 @@ import Book from "$templates/Book";
 import Placeholder from "$templates/Placeholder";
 import Unknown from "$templates/Unknown";
 import { useBook } from "$utils/book";
+import { TopicSchema } from "$server/models/topic";
 
 export type Query = {
   bookId?: string;
@@ -21,6 +22,15 @@ function Show(props: ShowProps) {
   const handleBookEditClick = () => {
     router.push({ pathname: "/book/edit", query: props });
   };
+  const handleTopicEditClick = ({ id }: Pick<TopicSchema, "id">) => {
+    router.push({
+      pathname: "/book/topic/edit",
+      query: {
+        bookId: props.bookId,
+        topicId: id,
+      },
+    });
+  };
 
   if (!book) return <Placeholder />;
 
@@ -29,6 +39,7 @@ function Show(props: ShowProps) {
       book={book}
       index={index}
       onBookEditClick={handleBookEditClick}
+      onTopicEditClick={handleTopicEditClick}
       onTopicEnded={handleTopicEnded}
       onItemClick={handleItemClick}
     />

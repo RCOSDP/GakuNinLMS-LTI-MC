@@ -8,56 +8,71 @@ import Collapse from "@material-ui/core/Collapse";
 import { ExpandLess, ExpandMore, EditOutlined } from "@material-ui/icons";
 import { SectionSchema } from "$server/models/book/section";
 
+type ItemIndex = [number, number];
+
 type Props = {
   className?: string;
   sections: SectionSchema[];
-  onItemClick(event: MouseEvent<HTMLElement>, index: [number, number]): void;
+  onItemClick(event: MouseEvent<HTMLElement>, index: ItemIndex): void;
+  onItemEditClick?(event: MouseEvent<HTMLElement>, index: ItemIndex): void;
 };
 
 export default function BookChildren(props: Props) {
-  const { className, sections, onItemClick } = props;
+  const { className, sections, onItemClick, onItemEditClick } = props;
   const [open, setOpen] = useState<boolean[]>(sections.map(() => true));
   const handleItemClick = (event: MouseEvent<HTMLElement>) => {
     const { section, topic } = event.currentTarget.dataset;
-    onItemClick(event, [section, topic].map(Number) as [number, number]);
+    onItemClick(event, [section, topic].map(Number) as ItemIndex);
   };
-  const handleSectionClick = (sectionIndex: number) => {
+  const handleSectionClick = (sectionItemIndex: number) => {
     setOpen((open) => {
       const newOpen = open.slice();
-      newOpen[sectionIndex] = !newOpen[sectionIndex];
+      newOpen[sectionItemIndex] = !newOpen[sectionItemIndex];
       return newOpen;
     });
   };
-  const handleEditClick = (event: MouseEvent<HTMLButtonElement>) => {
+  const handleItemEditClick = (...index: ItemIndex) => (
+    event: MouseEvent<HTMLButtonElement>
+  ) => {
     event.stopPropagation();
+    onItemEditClick?.(event, index);
   };
   return (
     <List disablePadding className={className}>
-      {sections.map((section, sectionIndex) => (
+      {sections.map((section, sectionItemIndex) => (
         <Fragment key={section.id}>
           {(section.name && (
             <>
-              <ListItem button onClick={() => handleSectionClick(sectionIndex)}>
+              <ListItem
+                button
+                onClick={() => handleSectionClick(sectionItemIndex)}
+              >
                 <ListItemText>
-                  {sectionIndex + 1} {section.name}
+                  {sectionItemIndex + 1} {section.name}
                 </ListItemText>
-                {open[sectionIndex] ? <ExpandLess /> : <ExpandMore />}
+                {open[sectionItemIndex] ? <ExpandLess /> : <ExpandMore />}
               </ListItem>
-              <Collapse in={open[sectionIndex]}>
-                {section.topics.map((topic, topicIndex) => (
+              <Collapse in={open[sectionItemIndex]}>
+                {section.topics.map((topic, topicItemIndex) => (
                   <ListItem
                     key={topic.id}
                     button
-                    data-section={sectionIndex}
-                    data-topic={topicIndex}
+                    data-section={sectionItemIndex}
+                    data-topic={topicItemIndex}
                     onClick={handleItemClick}
                   >
                     <ListItemText>
-                      {sectionIndex + 1}
-                      {section.name && `.${topicIndex + 1}`} {topic.name}
+                      {sectionItemIndex + 1}
+                      {section.name && `.${topicItemIndex + 1}`} {topic.name}
                     </ListItemText>
                     <ListItemSecondaryAction>
-                      <IconButton color="primary" onClick={handleEditClick}>
+                      <IconButton
+                        color="primary"
+                        onClick={handleItemEditClick(
+                          sectionItemIndex,
+                          topicItemIndex
+                        )}
+                      >
                         <EditOutlined />
                       </IconButton>
                     </ListItemSecondaryAction>
@@ -67,20 +82,26 @@ export default function BookChildren(props: Props) {
             </>
           )) || (
             <>
-              {section.topics.map((topic, topicIndex) => (
+              {section.topics.map((topic, topicItemIndex) => (
                 <ListItem
                   key={topic.id}
                   button
-                  data-section={sectionIndex}
-                  data-topic={topicIndex}
+                  data-section={sectionItemIndex}
+                  data-topic={topicItemIndex}
                   onClick={handleItemClick}
                 >
                   <ListItemText>
-                    {sectionIndex + 1}
-                    {section.name && `.${topicIndex + 1}`} {topic.name}
+                    {sectionItemIndex + 1}
+                    {section.name && `.${topicItemIndex + 1}`} {topic.name}
                   </ListItemText>
                   <ListItemSecondaryAction>
-                    <IconButton color="primary" onClick={handleEditClick}>
+                    <IconButton
+                      color="primary"
+                      onClick={handleItemEditClick(
+                        sectionItemIndex,
+                        topicItemIndex
+                      )}
+                    >
                       <EditOutlined />
                     </IconButton>
                   </ListItemSecondaryAction>
