@@ -6,6 +6,7 @@ import { topic } from "samples";
 const props = {
   topic,
   onSubmit: console.log,
+  onDelete: console.log,
   onSubtitleDelete: console.log,
   onSubtitleSubmit: console.log,
 };

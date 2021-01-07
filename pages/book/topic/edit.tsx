@@ -6,7 +6,9 @@ import type {
 } from "../../book";
 import Placeholder from "$templates/Placeholder";
 import TopicEdit from "$templates/TopicEdit";
-import { updateTopic, useTopic } from "$utils/topic";
+import { useBook } from "$utils/book";
+import { destroyTopic, updateTopic, useTopic } from "$utils/topic";
+import { updateBook } from "$utils/book";
 
 type Query = BookQuery & {
   topicId?: string;
@@ -16,12 +18,29 @@ type EditProps = BookShowProps & {
   topicId: TopicSchema["id"];
 };
 
-function Edit({ topicId, bookId }: EditProps) {
+function Edit({ bookId, topicId }: EditProps) {
+  const book = useBook(bookId);
   const topic = useTopic(topicId);
   const router = useRouter();
+  function backToBook() {
+    return router.push({ pathname: "/book", query: { bookId } });
+  }
   async function handleSubmit(props: TopicProps) {
     await updateTopic({ id: topicId, ...props });
-    return router.push({ pathname: "/book", query: { bookId } });
+    return backToBook();
+  }
+  async function handleDelete({ id: topicId }: Pick<TopicSchema, "id">) {
+    if (!book) return;
+    await updateBook({
+      ...book,
+      ltiResourceLinks: undefined,
+      sections: book?.sections?.map((section) => ({
+        ...section,
+        topics: section.topics.filter(({ id }) => id !== topicId),
+      })),
+    });
+    await destroyTopic(topicId);
+    return backToBook();
   }
   function handleSubtitleSubmit() {
     // TODO: 未実装
@@ -29,17 +48,17 @@ function Edit({ topicId, bookId }: EditProps) {
   async function handleSubtitleDelete() {
     // TODO: 未実装
   }
+  const handlers = {
+    onSubmit: handleSubmit,
+    onDelete: handleDelete,
+    onSubtitleSubmit: handleSubtitleSubmit,
+    onSubtitleDelete: handleSubtitleDelete,
+  };
 
+  if (!book) return <Placeholder />;
   if (!topic) return <Placeholder />;
 
-  return (
-    <TopicEdit
-      topic={topic}
-      onSubmit={handleSubmit}
-      onSubtitleSubmit={handleSubtitleSubmit}
-      onSubtitleDelete={handleSubtitleDelete}
-    />
-  );
+  return <TopicEdit topic={topic} {...handlers} />;
 }
 
 function Router() {
