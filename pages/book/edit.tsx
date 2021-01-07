@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
-import { BookProps, BookSchema } from "$server/models/book";
+import type { BookProps, BookSchema } from "$server/models/book";
+import type { SectionProps } from "$server/models/book/section";
 import BookEdit from "$templates/BookEdit";
 import Placeholder from "$templates/Placeholder";
 import Unknown from "$templates/Unknown";
@@ -28,9 +29,18 @@ function Edit({ bookId, prev }: EditProps) {
     await destroyBook(id);
     return router.push("/books");
   }
+  async function handleAddSection(section: SectionProps) {
+    if (!book) return;
+    await updateBook({
+      ...book,
+      ltiResourceLinks: undefined,
+      sections: [...book?.sections, section],
+    });
+  }
   const handlers = {
     onSubmit: handleSubmit,
     onDelete: handleDelete,
+    onAddSection: handleAddSection,
     onTopicNewClick: () =>
       router.push({
         pathname: "/book/topic/new",

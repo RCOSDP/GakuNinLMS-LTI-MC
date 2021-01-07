@@ -10,6 +10,7 @@ import TopicPreviewDialog from "$organisms/TopicPreviewDialog";
 import RequiredDot from "$atoms/RequiredDot";
 import useContainerStyles from "styles/container";
 import { BookProps, BookSchema } from "$server/models/book";
+import { SectionProps } from "$server/models/book/section";
 import { TopicSchema } from "$server/models/topic";
 import { useConfirm } from "material-ui-confirm";
 
@@ -44,11 +45,12 @@ type Props = {
   book: BookSchema | null;
   onSubmit(book: BookProps): void;
   onDelete(book: BookSchema): void;
+  onAddSection(props: SectionProps): void;
   onTopicNewClick(): void;
 };
 
 export default function BookEdit(props: Props) {
-  const { book, onSubmit, onDelete, onTopicNewClick } = props;
+  const { book, onSubmit, onDelete, onAddSection, onTopicNewClick } = props;
   const classes = useStyles();
   const containerClasses = useContainerStyles();
   const confirm = useConfirm();
@@ -63,6 +65,11 @@ export default function BookEdit(props: Props) {
       confirmationText: "OK",
     });
     onDelete(book);
+  };
+  const handleSectionNewClick = () => {
+    // TODO: window.prompt は非推奨な API なのでやめたい
+    const name = window.prompt("新しいセクション名を入力してください。");
+    if (name) onAddSection({ name, topics: [] });
   };
 
   return (
@@ -83,6 +90,7 @@ export default function BookEdit(props: Props) {
         sections={book?.sections ?? []}
         onTopicClick={handleTopicClick}
         onTopicNewClick={onTopicNewClick}
+        onSectionNewClick={handleSectionNewClick}
       />
       <BookForm className={classes.form} book={book} onSubmit={onSubmit} />
       <Button size="small" color="primary" onClick={handleDeleteButtonClick}>

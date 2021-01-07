@@ -5,10 +5,12 @@ import { book } from "samples";
 
 const handleSubmit = console.log;
 const handleDelete = console.log;
+const handleAddSection = console.log;
 const handleTopicNewClick = () => console.log("onTopicNewClick");
 const handlers = {
   onSubmit: handleSubmit,
   onDelete: handleDelete,
+  onAddSection: handleAddSection,
   onTopicNewClick: handleTopicNewClick,
 };
 
