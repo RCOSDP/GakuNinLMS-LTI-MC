@@ -1,8 +1,5 @@
-import { useState } from "react";
 import { useRouter } from "next/router";
 import { BookProps, BookSchema } from "$server/models/book";
-import { TopicSchema } from "$server/models/topic";
-import TopicPreviewDialog from "$organisms/TopicPreviewDialog";
 import BookEdit from "$templates/BookEdit";
 import Placeholder from "$templates/Placeholder";
 import Unknown from "$templates/Unknown";
@@ -16,8 +13,6 @@ export type Query = {
 function Edit({ id, prev }: Pick<BookSchema, "id"> & Pick<Query, "prev">) {
   const book = useBook(id);
   const router = useRouter();
-  const [open, setOpen] = useState(false);
-  const [topic, setTopic] = useState<TopicSchema | null>(null);
   async function handleSubmit(props: BookProps) {
     await updateBook({ id, ...props });
     switch (prev) {
@@ -27,13 +22,6 @@ function Edit({ id, prev }: Pick<BookSchema, "id"> & Pick<Query, "prev">) {
         return router.push({ pathname: "/book", query: { id } });
     }
   }
-  function handleTopicClick(topic: TopicSchema) {
-    setTopic(topic);
-    setOpen(true);
-  }
-  const handleClose = () => {
-    setOpen(false);
-  };
   async function handleDelete({ id }: Pick<BookSchema, "id">) {
     await destroyBook(id);
     return router.push("/books");
@@ -42,17 +30,7 @@ function Edit({ id, prev }: Pick<BookSchema, "id"> & Pick<Query, "prev">) {
   if (!book) return <Placeholder />;
 
   return (
-    <>
-      <BookEdit
-        book={book}
-        onSubmit={handleSubmit}
-        onTopicClick={handleTopicClick}
-        onDelete={handleDelete}
-      />
-      {topic && (
-        <TopicPreviewDialog open={open} onClose={handleClose} topic={topic} />
-      )}
-    </>
+    <BookEdit book={book} onSubmit={handleSubmit} onDelete={handleDelete} />
   );
 }
 

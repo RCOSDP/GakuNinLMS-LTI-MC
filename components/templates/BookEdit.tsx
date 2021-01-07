@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import Button from "@material-ui/core/Button";
@@ -5,6 +6,7 @@ import { DeleteOutlined } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import BookEditChildren from "$organisms/BookEditChildren";
 import BookForm from "$organisms/BookForm";
+import TopicPreviewDialog from "$organisms/TopicPreviewDialog";
 import RequiredDot from "$atoms/RequiredDot";
 import useContainerStyles from "styles/container";
 import { BookProps, BookSchema } from "$server/models/book";
@@ -41,16 +43,17 @@ const useStyles = makeStyles((theme) => ({
 type Props = {
   book: BookSchema | null;
   onSubmit(book: BookProps): void;
-  onTopicClick(topic: TopicSchema): void;
   onDelete(book: BookSchema): void;
 };
 
 export default function BookEdit(props: Props) {
-  const { book, onSubmit, onTopicClick, onDelete } = props;
+  const { book, onSubmit, onDelete } = props;
   const classes = useStyles();
   const containerClasses = useContainerStyles();
   const confirm = useConfirm();
-  const handleTopicClick = (topic: TopicSchema) => onTopicClick(topic);
+  const [previewTopic, setPreviewTopic] = useState<TopicSchema | null>(null);
+  const handlePreviewTopicClose = () => setPreviewTopic(null);
+  const handleTopicClick = (topic: TopicSchema) => setPreviewTopic(topic);
   const handleDeleteButtonClick = async () => {
     if (!book) return;
     await confirm({
@@ -84,6 +87,13 @@ export default function BookEdit(props: Props) {
         <DeleteOutlined />
         ブックを削除
       </Button>
+      {previewTopic && (
+        <TopicPreviewDialog
+          open
+          onClose={handlePreviewTopicClose}
+          topic={previewTopic}
+        />
+      )}
     </Container>
   );
 }
