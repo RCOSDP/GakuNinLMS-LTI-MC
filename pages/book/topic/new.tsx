@@ -22,9 +22,14 @@ function New({ bookId, prev }: BookEditProps) {
       ltiResourceLinks: undefined,
       sections: [...book.sections, { name: null, topics: [{ id }] }],
     });
+    const bookEditQuery = { bookId, ...(prev && { prev }) };
+    await router.replace({
+      pathname: "/book/topic/edit",
+      query: { ...bookEditQuery, topicId: id },
+    });
     return router.push({
       pathname: "/book/edit",
-      query: { bookId, ...(prev && { prev }) },
+      query: bookEditQuery,
     });
   }
   function handleSubtitleSubmit() {
