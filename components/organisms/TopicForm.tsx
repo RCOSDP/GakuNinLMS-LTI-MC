@@ -82,132 +82,135 @@ export default function TopicForm(props: Props) {
     defaultValues,
   });
   return (
-    <Card
-      classes={cardClasses}
-      className={`${classes.margin} ${className}`}
-      component="form"
-      onSubmit={handleSubmit((values) => {
-        onSubmit({ ...defaultValues, ...values });
-      })}
-    >
-      <TextField
-        name="name"
-        inputRef={register}
-        label={
-          <>
-            タイトル
-            <Typography
-              className={classes.labelDescription}
-              variant="caption"
-              component="span"
-            >
-              学習者が学習範囲を簡潔に理解できるタイトルを設定できます
-            </Typography>
-          </>
-        }
-        defaultValue={topic?.name}
-        required
-        fullWidth
-      />
-      <div>
-        <InputLabel classes={inputLabelClasses} htmlFor="shared">
-          他の編集者に共有
-        </InputLabel>
-        <Checkbox
-          id="shared"
-          name="shared"
+    <>
+      <Card
+        classes={cardClasses}
+        className={`${classes.margin} ${className}`}
+        component="form"
+        onSubmit={handleSubmit((values) => {
+          onSubmit({ ...defaultValues, ...values });
+        })}
+      >
+        <TextField
+          name="name"
           inputRef={register}
-          defaultChecked={defaultValues.shared}
-          color="primary"
+          label={
+            <>
+              タイトル
+              <Typography
+                className={classes.labelDescription}
+                variant="caption"
+                component="span"
+              >
+                学習者が学習範囲を簡潔に理解できるタイトルを設定できます
+              </Typography>
+            </>
+          }
+          defaultValue={topic?.name}
+          required
+          fullWidth
         />
-      </div>
-      <TextField
-        name="resource.url"
-        label={
-          <>
-            動画のURL
-            <Typography
-              className={classes.labelDescription}
-              variant="caption"
-              component="span"
-            >
-              YouTube, Vimeo, Wowzaに対応しています
-            </Typography>
-          </>
-        }
-        type="url"
-        defaultValue={topic?.resource.url}
-        inputProps={{
-          ref: register({
-            setValueAs: (value) => parse(value)?.url ?? value,
-          }),
-        }}
-        required
-        fullWidth
-      />
-      {topic && "tracks" in topic.resource && <Video {...topic.resource} />}
-      <Controller
-        name="language"
-        control={control}
-        defaultValue={defaultValues.language}
-        render={(props) => (
-          <TextField label="教材の主要な言語" select inputProps={props}>
-            {Object.entries(languages).map(([value, label]) => (
-              <MenuItem key={value} value={value}>
-                {label}
-              </MenuItem>
-            ))}
-          </TextField>
-        )}
-      />
-      <TextField
-        name="timeRequired"
-        label="学習時間 (秒)"
-        type="number"
-        inputProps={{
-          ref: register({
-            setValueAs: (value) => (value === "" ? null : +value),
-            min: 0,
-          }),
-          min: 0,
-        }}
-      />
-      <div>
-        <InputLabel classes={inputLabelClasses}>字幕</InputLabel>
-        <div className={classes.subtitles}>
-          {topic &&
-            "tracks" in topic.resource &&
-            topic.resource.tracks.map((track) => (
-              <SubtitleChip
-                key={track.id}
-                videoTrack={track}
-                onDelete={onSubtitleDelete}
-              />
-            ))}
+        <div>
+          <InputLabel classes={inputLabelClasses} htmlFor="shared">
+            他の編集者に共有
+          </InputLabel>
+          <Checkbox
+            id="shared"
+            name="shared"
+            inputRef={register}
+            defaultChecked={defaultValues.shared}
+            color="primary"
+          />
         </div>
-        <Button
-          variant="outlined"
-          color="primary"
-          onClick={handleClickSubtitle}
-        >
-          字幕を追加
-        </Button>
-        <SubtitleUploadDialog
-          open={open}
-          onClose={handleClose}
-          onSubmit={handleSubmitSubtitle}
+        <TextField
+          name="resource.url"
+          label={
+            <>
+              動画のURL
+              <Typography
+                className={classes.labelDescription}
+                variant="caption"
+                component="span"
+              >
+                YouTube, Vimeo, Wowzaに対応しています
+              </Typography>
+            </>
+          }
+          type="url"
+          defaultValue={topic?.resource.url}
+          inputProps={{
+            ref: register({
+              setValueAs: (value) => parse(value)?.url ?? value,
+            }),
+          }}
+          required
+          fullWidth
         />
-      </div>
-      <TextField
-        label="解説"
-        fullWidth
-        multiline
-        name="description"
-        inputRef={register}
+        {topic && "tracks" in topic.resource && <Video {...topic.resource} />}
+        <Controller
+          name="language"
+          control={control}
+          defaultValue={defaultValues.language}
+          render={(props) => (
+            <TextField label="教材の主要な言語" select inputProps={props}>
+              {Object.entries(languages).map(([value, label]) => (
+                <MenuItem key={value} value={value}>
+                  {label}
+                </MenuItem>
+              ))}
+            </TextField>
+          )}
+        />
+        <TextField
+          name="timeRequired"
+          label="学習時間 (秒)"
+          type="number"
+          inputProps={{
+            ref: register({
+              setValueAs: (value) => (value === "" ? null : +value),
+              min: 0,
+            }),
+            min: 0,
+          }}
+        />
+        <div>
+          <InputLabel classes={inputLabelClasses}>字幕</InputLabel>
+          <div className={classes.subtitles}>
+            {topic &&
+              "tracks" in topic.resource &&
+              topic.resource.tracks.map((track) => (
+                <SubtitleChip
+                  key={track.id}
+                  videoTrack={track}
+                  onDelete={onSubtitleDelete}
+                />
+              ))}
+          </div>
+          <Button
+            variant="outlined"
+            color="primary"
+            onClick={handleClickSubtitle}
+          >
+            字幕を追加
+          </Button>
+        </div>
+        <TextField
+          label="解説"
+          fullWidth
+          multiline
+          name="description"
+          inputRef={register}
+        />
+        <Button variant="contained" color="primary" type="submit">
+          {submitLabel}
+        </Button>
+      </Card>
+
+      <SubtitleUploadDialog
+        open={open}
+        onClose={handleClose}
+        onSubmit={handleSubmitSubtitle}
       />
-      <Button variant="contained" color="primary" type="submit">
-        {submitLabel}
-      </Button>
-    </Card>
+    </>
   );
 }

@@ -5,11 +5,13 @@ import { book } from "samples";
 
 const handleSubmit = console.log;
 const handleDelete = console.log;
+const handleTopicNewClick = () => console.log("onTopicNewClick");
+const handlers = {
+  onSubmit: handleSubmit,
+  onDelete: handleDelete,
+  onTopicNewClick: handleTopicNewClick,
+};
 
-export const Default = () => (
-  <BookEdit book={book} onSubmit={handleSubmit} onDelete={handleDelete} />
-);
+export const Default = () => <BookEdit book={book} {...handlers} />;
 
-export const Empty = () => (
-  <BookEdit book={null} onSubmit={handleSubmit} onDelete={handleDelete} />
-);
+export const Empty = () => <BookEdit book={null} {...handlers} />;

@@ -44,10 +44,11 @@ type Props = {
   book: BookSchema | null;
   onSubmit(book: BookProps): void;
   onDelete(book: BookSchema): void;
+  onTopicNewClick(): void;
 };
 
 export default function BookEdit(props: Props) {
-  const { book, onSubmit, onDelete } = props;
+  const { book, onSubmit, onDelete, onTopicNewClick } = props;
   const classes = useStyles();
   const containerClasses = useContainerStyles();
   const confirm = useConfirm();
@@ -81,6 +82,7 @@ export default function BookEdit(props: Props) {
         className={classes.children}
         sections={book?.sections ?? []}
         onTopicClick={handleTopicClick}
+        onTopicNewClick={onTopicNewClick}
       />
       <BookForm className={classes.form} book={book} onSubmit={onSubmit} />
       <Button size="small" color="primary" onClick={handleDeleteButtonClick}>

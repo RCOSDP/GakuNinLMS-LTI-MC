@@ -10,7 +10,9 @@ export type Query = {
   prev?: "/books";
 };
 
-function Edit({ id, prev }: Pick<BookSchema, "id"> & Pick<Query, "prev">) {
+export type EditProps = Pick<BookSchema, "id"> & Pick<Query, "prev">;
+
+function Edit({ id, prev }: EditProps) {
   const book = useBook(id);
   const router = useRouter();
   async function handleSubmit(props: BookProps) {
@@ -26,12 +28,18 @@ function Edit({ id, prev }: Pick<BookSchema, "id"> & Pick<Query, "prev">) {
     await destroyBook(id);
     return router.push("/books");
   }
-
+  const handlers = {
+    onSubmit: handleSubmit,
+    onDelete: handleDelete,
+    onTopicNewClick: () =>
+      router.push({
+        pathname: "/book/topic/new",
+        query: { id, prev },
+      }),
+  };
   if (!book) return <Placeholder />;
 
-  return (
-    <BookEdit book={book} onSubmit={handleSubmit} onDelete={handleDelete} />
-  );
+  return <BookEdit book={book} {...handlers} />;
 }
 
 function Router() {

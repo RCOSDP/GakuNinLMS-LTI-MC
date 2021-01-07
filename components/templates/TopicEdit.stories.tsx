@@ -12,4 +12,4 @@ const props = {
 
 export const Default = () => <TopicEdit {...props} />;
 
-export const Empty = () => <TopicEdit {...{ ...props, topic: null }} />;
+export const Empty = () => <TopicEdit {...props} topic={null} />;
