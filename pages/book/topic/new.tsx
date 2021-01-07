@@ -11,7 +11,7 @@ import type {
 } from "../edit";
 
 function New(query: BookEditProps) {
-  const book = useBook(query.id);
+  const book = useBook(query.bookId);
   const router = useRouter();
   async function handleSubmit(props: TopicProps) {
     if (!book) return;
@@ -45,16 +45,16 @@ function New(query: BookEditProps) {
 function Router() {
   const router = useRouter();
   const query: BookEditQuery = router.query;
-  const id = Number(query.id);
+  const bookId = Number(query.bookId);
 
-  if (!Number.isFinite(id))
+  if (!Number.isFinite(bookId))
     return (
       <Unknown header="ブックがありません">
         ブックが見つかりませんでした
       </Unknown>
     );
 
-  return <New id={id} prev={query.prev} />;
+  return <New bookId={bookId} prev={query.prev} />;
 }
 
 export default Router;

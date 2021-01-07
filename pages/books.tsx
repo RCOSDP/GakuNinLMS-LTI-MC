@@ -22,7 +22,7 @@ function Index() {
     pathname: `/book${"" | "/edit"}`,
     query?: BookQuery | BookEditQuery
   ) => ({ id }: Pick<Book, "id">) => {
-    router.push({ pathname, query: { ...query, id } });
+    router.push({ pathname, query: { ...query, bookId: id } });
   };
   const handlers = {
     onBookClick: handleBookClick("/book"),

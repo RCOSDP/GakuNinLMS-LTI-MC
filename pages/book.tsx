@@ -7,11 +7,11 @@ import Unknown from "$templates/Unknown";
 import { useBook } from "$utils/book";
 
 export type Query = {
-  id?: string;
+  bookId?: string;
 };
 
-function Show(props: Pick<BookSchema, "id">) {
-  const book = useBook(props.id);
+function Show(props: { bookId: BookSchema["id"] }) {
+  const book = useBook(props.bookId);
   const [index, nextItemIndex] = useNextItemIndexAtom();
   const handleTopicEnded = () => nextItemIndex();
   const handleItemClick = nextItemIndex;
@@ -36,16 +36,16 @@ function Show(props: Pick<BookSchema, "id">) {
 function Router() {
   const router = useRouter();
   const query: Query = router.query;
-  const id = Number(query.id);
+  const bookId = Number(query.bookId);
 
-  if (!Number.isFinite(id))
+  if (!Number.isFinite(bookId))
     return (
       <Unknown header="ブックがありません">
         ブックが見つかりませんでした
       </Unknown>
     );
 
-  return <Show id={id} />;
+  return <Show bookId={bookId} />;
 }
 
 export default Router;

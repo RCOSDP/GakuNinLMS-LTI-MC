@@ -14,7 +14,7 @@ function Replace(props: { href: string | UrlObject }) {
 function ReplaceToBook(props: { ltiResourceLink: LtiResourceLinkSchema }) {
   const url = {
     pathname: "/book",
-    query: { id: props.ltiResourceLink.bookId },
+    query: { bookId: props.ltiResourceLink.bookId },
   };
 
   return <Replace href={url} />;

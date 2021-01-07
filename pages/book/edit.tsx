@@ -6,22 +6,22 @@ import Unknown from "$templates/Unknown";
 import { destroyBook, updateBook, useBook } from "$utils/book";
 
 export type Query = {
-  id?: string;
+  bookId?: string;
   prev?: "/books";
 };
 
-export type EditProps = Pick<BookSchema, "id"> & Pick<Query, "prev">;
+export type EditProps = { bookId: BookSchema["id"] } & Pick<Query, "prev">;
 
-function Edit({ id, prev }: EditProps) {
-  const book = useBook(id);
+function Edit({ bookId, prev }: EditProps) {
+  const book = useBook(bookId);
   const router = useRouter();
   async function handleSubmit(props: BookProps) {
-    await updateBook({ id, ...props });
+    await updateBook({ id: bookId, ...props });
     switch (prev) {
       case "/books":
         return router.push(prev);
       default:
-        return router.push({ pathname: "/book", query: { id } });
+        return router.push({ pathname: "/book", query: { bookId } });
     }
   }
   async function handleDelete({ id }: Pick<BookSchema, "id">) {
@@ -34,7 +34,7 @@ function Edit({ id, prev }: EditProps) {
     onTopicNewClick: () =>
       router.push({
         pathname: "/book/topic/new",
-        query: { id, prev },
+        query: { bookId, prev },
       }),
   };
   if (!book) return <Placeholder />;
@@ -45,16 +45,16 @@ function Edit({ id, prev }: EditProps) {
 function Router() {
   const router = useRouter();
   const query: Query = router.query;
-  const id = Number(query.id);
+  const bookId = Number(query.bookId);
 
-  if (!Number.isFinite(id))
+  if (!Number.isFinite(bookId))
     return (
       <Unknown header="ブックがありません">
         ブックが見つかりませんでした
       </Unknown>
     );
 
-  return <Edit id={id} prev={query.prev} />;
+  return <Edit bookId={bookId} prev={query.prev} />;
 }
 
 export default Router;
