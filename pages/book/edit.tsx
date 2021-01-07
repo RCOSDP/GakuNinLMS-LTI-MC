@@ -34,7 +34,7 @@ function Edit({ bookId, prev }: EditProps) {
     onTopicNewClick: () =>
       router.push({
         pathname: "/book/topic/new",
-        query: { bookId, prev },
+        query: { bookId, ...(prev && { prev }) },
       }),
   };
   if (!book) return <Placeholder />;

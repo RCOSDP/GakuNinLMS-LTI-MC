@@ -10,8 +10,8 @@ import type {
   EditProps as BookEditProps,
 } from "../edit";
 
-function New(query: BookEditProps) {
-  const book = useBook(query.bookId);
+function New({ bookId, prev }: BookEditProps) {
+  const book = useBook(bookId);
   const router = useRouter();
   async function handleSubmit(props: TopicProps) {
     if (!book) return;
@@ -22,7 +22,10 @@ function New(query: BookEditProps) {
       ltiResourceLinks: undefined,
       sections: [...book.sections, { name: null, topics: [{ id }] }],
     });
-    return router.push({ pathname: "/book/edit", query });
+    return router.push({
+      pathname: "/book/edit",
+      query: { bookId, ...(prev && { prev }) },
+    });
   }
   function handleSubtitleSubmit() {
     // TODO: 未実装
