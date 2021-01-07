@@ -11,11 +11,11 @@ async function destroyTopic(id: Topic["id"]) {
   if (!topic) return;
 
   try {
-    await destroyResource(topic.resourceId);
     await prisma.$transaction([
       prisma.activity.deleteMany({ where: { topicId: id } }),
       prisma.topic.deleteMany({ where: { id } }),
     ]);
+    await destroyResource(topic.resourceId);
   } catch {
     return;
   }
