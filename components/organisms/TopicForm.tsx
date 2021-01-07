@@ -17,6 +17,7 @@ import gray from "theme/colors/gray";
 import { TopicProps, TopicSchema } from "$server/models/topic";
 import { VideoTrackProps, VideoTrackSchema } from "$server/models/videoTrack";
 import languages from "$utils/languages";
+import { parse } from "$utils/videoResource";
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -121,7 +122,7 @@ export default function TopicForm(props: Props) {
         />
       </div>
       <TextField
-        id="contentURL"
+        name="resource.url"
         label={
           <>
             動画のURL
@@ -134,7 +135,13 @@ export default function TopicForm(props: Props) {
             </Typography>
           </>
         }
+        type="url"
         defaultValue={topic?.resource.url}
+        inputProps={{
+          ref: register({
+            setValueAs: (value) => parse(value)?.url ?? value,
+          }),
+        }}
         required
         fullWidth
       />
