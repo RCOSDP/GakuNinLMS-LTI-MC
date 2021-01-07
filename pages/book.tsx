@@ -10,7 +10,9 @@ export type Query = {
   bookId?: string;
 };
 
-function Show(props: { bookId: BookSchema["id"] }) {
+export type ShowProps = { bookId: BookSchema["id"] };
+
+function Show(props: ShowProps) {
   const book = useBook(props.bookId);
   const [index, nextItemIndex] = useNextItemIndexAtom();
   const handleTopicEnded = () => nextItemIndex();
