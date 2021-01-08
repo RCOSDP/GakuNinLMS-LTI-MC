@@ -10,7 +10,7 @@ const itemIndexAtom = atom<ItemIndex>([0, 0]);
 const updateBookAtom = atom<BookSchema | undefined, BookSchema>(
   (get) => get(bookAtom),
   (get, set, book) => {
-    if (get(bookAtom) !== book) set(bookAtom, book);
+    set(bookAtom, book);
     if (get(itemIndexAtom).some((i) => i !== 0)) set(itemIndexAtom, [0, 0]);
   }
 );
