@@ -3,8 +3,10 @@ import jsonSchema from "$server/prisma/json-schema.json";
 
 export type VideoTrackProps = Pick<
   Prisma.TrackCreateWithoutVideoInput,
-  "language" | "content"
->;
+  "language"
+> & {
+  content: Track["content"] | Blob;
+};
 
 export type VideoTrackSchema = Pick<Track, "id" | "kind" | "language"> & {
   url: string;

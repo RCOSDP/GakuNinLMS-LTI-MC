@@ -4,8 +4,7 @@ import { api } from "./api";
 
 export async function uploadVideoTrack(
   resourceId: Resource["id"],
-  props: Omit<VideoTrackProps, "content">,
-  content: Blob | string
+  { content, ...props }: VideoTrackProps
 ) {
   const contentText =
     typeof content === "string" ? content : await content.text();
