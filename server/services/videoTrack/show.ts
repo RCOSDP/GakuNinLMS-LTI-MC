@@ -4,7 +4,6 @@ import {
   videoTrackParamsSchema,
 } from "$server/validators/videoTrackParams";
 import findVideoTrack from "$server/utils/videoTrack/findVideoTrack";
-import { Session } from "$utils/session";
 
 export const showSchema: FastifySchema = {
   description: "字幕の取得",
@@ -13,22 +12,11 @@ export const showSchema: FastifySchema = {
   produces: ["text/vtt"],
   response: {
     200: {},
-    400: {},
     404: {},
   },
 };
 
-export async function show({
-  session,
-  params,
-}: {
-  session: Session;
-  params: VideoTrackParams;
-}) {
-  console.log(session);
-  console.log(params);
-  if (!session.user) return { status: 400 };
-
+export async function show({ params }: { params: VideoTrackParams }) {
   const videoTrack = await findVideoTrack(
     params.resource_id,
     params.video_track_id
