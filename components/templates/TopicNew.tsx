@@ -4,7 +4,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import TopicForm from "$organisms/TopicForm";
 import RequiredDot from "$atoms/RequiredDot";
 import useContainerStyles from "styles/container";
-import { TopicProps, TopicSchema } from "$server/models/topic";
+import { TopicProps } from "$server/models/topic";
 import { VideoTrackProps, VideoTrackSchema } from "$server/models/videoTrack";
 
 const useStyles = makeStyles((theme) => ({
@@ -29,14 +29,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type Props = {
-  topic: TopicSchema | null;
   onSubmit(topic: TopicProps): void;
   onSubtitleDelete(videoTrack: VideoTrackSchema): void;
   onSubtitleSubmit(videoTrack: VideoTrackProps): void;
 };
 
 export default function TopicNew(props: Props) {
-  const { topic, onSubmit, onSubtitleDelete, onSubtitleSubmit } = props;
+  const { onSubmit, onSubtitleDelete, onSubtitleSubmit } = props;
   const classes = useStyles();
   const containerClasses = useContainerStyles();
 
@@ -54,7 +53,7 @@ export default function TopicNew(props: Props) {
         </Typography>
       </Typography>
       <TopicForm
-        topic={topic}
+        topic={null}
         submitLabel="作成"
         onSubmit={onSubmit}
         onSubtitleDelete={onSubtitleDelete}

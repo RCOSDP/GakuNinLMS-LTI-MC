@@ -5,19 +5,31 @@ import Book from "$templates/Book";
 import Placeholder from "$templates/Placeholder";
 import Unknown from "$templates/Unknown";
 import { useBook } from "$utils/book";
+import { TopicSchema } from "$server/models/topic";
 
 export type Query = {
-  id?: string;
+  bookId?: string;
 };
 
-function Show(props: Pick<BookSchema, "id">) {
-  const book = useBook(props.id);
+export type ShowProps = { bookId: BookSchema["id"] };
+
+function Show(props: ShowProps) {
+  const book = useBook(props.bookId);
   const [index, nextItemIndex] = useNextItemIndexAtom();
   const handleTopicEnded = () => nextItemIndex();
   const handleItemClick = nextItemIndex;
   const router = useRouter();
   const handleBookEditClick = () => {
     router.push({ pathname: "/book/edit", query: props });
+  };
+  const handleTopicEditClick = ({ id }: Pick<TopicSchema, "id">) => {
+    router.push({
+      pathname: "/book/topic/edit",
+      query: {
+        bookId: props.bookId,
+        topicId: id,
+      },
+    });
   };
 
   if (!book) return <Placeholder />;
@@ -27,6 +39,7 @@ function Show(props: Pick<BookSchema, "id">) {
       book={book}
       index={index}
       onBookEditClick={handleBookEditClick}
+      onTopicEditClick={handleTopicEditClick}
       onTopicEnded={handleTopicEnded}
       onItemClick={handleItemClick}
     />
@@ -36,16 +49,16 @@ function Show(props: Pick<BookSchema, "id">) {
 function Router() {
   const router = useRouter();
   const query: Query = router.query;
-  const id = Number(query.id);
+  const bookId = Number(query.bookId);
 
-  if (!Number.isFinite(id))
+  if (!Number.isFinite(bookId))
     return (
       <Unknown header="ブックがありません">
         ブックが見つかりませんでした
       </Unknown>
     );
 
-  return <Show id={id} />;
+  return <Show bookId={bookId} />;
 }
 
 export default Router;

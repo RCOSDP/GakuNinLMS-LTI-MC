@@ -9,7 +9,7 @@ function New() {
     const { id } = await createBook(book);
     await router.replace({
       pathname: "/book/edit",
-      query: { id },
+      query: { bookId: id },
     });
   };
 

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import Button from "@material-ui/core/Button";
@@ -5,9 +6,11 @@ import { DeleteOutlined } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import BookEditChildren from "$organisms/BookEditChildren";
 import BookForm from "$organisms/BookForm";
+import TopicPreviewDialog from "$organisms/TopicPreviewDialog";
 import RequiredDot from "$atoms/RequiredDot";
 import useContainerStyles from "styles/container";
 import { BookProps, BookSchema } from "$server/models/book";
+import { SectionProps } from "$server/models/book/section";
 import { TopicSchema } from "$server/models/topic";
 import { useConfirm } from "material-ui-confirm";
 
@@ -41,16 +44,19 @@ const useStyles = makeStyles((theme) => ({
 type Props = {
   book: BookSchema | null;
   onSubmit(book: BookProps): void;
-  onTopicClick(topic: TopicSchema): void;
   onDelete(book: BookSchema): void;
+  onAddSection(props: SectionProps): void;
+  onTopicNewClick(): void;
 };
 
 export default function BookEdit(props: Props) {
-  const { book, onSubmit, onTopicClick, onDelete } = props;
+  const { book, onSubmit, onDelete, onAddSection, onTopicNewClick } = props;
   const classes = useStyles();
   const containerClasses = useContainerStyles();
   const confirm = useConfirm();
-  const handleTopicClick = (topic: TopicSchema) => onTopicClick(topic);
+  const [previewTopic, setPreviewTopic] = useState<TopicSchema | null>(null);
+  const handlePreviewTopicClose = () => setPreviewTopic(null);
+  const handleTopicClick = (topic: TopicSchema) => setPreviewTopic(topic);
   const handleDeleteButtonClick = async () => {
     if (!book) return;
     await confirm({
@@ -59,6 +65,11 @@ export default function BookEdit(props: Props) {
       confirmationText: "OK",
     });
     onDelete(book);
+  };
+  const handleSectionNewClick = () => {
+    // TODO: window.prompt は非推奨な API なのでやめたい
+    const name = window.prompt("新しいセクション名を入力してください。");
+    if (name) onAddSection({ name, topics: [] });
   };
 
   return (
@@ -78,12 +89,21 @@ export default function BookEdit(props: Props) {
         className={classes.children}
         sections={book?.sections ?? []}
         onTopicClick={handleTopicClick}
+        onTopicNewClick={onTopicNewClick}
+        onSectionNewClick={handleSectionNewClick}
       />
       <BookForm className={classes.form} book={book} onSubmit={onSubmit} />
       <Button size="small" color="primary" onClick={handleDeleteButtonClick}>
         <DeleteOutlined />
         ブックを削除
       </Button>
+      {previewTopic && (
+        <TopicPreviewDialog
+          open
+          onClose={handlePreviewTopicClose}
+          topic={previewTopic}
+        />
+      )}
     </Container>
   );
 }

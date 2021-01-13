@@ -37,7 +37,9 @@ export default function SubtitleUploadDialog(props: Props) {
     language: Object.getOwnPropertyNames(languages)[0],
     content: "",
   };
-  const { handleSubmit, register, control } = useForm<VideoTrackProps>({
+  const { handleSubmit, register, control } = useForm<
+    VideoTrackProps & { contentFile?: FileList }
+  >({
     defaultValues,
   });
   return (
@@ -47,15 +49,16 @@ export default function SubtitleUploadDialog(props: Props) {
       PaperProps={{
         classes: cardClasses,
         component: "form",
-        onSubmit: handleSubmit((values) => {
-          onSubmit({ ...defaultValues, ...values });
+        onSubmit: handleSubmit(({ contentFile, ...values }) => {
+          const content = contentFile?.[0] ?? defaultValues.content;
+          onSubmit({ ...defaultValues, ...values, content });
         }),
       }}
     >
       <DialogTitle>字幕のアップロード</DialogTitle>
       <DialogContent className={classes.margin}>
         <TextField
-          name="content"
+          name="contentFile"
           label="字幕ファイル"
           type="file"
           inputRef={register}

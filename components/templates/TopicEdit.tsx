@@ -8,6 +8,7 @@ import RequiredDot from "$atoms/RequiredDot";
 import useContainerStyles from "styles/container";
 import { TopicProps, TopicSchema } from "$server/models/topic";
 import { VideoTrackProps, VideoTrackSchema } from "$server/models/videoTrack";
+import { useConfirm } from "material-ui-confirm";
 
 const useStyles = makeStyles((theme) => ({
   header: {
@@ -36,14 +37,31 @@ const useStyles = makeStyles((theme) => ({
 type Props = {
   topic: TopicSchema | null;
   onSubmit(topic: TopicProps): void;
+  onDelete(topic: TopicSchema): void;
   onSubtitleDelete(videoTrack: VideoTrackSchema): void;
   onSubtitleSubmit(videoTrack: VideoTrackProps): void;
 };
 
 export default function TopicEdit(props: Props) {
-  const { topic, onSubmit, onSubtitleDelete, onSubtitleSubmit } = props;
+  const {
+    topic,
+    onSubmit,
+    onDelete,
+    onSubtitleDelete,
+    onSubtitleSubmit,
+  } = props;
   const classes = useStyles();
   const containerClasses = useContainerStyles();
+  const confirm = useConfirm();
+  const handleDeleteButtonClick = async () => {
+    if (!topic) return;
+    await confirm({
+      title: `トピック「${topic.name}」を削除します。よろしいですか？`,
+      cancellationText: "キャンセル",
+      confirmationText: "OK",
+    });
+    onDelete(topic);
+  };
 
   return (
     <Container
@@ -65,7 +83,7 @@ export default function TopicEdit(props: Props) {
         onSubtitleDelete={onSubtitleDelete}
         onSubtitleSubmit={onSubtitleSubmit}
       />
-      <Button size="small" color="primary">
+      <Button size="small" color="primary" onClick={handleDeleteButtonClick}>
         <DeleteOutlined />
         トピックを削除
       </Button>

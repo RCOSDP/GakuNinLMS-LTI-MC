@@ -11,7 +11,8 @@ import LinkIcon from "@material-ui/icons/Link";
 import BookChildren from "$organisms/BookChildren";
 import BookItemDialog from "$organisms/BookItemDialog";
 import TopicViewer from "$organisms/TopicViewer";
-import { BookSchema } from "$server/models/book";
+import type { BookSchema } from "$server/models/book";
+import type { TopicSchema } from "$server/models/topic";
 import useContainerStyles from "styles/container";
 
 const useStyles = makeStyles((theme) => ({
@@ -51,12 +52,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+type ItemIndex = [number, number];
+
 type Props = {
   book: BookSchema | null;
-  index: [number, number];
+  index: ItemIndex;
   onBookEditClick(book: BookSchema): void;
+  onTopicEditClick?(topic: TopicSchema): void;
   onTopicEnded(): void;
-  onItemClick(index: [number, number]): void;
+  onItemClick(index: ItemIndex): void;
 };
 
 export default function Book(props: Props) {
@@ -64,6 +68,7 @@ export default function Book(props: Props) {
     book,
     index: [sectionIndex, topicIndex],
     onBookEditClick,
+    onTopicEditClick,
     onTopicEnded,
     onItemClick,
   } = props;
@@ -80,9 +85,17 @@ export default function Book(props: Props) {
     setOpen(false);
   };
   const handleEditClick = () => book && onBookEditClick(book);
-  const handleItemClick = (_: never, index: [number, number]) => {
+  const handleItemClick = (_: never, index: ItemIndex) => {
     onItemClick(index);
   };
+  function handleItemEditClick(
+    _: never,
+    [sectionIndex, topicIndex]: ItemIndex
+  ) {
+    const topic = book?.sections[sectionIndex]?.topics[topicIndex];
+    if (topic) onTopicEditClick?.(topic);
+  }
+
   return (
     <Container
       classes={containerClasses}
@@ -118,6 +131,7 @@ export default function Book(props: Props) {
           className={classes.bookChildren}
           sections={book?.sections ?? []}
           onItemClick={handleItemClick}
+          onItemEditClick={handleItemEditClick}
         />
       </div>
       {book && <BookItemDialog open={open} onClose={handleClose} book={book} />}

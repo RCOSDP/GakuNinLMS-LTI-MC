@@ -5,7 +5,7 @@ import prisma from "$server/utils/prisma";
 async function createVideoTrack(
   createRequestUrl: string,
   resourceId: Resource["id"],
-  videoTrack: VideoTrackProps
+  { content, ...props }: VideoTrackProps
 ): Promise<undefined | VideoTrackSchema> {
   const resource = await prisma.resource.findUnique({
     where: { id: resourceId },
@@ -15,9 +15,13 @@ async function createVideoTrack(
   if (!resource) return;
   if (resource.videoId == null) return;
 
+  const contentText =
+    typeof content === "string" ? content : await content.text();
+
   const created = await prisma.track.create({
     data: {
-      ...videoTrack,
+      ...props,
+      content: contentText,
       video: { connect: { id: resource.videoId } },
     },
     select: { id: true, kind: true, language: true },

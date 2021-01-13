@@ -4,7 +4,11 @@ import { useNextItemIndexAtom } from "$store/book";
 import Book from "./Book";
 import { book } from "samples";
 
-const props = { book, onBookEditClick: console.log };
+const props = {
+  book,
+  onBookEditClick: console.log,
+  onTopicEditClick: console.log,
+};
 
 // TODO: Please use <Provider> の問題の回避。なぜか回避できる。
 function wrap(WrappedComponent: React.FC) {
