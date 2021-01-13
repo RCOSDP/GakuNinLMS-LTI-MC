@@ -1,4 +1,5 @@
-# GakuNinLMS-LTI-MC
+# ChibiCHiLO Install document
+
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https%3A%2F%2Fgithub.com%2Fnpocccties%2FChibiCHiLO&env=NEXT_PUBLIC_API_BASE_PATH,NEXT_PUBLIC_LMS_URL,API_BASE_PATH,FRONTEND_ORIGIN,FRONTEND_PATH,SESSION_SECRET,OAUTH_CONSUMER_KEY,OAUTH_CONSUMER_SECRET,DATABASE_URL)
 
