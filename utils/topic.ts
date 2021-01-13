@@ -1,6 +1,6 @@
 import useSWR, { mutate } from "swr";
+import type { TopicProps, TopicSchema } from "$server/models/topic";
 import { api } from "./api";
-import { TopicProps, TopicSchema } from "$server/models/topic";
 
 const key = "/api/v2/topic/{topic_id}";
 
@@ -31,4 +31,8 @@ export async function updateTopic({
 
 export async function destroyTopic(id: TopicSchema["id"]) {
   await api.apiV2TopicTopicIdDelete({ topicId: id });
+}
+
+export function revalidateTopic(id: TopicSchema["id"]): Promise<TopicSchema> {
+  return mutate([key, id]);
 }

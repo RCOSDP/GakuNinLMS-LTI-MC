@@ -69,6 +69,7 @@ export default function TopicForm(props: Props) {
   };
   const handleSubmitSubtitle = (videoTrack: VideoTrackProps) => {
     onSubtitleSubmit(videoTrack);
+    setOpen(false);
   };
   const defaultValues = {
     name: topic?.name,

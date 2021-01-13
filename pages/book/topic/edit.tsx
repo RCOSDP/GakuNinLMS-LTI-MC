@@ -1,14 +1,25 @@
 import { useRouter } from "next/router";
 import type { TopicProps, TopicSchema } from "$server/models/topic";
 import type {
+  VideoTrackProps,
+  VideoTrackSchema,
+} from "$server/models/videoTrack";
+import type {
   Query as BookQuery,
   ShowProps as BookShowProps,
 } from "../../book";
 import Placeholder from "$templates/Placeholder";
 import TopicEdit from "$templates/TopicEdit";
+import Unknown from "$templates/Unknown";
 import { useBook } from "$utils/book";
-import { destroyTopic, updateTopic, useTopic } from "$utils/topic";
+import {
+  destroyTopic,
+  revalidateTopic,
+  updateTopic,
+  useTopic,
+} from "$utils/topic";
 import { updateBook } from "$utils/book";
+import { destroyVideoTrack, uploadVideoTrack } from "$utils/videoTrack";
 
 type Query = BookQuery & {
   topicId?: string;
@@ -42,11 +53,15 @@ function Edit({ bookId, topicId }: EditProps) {
     await destroyTopic(topicId);
     return backToBook();
   }
-  function handleSubtitleSubmit() {
-    // TODO: 未実装
+  async function handleSubtitleSubmit(videoTrack: VideoTrackProps) {
+    if (!topic) return;
+    await uploadVideoTrack(topic.resource.id, videoTrack);
+    await revalidateTopic(topic.id);
   }
-  async function handleSubtitleDelete() {
-    // TODO: 未実装
+  async function handleSubtitleDelete({ id }: Pick<VideoTrackSchema, "id">) {
+    if (!topic) return;
+    await destroyVideoTrack(topic.resource.id, id);
+    await revalidateTopic(topic.id);
   }
   const handlers = {
     onSubmit: handleSubmit,
@@ -68,6 +83,14 @@ function Router() {
     bookId: Number(query.bookId),
     topicId: Number(query.topicId),
   };
+
+  if (![props.bookId, props.topicId].every(Number.isFinite)) {
+    return (
+      <Unknown header="トピックがありません">
+        トピックが見つかりませんでした
+      </Unknown>
+    );
+  }
 
   return <Edit {...props} />;
 }
