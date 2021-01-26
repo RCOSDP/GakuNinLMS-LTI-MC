@@ -1,6 +1,5 @@
-import { FormEvent, useState } from "react";
+import { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import TopicPreview from "$organisms/TopicPreview";
@@ -45,63 +44,37 @@ const useStyles = makeStyles((theme) => ({
 
 type Props = {
   topics: TopicSchema[];
-  onSubmit(topics: TopicSchema[]): void;
   onTopicEditClick(topic: TopicSchema): void;
-  isTopicEditable(topic: TopicSchema): boolean | undefined;
 };
 
-export default function TopicImport(props: Props) {
-  const { topics, onSubmit, onTopicEditClick, isTopicEditable } = props;
+export default function Topics(props: Props) {
+  const { topics, onTopicEditClick } = props;
   const classes = useStyles();
   const containerClasses = useContainerStyles();
-  const [selectedIndexes, select] = useState<Set<number>>(new Set());
-  const handleChecked = (index: number) => () =>
-    select((indexes) =>
-      indexes.delete(index) ? new Set(indexes) : new Set(indexes.add(index))
-    );
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    onSubmit([...selectedIndexes].map((i) => topics[i]));
-  };
   const [previewTopic, setPreviewTopic] = useState<TopicSchema | null>(null);
   const handlePreviewTopicClose = () => setPreviewTopic(null);
   const handleTopicDetailClick = (topic: TopicSchema) => setPreviewTopic(topic);
-  const handleTopicEditClick = (topic: TopicSchema) =>
-    isTopicEditable(topic) && (() => onTopicEditClick(topic));
   return (
     <Container classes={containerClasses} maxWidth="lg">
-      <form className={classes.header} onSubmit={handleSubmit}>
+      <div className={classes.header}>
         <Typography className={classes.title} variant="h4" gutterBottom={true}>
-          トピックのインポート
-          <Typography variant="body1">
-            インポートしたいトピックを選んでください
-          </Typography>
+          マイトピック
         </Typography>
         <div className={classes.line}>
-          <Button
-            color="primary"
-            size="large"
-            variant="contained"
-            type="submit"
-          >
-            トピックをインポート
-          </Button>
           <SortSelect disabled /* TODO: ソート機能を追加したら有効化して */ />
           <SearchTextField
             placeholder="トピック検索"
-            disabled // TODO: トピック検索機能追加したら有効化して
+            disabled // TODO: ブック・トピック検索機能追加したら有効化して
           />
         </div>
-      </form>
+      </div>
       <div className={classes.topics}>
         {topics.map((topic, index) => (
           <TopicPreview
             key={index}
             topic={topic}
-            checked={selectedIndexes.has(index)}
-            onChange={handleChecked(index)}
             onTopicDetailClick={handleTopicDetailClick}
-            onTopicEditClick={handleTopicEditClick(topic)}
+            onTopicEditClick={onTopicEditClick}
           />
         ))}
       </div>
