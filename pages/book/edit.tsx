@@ -5,34 +5,31 @@ import BookEdit from "$templates/BookEdit";
 import Placeholder from "$templates/Placeholder";
 import Unknown from "$templates/Unknown";
 import { destroyBook, updateBook, useBook } from "$utils/book";
+import { pagesPath } from "$utils/$path";
 
-export type Query = {
-  bookId?: string;
-  prev?: "/books" | "/link";
-};
+export type Query = { bookId: BookSchema["id"]; context?: "books" | "link" };
 
-export type EditProps = { bookId: BookSchema["id"] } & Pick<Query, "prev">;
-
-function Edit({ bookId, prev }: EditProps) {
+function Edit({ bookId, context }: Query) {
   const book = useBook(bookId);
   const router = useRouter();
   async function handleSubmit(props: BookProps) {
     await updateBook({ id: bookId, ...props });
-    switch (prev) {
-      case "/books":
-      case "/link":
-        return router.push(prev);
+    switch (context) {
+      case "books":
+      case "link":
+        return router.push(pagesPath[context].$url());
       default:
-        return router.push({ pathname: "/book", query: { bookId } });
+        return router.push(pagesPath.book.$url({ query: { bookId } }));
     }
   }
   async function handleDelete({ id }: Pick<BookSchema, "id">) {
     await destroyBook(id);
-    switch (prev) {
-      case "/link":
-        return router.push(prev);
+    switch (context) {
+      case "books":
+      case "link":
+        return router.push(pagesPath[context].$url());
       default:
-        return router.push("/books");
+        return router.push(pagesPath.books.$url());
     }
   }
   async function handleAddSection(section: SectionProps) {
@@ -44,16 +41,18 @@ function Edit({ bookId, prev }: EditProps) {
     });
   }
   function toBookImport() {
-    return router.push({
-      pathname: `/book/import`,
-      query: { bookId, ...(prev && { prev }) },
-    });
+    return router.push(
+      pagesPath.book.import.$url({
+        query: { bookId, ...(context && { context }) },
+      })
+    );
   }
   function toTopic(path: "import" | "new") {
-    return router.push({
-      pathname: `/book/topic/${path}`,
-      query: { bookId, ...(prev && { prev }) },
-    });
+    return router.push(
+      pagesPath.book.topic[path].$url({
+        query: { bookId, ...(context && { context }) },
+      })
+    );
   }
   const handlers = {
     onSubmit: handleSubmit,
@@ -70,8 +69,8 @@ function Edit({ bookId, prev }: EditProps) {
 
 function Router() {
   const router = useRouter();
-  const query: Query = router.query;
-  const bookId = Number(query.bookId);
+  const bookId = Number(router.query.bookId);
+  const { context }: Pick<Query, "context"> = router.query;
 
   if (!Number.isFinite(bookId))
     return (
@@ -80,7 +79,7 @@ function Router() {
       </Unknown>
     );
 
-  return <Edit bookId={bookId} prev={query.prev} />;
+  return <Edit bookId={bookId} context={context} />;
 }
 
 export default Router;
