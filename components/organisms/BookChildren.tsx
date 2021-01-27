@@ -8,8 +8,6 @@ import Collapse from "@material-ui/core/Collapse";
 import { ExpandLess, ExpandMore, EditOutlined } from "@material-ui/icons";
 import { SectionSchema } from "$server/models/book/section";
 
-type ItemIndex = [number, number];
-
 type Props = {
   className?: string;
   sections: SectionSchema[];
@@ -18,24 +16,22 @@ type Props = {
 };
 
 function Section({
-  key,
   section,
   sectionItemIndex,
   onSectionClick,
   open,
   children,
 }: {
-  key: string | number;
   section: Pick<SectionSchema, "name">;
   sectionItemIndex: number;
   onSectionClick(): void;
   open: boolean;
   children: ReactNode;
 }) {
-  if (section.name == null) return <Fragment key={key}>{children}</Fragment>;
+  if (section.name == null) return <>{children}</>;
 
   return (
-    <Fragment key={key}>
+    <>
       <ListItem button onClick={onSectionClick}>
         <ListItemText>
           {sectionItemIndex + 1} {section.name}
@@ -43,7 +39,7 @@ function Section({
         {open ? <ExpandLess /> : <ExpandMore />}
       </ListItem>
       <Collapse in={open}>{children}</Collapse>
-    </Fragment>
+    </>
   );
 }
 
