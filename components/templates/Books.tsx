@@ -8,6 +8,7 @@ import BookAccordion from "$organisms/BookAccordion";
 import SortSelect from "$atoms/SortSelect";
 import SearchTextField from "$atoms/SearchTextField";
 import type { BookSchema } from "$server/models/book";
+import type { TopicSchema } from "$server/models/topic";
 import type { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
 import useContainerStyles from "styles/container";
 
@@ -42,6 +43,8 @@ type Props = {
   onBookEditClick(book: BookSchema): void;
   onBookNewClick(): void;
   onBookLinkClick(): void;
+  onTopicEditClick?(topic: TopicSchema): void;
+  isTopicEditable?(topic: TopicSchema): boolean | undefined;
 };
 
 export default function Books(props: Props) {
@@ -52,6 +55,8 @@ export default function Books(props: Props) {
     onBookEditClick,
     onBookNewClick,
     onBookLinkClick,
+    onTopicEditClick,
+    isTopicEditable,
   } = props;
   const handleBookEditClick = (book: BookSchema) => () => onBookEditClick(book);
   const handleTopicClick = (book: BookSchema) => () => onBookClick(book);
@@ -91,6 +96,8 @@ export default function Books(props: Props) {
             book={book}
             onEditClick={handleBookEditClick(book)}
             onTopicClick={handleTopicClick(book)}
+            onTopicEditClick={onTopicEditClick}
+            isTopicEditable={isTopicEditable}
           />
         ))}
       </div>
