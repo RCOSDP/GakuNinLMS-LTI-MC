@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import Player, { Options } from "@vimeo/player";
-import { usePlayerTracking } from "./player";
-import { volumePersister } from "./volume";
+import volumePersister from "$utils/volumePersister";
+import usePlayerTracking from "$utils/eventLogger/usePlayerTracking";
 
 type VimeoProps = {
   options: Options;

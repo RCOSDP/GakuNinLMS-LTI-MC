@@ -3,8 +3,8 @@ import videojs, { VideoJsPlayer, VideoJsPlayerOptions } from "video.js";
 import ja from "video.js/dist/lang/ja.json";
 import "videojs-youtube";
 import "videojs-seek-buttons";
-import { usePlayerTracking } from "./player";
-import { volumePersister } from "./volume";
+import volumePersister from "$utils/volumePersister";
+import usePlayerTracking from "$utils/eventLogger/usePlayerTracking";
 
 type VideoJsProps = {
   options: VideoJsPlayerOptions;

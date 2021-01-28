@@ -8,20 +8,20 @@ type Volume = {
   muted: boolean;
 };
 
-const Key = "volumePersisterVolume";
-const MuteKey = "volumePersisterMute";
-const Muted = "true";
+const key = "volumePersisterVolume";
+const muteKey = "volumePersisterMute";
+const mutedState = "true";
 
 function save({ volume, muted }: Volume) {
-  localStorage.setItem(Key, volume.toString());
-  if (muted) localStorage.setItem(MuteKey, Muted);
-  else localStorage.removeItem(MuteKey);
+  localStorage.setItem(key, volume.toString());
+  if (muted) localStorage.setItem(muteKey, mutedState);
+  else localStorage.removeItem(muteKey);
 }
 
 function load(): Volume | undefined {
-  const volume = localStorage.getItem(Key);
+  const volume = localStorage.getItem(key);
   if (volume == null) return;
-  const muted = localStorage.getItem(MuteKey) === Muted;
+  const muted = localStorage.getItem(muteKey) === mutedState;
   return {
     volume: Number(volume),
     muted,
@@ -55,7 +55,7 @@ function intoVideoJs(player: VideoJsPlayer) {
   player.muted(volume.muted);
 }
 
-export async function volumePersister(player: VideoJsPlayer | VimeoPlayer) {
+async function volumePersister(player: VideoJsPlayer | VimeoPlayer) {
   if (typeof window === "undefined") return;
   if (player instanceof VimeoPlayer) {
     await intoVimeo(player);
@@ -63,3 +63,5 @@ export async function volumePersister(player: VideoJsPlayer | VimeoPlayer) {
     intoVideoJs(player);
   }
 }
+
+export default volumePersister;
