@@ -1,6 +1,8 @@
+import { useCallback, useEffect } from "react";
 import { useRouter } from "next/router";
 import { BookSchema } from "$server/models/book";
 import { useNextItemIndexAtom } from "$store/book";
+import { usePlayerTrackerAtom } from "$store/playerTracker";
 import Book from "$templates/Book";
 import Placeholder from "$templates/Placeholder";
 import Unknown from "$templates/Unknown";
@@ -8,6 +10,7 @@ import { useBook } from "$utils/book";
 import { isInstructor, useSession } from "$utils/session";
 import { TopicSchema } from "$server/models/topic";
 import { pagesPath } from "$utils/$path";
+import logger from "$utils/eventLogger/logger";
 
 export type Query = { bookId: BookSchema["id"] };
 
@@ -15,8 +18,17 @@ function Show(query: Query) {
   const { data: session } = useSession();
   const book = useBook(query.bookId);
   const [index, nextItemIndex] = useNextItemIndexAtom();
-  const handleTopicEnded = () => nextItemIndex();
-  const handleItemClick = nextItemIndex;
+  const playerTracker = usePlayerTrackerAtom();
+  useEffect(() => {
+    if (playerTracker) logger(playerTracker);
+  }, [playerTracker]);
+  // NOTE: playerTrackerが更新され続けるのでVideoコンポーネントの再描画を防ぐ
+  const handleTopicEnded = useCallback(() => nextItemIndex(), [nextItemIndex]);
+  const handleItemClick = ([sectionIndex, topicIndex]: ItemIndex) => {
+    const topicExists = book?.sections[sectionIndex]?.topics[topicIndex];
+    if (topicExists) playerTracker?.next(topicExists.id);
+    nextItemIndex([sectionIndex, topicIndex]);
+  };
   const router = useRouter();
   const handleBookEditClick = () => {
     return router.push(pagesPath.book.edit.$url({ query }));
@@ -32,6 +44,13 @@ function Show(query: Query) {
       })
     );
   };
+  const handlers = {
+    onTopicEnded: handleTopicEnded,
+    onItemClick: handleItemClick,
+    onBookEditClick: handleBookEditClick,
+    onBookLinkClick: handleBookLinkClick,
+    onTopicEditClick: handleTopicEditClick,
+  };
 
   if (!book) return <Placeholder />;
 
@@ -40,11 +59,7 @@ function Show(query: Query) {
       editable={session && isInstructor(session)}
       book={book}
       index={index}
-      onBookEditClick={handleBookEditClick}
-      onBookLinkClick={handleBookLinkClick}
-      onTopicEditClick={handleTopicEditClick}
-      onTopicEnded={handleTopicEnded}
-      onItemClick={handleItemClick}
+      {...handlers}
     />
   );
 }

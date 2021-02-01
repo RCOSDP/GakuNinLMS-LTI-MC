@@ -13,12 +13,12 @@ const basicEventsMap = [
   "timeupdate",
 ] as const;
 
-type PlayerEvent = Pick<VideoResourceSchema, "providerUrl" | "url"> & {
+export type PlayerEvent = Pick<VideoResourceSchema, "providerUrl" | "url"> & {
   /** ビデオの経過時間 (秒) */
   currentTime: number;
 };
 
-type PlayerEvents = {
+export type PlayerEvents = {
   ended: PlayerEvent;
   pause: PlayerEvent;
   play: PlayerEvent;
