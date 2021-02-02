@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
 
 type Props = Parameters<typeof Radio>[0] & {
   book: BookSchema;
-  onEditClick(event: MouseEvent<HTMLElement>, book: BookSchema): void;
+  onEditClick?: ((book: BookSchema) => void) | false | undefined;
 };
 
 export default function BookPreview(props: Props) {
@@ -73,8 +73,8 @@ export default function BookPreview(props: Props) {
   const handleClose = () => {
     setOpen(false);
   };
-  const handleEditClick = (event: MouseEvent<HTMLElement>) => {
-    onEditClick(event, book);
+  const handle = (handler?: (book: BookSchema) => void) => () => {
+    handler?.(book);
   };
   return (
     <Card
@@ -93,9 +93,11 @@ export default function BookPreview(props: Props) {
           <IconButton onClick={handleInfoClick}>
             <InfoOutlined />
           </IconButton>
-          <IconButton color="primary" onClick={handleEditClick}>
-            <EditOutlined />
-          </IconButton>
+          {onEditClick && (
+            <IconButton color="primary" onClick={handle(onEditClick)}>
+              <EditOutlined />
+            </IconButton>
+          )}
         </Typography>
         <div className={classes.chips}>
           {book.ltiResourceLinks.map((ltiResourceLink) => (

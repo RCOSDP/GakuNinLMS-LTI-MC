@@ -39,3 +39,7 @@ export const Checked = () => {
 export const EmptySection = () => {
   return <BookPreview {...props} book={{ ...props.book, sections: [] }} />;
 };
+
+export const NoEditable = () => {
+  return <BookPreview book={book} />;
+};

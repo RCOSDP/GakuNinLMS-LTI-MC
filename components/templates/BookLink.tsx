@@ -53,6 +53,7 @@ type Props = {
   onSubmit(book: BookSchema): void;
   onBookEditClick(book: BookSchema): void;
   onBookNewClick(): void;
+  isBookEditable?(book: BookSchema): boolean | undefined;
 };
 
 export default function BookLink(props: Props) {
@@ -62,6 +63,7 @@ export default function BookLink(props: Props) {
     onSubmit,
     onBookEditClick,
     onBookNewClick,
+    isBookEditable,
   } = props;
   const classes = useStyles();
   const containerClasses = useContainerStyles();
@@ -76,9 +78,8 @@ export default function BookLink(props: Props) {
     if (!selectedBook) return;
     onSubmit(selectedBook);
   };
-  const handleBookEditClick = (_: never, book: BookSchema) => {
-    onBookEditClick(book);
-  };
+  const handleBookEditClick = (book: BookSchema) =>
+    isBookEditable?.(book) && onBookEditClick;
   return (
     <Container classes={containerClasses} maxWidth="md">
       <form className={classes.header} onSubmit={handleSubmit}>
@@ -126,7 +127,7 @@ export default function BookLink(props: Props) {
             value={book.id}
             checked={selectedBookId === book.id}
             onChange={handleChecked(book.id)}
-            onEditClick={handleBookEditClick}
+            onEditClick={handleBookEditClick(book)}
           />
         ))}
       </div>

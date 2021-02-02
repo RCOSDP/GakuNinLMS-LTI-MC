@@ -55,6 +55,9 @@ function Link() {
     onSubmit: handleSubmit,
     onBookEditClick: handleBookEdit,
     onBookNewClick: handleBookNew,
+    isBookEditable: (book: BookSchema) =>
+      // NOTE: 自身以外の作成したブックに関しては編集不可
+      session?.user && book.author.id === session.user.id,
   };
 
   if (ltiResourceLink == null) return <Placeholder />;
