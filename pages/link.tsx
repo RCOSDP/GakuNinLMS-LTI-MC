@@ -15,6 +15,7 @@ function Index() {
   const books = useBooks(session?.user);
   const ltiLaunchBody = session?.ltiLaunchBody;
   const ltiResourceLink = ltiLaunchBody && {
+    consumerId: ltiLaunchBody.oauth_consumer_key,
     id: ltiLaunchBody.resource_link_id,
     title: ltiLaunchBody.resource_link_title ?? "",
     contextId: ltiLaunchBody.context_id,

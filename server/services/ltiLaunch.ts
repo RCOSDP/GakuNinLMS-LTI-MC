@@ -37,11 +37,13 @@ const method: Method = {
 async function post({ session }: FastifyRequest) {
   const { ltiLaunchBody } = session;
   if (ltiLaunchBody != null) {
-    const ltiResourceLink = await findLtiResourceLink(
-      ltiLaunchBody.resource_link_id
-    );
+    const ltiResourceLink = await findLtiResourceLink({
+      consumerId: ltiLaunchBody.oauth_consumer_key,
+      id: ltiLaunchBody.resource_link_id,
+    });
 
     const user = await upsertUser({
+      ltiConsumerId: ltiLaunchBody.oauth_consumer_key,
       ltiUserId: ltiLaunchBody.user_id,
       name: ltiLaunchBody.lis_person_name_full ?? "",
     });
@@ -82,8 +84,8 @@ function preHandler(fastify: FastifyInstance) {
       const authorized = await auth(
         url,
         (body as unknown) as Record<string, string>,
-        OAUTH_CONSUMER_KEY,
-        OAUTH_CONSUMER_SECRET,
+        OAUTH_CONSUMER_KEY, // TODO: 環境変数ではなく `lti_consumer` テーブルからルックアップせよ ("" は無効)
+        OAUTH_CONSUMER_SECRET, // TODO: 環境変数ではなく `lti_consumer` テーブルからルックアップせよ
         lookupNonce
       );
 

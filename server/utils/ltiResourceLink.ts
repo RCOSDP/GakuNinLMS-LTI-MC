@@ -22,26 +22,31 @@ export function ltiResourceLinkToSchema(
 export async function upsertLtiResourceLink(
   props: LtiResourceLinkSchema
 ): Promise<LtiResourceLinkSchema | null> {
-  const { contextId, contextTitle, bookId, ...link } = props;
+  const { consumerId, contextId, contextTitle, bookId, ...link } = props;
 
   const found = await bookExists(bookId);
   if (!found) return null;
 
-  const contextInput = { id: contextId, title: contextTitle };
+  const contextInput = {
+    id: contextId,
+    title: contextTitle,
+    consumer: { connect: { id: consumerId } },
+  };
   const linkInput = {
     ...link,
-    context: { connect: { id: contextId } },
+    context: { connect: { consumerId_id: { consumerId, id: contextId } } },
     book: { connect: { id: bookId } },
+    consumer: { connect: { id: consumerId } },
   };
 
   await prisma.$transaction([
     prisma.ltiContext.upsert({
-      where: { id: contextInput.id },
+      where: { consumerId_id: { consumerId, id: contextInput.id } },
       create: contextInput,
       update: contextInput,
     }),
     prisma.ltiResourceLink.upsert({
-      where: { id: linkInput.id },
+      where: { consumerId_id: { consumerId, id: linkInput.id } },
       create: linkInput,
       update: linkInput,
     }),
@@ -50,11 +55,15 @@ export async function upsertLtiResourceLink(
   return props;
 }
 
-export async function findLtiResourceLink(
-  id: LtiResourceLinkSchema["id"]
-): Promise<LtiResourceLinkSchema | null> {
+export async function findLtiResourceLink({
+  consumerId,
+  id,
+}: Pick<
+  LtiResourceLinkSchema,
+  "consumerId" | "id"
+>): Promise<LtiResourceLinkSchema | null> {
   const link = await prisma.ltiResourceLink.findUnique({
-    where: { id },
+    where: { consumerId_id: { consumerId, id } },
     include: { context: true },
   });
 
@@ -66,9 +75,14 @@ export async function findLtiResourceLink(
   );
 }
 
-export async function destroyLtiResourceLink(id: LtiResourceLinkSchema["id"]) {
+export async function destroyLtiResourceLink({
+  consumerId,
+  id,
+}: Pick<LtiResourceLinkSchema, "consumerId" | "id">) {
   try {
-    await prisma.ltiResourceLink.delete({ where: { id } });
+    await prisma.ltiResourceLink.delete({
+      where: { consumerId_id: { consumerId, id } },
+    });
   } catch {
     return;
   }

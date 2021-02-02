@@ -112,15 +112,18 @@ export interface ApiV2LtiLaunchPostRequest {
     lisPersonNameFull?: string;
 }
 
-export interface ApiV2LtiResourceLinkLtiResourceLinkIdDeleteRequest {
+export interface ApiV2LtiLtiConsumerIdResourceLinkLtiResourceLinkIdDeleteRequest {
+    ltiConsumerId: string;
     ltiResourceLinkId: string;
 }
 
-export interface ApiV2LtiResourceLinkLtiResourceLinkIdGetRequest {
+export interface ApiV2LtiLtiConsumerIdResourceLinkLtiResourceLinkIdGetRequest {
+    ltiConsumerId: string;
     ltiResourceLinkId: string;
 }
 
-export interface ApiV2LtiResourceLinkLtiResourceLinkIdPutRequest {
+export interface ApiV2LtiLtiConsumerIdResourceLinkLtiResourceLinkIdPutRequest {
+    ltiConsumerId: string;
     ltiResourceLinkId: string;
     body?: InlineObject;
 }
@@ -533,9 +536,13 @@ export class DefaultApi extends runtime.BaseAPI {
      * LTI Resource Linkを削除します。 教員または管理者でなければなりません。
      * LTI Resource Linkの削除
      */
-    async apiV2LtiResourceLinkLtiResourceLinkIdDeleteRaw(requestParameters: ApiV2LtiResourceLinkLtiResourceLinkIdDeleteRequest): Promise<runtime.ApiResponse<object>> {
+    async apiV2LtiLtiConsumerIdResourceLinkLtiResourceLinkIdDeleteRaw(requestParameters: ApiV2LtiLtiConsumerIdResourceLinkLtiResourceLinkIdDeleteRequest): Promise<runtime.ApiResponse<object>> {
+        if (requestParameters.ltiConsumerId === null || requestParameters.ltiConsumerId === undefined) {
+            throw new runtime.RequiredError('ltiConsumerId','Required parameter requestParameters.ltiConsumerId was null or undefined when calling apiV2LtiLtiConsumerIdResourceLinkLtiResourceLinkIdDelete.');
+        }
+
         if (requestParameters.ltiResourceLinkId === null || requestParameters.ltiResourceLinkId === undefined) {
-            throw new runtime.RequiredError('ltiResourceLinkId','Required parameter requestParameters.ltiResourceLinkId was null or undefined when calling apiV2LtiResourceLinkLtiResourceLinkIdDelete.');
+            throw new runtime.RequiredError('ltiResourceLinkId','Required parameter requestParameters.ltiResourceLinkId was null or undefined when calling apiV2LtiLtiConsumerIdResourceLinkLtiResourceLinkIdDelete.');
         }
 
         const queryParameters: runtime.HTTPQuery = {};
@@ -543,7 +550,7 @@ export class DefaultApi extends runtime.BaseAPI {
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/api/v2/lti/resource_link/{lti_resource_link_id}`.replace(`{${"lti_resource_link_id"}}`, encodeURIComponent(String(requestParameters.ltiResourceLinkId))),
+            path: `/api/v2/lti/{lti_consumer_id}/resource_link/{lti_resource_link_id}`.replace(`{${"lti_consumer_id"}}`, encodeURIComponent(String(requestParameters.ltiConsumerId))).replace(`{${"lti_resource_link_id"}}`, encodeURIComponent(String(requestParameters.ltiResourceLinkId))),
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -556,8 +563,8 @@ export class DefaultApi extends runtime.BaseAPI {
      * LTI Resource Linkを削除します。 教員または管理者でなければなりません。
      * LTI Resource Linkの削除
      */
-    async apiV2LtiResourceLinkLtiResourceLinkIdDelete(requestParameters: ApiV2LtiResourceLinkLtiResourceLinkIdDeleteRequest): Promise<object> {
-        const response = await this.apiV2LtiResourceLinkLtiResourceLinkIdDeleteRaw(requestParameters);
+    async apiV2LtiLtiConsumerIdResourceLinkLtiResourceLinkIdDelete(requestParameters: ApiV2LtiLtiConsumerIdResourceLinkLtiResourceLinkIdDeleteRequest): Promise<object> {
+        const response = await this.apiV2LtiLtiConsumerIdResourceLinkLtiResourceLinkIdDeleteRaw(requestParameters);
         return await response.value();
     }
 
@@ -565,9 +572,13 @@ export class DefaultApi extends runtime.BaseAPI {
      * LTI Resource Linkの詳細を取得します。 教員または管理者でなければなりません。
      * LTI Resource Linkの取得
      */
-    async apiV2LtiResourceLinkLtiResourceLinkIdGetRaw(requestParameters: ApiV2LtiResourceLinkLtiResourceLinkIdGetRequest): Promise<runtime.ApiResponse<InlineResponse200>> {
+    async apiV2LtiLtiConsumerIdResourceLinkLtiResourceLinkIdGetRaw(requestParameters: ApiV2LtiLtiConsumerIdResourceLinkLtiResourceLinkIdGetRequest): Promise<runtime.ApiResponse<InlineResponse200>> {
+        if (requestParameters.ltiConsumerId === null || requestParameters.ltiConsumerId === undefined) {
+            throw new runtime.RequiredError('ltiConsumerId','Required parameter requestParameters.ltiConsumerId was null or undefined when calling apiV2LtiLtiConsumerIdResourceLinkLtiResourceLinkIdGet.');
+        }
+
         if (requestParameters.ltiResourceLinkId === null || requestParameters.ltiResourceLinkId === undefined) {
-            throw new runtime.RequiredError('ltiResourceLinkId','Required parameter requestParameters.ltiResourceLinkId was null or undefined when calling apiV2LtiResourceLinkLtiResourceLinkIdGet.');
+            throw new runtime.RequiredError('ltiResourceLinkId','Required parameter requestParameters.ltiResourceLinkId was null or undefined when calling apiV2LtiLtiConsumerIdResourceLinkLtiResourceLinkIdGet.');
         }
 
         const queryParameters: runtime.HTTPQuery = {};
@@ -575,7 +586,7 @@ export class DefaultApi extends runtime.BaseAPI {
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/api/v2/lti/resource_link/{lti_resource_link_id}`.replace(`{${"lti_resource_link_id"}}`, encodeURIComponent(String(requestParameters.ltiResourceLinkId))),
+            path: `/api/v2/lti/{lti_consumer_id}/resource_link/{lti_resource_link_id}`.replace(`{${"lti_consumer_id"}}`, encodeURIComponent(String(requestParameters.ltiConsumerId))).replace(`{${"lti_resource_link_id"}}`, encodeURIComponent(String(requestParameters.ltiResourceLinkId))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -588,8 +599,8 @@ export class DefaultApi extends runtime.BaseAPI {
      * LTI Resource Linkの詳細を取得します。 教員または管理者でなければなりません。
      * LTI Resource Linkの取得
      */
-    async apiV2LtiResourceLinkLtiResourceLinkIdGet(requestParameters: ApiV2LtiResourceLinkLtiResourceLinkIdGetRequest): Promise<InlineResponse200> {
-        const response = await this.apiV2LtiResourceLinkLtiResourceLinkIdGetRaw(requestParameters);
+    async apiV2LtiLtiConsumerIdResourceLinkLtiResourceLinkIdGet(requestParameters: ApiV2LtiLtiConsumerIdResourceLinkLtiResourceLinkIdGetRequest): Promise<InlineResponse200> {
+        const response = await this.apiV2LtiLtiConsumerIdResourceLinkLtiResourceLinkIdGetRaw(requestParameters);
         return await response.value();
     }
 
@@ -597,9 +608,13 @@ export class DefaultApi extends runtime.BaseAPI {
      * LTI Resource Linkを更新します。 教員または管理者でなければなりません。
      * LTI Resource Linkの更新
      */
-    async apiV2LtiResourceLinkLtiResourceLinkIdPutRaw(requestParameters: ApiV2LtiResourceLinkLtiResourceLinkIdPutRequest): Promise<runtime.ApiResponse<InlineResponse200>> {
+    async apiV2LtiLtiConsumerIdResourceLinkLtiResourceLinkIdPutRaw(requestParameters: ApiV2LtiLtiConsumerIdResourceLinkLtiResourceLinkIdPutRequest): Promise<runtime.ApiResponse<InlineResponse200>> {
+        if (requestParameters.ltiConsumerId === null || requestParameters.ltiConsumerId === undefined) {
+            throw new runtime.RequiredError('ltiConsumerId','Required parameter requestParameters.ltiConsumerId was null or undefined when calling apiV2LtiLtiConsumerIdResourceLinkLtiResourceLinkIdPut.');
+        }
+
         if (requestParameters.ltiResourceLinkId === null || requestParameters.ltiResourceLinkId === undefined) {
-            throw new runtime.RequiredError('ltiResourceLinkId','Required parameter requestParameters.ltiResourceLinkId was null or undefined when calling apiV2LtiResourceLinkLtiResourceLinkIdPut.');
+            throw new runtime.RequiredError('ltiResourceLinkId','Required parameter requestParameters.ltiResourceLinkId was null or undefined when calling apiV2LtiLtiConsumerIdResourceLinkLtiResourceLinkIdPut.');
         }
 
         const queryParameters: runtime.HTTPQuery = {};
@@ -609,7 +624,7 @@ export class DefaultApi extends runtime.BaseAPI {
         headerParameters['Content-Type'] = 'application/json';
 
         const response = await this.request({
-            path: `/api/v2/lti/resource_link/{lti_resource_link_id}`.replace(`{${"lti_resource_link_id"}}`, encodeURIComponent(String(requestParameters.ltiResourceLinkId))),
+            path: `/api/v2/lti/{lti_consumer_id}/resource_link/{lti_resource_link_id}`.replace(`{${"lti_consumer_id"}}`, encodeURIComponent(String(requestParameters.ltiConsumerId))).replace(`{${"lti_resource_link_id"}}`, encodeURIComponent(String(requestParameters.ltiResourceLinkId))),
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -623,8 +638,8 @@ export class DefaultApi extends runtime.BaseAPI {
      * LTI Resource Linkを更新します。 教員または管理者でなければなりません。
      * LTI Resource Linkの更新
      */
-    async apiV2LtiResourceLinkLtiResourceLinkIdPut(requestParameters: ApiV2LtiResourceLinkLtiResourceLinkIdPutRequest): Promise<InlineResponse200> {
-        const response = await this.apiV2LtiResourceLinkLtiResourceLinkIdPutRaw(requestParameters);
+    async apiV2LtiLtiConsumerIdResourceLinkLtiResourceLinkIdPut(requestParameters: ApiV2LtiLtiConsumerIdResourceLinkLtiResourceLinkIdPutRequest): Promise<InlineResponse200> {
+        const response = await this.apiV2LtiLtiConsumerIdResourceLinkLtiResourceLinkIdPutRaw(requestParameters);
         return await response.value();
     }
 

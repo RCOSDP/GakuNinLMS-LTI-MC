@@ -21,6 +21,10 @@ export class LtiResourceLinkProps {
 export class LtiResourceLinkSchema extends LtiResourceLinkProps {
   @IsNotEmpty()
   @IsString()
+  consumerId!: string;
+
+  @IsNotEmpty()
+  @IsString()
   id!: string;
 }
 

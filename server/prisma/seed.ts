@@ -9,9 +9,23 @@ import { upsertUser } from "$server/utils/user";
 import upsertTopic from "$server/utils/topic/upsertTopic";
 import createBook from "$server/utils/book/createBook";
 import { upsertLtiResourceLink } from "$server/utils/ltiResourceLink";
+import { upsertLtiConsumer } from "$server/utils/ltiConsumer";
+import { OAUTH_CONSUMER_KEY, OAUTH_CONSUMER_SECRET } from "$server/utils/env";
 
 async function seed() {
-  const createdUsers = await Promise.all(users.map(upsertUser));
+  const ltiConsumer = await upsertLtiConsumer(
+    OAUTH_CONSUMER_KEY,
+    OAUTH_CONSUMER_SECRET
+  );
+
+  const createdUsers = await Promise.all(
+    users
+      .map((user) => ({
+        ...user,
+        ltiConsumerId: ltiConsumer.id,
+      }))
+      .map(upsertUser)
+  );
   const authorId = createdUsers[0].id;
 
   await Promise.all(topics.map((topic) => upsertTopic(authorId, topic)));
@@ -22,7 +36,11 @@ async function seed() {
 
   await Promise.all(
     ltiResourceLinks
-      .map((link) => ({ ...link, bookId: createdBooks[0].id }))
+      .map((link) => ({
+        ...link,
+        consumerId: ltiConsumer.id,
+        bookId: createdBooks[0].id,
+      }))
       .map(upsertLtiResourceLink)
   );
 }
