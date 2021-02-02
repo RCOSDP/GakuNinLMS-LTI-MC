@@ -50,9 +50,10 @@ const useStyles = makeStyles((theme) => ({
 type Props = {
   books: BookSchema[];
   ltiResourceLink: Pick<LtiResourceLinkSchema, "title">;
-  onSubmit(bookId: BookSchema["id"]): void;
+  onSubmit(book: BookSchema): void;
   onBookEditClick(book: BookSchema): void;
   onBookNewClick(): void;
+  isBookEditable?(book: BookSchema): boolean | undefined;
 };
 
 export default function BookLink(props: Props) {
@@ -62,18 +63,23 @@ export default function BookLink(props: Props) {
     onSubmit,
     onBookEditClick,
     onBookNewClick,
+    isBookEditable,
   } = props;
   const classes = useStyles();
   const containerClasses = useContainerStyles();
-  const [selectedBook, selectBook] = useState<BookSchema["id"] | null>(null);
-  const handleChecked = (id: BookSchema["id"]) => () => selectBook(id);
+  const [selectedBookId, selectBookId] = useState<BookSchema["id"] | null>(
+    null
+  );
+  const handleChecked = (id: BookSchema["id"]) => () => selectBookId(id);
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    if (selectedBook != null) onSubmit(selectedBook);
+    if (selectedBookId === null) return;
+    const selectedBook = books.find((book) => book.id === selectedBookId);
+    if (!selectedBook) return;
+    onSubmit(selectedBook);
   };
-  const handleBookEditClick = (_: never, book: BookSchema) => {
-    onBookEditClick(book);
-  };
+  const handleBookEditClick = (book: BookSchema) =>
+    isBookEditable?.(book) && onBookEditClick;
   return (
     <Container classes={containerClasses} maxWidth="md">
       <form className={classes.header} onSubmit={handleSubmit}>
@@ -93,7 +99,7 @@ export default function BookLink(props: Props) {
             size="large"
             variant="contained"
             type="submit"
-            disabled={selectedBook == null}
+            disabled={selectedBookId == null}
           >
             ブックを連携
           </Button>
@@ -119,9 +125,9 @@ export default function BookLink(props: Props) {
             book={book}
             name="bookId"
             value={book.id}
-            checked={selectedBook === book.id}
+            checked={selectedBookId === book.id}
             onChange={handleChecked(book.id)}
-            onEditClick={handleBookEditClick}
+            onEditClick={handleBookEditClick(book)}
           />
         ))}
       </div>
