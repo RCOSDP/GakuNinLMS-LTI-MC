@@ -17,7 +17,7 @@ const sharedOrCreatedBy = (author?: Pick<UserSchema, "id">) => (
   return book.shared || bookCreateBy(book, author);
 };
 
-function Link() {
+function Index() {
   const router = useRouter();
   const { data: session, error } = useSession();
   const books = useBooks();
@@ -75,4 +75,4 @@ function Link() {
   );
 }
 
-export default Link;
+export default Index;
