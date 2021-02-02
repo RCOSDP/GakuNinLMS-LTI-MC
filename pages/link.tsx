@@ -75,8 +75,4 @@ function Link() {
   );
 }
 
-function Router() {
-  return <Link />;
-}
-
-export default Router;
+export default Link;
