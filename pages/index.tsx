@@ -4,6 +4,7 @@ import { isInstructor, useSession } from "$utils/session";
 import Unknown from "$templates/Unknown";
 import Placeholder from "$templates/Placeholder";
 import { pagesPath } from "$utils/$path";
+import { useLoggerInit } from "$utils/eventLogger/loggerSessionPersister";
 
 function Replace(props: { href: string | UrlObject }) {
   const router = useRouter();
@@ -12,14 +13,17 @@ function Replace(props: { href: string | UrlObject }) {
 }
 
 function Router() {
-  const session = useSession();
+  const { data: session } = useSession();
+
+  // NOTE: eventLogger のために使用
+  useLoggerInit(session);
 
   // TODO: https://github.com/npocccties/ChibiCHiLO/issues/3
-  if (!session.data) return <Placeholder />;
+  if (!session) return <Placeholder />;
 
-  const ltiResourceLink = session.data.ltiResourceLink;
+  const ltiResourceLink = session.ltiResourceLink;
 
-  if (!ltiResourceLink && isInstructor(session.data))
+  if (!ltiResourceLink && isInstructor(session))
     return <Replace href={pagesPath.link.$url()} />;
 
   if (!ltiResourceLink)

@@ -1,7 +1,7 @@
 import { memo } from "react";
-import { VideoTrackSchema } from "$server/models/videoTrack";
+import type { VideoTrackSchema } from "$server/models/videoTrack";
+import buildTracks from "$utils/buildTracks";
 import { VideoJs } from "./VideoJs";
-import buildTracks from "./buildTracks";
 
 type PlayerProps = {
   url: string;

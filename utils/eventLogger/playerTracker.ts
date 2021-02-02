@@ -1,9 +1,8 @@
-import { SetStateAction, useEffect } from "react";
-import { StrictEventEmitter } from "strict-event-emitter-types";
+import type { StrictEventEmitter } from "strict-event-emitter-types";
 import { EventEmitter } from "events";
 import { VideoJsPlayer } from "video.js";
 import VimeoPlayer from "@vimeo/player";
-import { useAppPlayerTracker, useAppState } from "./state";
+import type { VideoResourceSchema } from "$server/models/videoResource";
 
 const basicEventsMap = [
   "ended",
@@ -14,18 +13,36 @@ const basicEventsMap = [
   "timeupdate",
 ] as const;
 
+export type PlayerEvent = Pick<VideoResourceSchema, "providerUrl" | "url"> & {
+  /** ビデオの経過時間 (秒) */
+  currentTime: number;
+};
+
+export type PlayerEvents = {
+  ended: PlayerEvent;
+  pause: PlayerEvent;
+  play: PlayerEvent;
+  seeked: PlayerEvent;
+  seeking: PlayerEvent;
+  timeupdate: PlayerEvent;
+  playbackratechange: PlayerEvent & { playbackRate: number };
+  texttrackchange: PlayerEvent & { language?: string };
+  /** @deprecated */
+  firstplay: PlayerEvent;
+};
+
 type CustomEvents = {
   nextvideo: PlayerEvent & { video: number };
 };
 
 const nullEvent = {
-  type: "youtube",
-  src: "",
+  providerUrl: "https://www.youtube.com/",
+  url: "",
   currentTime: 0,
 } as const;
 
 /** プレイヤーのトラッキング用 */
-export class PlayerTracker extends (EventEmitter as {
+class PlayerTracker extends (EventEmitter as {
   new (): StrictEventEmitter<EventEmitter, PlayerEvents & CustomEvents>;
 }) {
   readonly player: VideoJsPlayer | VimeoPlayer;
@@ -101,52 +118,33 @@ export class PlayerTracker extends (EventEmitter as {
   }
 }
 
+export default PlayerTracker;
+
 function videoJsStats(player: VideoJsPlayer): PlayerEvent {
   // @ts-expect-error: @types/video.js@^7.3.11 Unsupported
   if (player.isDisposed()) return nullEvent;
 
   return {
-    type: /youtube/.test(player.currentType()) ? "youtube" : "wowza",
-    src: player.src(),
+    // TODO: Wowza の識別子を決めて修正してください
+    // providerUrl: /youtube/.test(player.currentType()) ? "https://www.youtube.com/" : "wowza",
+    providerUrl: "https://www.youtube.com/",
+    url: player.src(),
     currentTime: player.currentTime(),
   };
 }
 
 async function vimeoStats(player: VimeoPlayer): Promise<PlayerEvent> {
   try {
-    const [src, currentTime] = await Promise.all([
-      player.getVideoId(),
+    const [url, currentTime] = await Promise.all([
+      player.getVideoUrl(),
       player.getCurrentTime(),
     ]);
     return {
-      type: "vimeo",
-      src: src.toString(),
+      providerUrl: "https://vimeo.com/",
+      url,
       currentTime,
     };
   } catch {
     return nullEvent;
   }
 }
-
-function playerTrackerState(
-  player?: VideoJsPlayer | VimeoPlayer
-): SetStateAction<PlayerTracker | undefined> {
-  if (!player) return () => undefined;
-  return (prev) => {
-    if (prev?.player === player) return prev;
-    if (prev != null) prev.removeAllListeners();
-    return new PlayerTracker(player);
-  };
-}
-
-export function usePlayerTracking() {
-  const playerTracker = useAppPlayerTracker();
-  const tracking = (player?: VideoJsPlayer | VimeoPlayer) =>
-    playerTracker(playerTrackerState(player));
-
-  useEffect(() => () => tracking());
-
-  return tracking;
-}
-
-export const usePlayerTracker = () => useAppState().playerTracker;

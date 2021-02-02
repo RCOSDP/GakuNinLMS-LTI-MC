@@ -3,8 +3,8 @@ import videojs, { VideoJsPlayer, VideoJsPlayerOptions } from "video.js";
 import ja from "video.js/dist/lang/ja.json";
 import "videojs-youtube";
 import "videojs-seek-buttons";
-import { usePlayerTracking } from "./player";
-import { volumePersister } from "./volume";
+import { usePlayerTrackingAtom } from "$store/playerTracker";
+import volumePersister from "$utils/volumePersister";
 
 type VideoJsProps = {
   options: VideoJsPlayerOptions;
@@ -27,7 +27,7 @@ const defaultOptions: VideoJsPlayerOptions = {
 
 export function VideoJs(props: VideoJsProps) {
   const ref = useRef(document.createElement("div"));
-  const tracking = usePlayerTracking();
+  const tracking = usePlayerTrackingAtom();
   useEffect(() => {
     const element = document.createElement("video-js");
     element.classList.add("vjs-big-play-centered");

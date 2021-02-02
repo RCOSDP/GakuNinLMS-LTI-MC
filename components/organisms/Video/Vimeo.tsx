@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import Player, { Options } from "@vimeo/player";
-import { usePlayerTracking } from "./player";
-import { volumePersister } from "./volume";
+import { usePlayerTrackingAtom } from "$store/playerTracker";
+import volumePersister from "$utils/volumePersister";
 
 type VimeoProps = {
   options: Options;
@@ -14,7 +14,7 @@ const defaultOptions: Options = {
 
 export function Vimeo(props: VimeoProps) {
   const ref = useRef(document.createElement("div"));
-  const tracking = usePlayerTracking();
+  const tracking = usePlayerTrackingAtom();
   useEffect(() => {
     const { current } = ref;
     const player = new Player(current, {
