@@ -4,12 +4,7 @@ import { validateOrReject } from "class-validator";
 import { upsertUser } from "$server/utils/user";
 import Method from "$server/types/method";
 import prisma from "$server/utils/prisma";
-import {
-  FRONTEND_ORIGIN,
-  FRONTEND_PATH,
-  OAUTH_CONSUMER_KEY,
-  OAUTH_CONSUMER_SECRET,
-} from "$server/utils/env";
+import { FRONTEND_ORIGIN, FRONTEND_PATH } from "$server/utils/env";
 import { auth, valid } from "$server/utils/ltiv1p1/oauth";
 import {
   LtiLaunchBody,
@@ -81,13 +76,16 @@ function preHandler(fastify: FastifyInstance) {
     async (req) => {
       const body = req.body as LtiLaunchBody;
       const url = `${req.protocol}://${req.hostname}${req.url}`;
-      const authorized = await auth(
-        url,
-        (body as unknown) as Record<string, string>,
-        OAUTH_CONSUMER_KEY, // TODO: 環境変数ではなく `lti_consumer` テーブルからルックアップせよ ("" は無効)
-        OAUTH_CONSUMER_SECRET, // TODO: 環境変数ではなく `lti_consumer` テーブルからルックアップせよ
-        lookupNonce
-      );
+      const secret = await lookupSecret(body.oauth_consumer_key);
+      const authorized =
+        secret &&
+        (await auth(
+          url,
+          (body as unknown) as Record<string, string>,
+          body.oauth_consumer_key,
+          secret,
+          lookupNonce
+        ));
 
       if (!authorized) throw new Error("unauthorized");
 
@@ -102,6 +100,15 @@ export const ltiLaunchService = {
   preValidation,
   preHandler,
 };
+
+async function lookupSecret(oauthConsumerKey: string) {
+  const found = await prisma.ltiConsumer.findUnique({
+    where: { id: oauthConsumerKey },
+    select: { secret: true },
+  });
+
+  return found?.secret;
+}
 
 async function lookupNonce(nonce: string, timestamp: number) {
   const count = await prisma.account.count({
