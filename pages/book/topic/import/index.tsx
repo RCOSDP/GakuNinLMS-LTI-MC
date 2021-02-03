@@ -6,22 +6,16 @@ import { updateBook, useBook } from "$utils/book";
 import { useSession } from "$utils/session";
 import { useTopics } from "$utils/topics";
 import type { TopicSchema } from "$server/models/topic";
-import type { UserSchema } from "$server/models/user";
 import type { Query as BookEditQuery } from "$pages/book/edit";
-import topicCreateBy from "$utils/topicCreateBy";
-import { createTopic } from "$utils/topic";
+import { connectOrCreateTopic } from "$utils/topic";
 import { pagesPath } from "$utils/$path";
 
 export type Query = BookEditQuery;
 
-const sharedOrCreatedBy = (creator?: Pick<UserSchema, "id">) => (
-  topic: TopicSchema
-) => topic.shared || topicCreateBy(topic, creator);
-
 function Import({ bookId, context }: BookEditQuery) {
   const { data: session } = useSession();
   const book = useBook(bookId);
-  const topics = useTopics();
+  const topics = useTopics(session?.user);
   const router = useRouter();
   const bookEditQuery = { bookId, ...(context && { context }) };
   async function handleSubmit(topics: TopicSchema[]) {
@@ -29,9 +23,8 @@ function Import({ bookId, context }: BookEditQuery) {
 
     const connectOrCreateTopics = topics.map((topic) => {
       if (!session?.user) return Promise.reject();
-      if (topicCreateBy(topic, session.user)) return Promise.resolve(topic.id);
       // NOTE: 自身以外の作成したトピックに関しては影響を及ぼすのを避ける目的で複製
-      return createTopic(topic).then(({ id }) => id);
+      return connectOrCreateTopic(session.user, topic).then(({ id }) => id);
     });
     const ids = await Promise.all(connectOrCreateTopics);
     await updateBook({
@@ -64,12 +57,7 @@ function Import({ bookId, context }: BookEditQuery) {
   if (!book) return <Placeholder />;
   if (!topics) return <Placeholder />;
 
-  return (
-    <TopicImport
-      topics={topics.filter(sharedOrCreatedBy(session?.user))}
-      {...handlers}
-    />
-  );
+  return <TopicImport topics={topics} {...handlers} />;
 }
 
 function Router() {

@@ -2,7 +2,9 @@ import { useEffect } from "react";
 import useSWR, { mutate } from "swr";
 import { useUpdateBookAtom } from "$store/book";
 import { api } from "./api";
-import { BookProps, BookSchema } from "$server/models/book";
+import type { BookProps, BookSchema } from "$server/models/book";
+import type { UserSchema } from "$server/models/user";
+import bookCreateBy from "./bookCreateBy";
 
 const key = "/api/v2/book/{book_id}";
 
@@ -25,6 +27,15 @@ export async function createBook(body: BookProps): Promise<BookSchema> {
   const res = await api.apiV2BookPost({ body });
   await mutate([key, res.id], res);
   return res as BookSchema;
+}
+
+export async function connectOrCreateBook(
+  user: Pick<UserSchema, "id">,
+  book: BookSchema
+) {
+  if (bookCreateBy(book, user)) return book;
+  const { ltiResourceLinks: _, ...bookProps } = book;
+  return createBook(bookProps);
 }
 
 export async function updateBook({
