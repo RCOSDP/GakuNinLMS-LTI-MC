@@ -6,8 +6,8 @@ import { usePlayerTrackerAtom } from "$store/playerTracker";
 import Book from "$templates/Book";
 import Placeholder from "$templates/Placeholder";
 import BookNotFoundProblem from "$organisms/BookNotFoundProblem";
+import { useSessionAtom } from "$store/session";
 import { useBook } from "$utils/book";
-import { isInstructor, useSession } from "$utils/session";
 import { TopicSchema } from "$server/models/topic";
 import { pagesPath } from "$utils/$path";
 import logger from "$utils/eventLogger/logger";
@@ -15,7 +15,7 @@ import logger from "$utils/eventLogger/logger";
 export type Query = { bookId: BookSchema["id"] };
 
 function Show(query: Query) {
-  const { data: session } = useSession();
+  const { isInstructor } = useSessionAtom();
   const book = useBook(query.bookId);
   const [index, nextItemIndex] = useNextItemIndexAtom();
   const playerTracker = usePlayerTrackerAtom();
@@ -55,12 +55,7 @@ function Show(query: Query) {
   if (!book) return <Placeholder />;
 
   return (
-    <Book
-      editable={session && isInstructor(session)}
-      book={book}
-      index={index}
-      {...handlers}
-    />
+    <Book editable={isInstructor} book={book} index={index} {...handlers} />
   );
 }
 

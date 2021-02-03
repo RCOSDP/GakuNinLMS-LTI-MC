@@ -1,8 +1,6 @@
 import useSWR, { mutate } from "swr";
 import type { TopicProps, TopicSchema } from "$server/models/topic";
-import type { UserSchema } from "$server/models/user";
 import { api } from "./api";
-import topicCreateBy from "./topicCreateBy";
 
 const key = "/api/v2/topic/{topic_id}";
 
@@ -25,10 +23,10 @@ export async function createTopic(body: TopicProps): Promise<TopicSchema> {
 }
 
 export async function connectOrCreateTopic(
-  user: Pick<UserSchema, "id">,
-  topic: TopicSchema
+  topic: TopicSchema,
+  isTopicEditable: (topic: Pick<TopicSchema, "creator">) => boolean
 ) {
-  if (topicCreateBy(topic, user)) return topic;
+  if (isTopicEditable(topic)) return topic;
   return createTopic(topic);
 }
 

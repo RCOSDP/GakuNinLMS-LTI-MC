@@ -3,11 +3,9 @@ import useSWR, { mutate } from "swr";
 import { useUpdateBookAtom } from "$store/book";
 import { api } from "./api";
 import type { BookProps, BookSchema } from "$server/models/book";
+import type { TopicSchema } from "$server/models/topic";
 import type { SectionSchema } from "$server/models/book/section";
-import type { UserSchema } from "$server/models/user";
-import bookCreateBy from "./bookCreateBy";
 import { createTopic } from "./topic";
-import topicCreateBy from "./topicCreateBy";
 
 const key = "/api/v2/book/{book_id}";
 
@@ -32,12 +30,12 @@ export async function createBook(body: BookProps): Promise<BookSchema> {
   return res as BookSchema;
 }
 
-const sectionInput = (creator: Pick<UserSchema, "id">) => async (
-  section: SectionSchema
-) => {
+const sectionInput = (
+  isTopicEditable: (topic: Pick<TopicSchema, "creator">) => boolean
+) => async (section: SectionSchema) => {
   const topics = await Promise.all(
     section.topics.map(async (topic) => {
-      if (topicCreateBy(topic, creator)) return topic;
+      if (isTopicEditable(topic)) return topic;
       return createTopic(topic);
     })
   );
@@ -45,21 +43,25 @@ const sectionInput = (creator: Pick<UserSchema, "id">) => async (
 };
 
 async function connectOrCreateSections(
-  user: Pick<UserSchema, "id">,
-  sections: SectionSchema[]
+  sections: SectionSchema[],
+  isTopicEditable: (topic: Pick<TopicSchema, "creator">) => boolean
 ) {
-  return Promise.all(sections.map(sectionInput(user)));
+  return Promise.all(sections.map(sectionInput(isTopicEditable)));
 }
 
 export async function connectOrCreateBook(
-  user: Pick<UserSchema, "id">,
-  book: BookSchema
+  book: BookSchema,
+  isBookEditable: (book: Pick<BookSchema, "author">) => boolean,
+  isTopicEditable: (topic: Pick<TopicSchema, "creator">) => boolean
 ) {
-  if (bookCreateBy(book, user)) return book;
+  if (isBookEditable(book)) return book;
   const { ltiResourceLinks: _, ...bookProps } = book;
   // NOTE: 自身以外の作成したトピックの含まれるセクションに関しては、
   //       影響を及ぼすのを避ける目的でトピックを複製して更新
-  const sections = await connectOrCreateSections(user, bookProps.sections);
+  const sections = await connectOrCreateSections(
+    bookProps.sections,
+    isTopicEditable
+  );
   return createBook({ ...bookProps, sections });
 }
 

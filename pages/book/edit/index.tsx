@@ -1,8 +1,8 @@
 import { useRouter } from "next/router";
-import { useSession } from "$utils/session";
 import type { BookProps, BookSchema } from "$server/models/book";
 import type { SectionProps } from "$server/models/book/section";
 import type { TopicSchema } from "$server/models/topic";
+import { useSessionAtom } from "$store/session";
 import BookEdit from "$templates/BookEdit";
 import Placeholder from "$templates/Placeholder";
 import BookNotFoundProblem from "$organisms/TopicNotFoundProblem";
@@ -13,7 +13,7 @@ export type Query = { bookId: BookSchema["id"]; context?: "books" | "link" };
 
 function Edit({ bookId, context }: Query) {
   const book = useBook(bookId);
-  const { data: session } = useSession();
+  const { isTopicEditable } = useSessionAtom();
   const router = useRouter();
   async function handleSubmit(props: BookProps) {
     await updateBook({ id: bookId, ...props });
@@ -72,9 +72,7 @@ function Edit({ bookId, context }: Query) {
     onTopicImportClick: () => toTopic("import"),
     onTopicNewClick: () => toTopic("new"),
     onTopicEditClick: handleTopicEditClick,
-    isTopicEditable: (topic: TopicSchema) =>
-      // NOTE: 自身以外の作成したトピックに関しては編集不可
-      session?.user && topic.creator.id === session.user.id,
+    isTopicEditable,
   };
   if (!book) return <Placeholder />;
 

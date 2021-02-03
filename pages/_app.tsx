@@ -6,20 +6,44 @@ import MuiThemeProvider from "@material-ui/styles/ThemeProvider";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { ConfirmProvider } from "material-ui-confirm";
 import theme from "$theme";
+import Placeholder from "$templates/Placeholder";
 import AppBar from "$organisms/AppBar";
+import Problem from "$organisms/Problem";
 import { useRouter } from "next/router";
-import { isInstructor, useSession } from "$utils/session";
+import { useSessionInit } from "$utils/session";
 import { pagesPath } from "$utils/$path";
 // NOTE: For VideoJs components.
 import "video.js/dist/video-js.css";
 import "videojs-seek-buttons/dist/videojs-seek-buttons.css";
 import "$styles/video-js.css";
 
-function ThemeProvider({ children }: { children: ReactNode }) {
+function Content({ children }: { children: ReactNode }) {
   const router = useRouter();
-  const { data: session } = useSession();
+  const { session, isInstructor, error } = useSessionInit();
+
+  // TODO: https://github.com/npocccties/ChibiCHiLO/issues/3
+  if (!session) return <Placeholder />;
+  if (error) return <Problem title="セッション情報が得られませんでした" />;
+
   const handleBooksClick = () => router.push(pagesPath.books.$url());
   const handleTopicsClick = () => router.push(pagesPath.topics.$url());
+
+  return (
+    <>
+      {isInstructor && (
+        <AppBar
+          position="sticky"
+          session={session}
+          onBooksClick={handleBooksClick}
+          onTopicsClick={handleTopicsClick}
+        />
+      )}
+      {children}
+    </>
+  );
+}
+
+function ThemeProvider({ children }: { children: ReactNode }) {
   return (
     <>
       <Head>
@@ -29,15 +53,7 @@ function ThemeProvider({ children }: { children: ReactNode }) {
       </Head>
       <MuiThemeProvider theme={theme}>
         <CssBaseline />
-        {session && isInstructor(session) && (
-          <AppBar
-            position="sticky"
-            session={session}
-            onBooksClick={handleBooksClick}
-            onTopicsClick={handleTopicsClick}
-          />
-        )}
-        {children}
+        <Content>{children}</Content>
       </MuiThemeProvider>
     </>
   );

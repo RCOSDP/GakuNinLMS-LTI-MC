@@ -2,8 +2,8 @@ import { useRouter } from "next/router";
 import TopicImport from "$templates/TopicImport.tsx";
 import Placeholder from "$templates/Placeholder";
 import BookNotFoundProblem from "$organisms/TopicNotFoundProblem";
+import { useSessionAtom } from "$store/session";
 import { updateBook, useBook } from "$utils/book";
-import { useSession } from "$utils/session";
 import { useTopics } from "$utils/topics";
 import type { TopicSchema } from "$server/models/topic";
 import type { Query as BookEditQuery } from "$pages/book/edit";
@@ -13,18 +13,16 @@ import { pagesPath } from "$utils/$path";
 export type Query = BookEditQuery;
 
 function Import({ bookId, context }: BookEditQuery) {
-  const { data: session } = useSession();
+  const { isTopicEditable } = useSessionAtom();
   const book = useBook(bookId);
-  const topics = useTopics(session?.user);
+  const topics = useTopics(isTopicEditable);
   const router = useRouter();
   const bookEditQuery = { bookId, ...(context && { context }) };
   async function handleSubmit(topics: TopicSchema[]) {
     if (!book) return;
 
     const connectOrCreateTopics = topics.map((topic) => {
-      if (!session?.user) return Promise.reject();
-      // NOTE: 自身以外の作成したトピックに関しては影響を及ぼすのを避ける目的で複製
-      return connectOrCreateTopic(session.user, topic).then(({ id }) => id);
+      return connectOrCreateTopic(topic, isTopicEditable).then(({ id }) => id);
     });
     const ids = await Promise.all(connectOrCreateTopics);
     await updateBook({
@@ -49,9 +47,7 @@ function Import({ bookId, context }: BookEditQuery) {
   const handlers = {
     onSubmit: handleSubmit,
     onTopicEditClick: handleTopicEditClick,
-    isTopicEditable: (topic: TopicSchema) =>
-      // NOTE: 自身以外の作成したトピックに関しては編集不可
-      session?.user && topic.creator.id === session.user.id,
+    isTopicEditable,
   };
 
   if (!book) return <Placeholder />;
