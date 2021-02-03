@@ -20,18 +20,14 @@ function topicUpdateInput(creatorId: User["id"], topic: TopicProps) {
 
 async function upsertTopic(
   creatorId: User["id"],
-  { id, ...topic }: TopicProps & { id: Topic["id"] }
+  { id, ...topic }: TopicProps & Pick<Topic, "id">
 ): Promise<TopicSchema | undefined> {
-  const upsert = prisma.topic.upsert({
+  const created = await prisma.topic.upsert({
+    ...topicsWithResourcesArg,
     where: { id },
     create: topicCreateInput(creatorId, topic),
     update: topicUpdateInput(creatorId, topic),
   });
-  const find = prisma.topic.findUnique({
-    ...topicsWithResourcesArg,
-    where: { id },
-  });
-  const [, created] = await prisma.$transaction([upsert, find]);
 
   if (!created) return;
 
