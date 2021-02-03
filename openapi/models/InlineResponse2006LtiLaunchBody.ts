@@ -109,6 +109,12 @@ export interface InlineResponse2006LtiLaunchBody {
      * @memberof InlineResponse2006LtiLaunchBody
      */
     lisPersonNameFull?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineResponse2006LtiLaunchBody
+     */
+    launchPresentationReturnUrl?: string;
 }
 
 export function InlineResponse2006LtiLaunchBodyFromJSON(json: any): InlineResponse2006LtiLaunchBody {
@@ -136,6 +142,7 @@ export function InlineResponse2006LtiLaunchBodyFromJSONTyped(json: any, ignoreDi
         'resourceLinkTitle': !exists(json, 'resource_link_title') ? undefined : json['resource_link_title'],
         'contextTitle': !exists(json, 'context_title') ? undefined : json['context_title'],
         'lisPersonNameFull': !exists(json, 'lis_person_name_full') ? undefined : json['lis_person_name_full'],
+        'launchPresentationReturnUrl': !exists(json, 'launch_presentation_return_url') ? undefined : json['launch_presentation_return_url'],
     };
 }
 
@@ -163,6 +170,7 @@ export function InlineResponse2006LtiLaunchBodyToJSON(value?: InlineResponse2006
         'resource_link_title': value.resourceLinkTitle,
         'context_title': value.contextTitle,
         'lis_person_name_full': value.lisPersonNameFull,
+        'launch_presentation_return_url': value.launchPresentationReturnUrl,
     };
 }
 

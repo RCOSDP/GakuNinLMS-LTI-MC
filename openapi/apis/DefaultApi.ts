@@ -110,6 +110,7 @@ export interface ApiV2LtiLaunchPostRequest {
     resourceLinkTitle?: string;
     contextTitle?: string;
     lisPersonNameFull?: string;
+    launchPresentationReturnUrl?: string;
 }
 
 export interface ApiV2LtiLtiConsumerIdResourceLinkLtiResourceLinkIdDeleteRequest {
@@ -511,6 +512,10 @@ export class DefaultApi extends runtime.BaseAPI {
 
         if (requestParameters.lisPersonNameFull !== undefined) {
             formParams.append('lis_person_name_full', requestParameters.lisPersonNameFull as any);
+        }
+
+        if (requestParameters.launchPresentationReturnUrl !== undefined) {
+            formParams.append('launch_presentation_return_url', requestParameters.launchPresentationReturnUrl as any);
         }
 
         const response = await this.request({
