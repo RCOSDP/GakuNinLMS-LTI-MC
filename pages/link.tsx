@@ -1,26 +1,18 @@
 import { useRouter } from "next/router";
 import type { BookSchema } from "$server/models/book";
-import type { UserSchema } from "$server/models/user";
-import bookCreateBy from "$utils/bookCreateBy";
 import { useSession } from "$utils/session";
 import { updateLtiResourceLink } from "$utils/ltiResourceLink";
 import { useBooks } from "$utils/books";
 import BookLink from "$templates/BookLink";
 import Unknown from "$templates/Unknown";
 import Placeholder from "$templates/Placeholder";
-import { createBook } from "$utils/book";
+import { connectOrCreateBook } from "$utils/book";
 import { pagesPath } from "$utils/$path";
-
-const sharedOrCreatedBy = (author?: Pick<UserSchema, "id">) => (
-  book: BookSchema
-) => {
-  return book.shared || bookCreateBy(book, author);
-};
 
 function Index() {
   const router = useRouter();
   const { data: session, error } = useSession();
-  const books = useBooks();
+  const books = useBooks(session?.user);
   const ltiLaunchBody = session?.ltiLaunchBody;
   const ltiResourceLink = ltiLaunchBody && {
     id: ltiLaunchBody.resource_link_id,
@@ -30,14 +22,9 @@ function Index() {
   };
   async function handleSubmit(book: BookSchema) {
     if (ltiResourceLink == null) return;
-    const connectOrCreateBook = async (book: BookSchema) => {
-      if (!session?.user) return Promise.reject();
-      if (bookCreateBy(book, session.user)) return Promise.resolve(book.id);
-      // NOTE: 自身以外の作成したブックに関しては影響を及ぼすのを避ける目的で複製
-      const { ltiResourceLinks: _, ...bookProps } = book;
-      return createBook(bookProps).then(({ id }) => id);
-    };
-    const bookId = await connectOrCreateBook(book);
+    if (!session?.user) return;
+    // NOTE: 自身以外の作成したブックに関しては影響を及ぼすのを避ける目的で複製
+    const { id: bookId } = await connectOrCreateBook(session.user, book);
     await updateLtiResourceLink({ ...ltiResourceLink, bookId });
     return router.push(pagesPath.book.$url({ query: { bookId } }));
   }
@@ -67,11 +54,7 @@ function Index() {
   }
 
   return (
-    <BookLink
-      books={books.filter(sharedOrCreatedBy(session?.user))}
-      ltiResourceLink={ltiResourceLink}
-      {...handlers}
-    />
+    <BookLink books={books} ltiResourceLink={ltiResourceLink} {...handlers} />
   );
 }
 

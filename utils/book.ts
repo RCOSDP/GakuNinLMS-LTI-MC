@@ -2,7 +2,12 @@ import { useEffect } from "react";
 import useSWR, { mutate } from "swr";
 import { useUpdateBookAtom } from "$store/book";
 import { api } from "./api";
-import { BookProps, BookSchema } from "$server/models/book";
+import type { BookProps, BookSchema } from "$server/models/book";
+import type { SectionSchema } from "$server/models/book/section";
+import type { UserSchema } from "$server/models/user";
+import bookCreateBy from "./bookCreateBy";
+import { createTopic } from "./topic";
+import topicCreateBy from "./topicCreateBy";
 
 const key = "/api/v2/book/{book_id}";
 
@@ -25,6 +30,37 @@ export async function createBook(body: BookProps): Promise<BookSchema> {
   const res = await api.apiV2BookPost({ body });
   await mutate([key, res.id], res);
   return res as BookSchema;
+}
+
+const sectionInput = (creator: Pick<UserSchema, "id">) => async (
+  section: SectionSchema
+) => {
+  const topics = await Promise.all(
+    section.topics.map(async (topic) => {
+      if (topicCreateBy(topic, creator)) return topic;
+      return createTopic(topic);
+    })
+  );
+  return { ...section, topics };
+};
+
+async function connectOrCreateSections(
+  user: Pick<UserSchema, "id">,
+  sections: SectionSchema[]
+) {
+  return Promise.all(sections.map(sectionInput(user)));
+}
+
+export async function connectOrCreateBook(
+  user: Pick<UserSchema, "id">,
+  book: BookSchema
+) {
+  if (bookCreateBy(book, user)) return book;
+  const { ltiResourceLinks: _, ...bookProps } = book;
+  // NOTE: 自身以外の作成したトピックの含まれるセクションに関しては、
+  //       影響を及ぼすのを避ける目的でトピックを複製して更新
+  const sections = await connectOrCreateSections(user, bookProps.sections);
+  return createBook({ ...bookProps, sections });
 }
 
 export async function updateBook({
