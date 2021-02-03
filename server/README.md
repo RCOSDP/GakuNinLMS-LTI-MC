@@ -72,8 +72,8 @@ docker-compose down
 | `FRONTEND_ORIGIN`       | フロントエンドのオリジン (例: `http://localhost:3000`)            |
 | `FRONTEND_PATH`         | フロントエンドのパス (例: `http://localhost:3000/` ならば `/`)    |
 | `SESSION_SECRET`        | セッションストアの秘密鍵                                          |
-| `OAUTH_CONSUMER_KEY`    | LMS に登録されている OAuth Consumer Key                           |
-| `OAUTH_CONSUMER_SECRET` | LMS に登録されている OAuth Consumer Secret                        |
+| `OAUTH_CONSUMER_KEY`    | LMS に登録する OAuth Consumer Key (デフォルト: 無効)              |
+| `OAUTH_CONSUMER_SECRET` | LMS に登録する OAuth Consumer Secret (デフォルト: 無効)           |
 | `DATABASE_URL`          | [PostgreSQL 接続 URL][database_connection_url]                    |
 | `HTTPS_CERT_PATH`       | HTTPS を使うための証明書のファイルパス (デフォルト: 無効)         |
 | `HTTPS_KEY_PATH`        | HTTPS を使うための証明書の秘密鍵のファイルパス (デフォルト: 無効) |
@@ -82,20 +82,43 @@ docker-compose down
 
 ## 本番環境へのデプロイ
 
-### 前提
-
-フロントエンドの静的ファイルを生成し public ディレクトリ以下に配置します。
-加えて、サーバー上のデータベースはあらかじめマイグレートしておく必要があります。
-
 ### ビルド
 
-次のコマンドを実行してビルドします。
+次のコマンドを実行し、フロントエンドの静的ファイルを生成し public ディレクトリ以下に配置します。
 
 ```sh
+https://github.com/npocccties/ChibiCHiLO.git
+yarn
 yarn build
 ```
 
-dist ディレクトリ以下に作られたファイルが作られれば成功です。
+server/dist ディレクトリ以下にファイルが作られれば成功です。
+
+### データベースのマイグレーション
+
+データベースのマイグレーションを行います。
+
+```sh
+cd server
+echo 'DATABASE_URL={PostgreSQL 接続 URL}' >> .env
+yarn migrate
+```
+
+### LTI Tool Consumer の設定
+
+マイグレーション後、接続する PostgreSQL に対して、次の SQL を実行し、LTI Tool Consumer の設定を行います。
+
+```sql
+INSERT INTO "lti_consumer" VALUES ('{LMS に登録する OAuth Consumer Key}', '{LMS に登録する OAuth Consumer Secret}');
+```
+
+#### ヒント: PostgreSQL への接続
+
+[psql コマンド](https://www.postgresql.org/docs/current/app-psql.html) を使うことで接続できます。
+
+```sh
+psql "$DATABASE_URL"
+```
 
 ### 起動
 
