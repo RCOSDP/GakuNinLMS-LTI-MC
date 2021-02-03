@@ -28,21 +28,21 @@ async function seed() {
   );
   const authorId = createdUsers[0].id;
 
-  await Promise.all(topics.map((topic) => upsertTopic(authorId, topic)));
+  for (const topic of topics) {
+    await upsertTopic(authorId, topic);
+  }
 
   const createdBooks = (await Promise.all(
     books.map((book) => createBook(authorId, book))
   )) as BookSchema[];
 
-  await Promise.all(
-    ltiResourceLinks
-      .map((link) => ({
-        ...link,
-        consumerId: ltiConsumer.id,
-        bookId: createdBooks[0].id,
-      }))
-      .map(upsertLtiResourceLink)
-  );
+  for (const link of ltiResourceLinks) {
+    await upsertLtiResourceLink({
+      ...link,
+      consumerId: ltiConsumer.id,
+      bookId: createdBooks[0].id,
+    });
+  }
 }
 
 async function main() {
