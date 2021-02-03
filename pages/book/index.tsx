@@ -5,7 +5,7 @@ import { useNextItemIndexAtom } from "$store/book";
 import { usePlayerTrackerAtom } from "$store/playerTracker";
 import Book from "$templates/Book";
 import Placeholder from "$templates/Placeholder";
-import Unknown from "$templates/Unknown";
+import BookNotFoundProblem from "$organisms/BookNotFoundProblem";
 import { useBook } from "$utils/book";
 import { isInstructor, useSession } from "$utils/session";
 import { TopicSchema } from "$server/models/topic";
@@ -68,12 +68,7 @@ function Router() {
   const router = useRouter();
   const bookId = Number(router.query.bookId);
 
-  if (!Number.isFinite(bookId))
-    return (
-      <Unknown header="ブックがありません">
-        ブックが見つかりませんでした
-      </Unknown>
-    );
+  if (!Number.isFinite(bookId)) return <BookNotFoundProblem />;
 
   return <Show bookId={bookId} />;
 }

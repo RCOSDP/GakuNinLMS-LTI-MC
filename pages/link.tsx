@@ -4,8 +4,8 @@ import { useSession } from "$utils/session";
 import { updateLtiResourceLink } from "$utils/ltiResourceLink";
 import { useBooks } from "$utils/books";
 import BookLink from "$templates/BookLink";
-import Unknown from "$templates/Unknown";
 import Placeholder from "$templates/Placeholder";
+import Problem from "$organisms/Problem";
 import { connectOrCreateBook } from "$utils/book";
 import { pagesPath } from "$utils/$path";
 
@@ -50,9 +50,7 @@ function Index() {
 
   if (ltiResourceLink == null) return <Placeholder />;
   if (!books) return <Placeholder />;
-  if (error) {
-    return <Unknown header="セッション情報が得られませんでした" />;
-  }
+  if (error) return <Problem title="セッション情報が得られませんでした" />;
 
   return (
     <BookLink books={books} ltiResourceLink={ltiResourceLink} {...handlers} />

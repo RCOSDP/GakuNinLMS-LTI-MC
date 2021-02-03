@@ -5,7 +5,7 @@ import type { SectionProps } from "$server/models/book/section";
 import type { TopicSchema } from "$server/models/topic";
 import BookEdit from "$templates/BookEdit";
 import Placeholder from "$templates/Placeholder";
-import Unknown from "$templates/Unknown";
+import BookNotFoundProblem from "$organisms/TopicNotFoundProblem";
 import { destroyBook, updateBook, useBook } from "$utils/book";
 import { pagesPath } from "$utils/$path";
 
@@ -86,12 +86,7 @@ function Router() {
   const bookId = Number(router.query.bookId);
   const { context }: Pick<Query, "context"> = router.query;
 
-  if (!Number.isFinite(bookId))
-    return (
-      <Unknown header="ブックがありません">
-        ブックが見つかりませんでした
-      </Unknown>
-    );
+  if (!Number.isFinite(bookId)) return <BookNotFoundProblem />;
 
   return <Edit bookId={bookId} context={context} />;
 }

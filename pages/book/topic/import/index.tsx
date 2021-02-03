@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import TopicImport from "$templates/TopicImport.tsx";
 import Placeholder from "$templates/Placeholder";
-import Unknown from "$templates/Unknown";
+import BookNotFoundProblem from "$organisms/TopicNotFoundProblem";
 import { updateBook, useBook } from "$utils/book";
 import { useSession } from "$utils/session";
 import { useTopics } from "$utils/topics";
@@ -65,12 +65,7 @@ function Router() {
   const bookId = Number(router.query.bookId);
   const { context }: Pick<Query, "context"> = router.query;
 
-  if (!Number.isFinite(bookId))
-    return (
-      <Unknown header="ブックがありません">
-        ブックが見つかりませんでした
-      </Unknown>
-    );
+  if (!Number.isFinite(bookId)) return <BookNotFoundProblem />;
 
   return <Import bookId={bookId} context={context} />;
 }

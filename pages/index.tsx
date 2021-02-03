@@ -1,7 +1,7 @@
 import { UrlObject } from "url";
 import { useRouter } from "next/router";
 import { isInstructor, useSession } from "$utils/session";
-import Unknown from "$templates/Unknown";
+import UnlinkedProblem from "$organisms/UnlinkedProblem";
 import Placeholder from "$templates/Placeholder";
 import { pagesPath } from "$utils/$path";
 import { useLoggerInit } from "$utils/eventLogger/loggerSessionPersister";
@@ -26,12 +26,7 @@ function Router() {
   if (!ltiResourceLink && isInstructor(session))
     return <Replace href={pagesPath.link.$url()} />;
 
-  if (!ltiResourceLink)
-    return (
-      <Unknown header="ブックが未連携です">
-        LTIリンクがどのブックとも連携されていません。担当教員にお問い合わせください
-      </Unknown>
-    );
+  if (!ltiResourceLink) return <UnlinkedProblem />;
 
   return (
     <Replace
