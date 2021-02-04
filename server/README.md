@@ -120,6 +120,18 @@ INSERT INTO "lti_consumer" VALUES ('{LMS に登録する OAuth Consumer Key}', '
 psql "$DATABASE_URL"
 ```
 
+#### 別の方法: Prisma Studio を使う
+
+データベースのビジュアルエディター Prisma Studio を使い、LTI Tool Consumer の設定を行います。
+
+```sh
+yarn --cwd server prisma studio
+```
+
+コマンドの実行し、ブラウザーから Prisma Studio にアクセスした後、 [Open a Model] → [LtiConsumer] を開きます。
+[Add Record] を押し適切な LMS に登録する OAuth Consumer Key とその秘密鍵の値をそれぞれ `id` と `secret` に書き加えます。
+[Save 1 change] ボタンを押すと、 OAuth Consumer を追加できます。
+
 ### 起動
 
 dist ディレクトリをサーバー上に配置し、各環境変数とともに `NODE_ENV=production node dist/index.js | logger -p daemon.info -t chibichilo-server` とコマンドを実行することでアプリケーションを起動できます。
