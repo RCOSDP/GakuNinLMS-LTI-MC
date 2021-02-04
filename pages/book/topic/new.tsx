@@ -3,7 +3,7 @@ import type { TopicProps } from "$server/models/topic";
 import type { VideoTrackProps } from "$server/models/videoTrack";
 import TopicNew from "$templates/TopicNew";
 import Placeholder from "$templates/Placeholder";
-import Unknown from "$templates/Unknown";
+import BookNotFoundProblem from "$organisms/TopicNotFoundProblem";
 import { useAddVideoTrackAtom } from "$store/topic";
 import { updateBook, useBook } from "$utils/book";
 import { createTopic } from "$utils/topic";
@@ -71,12 +71,7 @@ function Router() {
   const bookId = Number(router.query.bookId);
   const { context }: Pick<Query, "context"> = router.query;
 
-  if (!Number.isFinite(bookId))
-    return (
-      <Unknown header="ブックがありません">
-        ブックが見つかりませんでした
-      </Unknown>
-    );
+  if (!Number.isFinite(bookId)) return <BookNotFoundProblem />;
 
   return <New bookId={bookId} context={context} />;
 }

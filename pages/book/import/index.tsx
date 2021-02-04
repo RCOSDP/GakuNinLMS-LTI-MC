@@ -1,9 +1,9 @@
 import { useRouter } from "next/router";
 import BookImport from "$templates/BookImport";
 import Placeholder from "$templates/Placeholder";
-import Unknown from "$templates/Unknown";
+import BookNotFoundProblem from "$organisms/TopicNotFoundProblem";
+import { useSessionAtom } from "$store/session";
 import { updateBook, useBook } from "$utils/book";
-import { useSession } from "$utils/session";
 import { useBooks } from "$utils/books";
 import type { BookSchema } from "$server/models/book";
 import type { SectionSchema } from "$server/models/book/section";
@@ -15,9 +15,9 @@ import { pagesPath } from "$utils/$path";
 export type Query = BookEditQuery;
 
 function Import({ bookId, context }: Query) {
-  const { data: session } = useSession();
+  const { isTopicEditable, isBookEditable } = useSessionAtom();
   const book = useBook(bookId);
-  const books = useBooks(session?.user);
+  const books = useBooks(isBookEditable, isTopicEditable);
   const router = useRouter();
   const bookEditQuery = { bookId, ...(context && { context }) };
   async function handleSubmit({
@@ -30,9 +30,7 @@ function Import({ bookId, context }: Query) {
     if (!book) return;
 
     const connectOrCreateTopics = topics.map(async (topic) => {
-      if (!session?.user) return Promise.reject();
-      // NOTE: 自身以外の作成したトピックに関しては影響を及ぼすのを避ける目的で複製
-      return connectOrCreateTopic(session.user, topic).then(({ id }) => id);
+      return connectOrCreateTopic(topic, isTopicEditable).then(({ id }) => id);
     });
     const ids = await Promise.all(connectOrCreateTopics);
     await updateBook({
@@ -62,12 +60,8 @@ function Import({ bookId, context }: Query) {
     onSubmit: handleSubmit,
     onBookEditClick: handleBookEditClick,
     onTopicEditClick: handleTopicEditClick,
-    isBookEditable: (book: BookSchema) =>
-      // NOTE: 自身以外の作成したブックに関しては編集不可
-      session?.user && book.author.id === session.user.id,
-    isTopicEditable: (topic: TopicSchema) =>
-      // NOTE: 自身以外の作成したトピックに関しては編集不可
-      session?.user && topic.creator.id === session.user.id,
+    isTopicEditable,
+    isBookEditable,
   };
 
   if (!book) return <Placeholder />;
@@ -81,12 +75,7 @@ function Router() {
   const bookId = Number(router.query.bookId);
   const { context }: Pick<Query, "context"> = router.query;
 
-  if (!Number.isFinite(bookId))
-    return (
-      <Unknown header="ブックがありません">
-        ブックが見つかりませんでした
-      </Unknown>
-    );
+  if (!Number.isFinite(bookId)) return <BookNotFoundProblem />;
 
   return <Import bookId={bookId} context={context} />;
 }

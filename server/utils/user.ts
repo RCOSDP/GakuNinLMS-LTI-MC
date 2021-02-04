@@ -12,10 +12,18 @@ import {
   topicToTopicSchema,
 } from "./topic/topicToTopicSchema";
 
-export async function upsertUser(user: UserProps) {
+export async function upsertUser({ ltiConsumerId, ...user }: UserProps) {
   return await prisma.user.upsert({
-    where: { ltiUserId: user.ltiUserId },
-    create: user,
+    where: {
+      ltiConsumerId_ltiUserId: {
+        ltiConsumerId: ltiConsumerId,
+        ltiUserId: user.ltiUserId,
+      },
+    },
+    create: {
+      ...user,
+      ltiConsumer: { connect: { id: ltiConsumerId } },
+    },
     update: user,
   });
 }

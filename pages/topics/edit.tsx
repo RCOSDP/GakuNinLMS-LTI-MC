@@ -7,7 +7,8 @@ import type {
 import type { Query as BookEditQuery } from "$pages/book/edit";
 import Placeholder from "$templates/Placeholder";
 import TopicEdit from "$templates/TopicEdit";
-import Unknown from "$templates/Unknown";
+import TopicNotFoundProblem from "$organisms/BookNotFoundProblem";
+import BookNotFoundProblem from "$organisms/TopicNotFoundProblem";
 import {
   destroyTopic,
   revalidateTopic,
@@ -93,19 +94,9 @@ function Router() {
   };
   const back = () => router.push({ pathname: "./", query: bookEditQuery });
 
-  if (!Number.isFinite(topicId)) {
-    return (
-      <Unknown header="トピックがありません">
-        トピックが見つかりませんでした
-      </Unknown>
-    );
-  }
+  if (!Number.isFinite(topicId)) return <TopicNotFoundProblem />;
   if ("bookId" in bookEditQuery && !Number.isFinite(bookEditQuery.bookId)) {
-    return (
-      <Unknown header="ブックがありません">
-        ブックが見つかりませんでした
-      </Unknown>
-    );
+    return <BookNotFoundProblem />;
   }
   if ("bookId" in bookEditQuery) {
     return <EditWithBook topicId={topicId} back={back} {...bookEditQuery} />;

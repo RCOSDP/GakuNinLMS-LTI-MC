@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import type { UserSchema } from "$server/models/user";
 import type { BookSchema } from "$server/models/book";
-import { useSession } from "$utils/session";
+import { useSessionAtom } from "$store/session";
 import { useUserBooks } from "$utils/userBooks";
 import Books from "$templates/Books";
 import { pagesPath } from "$utils/$path";
@@ -19,9 +19,9 @@ function UserBooks(
 
 function Index() {
   const router = useRouter();
-  const session = useSession();
-  const userId = session.data?.user?.id;
-  const ltiResourceLink = session.data?.ltiResourceLink;
+  const { session, isTopicEditable } = useSessionAtom();
+  const userId = session?.user?.id;
+  const ltiResourceLink = session?.ltiResourceLink;
   const handlers = {
     onBookClick({ id }: Pick<BookSchema, "id">) {
       return router.push(pagesPath.book.$url({ query: { bookId: id } }));
@@ -46,10 +46,7 @@ function Index() {
         })
       );
     },
-    isTopicEditable(topic: TopicSchema) {
-      // NOTE: 自身以外の作成したトピックに関しては編集不可
-      return session?.data?.user && topic.creator.id === session?.data?.user.id;
-    },
+    isTopicEditable,
   };
 
   if (userId == null) {

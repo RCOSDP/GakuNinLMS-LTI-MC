@@ -2,35 +2,50 @@ import useSWR, { mutate } from "swr";
 import { api } from "./api";
 import { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
 
-const key = "/api/v2/lti/resource_link/{lti_resource_link_id}";
+const key =
+  "/api/v2/lti/{lti_consumer_id}/resource_link/{lti_resource_link_id}";
 
 async function fetchLtiResourceLink(
   _: typeof key,
+  consumerId: LtiResourceLinkSchema["consumerId"],
   id: LtiResourceLinkSchema["id"]
 ) {
-  const res = await api.apiV2LtiResourceLinkLtiResourceLinkIdGet({
+  const res = await api.apiV2LtiLtiConsumerIdResourceLinkLtiResourceLinkIdGet({
+    ltiConsumerId: consumerId,
     ltiResourceLinkId: id,
   });
   return res as LtiResourceLinkSchema;
 }
 
-export function useLtiResourceLink(id: LtiResourceLinkSchema["id"]) {
-  return useSWR<LtiResourceLinkSchema>([key, id], fetchLtiResourceLink);
+export function useLtiResourceLink({
+  consumerId,
+  id,
+}: Pick<LtiResourceLinkSchema, "consumerId" | "id">) {
+  return useSWR<LtiResourceLinkSchema>(
+    [key, consumerId, id],
+    fetchLtiResourceLink
+  );
 }
 
 export async function updateLtiResourceLink({
+  consumerId,
   id,
   ...body
 }: LtiResourceLinkSchema) {
-  const res = await api.apiV2LtiResourceLinkLtiResourceLinkIdPut({
+  const res = await api.apiV2LtiLtiConsumerIdResourceLinkLtiResourceLinkIdPut({
+    ltiConsumerId: consumerId,
     ltiResourceLinkId: id,
     body,
   });
   await mutate([key, id], res);
 }
 
-export async function destroyLtiResourceLink(id: LtiResourceLinkSchema["id"]) {
-  await api.apiV2LtiResourceLinkLtiResourceLinkIdDelete({
+export async function destroyLtiResourceLink({
+  consumerId,
+  id,
+}: Pick<LtiResourceLinkSchema, "consumerId" | "id">) {
+  await api.apiV2LtiLtiConsumerIdResourceLinkLtiResourceLinkIdDelete({
+    ltiConsumerId: consumerId,
     ltiResourceLinkId: id,
   });
 }

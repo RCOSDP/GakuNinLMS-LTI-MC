@@ -1,7 +1,7 @@
 import type { User } from "@prisma/client";
 import type { TopicSchema } from "$server/models/topic";
 import { useRouter } from "next/router";
-import { useSession } from "$utils/session";
+import { useSessionAtom } from "$store/session";
 import { useUserTopics } from "$utils/userTopics";
 import Topics from "$templates/Topics";
 import { pagesPath } from "$utils/$path";
@@ -16,8 +16,8 @@ function UserTopics(
 
 function Index() {
   const router = useRouter();
-  const session = useSession();
-  const userId = session.data?.user?.id;
+  const { session } = useSessionAtom();
+  const userId = session?.user?.id;
   const handlers = {
     onTopicEditClick({ id }: Pick<TopicSchema, "id">) {
       return router.push(

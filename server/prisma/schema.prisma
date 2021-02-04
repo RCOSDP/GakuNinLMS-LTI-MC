@@ -100,24 +100,43 @@ model Keyword {
 
 // Map Objects/Learning Contents
 
+/// LTI Consumer
+model LtiConsumer {
+  ltiContext       LtiContext[]
+  ltiResourceLinks LtiResourceLink[]
+  users            User[]
+  /// OAuth Consumer key ("" は無効)
+  id               String            @id
+  /// OAuth Consumer secret
+  secret           String
+
+  @@map("lti_consumer")
+}
+
 /// LTI Context
 model LtiContext {
-  id            String            @id
+  consumer      LtiConsumer       @relation(fields: [consumerId], references: [id])
+  consumerId    String            @map("consumer_id")
+  id            String
   resourceLinks LtiResourceLink[]
   title         String
 
+  @@id([consumerId, id])
   @@map("lti_context")
 }
 
 /// LTI ResourceLink
 model LtiResourceLink {
-  id        String     @id
-  context   LtiContext @relation(fields: [contextId], references: [id])
-  contextId String     @map("context_id")
-  title     String
-  book      Book       @relation(fields: [bookId], references: [id])
-  bookId    Int        @map("book_id")
+  consumer   LtiConsumer @relation(fields: [consumerId], references: [id])
+  consumerId String      @map("consumer_id")
+  id         String
+  context    LtiContext  @relation(fields: [consumerId, contextId], references: [consumerId, id])
+  contextId  String      @map("context_id")
+  title      String
+  book       Book        @relation(fields: [bookId], references: [id])
+  bookId     Int         @map("book_id")
 
+  @@id([consumerId, id])
   @@map("lti_resource_link")
 }
 
@@ -186,14 +205,17 @@ model TopicSection {
 
 /// 利用者
 model User {
-  id            Int        @id @default(autoincrement())
+  id            Int         @id @default(autoincrement())
   createdTopics Topic[]
   writtenBooks  Book[]
-  ltiUserId     String     @unique @map("lti_user_id")
+  ltiConsumer   LtiConsumer @relation(fields: [ltiConsumerId], references: [id])
+  ltiConsumerId String      @map("lti_consumer_id")
+  ltiUserId     String      @map("lti_user_id")
   activities    Activity[]
   /// 氏名
   name          String
 
+  @@unique([ltiConsumerId, ltiUserId])
   @@map("users")
 }
 

@@ -1,10 +1,8 @@
 import useSWR from "swr";
 import type { BookSchema } from "$server/models/book";
-import type { UserSchema } from "$server/models/user";
+import type { TopicSchema } from "$server/models/topic";
 import { api } from "./api";
 import { revalidateBook } from "./book";
-import bookCreateBy from "./bookCreateBy";
-import topicCreateBy from "./topicCreateBy";
 
 const key = "/api/v2/books";
 
@@ -16,24 +14,30 @@ async function fetchBooks(_: typeof key, page = 0): Promise<BookSchema[]> {
 }
 
 function sharedOrCreatedBy(
-  author: Pick<UserSchema, "id"> | undefined,
-  book: BookSchema
+  book: BookSchema,
+  isBookEditable: (book: Pick<BookSchema, "author">) => boolean
 ) {
-  return book.shared || bookCreateBy(book, author);
+  return book.shared || isBookEditable(book);
 }
 
-const filter = (author?: Pick<UserSchema, "id">) => (book: BookSchema) => {
-  if (!sharedOrCreatedBy(author, book)) return [];
+const filter = (
+  isBookEditable: (book: Pick<BookSchema, "author">) => boolean,
+  isTopicEditable: (topic: Pick<TopicSchema, "creator">) => boolean
+) => (book: BookSchema) => {
+  if (!sharedOrCreatedBy(book, isBookEditable)) return [];
   const sections = book.sections.map((section) => {
     const topics = section.topics.filter(
-      (topic) => topic.shared || topicCreateBy(topic, author)
+      (topic) => topic.shared || isTopicEditable(topic)
     );
     return { ...section, topics };
   });
   return [{ ...book, sections }];
 };
 
-export function useBooks(author: Pick<UserSchema, "id"> | undefined) {
+export function useBooks(
+  isBookEditable: (book: Pick<BookSchema, "author">) => boolean,
+  isTopicEditable: (topic: Pick<TopicSchema, "creator">) => boolean
+) {
   const { data } = useSWR<BookSchema[]>(key, fetchBooks);
-  return data?.flatMap(filter(author));
+  return data?.flatMap(filter(isBookEditable, isTopicEditable));
 }

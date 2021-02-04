@@ -30,6 +30,12 @@ export interface InlineResponse2001Author {
      * @type {string}
      * @memberof InlineResponse2001Author
      */
+    ltiConsumerId?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineResponse2001Author
+     */
     ltiUserId?: string;
     /**
      * 
@@ -50,6 +56,7 @@ export function InlineResponse2001AuthorFromJSONTyped(json: any, ignoreDiscrimin
     return {
         
         'id': !exists(json, 'id') ? undefined : json['id'],
+        'ltiConsumerId': !exists(json, 'ltiConsumerId') ? undefined : json['ltiConsumerId'],
         'ltiUserId': !exists(json, 'ltiUserId') ? undefined : json['ltiUserId'],
         'name': !exists(json, 'name') ? undefined : json['name'],
     };
@@ -65,6 +72,7 @@ export function InlineResponse2001AuthorToJSON(value?: InlineResponse2001Author 
     return {
         
         'id': value.id,
+        'ltiConsumerId': value.ltiConsumerId,
         'ltiUserId': value.ltiUserId,
         'name': value.name,
     };

@@ -1,7 +1,7 @@
 import { UrlObject } from "url";
 import { useRouter } from "next/router";
-import { isInstructor, useSession } from "$utils/session";
-import Unknown from "$templates/Unknown";
+import { useSessionAtom } from "$store/session";
+import UnlinkedProblem from "$organisms/UnlinkedProblem";
 import Placeholder from "$templates/Placeholder";
 import { pagesPath } from "$utils/$path";
 import { useLoggerInit } from "$utils/eventLogger/loggerSessionPersister";
@@ -13,25 +13,17 @@ function Replace(props: { href: string | UrlObject }) {
 }
 
 function Router() {
-  const { data: session } = useSession();
+  const { session, isInstructor } = useSessionAtom();
 
   // NOTE: eventLogger のために使用
   useLoggerInit(session);
 
-  // TODO: https://github.com/npocccties/ChibiCHiLO/issues/3
-  if (!session) return <Placeholder />;
+  const ltiResourceLink = session?.ltiResourceLink;
 
-  const ltiResourceLink = session.ltiResourceLink;
-
-  if (!ltiResourceLink && isInstructor(session))
+  if (!ltiResourceLink && isInstructor)
     return <Replace href={pagesPath.link.$url()} />;
 
-  if (!ltiResourceLink)
-    return (
-      <Unknown header="ブックが未連携です">
-        LTIリンクがどのブックとも連携されていません。担当教員にお問い合わせください
-      </Unknown>
-    );
+  if (!ltiResourceLink) return <UnlinkedProblem />;
 
   return (
     <Replace

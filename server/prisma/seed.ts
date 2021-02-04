@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 import prisma from "$server/utils/prisma";
-import { BookSchema } from "$server/models/book";
+import type { User } from "@prisma/client";
+import type { BookSchema } from "$server/models/book";
 import users from "$server/config/seeds/users";
 import topics from "$server/config/seeds/topics";
 import books from "$server/config/seeds/books";
@@ -9,22 +10,46 @@ import { upsertUser } from "$server/utils/user";
 import upsertTopic from "$server/utils/topic/upsertTopic";
 import createBook from "$server/utils/book/createBook";
 import { upsertLtiResourceLink } from "$server/utils/ltiResourceLink";
+import { upsertLtiConsumer } from "$server/utils/ltiConsumer";
+import { OAUTH_CONSUMER_KEY, OAUTH_CONSUMER_SECRET } from "$server/utils/env";
 
 async function seed() {
-  const createdUsers = await Promise.all(users.map(upsertUser));
+  const ltiConsumer = await upsertLtiConsumer(
+    OAUTH_CONSUMER_KEY,
+    OAUTH_CONSUMER_SECRET
+  );
+
+  const createdUsers: User[] = [];
+  // TODO: upsert時の一意性の問題が解決したら `Promise.all()` 等に修正して。
+  //       See also https://github.com/prisma/prisma/issues/3242
+  for (const user of users) {
+    const created = await upsertUser({
+      ...user,
+      ltiConsumerId: ltiConsumer.id,
+    });
+    createdUsers.push(created);
+  }
   const authorId = createdUsers[0].id;
 
-  await Promise.all(topics.map((topic) => upsertTopic(authorId, topic)));
+  // TODO: upsert時の一意性の問題が解決したら `Promise.all()` 等に修正して。
+  //       See also https://github.com/prisma/prisma/issues/3242
+  for (const topic of topics) {
+    await upsertTopic(authorId, topic);
+  }
 
   const createdBooks = (await Promise.all(
     books.map((book) => createBook(authorId, book))
   )) as BookSchema[];
 
-  await Promise.all(
-    ltiResourceLinks
-      .map((link) => ({ ...link, bookId: createdBooks[0].id }))
-      .map(upsertLtiResourceLink)
-  );
+  // TODO: upsert時の一意性の問題が解決したら `Promise.all()` 等に修正して。
+  //       See also https://github.com/prisma/prisma/issues/3242
+  for (const link of ltiResourceLinks) {
+    await upsertLtiResourceLink({
+      ...link,
+      consumerId: ltiConsumer.id,
+      bookId: createdBooks[0].id,
+    });
+  }
 }
 
 async function main() {

@@ -1,9 +1,8 @@
+import type { ReactNode } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import Link from "@material-ui/core/Link";
 import Container from "@material-ui/core/Container";
 import useContainerStyles from "styles/container";
-import { NEXT_PUBLIC_LMS_URL } from "$utils/env";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -11,12 +10,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-type Props = { header: Node | string; children?: Node | string };
+type Props = { title: ReactNode; children?: ReactNode };
 
-export default function Unknown(props: Props) {
+export default function Problem(props: Props) {
   const classes = useStyles();
   const containerClasses = useContainerStyles();
-  const { header, children } = props;
+  const { title, children } = props;
   return (
     <Container
       classes={containerClasses}
@@ -24,13 +23,9 @@ export default function Unknown(props: Props) {
       maxWidth="md"
     >
       <Typography variant="h4" gutterBottom={true}>
-        {header}
+        {title}
       </Typography>
-      <Typography variant="body1">
-        {children}
-        <br />
-        <Link href={NEXT_PUBLIC_LMS_URL}>LMSに戻る</Link>
-      </Typography>
+      <Typography variant="body1">{children}</Typography>
     </Container>
   );
 }

@@ -16,7 +16,7 @@ export async function launch(fastify: FastifyInstance) {
 }
 
 export async function resourceLink(fastify: FastifyInstance) {
-  const path = "/lti/resource_link/:lti_resource_link_id";
+  const path = "/lti/:lti_consumer_id/resource_link/:lti_resource_link_id";
   const { method, show, update, destroy } = ltiResourceLinkService;
   const preHandler = ltiResourceLinkService.preHandler(fastify);
 

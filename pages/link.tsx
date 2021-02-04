@@ -1,20 +1,20 @@
 import { useRouter } from "next/router";
 import type { BookSchema } from "$server/models/book";
-import { useSession } from "$utils/session";
+import { useSessionAtom } from "$store/session";
 import { updateLtiResourceLink } from "$utils/ltiResourceLink";
 import { useBooks } from "$utils/books";
 import BookLink from "$templates/BookLink";
-import Unknown from "$templates/Unknown";
 import Placeholder from "$templates/Placeholder";
 import { connectOrCreateBook } from "$utils/book";
 import { pagesPath } from "$utils/$path";
 
 function Index() {
   const router = useRouter();
-  const { data: session, error } = useSession();
-  const books = useBooks(session?.user);
+  const { session, isBookEditable, isTopicEditable } = useSessionAtom();
+  const books = useBooks(isBookEditable, isTopicEditable);
   const ltiLaunchBody = session?.ltiLaunchBody;
   const ltiResourceLink = ltiLaunchBody && {
+    consumerId: ltiLaunchBody.oauth_consumer_key,
     id: ltiLaunchBody.resource_link_id,
     title: ltiLaunchBody.resource_link_title ?? "",
     contextId: ltiLaunchBody.context_id,
@@ -22,9 +22,11 @@ function Index() {
   };
   async function handleSubmit(book: BookSchema) {
     if (ltiResourceLink == null) return;
-    if (!session?.user) return;
-    // NOTE: 自身以外の作成したブックに関しては影響を及ぼすのを避ける目的で複製
-    const { id: bookId } = await connectOrCreateBook(session.user, book);
+    const { id: bookId } = await connectOrCreateBook(
+      book,
+      isBookEditable,
+      isTopicEditable
+    );
     await updateLtiResourceLink({ ...ltiResourceLink, bookId });
     return router.push(pagesPath.book.$url({ query: { bookId } }));
   }
@@ -42,16 +44,11 @@ function Index() {
     onSubmit: handleSubmit,
     onBookEditClick: handleBookEdit,
     onBookNewClick: handleBookNew,
-    isBookEditable: (book: BookSchema) =>
-      // NOTE: 自身以外の作成したブックに関しては編集不可
-      session?.user && book.author.id === session.user.id,
+    isBookEditable,
   };
 
   if (ltiResourceLink == null) return <Placeholder />;
   if (!books) return <Placeholder />;
-  if (error) {
-    return <Unknown header="セッション情報が得られませんでした" />;
-  }
 
   return (
     <BookLink books={books} ltiResourceLink={ltiResourceLink} {...handlers} />

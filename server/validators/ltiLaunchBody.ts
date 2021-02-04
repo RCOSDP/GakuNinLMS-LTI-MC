@@ -61,6 +61,10 @@ export class LtiLaunchBody {
   @IsOptional()
   @IsString()
   lis_person_name_full?: string;
+
+  @IsOptional()
+  @IsString()
+  launch_presentation_return_url?: string;
 }
 
 export const ltiLaunchBodySchema = validationMetadatasToSchemas().LtiLaunchBody;

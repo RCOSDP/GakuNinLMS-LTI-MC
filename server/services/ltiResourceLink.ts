@@ -58,7 +58,10 @@ export const method: Method = {
 export const preHandler = authInstructorHandler;
 
 export async function show({ params }: { params: LtiResourceLinkParams }) {
-  const link = await findLtiResourceLink(params.lti_resource_link_id);
+  const link = await findLtiResourceLink({
+    consumerId: params.lti_consumer_id,
+    id: params.lti_resource_link_id,
+  });
 
   return {
     status: link == null ? 404 : 200,
@@ -75,6 +78,7 @@ export async function update({
 }) {
   const link = await upsertLtiResourceLink({
     ...body,
+    consumerId: params.lti_consumer_id,
     id: params.lti_resource_link_id,
   });
 
@@ -85,7 +89,10 @@ export async function update({
 }
 
 export async function destroy({ params }: { params: LtiResourceLinkParams }) {
-  await destroyLtiResourceLink(params.lti_resource_link_id);
+  await destroyLtiResourceLink({
+    consumerId: params.lti_consumer_id,
+    id: params.lti_resource_link_id,
+  });
 
   return {
     status: 204,
