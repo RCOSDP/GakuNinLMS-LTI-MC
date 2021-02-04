@@ -7,10 +7,6 @@ import useContainerStyles from "styles/container";
 import { BookProps, BookSchema } from "$server/models/book";
 
 const useStyles = makeStyles((theme) => ({
-  header: {
-    display: "flex",
-    justifyContent: "flex-end",
-  },
   container: {
     marginTop: theme.spacing(4),
   },

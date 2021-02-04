@@ -3,40 +3,16 @@ import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
+import TopBar from "$organisms/TopBar";
 import TopicPreview from "$organisms/TopicPreview";
 import TopicPreviewDialog from "$organisms/TopicPreviewDialog";
 import SortSelect from "$atoms/SortSelect";
 import SearchTextField from "$atoms/SearchTextField";
 import { TopicSchema } from "$server/models/topic";
-import { gray } from "$theme/colors";
 import useContainerStyles from "$styles/container";
 import useDialogProps from "$utils/useDialogProps";
 
 const useStyles = makeStyles((theme) => ({
-  line: {
-    display: "flex",
-    alignItems: "center",
-    flexWrap: "wrap",
-    marginBottom: theme.spacing(-2),
-    "& > *": {
-      marginRight: theme.spacing(2),
-      marginBottom: theme.spacing(2),
-    },
-  },
-  title: {
-    marginBottom: theme.spacing(4),
-    "& > *": {
-      marginRight: theme.spacing(1),
-    },
-  },
-  header: {
-    position: "sticky",
-    top: 0,
-    zIndex: 1,
-    backgroundColor: gray[50],
-    paddingTop: theme.spacing(4),
-    paddingBottom: theme.spacing(2),
-  },
   topics: {
     display: "grid",
     gridTemplateColumns: "repeat(auto-fill, 380px)",
@@ -74,29 +50,35 @@ export default function TopicImport(props: Props) {
     isTopicEditable(topic) && (() => onTopicEditClick(topic));
   return (
     <Container classes={containerClasses} maxWidth="lg">
-      <form className={classes.header} onSubmit={handleSubmit}>
-        <Typography className={classes.title} variant="h4" gutterBottom={true}>
-          トピックのインポート
-          <Typography variant="body1">
-            インポートしたいトピックを選んでください
-          </Typography>
-        </Typography>
-        <div className={classes.line}>
-          <Button
-            color="primary"
-            size="large"
-            variant="contained"
-            type="submit"
-          >
-            トピックをインポート
-          </Button>
-          <SortSelect disabled /* TODO: ソート機能を追加したら有効化して */ />
-          <SearchTextField
-            placeholder="トピック検索"
-            disabled // TODO: トピック検索機能追加したら有効化して
-          />
-        </div>
-      </form>
+      <TopBar
+        component="form"
+        onSubmit={handleSubmit}
+        title={
+          <>
+            トピックのインポート
+            <Typography variant="body1">
+              インポートしたいトピックを選んでください
+            </Typography>
+          </>
+        }
+        action={
+          <>
+            <Button
+              color="primary"
+              size="large"
+              variant="contained"
+              type="submit"
+            >
+              トピックをインポート
+            </Button>
+            <SortSelect disabled /* TODO: ソート機能を追加したら有効化して */ />
+            <SearchTextField
+              placeholder="トピック検索"
+              disabled // TODO: トピック検索機能追加したら有効化して
+            />
+          </>
+        }
+      />
       <div className={classes.topics}>
         {topics.map((topic, index) => (
           <TopicPreview

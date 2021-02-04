@@ -8,10 +8,6 @@ import { TopicProps } from "$server/models/topic";
 import { VideoTrackProps, VideoTrackSchema } from "$server/models/videoTrack";
 
 const useStyles = makeStyles((theme) => ({
-  header: {
-    display: "flex",
-    justifyContent: "flex-end",
-  },
   container: {
     marginTop: theme.spacing(4),
   },

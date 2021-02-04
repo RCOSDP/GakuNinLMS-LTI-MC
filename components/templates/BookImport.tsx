@@ -6,6 +6,7 @@ import Container from "@material-ui/core/Container";
 import TreeView from "@material-ui/lab/TreeView";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import TopBar from "$organisms/TopBar";
 import BookItemDialog from "$organisms/BookItemDialog";
 import BookTree from "$molecules/BookTree";
 import SortSelect from "$atoms/SortSelect";
@@ -13,35 +14,10 @@ import SearchTextField from "$atoms/SearchTextField";
 import { BookSchema } from "$server/models/book";
 import { SectionSchema } from "$server/models/book/section";
 import { TopicSchema } from "$server/models/topic";
-import { gray } from "$theme/colors";
 import useContainerStyles from "$styles/container";
 import useDialogProps from "$utils/useDialogProps";
 
 const useStyles = makeStyles((theme) => ({
-  line: {
-    display: "flex",
-    alignItems: "center",
-    flexWrap: "wrap",
-    marginBottom: theme.spacing(-2),
-    "& > *": {
-      marginRight: theme.spacing(2),
-      marginBottom: theme.spacing(2),
-    },
-  },
-  title: {
-    marginBottom: theme.spacing(4),
-    "& > *": {
-      marginRight: theme.spacing(1),
-    },
-  },
-  header: {
-    position: "sticky",
-    top: 0,
-    zIndex: 1,
-    backgroundColor: gray[50],
-    paddingTop: theme.spacing(4),
-    paddingBottom: theme.spacing(2),
-  },
   icon: {
     marginRight: theme.spacing(0.5),
   },
@@ -125,29 +101,35 @@ export default function BookImport(props: Props) {
   };
   return (
     <Container classes={containerClasses} maxWidth="md">
-      <form className={classes.header} onSubmit={handleSubmit}>
-        <Typography className={classes.title} variant="h4" gutterBottom={true}>
-          ブックからインポート
-          <Typography variant="body1">
-            ブックからインポートしたいトピックを選んでください
-          </Typography>
-        </Typography>
-        <div className={classes.line}>
-          <Button
-            color="primary"
-            size="large"
-            variant="contained"
-            type="submit"
-          >
-            ブックをインポート
-          </Button>
-          <SortSelect disabled /* TODO: ソート機能を追加したら有効化して */ />
-          <SearchTextField
-            placeholder="ブック・トピック検索"
-            disabled // TODO: ブック・トピック検索機能追加したら有効化して
-          />
-        </div>
-      </form>
+      <TopBar
+        component="form"
+        onSubmit={handleSubmit}
+        title={
+          <>
+            ブックからインポート
+            <Typography variant="body1">
+              ブックからインポートしたいトピックを選んでください
+            </Typography>
+          </>
+        }
+        action={
+          <>
+            <Button
+              color="primary"
+              size="large"
+              variant="contained"
+              type="submit"
+            >
+              ブックをインポート
+            </Button>
+            <SortSelect disabled /* TODO: ソート機能を追加したら有効化して */ />
+            <SearchTextField
+              placeholder="ブック・トピック検索"
+              disabled // TODO: ブック・トピック検索機能追加したら有効化して
+            />
+          </>
+        }
+      />
       <TreeView
         defaultCollapseIcon={<ExpandMoreIcon />}
         defaultExpandIcon={<ChevronRightIcon />}
