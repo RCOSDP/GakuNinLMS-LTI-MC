@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 import prisma from "$server/utils/prisma";
-import { BookSchema } from "$server/models/book";
+import type { User } from "@prisma/client";
+import type { BookSchema } from "$server/models/book";
 import users from "$server/config/seeds/users";
 import topics from "$server/config/seeds/topics";
 import books from "$server/config/seeds/books";
@@ -18,14 +19,14 @@ async function seed() {
     OAUTH_CONSUMER_SECRET
   );
 
-  const createdUsers = await Promise.all(
-    users
-      .map((user) => ({
-        ...user,
-        ltiConsumerId: ltiConsumer.id,
-      }))
-      .map(upsertUser)
-  );
+  const createdUsers: User[] = [];
+  for (const user of users) {
+    const created = await upsertUser({
+      ...user,
+      ltiConsumerId: ltiConsumer.id,
+    });
+    createdUsers.push(created);
+  }
   const authorId = createdUsers[0].id;
 
   for (const topic of topics) {
