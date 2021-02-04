@@ -20,6 +20,8 @@ async function seed() {
   );
 
   const createdUsers: User[] = [];
+  // TODO: upsert時の一意性の問題が解決したら `Promise.all()` 等に修正して。
+  //       See also https://github.com/prisma/prisma/issues/3242
   for (const user of users) {
     const created = await upsertUser({
       ...user,
@@ -29,6 +31,8 @@ async function seed() {
   }
   const authorId = createdUsers[0].id;
 
+  // TODO: upsert時の一意性の問題が解決したら `Promise.all()` 等に修正して。
+  //       See also https://github.com/prisma/prisma/issues/3242
   for (const topic of topics) {
     await upsertTopic(authorId, topic);
   }
@@ -37,6 +41,8 @@ async function seed() {
     books.map((book) => createBook(authorId, book))
   )) as BookSchema[];
 
+  // TODO: upsert時の一意性の問題が解決したら `Promise.all()` 等に修正して。
+  //       See also https://github.com/prisma/prisma/issues/3242
   for (const link of ltiResourceLinks) {
     await upsertLtiResourceLink({
       ...link,
