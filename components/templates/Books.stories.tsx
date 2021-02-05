@@ -1,6 +1,7 @@
 export default { title: "templates/Books" };
 
 import Books from "./Books";
+import { Default as AppBar } from "$organisms/AppBar.stories";
 import { books } from "samples";
 
 const props = {
@@ -21,8 +22,16 @@ const props = {
   },
 };
 
-export const Default = () => <Books {...props} />;
+export const Default = () => (
+  <>
+    <AppBar />
+    <Books {...props} />
+  </>
+);
 
 export const Empty = () => (
-  <Books {...props} books={[]} ltiResourceLink={null} />
+  <>
+    <AppBar />
+    <Books {...props} books={[]} ltiResourceLink={null} />
+  </>
 );

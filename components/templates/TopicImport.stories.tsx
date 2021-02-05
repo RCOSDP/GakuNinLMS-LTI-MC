@@ -1,6 +1,7 @@
 export default { title: "templates/TopicImport" };
 
 import TopicImport from "./TopicImport";
+import { Default as AppBar } from "$organisms/AppBar.stories";
 import { topic } from "samples";
 
 const topics = [...Array(10)].map(() => topic);
@@ -10,10 +11,23 @@ const handlers = {
   isTopicEditable: () => true,
 };
 
-export const Default = () => <TopicImport topics={topics} {...handlers} />;
+export const Default = () => (
+  <>
+    <AppBar />
+    <TopicImport topics={topics} {...handlers} />
+  </>
+);
 
-export const Empty = () => <TopicImport topics={[]} {...handlers} />;
+export const Empty = () => (
+  <>
+    <AppBar />
+    <TopicImport topics={[]} {...handlers} />
+  </>
+);
 
 export const Others = () => (
-  <TopicImport topics={topics} {...handlers} isTopicEditable={() => false} />
+  <>
+    <AppBar />
+    <TopicImport topics={topics} {...handlers} isTopicEditable={() => false} />
+  </>
 );

@@ -1,13 +1,14 @@
 import clsx from "clsx";
 import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
-import { makeStyles } from "@material-ui/core/styles";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import { useTheme, makeStyles } from "@material-ui/core/styles";
 import { gray } from "theme/colors";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    top: 0,
     zIndex: 1,
+    position: "sticky",
     backgroundColor: gray[50],
     paddingTop: theme.spacing(4),
     paddingBottom: theme.spacing(2),
@@ -31,17 +32,16 @@ const useStyles = makeStyles((theme) => ({
   container: {
     padding: 0,
   },
-  sticky: {
-    position: "sticky",
+  desktop: {
+    top: 65,
   },
-  absolute: {
-    position: "absolute",
+  mobile: {
+    top: 55,
   },
 }));
 
 type Props = {
   component?: React.ElementType;
-  position?: "sticky" | "absolute";
   maxWidth?: "xs" | "sm" | "md" | "lg" | "xl";
   title: React.ReactNode | string;
   action: React.ReactNode | string;
@@ -51,16 +51,17 @@ type Props = {
 export default function TopBar(props: Props) {
   const {
     component: Component = "div",
-    position = "sticky",
     maxWidth,
     title,
     action,
     onSubmit,
   } = props;
   const classes = useStyles();
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up("md"));
   return (
     <Component
-      className={clsx(classes.root, classes[position])}
+      className={clsx(classes.root, matches ? classes.desktop : classes.mobile)}
       onSubmit={onSubmit}
     >
       <Container

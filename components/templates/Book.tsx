@@ -125,8 +125,7 @@ export default function Book(props: Props) {
       <div
         className={clsx(
           classes.inner,
-          { [classes.innerDesktop]: matches },
-          { [classes.innerMobile]: !matches }
+          matches ? classes.innerDesktop : classes.innerMobile
         )}
       >
         {topic && (

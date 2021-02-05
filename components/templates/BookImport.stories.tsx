@@ -1,6 +1,7 @@
 export default { title: "templates/BookImport" };
 
 import BookImport from "./BookImport";
+import { Default as AppBar } from "$organisms/AppBar.stories";
 import { books } from "samples";
 
 const handlers = {
@@ -10,6 +11,16 @@ const handlers = {
   onSubmit: console.log,
 };
 
-export const Default = () => <BookImport books={books} {...handlers} />;
+export const Default = () => (
+  <>
+    <AppBar />
+    <BookImport books={books} {...handlers} />
+  </>
+);
 
-export const Empty = () => <BookImport books={[]} {...handlers} />;
+export const Empty = () => (
+  <>
+    <AppBar />
+    <BookImport books={[]} {...handlers} />
+  </>
+);
