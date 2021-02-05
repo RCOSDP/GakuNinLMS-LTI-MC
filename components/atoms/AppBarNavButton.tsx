@@ -5,6 +5,7 @@ import makeStyles from "@material-ui/styles/makeStyles";
 const useButtonStyles = makeStyles({
   label: {
     flexDirection: "column",
+    lineHeight: 1.5,
   },
 });
 
