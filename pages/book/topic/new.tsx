@@ -54,16 +54,19 @@ function New({ bookId, context }: Query) {
   async function handleSubtitleDelete() {
     // TODO: 未実装
   }
+  function handleCancel() {
+    return router.back();
+  }
+  const handlers = {
+    onSubmit: handleSubmit,
+    onSubtitleSubmit: handleSubtitleSubmit,
+    onSubtitleDelete: handleSubtitleDelete,
+    onCancel: handleCancel,
+  };
 
   if (!book) return <Placeholder />;
 
-  return (
-    <TopicNew
-      onSubmit={handleSubmit}
-      onSubtitleSubmit={handleSubtitleSubmit}
-      onSubtitleDelete={handleSubtitleDelete}
-    />
-  );
+  return <TopicNew {...handlers} />;
 }
 
 function Router() {

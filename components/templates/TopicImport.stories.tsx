@@ -7,6 +7,7 @@ import { topic } from "samples";
 const topics = [...Array(10)].map(() => topic);
 const handlers = {
   onSubmit: console.log,
+  onCancel: () => console.log("Cancel"),
   onTopicEditClick: console.log,
   isTopicEditable: () => true,
 };

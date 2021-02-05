@@ -9,6 +9,7 @@ const handlers = {
   onTopicClick: console.log,
   onTopicEditClick: console.log,
   onSubmit: console.log,
+  onCancel: () => console.log("Cancel"),
 };
 
 export const Default = () => (

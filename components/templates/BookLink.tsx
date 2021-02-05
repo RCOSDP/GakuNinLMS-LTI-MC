@@ -33,6 +33,7 @@ type Props = {
   books: BookSchema[];
   ltiResourceLink: Pick<LtiResourceLinkSchema, "title">;
   onSubmit(book: BookSchema): void;
+  onCancel(): void;
   onBookEditClick(book: BookSchema): void;
   onBookNewClick(): void;
   isBookEditable?(book: BookSchema): boolean | undefined;
@@ -43,6 +44,7 @@ export default function BookLink(props: Props) {
     books,
     ltiResourceLink,
     onSubmit,
+    onCancel,
     onBookEditClick,
     onBookNewClick,
     isBookEditable,
@@ -97,7 +99,12 @@ export default function BookLink(props: Props) {
       />
       <BottomBar maxWidth="md">
         <form className={classes.form} onSubmit={handleSubmit}>
-          <Button color="primary" size="small" variant="text">
+          <Button
+            color="primary"
+            size="small"
+            variant="text"
+            onClick={onCancel}
+          >
             キャンセル
           </Button>
           <Button

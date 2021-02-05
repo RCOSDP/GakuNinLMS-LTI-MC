@@ -13,6 +13,7 @@ const props = {
     contextTitle: "コース2",
   },
   onSubmit: console.log,
+  onCancel: () => console.log("Cancel"),
   onBookEditClick: console.log,
   onBookNewClick: console.log,
 };

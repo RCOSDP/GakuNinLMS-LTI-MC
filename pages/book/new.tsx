@@ -20,8 +20,13 @@ function New() {
       })
     );
   };
+  const handleCancel = () => router.back();
+  const handlers = {
+    onSubmit: handleSubmit,
+    onCancel: handleCancel,
+  };
 
-  return <BookNew onSubmit={handleSubmit} />;
+  return <BookNew {...handlers} />;
 }
 
 export default New;

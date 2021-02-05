@@ -29,12 +29,19 @@ const useStyles = makeStyles((theme) => ({
 type Props = {
   topics: TopicSchema[];
   onSubmit(topics: TopicSchema[]): void;
+  onCancel(): void;
   onTopicEditClick(topic: TopicSchema): void;
   isTopicEditable(topic: TopicSchema): boolean | undefined;
 };
 
 export default function TopicImport(props: Props) {
-  const { topics, onSubmit, onTopicEditClick, isTopicEditable } = props;
+  const {
+    topics,
+    onSubmit,
+    onCancel,
+    onTopicEditClick,
+    isTopicEditable,
+  } = props;
   const classes = useStyles();
   const containerClasses = useContainerStyles();
   const [selectedIndexes, select] = useState<Set<number>>(new Set());
@@ -89,7 +96,12 @@ export default function TopicImport(props: Props) {
       </div>
       <BottomBar maxWidth="lg">
         <form className={classes.form} onSubmit={handleSubmit}>
-          <Button color="primary" size="small" variant="text">
+          <Button
+            color="primary"
+            size="small"
+            variant="text"
+            onClick={onCancel}
+          >
             キャンセル
           </Button>
           <Button

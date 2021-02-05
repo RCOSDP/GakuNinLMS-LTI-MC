@@ -37,6 +37,9 @@ function Import({ bookId, context }: BookEditQuery) {
       })
     );
   }
+  function handleCancel() {
+    return router.back();
+  }
   function handleTopicEditClick({ id: topicId }: Pick<TopicSchema, "id">) {
     return router.push(
       pagesPath.book.topic.import.edit.$url({
@@ -46,6 +49,7 @@ function Import({ bookId, context }: BookEditQuery) {
   }
   const handlers = {
     onSubmit: handleSubmit,
+    onCancel: handleCancel,
     onTopicEditClick: handleTopicEditClick,
     isTopicEditable,
   };

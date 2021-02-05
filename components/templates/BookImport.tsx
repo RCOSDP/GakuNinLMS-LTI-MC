@@ -45,6 +45,7 @@ type Props = {
     sections: SectionSchema[];
     topics: TopicSchema[];
   }): void;
+  onCancel(): void;
   onBookEditClick?(book: BookSchema): void;
   onTopicClick?(topic: TopicSchema): void;
   onTopicEditClick?(topic: TopicSchema): void;
@@ -56,6 +57,7 @@ export default function BookImport(props: Props) {
   const {
     books,
     onSubmit,
+    onCancel,
     onBookEditClick,
     onTopicClick,
     onTopicEditClick,
@@ -153,7 +155,12 @@ export default function BookImport(props: Props) {
       </TreeView>
       <BottomBar maxWidth="md">
         <form className={classes.form} onSubmit={handleSubmit}>
-          <Button color="primary" size="small" variant="text">
+          <Button
+            color="primary"
+            size="small"
+            variant="text"
+            onClick={onCancel}
+          >
             キャンセル
           </Button>
           <Button

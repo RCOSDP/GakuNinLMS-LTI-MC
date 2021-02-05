@@ -30,6 +30,11 @@ function Index() {
     await updateLtiResourceLink({ ...ltiResourceLink, bookId });
     return router.push(pagesPath.book.$url({ query: { bookId } }));
   }
+  function handleCancel() {
+    // FIXME: 連携後にLTIリンクを踏み直す(useSessionInitする)まで動線が変化しない
+    if (!session?.ltiResourceLink) return router.push(pagesPath.books.$url());
+    return router.back();
+  }
   function handleBookEdit({ id }: Pick<BookSchema, "id">) {
     return router.push(
       pagesPath.book.edit.$url({
@@ -42,6 +47,7 @@ function Index() {
   }
   const handlers = {
     onSubmit: handleSubmit,
+    onCancel: handleCancel,
     onBookEditClick: handleBookEdit,
     onBookNewClick: handleBookNew,
     isBookEditable,

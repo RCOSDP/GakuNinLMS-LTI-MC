@@ -5,6 +5,7 @@ import { DeleteOutlined } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import TopicForm from "$organisms/TopicForm";
 import RequiredDot from "$atoms/RequiredDot";
+import BackButton from "$atoms/BackButton";
 import useContainerStyles from "styles/container";
 import { TopicProps, TopicSchema } from "$server/models/topic";
 import { VideoTrackProps, VideoTrackSchema } from "$server/models/videoTrack";
@@ -12,7 +13,7 @@ import { useConfirm } from "material-ui-confirm";
 
 const useStyles = makeStyles((theme) => ({
   container: {
-    marginTop: theme.spacing(4),
+    marginTop: theme.spacing(1),
   },
   title: {
     marginBottom: theme.spacing(4),
@@ -34,6 +35,7 @@ type Props = {
   topic: TopicSchema | null;
   onSubmit(topic: TopicProps): void;
   onDelete(topic: TopicSchema): void;
+  onCancel(): void;
   onSubtitleDelete(videoTrack: VideoTrackSchema): void;
   onSubtitleSubmit(videoTrack: VideoTrackProps): void;
 };
@@ -43,6 +45,7 @@ export default function TopicEdit(props: Props) {
     topic,
     onSubmit,
     onDelete,
+    onCancel,
     onSubtitleDelete,
     onSubtitleSubmit,
   } = props;
@@ -65,6 +68,7 @@ export default function TopicEdit(props: Props) {
       className={classes.container}
       maxWidth="md"
     >
+      <BackButton onClick={onCancel}>戻る</BackButton>
       <Typography className={classes.title} variant="h4">
         トピックの編集
         <Typography variant="caption" component="span" aria-hidden="true">

@@ -35,6 +35,9 @@ function Edit({ bookId, context }: Query) {
         return router.push(pagesPath.books.$url());
     }
   }
+  function handleCancel() {
+    return router.back();
+  }
   async function handleAddSection(section: SectionProps) {
     if (!book) return;
     await updateBook({
@@ -67,6 +70,7 @@ function Edit({ bookId, context }: Query) {
   const handlers = {
     onSubmit: handleSubmit,
     onDelete: handleDelete,
+    onCancel: handleCancel,
     onAddSection: handleAddSection,
     onBookImportClick: () => toBookImport(),
     onTopicImportClick: () => toTopic("import"),

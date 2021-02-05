@@ -55,6 +55,7 @@ function Edit({ topicId, back, onDelete }: EditProps) {
   const handlers = {
     onSubmit: handleSubmit,
     onDelete: handleDelete,
+    onCancel: back,
     onSubtitleSubmit: handleSubtitleSubmit,
     onSubtitleDelete: handleSubtitleDelete,
   };

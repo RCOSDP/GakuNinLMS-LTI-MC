@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme) => ({
     zIndex: 1,
     position: "sticky",
     backgroundColor: gray[50],
-    paddingTop: theme.spacing(4),
+    paddingTop: theme.spacing(5),
     paddingBottom: theme.spacing(2),
   },
   title: {
@@ -50,7 +50,7 @@ export default function TopBar(props: Props) {
   const { maxWidth, title, action } = props;
   const classes = useStyles();
   const theme = useTheme();
-  const matches = useMediaQuery(theme.breakpoints.up("md"));
+  const matches = useMediaQuery(theme.breakpoints.up("sm"));
   return (
     <div
       className={clsx(classes.root, matches ? classes.desktop : classes.mobile)}
