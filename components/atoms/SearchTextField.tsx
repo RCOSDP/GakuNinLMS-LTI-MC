@@ -50,18 +50,20 @@ export default function SearchTextField(
   const outlinedInputClasses = useOutlinedInputStyles();
   const inputLabelClasses = useInputLabelStyles();
   return (
-    <TextField
-      variant="outlined"
-      InputProps={{
-        classes: outlinedInputClasses,
-        endAdornment: (
-          <InputAdornment position="end">
-            <SearchIcon style={{ color: gray[700] }} />
-          </InputAdornment>
-        ),
-      }}
-      InputLabelProps={{ classes: inputLabelClasses }}
-      {...props}
-    />
+    <div>
+      <TextField
+        variant="outlined"
+        InputProps={{
+          classes: outlinedInputClasses,
+          endAdornment: (
+            <InputAdornment position="end">
+              <SearchIcon style={{ color: gray[700] }} />
+            </InputAdornment>
+          ),
+        }}
+        InputLabelProps={{ classes: inputLabelClasses }}
+        {...props}
+      />
+    </div>
   );
 }
