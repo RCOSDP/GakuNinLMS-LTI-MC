@@ -5,6 +5,7 @@ import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import AddIcon from "@material-ui/icons/Add";
 import TopBar from "$organisms/TopBar";
+import BottomBar from "$organisms/BottomBar";
 import BookPreview from "$organisms/BookPreview";
 import SortSelect from "$atoms/SortSelect";
 import SearchTextField from "$atoms/SearchTextField";
@@ -19,6 +20,11 @@ const useStyles = makeStyles((theme) => ({
   books: {
     "&> :not(:last-child)": {
       marginBottom: theme.spacing(2),
+    },
+  },
+  form: {
+    "& > *": {
+      marginRight: theme.spacing(1),
     },
   },
 }));
@@ -59,8 +65,6 @@ export default function BookLink(props: Props) {
   return (
     <Container classes={containerClasses} maxWidth="md">
       <TopBar
-        component="form"
-        onSubmit={handleSubmit}
         title={
           <>
             LTIリンク「{ltiResourceLink.title}」と連携
@@ -78,15 +82,6 @@ export default function BookLink(props: Props) {
             <Button
               color="primary"
               size="large"
-              variant="contained"
-              type="submit"
-              disabled={selectedBookId == null}
-            >
-              ブックを連携
-            </Button>
-            <Button
-              color="primary"
-              size="large"
               variant="outlined"
               disabled={true /* TODO: 連携解除機能を追加したら取り除くべき */}
             >
@@ -100,6 +95,22 @@ export default function BookLink(props: Props) {
           </>
         }
       />
+      <BottomBar maxWidth="md">
+        <form className={classes.form} onSubmit={handleSubmit}>
+          <Button color="primary" size="small" variant="text">
+            キャンセル
+          </Button>
+          <Button
+            color="primary"
+            size="large"
+            variant="contained"
+            type="submit"
+            disabled={selectedBookId == null}
+          >
+            ブックを連携
+          </Button>
+        </form>
+      </BottomBar>
       <div className={classes.books}>
         {books.map((book) => (
           <BookPreview

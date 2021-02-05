@@ -7,6 +7,7 @@ import TreeView from "@material-ui/lab/TreeView";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import TopBar from "$organisms/TopBar";
+import BottomBar from "$organisms/BottomBar";
 import BookItemDialog from "$organisms/BookItemDialog";
 import BookTree from "$molecules/BookTree";
 import SortSelect from "$atoms/SortSelect";
@@ -24,6 +25,11 @@ const useStyles = makeStyles((theme) => ({
   books: {
     "&> :not(:last-child)": {
       marginBottom: theme.spacing(2),
+    },
+  },
+  form: {
+    "& > *": {
+      marginRight: theme.spacing(1),
     },
   },
 }));
@@ -102,8 +108,6 @@ export default function BookImport(props: Props) {
   return (
     <Container classes={containerClasses} maxWidth="md">
       <TopBar
-        component="form"
-        onSubmit={handleSubmit}
         title={
           <>
             ブックからインポート
@@ -114,14 +118,6 @@ export default function BookImport(props: Props) {
         }
         action={
           <>
-            <Button
-              color="primary"
-              size="large"
-              variant="contained"
-              type="submit"
-            >
-              ブックをインポート
-            </Button>
             <SortSelect disabled /* TODO: ソート機能を追加したら有効化して */ />
             <SearchTextField
               placeholder="ブック・トピック検索"
@@ -155,6 +151,21 @@ export default function BookImport(props: Props) {
           );
         })}
       </TreeView>
+      <BottomBar maxWidth="md">
+        <form className={classes.form} onSubmit={handleSubmit}>
+          <Button color="primary" size="small" variant="text">
+            キャンセル
+          </Button>
+          <Button
+            color="primary"
+            size="large"
+            variant="contained"
+            type="submit"
+          >
+            ブックをインポート
+          </Button>
+        </form>
+      </BottomBar>
       {currentBook && <BookItemDialog {...dialogProps} book={currentBook} />}
     </Container>
   );

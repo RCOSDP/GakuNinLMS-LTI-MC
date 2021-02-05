@@ -4,6 +4,7 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import TopBar from "$organisms/TopBar";
+import BottomBar from "$organisms/BottomBar";
 import TopicPreview from "$organisms/TopicPreview";
 import TopicPreviewDialog from "$organisms/TopicPreviewDialog";
 import SortSelect from "$atoms/SortSelect";
@@ -17,6 +18,11 @@ const useStyles = makeStyles((theme) => ({
     display: "grid",
     gridTemplateColumns: "repeat(auto-fill, 380px)",
     gap: `${theme.spacing(2)}px`,
+  },
+  form: {
+    "& > *": {
+      marginRight: theme.spacing(1),
+    },
   },
 }));
 
@@ -51,8 +57,6 @@ export default function TopicImport(props: Props) {
   return (
     <Container classes={containerClasses} maxWidth="lg">
       <TopBar
-        component="form"
-        onSubmit={handleSubmit}
         title={
           <>
             トピックのインポート
@@ -63,14 +67,6 @@ export default function TopicImport(props: Props) {
         }
         action={
           <>
-            <Button
-              color="primary"
-              size="large"
-              variant="contained"
-              type="submit"
-            >
-              トピックをインポート
-            </Button>
             <SortSelect disabled /* TODO: ソート機能を追加したら有効化して */ />
             <SearchTextField
               placeholder="トピック検索"
@@ -91,6 +87,21 @@ export default function TopicImport(props: Props) {
           />
         ))}
       </div>
+      <BottomBar maxWidth="lg">
+        <form className={classes.form} onSubmit={handleSubmit}>
+          <Button color="primary" size="small" variant="text">
+            キャンセル
+          </Button>
+          <Button
+            color="primary"
+            size="large"
+            variant="contained"
+            type="submit"
+          >
+            トピックをインポート
+          </Button>
+        </form>
+      </BottomBar>
       {previewTopic && (
         <TopicPreviewDialog {...dialogProps} topic={previewTopic} />
       )}

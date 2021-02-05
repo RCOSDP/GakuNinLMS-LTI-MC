@@ -1,3 +1,4 @@
+import { ComponentProps } from "react";
 import clsx from "clsx";
 import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
@@ -40,29 +41,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-type Props = {
-  component?: React.ElementType;
-  maxWidth?: "xs" | "sm" | "md" | "lg" | "xl";
+type Props = Pick<ComponentProps<typeof Container>, "maxWidth"> & {
   title: React.ReactNode | string;
   action: React.ReactNode | string;
-  onSubmit?(event: React.FormEvent<Element>): void;
 };
 
 export default function TopBar(props: Props) {
-  const {
-    component: Component = "div",
-    maxWidth,
-    title,
-    action,
-    onSubmit,
-  } = props;
+  const { maxWidth, title, action } = props;
   const classes = useStyles();
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up("md"));
   return (
-    <Component
+    <div
       className={clsx(classes.root, matches ? classes.desktop : classes.mobile)}
-      onSubmit={onSubmit}
     >
       <Container
         className={clsx({ [classes.container]: !maxWidth })}
@@ -73,6 +64,6 @@ export default function TopBar(props: Props) {
         </Typography>
         {action && <div className={classes.action}>{action}</div>}
       </Container>
-    </Component>
+    </div>
   );
 }
