@@ -11,10 +11,6 @@ import { VideoTrackProps, VideoTrackSchema } from "$server/models/videoTrack";
 import { useConfirm } from "material-ui-confirm";
 
 const useStyles = makeStyles((theme) => ({
-  header: {
-    display: "flex",
-    justifyContent: "flex-end",
-  },
   container: {
     marginTop: theme.spacing(4),
   },
