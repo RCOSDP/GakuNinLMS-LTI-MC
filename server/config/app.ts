@@ -50,7 +50,11 @@ async function app(fastify: FastifyInstance, options: Options) {
     fastify.register(session, {
       secret: sessionSecret,
       store: sessionStore,
-      cookie: { secure: "auto" },
+      cookie: {
+        secure: "auto",
+        // NOTE: SameSite=Lax では iframe に埋め込み時 Cookie が送信されないため。
+        sameSite: "none",
+      },
     }),
     fastify.register(auth),
     fastify.register(formbody),
