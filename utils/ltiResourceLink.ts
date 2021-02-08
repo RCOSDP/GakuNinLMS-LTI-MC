@@ -1,6 +1,7 @@
 import useSWR, { mutate } from "swr";
 import { api } from "./api";
 import { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
+import { revalidateSession } from "./session";
 
 const key =
   "/api/v2/lti/{lti_consumer_id}/resource_link/{lti_resource_link_id}";
@@ -14,6 +15,7 @@ async function fetchLtiResourceLink(
     ltiConsumerId: consumerId,
     ltiResourceLinkId: id,
   });
+  await revalidateSession();
   return res as LtiResourceLinkSchema;
 }
 
@@ -37,7 +39,8 @@ export async function updateLtiResourceLink({
     ltiResourceLinkId: id,
     body,
   });
-  await mutate([key, id], res);
+  await mutate([key, consumerId, id], res);
+  await revalidateSession();
 }
 
 export async function destroyLtiResourceLink({
@@ -48,4 +51,5 @@ export async function destroyLtiResourceLink({
     ltiConsumerId: consumerId,
     ltiResourceLinkId: id,
   });
+  await revalidateSession();
 }
