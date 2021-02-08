@@ -1,10 +1,17 @@
 export default { title: "templates/TopicImport" };
 
 import TopicImport from "./TopicImport";
-import { Default as AppBar } from "$organisms/AppBar.stories";
-import { topic } from "samples";
+import AppBar from "$organisms/AppBar";
+import { topic, session } from "samples";
+
+const appBarHandlers = {
+  onBooksClick: console.log,
+  onTopicsClick: console.log,
+  onDashboardClick: console.log,
+};
 
 const topics = [...Array(10)].map(() => topic);
+
 const handlers = {
   onSubmit: console.log,
   onCancel: () => console.log("Cancel"),
@@ -14,21 +21,21 @@ const handlers = {
 
 export const Default = () => (
   <>
-    <AppBar />
+    <AppBar position="sticky" session={session} {...appBarHandlers} />
     <TopicImport topics={topics} {...handlers} />
   </>
 );
 
 export const Empty = () => (
   <>
-    <AppBar />
+    <AppBar position="sticky" session={session} {...appBarHandlers} />
     <TopicImport topics={[]} {...handlers} />
   </>
 );
 
 export const Others = () => (
   <>
-    <AppBar />
+    <AppBar position="sticky" session={session} {...appBarHandlers} />
     <TopicImport topics={topics} {...handlers} isTopicEditable={() => false} />
   </>
 );

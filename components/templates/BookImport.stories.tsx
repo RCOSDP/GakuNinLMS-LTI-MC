@@ -1,8 +1,14 @@
 export default { title: "templates/BookImport" };
 
 import BookImport from "./BookImport";
-import { Default as AppBar } from "$organisms/AppBar.stories";
-import { books } from "samples";
+import AppBar from "$organisms/AppBar";
+import { books, session } from "samples";
+
+const appBarHandlers = {
+  onBooksClick: console.log,
+  onTopicsClick: console.log,
+  onDashboardClick: console.log,
+};
 
 const handlers = {
   onBookEditClick: console.log,
@@ -14,14 +20,14 @@ const handlers = {
 
 export const Default = () => (
   <>
-    <AppBar />
+    <AppBar position="sticky" session={session} {...appBarHandlers} />
     <BookImport books={books} {...handlers} />
   </>
 );
 
 export const Empty = () => (
   <>
-    <AppBar />
+    <AppBar position="sticky" session={session} {...appBarHandlers} />
     <BookImport books={[]} {...handlers} />
   </>
 );

@@ -1,8 +1,14 @@
 export default { title: "templates/BookLink" };
 
 import BookLink from "./BookLink";
-import { Default as AppBar } from "$organisms/AppBar.stories";
-import { books } from "samples";
+import AppBar from "$organisms/AppBar";
+import { books, session } from "samples";
+
+const appBarHandlers = {
+  onBooksClick: console.log,
+  onTopicsClick: console.log,
+  onDashboardClick: console.log,
+};
 
 const props = {
   books,
@@ -20,14 +26,14 @@ const props = {
 
 export const Default = () => (
   <>
-    <AppBar />
+    <AppBar position="sticky" session={session} {...appBarHandlers} />
     <BookLink {...props} />
   </>
 );
 
 export const Empty = () => (
   <>
-    <AppBar />
+    <AppBar position="sticky" session={session} {...appBarHandlers} />
     <BookLink {...props} books={[]} />
   </>
 );
