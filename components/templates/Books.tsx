@@ -3,7 +3,7 @@ import Button from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
 import AddIcon from "@material-ui/icons/Add";
 import LinkIcon from "@material-ui/icons/Link";
-import TopBar from "$organisms/TopBar";
+import ActionHeader from "$organisms/ActionHeader";
 import BookAccordion from "$organisms/BookAccordion";
 import SortSelect from "$atoms/SortSelect";
 import SearchTextField from "$atoms/SearchTextField";
@@ -50,7 +50,7 @@ export default function Books(props: Props) {
   const containerClasses = useContainerStyles();
   return (
     <>
-      <TopBar
+      <ActionHeader
         maxWidth="md"
         title={
           <>

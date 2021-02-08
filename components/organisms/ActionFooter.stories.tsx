@@ -1,15 +1,15 @@
-export default { title: "organisms/BottomBar" };
+export default { title: "organisms/ActionFooter" };
 
-import BottomBar from "./BottomBar";
+import ActionFooter from "./ActionFooter";
 import Button from "@material-ui/core/Button";
 
 export const Default = () => (
-  <BottomBar maxWidth="md">
+  <ActionFooter maxWidth="md">
     <Button size="small" color="primary" variant="text">
       キャンセル
     </Button>
     <Button size="large" color="primary" variant="contained">
       インポート
     </Button>
-  </BottomBar>
+  </ActionFooter>
 );

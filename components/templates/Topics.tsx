@@ -1,6 +1,6 @@
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import TopBar from "$organisms/TopBar";
+import ActionHeader from "$organisms/ActionHeader";
 import TopicPreview from "$organisms/TopicPreview";
 import TopicPreviewDialog from "$organisms/TopicPreviewDialog";
 import SortSelect from "$atoms/SortSelect";
@@ -34,7 +34,7 @@ export default function Topics(props: Props) {
   const handleTopicDetailClick = (topic: TopicSchema) => setPreviewTopic(topic);
   return (
     <Container classes={containerClasses} maxWidth="lg">
-      <TopBar
+      <ActionHeader
         title="マイトピック"
         action={
           <>

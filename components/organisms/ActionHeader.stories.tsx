@@ -1,10 +1,10 @@
-export default { title: "organisms/TopBar" };
+export default { title: "organisms/ActionHeader" };
 
-import TopBar from "./TopBar";
+import ActionHeader from "./ActionHeader";
 import Button from "@material-ui/core/Button";
 
 export const Default = () => (
-  <TopBar
+  <ActionHeader
     title="タイトル"
     action={
       <Button color="primary" variant="contained">
@@ -15,7 +15,7 @@ export const Default = () => (
 );
 
 export const UseContainer = () => (
-  <TopBar
+  <ActionHeader
     maxWidth="sm"
     title="タイトル"
     action={

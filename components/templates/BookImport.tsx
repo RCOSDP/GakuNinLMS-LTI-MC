@@ -6,8 +6,8 @@ import Container from "@material-ui/core/Container";
 import TreeView from "@material-ui/lab/TreeView";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import TopBar from "$organisms/TopBar";
-import BottomBar from "$organisms/BottomBar";
+import ActionHeader from "$organisms/ActionHeader";
+import ActionFooter from "$organisms/ActionFooter";
 import BookItemDialog from "$organisms/BookItemDialog";
 import BookTree from "$molecules/BookTree";
 import SortSelect from "$atoms/SortSelect";
@@ -109,7 +109,7 @@ export default function BookImport(props: Props) {
   };
   return (
     <Container classes={containerClasses} maxWidth="md">
-      <TopBar
+      <ActionHeader
         title={
           <>
             ブックからインポート
@@ -153,7 +153,7 @@ export default function BookImport(props: Props) {
           );
         })}
       </TreeView>
-      <BottomBar maxWidth="md">
+      <ActionFooter maxWidth="md">
         <form className={classes.form} onSubmit={handleSubmit}>
           <Button
             color="primary"
@@ -172,7 +172,7 @@ export default function BookImport(props: Props) {
             ブックをインポート
           </Button>
         </form>
-      </BottomBar>
+      </ActionFooter>
       {currentBook && <BookItemDialog {...dialogProps} book={currentBook} />}
     </Container>
   );

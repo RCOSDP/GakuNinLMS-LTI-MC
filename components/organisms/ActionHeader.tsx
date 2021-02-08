@@ -46,7 +46,7 @@ type Props = Pick<ComponentProps<typeof Container>, "maxWidth"> & {
   action: React.ReactNode;
 };
 
-export default function TopBar(props: Props) {
+export default function ActionHeader(props: Props) {
   const { maxWidth, title, action } = props;
   const classes = useStyles();
   const theme = useTheme();

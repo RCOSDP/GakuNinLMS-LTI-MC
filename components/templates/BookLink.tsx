@@ -4,8 +4,8 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import AddIcon from "@material-ui/icons/Add";
-import TopBar from "$organisms/TopBar";
-import BottomBar from "$organisms/BottomBar";
+import ActionHeader from "$organisms/ActionHeader";
+import ActionFooter from "$organisms/ActionFooter";
 import BookPreview from "$organisms/BookPreview";
 import SortSelect from "$atoms/SortSelect";
 import SearchTextField from "$atoms/SearchTextField";
@@ -66,7 +66,7 @@ export default function BookLink(props: Props) {
     isBookEditable?.(book) && onBookEditClick;
   return (
     <Container classes={containerClasses} maxWidth="md">
-      <TopBar
+      <ActionHeader
         title={
           <>
             LTIリンク「{ltiResourceLink.title}」と連携
@@ -97,7 +97,20 @@ export default function BookLink(props: Props) {
           </>
         }
       />
-      <BottomBar maxWidth="md">
+      <div className={classes.books}>
+        {books.map((book) => (
+          <BookPreview
+            key={book.id}
+            book={book}
+            name="bookId"
+            value={book.id}
+            checked={selectedBookId === book.id}
+            onChange={handleChecked(book.id)}
+            onEditClick={handleBookEditClick(book)}
+          />
+        ))}
+      </div>
+      <ActionFooter maxWidth="md">
         <form className={classes.form} onSubmit={handleSubmit}>
           <Button
             color="primary"
@@ -117,20 +130,7 @@ export default function BookLink(props: Props) {
             ブックを連携
           </Button>
         </form>
-      </BottomBar>
-      <div className={classes.books}>
-        {books.map((book) => (
-          <BookPreview
-            key={book.id}
-            book={book}
-            name="bookId"
-            value={book.id}
-            checked={selectedBookId === book.id}
-            onChange={handleChecked(book.id)}
-            onEditClick={handleBookEditClick(book)}
-          />
-        ))}
-      </div>
+      </ActionFooter>
     </Container>
   );
 }

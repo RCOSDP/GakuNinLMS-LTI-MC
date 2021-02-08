@@ -22,7 +22,7 @@ const useAppBarStyles = makeStyles({
 type Props = ComponentProps<typeof AppBar> &
   Pick<ComponentProps<typeof Container>, "children" | "maxWidth">;
 
-export default function BottomBar(props: Props) {
+export default function ActionFooter(props: Props) {
   const appBarClasses = useAppBarStyles();
   const { children, maxWidth, ...others } = props;
   return (

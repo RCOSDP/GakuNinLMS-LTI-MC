@@ -3,8 +3,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
-import TopBar from "$organisms/TopBar";
-import BottomBar from "$organisms/BottomBar";
+import ActionHeader from "$organisms/ActionHeader";
+import ActionFooter from "$organisms/ActionFooter";
 import TopicPreview from "$organisms/TopicPreview";
 import TopicPreviewDialog from "$organisms/TopicPreviewDialog";
 import SortSelect from "$atoms/SortSelect";
@@ -63,7 +63,7 @@ export default function TopicImport(props: Props) {
     isTopicEditable(topic) && (() => onTopicEditClick(topic));
   return (
     <Container classes={containerClasses} maxWidth="lg">
-      <TopBar
+      <ActionHeader
         title={
           <>
             トピックのインポート
@@ -94,7 +94,7 @@ export default function TopicImport(props: Props) {
           />
         ))}
       </div>
-      <BottomBar maxWidth="lg">
+      <ActionFooter maxWidth="lg">
         <form className={classes.form} onSubmit={handleSubmit}>
           <Button
             color="primary"
@@ -113,7 +113,7 @@ export default function TopicImport(props: Props) {
             トピックをインポート
           </Button>
         </form>
-      </BottomBar>
+      </ActionFooter>
       {previewTopic && (
         <TopicPreviewDialog {...dialogProps} topic={previewTopic} />
       )}
