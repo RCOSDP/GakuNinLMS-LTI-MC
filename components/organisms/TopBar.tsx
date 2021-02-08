@@ -42,8 +42,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type Props = Pick<ComponentProps<typeof Container>, "maxWidth"> & {
-  title: React.ReactNode | string;
-  action: React.ReactNode | string;
+  title: React.ReactNode;
+  action: React.ReactNode;
 };
 
 export default function TopBar(props: Props) {

@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type Props = Pick<ComponentProps<typeof Button>, "onClick" | "className"> & {
-  children: React.ReactNode | string;
+  children: React.ReactNode;
 };
 
 export default function BackButton(props: Props) {
