@@ -12,6 +12,9 @@ import useContainerStyles from "$styles/container";
 import useDialogProps from "$utils/useDialogProps";
 
 const useStyles = makeStyles((theme) => ({
+  icon: {
+    marginRight: theme.spacing(0.5),
+  },
   topics: {
     display: "grid",
     gridTemplateColumns: "repeat(auto-fill, 380px)",

@@ -10,7 +10,7 @@ import { createTopic } from "$utils/topic";
 import type { Query as BookEditQuery } from "$pages/book/edit";
 import { uploadVideoTrack } from "$utils/videoTrack";
 
-export type Query = BookEditQuery;
+export type Query = null | BookEditQuery;
 
 type NewProps = {
   edit(topic: TopicSchema): Promise<unknown>;
@@ -75,7 +75,7 @@ function NewWithBook({ bookId, ...props }: NewWithBookprops) {
 function Router() {
   const router = useRouter();
   const bookId = router.query.bookId && Number(router.query.bookId);
-  const { context }: Pick<Query, "context"> = router.query;
+  const { context }: Pick<BookEditQuery, "context"> = router.query;
   const bookEditQuery = {
     ...(bookId && { bookId }),
     ...(context && { context }),
