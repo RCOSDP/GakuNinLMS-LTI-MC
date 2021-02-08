@@ -31,7 +31,6 @@ function Index() {
     return router.push(pagesPath.book.$url({ query: { bookId } }));
   }
   function handleCancel() {
-    // FIXME: 連携後にLTIリンクを踏み直す(useSessionInitする)まで動線が変化しない
     if (!session?.ltiResourceLink) return router.push(pagesPath.books.$url());
     return router.back();
   }
