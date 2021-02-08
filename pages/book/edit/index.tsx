@@ -15,8 +15,7 @@ function Edit({ bookId, context }: Query) {
   const book = useBook(bookId);
   const { isTopicEditable } = useSessionAtom();
   const router = useRouter();
-  async function handleSubmit(props: BookProps) {
-    await updateBook({ id: bookId, ...props });
+  const back = () => {
     switch (context) {
       case "books":
       case "link":
@@ -24,6 +23,10 @@ function Edit({ bookId, context }: Query) {
       default:
         return router.push(pagesPath.book.$url({ query: { bookId } }));
     }
+  };
+  async function handleSubmit(props: BookProps) {
+    await updateBook({ id: bookId, ...props });
+    return back();
   }
   async function handleDelete({ id }: Pick<BookSchema, "id">) {
     await destroyBook(id);
@@ -36,7 +39,7 @@ function Edit({ bookId, context }: Query) {
     }
   }
   function handleCancel() {
-    return router.back();
+    return back();
   }
   async function handleAddSection(section: SectionProps) {
     if (!book) return;
@@ -53,16 +56,23 @@ function Edit({ bookId, context }: Query) {
       })
     );
   }
-  function toBookImport() {
+  function handleTopicNewClick() {
+    return router.push(
+      pagesPath.book.edit.topic.new.$url({
+        query: { bookId, ...(context && { context }) },
+      })
+    );
+  }
+  function handleBookImportClick() {
     return router.push(
       pagesPath.book.import.$url({
         query: { bookId, ...(context && { context }) },
       })
     );
   }
-  function toTopic(path: "import" | "new") {
+  function handleTopicImportClick() {
     return router.push(
-      pagesPath.book.topic[path].$url({
+      pagesPath.book.topic.import.$url({
         query: { bookId, ...(context && { context }) },
       })
     );
@@ -72,9 +82,9 @@ function Edit({ bookId, context }: Query) {
     onDelete: handleDelete,
     onCancel: handleCancel,
     onAddSection: handleAddSection,
-    onBookImportClick: () => toBookImport(),
-    onTopicImportClick: () => toTopic("import"),
-    onTopicNewClick: () => toTopic("new"),
+    onBookImportClick: handleBookImportClick,
+    onTopicImportClick: handleTopicImportClick,
+    onTopicNewClick: handleTopicNewClick,
     onTopicEditClick: handleTopicEditClick,
     isTopicEditable,
   };

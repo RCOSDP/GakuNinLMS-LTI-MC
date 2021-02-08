@@ -14,6 +14,7 @@ const topics = [...Array(10)].map(() => topic);
 
 const handlers = {
   onTopicEditClick: console.log,
+  onTopicNewClick: console.log,
 };
 
 export const Default = () => (

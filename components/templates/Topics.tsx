@@ -1,5 +1,7 @@
 import { makeStyles } from "@material-ui/core/styles";
+import Button from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
+import AddIcon from "@material-ui/icons/Add";
 import ActionHeader from "$organisms/ActionHeader";
 import TopicPreview from "$organisms/TopicPreview";
 import TopicPreviewDialog from "$organisms/TopicPreviewDialog";
@@ -20,10 +22,11 @@ const useStyles = makeStyles((theme) => ({
 type Props = {
   topics: TopicSchema[];
   onTopicEditClick(topic: TopicSchema): void;
+  onTopicNewClick(): void;
 };
 
 export default function Topics(props: Props) {
-  const { topics, onTopicEditClick } = props;
+  const { topics, onTopicEditClick, onTopicNewClick } = props;
   const classes = useStyles();
   const containerClasses = useContainerStyles();
   const {
@@ -35,7 +38,15 @@ export default function Topics(props: Props) {
   return (
     <Container classes={containerClasses} maxWidth="lg">
       <ActionHeader
-        title="マイトピック"
+        title={
+          <>
+            マイトピック
+            <Button size="small" color="primary" onClick={onTopicNewClick}>
+              <AddIcon className={classes.icon} />
+              トピックの作成
+            </Button>
+          </>
+        }
         action={
           <>
             <SortSelect disabled /* TODO: ソート機能を追加したら有効化して */ />
