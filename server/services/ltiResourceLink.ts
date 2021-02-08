@@ -1,3 +1,4 @@
+import type { FastifyRequest } from "fastify";
 import { outdent } from "outdent";
 import Method from "$server/types/method";
 import {
@@ -57,11 +58,16 @@ export const method: Method = {
 
 export const preHandler = authInstructorHandler;
 
-export async function show({ params }: { params: LtiResourceLinkParams }) {
+export async function show({
+  params,
+  session,
+}: FastifyRequest<{ Params: LtiResourceLinkParams }>) {
   const link = await findLtiResourceLink({
     consumerId: params.lti_consumer_id,
     id: params.lti_resource_link_id,
   });
+
+  session.ltiResourceLink = link;
 
   return {
     status: link == null ? 404 : 200,
@@ -72,15 +78,18 @@ export async function show({ params }: { params: LtiResourceLinkParams }) {
 export async function update({
   body,
   params,
-}: {
-  body: Props;
-  params: LtiResourceLinkParams;
-}) {
+  session,
+}: FastifyRequest<{
+  Body: Props;
+  Params: LtiResourceLinkParams;
+}>) {
   const link = await upsertLtiResourceLink({
     ...body,
     consumerId: params.lti_consumer_id,
     id: params.lti_resource_link_id,
   });
+
+  session.ltiResourceLink = link;
 
   return {
     status: link == null ? 400 : 201,
@@ -88,11 +97,16 @@ export async function update({
   };
 }
 
-export async function destroy({ params }: { params: LtiResourceLinkParams }) {
+export async function destroy({
+  params,
+  session,
+}: FastifyRequest<{ Params: LtiResourceLinkParams }>) {
   await destroyLtiResourceLink({
     consumerId: params.lti_consumer_id,
     id: params.lti_resource_link_id,
   });
+
+  session.ltiResourceLink = null;
 
   return {
     status: 204,
