@@ -114,7 +114,7 @@ export default function BookImport(props: Props) {
           <>
             ブックからインポート
             <Typography variant="body1">
-              ブックからインポートしたいトピックを選んでください
+              ブックからインポートするトピックを選んでください
             </Typography>
           </>
         }
@@ -169,7 +169,7 @@ export default function BookImport(props: Props) {
             variant="contained"
             type="submit"
           >
-            ブックをインポート
+            ブックからインポート
           </Button>
         </form>
       </ActionFooter>

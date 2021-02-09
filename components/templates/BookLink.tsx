@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(0.5),
   },
   books: {
-    "&> :not(:last-child)": {
+    "& > :not(:last-child)": {
       marginBottom: theme.spacing(2),
     },
   },
@@ -69,26 +69,18 @@ export default function BookLink(props: Props) {
       <ActionHeader
         title={
           <>
-            LTIリンク「{ltiResourceLink.title}」と連携
+            「{ltiResourceLink.title}」とのリンク
             <Button size="small" color="primary" onClick={onBookNewClick}>
               <AddIcon className={classes.icon} />
               ブックの作成
             </Button>
             <Typography variant="body1">
-              LTIリンクと連携したいブックを選んでください
+              LTIリソースとしてリンクするブックを選んでください
             </Typography>
           </>
         }
         action={
           <>
-            <Button
-              color="primary"
-              size="large"
-              variant="outlined"
-              disabled={true /* TODO: 連携解除機能を追加したら取り除くべき */}
-            >
-              連携解除
-            </Button>
             <SortSelect disabled /* TODO: ソート機能を追加したら有効化して */ />
             <SearchTextField
               placeholder="ブック・トピック検索"
@@ -123,11 +115,19 @@ export default function BookLink(props: Props) {
           <Button
             color="primary"
             size="large"
+            variant="outlined"
+            disabled={true /* TODO: 連携解除機能を追加したら取り除くべき */}
+          >
+            リンク解除
+          </Button>
+          <Button
+            color="primary"
+            size="large"
             variant="contained"
             type="submit"
             disabled={selectedBookId == null}
           >
-            ブックを連携
+            ブックをリンク
           </Button>
         </form>
       </ActionFooter>

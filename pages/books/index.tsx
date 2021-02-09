@@ -21,7 +21,6 @@ function Index() {
   const router = useRouter();
   const { session, isTopicEditable } = useSessionAtom();
   const userId = session?.user?.id;
-  const ltiResourceLink = session?.ltiResourceLink;
   const handlers = {
     onBookClick({ id }: Pick<BookSchema, "id">) {
       return router.push(pagesPath.book.$url({ query: { bookId: id } }));
@@ -35,9 +34,6 @@ function Index() {
       return router.push(
         pagesPath.book.new.$url({ query: { context: "books" } })
       );
-    },
-    onBookLinkClick() {
-      return router.push(pagesPath.link.$url());
     },
     onTopicEditClick({ id }: Pick<TopicSchema, "id">) {
       return router.push(
@@ -53,13 +49,7 @@ function Index() {
     return <Books books={[]} {...handlers} />;
   }
 
-  return (
-    <UserBooks
-      userId={userId}
-      ltiResourceLink={ltiResourceLink}
-      {...handlers}
-    />
-  );
+  return <UserBooks userId={userId} {...handlers} />;
 }
 
 export default Index;

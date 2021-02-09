@@ -68,7 +68,7 @@ export default function TopicImport(props: Props) {
           <>
             トピックのインポート
             <Typography variant="body1">
-              インポートしたいトピックを選んでください
+              インポートするトピックを選んでください
             </Typography>
           </>
         }

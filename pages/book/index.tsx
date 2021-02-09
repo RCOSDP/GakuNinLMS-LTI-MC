@@ -15,7 +15,7 @@ import logger from "$utils/eventLogger/logger";
 export type Query = { bookId: BookSchema["id"] };
 
 function Show(query: Query) {
-  const { isInstructor } = useSessionAtom();
+  const { session, isInstructor } = useSessionAtom();
   const book = useBook(query.bookId);
   const [index, nextItemIndex] = useNextItemIndexAtom();
   const playerTracker = usePlayerTrackerAtom();
@@ -45,6 +45,8 @@ function Show(query: Query) {
     );
   };
   const handlers = {
+    editable: isInstructor,
+    linked: query.bookId === session?.ltiResourceLink?.bookId,
     onTopicEnded: handleTopicEnded,
     onItemClick: handleItemClick,
     onBookEditClick: handleBookEditClick,
@@ -54,9 +56,7 @@ function Show(query: Query) {
 
   if (!book) return <Placeholder />;
 
-  return (
-    <Book editable={isInstructor} book={book} index={index} {...handlers} />
-  );
+  return <Book book={book} index={index} {...handlers} />;
 }
 
 function Router() {
