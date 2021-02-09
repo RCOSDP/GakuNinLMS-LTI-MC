@@ -222,21 +222,34 @@ model User {
 
 /// 学習活動
 model Activity {
-  id        Int      @id @default(autoincrement())
-  topic     Topic    @relation(fields: [topicId], references: [id])
-  topicId   Int      @map("topic_id")
-  learner   User     @relation(fields: [learnerId], references: [id])
-  learnerId Int      @map("learner_id")
-  /// 学習活動種別: "viewed" | "completed"
-  type      String
+  id          Int                 @id @default(autoincrement())
+  timeRanges  ActivityTimeRange[]
+  topic       Topic               @relation(fields: [topicId], references: [id])
+  topicId     Int                 @map("topic_id")
+  learner     User                @relation(fields: [learnerId], references: [id])
+  learnerId   Int                 @map("learner_id")
+  /// 合計時間 (ms)
+  totalTimeMs Int                 @map("total_time_ms")
   /// 作成日
-  createdAt DateTime @default(now()) @map("created_at")
+  createdAt   DateTime            @default(now()) @map("created_at")
   /// 更新日
-  updatedAt DateTime @default(now()) @map("updated_at")
+  updatedAt   DateTime            @default(now()) @map("updated_at")
 
-  @@index([topicId], name: "topic_id")
-  @@index([learnerId], name: "learner_id")
+  @@unique([topicId, learnerId])
   @@map("activities")
+}
+
+// 学習活動の時間範囲
+model ActivityTimeRange {
+  activity   Activity @relation(fields: [activityId], references: [id])
+  activityId Int      @map("activity_id")
+  /// 開始時間 (ms)
+  startMs    Int      @map("start_ms")
+  /// 終了時間 (ms)
+  endMs      Int      @map("end_ms")
+
+  @@id([activityId, startMs])
+  @@map("activities_time_ranges")
 }
 
 // Etc.

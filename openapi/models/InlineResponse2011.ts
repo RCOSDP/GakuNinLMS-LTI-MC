@@ -16,39 +16,53 @@ import { exists, mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface InlineObject6
+ * @interface InlineResponse2011
  */
-export interface InlineObject6 {
+export interface InlineResponse2011 {
+    /**
+     * 
+     * @type {number}
+     * @memberof InlineResponse2011
+     */
+    id?: number;
     /**
      * 
      * @type {string}
-     * @memberof InlineObject6
+     * @memberof InlineResponse2011
+     */
+    kind?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineResponse2011
      */
     language?: string;
     /**
      * 
      * @type {string}
-     * @memberof InlineObject6
+     * @memberof InlineResponse2011
      */
-    content?: string;
+    url?: string;
 }
 
-export function InlineObject6FromJSON(json: any): InlineObject6 {
-    return InlineObject6FromJSONTyped(json, false);
+export function InlineResponse2011FromJSON(json: any): InlineResponse2011 {
+    return InlineResponse2011FromJSONTyped(json, false);
 }
 
-export function InlineObject6FromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineObject6 {
+export function InlineResponse2011FromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse2011 {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
+        'id': !exists(json, 'id') ? undefined : json['id'],
+        'kind': !exists(json, 'kind') ? undefined : json['kind'],
         'language': !exists(json, 'language') ? undefined : json['language'],
-        'content': !exists(json, 'content') ? undefined : json['content'],
+        'url': !exists(json, 'url') ? undefined : json['url'],
     };
 }
 
-export function InlineObject6ToJSON(value?: InlineObject6 | null): any {
+export function InlineResponse2011ToJSON(value?: InlineResponse2011 | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -57,8 +71,10 @@ export function InlineObject6ToJSON(value?: InlineObject6 | null): any {
     }
     return {
         
+        'id': value.id,
+        'kind': value.kind,
         'language': value.language,
-        'content': value.content,
+        'url': value.url,
     };
 }
 
