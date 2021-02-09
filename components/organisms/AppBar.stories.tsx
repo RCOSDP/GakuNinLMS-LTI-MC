@@ -5,10 +5,13 @@ import { session } from "$samples";
 
 export const Default = () => (
   <AppBar
-    position="sticky"
+    position="static"
     session={session}
     onBooksClick={console.log}
     onTopicsClick={console.log}
     onDashboardClick={console.log}
+    onBookLinkClick={console.log}
   />
 );
+
+export const Empty = () => <AppBar position="static" session={session} />;

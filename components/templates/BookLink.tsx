@@ -69,13 +69,13 @@ export default function BookLink(props: Props) {
       <ActionHeader
         title={
           <>
-            LTIリンク「{ltiResourceLink.title}」と連携
+            LTIリンク「{ltiResourceLink.title}」とリンク
             <Button size="small" color="primary" onClick={onBookNewClick}>
               <AddIcon className={classes.icon} />
               ブックの作成
             </Button>
             <Typography variant="body1">
-              LTIリンクと連携したいブックを選んでください
+              LTIリンクとリンクしたいブックを選んでください
             </Typography>
           </>
         }
@@ -127,7 +127,7 @@ export default function BookLink(props: Props) {
             type="submit"
             disabled={selectedBookId == null}
           >
-            ブックを連携
+            ブックをリンク
           </Button>
         </form>
       </ActionFooter>

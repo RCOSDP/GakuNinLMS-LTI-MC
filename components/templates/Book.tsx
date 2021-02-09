@@ -55,6 +55,7 @@ const useStyles = makeStyles((theme) => ({
 
 type Props = {
   editable?: boolean;
+  linked?: boolean;
   book: BookSchema | null;
   index: ItemIndex;
   onBookEditClick(book: BookSchema): void;
@@ -67,6 +68,7 @@ type Props = {
 export default function Book(props: Props) {
   const {
     editable,
+    linked,
     book,
     index: [sectionIndex, topicIndex],
     onBookEditClick,
@@ -115,11 +117,13 @@ export default function Book(props: Props) {
             <IconButton color="primary" onClick={handleEditClick}>
               <EditOutlinedIcon />
             </IconButton>
-            <Button size="small" color="primary" onClick={onBookLinkClick}>
-              <LinkIcon className={classes.icon} />
-              LTIリンクの再連携
-            </Button>
           </>
+        )}
+        {editable && linked && (
+          <Button size="small" color="primary" onClick={onBookLinkClick}>
+            <LinkIcon className={classes.icon} />
+            他のブックをリンク
+          </Button>
         )}
       </Typography>
       <div

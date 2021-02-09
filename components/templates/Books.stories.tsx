@@ -2,7 +2,7 @@ export default { title: "templates/Books" };
 
 import Books from "./Books";
 import AppBar from "$organisms/AppBar";
-import { books, ltiResourceLink, session } from "samples";
+import { books, session } from "samples";
 
 const appBarHandlers = {
   onBooksClick: console.log,
@@ -24,13 +24,13 @@ const handlers = {
 export const Default = () => (
   <>
     <AppBar position="sticky" session={session} {...appBarHandlers} />
-    <Books books={books} ltiResourceLink={ltiResourceLink} {...handlers} />
+    <Books books={books} {...handlers} />
   </>
 );
 
 export const Empty = () => (
   <>
     <AppBar position="sticky" session={session} {...appBarHandlers} />
-    <Books books={[]} ltiResourceLink={null} {...handlers} />
+    <Books books={[]} {...handlers} />
   </>
 );

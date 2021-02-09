@@ -5,6 +5,7 @@ import Button from "@material-ui/core/Button";
 import MenuBookOutlinedIcon from "@material-ui/icons/MenuBookOutlined";
 import LibraryBooksOutlinedIcon from "@material-ui/icons/LibraryBooksOutlined";
 import AssessmentOutlinedIcon from "@material-ui/icons/AssessmentOutlined";
+import LinkIcon from "@material-ui/icons/Link";
 import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
 import LogoIcon from "$atoms/LogoIcon";
@@ -54,8 +55,9 @@ const useStyles = makeStyles((theme) => ({
 
 type Props = ComponentProps<typeof MuiAppBar> & {
   session: Session;
-  onBooksClick(): void;
-  onTopicsClick(): void;
+  onBooksClick?(): void;
+  onTopicsClick?(): void;
+  onBookLinkClick?(): void;
   onDashboardClick?(): void;
 };
 
@@ -70,6 +72,7 @@ export default function AppBar(props: Props) {
     session,
     onBooksClick,
     onTopicsClick,
+    onBookLinkClick,
     onDashboardClick,
     ...others
   } = props;
@@ -93,20 +96,30 @@ export default function AppBar(props: Props) {
               icon={<MenuBookOutlinedIcon />}
               label="マイブック"
               onClick={onBooksClick}
+              disabled={!onBooksClick}
             />
             <AppBarNavButton
               color="inherit"
               icon={<LibraryBooksOutlinedIcon />}
               label="マイトピック"
               onClick={onTopicsClick}
+              disabled={!onTopicsClick}
             />
             <AppBarNavButton
               color="inherit"
-              icon={<AssessmentOutlinedIcon />}
-              label="学習分析"
-              onClick={onDashboardClick}
-              disabled // TODO: 学習分析機能を実装したら有効化して
+              icon={<LinkIcon />}
+              label="LTIリンク"
+              onClick={onBookLinkClick}
+              disabled={!onBookLinkClick}
             />
+            {onDashboardClick && (
+              <AppBarNavButton
+                color="inherit"
+                icon={<AssessmentOutlinedIcon />}
+                label="学習分析"
+                onClick={onDashboardClick}
+              />
+            )}
           </div>
           <div className={clsx(classes.user, classes.margin)}>
             {session.user && <p>{session.user.name}</p>}
