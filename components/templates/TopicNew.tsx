@@ -3,17 +3,14 @@ import Container from "@material-ui/core/Container";
 import { makeStyles } from "@material-ui/core/styles";
 import TopicForm from "$organisms/TopicForm";
 import RequiredDot from "$atoms/RequiredDot";
+import BackButton from "$atoms/BackButton";
 import useContainerStyles from "styles/container";
 import { TopicProps } from "$server/models/topic";
 import { VideoTrackProps, VideoTrackSchema } from "$server/models/videoTrack";
 
 const useStyles = makeStyles((theme) => ({
-  header: {
-    display: "flex",
-    justifyContent: "flex-end",
-  },
   container: {
-    marginTop: theme.spacing(4),
+    marginTop: theme.spacing(1),
   },
   title: {
     marginBottom: theme.spacing(4),
@@ -32,10 +29,11 @@ type Props = {
   onSubmit(topic: TopicProps): void;
   onSubtitleDelete(videoTrack: VideoTrackSchema): void;
   onSubtitleSubmit(videoTrack: VideoTrackProps): void;
+  onCancel(): void;
 };
 
 export default function TopicNew(props: Props) {
-  const { onSubmit, onSubtitleDelete, onSubtitleSubmit } = props;
+  const { onSubmit, onSubtitleDelete, onSubtitleSubmit, onCancel } = props;
   const classes = useStyles();
   const containerClasses = useContainerStyles();
 
@@ -45,6 +43,7 @@ export default function TopicNew(props: Props) {
       className={classes.container}
       maxWidth="md"
     >
+      <BackButton onClick={onCancel}>戻る</BackButton>
       <Typography className={classes.title} variant="h4">
         トピックの作成
         <Typography variant="caption" component="span" aria-hidden="true">

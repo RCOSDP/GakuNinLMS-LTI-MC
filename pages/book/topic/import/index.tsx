@@ -18,10 +18,16 @@ function Import({ bookId, context }: BookEditQuery) {
   const topics = useTopics(isTopicEditable);
   const router = useRouter();
   const bookEditQuery = { bookId, ...(context && { context }) };
+  const back = () =>
+    router.push(
+      pagesPath.book.edit.$url({
+        query: bookEditQuery,
+      })
+    );
   async function handleSubmit(topics: TopicSchema[]) {
     if (!book) return;
 
-    const connectOrCreateTopics = topics.map((topic) => {
+    const connectOrCreateTopics = topics.map(async (topic) => {
       return connectOrCreateTopic(topic, isTopicEditable).then(({ id }) => id);
     });
     const ids = await Promise.all(connectOrCreateTopics);
@@ -31,11 +37,10 @@ function Import({ bookId, context }: BookEditQuery) {
       sections: [...book.sections, ...ids.map((id) => ({ topics: [{ id }] }))],
     });
 
-    return router.push(
-      pagesPath.book.edit.$url({
-        query: bookEditQuery,
-      })
-    );
+    return back();
+  }
+  function handleCancel() {
+    return back();
   }
   function handleTopicEditClick({ id: topicId }: Pick<TopicSchema, "id">) {
     return router.push(
@@ -46,6 +51,7 @@ function Import({ bookId, context }: BookEditQuery) {
   }
   const handlers = {
     onSubmit: handleSubmit,
+    onCancel: handleCancel,
     onTopicEditClick: handleTopicEditClick,
     isTopicEditable,
   };

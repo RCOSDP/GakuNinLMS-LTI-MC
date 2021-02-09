@@ -1,13 +1,32 @@
 export default { title: "templates/Topics" };
 
 import Topics from "./Topics";
-import { topic } from "samples";
+import AppBar from "$organisms/AppBar";
+import { topic, session } from "samples";
 
-const topics = [...Array(10)].map(() => topic);
-const handlers = {
-  onTopicEditClick: console.log,
+const appBarHandlers = {
+  onBooksClick: console.log,
+  onTopicsClick: console.log,
+  onDashboardClick: console.log,
 };
 
-export const Default = () => <Topics topics={topics} {...handlers} />;
+const topics = [...Array(10)].map(() => topic);
 
-export const Empty = () => <Topics topics={[]} {...handlers} />;
+const handlers = {
+  onTopicEditClick: console.log,
+  onTopicNewClick: console.log,
+};
+
+export const Default = () => (
+  <>
+    <AppBar position="sticky" session={session} {...appBarHandlers} />
+    <Topics topics={topics} {...handlers} />
+  </>
+);
+
+export const Empty = () => (
+  <>
+    <AppBar position="sticky" session={session} {...appBarHandlers} />
+    <Topics topics={[]} {...handlers} />
+  </>
+);

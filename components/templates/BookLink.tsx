@@ -4,39 +4,16 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import AddIcon from "@material-ui/icons/Add";
+import ActionHeader from "$organisms/ActionHeader";
+import ActionFooter from "$organisms/ActionFooter";
 import BookPreview from "$organisms/BookPreview";
 import SortSelect from "$atoms/SortSelect";
 import SearchTextField from "$atoms/SearchTextField";
 import type { BookSchema } from "$server/models/book";
 import type { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
-import { gray } from "theme/colors";
 import useContainerStyles from "styles/container";
 
 const useStyles = makeStyles((theme) => ({
-  line: {
-    display: "flex",
-    alignItems: "center",
-    flexWrap: "wrap",
-    marginBottom: theme.spacing(-2),
-    "& > *": {
-      marginRight: theme.spacing(2),
-      marginBottom: theme.spacing(2),
-    },
-  },
-  title: {
-    marginBottom: theme.spacing(4),
-    "& > *": {
-      marginRight: theme.spacing(1),
-    },
-  },
-  header: {
-    position: "sticky",
-    top: 0,
-    zIndex: 1,
-    backgroundColor: gray[50],
-    paddingTop: theme.spacing(4),
-    paddingBottom: theme.spacing(2),
-  },
   icon: {
     marginRight: theme.spacing(0.5),
   },
@@ -45,12 +22,18 @@ const useStyles = makeStyles((theme) => ({
       marginBottom: theme.spacing(2),
     },
   },
+  form: {
+    "& > *": {
+      marginRight: theme.spacing(1),
+    },
+  },
 }));
 
 type Props = {
   books: BookSchema[];
   ltiResourceLink: Pick<LtiResourceLinkSchema, "title">;
   onSubmit(book: BookSchema): void;
+  onCancel(): void;
   onBookEditClick(book: BookSchema): void;
   onBookNewClick(): void;
   isBookEditable?(book: BookSchema): boolean | undefined;
@@ -61,6 +44,7 @@ export default function BookLink(props: Props) {
     books,
     ltiResourceLink,
     onSubmit,
+    onCancel,
     onBookEditClick,
     onBookNewClick,
     isBookEditable,
@@ -82,42 +66,37 @@ export default function BookLink(props: Props) {
     isBookEditable?.(book) && onBookEditClick;
   return (
     <Container classes={containerClasses} maxWidth="md">
-      <form className={classes.header} onSubmit={handleSubmit}>
-        <Typography className={classes.title} variant="h4" gutterBottom={true}>
-          LTIリンク「{ltiResourceLink.title}」と連携
-          <Button size="small" color="primary" onClick={onBookNewClick}>
-            <AddIcon className={classes.icon} />
-            ブックの作成
-          </Button>
-          <Typography variant="body1">
-            LTIリンクと連携したいブックを選んでください
-          </Typography>
-        </Typography>
-        <div className={classes.line}>
-          <Button
-            color="primary"
-            size="large"
-            variant="contained"
-            type="submit"
-            disabled={selectedBookId == null}
-          >
-            ブックを連携
-          </Button>
-          <Button
-            color="primary"
-            size="large"
-            variant="outlined"
-            disabled={true /* TODO: 連携解除機能を追加したら取り除くべき */}
-          >
-            連携解除
-          </Button>
-          <SortSelect disabled /* TODO: ソート機能を追加したら有効化して */ />
-          <SearchTextField
-            placeholder="ブック・トピック検索"
-            disabled // TODO: ブック・トピック検索機能追加したら有効化して
-          />
-        </div>
-      </form>
+      <ActionHeader
+        title={
+          <>
+            LTIリンク「{ltiResourceLink.title}」と連携
+            <Button size="small" color="primary" onClick={onBookNewClick}>
+              <AddIcon className={classes.icon} />
+              ブックの作成
+            </Button>
+            <Typography variant="body1">
+              LTIリンクと連携したいブックを選んでください
+            </Typography>
+          </>
+        }
+        action={
+          <>
+            <Button
+              color="primary"
+              size="large"
+              variant="outlined"
+              disabled={true /* TODO: 連携解除機能を追加したら取り除くべき */}
+            >
+              連携解除
+            </Button>
+            <SortSelect disabled /* TODO: ソート機能を追加したら有効化して */ />
+            <SearchTextField
+              placeholder="ブック・トピック検索"
+              disabled // TODO: ブック・トピック検索機能追加したら有効化して
+            />
+          </>
+        }
+      />
       <div className={classes.books}>
         {books.map((book) => (
           <BookPreview
@@ -131,6 +110,27 @@ export default function BookLink(props: Props) {
           />
         ))}
       </div>
+      <ActionFooter maxWidth="md">
+        <form className={classes.form} onSubmit={handleSubmit}>
+          <Button
+            color="primary"
+            size="small"
+            variant="text"
+            onClick={onCancel}
+          >
+            キャンセル
+          </Button>
+          <Button
+            color="primary"
+            size="large"
+            variant="contained"
+            type="submit"
+            disabled={selectedBookId == null}
+          >
+            ブックを連携
+          </Button>
+        </form>
+      </ActionFooter>
     </Container>
   );
 }

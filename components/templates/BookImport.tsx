@@ -6,6 +6,8 @@ import Container from "@material-ui/core/Container";
 import TreeView from "@material-ui/lab/TreeView";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import ActionHeader from "$organisms/ActionHeader";
+import ActionFooter from "$organisms/ActionFooter";
 import BookItemDialog from "$organisms/BookItemDialog";
 import BookTree from "$molecules/BookTree";
 import SortSelect from "$atoms/SortSelect";
@@ -13,41 +15,21 @@ import SearchTextField from "$atoms/SearchTextField";
 import { BookSchema } from "$server/models/book";
 import { SectionSchema } from "$server/models/book/section";
 import { TopicSchema } from "$server/models/topic";
-import { gray } from "$theme/colors";
 import useContainerStyles from "$styles/container";
 import useDialogProps from "$utils/useDialogProps";
 
 const useStyles = makeStyles((theme) => ({
-  line: {
-    display: "flex",
-    alignItems: "center",
-    flexWrap: "wrap",
-    marginBottom: theme.spacing(-2),
-    "& > *": {
-      marginRight: theme.spacing(2),
-      marginBottom: theme.spacing(2),
-    },
-  },
-  title: {
-    marginBottom: theme.spacing(4),
-    "& > *": {
-      marginRight: theme.spacing(1),
-    },
-  },
-  header: {
-    position: "sticky",
-    top: 0,
-    zIndex: 1,
-    backgroundColor: gray[50],
-    paddingTop: theme.spacing(4),
-    paddingBottom: theme.spacing(2),
-  },
   icon: {
     marginRight: theme.spacing(0.5),
   },
   books: {
     "&> :not(:last-child)": {
       marginBottom: theme.spacing(2),
+    },
+  },
+  form: {
+    "& > *": {
+      marginRight: theme.spacing(1),
     },
   },
 }));
@@ -63,6 +45,7 @@ type Props = {
     sections: SectionSchema[];
     topics: TopicSchema[];
   }): void;
+  onCancel(): void;
   onBookEditClick?(book: BookSchema): void;
   onTopicClick?(topic: TopicSchema): void;
   onTopicEditClick?(topic: TopicSchema): void;
@@ -74,6 +57,7 @@ export default function BookImport(props: Props) {
   const {
     books,
     onSubmit,
+    onCancel,
     onBookEditClick,
     onTopicClick,
     onTopicEditClick,
@@ -125,29 +109,25 @@ export default function BookImport(props: Props) {
   };
   return (
     <Container classes={containerClasses} maxWidth="md">
-      <form className={classes.header} onSubmit={handleSubmit}>
-        <Typography className={classes.title} variant="h4" gutterBottom={true}>
-          ブックからインポート
-          <Typography variant="body1">
-            ブックからインポートしたいトピックを選んでください
-          </Typography>
-        </Typography>
-        <div className={classes.line}>
-          <Button
-            color="primary"
-            size="large"
-            variant="contained"
-            type="submit"
-          >
-            ブックをインポート
-          </Button>
-          <SortSelect disabled /* TODO: ソート機能を追加したら有効化して */ />
-          <SearchTextField
-            placeholder="ブック・トピック検索"
-            disabled // TODO: ブック・トピック検索機能追加したら有効化して
-          />
-        </div>
-      </form>
+      <ActionHeader
+        title={
+          <>
+            ブックからインポート
+            <Typography variant="body1">
+              ブックからインポートしたいトピックを選んでください
+            </Typography>
+          </>
+        }
+        action={
+          <>
+            <SortSelect disabled /* TODO: ソート機能を追加したら有効化して */ />
+            <SearchTextField
+              placeholder="ブック・トピック検索"
+              disabled // TODO: ブック・トピック検索機能追加したら有効化して
+            />
+          </>
+        }
+      />
       <TreeView
         defaultCollapseIcon={<ExpandMoreIcon />}
         defaultExpandIcon={<ChevronRightIcon />}
@@ -173,6 +153,26 @@ export default function BookImport(props: Props) {
           );
         })}
       </TreeView>
+      <ActionFooter maxWidth="md">
+        <form className={classes.form} onSubmit={handleSubmit}>
+          <Button
+            color="primary"
+            size="small"
+            variant="text"
+            onClick={onCancel}
+          >
+            キャンセル
+          </Button>
+          <Button
+            color="primary"
+            size="large"
+            variant="contained"
+            type="submit"
+          >
+            ブックをインポート
+          </Button>
+        </form>
+      </ActionFooter>
       {currentBook && <BookItemDialog {...dialogProps} book={currentBook} />}
     </Container>
   );

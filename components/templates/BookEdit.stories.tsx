@@ -5,6 +5,7 @@ import { book } from "samples";
 
 const handleSubmit = console.log;
 const handleDelete = console.log;
+const handleCancel = () => console.log("back");
 const handleAddSection = console.log;
 const handleTopicImportClick = () => console.log("onTopicImportClick");
 const handleTopicNewClick = () => console.log("onTopicNewClick");
@@ -13,6 +14,7 @@ const handleTopicEditClick = console.log;
 const handlers = {
   onSubmit: handleSubmit,
   onDelete: handleDelete,
+  onCancel: handleCancel,
   onAddSection: handleAddSection,
   onTopicImportClick: handleTopicImportClick,
   onTopicNewClick: handleTopicNewClick,

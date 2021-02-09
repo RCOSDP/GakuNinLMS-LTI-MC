@@ -7,6 +7,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import { useForm, Controller } from "react-hook-form";
+import clsx from "clsx";
 import TextField from "$atoms/TextField";
 import SubtitleChip from "$atoms/SubtitleChip";
 import SubtitleUploadDialog from "$organisms/SubtitleUploadDialog";
@@ -86,7 +87,7 @@ export default function TopicForm(props: Props) {
     <>
       <Card
         classes={cardClasses}
-        className={`${classes.margin} ${className}`}
+        className={clsx(classes.margin, className)}
         component="form"
         onSubmit={handleSubmit((values) => {
           onSubmit({ ...defaultValues, ...values });

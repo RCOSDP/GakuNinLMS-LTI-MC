@@ -1,4 +1,5 @@
 import { useState } from "react";
+import clsx from "clsx";
 import { useTheme, makeStyles } from "@material-ui/core/styles";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import Button from "@material-ui/core/Button";
@@ -122,9 +123,10 @@ export default function Book(props: Props) {
         )}
       </Typography>
       <div
-        className={`${classes.inner} ${
+        className={clsx(
+          classes.inner,
           matches ? classes.innerDesktop : classes.innerMobile
-        }`}
+        )}
       >
         {topic && (
           <TopicViewer

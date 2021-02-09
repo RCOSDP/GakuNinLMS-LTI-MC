@@ -51,6 +51,11 @@ const useStyles = makeStyles((theme) => ({
   margin: {
     marginRight: theme.spacing(1),
   },
+  nav: {
+    flex: 1,
+    overflowX: "auto",
+    whiteSpace: "nowrap",
+  },
   user: {
     display: "inline-block",
     "& > p": {
@@ -61,9 +66,6 @@ const useStyles = makeStyles((theme) => ({
   roles: {
     fontSize: "0.75rem",
     color: gray[700],
-  },
-  grow: {
-    flexGrow: 1,
   },
 }));
 
@@ -102,26 +104,27 @@ export default function AppBar(props: Props) {
       <Toolbar color="inherit" disableGutters>
         <div className={classes.inner}>
           <LogoIcon className={classes.margin} />
-          <AppBarNavButton
-            color="inherit"
-            icon={<MenuBookOutlinedIcon />}
-            label="マイブック"
-            onClick={onBooksClick}
-          />
-          <AppBarNavButton
-            color="inherit"
-            icon={<LibraryBooksOutlinedIcon />}
-            label="マイトピック"
-            onClick={onTopicsClick}
-          />
-          <AppBarNavButton
-            color="inherit"
-            icon={<AssessmentOutlinedIcon />}
-            label="学習分析"
-            onClick={onDashboardClick}
-            disabled // TODO: 学習分析機能を実装したら有効化して
-          />
-          <div className={classes.grow} />
+          <div className={classes.nav}>
+            <AppBarNavButton
+              color="inherit"
+              icon={<MenuBookOutlinedIcon />}
+              label="マイブック"
+              onClick={onBooksClick}
+            />
+            <AppBarNavButton
+              color="inherit"
+              icon={<LibraryBooksOutlinedIcon />}
+              label="マイトピック"
+              onClick={onTopicsClick}
+            />
+            <AppBarNavButton
+              color="inherit"
+              icon={<AssessmentOutlinedIcon />}
+              label="学習分析"
+              onClick={onDashboardClick}
+              disabled // TODO: 学習分析機能を実装したら有効化して
+            />
+          </div>
           <div className={clsx(classes.user, classes.margin)}>
             {session.user && <p>{session.user.name}</p>}
             <p className={classes.roles}>{role(session)}</p>

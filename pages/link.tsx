@@ -31,6 +31,13 @@ function Index() {
     await updateLtiResourceLink({ ...ltiResourceLink, bookId });
     return router.push(pagesPath.book.$url({ query: { bookId } }));
   }
+  function handleCancel() {
+    const ltiResourceLink = session?.ltiResourceLink;
+    if (!ltiResourceLink) return router.push(pagesPath.books.$url());
+    return router.push(
+      pagesPath.book.$url({ query: { bookId: ltiResourceLink.bookId } })
+    );
+  }
   function handleBookEdit({ id }: Pick<BookSchema, "id">) {
     return router.push(
       pagesPath.book.edit.$url({
@@ -43,6 +50,7 @@ function Index() {
   }
   const handlers = {
     onSubmit: handleSubmit,
+    onCancel: handleCancel,
     onBookEditClick: handleBookEdit,
     onBookNewClick: handleBookNew,
     isBookEditable,

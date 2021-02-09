@@ -18,12 +18,15 @@ function Index() {
   const router = useRouter();
   const { session } = useSessionAtom();
   const userId = session?.user?.id;
+  function handleTopicEditClick({ id }: Pick<TopicSchema, "id">) {
+    return router.push(pagesPath.topics.edit.$url({ query: { topicId: id } }));
+  }
+  function handleTopicNewClick() {
+    return router.push(pagesPath.topics.new.$url({ query: null }));
+  }
   const handlers = {
-    onTopicEditClick({ id }: Pick<TopicSchema, "id">) {
-      return router.push(
-        pagesPath.topics.edit.$url({ query: { topicId: id } })
-      );
-    },
+    onTopicEditClick: handleTopicEditClick,
+    onTopicNewClick: handleTopicNewClick,
   };
 
   if (userId == null) {

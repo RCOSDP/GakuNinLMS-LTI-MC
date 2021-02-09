@@ -1,17 +1,16 @@
 export default { title: "templates/Books" };
 
 import Books from "./Books";
-import { books } from "samples";
+import AppBar from "$organisms/AppBar";
+import { books, ltiResourceLink, session } from "samples";
 
-const props = {
-  books,
-  ltiResourceLink: {
-    id: "1",
-    title: "リンク1",
-    contextId: "2",
-    contextTitle: "コース2",
-    contextLabel: "C2",
-  },
+const appBarHandlers = {
+  onBooksClick: console.log,
+  onTopicsClick: console.log,
+  onDashboardClick: console.log,
+};
+
+const handlers = {
   onBookClick: console.log,
   onBookEditClick: console.log,
   onBookNewClick() {
@@ -22,8 +21,16 @@ const props = {
   },
 };
 
-export const Default = () => <Books {...props} />;
+export const Default = () => (
+  <>
+    <AppBar position="sticky" session={session} {...appBarHandlers} />
+    <Books books={books} ltiResourceLink={ltiResourceLink} {...handlers} />
+  </>
+);
 
 export const Empty = () => (
-  <Books {...props} books={[]} ltiResourceLink={null} />
+  <>
+    <AppBar position="sticky" session={session} {...appBarHandlers} />
+    <Books books={[]} ltiResourceLink={null} {...handlers} />
+  </>
 );

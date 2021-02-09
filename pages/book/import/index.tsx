@@ -20,6 +20,8 @@ function Import({ bookId, context }: Query) {
   const books = useBooks(isBookEditable, isTopicEditable);
   const router = useRouter();
   const bookEditQuery = { bookId, ...(context && { context }) };
+  const back = () =>
+    router.push(pagesPath.book.edit.$url({ query: { bookId } }));
   async function handleSubmit({
     topics,
   }: {
@@ -39,7 +41,10 @@ function Import({ bookId, context }: Query) {
       sections: [...book.sections, ...ids.map((id) => ({ topics: [{ id }] }))],
     });
 
-    return router.push(pagesPath.book.edit.$url({ query: { bookId } }));
+    return back();
+  }
+  function handleCancel() {
+    return back();
   }
   function handleBookEditClick({ id: bookId }: Pick<BookSchema, "id">) {
     return router.push(
@@ -58,6 +63,7 @@ function Import({ bookId, context }: Query) {
   }
   const handlers = {
     onSubmit: handleSubmit,
+    onCancel: handleCancel,
     onBookEditClick: handleBookEditClick,
     onTopicEditClick: handleTopicEditClick,
     isTopicEditable,

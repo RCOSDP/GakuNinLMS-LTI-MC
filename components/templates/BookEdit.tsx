@@ -7,6 +7,7 @@ import BookEditChildren from "$organisms/BookEditChildren";
 import BookForm from "$organisms/BookForm";
 import TopicPreviewDialog from "$organisms/TopicPreviewDialog";
 import RequiredDot from "$atoms/RequiredDot";
+import BackButton from "$atoms/BackButton";
 import useContainerStyles from "styles/container";
 import { BookProps, BookSchema } from "$server/models/book";
 import { SectionProps } from "$server/models/book/section";
@@ -15,12 +16,8 @@ import { useConfirm } from "material-ui-confirm";
 import useDialogProps from "$utils/useDialogProps";
 
 const useStyles = makeStyles((theme) => ({
-  header: {
-    display: "flex",
-    justifyContent: "flex-end",
-  },
   container: {
-    marginTop: theme.spacing(4),
+    marginTop: theme.spacing(1),
   },
   title: {
     marginBottom: theme.spacing(4),
@@ -45,6 +42,7 @@ type Props = {
   book: BookSchema | null;
   onSubmit(book: BookProps): void;
   onDelete(book: BookSchema): void;
+  onCancel(): void;
   onAddSection(props: SectionProps): void;
   onTopicImportClick(): void;
   onTopicNewClick(): void;
@@ -58,6 +56,7 @@ export default function BookEdit(props: Props) {
     book,
     onSubmit,
     onDelete,
+    onCancel,
     onAddSection,
     onTopicImportClick,
     onTopicNewClick,
@@ -95,6 +94,7 @@ export default function BookEdit(props: Props) {
       className={classes.container}
       maxWidth="md"
     >
+      <BackButton onClick={onCancel}>戻る</BackButton>
       <Typography className={classes.title} variant="h4">
         ブックの編集
         <Typography variant="caption" component="span" aria-hidden="true">

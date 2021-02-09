@@ -52,9 +52,13 @@ function Edit({ topicId, back, onDelete }: EditProps) {
     await destroyVideoTrack(topic.resource.id, id);
     await revalidateTopic(topic.id);
   }
+  function handleCancel() {
+    return back();
+  }
   const handlers = {
     onSubmit: handleSubmit,
     onDelete: handleDelete,
+    onCancel: handleCancel,
     onSubtitleSubmit: handleSubtitleSubmit,
     onSubtitleDelete: handleSubtitleDelete,
   };

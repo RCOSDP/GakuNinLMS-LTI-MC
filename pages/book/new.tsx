@@ -8,7 +8,7 @@ export type Query = { context?: "books" | "link" };
 
 function New() {
   const router = useRouter();
-  const handleSubmit = async (book: BookProps) => {
+  async function handleSubmit(book: BookProps) {
     const { id } = await createBook(book);
     const { context }: Pick<Query, "context"> = router.query;
     await router.replace(
@@ -19,9 +19,16 @@ function New() {
         },
       })
     );
+  }
+  function handleCancel() {
+    return router.push(pagesPath.books.$url());
+  }
+  const handlers = {
+    onSubmit: handleSubmit,
+    onCancel: handleCancel,
   };
 
-  return <BookNew onSubmit={handleSubmit} />;
+  return <BookNew {...handlers} />;
 }
 
 export default New;

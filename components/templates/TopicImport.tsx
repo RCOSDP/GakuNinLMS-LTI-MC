@@ -3,56 +3,45 @@ import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
+import ActionHeader from "$organisms/ActionHeader";
+import ActionFooter from "$organisms/ActionFooter";
 import TopicPreview from "$organisms/TopicPreview";
 import TopicPreviewDialog from "$organisms/TopicPreviewDialog";
 import SortSelect from "$atoms/SortSelect";
 import SearchTextField from "$atoms/SearchTextField";
 import { TopicSchema } from "$server/models/topic";
-import { gray } from "$theme/colors";
 import useContainerStyles from "$styles/container";
 import useDialogProps from "$utils/useDialogProps";
 
 const useStyles = makeStyles((theme) => ({
-  line: {
-    display: "flex",
-    alignItems: "center",
-    flexWrap: "wrap",
-    marginBottom: theme.spacing(-2),
-    "& > *": {
-      marginRight: theme.spacing(2),
-      marginBottom: theme.spacing(2),
-    },
-  },
-  title: {
-    marginBottom: theme.spacing(4),
-    "& > *": {
-      marginRight: theme.spacing(1),
-    },
-  },
-  header: {
-    position: "sticky",
-    top: 0,
-    zIndex: 1,
-    backgroundColor: gray[50],
-    paddingTop: theme.spacing(4),
-    paddingBottom: theme.spacing(2),
-  },
   topics: {
     display: "grid",
     gridTemplateColumns: "repeat(auto-fill, 380px)",
     gap: `${theme.spacing(2)}px`,
+  },
+  form: {
+    "& > *": {
+      marginRight: theme.spacing(1),
+    },
   },
 }));
 
 type Props = {
   topics: TopicSchema[];
   onSubmit(topics: TopicSchema[]): void;
+  onCancel(): void;
   onTopicEditClick(topic: TopicSchema): void;
   isTopicEditable(topic: TopicSchema): boolean | undefined;
 };
 
 export default function TopicImport(props: Props) {
-  const { topics, onSubmit, onTopicEditClick, isTopicEditable } = props;
+  const {
+    topics,
+    onSubmit,
+    onCancel,
+    onTopicEditClick,
+    isTopicEditable,
+  } = props;
   const classes = useStyles();
   const containerClasses = useContainerStyles();
   const [selectedIndexes, select] = useState<Set<number>>(new Set());
@@ -74,29 +63,25 @@ export default function TopicImport(props: Props) {
     isTopicEditable(topic) && (() => onTopicEditClick(topic));
   return (
     <Container classes={containerClasses} maxWidth="lg">
-      <form className={classes.header} onSubmit={handleSubmit}>
-        <Typography className={classes.title} variant="h4" gutterBottom={true}>
-          トピックのインポート
-          <Typography variant="body1">
-            インポートしたいトピックを選んでください
-          </Typography>
-        </Typography>
-        <div className={classes.line}>
-          <Button
-            color="primary"
-            size="large"
-            variant="contained"
-            type="submit"
-          >
-            トピックをインポート
-          </Button>
-          <SortSelect disabled /* TODO: ソート機能を追加したら有効化して */ />
-          <SearchTextField
-            placeholder="トピック検索"
-            disabled // TODO: トピック検索機能追加したら有効化して
-          />
-        </div>
-      </form>
+      <ActionHeader
+        title={
+          <>
+            トピックのインポート
+            <Typography variant="body1">
+              インポートしたいトピックを選んでください
+            </Typography>
+          </>
+        }
+        action={
+          <>
+            <SortSelect disabled /* TODO: ソート機能を追加したら有効化して */ />
+            <SearchTextField
+              placeholder="トピック検索"
+              disabled // TODO: トピック検索機能追加したら有効化して
+            />
+          </>
+        }
+      />
       <div className={classes.topics}>
         {topics.map((topic, index) => (
           <TopicPreview
@@ -109,6 +94,26 @@ export default function TopicImport(props: Props) {
           />
         ))}
       </div>
+      <ActionFooter maxWidth="lg">
+        <form className={classes.form} onSubmit={handleSubmit}>
+          <Button
+            color="primary"
+            size="small"
+            variant="text"
+            onClick={onCancel}
+          >
+            キャンセル
+          </Button>
+          <Button
+            color="primary"
+            size="large"
+            variant="contained"
+            type="submit"
+          >
+            トピックをインポート
+          </Button>
+        </form>
+      </ActionFooter>
       {previewTopic && (
         <TopicPreviewDialog {...dialogProps} topic={previewTopic} />
       )}
