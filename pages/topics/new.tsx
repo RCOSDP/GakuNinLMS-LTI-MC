@@ -32,7 +32,8 @@ function New({ edit, back, onSubmit }: NewProps) {
 
     await onSubmit?.(topic);
 
-    return edit(topic);
+    await edit(topic);
+    return back();
   }
   function handleSubtitleSubmit(videoTrack: VideoTrackProps) {
     addVideoTrack(videoTrack);
