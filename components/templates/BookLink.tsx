@@ -69,13 +69,13 @@ export default function BookLink(props: Props) {
       <ActionHeader
         title={
           <>
-            LTIリソース「{ltiResourceLink.title}」とリンク
+            「{ltiResourceLink.title}」とのリンク
             <Button size="small" color="primary" onClick={onBookNewClick}>
               <AddIcon className={classes.icon} />
               ブックの作成
             </Button>
             <Typography variant="body1">
-              LTIリソースとリンクしたいブックを選んでください
+              LTIリソースとしてリンクするブックを選んでください
             </Typography>
           </>
         }
