@@ -82,10 +82,14 @@ function Router() {
     ...(context && { context }),
   };
   const edit = (topic: TopicSchema) =>
-    router.replace({
-      pathname: "./edit",
-      query: { ...bookEditQuery, topicId: topic.id },
-    });
+    router.replace(
+      {
+        pathname: "./edit",
+        query: { ...bookEditQuery, topicId: topic.id },
+      },
+      undefined,
+      { shallow: true }
+    );
   const back = () => router.push({ pathname: "./", query: bookEditQuery });
 
   if ("bookId" in bookEditQuery && !Number.isFinite(bookId)) {
