@@ -112,14 +112,13 @@ export default function AppBar(props: Props) {
               onClick={onBookLinkClick}
               disabled={!onBookLinkClick}
             />
-            {onDashboardClick && (
-              <AppBarNavButton
-                color="inherit"
-                icon={<AssessmentOutlinedIcon />}
-                label="学習分析"
-                onClick={onDashboardClick}
-              />
-            )}
+            <AppBarNavButton
+              color="inherit"
+              icon={<AssessmentOutlinedIcon />}
+              label="学習分析"
+              onClick={onDashboardClick}
+              disabled={!onDashboardClick}
+            />
           </div>
           <div className={clsx(classes.user, classes.margin)}>
             {session.user && <p>{session.user.name}</p>}
