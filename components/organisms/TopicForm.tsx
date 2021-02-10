@@ -17,8 +17,10 @@ import useInputLabelStyles from "styles/inputLabel";
 import gray from "theme/colors/gray";
 import { TopicProps, TopicSchema } from "$server/models/topic";
 import { VideoTrackProps, VideoTrackSchema } from "$server/models/videoTrack";
+import { ResourceSchema } from "$server/models/resource";
+import { VideoResource } from "$server/models/videoResource";
 import languages from "$utils/languages";
-import { parse } from "$utils/videoResource";
+import { parse, isVideoResource } from "$utils/videoResource";
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -72,6 +74,16 @@ export default function TopicForm(props: Props) {
     onSubtitleSubmit(videoTrack);
     setOpen(false);
   };
+  const [videoResource, setVideoResource] = useState<VideoResource | null>(
+    topic && isVideoResource(topic.resource) ? topic.resource : null
+  );
+  const onResourceUrlBlur = () => {
+    const url: string = getValues("resource.url");
+    const newVideoResource = parse(url);
+    if (!newVideoResource) return;
+    if (videoResource && newVideoResource.url === videoResource.url) return;
+    setVideoResource(newVideoResource);
+  };
   const defaultValues = {
     name: topic?.name,
     description: topic?.description ?? "",
@@ -80,7 +92,7 @@ export default function TopicForm(props: Props) {
     timeRequired: topic?.timeRequired,
     resource: topic?.resource,
   };
-  const { handleSubmit, register, control } = useForm<TopicProps>({
+  const { handleSubmit, register, control, getValues } = useForm<TopicProps>({
     defaultValues,
   });
   return (
@@ -147,8 +159,9 @@ export default function TopicForm(props: Props) {
           }}
           required
           fullWidth
+          onBlur={onResourceUrlBlur}
         />
-        {topic && "tracks" in topic.resource && <Video {...topic.resource} />}
+        {videoResource && <Video {...videoResource} />}
         <Controller
           name="language"
           control={control}
