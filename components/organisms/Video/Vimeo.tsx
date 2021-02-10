@@ -25,8 +25,9 @@ export function Vimeo(props: VimeoProps) {
     volumePersister(player);
     if (props.onEnded) player.on("ended", props.onEnded);
     return () => {
-      player.destroy();
-      // NOTE: destroy() してもゴミが残るので新しい空の要素にしておく
+      // TODO: getPlayed() に失敗するので destroy() せず一時停止して保持
+      //       メモリリークにつながるので避けたほうが望ましい
+      player.pause();
       current.textContent = "";
     };
   }, [props.options, props.onEnded, tracking]);

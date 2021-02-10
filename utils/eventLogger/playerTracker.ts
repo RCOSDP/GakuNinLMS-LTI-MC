@@ -3,6 +3,7 @@ import { EventEmitter } from "events";
 import { VideoJsPlayer } from "video.js";
 import VimeoPlayer from "@vimeo/player";
 import type { VideoResourceSchema } from "$server/models/videoResource";
+import youtubePlayedShims from "$utils/youtubePlayedShims";
 
 const basicEventsMap = [
   "ended",
@@ -47,6 +48,8 @@ class PlayerTracker extends (EventEmitter as {
 }) {
   readonly player: VideoJsPlayer | VimeoPlayer;
   readonly stats: () => Promise<PlayerEvent>;
+  /** 再生した時間範囲の取得 */
+  readonly getPlayed: () => Promise<[number, number][]>;
 
   constructor(player: VideoJsPlayer | VimeoPlayer) {
     super();
@@ -54,9 +57,21 @@ class PlayerTracker extends (EventEmitter as {
 
     if (player instanceof VimeoPlayer) {
       this.stats = async () => vimeoStats(player);
+      this.getPlayed = player.getPlayed.bind(player);
       this.intoVimeo(player);
     } else {
+      // NOTE: YouTube Player API に存在しない API の再現
+      youtubePlayedShims(player);
+
       this.stats = async () => videoJsStats(player);
+      this.getPlayed = async () => {
+        const timeRanges = player.played() as TimeRanges;
+        return [...Array(timeRanges.length)].map((_, i) => [
+          timeRanges.start(i),
+          timeRanges.end(i),
+        ]);
+      };
+
       this.intoVideoJs(player);
     }
   }
