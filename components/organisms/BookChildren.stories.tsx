@@ -3,15 +3,21 @@ export default { title: "organisms/BookChildren" };
 import BookChildren from "./BookChildren";
 import { sections } from "samples";
 
-const props = {
-  sections,
+const handlers = {
   onItemClick(_: never, index: ItemIndex) {
     console.log(index);
   },
 };
 
-export const Default = () => <BookChildren {...props} />;
+export const Default = () => (
+  <BookChildren sections={sections} index={[0, 0]} {...handlers} />
+);
 
 export const Editable = () => (
-  <BookChildren {...props} onItemEditClick={console.log} />
+  <BookChildren
+    sections={sections}
+    index={[0, 0]}
+    {...handlers}
+    onItemEditClick={console.log}
+  />
 );

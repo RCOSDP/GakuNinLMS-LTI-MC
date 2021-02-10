@@ -141,6 +141,7 @@ export default function Book(props: Props) {
         )}
         <BookChildren
           className={classes.bookChildren}
+          index={[sectionIndex, topicIndex]}
           sections={book?.sections ?? []}
           onItemClick={handleItemClick}
           onItemEditClick={editable ? handleItemEditClick : undefined}

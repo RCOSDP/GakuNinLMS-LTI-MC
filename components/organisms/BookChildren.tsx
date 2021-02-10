@@ -1,19 +1,15 @@
-import { ReactNode, MouseEvent, Fragment, useState } from "react";
+import { ReactNode, MouseEvent, useState } from "react";
+import clsx from "clsx";
 import IconButton from "@material-ui/core/IconButton";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import Collapse from "@material-ui/core/Collapse";
+import { makeStyles } from "@material-ui/styles";
 import { ExpandLess, ExpandMore, EditOutlined } from "@material-ui/icons";
 import { SectionSchema } from "$server/models/book/section";
-
-type Props = {
-  className?: string;
-  sections: SectionSchema[];
-  onItemClick(event: MouseEvent<HTMLElement>, index: ItemIndex): void;
-  onItemEditClick?(event: MouseEvent<HTMLElement>, index: ItemIndex): void;
-};
+import { primary } from "$theme/colors";
 
 function Section({
   section,
@@ -43,8 +39,29 @@ function Section({
   );
 }
 
+const useStyles = makeStyles({
+  active: {
+    backgroundColor: primary[50],
+  },
+});
+
+type Props = {
+  className?: string;
+  sections: SectionSchema[];
+  index: ItemIndex;
+  onItemClick(event: MouseEvent<HTMLElement>, index: ItemIndex): void;
+  onItemEditClick?(event: MouseEvent<HTMLElement>, index: ItemIndex): void;
+};
+
 export default function BookChildren(props: Props) {
-  const { className, sections, onItemClick, onItemEditClick } = props;
+  const {
+    className,
+    sections,
+    index: [sectionIndex, topicIndex],
+    onItemClick,
+    onItemEditClick,
+  } = props;
+  const classes = useStyles();
   const [open, setOpen] = useState<boolean[]>(sections.map(() => true));
   const handleItemClick = (event: MouseEvent<HTMLElement>) => {
     const { section, topic } = event.currentTarget.dataset;
@@ -76,6 +93,11 @@ export default function BookChildren(props: Props) {
           {section.topics.map((topic, topicItemIndex) => (
             <ListItem
               key={topic.id}
+              className={clsx({
+                [classes.active]:
+                  sectionIndex === sectionItemIndex &&
+                  topicIndex === topicItemIndex,
+              })}
               button
               data-section={sectionItemIndex}
               data-topic={topicItemIndex}
