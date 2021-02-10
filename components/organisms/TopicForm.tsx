@@ -17,7 +17,6 @@ import useInputLabelStyles from "styles/inputLabel";
 import gray from "theme/colors/gray";
 import { TopicProps, TopicSchema } from "$server/models/topic";
 import { VideoTrackProps, VideoTrackSchema } from "$server/models/videoTrack";
-import { ResourceSchema } from "$server/models/resource";
 import { VideoResource } from "$server/models/videoResource";
 import languages from "$utils/languages";
 import { parse, isVideoResource } from "$utils/videoResource";
