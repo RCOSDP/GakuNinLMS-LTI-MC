@@ -73,8 +73,9 @@ export default function TopicForm(props: Props) {
     onSubtitleSubmit(videoTrack);
     setOpen(false);
   };
+  const resource = topic?.resource;
   const [videoResource, setVideoResource] = useState<VideoResource | null>(
-    topic && isVideoResource(topic.resource) ? topic.resource : null
+    isVideoResource(resource) ? resource : null
   );
   const onResourceUrlBlur = () => {
     const url: string = getValues("resource.url");
