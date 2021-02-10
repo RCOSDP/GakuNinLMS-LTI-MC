@@ -12,7 +12,7 @@ import { pagesPath } from "$utils/$path";
 export type Query = { bookId: BookSchema["id"]; context?: "books" | "link" };
 
 function Edit({ bookId, context }: Query) {
-  const book = useBook(bookId);
+  const { book } = useBook(bookId);
   const { isTopicEditable } = useSessionAtom();
   const router = useRouter();
   const back = () => {

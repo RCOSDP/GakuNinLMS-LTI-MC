@@ -1,7 +1,6 @@
-import { useCallback, useEffect } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { BookSchema } from "$server/models/book";
-import { useNextItemIndexAtom } from "$store/book";
 import { usePlayerTrackerAtom } from "$store/playerTracker";
 import Book from "$templates/Book";
 import Placeholder from "$templates/Placeholder";
@@ -16,18 +15,21 @@ export type Query = { bookId: BookSchema["id"] };
 
 function Show(query: Query) {
   const { session, isInstructor } = useSessionAtom();
-  const book = useBook(query.bookId);
-  const [index, nextItemIndex] = useNextItemIndexAtom();
+  const {
+    book,
+    itemIndex,
+    itemExists,
+    updateItemIndex,
+    nextItemIndex,
+  } = useBook(query.bookId);
   const playerTracker = usePlayerTrackerAtom();
   useEffect(() => {
     if (playerTracker) logger(playerTracker);
   }, [playerTracker]);
-  // NOTE: playerTrackerが更新され続けるのでVideoコンポーネントの再描画を防ぐ
-  const handleTopicEnded = useCallback(() => nextItemIndex(), [nextItemIndex]);
-  const handleItemClick = ([sectionIndex, topicIndex]: ItemIndex) => {
-    const topicExists = book?.sections[sectionIndex]?.topics[topicIndex];
-    if (topicExists) playerTracker?.next(topicExists.id);
-    nextItemIndex([sectionIndex, topicIndex]);
+  const handleItemClick = (index: ItemIndex) => {
+    const topic = itemExists(index);
+    if (topic) playerTracker?.next(topic.id);
+    updateItemIndex(index);
   };
   const router = useRouter();
   const handleBookEditClick = () => {
@@ -47,7 +49,7 @@ function Show(query: Query) {
   const handlers = {
     editable: isInstructor,
     linked: query.bookId === session?.ltiResourceLink?.bookId,
-    onTopicEnded: handleTopicEnded,
+    onTopicEnded: nextItemIndex,
     onItemClick: handleItemClick,
     onBookEditClick: handleBookEditClick,
     onBookLinkClick: handleBookLinkClick,
@@ -56,7 +58,7 @@ function Show(query: Query) {
 
   if (!book) return <Placeholder />;
 
-  return <Book book={book} index={index} {...handlers} />;
+  return <Book book={book} index={itemIndex} {...handlers} />;
 }
 
 function Router() {

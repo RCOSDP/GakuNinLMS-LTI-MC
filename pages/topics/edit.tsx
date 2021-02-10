@@ -69,7 +69,7 @@ function Edit({ topicId, back, onDelete }: EditProps) {
 }
 
 function EditWithBook({ bookId, ...props }: EditWithBookProps) {
-  const book = useBook(bookId);
+  const { book } = useBook(bookId);
   async function handleDelete({ id: topicId }: Pick<TopicSchema, "id">) {
     if (!book) return;
     await updateBook({
