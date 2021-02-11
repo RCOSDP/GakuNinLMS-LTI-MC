@@ -1,5 +1,6 @@
 import { useEffect, useMemo } from "react";
 import throttle from "lodash.throttle";
+import usePrevious from "@rooks/use-previous";
 import type { TopicSchema } from "$server/models/topic";
 import { useBookAtom } from "$store/book";
 import { usePlayerTrackerAtom } from "$store/playerTracker";
@@ -28,11 +29,12 @@ export function useActivityTracking() {
   const { itemIndex, itemExists } = useBookAtom();
   const topic = itemExists(itemIndex);
   const playerTracker = usePlayerTrackerAtom();
+  const changed = playerTracker !== usePrevious(playerTracker);
   const updateHandler = useMemo(() => {
-    if (!topic) return;
-    if (!playerTracker) return;
-    return buildUpdateHandler(topic.id, playerTracker);
-  }, [topic, playerTracker]);
+    if (topic && playerTracker && changed) {
+      return buildUpdateHandler(topic.id, playerTracker);
+    }
+  }, [topic, playerTracker, changed]);
   const throttled = useMemo(
     () =>
       updateHandler &&

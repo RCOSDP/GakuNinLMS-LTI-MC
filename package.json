@@ -13,6 +13,7 @@
     "@material-ui/lab": "^4.0.0-alpha.57",
     "@material-ui/styles": "^4.11.2",
     "@openapitools/openapi-generator-cli": "^2.1.10",
+    "@rooks/use-previous": "^4.9.1",
     "@storybook/react": "^6.1.11",
     "@types/events": "^3.0.0",
     "@types/lodash.throttle": "^4.1.6",

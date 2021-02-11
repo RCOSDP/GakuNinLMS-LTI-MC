@@ -1864,6 +1864,11 @@
     prop-types "^15.6.1"
     react-lifecycles-compat "^3.0.4"
 
+"@rooks/use-previous@^4.9.1":
+  version "4.9.1"
+  resolved "https://registry.yarnpkg.com/@rooks/use-previous/-/use-previous-4.9.1.tgz#1428f9232acdf8a46d8f145d6f1f2fdba13e0f12"
+  integrity sha512-a4LOVePDR8wTapup7mVZQk5Nu5WGipr1/LbOOFhvx1SKNo4BT2sZ6pbo0RBKr5ufbRrZoFfzbgW7k/CA5ZbdsA==
+
 "@sindresorhus/is@^0.14.0":
   version "0.14.0"
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-0.14.0.tgz#9fb3a3cf3132328151f353de4632e01e52102bea"
