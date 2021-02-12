@@ -34,6 +34,8 @@ export function useActivityTracking() {
     if (topic && playerTracker && changed) {
       return buildUpdateHandler(topic.id, playerTracker);
     }
+
+    return;
   }, [topic, playerTracker, changed]);
   const throttled = useMemo(
     () =>
