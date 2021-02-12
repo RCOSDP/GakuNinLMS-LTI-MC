@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Card from "@material-ui/core/Card";
 import Checkbox from "@material-ui/core/Checkbox";
 import Button from "@material-ui/core/Button";
@@ -7,6 +7,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import { useForm, Controller } from "react-hook-form";
+import { useDebounce } from "use-debounce";
 import clsx from "clsx";
 import TextField from "$atoms/TextField";
 import SubtitleChip from "$atoms/SubtitleChip";
@@ -77,13 +78,18 @@ export default function TopicForm(props: Props) {
   const [videoResource, setVideoResource] = useState<VideoResource | null>(
     isVideoResource(resource) ? resource : null
   );
-  const onResourceUrlBlur = () => {
-    const url: string = getValues("resource.url");
-    const newVideoResource = parse(url);
+  const [url, setUrl] = useState<string | undefined>(topic?.resource?.url);
+  const onResourceUrlChange = () => {
+    setUrl(getValues("resource.url"));
+  };
+  const [debouncedUrl] = useDebounce(url, 500);
+  useEffect(() => {
+    if (!debouncedUrl) return;
+    const newVideoResource = parse(debouncedUrl);
     if (!newVideoResource) return;
     if (videoResource && newVideoResource.url === videoResource.url) return;
     setVideoResource(newVideoResource);
-  };
+  }, [debouncedUrl]);
   const defaultValues = {
     name: topic?.name,
     description: topic?.description ?? "",
@@ -159,7 +165,7 @@ export default function TopicForm(props: Props) {
           }}
           required
           fullWidth
-          onBlur={onResourceUrlBlur}
+          onChange={onResourceUrlChange}
         />
         {videoResource && <Video {...videoResource} />}
         <Controller
