@@ -16,8 +16,9 @@ export function Vimeo(props: VimeoProps) {
   const ref = useRef(document.createElement("div"));
   const tracking = usePlayerTrackingAtom();
   useEffect(() => {
-    const { current } = ref;
-    const player = new Player(current, {
+    const element = document.createElement("div");
+    ref.current.appendChild(element);
+    const player = new Player(element, {
       ...defaultOptions,
       ...props.options,
     });
@@ -25,10 +26,10 @@ export function Vimeo(props: VimeoProps) {
     volumePersister(player);
     if (props.onEnded) player.on("ended", props.onEnded);
     return () => {
-      // TODO: getPlayed() に失敗するので destroy() せず一時停止して保持
-      //       メモリリークにつながるので避けたほうが望ましい
+      // TODO: 要素を取り除くと学習活動の記録のために使われている getPlayed() が resolve しないので残す
+      //       メモリリークにつながるので避けたほうが望ましく、学習活動の送信後すみやかに取り除くべき
       player.pause();
-      current.textContent = "";
+      element.style.display = "none";
     };
   }, [props.options, props.onEnded, tracking]);
   return <div ref={ref} />;
