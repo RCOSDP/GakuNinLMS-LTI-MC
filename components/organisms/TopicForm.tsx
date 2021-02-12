@@ -89,7 +89,7 @@ export default function TopicForm(props: Props) {
     if (!newVideoResource) return;
     if (videoResource && newVideoResource.url === videoResource.url) return;
     setVideoResource(newVideoResource);
-  }, [debouncedUrl]);
+  }, [debouncedUrl, videoResource]);
   const defaultValues = {
     name: topic?.name,
     description: topic?.description ?? "",
