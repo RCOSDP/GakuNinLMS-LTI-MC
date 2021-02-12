@@ -36,6 +36,9 @@ import {
     InlineObject6,
     InlineObject6FromJSON,
     InlineObject6ToJSON,
+    InlineObject7,
+    InlineObject7FromJSON,
+    InlineObject7ToJSON,
     InlineResponse200,
     InlineResponse200FromJSON,
     InlineResponse200ToJSON,
@@ -66,6 +69,9 @@ import {
     InlineResponse201,
     InlineResponse201FromJSON,
     InlineResponse201ToJSON,
+    InlineResponse2011,
+    InlineResponse2011FromJSON,
+    InlineResponse2011ToJSON,
 } from '../models';
 
 export interface ApiV2BookBookIdDeleteRequest {
@@ -91,7 +97,7 @@ export interface ApiV2BooksGetRequest {
 }
 
 export interface ApiV2EventPostRequest {
-    body?: InlineObject6;
+    body?: InlineObject7;
 }
 
 export interface ApiV2LtiLaunchPostRequest {
@@ -132,7 +138,7 @@ export interface ApiV2LtiLtiConsumerIdResourceLinkLtiResourceLinkIdPutRequest {
 
 export interface ApiV2ResourceResourceIdVideoTrackPostRequest {
     resourceId: number;
-    body?: InlineObject5;
+    body?: InlineObject6;
 }
 
 export interface ApiV2ResourceResourceIdVideoTrackVideoTrackIdDeleteRequest {
@@ -152,6 +158,11 @@ export interface ApiV2ResourcesGetRequest {
 
 export interface ApiV2TopicPostRequest {
     body?: InlineObject4;
+}
+
+export interface ApiV2TopicTopicIdActivityPutRequest {
+    topicId: number;
+    body?: InlineObject5;
 }
 
 export interface ApiV2TopicTopicIdDeleteRequest {
@@ -370,7 +381,7 @@ export class DefaultApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: InlineObject6ToJSON(requestParameters.body),
+            body: InlineObject7ToJSON(requestParameters.body),
         });
 
         return new runtime.VoidApiResponse(response);
@@ -657,7 +668,7 @@ export class DefaultApi extends runtime.BaseAPI {
      * 字幕をアップロードします。 教員または管理者でなければなりません。
      * 字幕のアップロード
      */
-    async apiV2ResourceResourceIdVideoTrackPostRaw(requestParameters: ApiV2ResourceResourceIdVideoTrackPostRequest): Promise<runtime.ApiResponse<InlineResponse201>> {
+    async apiV2ResourceResourceIdVideoTrackPostRaw(requestParameters: ApiV2ResourceResourceIdVideoTrackPostRequest): Promise<runtime.ApiResponse<InlineResponse2011>> {
         if (requestParameters.resourceId === null || requestParameters.resourceId === undefined) {
             throw new runtime.RequiredError('resourceId','Required parameter requestParameters.resourceId was null or undefined when calling apiV2ResourceResourceIdVideoTrackPost.');
         }
@@ -673,17 +684,17 @@ export class DefaultApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: InlineObject5ToJSON(requestParameters.body),
+            body: InlineObject6ToJSON(requestParameters.body),
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse201FromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2011FromJSON(jsonValue));
     }
 
     /**
      * 字幕をアップロードします。 教員または管理者でなければなりません。
      * 字幕のアップロード
      */
-    async apiV2ResourceResourceIdVideoTrackPost(requestParameters: ApiV2ResourceResourceIdVideoTrackPostRequest): Promise<InlineResponse201> {
+    async apiV2ResourceResourceIdVideoTrackPost(requestParameters: ApiV2ResourceResourceIdVideoTrackPostRequest): Promise<InlineResponse2011> {
         const response = await this.apiV2ResourceResourceIdVideoTrackPostRaw(requestParameters);
         return await response.value();
     }
@@ -851,6 +862,41 @@ export class DefaultApi extends runtime.BaseAPI {
      */
     async apiV2TopicPost(requestParameters: ApiV2TopicPostRequest): Promise<InlineResponse2001Topics> {
         const response = await this.apiV2TopicPostRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * 自身の学習活動を更新します。 利用者でなければなりません。
+     * 学習活動の更新
+     */
+    async apiV2TopicTopicIdActivityPutRaw(requestParameters: ApiV2TopicTopicIdActivityPutRequest): Promise<runtime.ApiResponse<InlineResponse201>> {
+        if (requestParameters.topicId === null || requestParameters.topicId === undefined) {
+            throw new runtime.RequiredError('topicId','Required parameter requestParameters.topicId was null or undefined when calling apiV2TopicTopicIdActivityPut.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/api/v2/topic/{topic_id}/activity`.replace(`{${"topic_id"}}`, encodeURIComponent(String(requestParameters.topicId))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: InlineObject5ToJSON(requestParameters.body),
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse201FromJSON(jsonValue));
+    }
+
+    /**
+     * 自身の学習活動を更新します。 利用者でなければなりません。
+     * 学習活動の更新
+     */
+    async apiV2TopicTopicIdActivityPut(requestParameters: ApiV2TopicTopicIdActivityPutRequest): Promise<InlineResponse201> {
+        const response = await this.apiV2TopicTopicIdActivityPutRaw(requestParameters);
         return await response.value();
     }
 

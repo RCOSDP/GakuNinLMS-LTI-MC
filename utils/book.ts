@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import useSWR, { mutate } from "swr";
-import { useUpdateBookAtom } from "$store/book";
+import { useBookAtom } from "$store/book";
 import { api } from "./api";
 import type { BookProps, BookSchema } from "$server/models/book";
 import type { TopicSchema } from "$server/models/topic";
@@ -16,11 +16,11 @@ async function fetchBook(_: typeof key, id: BookSchema["id"]) {
 
 export function useBook(id: BookSchema["id"]) {
   const { data } = useSWR<BookSchema>([key, id], fetchBook);
-  const updateBook = useUpdateBookAtom();
+  const { updateBook, ...state } = useBookAtom();
   useEffect(() => {
     if (data) updateBook(data);
   }, [data, updateBook]);
-  return data;
+  return state;
 }
 
 export async function createBook(body: BookProps): Promise<BookSchema> {

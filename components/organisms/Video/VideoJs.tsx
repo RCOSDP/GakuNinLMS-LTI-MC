@@ -29,9 +29,10 @@ export function VideoJs(props: VideoJsProps) {
   const ref = useRef(document.createElement("div"));
   const tracking = usePlayerTrackingAtom();
   useEffect(() => {
+    const { current } = ref;
     const element = document.createElement("video-js");
     element.classList.add("vjs-big-play-centered");
-    ref.current.appendChild(element);
+    current.appendChild(element);
     const player = videojs(element, { ...defaultOptions, ...props.options });
     // @ts-expect-error: @types/video.js@^7.3.11 Unsupported
     player.seekButtons({
@@ -41,7 +42,12 @@ export function VideoJs(props: VideoJsProps) {
     tracking(player);
     volumePersister(player);
     if (props.onEnded) player.on("ended", props.onEnded);
-    return () => player.dispose();
+    return () => {
+      // TODO: played() に失敗するので dispose() せず一時停止して保持
+      //       メモリリークにつながるので避けたほうが望ましい
+      player.pause();
+      current.textContent = "";
+    };
   }, [props.options, props.onEnded, tracking]);
   const tracksRef = useRef<HTMLTrackElement[]>([]);
   useEffect(() => {

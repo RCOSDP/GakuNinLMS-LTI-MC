@@ -1,1 +1,1 @@
-type ItemIndex = [number, number];
+type ItemIndex = readonly [number, number];

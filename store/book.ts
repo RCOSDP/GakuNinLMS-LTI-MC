@@ -1,44 +1,74 @@
-import { atom, useAtom } from "jotai";
-import { useUpdateAtom } from "jotai/utils";
-import { BookSchema } from "$server/models/book";
+import { atom } from "jotai";
+import { useAtomValue, useUpdateAtom } from "jotai/utils";
+import type { BookSchema } from "$server/models/book";
+import type { TopicSchema } from "$server/models/topic";
 
-type ItemIndex = [number, number];
+type BookState = {
+  book: BookSchema | undefined;
+  itemIndex: ItemIndex;
+  itemExists(itemIndex: ItemIndex): TopicSchema | undefined;
+};
 
-const bookAtom = atom<BookSchema | undefined>(undefined);
-const itemIndexAtom = atom<ItemIndex>([0, 0]);
+const bookAtom = atom<BookState>({
+  book: undefined,
+  itemIndex: [0, 0],
+  itemExists: () => undefined,
+});
 
-const updateBookAtom = atom<BookSchema | undefined, BookSchema>(
-  (get) => get(bookAtom),
-  (get, set, book) => {
-    set(bookAtom, book);
-    if (get(itemIndexAtom).some((i) => i !== 0)) set(itemIndexAtom, [0, 0]);
+const updateBookAtom = atom<undefined, BookSchema>(
+  () => undefined,
+  (_, set, book) => {
+    set(bookAtom, {
+      book,
+      itemIndex: [0, 0],
+      itemExists: ([sectionIndex, topicIndex]) =>
+        book.sections[sectionIndex]?.topics[topicIndex],
+    });
   }
 );
 
-const nextItemIndexAtom = atom<ItemIndex, ItemIndex | undefined>(
-  (get) => get(itemIndexAtom),
-  (get, set, arg) => {
-    const book = get(bookAtom);
-    if (!book) return;
-    if (arg) return set(itemIndexAtom, arg);
-    const [prevSectionIndex, prevTopicIndex] = get(itemIndexAtom);
-    const topicIndex = prevTopicIndex + 1;
-    const topicExists = book.sections[prevSectionIndex].topics[topicIndex];
-    if (topicExists) return set(itemIndexAtom, [prevSectionIndex, topicIndex]);
-    const sectionIndex = prevSectionIndex + 1;
-    const sectionExists = book.sections[sectionIndex];
-    if (sectionExists) return set(itemIndexAtom, [sectionIndex, 0]);
+const updateItemIndexAtom = atom<undefined, ItemIndex>(
+  () => undefined,
+  (get, set, itemIndex) => {
+    const { book, itemExists } = get(bookAtom);
+    if (itemExists(itemIndex)) {
+      set(bookAtom, { book, itemIndex, itemExists });
+    }
   }
 );
 
-export function useUpdateBookAtom() {
-  useAtom(bookAtom);
-  useAtom(itemIndexAtom);
-  return useUpdateAtom(updateBookAtom);
-}
+const nextItemIndexAtom = atom(
+  () => undefined,
+  (get, set) => {
+    const {
+      book,
+      itemIndex: [prevSectionIndex, prevTopicIndex],
+      itemExists,
+    } = get(bookAtom);
 
-export function useNextItemIndexAtom() {
-  useAtom(bookAtom);
-  useAtom(itemIndexAtom);
-  return useAtom(nextItemIndexAtom);
+    const nextTopicIndex = [prevSectionIndex, prevTopicIndex + 1] as const;
+    const nextSectionIndex = [prevSectionIndex + 1, 0] as const;
+
+    if (itemExists(nextTopicIndex)) {
+      set(bookAtom, {
+        book,
+        itemIndex: nextTopicIndex,
+        itemExists,
+      });
+    } else if (itemExists(nextSectionIndex)) {
+      set(bookAtom, {
+        book,
+        itemIndex: nextSectionIndex,
+        itemExists,
+      });
+    }
+  }
+);
+
+export function useBookAtom() {
+  const state = useAtomValue(bookAtom);
+  const updateBook = useUpdateAtom(updateBookAtom);
+  const updateItemIndex = useUpdateAtom(updateItemIndexAtom);
+  const nextItemIndex = useUpdateAtom(nextItemIndexAtom);
+  return { ...state, updateBook, updateItemIndex, nextItemIndex };
 }

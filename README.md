@@ -43,10 +43,11 @@ When changing the information of the connection destination of API, .env must be
 
 .env:
 
-| Environment variable        | Explanation                       |
-| --------------------------- | --------------------------------- |
-| `NEXT_PUBLIC_API_BASE_PATH` | Base path for API URLs            |
-| `NEXT_PUBLIC_BASE_PATH`     | Base path for static content URLs |
+| Environment variable                 | Explanation                                   |
+| ------------------------------------ | --------------------------------------------- |
+| `NEXT_PUBLIC_API_BASE_PATH`          | Base path for API URLs                        |
+| `NEXT_PUBLIC_BASE_PATH`              | Base path for static content URLs             |
+| `NEXT_PUBLIC_ACTIVITY_SEND_INTERVAL` | 学習活動の送信間隔 (秒) (デフォルト: 10 秒間) |
 
 ## Build front-ends
 

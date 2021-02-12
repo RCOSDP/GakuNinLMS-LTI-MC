@@ -65,7 +65,7 @@ export default function BookChildren(props: Props) {
   const [open, setOpen] = useState<boolean[]>(sections.map(() => true));
   const handleItemClick = (event: MouseEvent<HTMLElement>) => {
     const { section, topic } = event.currentTarget.dataset;
-    onItemClick(event, [section, topic].map(Number) as ItemIndex);
+    onItemClick(event, ([section, topic].map(Number) as unknown) as ItemIndex);
   };
   const handleSectionClick = (sectionItemIndex: number) => () => {
     setOpen((open) => {

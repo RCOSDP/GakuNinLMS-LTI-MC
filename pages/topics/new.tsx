@@ -58,7 +58,7 @@ function New({ edit, back, onSubmit }: NewProps) {
 type NewWithBookprops = NewProps & Query;
 
 function NewWithBook({ bookId, ...props }: NewWithBookprops) {
-  const book = useBook(bookId);
+  const { book } = useBook(bookId);
   async function handleSubmit({ id }: Pick<TopicSchema, "id">) {
     if (!book) return;
     await updateBook({

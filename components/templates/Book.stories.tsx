@@ -1,6 +1,7 @@
 export default { title: "templates/Book" };
 
-import { useNextItemIndexAtom } from "$store/book";
+import { useEffect } from "react";
+import { useBookAtom } from "$store/book";
 import Book from "./Book";
 import { book } from "samples";
 
@@ -23,64 +24,72 @@ function wrap(WrappedComponent: React.FC) {
 }
 
 export const Default = wrap(() => {
-  const [index, nextItemIndex] = useNextItemIndexAtom();
-  const handleTopicEnded = () => nextItemIndex();
-  const handleItemClick = nextItemIndex;
+  const {
+    updateBook,
+    itemIndex,
+    updateItemIndex,
+    nextItemIndex,
+  } = useBookAtom();
+  useEffect(() => {
+    updateBook(props.book);
+  }, [updateBook]);
 
   return (
     <Book
       {...props}
-      index={index}
-      onTopicEnded={handleTopicEnded}
-      onItemClick={handleItemClick}
+      index={itemIndex}
+      onTopicEnded={nextItemIndex}
+      onItemClick={updateItemIndex}
     />
   );
 });
 
 export const Empty = wrap(() => {
-  const [index, nextItemIndex] = useNextItemIndexAtom();
-  const handleTopicEnded = () => nextItemIndex();
-  const handleItemClick = nextItemIndex;
+  const { itemIndex, updateItemIndex, nextItemIndex } = useBookAtom();
 
   return (
     <Book
       {...props}
       book={null}
-      index={index}
-      onTopicEnded={handleTopicEnded}
-      onItemClick={handleItemClick}
+      index={itemIndex}
+      onTopicEnded={nextItemIndex}
+      onItemClick={updateItemIndex}
     />
   );
 });
 
 export const EmptySection = wrap(() => {
-  const [index, nextItemIndex] = useNextItemIndexAtom();
-  const handleTopicEnded = () => nextItemIndex();
-  const handleItemClick = nextItemIndex;
+  const { itemIndex, updateItemIndex, nextItemIndex } = useBookAtom();
 
   return (
     <Book
       {...props}
       book={{ ...props.book, sections: [] }}
-      index={index}
-      onTopicEnded={handleTopicEnded}
-      onItemClick={handleItemClick}
+      index={itemIndex}
+      onTopicEnded={nextItemIndex}
+      onItemClick={updateItemIndex}
     />
   );
 });
 
 export const ForStudent = wrap(() => {
-  const [index, nextItemIndex] = useNextItemIndexAtom();
-  const handleTopicEnded = () => nextItemIndex();
-  const handleItemClick = nextItemIndex;
+  const {
+    updateBook,
+    itemIndex,
+    updateItemIndex,
+    nextItemIndex,
+  } = useBookAtom();
+  useEffect(() => {
+    updateBook(props.book);
+  }, [updateBook]);
 
   return (
     <Book
       {...props}
       editable={false}
-      index={index}
-      onTopicEnded={handleTopicEnded}
-      onItemClick={handleItemClick}
+      index={itemIndex}
+      onTopicEnded={nextItemIndex}
+      onItemClick={updateItemIndex}
     />
   );
 });
