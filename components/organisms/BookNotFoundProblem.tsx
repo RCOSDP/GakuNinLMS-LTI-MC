@@ -2,7 +2,7 @@ import Link from "@material-ui/core/Link";
 import { useLmsUrl } from "$store/session";
 import Problem from "./Problem";
 
-export default function TopicNotFoundProblem() {
+export default function BookNotFoundProblem() {
   const url = useLmsUrl();
 
   return (

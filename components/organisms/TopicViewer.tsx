@@ -9,7 +9,7 @@ type Props = {
   onEnded?: () => void;
 };
 
-export default function TopicPlaer(props: Props) {
+export default function TopicViewer(props: Props) {
   const cardClasses = useCardStyles();
   const { className, topic, onEnded } = props;
   return (

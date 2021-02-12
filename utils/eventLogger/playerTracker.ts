@@ -43,7 +43,7 @@ const nullEvent = {
 } as const;
 
 /** プレイヤーのトラッキング用 */
-class PlayerTracker extends (EventEmitter as {
+export class PlayerTracker extends (EventEmitter as {
   new (): StrictEventEmitter<EventEmitter, PlayerEvents & CustomEvents>;
 }) {
   readonly player: VideoJsPlayer | VimeoPlayer;
@@ -132,8 +132,6 @@ class PlayerTracker extends (EventEmitter as {
     );
   }
 }
-
-export default PlayerTracker;
 
 function videoJsStats(player: VideoJsPlayer): PlayerEvent {
   // @ts-expect-error: @types/video.js@^7.3.11 Unsupported
