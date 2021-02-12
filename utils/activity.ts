@@ -4,7 +4,7 @@ import usePrevious from "@rooks/use-previous";
 import type { TopicSchema } from "$server/models/topic";
 import { useBookAtom } from "$store/book";
 import { usePlayerTrackerAtom } from "$store/playerTracker";
-import type PlayerTracker from "./eventLogger/playerTracker";
+import type { PlayerTracker } from "./eventLogger/playerTracker";
 import { api } from "./api";
 import { NEXT_PUBLIC_ACTIVITY_SEND_INTERVAL } from "./env";
 

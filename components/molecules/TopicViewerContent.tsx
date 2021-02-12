@@ -40,7 +40,7 @@ type Props = {
   onEnded?: () => void;
 };
 
-export default function TopicPlaer(props: Props) {
+export default function TopicViewerContent(props: Props) {
   const classes = useStyles();
   const { topic, onEnded } = props;
   return (
