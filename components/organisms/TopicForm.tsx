@@ -7,7 +7,6 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import { useForm, Controller } from "react-hook-form";
-import { useDebounce } from "use-debounce";
 import clsx from "clsx";
 import TextField from "$atoms/TextField";
 import SubtitleChip from "$atoms/SubtitleChip";
@@ -18,9 +17,9 @@ import useInputLabelStyles from "styles/inputLabel";
 import gray from "theme/colors/gray";
 import { TopicProps, TopicSchema } from "$server/models/topic";
 import { VideoTrackProps, VideoTrackSchema } from "$server/models/videoTrack";
-import { VideoResource } from "$server/models/videoResource";
 import languages from "$utils/languages";
-import { parse, isVideoResource } from "$utils/videoResource";
+import { parse } from "$utils/videoResource";
+import useVideoResourceProps from "$utils/useVideoResourceProps";
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -63,6 +62,11 @@ export default function TopicForm(props: Props) {
   const cardClasses = useCardStyles();
   const inputLabelClasses = useInputLabelStyles();
   const classes = useStyles();
+  const {
+    videoResource,
+    setUrl,
+  } = useVideoResourceProps(topic?.resource);
+  const handleResourceUrlChange = () => setUrl(getValues("resource.url"));
   const [open, setOpen] = useState(false);
   const handleClickSubtitle = () => {
     setOpen(true);
@@ -74,22 +78,6 @@ export default function TopicForm(props: Props) {
     onSubtitleSubmit(videoTrack);
     setOpen(false);
   };
-  const resource = topic?.resource;
-  const [videoResource, setVideoResource] = useState<VideoResource | null>(
-    isVideoResource(resource) ? resource : null
-  );
-  const [url, setUrl] = useState<string | undefined>(topic?.resource?.url);
-  const onResourceUrlChange = () => {
-    setUrl(getValues("resource.url"));
-  };
-  const [debouncedUrl] = useDebounce(url, 500);
-  useEffect(() => {
-    if (!debouncedUrl) return;
-    const newVideoResource = parse(debouncedUrl);
-    if (!newVideoResource) return;
-    if (videoResource && newVideoResource.url === videoResource.url) return;
-    setVideoResource(newVideoResource);
-  }, [debouncedUrl, videoResource]);
   const defaultValues = {
     name: topic?.name,
     description: topic?.description ?? "",
@@ -126,7 +114,7 @@ export default function TopicForm(props: Props) {
               </Typography>
             </>
           }
-          defaultValue={topic?.name}
+          defaultValue={defaultValues.name}
           required
           fullWidth
         />
@@ -157,7 +145,7 @@ export default function TopicForm(props: Props) {
             </>
           }
           type="url"
-          defaultValue={topic?.resource.url}
+          defaultValue={defaultValues.resource?.url}
           inputProps={{
             ref: register({
               setValueAs: (value) => parse(value)?.url ?? value,
@@ -165,7 +153,7 @@ export default function TopicForm(props: Props) {
           }}
           required
           fullWidth
-          onChange={onResourceUrlChange}
+          onChange={handleResourceUrlChange}
         />
         {videoResource && <Video {...videoResource} />}
         <Controller
