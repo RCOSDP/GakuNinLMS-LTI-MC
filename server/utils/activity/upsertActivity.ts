@@ -1,4 +1,4 @@
-import { IntervalTree } from "node-interval-tree";
+import { IntervalTree } from "$server/utils/intervalTree";
 import type { User, Topic, Activity, Prisma } from "@prisma/client";
 import type { ActivityProps } from "$server/models/activity";
 import type { ActivityTimeRangeProps } from "$server/models/activityTimeRange";
@@ -11,21 +11,18 @@ function findActivity(learnerId: User["id"], topicId: Topic["id"]) {
   });
 }
 
+function toInterval({ startMs, endMs }: ActivityTimeRangeProps) {
+  return { low: startMs, high: endMs };
+}
+
 function merge(
   self: ActivityTimeRangeProps[],
   other: ActivityTimeRangeProps[]
 ): ActivityTimeRangeProps[] {
   const tree = new IntervalTree();
 
-  self.forEach(({ startMs, endMs }) => {
-    tree.insert({ low: startMs, high: endMs });
-  });
-
-  other.forEach(({ startMs, endMs }) => {
-    const [low, high] = [startMs, endMs];
-    tree.search(low, high).forEach((range) => tree.remove(range));
-    tree.insert({ low, high });
-  });
+  self.forEach((range) => tree.insert(toInterval(range)));
+  other.forEach((range) => tree.insertOrExpand(toInterval(range)));
 
   const timeRanges = [...tree.inOrder()].map(({ low, high }) => ({
     startMs: low,

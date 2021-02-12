@@ -1,5 +1,5 @@
 import type { VideoJsPlayer } from "video.js";
-import { IntervalTree } from "node-interval-tree";
+import { IntervalTree } from "./intervalTree";
 
 const youtubeType = "video/youtube";
 
@@ -43,8 +43,7 @@ function youtubePlayedShims(player: VideoJsPlayer) {
       return;
     }
 
-    tree.search(start, end).forEach((range) => tree.remove(range));
-    tree.insert({ low: start, high: end });
+    tree.insertOrExpand({ low: start, high: end });
   });
 
   Object.assign(player, { played });
