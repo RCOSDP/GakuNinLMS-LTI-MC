@@ -3,6 +3,6 @@ import { book } from "samples";
 
 export default { title: "organisms/BookForm" };
 
-const props = { book, onSubmit: console.log };
+const defaultProps = { book, onSubmit: console.log };
 
-export const Default = () => <BookForm {...props} />;
+export const Default = () => <BookForm {...defaultProps} />;

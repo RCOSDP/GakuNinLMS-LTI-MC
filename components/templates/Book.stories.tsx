@@ -5,7 +5,7 @@ import { useBookAtom } from "$store/book";
 import Book from "./Book";
 import { book } from "samples";
 
-const props = {
+const defaultProps = {
   book,
   editable: true,
   onBookEditClick: console.log,
@@ -31,12 +31,12 @@ export const Default = wrap(() => {
     nextItemIndex,
   } = useBookAtom();
   useEffect(() => {
-    updateBook(props.book);
+    updateBook(defaultProps.book);
   }, [updateBook]);
 
   return (
     <Book
-      {...props}
+      {...defaultProps}
       index={itemIndex}
       onTopicEnded={nextItemIndex}
       onItemClick={updateItemIndex}
@@ -49,7 +49,7 @@ export const Empty = wrap(() => {
 
   return (
     <Book
-      {...props}
+      {...defaultProps}
       book={null}
       index={itemIndex}
       onTopicEnded={nextItemIndex}
@@ -63,8 +63,8 @@ export const EmptySection = wrap(() => {
 
   return (
     <Book
-      {...props}
-      book={{ ...props.book, sections: [] }}
+      {...defaultProps}
+      book={{ ...defaultProps.book, sections: [] }}
       index={itemIndex}
       onTopicEnded={nextItemIndex}
       onItemClick={updateItemIndex}
@@ -80,12 +80,12 @@ export const ForStudent = wrap(() => {
     nextItemIndex,
   } = useBookAtom();
   useEffect(() => {
-    updateBook(props.book);
+    updateBook(defaultProps.book);
   }, [updateBook]);
 
   return (
     <Book
-      {...props}
+      {...defaultProps}
       editable={false}
       index={itemIndex}
       onTopicEnded={nextItemIndex}
