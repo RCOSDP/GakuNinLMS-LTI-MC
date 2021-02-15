@@ -3,6 +3,6 @@ export default { title: "organisms/TopicViewer" };
 import TopicViewer from "./TopicViewer";
 import { topic } from "samples";
 
-const props = { topic };
+const defaultProps = { topic };
 
-export const Default = () => <TopicViewer {...props} />;
+export const Default = () => <TopicViewer {...defaultProps} />;

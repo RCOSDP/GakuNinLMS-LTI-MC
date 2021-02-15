@@ -6,7 +6,7 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import { book } from "$samples";
 
-const props = {
+const defaultProps = {
   book,
   onItemClick: console.log,
   onBookInfoClick: console.log,
@@ -17,7 +17,7 @@ export const Default = () => (
     defaultCollapseIcon={<ExpandMoreIcon />}
     defaultExpandIcon={<ChevronRightIcon />}
   >
-    <BookTree {...props} />
+    <BookTree {...defaultProps} />
   </TreeView>
 );
 
@@ -27,7 +27,7 @@ export const Editable = () => (
     defaultExpandIcon={<ChevronRightIcon />}
   >
     <BookTree
-      {...props}
+      {...defaultProps}
       onItemEditClick={console.log}
       onBookEditClick={console.log}
     />
@@ -39,6 +39,6 @@ export const Selectable = () => (
     defaultCollapseIcon={<ExpandMoreIcon />}
     defaultExpandIcon={<ChevronRightIcon />}
   >
-    <BookTree {...props} onTreeChange={console.log} />
+    <BookTree {...defaultProps} onTreeChange={console.log} />
   </TreeView>
 );

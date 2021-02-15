@@ -3,7 +3,7 @@ export default { title: "organisms/Video" };
 import { outdent } from "outdent";
 import Video from "./Video";
 
-const props = {
+const defaultProps = {
   tracks: [
     {
       id: 1,
@@ -27,7 +27,7 @@ export const YouTube = () => (
   <Video
     providerUrl="https://www.youtube.com/"
     url="https://www.youtube.com/watch?v=3yfen-t49eI"
-    {...props}
+    {...defaultProps}
   />
 );
 
@@ -35,9 +35,9 @@ export const Vimeo = () => (
   <Video
     providerUrl="https://vimeo.com/"
     url="https://vimeo.com/1084537"
-    {...props}
+    {...defaultProps}
   />
 );
 
 // TODO: 未サポート
-// export const Wowza = () => <Video type="wowza" src="sample.mp4" {...props} />;
+// export const Wowza = () => <Video type="wowza" src="sample.mp4" {...defaultProps} />;
