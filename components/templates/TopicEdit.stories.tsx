@@ -3,7 +3,7 @@ export default { title: "templates/TopicEdit" };
 import TopicEdit from "./TopicEdit";
 import { topic } from "samples";
 
-const props = {
+const defaultProps = {
   topic,
   onSubmit: console.log,
   onDelete: console.log,
@@ -12,6 +12,6 @@ const props = {
   onSubtitleSubmit: console.log,
 };
 
-export const Default = () => <TopicEdit {...props} />;
+export const Default = () => <TopicEdit {...defaultProps} />;
 
-export const Empty = () => <TopicEdit {...props} topic={null} />;
+export const Empty = () => <TopicEdit {...defaultProps} topic={null} />;

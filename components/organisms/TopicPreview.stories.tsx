@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const props = {
+const defaultProps = {
   topic,
   onTopicDetailClick: console.log,
   onTopicEditClick: console.log,
@@ -23,7 +23,7 @@ export const Default = () => {
   return (
     <div className={classes.grid}>
       {[...Array(10)].map((_value, index) => (
-        <TopicPreview key={index} {...props} />
+        <TopicPreview key={index} {...defaultProps} />
       ))}
     </div>
   );
@@ -34,7 +34,7 @@ export const Checkable = () => {
   return (
     <div className={classes.grid}>
       {[...Array(10)].map((_value, index) => (
-        <TopicPreview key={index} {...props} onChange={console.log} />
+        <TopicPreview key={index} {...defaultProps} onChange={console.log} />
       ))}
     </div>
   );
@@ -45,7 +45,11 @@ export const Others = () => {
   return (
     <div className={classes.grid}>
       {[...Array(10)].map((_value, index) => (
-        <TopicPreview key={index} {...props} onTopicEditClick={undefined} />
+        <TopicPreview
+          key={index}
+          {...defaultProps}
+          onTopicEditClick={undefined}
+        />
       ))}
     </div>
   );

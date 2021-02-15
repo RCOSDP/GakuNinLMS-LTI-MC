@@ -3,12 +3,16 @@ export default { title: "organisms/BookAccordion" };
 import BookAccordion from "./BookAccordion";
 import { book } from "samples";
 
-const props = { book, onEditClick: console.log, onTopicClick: console.log };
+const defaultProps = {
+  book,
+  onEditClick: console.log,
+  onTopicClick: console.log,
+};
 
 export const Default = () => (
   <div>
     {[...Array(10)].map((_value, index) => (
-      <BookAccordion key={index} {...props} />
+      <BookAccordion key={index} {...defaultProps} />
     ))}
   </div>
 );
@@ -18,7 +22,7 @@ export const Editable = () => (
     {[...Array(10)].map((_value, index) => (
       <BookAccordion
         key={index}
-        {...props}
+        {...defaultProps}
         onTopicEditClick={console.log}
         isTopicEditable={() => true}
       />

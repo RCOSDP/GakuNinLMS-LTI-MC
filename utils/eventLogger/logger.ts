@@ -1,6 +1,6 @@
 import type { EventType } from "$server/models/event";
 import { api } from "$utils/api";
-import PlayerTracker, { PlayerEvent, PlayerEvents } from "./playerTracker";
+import { PlayerEvent, PlayerEvents, PlayerTracker } from "./playerTracker";
 import { load } from "./loggerSessionPersister";
 
 /** v1のときのトラッキング用コードの移植 */

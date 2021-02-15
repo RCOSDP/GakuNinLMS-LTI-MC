@@ -5,6 +5,7 @@ parserOptions:
 plugins:
   - react
   - "@typescript-eslint"
+  - filenames
 settings:
   react:
     version: detect
@@ -23,6 +24,7 @@ rules:
     - "error"
     - varsIgnorePattern: "^_"
   react/react-in-jsx-scope: "off"
+  filenames/match-exported: error
 overrides:
   - files:
       - next.config.js
@@ -32,3 +34,9 @@ overrides:
       - samples/**
     rules:
       no-irregular-whitespace: "off"
+  - files: pages/**
+    rules:
+      filenames/match-exported: "off"
+  - files: [types/**, server/types/**]
+    rules:
+      filenames/match-exported: [error, camel]

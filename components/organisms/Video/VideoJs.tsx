@@ -17,7 +17,6 @@ const defaultOptions: VideoJsPlayerOptions = {
   fluid: true,
   controlBar: {
     // FIXME: https://github.com/videojs/videojs-youtube/issues/562
-    // @ts-expect-error: @types/video.js@^7.3.11 Unsupported
     pictureInPictureToggle: false,
   },
   playbackRates: [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2],

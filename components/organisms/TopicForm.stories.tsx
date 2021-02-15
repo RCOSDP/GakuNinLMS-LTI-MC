@@ -4,7 +4,7 @@ import type { VideoTrackSchema } from "$server/models/videoTrack";
 
 export default { title: "organisms/TopicForm" };
 
-const props = {
+const defaultProps = {
   topic,
   onSubmit: console.log,
   onSubtitleDelete: console.log,
@@ -17,4 +17,4 @@ const props = {
     }),
 };
 
-export const Default = () => <TopicForm {...props} />;
+export const Default = () => <TopicForm {...defaultProps} />;

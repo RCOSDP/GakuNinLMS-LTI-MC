@@ -10,7 +10,7 @@ const appBarHandlers = {
   onDashboardClick: console.log,
 };
 
-const props = {
+const defaultProps = {
   books,
   ltiResourceLink: {
     id: "1",
@@ -28,13 +28,13 @@ const props = {
 export const Default = () => (
   <>
     <AppBar position="sticky" session={session} {...appBarHandlers} />
-    <BookLink {...props} />
+    <BookLink {...defaultProps} />
   </>
 );
 
 export const Empty = () => (
   <>
     <AppBar position="sticky" session={session} {...appBarHandlers} />
-    <BookLink {...props} books={[]} />
+    <BookLink {...defaultProps} books={[]} />
   </>
 );
