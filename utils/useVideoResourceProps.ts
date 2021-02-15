@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { useDebounce } from "use-debounce";
 import type { VideoResource } from "$server/models/videoResource";
+import type { VideoTrackSchema } from "$server/models/videoTrack";
 import type { ResourceSchema } from "$server/models/resource";
 import { parse, isVideoResource } from "$utils/videoResource";
 
@@ -10,18 +10,32 @@ function useVideoResourceProps(
   const [videoResource, setVideoResource] = useState<VideoResource | undefined>(
     isVideoResource(resource) ? resource : undefined
   );
-  const [url, setUrl] = useState<string | undefined>();
-  const [debouncedUrl] = useDebounce(url, 500);
+  const [tracks, setTracks] = useState<VideoTrackSchema[]>(
+    isVideoResource(resource) ? resource.tracks : []
+  );
+  const addTrack = (track: VideoTrackSchema) => {
+    const newTracks = tracks.slice();
+    newTracks.push(track);
+    setTracks(newTracks);
+  };
+  const deleteTrack = ({ id }: Pick<VideoTrackSchema, "id">) => {
+    const newTracks = tracks.slice();
+    const index = newTracks.findIndex((track) => track.id === id);
+    newTracks.splice(index, 1);
+    setTracks(newTracks);
+  };
+  const [url, setUrl] = useState<string | undefined>(resource?.url);
   useEffect(() => {
-    if (!debouncedUrl) return;
-    const newVideoResource = parse(debouncedUrl);
-    if (!newVideoResource) return;
-    if (videoResource && newVideoResource.url === videoResource.url) return;
-    setVideoResource({ ...newVideoResource });
-  }, [debouncedUrl, videoResource]);
+    const newVideoResource = parse(url ?? "");
+    newVideoResource
+      ? setVideoResource({ ...newVideoResource, tracks })
+      : setVideoResource(undefined);
+  }, [url, tracks]);
   return {
     videoResource,
     setUrl,
+    addTrack,
+    deleteTrack,
   };
 }
 
