@@ -10,12 +10,7 @@ import TopicEdit from "$templates/TopicEdit";
 import TopicNotFoundProblem from "$organisms/BookNotFoundProblem";
 import BookNotFoundProblem from "$organisms/TopicNotFoundProblem";
 import { useVideoTrackAtom } from "$store/videoTrack";
-import {
-  destroyTopic,
-  revalidateTopic,
-  updateTopic,
-  useTopic,
-} from "$utils/topic";
+import { destroyTopic, updateTopic, useTopic } from "$utils/topic";
 import { destroyVideoTrack, uploadVideoTrack } from "$utils/videoTrack";
 import { updateBook, useBook } from "$utils/book";
 
