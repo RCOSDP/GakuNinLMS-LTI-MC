@@ -4,7 +4,7 @@
 /.next/
 /.vercel/
 /eslint_report.json
+/public/
 /utils/$path.ts
 node_modules/
 .env
-public/
