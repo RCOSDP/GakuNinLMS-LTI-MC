@@ -52,7 +52,6 @@ function Edit({ topicId, back, onDelete }: EditProps) {
   async function handleSubtitleDelete({ id }: VideoTrackSchema) {
     if (!topic) return;
     await destroyVideoTrack(topic.resource.id, id);
-    await revalidateTopic(topic.id);
     deleteVideoTrack(id);
   }
   function handleCancel() {
