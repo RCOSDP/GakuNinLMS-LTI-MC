@@ -47,7 +47,6 @@ function Edit({ topicId, back, onDelete }: EditProps) {
   async function handleSubtitleSubmit(videoTrack: VideoTrackProps) {
     if (!topic) return;
     const uploaded = await uploadVideoTrack(topic.resource.id, videoTrack);
-    await revalidateTopic(topic.id);
     addVideoTrack(uploaded);
   }
   async function handleSubtitleDelete({ id }: VideoTrackSchema) {
