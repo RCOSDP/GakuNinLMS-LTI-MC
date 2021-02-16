@@ -80,7 +80,7 @@ export function useVideoTrackAtom() {
   const videoTracksProps = useAtomValue(videoTracksPropsAtom);
   const resetVideoTrackProps = useResetAtom(videoTracksPropsAtom);
   useAtomValue(videoTracksPropsToSchemaAtom);
-  const videoTracksSchema = useAtomValue(videoTracksSchemaAtom);
+  useAtomValue(videoTracksSchemaAtom);
   const videoTracks = useAtomValue(videoTracksAtom);
   const setVideoTracks = useUpdateAtom(setVideoTracksAtom);
   const addVideoTrack = useUpdateAtom(addVideoTrackAtom);
@@ -88,7 +88,6 @@ export function useVideoTrackAtom() {
   return {
     videoTracksProps,
     resetVideoTrackProps,
-    videoTracksSchema,
     videoTracks,
     setVideoTracks,
     addVideoTrack,
