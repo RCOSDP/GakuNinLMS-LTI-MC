@@ -25,23 +25,13 @@ const isVideoTrackProps = (
 ): videoTrack is VideoTrackProps => "content" in videoTrack;
 
 const videoTracksPropsAtom = atomWithReset<VideoTrackProps[]>([]);
-const videoTracksPropsToSchemaAtom = atom<VideoTrackSchema[]>((get) =>
-  get(videoTracksPropsAtom).map(toVideoTrackSchema)
-);
 const videoTracksSchemaAtom = atom<VideoTrackSchema[]>([]);
 
 const videoTracksAtom = atom<VideoTrackSchema[]>((get) => {
   if (get(videoTracksPropsAtom).length > 0)
-    return get(videoTracksPropsToSchemaAtom);
+    return get(videoTracksPropsAtom).map(toVideoTrackSchema);
   else return get(videoTracksSchemaAtom);
 });
-
-const setVideoTracksAtom = atom<null, VideoTrackSchema[]>(
-  null,
-  (_, set, videoTracks) => {
-    set(videoTracksSchemaAtom, [...videoTracks]);
-  }
-);
 
 const addVideoTrackAtom = atom<null, VideoTrackProps | VideoTrackSchema>(
   null,
@@ -79,10 +69,8 @@ const deleteVideoTrackAtom = atom<null, VideoTrackSchema>(
 export function useVideoTrackAtom() {
   const videoTracksProps = useAtomValue(videoTracksPropsAtom);
   const resetVideoTrackProps = useResetAtom(videoTracksPropsAtom);
-  useAtomValue(videoTracksPropsToSchemaAtom);
-  useAtomValue(videoTracksSchemaAtom);
   const videoTracks = useAtomValue(videoTracksAtom);
-  const setVideoTracks = useUpdateAtom(setVideoTracksAtom);
+  const setVideoTracks = useUpdateAtom(videoTracksSchemaAtom);
   const addVideoTrack = useUpdateAtom(addVideoTrackAtom);
   const deleteVideoTrack = useUpdateAtom(deleteVideoTrackAtom);
   return {
