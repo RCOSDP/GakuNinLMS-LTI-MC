@@ -1,10 +1,14 @@
+import { useEffect } from "react";
 import { useRouter } from "next/router";
 import type { TopicProps, TopicSchema } from "$server/models/topic";
-import type { VideoTrackProps } from "$server/models/videoTrack";
+import type {
+  VideoTrackProps,
+  VideoTrackSchema,
+} from "$server/models/videoTrack";
 import TopicNew from "$templates/TopicNew";
 import Placeholder from "$templates/Placeholder";
 import BookNotFoundProblem from "$organisms/TopicNotFoundProblem";
-import { useAddVideoTrackAtom } from "$store/topic";
+import { useVideoTrackAtom } from "$store/videoTrack";
 import { updateBook, useBook } from "$utils/book";
 import { createTopic } from "$utils/topic";
 import type { Query as BookEditQuery } from "$pages/book/edit";
@@ -19,7 +23,15 @@ type NewProps = {
 };
 
 function New({ edit, back, onSubmit }: NewProps) {
-  const [videoTracks, addVideoTrack] = useAddVideoTrackAtom();
+  const {
+    videoTracksProps,
+    resetVideoTrackProps,
+    addVideoTrack,
+    deleteVideoTrack,
+  } = useVideoTrackAtom();
+  useEffect(() => {
+    resetVideoTrackProps();
+  }, [resetVideoTrackProps]);
   async function handleSubmit(props: TopicProps) {
     const topic = await createTopic(props);
     const {
@@ -27,7 +39,7 @@ function New({ edit, back, onSubmit }: NewProps) {
     } = topic;
 
     await Promise.all(
-      videoTracks.map((vt) => uploadVideoTrack(resourceId, vt))
+      videoTracksProps.map((vt) => uploadVideoTrack(resourceId, vt))
     );
 
     await onSubmit?.(topic);
@@ -37,10 +49,9 @@ function New({ edit, back, onSubmit }: NewProps) {
   }
   function handleSubtitleSubmit(videoTrack: VideoTrackProps) {
     addVideoTrack(videoTrack);
-    // FIXME: 追加された字幕が画面に反映されない不具合
   }
-  async function handleSubtitleDelete() {
-    // TODO: 未実装
+  function handleSubtitleDelete({ id }: VideoTrackSchema) {
+    deleteVideoTrack(id);
   }
   function handleCancel() {
     return back();

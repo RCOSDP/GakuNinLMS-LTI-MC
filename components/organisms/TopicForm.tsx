@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Card from "@material-ui/core/Card";
 import Checkbox from "@material-ui/core/Checkbox";
 import Button from "@material-ui/core/Button";
@@ -7,7 +7,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import { useForm, Controller } from "react-hook-form";
-import { useDebounce } from "use-debounce";
+import { useDebouncedCallback } from "use-debounce";
 import clsx from "clsx";
 import TextField from "$atoms/TextField";
 import SubtitleChip from "$atoms/SubtitleChip";
@@ -16,11 +16,15 @@ import Video from "$organisms/Video";
 import useCardStyles from "styles/card";
 import useInputLabelStyles from "styles/inputLabel";
 import gray from "theme/colors/gray";
-import { TopicProps, TopicSchema } from "$server/models/topic";
-import { VideoTrackProps, VideoTrackSchema } from "$server/models/videoTrack";
-import { VideoResource } from "$server/models/videoResource";
+import type { TopicProps, TopicSchema } from "$server/models/topic";
+import type {
+  VideoTrackProps,
+  VideoTrackSchema,
+} from "$server/models/videoTrack";
 import languages from "$utils/languages";
-import { parse, isVideoResource } from "$utils/videoResource";
+import { parse } from "$utils/videoResource";
+import useVideoResourceProps from "$utils/useVideoResourceProps";
+import { useVideoTrackAtom } from "$store/videoTrack";
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -46,9 +50,9 @@ type Props = {
   topic: TopicSchema | null;
   className?: string;
   submitLabel?: string;
-  onSubmit?: (topic: TopicProps) => void;
-  onSubtitleDelete: (videoTrack: VideoTrackSchema) => void;
-  onSubtitleSubmit: (videoTrack: VideoTrackProps) => void;
+  onSubmit?(topic: TopicProps): void;
+  onSubtitleSubmit(videoTrack: VideoTrackProps): void;
+  onSubtitleDelete(videoTrack: VideoTrackSchema): void;
 };
 
 export default function TopicForm(props: Props) {
@@ -57,12 +61,18 @@ export default function TopicForm(props: Props) {
     className,
     submitLabel = "更新",
     onSubmit = () => undefined,
-    onSubtitleDelete,
     onSubtitleSubmit,
+    onSubtitleDelete,
   } = props;
   const cardClasses = useCardStyles();
   const inputLabelClasses = useInputLabelStyles();
   const classes = useStyles();
+  const { videoResource, setUrl } = useVideoResourceProps(topic?.resource);
+  const handleResourceUrlChange = useDebouncedCallback(
+    () => setUrl(getValues("resource.url")),
+    500
+  ).callback;
+  const { videoTracks } = useVideoTrackAtom();
   const [open, setOpen] = useState(false);
   const handleClickSubtitle = () => {
     setOpen(true);
@@ -70,26 +80,13 @@ export default function TopicForm(props: Props) {
   const handleClose = () => {
     setOpen(false);
   };
-  const handleSubmitSubtitle = (videoTrack: VideoTrackProps) => {
+  const handleSubtitleSubmit = (videoTrack: VideoTrackProps) => {
     onSubtitleSubmit(videoTrack);
     setOpen(false);
   };
-  const resource = topic?.resource;
-  const [videoResource, setVideoResource] = useState<VideoResource | null>(
-    isVideoResource(resource) ? resource : null
-  );
-  const [url, setUrl] = useState<string | undefined>(topic?.resource?.url);
-  const onResourceUrlChange = () => {
-    setUrl(getValues("resource.url"));
+  const handleSubtitleDelete = (videoTrack: VideoTrackSchema) => {
+    onSubtitleDelete(videoTrack);
   };
-  const [debouncedUrl] = useDebounce(url, 500);
-  useEffect(() => {
-    if (!debouncedUrl) return;
-    const newVideoResource = parse(debouncedUrl);
-    if (!newVideoResource) return;
-    if (videoResource && newVideoResource.url === videoResource.url) return;
-    setVideoResource(newVideoResource);
-  }, [debouncedUrl, videoResource]);
   const defaultValues = {
     name: topic?.name,
     description: topic?.description ?? "",
@@ -126,7 +123,7 @@ export default function TopicForm(props: Props) {
               </Typography>
             </>
           }
-          defaultValue={topic?.name}
+          defaultValue={defaultValues.name}
           required
           fullWidth
         />
@@ -157,7 +154,7 @@ export default function TopicForm(props: Props) {
             </>
           }
           type="url"
-          defaultValue={topic?.resource.url}
+          defaultValue={defaultValues.resource?.url}
           inputProps={{
             ref: register({
               setValueAs: (value) => parse(value)?.url ?? value,
@@ -165,7 +162,7 @@ export default function TopicForm(props: Props) {
           }}
           required
           fullWidth
-          onChange={onResourceUrlChange}
+          onChange={handleResourceUrlChange}
         />
         {videoResource && <Video {...videoResource} />}
         <Controller
@@ -197,15 +194,13 @@ export default function TopicForm(props: Props) {
         <div>
           <InputLabel classes={inputLabelClasses}>字幕</InputLabel>
           <div className={classes.subtitles}>
-            {topic &&
-              "tracks" in topic.resource &&
-              topic.resource.tracks.map((track) => (
-                <SubtitleChip
-                  key={track.id}
-                  videoTrack={track}
-                  onDelete={onSubtitleDelete}
-                />
-              ))}
+            {videoTracks.map((track) => (
+              <SubtitleChip
+                key={track.id}
+                videoTrack={track}
+                onDelete={handleSubtitleDelete}
+              />
+            ))}
           </div>
           <Button
             variant="outlined"
@@ -230,7 +225,7 @@ export default function TopicForm(props: Props) {
       <SubtitleUploadDialog
         open={open}
         onClose={handleClose}
-        onSubmit={handleSubmitSubtitle}
+        onSubmit={handleSubtitleSubmit}
       />
     </>
   );

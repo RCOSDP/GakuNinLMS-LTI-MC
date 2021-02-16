@@ -1,14 +1,17 @@
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import Button from "@material-ui/core/Button";
-import { DeleteOutlined } from "@material-ui/icons";
+import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
 import { makeStyles } from "@material-ui/core/styles";
 import TopicForm from "$organisms/TopicForm";
 import RequiredDot from "$atoms/RequiredDot";
 import BackButton from "$atoms/BackButton";
 import useContainerStyles from "styles/container";
-import { TopicProps, TopicSchema } from "$server/models/topic";
-import { VideoTrackProps, VideoTrackSchema } from "$server/models/videoTrack";
+import type { TopicProps, TopicSchema } from "$server/models/topic";
+import type {
+  VideoTrackProps,
+  VideoTrackSchema,
+} from "$server/models/videoTrack";
 import { useConfirm } from "material-ui-confirm";
 
 const useStyles = makeStyles((theme) => ({
@@ -84,7 +87,7 @@ export default function TopicEdit(props: Props) {
         onSubtitleSubmit={onSubtitleSubmit}
       />
       <Button size="small" color="primary" onClick={handleDeleteButtonClick}>
-        <DeleteOutlined />
+        <DeleteOutlinedIcon />
         トピックを削除
       </Button>
     </Container>
