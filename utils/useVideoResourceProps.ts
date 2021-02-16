@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import type { VideoResource } from "$server/models/videoResource";
 import type { ResourceSchema } from "$server/models/resource";
 import { parse, isVideoResource } from "$utils/videoResource";
@@ -14,16 +14,15 @@ function useVideoResourceProps(
   useEffect(() => {
     if (isVideoResource(resource)) setVideoTracks(resource.tracks);
   }, [resource, setVideoTracks]);
-  const [url, setUrl] = useState<string | undefined>(resource?.url);
-  useEffect(() => {
-    const newVideoResource = parse(url ?? "");
-    newVideoResource
-      ? setVideoResource({
-          ...newVideoResource,
-          tracks: videoTracks,
-        })
-      : setVideoResource(undefined);
-  }, [url, videoTracks]);
+  const setUrl = useCallback(
+    (url: string | undefined) => {
+      const nextVideoResource = parse(url ?? "");
+      setVideoResource(
+        nextVideoResource && { ...nextVideoResource, tracks: videoTracks }
+      );
+    },
+    [videoTracks]
+  );
   return {
     videoResource,
     setUrl,
