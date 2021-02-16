@@ -24,6 +24,7 @@ type NewProps = {
 function New({ edit, back, onSubmit }: NewProps) {
   const {
     videoTracksProps,
+    resetVideoTrackProps,
     addVideoTrack,
     deleteVideoTrack,
   } = useVideoTrackAtom();
@@ -36,6 +37,7 @@ function New({ edit, back, onSubmit }: NewProps) {
     await Promise.all(
       videoTracksProps.map((vt) => uploadVideoTrack(resourceId, vt))
     );
+    resetVideoTrackProps();
 
     await onSubmit?.(topic);
 

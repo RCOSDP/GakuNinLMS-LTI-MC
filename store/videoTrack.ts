@@ -1,5 +1,10 @@
 import { atom } from "jotai";
-import { useAtomValue, useUpdateAtom } from "jotai/utils";
+import {
+  atomWithReset,
+  useResetAtom,
+  useAtomValue,
+  useUpdateAtom,
+} from "jotai/utils";
 import type {
   VideoTrackProps,
   VideoTrackSchema,
@@ -19,7 +24,7 @@ const isVideoTrackProps = (
   videoTrack: VideoTrackProps | VideoTrackSchema
 ): videoTrack is VideoTrackProps => "content" in videoTrack;
 
-const videoTracksPropsAtom = atom<VideoTrackProps[]>([]);
+const videoTracksPropsAtom = atomWithReset<VideoTrackProps[]>([]);
 const videoTracksPropsToSchemaAtom = atom<VideoTrackSchema[]>((get) =>
   get(videoTracksPropsAtom).map(toVideoTrackSchema)
 );
@@ -73,6 +78,7 @@ const deleteVideoTrackAtom = atom<null, VideoTrackSchema>(
 
 export function useVideoTrackAtom() {
   const videoTracksProps = useAtomValue(videoTracksPropsAtom);
+  const resetVideoTrackProps = useResetAtom(videoTracksPropsAtom);
   useAtomValue(videoTracksPropsToSchemaAtom);
   const videoTracksSchema = useAtomValue(videoTracksSchemaAtom);
   const videoTracks = useAtomValue(videoTracksAtom);
@@ -81,6 +87,7 @@ export function useVideoTrackAtom() {
   const deleteVideoTrack = useUpdateAtom(deleteVideoTrackAtom);
   return {
     videoTracksProps,
+    resetVideoTrackProps,
     videoTracksSchema,
     videoTracks,
     setVideoTracks,
