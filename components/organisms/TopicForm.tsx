@@ -24,6 +24,7 @@ import type {
 import languages from "$utils/languages";
 import { parse } from "$utils/videoResource";
 import useVideoResourceProps from "$utils/useVideoResourceProps";
+import { useVideoTrackAtom } from "$store/videoTrack";
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -49,9 +50,9 @@ type Props = {
   topic: TopicSchema | null;
   className?: string;
   submitLabel?: string;
-  onSubmit?: (topic: TopicProps) => void;
-  onSubtitleDelete: (videoTrack: VideoTrackSchema) => void;
-  onSubtitleSubmit: (videoTrack: VideoTrackProps) => Promise<VideoTrackSchema>;
+  onSubmit?(topic: TopicProps): void;
+  onSubtitleSubmit(videoTrack: VideoTrackProps): void;
+  onSubtitleDelete(videoTrack: VideoTrackSchema): void;
 };
 
 export default function TopicForm(props: Props) {
@@ -60,22 +61,18 @@ export default function TopicForm(props: Props) {
     className,
     submitLabel = "更新",
     onSubmit = () => undefined,
-    onSubtitleDelete,
     onSubtitleSubmit,
+    onSubtitleDelete,
   } = props;
   const cardClasses = useCardStyles();
   const inputLabelClasses = useInputLabelStyles();
   const classes = useStyles();
-  const {
-    videoResource,
-    setUrl,
-    addTrack,
-    deleteTrack,
-  } = useVideoResourceProps(topic?.resource);
+  const { videoResource, setUrl } = useVideoResourceProps(topic?.resource);
   const handleResourceUrlChange = useDebouncedCallback(
     () => setUrl(getValues("resource.url")),
     500
   ).callback;
+  const { videoTracks } = useVideoTrackAtom();
   const [open, setOpen] = useState(false);
   const handleClickSubtitle = () => {
     setOpen(true);
@@ -83,14 +80,12 @@ export default function TopicForm(props: Props) {
   const handleClose = () => {
     setOpen(false);
   };
+  const handleSubtitleSubmit = (videoTrack: VideoTrackProps) => {
+    onSubtitleSubmit(videoTrack);
+    setOpen(false);
+  };
   const handleSubtitleDelete = (videoTrack: VideoTrackSchema) => {
     onSubtitleDelete(videoTrack);
-    deleteTrack(videoTrack);
-  };
-  const handleSubtitleSubmit = async (videoTrack: VideoTrackProps) => {
-    const uploaded = await onSubtitleSubmit(videoTrack);
-    addTrack(uploaded);
-    setOpen(false);
   };
   const defaultValues = {
     name: topic?.name,
@@ -199,14 +194,13 @@ export default function TopicForm(props: Props) {
         <div>
           <InputLabel classes={inputLabelClasses}>字幕</InputLabel>
           <div className={classes.subtitles}>
-            {videoResource &&
-              videoResource.tracks.map((track) => (
-                <SubtitleChip
-                  key={track.id}
-                  videoTrack={track}
-                  onDelete={handleSubtitleDelete}
-                />
-              ))}
+            {videoTracks.map((track) => (
+              <SubtitleChip
+                key={track.id}
+                videoTrack={track}
+                onDelete={handleSubtitleDelete}
+              />
+            ))}
           </div>
           <Button
             variant="outlined"

@@ -9,6 +9,7 @@ import Placeholder from "$templates/Placeholder";
 import TopicEdit from "$templates/TopicEdit";
 import TopicNotFoundProblem from "$organisms/BookNotFoundProblem";
 import BookNotFoundProblem from "$organisms/TopicNotFoundProblem";
+import { useVideoTrackAtom } from "$store/videoTrack";
 import {
   destroyTopic,
   revalidateTopic,
@@ -32,6 +33,7 @@ type EditWithBookProps = EditProps & BookEditQuery;
 
 function Edit({ topicId, back, onDelete }: EditProps) {
   const topic = useTopic(topicId);
+  const { addVideoTrack, deleteVideoTrack } = useVideoTrackAtom();
   async function handleSubmit(props: TopicProps) {
     await updateTopic({ id: topicId, ...props });
     return back();
@@ -46,12 +48,13 @@ function Edit({ topicId, back, onDelete }: EditProps) {
     if (!topic) return;
     const uploaded = await uploadVideoTrack(topic.resource.id, videoTrack);
     await revalidateTopic(topic.id);
-    return uploaded;
+    addVideoTrack(uploaded);
   }
-  async function handleSubtitleDelete({ id }: Pick<VideoTrackSchema, "id">) {
+  async function handleSubtitleDelete(videoTrack: VideoTrackSchema) {
     if (!topic) return;
-    await destroyVideoTrack(topic.resource.id, id);
+    await destroyVideoTrack(topic.resource.id, videoTrack.id);
     await revalidateTopic(topic.id);
+    deleteVideoTrack(videoTrack);
   }
   function handleCancel() {
     return back();

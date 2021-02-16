@@ -5,8 +5,11 @@ import TopicForm from "$organisms/TopicForm";
 import RequiredDot from "$atoms/RequiredDot";
 import BackButton from "$atoms/BackButton";
 import useContainerStyles from "styles/container";
-import { TopicProps } from "$server/models/topic";
-import { VideoTrackProps, VideoTrackSchema } from "$server/models/videoTrack";
+import type { TopicProps } from "$server/models/topic";
+import type {
+  VideoTrackProps,
+  VideoTrackSchema,
+} from "$server/models/videoTrack";
 
 const useStyles = makeStyles((theme) => ({
   container: {
