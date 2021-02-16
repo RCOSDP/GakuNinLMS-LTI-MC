@@ -14,6 +14,7 @@ const toVideoTrackSchema = (
   { language, content }: VideoTrackProps,
   index: number
 ): VideoTrackSchema => ({
+  // NOTE: uploadVideoTrackでidを採番する前はindexをマッピングする
   id: index,
   kind: "subtitles",
   language,
@@ -44,23 +45,21 @@ const addVideoTrackAtom = atom<null, VideoTrackProps | VideoTrackSchema>(
   }
 );
 
-const deleteVideoTrackAtom = atom<null, VideoTrackSchema>(
+const deleteVideoTrackAtom = atom<null, VideoTrackSchema["id"]>(
   null,
-  (get, set, { id }) => {
+  (get, set, indexOrId) => {
     const videoTracksProps = get(videoTracksPropsAtom);
-    const videoTracks = get(videoTracksAtom);
-    const deleteIndex = videoTracks.findIndex(
-      (videoTrack) => videoTrack.id === id
-    );
     if (videoTracksProps.length > 0) {
       set(
         videoTracksPropsAtom,
-        videoTracksProps.filter((_, index) => index !== deleteIndex)
+        videoTracksProps.filter((_, index) => index !== indexOrId)
       );
     } else {
       set(
         videoTracksSchemaAtom,
-        get(videoTracksSchemaAtom).filter((_, index) => index !== deleteIndex)
+        get(videoTracksSchemaAtom).filter(
+          (videoTrack) => videoTrack.id !== indexOrId
+        )
       );
     }
   }

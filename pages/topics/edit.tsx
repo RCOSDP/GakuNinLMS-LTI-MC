@@ -50,11 +50,11 @@ function Edit({ topicId, back, onDelete }: EditProps) {
     await revalidateTopic(topic.id);
     addVideoTrack(uploaded);
   }
-  async function handleSubtitleDelete(videoTrack: VideoTrackSchema) {
+  async function handleSubtitleDelete({ id }: VideoTrackSchema) {
     if (!topic) return;
-    await destroyVideoTrack(topic.resource.id, videoTrack.id);
+    await destroyVideoTrack(topic.resource.id, id);
     await revalidateTopic(topic.id);
-    deleteVideoTrack(videoTrack);
+    deleteVideoTrack(id);
   }
   function handleCancel() {
     return back();

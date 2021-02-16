@@ -47,8 +47,8 @@ function New({ edit, back, onSubmit }: NewProps) {
   function handleSubtitleSubmit(videoTrack: VideoTrackProps) {
     addVideoTrack(videoTrack);
   }
-  function handleSubtitleDelete(videoTrack: VideoTrackSchema) {
-    deleteVideoTrack(videoTrack);
+  function handleSubtitleDelete({ id }: VideoTrackSchema) {
+    deleteVideoTrack(id);
   }
   function handleCancel() {
     return back();
