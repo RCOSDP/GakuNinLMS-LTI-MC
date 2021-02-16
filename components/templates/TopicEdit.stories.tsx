@@ -39,7 +39,7 @@ export const Default = wrap(() => {
   return (
     <TopicEdit
       topic={topic}
-      onSubtitleDelete={deleteVideoTrack}
+      onSubtitleDelete={({ id }) => deleteVideoTrack(id)}
       onSubtitleSubmit={handleSubtitleSubmit(addVideoTrack)}
       {...handlers}
     />
@@ -51,7 +51,7 @@ export const Empty = wrap(() => {
   return (
     <TopicEdit
       topic={null}
-      onSubtitleDelete={deleteVideoTrack}
+      onSubtitleDelete={({ id }) => deleteVideoTrack(id)}
       onSubtitleSubmit={handleSubtitleSubmit(addVideoTrack)}
       {...handlers}
     />

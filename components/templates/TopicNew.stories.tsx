@@ -20,7 +20,7 @@ export const Default = wrap(() => {
   const { addVideoTrack, deleteVideoTrack } = useVideoTrackAtom();
   return (
     <TopicNew
-      onSubtitleDelete={deleteVideoTrack}
+      onSubtitleDelete={({ id }) => deleteVideoTrack(id)}
       onSubtitleSubmit={addVideoTrack}
       {...handlers}
     />

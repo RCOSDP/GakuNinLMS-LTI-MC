@@ -37,7 +37,7 @@ export const Default = wrap(() => {
   return (
     <TopicForm
       topic={topic}
-      onSubtitleDelete={deleteVideoTrack}
+      onSubtitleDelete={({ id }) => deleteVideoTrack(id)}
       onSubtitleSubmit={handleSubtitleSubmit(addVideoTrack)}
       {...handlers}
     />
