@@ -1,10 +1,6 @@
-import { atom } from "jotai";
-import {
-  atomWithReset,
-  useResetAtom,
-  useAtomValue,
-  useUpdateAtom,
-} from "jotai/utils";
+import { useEffect } from "react";
+import { atom, useAtom } from "jotai";
+import { RESET, atomWithReset, useAtomValue, useUpdateAtom } from "jotai/utils";
 import type {
   VideoTrackProps,
   VideoTrackSchema,
@@ -66,15 +62,19 @@ const deleteVideoTrackAtom = atom<null, VideoTrackSchema["id"]>(
 );
 
 export function useVideoTrackAtom() {
-  const videoTracksProps = useAtomValue(videoTracksPropsAtom);
-  const resetVideoTrackProps = useResetAtom(videoTracksPropsAtom);
+  const [videoTracksProps, reset] = useAtom(videoTracksPropsAtom);
   const videoTracks = useAtomValue(videoTracksAtom);
   const setVideoTracks = useUpdateAtom(videoTracksSchemaAtom);
   const addVideoTrack = useUpdateAtom(addVideoTrackAtom);
   const deleteVideoTrack = useUpdateAtom(deleteVideoTrackAtom);
+  useEffect(
+    () => () => {
+      reset(RESET);
+    },
+    [reset]
+  );
   return {
     videoTracksProps,
-    resetVideoTrackProps,
     videoTracks,
     setVideoTracks,
     addVideoTrack,

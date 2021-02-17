@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useRouter } from "next/router";
 import type { TopicProps, TopicSchema } from "$server/models/topic";
 import type {
@@ -25,13 +24,9 @@ type NewProps = {
 function New({ edit, back, onSubmit }: NewProps) {
   const {
     videoTracksProps,
-    resetVideoTrackProps,
     addVideoTrack,
     deleteVideoTrack,
   } = useVideoTrackAtom();
-  useEffect(() => {
-    resetVideoTrackProps();
-  }, [resetVideoTrackProps]);
   async function handleSubmit(props: TopicProps) {
     const topic = await createTopic(props);
     const {
