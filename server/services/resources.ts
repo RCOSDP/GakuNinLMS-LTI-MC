@@ -37,7 +37,7 @@ export const method: Method = {
 export async function index({ query }: { query: Query }) {
   const page = query.page ?? 0;
   const perPage = query.per_page ?? 100;
-  const resources = await findResources(page, perPage);
+  const resources = await findResources(query.sort, page, perPage);
 
   return {
     status: 200,

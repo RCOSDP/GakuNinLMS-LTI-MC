@@ -3,38 +3,42 @@ import MenuItem from "@material-ui/core/MenuItem";
 import MuiSelect from "@material-ui/core/Select";
 import useSelectStyles from "styles/select";
 import useInputStyles from "styles/input";
+import type { SortOrder } from "$server/models/sortOrder";
 
-const options = [
+const options: ReadonlyArray<{
+  value: SortOrder;
+  label: string;
+}> = [
   {
-    value: "name-descend",
-    label: "名前順（A-Z）",
-  },
-  {
-    value: "name-ascend",
-    label: "名前順（Z-A）",
-  },
-  {
-    value: "created-at-descend",
-    label: "作成日順（新しい）",
-  },
-  {
-    value: "created-at-ascend",
-    label: "作成日順（古い）",
-  },
-  {
-    value: "updated-at-descend",
+    value: "updated",
     label: "更新日順（新しい）",
   },
   {
-    value: "updated-at-ascend",
+    value: "reverse-updated",
     label: "更新日順（古い）",
   },
-] as const;
+  {
+    value: "created",
+    label: "作成日順（新しい）",
+  },
+  {
+    value: "reverse-created",
+    label: "作成日順（古い）",
+  },
+  {
+    value: "name",
+    label: "名前順（A-Z）",
+  },
+  {
+    value: "reverse-name",
+    label: "名前順（Z-A）",
+  },
+];
 
 export default function SortSelect(props: Parameters<typeof MuiSelect>[0]) {
   const selectClasses = useSelectStyles();
   const inputClasses = useInputStyles();
-  const [value, setValue] = useState("name-descend");
+  const [value, setValue] = useState("updated");
   const handleChange = (event: ChangeEvent<{ value: unknown }>) => {
     setValue(event.target.value as string);
   };

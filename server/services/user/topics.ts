@@ -30,7 +30,7 @@ export async function get({ query, params }: { query: Query; params: Params }) {
   const page = query.page ?? 0;
   const perPage = query.per_page ?? 100;
   const { user_id: userId } = params;
-  const topics = await findCreatedTopics(userId, page, perPage);
+  const topics = await findCreatedTopics(userId, query.sort, page, perPage);
 
   return {
     status: 200,

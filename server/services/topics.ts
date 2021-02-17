@@ -37,7 +37,7 @@ const indexMethod: Method = {
 async function index({ query }: { query: IndexQuery }) {
   const page = query.page ?? 0;
   const perPage = query.per_page ?? 100;
-  const topics = await findTopics(page, perPage);
+  const topics = await findTopics(query.sort, page, perPage);
 
   return {
     status: 200,

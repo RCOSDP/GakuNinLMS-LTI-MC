@@ -1,4 +1,5 @@
 import { useSWRInfinite } from "swr";
+import type { SortOrder } from "$server/models/sortOrder";
 import type { BookSchema } from "$server/models/book";
 import type { TopicSchema } from "$server/models/topic";
 import { api } from "./api";
@@ -7,13 +8,20 @@ import { revalidateBook } from "./book";
 
 const key = "/api/v2/books";
 
-function getKey(page: number, prev: BookSchema[] | null) {
+const makeKey = (sort: SortOrder) => (
+  page: number,
+  prev: BookSchema[] | null
+): Parameters<typeof fetchBooks> | null => {
   if (prev && prev.length === 0) return null;
-  return [key, page];
-}
+  return [key, sort, page];
+};
 
-async function fetchBooks(_: typeof key, page: number): Promise<BookSchema[]> {
-  const res = await api.apiV2BooksGet({ page });
+async function fetchBooks(
+  _: typeof key,
+  sort: string,
+  page: number
+): Promise<BookSchema[]> {
+  const res = await api.apiV2BooksGet({ sort, page });
   const books = (res["books"] ?? []) as BookSchema[];
   await Promise.all(books.map((t) => revalidateBook(t.id, t)));
   return books;
@@ -46,7 +54,7 @@ export function useBooks(
   isTopicEditable: (topic: Pick<TopicSchema, "creator">) => boolean
 ) {
   const { data, size, setSize } = useSWRInfinite<BookSchema[]>(
-    getKey,
+    makeKey("updated"),
     fetchBooks
   );
   const books =
