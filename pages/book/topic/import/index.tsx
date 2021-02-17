@@ -15,7 +15,7 @@ export type Query = BookEditQuery;
 function Import({ bookId, context }: BookEditQuery) {
   const { isTopicEditable } = useSessionAtom();
   const { book } = useBook(bookId);
-  const topics = useTopics(isTopicEditable);
+  const topicsWithInfiniteProps = useTopics(isTopicEditable);
   const router = useRouter();
   const bookEditQuery = { bookId, ...(context && { context }) };
   const back = () =>
@@ -57,9 +57,8 @@ function Import({ bookId, context }: BookEditQuery) {
   };
 
   if (!book) return <Placeholder />;
-  if (!topics) return <Placeholder />;
 
-  return <TopicImport topics={topics} {...handlers} />;
+  return <TopicImport {...topicsWithInfiniteProps} {...handlers} />;
 }
 
 function Router() {

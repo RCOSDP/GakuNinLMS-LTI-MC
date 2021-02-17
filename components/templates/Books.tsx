@@ -1,3 +1,5 @@
+import useInfiniteScroll from "react-infinite-scroll-hook";
+import Skeleton from "@material-ui/lab/Skeleton";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
@@ -19,8 +21,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-type Props = {
+export type Props = {
   books: BookSchema[];
+  loading?: boolean;
+  hasNextPage?: boolean;
+  onLoadMore?(): void;
   onBookClick(book: BookSchema): void;
   onBookEditClick(book: BookSchema): void;
   onBookNewClick(): void;
@@ -31,6 +36,9 @@ type Props = {
 export default function Books(props: Props) {
   const {
     books,
+    loading = false,
+    hasNextPage = false,
+    onLoadMore = () => undefined,
     onBookClick,
     onBookEditClick,
     onBookNewClick,
@@ -42,8 +50,13 @@ export default function Books(props: Props) {
   const handleBookNewClick = () => onBookNewClick();
   const classes = useStyles();
   const containerClasses = useContainerStyles();
+  const infiniteRef = useInfiniteScroll<HTMLDivElement>({
+    loading,
+    hasNextPage,
+    onLoadMore,
+  });
   return (
-    <>
+    <div ref={infiniteRef}>
       <ActionHeader
         maxWidth="md"
         title={
@@ -77,8 +90,10 @@ export default function Books(props: Props) {
               isTopicEditable={isTopicEditable}
             />
           ))}
+          {loading &&
+            [...Array(5)].map((_, i) => <Skeleton key={i} height={64} />)}
         </div>
       </Container>
-    </>
+    </div>
   );
 }

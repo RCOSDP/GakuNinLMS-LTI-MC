@@ -6,13 +6,9 @@ import { useUserTopics } from "$utils/userTopics";
 import Topics from "$templates/Topics";
 import { pagesPath } from "$utils/$path";
 
-function UserTopics(
+const UserTopics = (
   props: Omit<Parameters<typeof Topics>[0], "topics"> & { userId: User["id"] }
-) {
-  const userTopics = useUserTopics(props.userId);
-  const topics = userTopics.data?.topics ?? [];
-  return <Topics {...props} topics={topics} />;
-}
+) => <Topics {...props} {...useUserTopics(props.userId)} />;
 
 function Index() {
   const router = useRouter();
