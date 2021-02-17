@@ -12,7 +12,8 @@ function VimeoPlayerBase(props: PlayerProps) {
     <Vimeo
       options={{
         url: props.url,
-        autoplay: props.autoplay,
+        // NOTE: boolean に割り当てなければ自動再生されうる
+        autoplay: Boolean(props.autoplay),
       }}
       onEnded={props.onEnded}
     />
