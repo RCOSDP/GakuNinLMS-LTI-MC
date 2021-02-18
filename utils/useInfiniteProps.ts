@@ -6,10 +6,10 @@ function useInfiniteProps<Data>(
   setSize: (size: number | ((size: number) => number)) => Promise<unknown>
 ) {
   const [prev] = data?.slice(-1) ?? [];
-  const hasNextMore = prev === undefined || prev.length > 0;
+  const hasNextPage = prev === undefined || prev.length > 0;
   const loading = data?.length !== size;
   const onLoadMore = useCallback(() => setSize((n) => n + 1), [setSize]);
-  return { loading, hasNextMore, onLoadMore };
+  return { loading, hasNextPage, onLoadMore };
 }
 
 export default useInfiniteProps;
