@@ -1,4 +1,6 @@
 import { FormEvent, useState } from "react";
+import useInfiniteScroll from "react-infinite-scroll-hook";
+import Skeleton from "@material-ui/lab/Skeleton";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
@@ -31,6 +33,9 @@ const useStyles = makeStyles((theme) => ({
 
 type Props = {
   books: BookSchema[];
+  loading?: boolean;
+  hasNextPage?: boolean;
+  onLoadMore?(): void;
   ltiResourceLink: Pick<LtiResourceLinkSchema, "title">;
   onSubmit(book: BookSchema): void;
   onCancel(): void;
@@ -42,6 +47,9 @@ type Props = {
 export default function BookLink(props: Props) {
   const {
     books,
+    loading = false,
+    hasNextPage = false,
+    onLoadMore = () => undefined,
     ltiResourceLink,
     onSubmit,
     onCancel,
@@ -64,8 +72,13 @@ export default function BookLink(props: Props) {
   };
   const handleBookEditClick = (book: BookSchema) =>
     isBookEditable?.(book) && onBookEditClick;
+  const infiniteRef = useInfiniteScroll<HTMLDivElement>({
+    loading,
+    hasNextPage,
+    onLoadMore,
+  });
   return (
-    <Container classes={containerClasses} maxWidth="md">
+    <Container ref={infiniteRef} classes={containerClasses} maxWidth="md">
       <ActionHeader
         title={
           <>
@@ -101,6 +114,10 @@ export default function BookLink(props: Props) {
             onEditClick={handleBookEditClick(book)}
           />
         ))}
+        {loading &&
+          [...Array(5)].map((_, i) => (
+            <Skeleton key={i} height={400 /* NOTE: 適当 */} />
+          ))}
       </div>
       <ActionFooter maxWidth="md">
         <form className={classes.form} onSubmit={handleSubmit}>

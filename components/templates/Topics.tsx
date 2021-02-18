@@ -1,3 +1,5 @@
+import useInfiniteScroll from "react-infinite-scroll-hook";
+import Skeleton from "@material-ui/lab/Skeleton";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
@@ -24,12 +26,22 @@ const useStyles = makeStyles((theme) => ({
 
 type Props = {
   topics: TopicSchema[];
+  loading?: boolean;
+  hasNextPage?: boolean;
+  onLoadMore?(): void;
   onTopicEditClick(topic: TopicSchema): void;
   onTopicNewClick(): void;
 };
 
 export default function Topics(props: Props) {
-  const { topics, onTopicEditClick, onTopicNewClick } = props;
+  const {
+    topics,
+    loading = false,
+    hasNextPage = false,
+    onLoadMore = () => undefined,
+    onTopicEditClick,
+    onTopicNewClick,
+  } = props;
   const classes = useStyles();
   const containerClasses = useContainerStyles();
   const {
@@ -38,8 +50,13 @@ export default function Topics(props: Props) {
     ...dialogProps
   } = useDialogProps<TopicSchema>();
   const handleTopicDetailClick = (topic: TopicSchema) => setPreviewTopic(topic);
+  const infiniteRef = useInfiniteScroll<HTMLDivElement>({
+    loading,
+    hasNextPage,
+    onLoadMore,
+  });
   return (
-    <Container classes={containerClasses} maxWidth="lg">
+    <Container ref={infiniteRef} classes={containerClasses} maxWidth="lg">
       <ActionHeader
         title={
           <>
@@ -69,6 +86,10 @@ export default function Topics(props: Props) {
             onTopicEditClick={onTopicEditClick}
           />
         ))}
+        {loading &&
+          [...Array(6)].map((_, i) => (
+            <Skeleton key={i} height={324 /* NOTE: 適当 */} />
+          ))}
       </div>
       {previewTopic && (
         <TopicPreviewDialog {...dialogProps} topic={previewTopic} />

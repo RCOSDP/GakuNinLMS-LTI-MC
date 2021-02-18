@@ -1,4 +1,6 @@
 import { FormEvent, useState } from "react";
+import useInfiniteScroll from "react-infinite-scroll-hook";
+import Skeleton from "@material-ui/lab/Skeleton";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
@@ -28,6 +30,9 @@ const useStyles = makeStyles((theme) => ({
 
 type Props = {
   topics: TopicSchema[];
+  loading?: boolean;
+  hasNextPage?: boolean;
+  onLoadMore?(): void;
   onSubmit(topics: TopicSchema[]): void;
   onCancel(): void;
   onTopicEditClick(topic: TopicSchema): void;
@@ -37,6 +42,9 @@ type Props = {
 export default function TopicImport(props: Props) {
   const {
     topics,
+    loading = false,
+    hasNextPage = false,
+    onLoadMore = () => undefined,
     onSubmit,
     onCancel,
     onTopicEditClick,
@@ -61,8 +69,13 @@ export default function TopicImport(props: Props) {
   const handleTopicDetailClick = (topic: TopicSchema) => setPreviewTopic(topic);
   const handleTopicEditClick = (topic: TopicSchema) =>
     isTopicEditable(topic) && (() => onTopicEditClick(topic));
+  const infiniteRef = useInfiniteScroll<HTMLDivElement>({
+    loading,
+    hasNextPage,
+    onLoadMore,
+  });
   return (
-    <Container classes={containerClasses} maxWidth="lg">
+    <Container ref={infiniteRef} classes={containerClasses} maxWidth="lg">
       <ActionHeader
         title={
           <>
@@ -93,6 +106,10 @@ export default function TopicImport(props: Props) {
             onTopicEditClick={handleTopicEditClick(topic)}
           />
         ))}
+        {loading &&
+          [...Array(6)].map((_, i) => (
+            <Skeleton key={i} height={324 /* NOTE: 適当 */} />
+          ))}
       </div>
       <ActionFooter maxWidth="lg">
         <form className={classes.form} onSubmit={handleSubmit}>

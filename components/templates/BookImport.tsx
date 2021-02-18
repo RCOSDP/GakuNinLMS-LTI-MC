@@ -1,4 +1,6 @@
 import { FormEvent, useState } from "react";
+import useInfiniteScroll from "react-infinite-scroll-hook";
+import Skeleton from "@material-ui/lab/Skeleton";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
@@ -36,6 +38,9 @@ const useStyles = makeStyles((theme) => ({
 
 type Props = {
   books: BookSchema[];
+  loading?: boolean;
+  hasNextPage?: boolean;
+  onLoadMore?(): void;
   onSubmit({
     books,
     sections,
@@ -56,6 +61,9 @@ type Props = {
 export default function BookImport(props: Props) {
   const {
     books,
+    loading = false,
+    hasNextPage = false,
+    onLoadMore = () => undefined,
     onSubmit,
     onCancel,
     onBookEditClick,
@@ -107,8 +115,13 @@ export default function BookImport(props: Props) {
       topics: selectedTopics,
     });
   };
+  const infiniteRef = useInfiniteScroll<HTMLDivElement>({
+    loading,
+    hasNextPage,
+    onLoadMore,
+  });
   return (
-    <Container classes={containerClasses} maxWidth="md">
+    <Container ref={infiniteRef} classes={containerClasses} maxWidth="md">
       <ActionHeader
         title={
           <>
@@ -153,6 +166,7 @@ export default function BookImport(props: Props) {
           );
         })}
       </TreeView>
+      {loading && [...Array(5)].map((_, i) => <Skeleton key={i} height={40} />)}
       <ActionFooter maxWidth="md">
         <form className={classes.form} onSubmit={handleSubmit}>
           <Button

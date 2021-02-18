@@ -11,7 +11,7 @@ import { pagesPath } from "$utils/$path";
 function Index() {
   const router = useRouter();
   const { session, isBookEditable, isTopicEditable } = useSessionAtom();
-  const books = useBooks(isBookEditable, isTopicEditable);
+  const booksWithInfiniteProps = useBooks(isBookEditable, isTopicEditable);
   const ltiLaunchBody = session?.ltiLaunchBody;
   const ltiResourceLink = ltiLaunchBody && {
     consumerId: ltiLaunchBody.oauth_consumer_key,
@@ -57,10 +57,13 @@ function Index() {
   };
 
   if (ltiResourceLink == null) return <Placeholder />;
-  if (!books) return <Placeholder />;
 
   return (
-    <BookLink books={books} ltiResourceLink={ltiResourceLink} {...handlers} />
+    <BookLink
+      ltiResourceLink={ltiResourceLink}
+      {...booksWithInfiniteProps}
+      {...handlers}
+    />
   );
 }
 

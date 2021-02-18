@@ -92,6 +92,7 @@ export interface ApiV2BookPostRequest {
 }
 
 export interface ApiV2BooksGetRequest {
+    sort?: string;
     page?: number;
     perPage?: number;
 }
@@ -152,6 +153,7 @@ export interface ApiV2ResourceResourceIdVideoTrackVideoTrackIdVttGetRequest {
 }
 
 export interface ApiV2ResourcesGetRequest {
+    sort?: string;
     page?: number;
     perPage?: number;
 }
@@ -179,18 +181,21 @@ export interface ApiV2TopicTopicIdPutRequest {
 }
 
 export interface ApiV2TopicsGetRequest {
+    sort?: string;
     page?: number;
     perPage?: number;
 }
 
 export interface ApiV2UserUserIdBooksGetRequest {
     userId: number;
+    sort?: string;
     page?: number;
     perPage?: number;
 }
 
 export interface ApiV2UserUserIdTopicsGetRequest {
     userId: number;
+    sort?: string;
     page?: number;
     perPage?: number;
 }
@@ -335,6 +340,10 @@ export class DefaultApi extends runtime.BaseAPI {
      */
     async apiV2BooksGetRaw(requestParameters: ApiV2BooksGetRequest): Promise<runtime.ApiResponse<InlineResponse2003>> {
         const queryParameters: runtime.HTTPQuery = {};
+
+        if (requestParameters.sort !== undefined) {
+            queryParameters['sort'] = requestParameters.sort;
+        }
 
         if (requestParameters.page !== undefined) {
             queryParameters['page'] = requestParameters.page;
@@ -557,7 +566,7 @@ export class DefaultApi extends runtime.BaseAPI {
      * LTI Resource Linkを削除します。 教員または管理者でなければなりません。
      * LTI Resource Linkの削除
      */
-    async apiV2LtiLtiConsumerIdResourceLinkLtiResourceLinkIdDeleteRaw(requestParameters: ApiV2LtiLtiConsumerIdResourceLinkLtiResourceLinkIdDeleteRequest): Promise<runtime.ApiResponse<object>> {
+    async apiV2LtiLtiConsumerIdResourceLinkLtiResourceLinkIdDeleteRaw(requestParameters: ApiV2LtiLtiConsumerIdResourceLinkLtiResourceLinkIdDeleteRequest): Promise<runtime.ApiResponse<void>> {
         if (requestParameters.ltiConsumerId === null || requestParameters.ltiConsumerId === undefined) {
             throw new runtime.RequiredError('ltiConsumerId','Required parameter requestParameters.ltiConsumerId was null or undefined when calling apiV2LtiLtiConsumerIdResourceLinkLtiResourceLinkIdDelete.');
         }
@@ -577,16 +586,15 @@ export class DefaultApi extends runtime.BaseAPI {
             query: queryParameters,
         });
 
-        return new runtime.JSONApiResponse<any>(response);
+        return new runtime.VoidApiResponse(response);
     }
 
     /**
      * LTI Resource Linkを削除します。 教員または管理者でなければなりません。
      * LTI Resource Linkの削除
      */
-    async apiV2LtiLtiConsumerIdResourceLinkLtiResourceLinkIdDelete(requestParameters: ApiV2LtiLtiConsumerIdResourceLinkLtiResourceLinkIdDeleteRequest): Promise<object> {
-        const response = await this.apiV2LtiLtiConsumerIdResourceLinkLtiResourceLinkIdDeleteRaw(requestParameters);
-        return await response.value();
+    async apiV2LtiLtiConsumerIdResourceLinkLtiResourceLinkIdDelete(requestParameters: ApiV2LtiLtiConsumerIdResourceLinkLtiResourceLinkIdDeleteRequest): Promise<void> {
+        await this.apiV2LtiLtiConsumerIdResourceLinkLtiResourceLinkIdDeleteRaw(requestParameters);
     }
 
     /**
@@ -776,6 +784,10 @@ export class DefaultApi extends runtime.BaseAPI {
      */
     async apiV2ResourcesGetRaw(requestParameters: ApiV2ResourcesGetRequest): Promise<runtime.ApiResponse<InlineResponse2005>> {
         const queryParameters: runtime.HTTPQuery = {};
+
+        if (requestParameters.sort !== undefined) {
+            queryParameters['sort'] = requestParameters.sort;
+        }
 
         if (requestParameters.page !== undefined) {
             queryParameters['page'] = requestParameters.page;
@@ -1005,6 +1017,10 @@ export class DefaultApi extends runtime.BaseAPI {
     async apiV2TopicsGetRaw(requestParameters: ApiV2TopicsGetRequest): Promise<runtime.ApiResponse<InlineResponse2004>> {
         const queryParameters: runtime.HTTPQuery = {};
 
+        if (requestParameters.sort !== undefined) {
+            queryParameters['sort'] = requestParameters.sort;
+        }
+
         if (requestParameters.page !== undefined) {
             queryParameters['page'] = requestParameters.page;
         }
@@ -1044,6 +1060,10 @@ export class DefaultApi extends runtime.BaseAPI {
         }
 
         const queryParameters: runtime.HTTPQuery = {};
+
+        if (requestParameters.sort !== undefined) {
+            queryParameters['sort'] = requestParameters.sort;
+        }
 
         if (requestParameters.page !== undefined) {
             queryParameters['page'] = requestParameters.page;
@@ -1085,6 +1105,10 @@ export class DefaultApi extends runtime.BaseAPI {
 
         const queryParameters: runtime.HTTPQuery = {};
 
+        if (requestParameters.sort !== undefined) {
+            queryParameters['sort'] = requestParameters.sort;
+        }
+
         if (requestParameters.page !== undefined) {
             queryParameters['page'] = requestParameters.page;
         }
@@ -1112,6 +1136,29 @@ export class DefaultApi extends runtime.BaseAPI {
     async apiV2UserUserIdTopicsGet(requestParameters: ApiV2UserUserIdTopicsGetRequest): Promise<InlineResponse2002> {
         const response = await this.apiV2UserUserIdTopicsGetRaw(requestParameters);
         return await response.value();
+    }
+
+    /**
+     */
+    async optionsRaw(): Promise<runtime.ApiResponse<void>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/*`,
+            method: 'OPTIONS',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async options(): Promise<void> {
+        await this.optionsRaw();
     }
 
 }

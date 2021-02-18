@@ -28,9 +28,9 @@ export const method: Method = {
 
 export async function get({ query, params }: { query: Query; params: Params }) {
   const page = query.page ?? 0;
-  const perPage = query.per_page ?? 100;
+  const perPage = query.per_page ?? 50;
   const { user_id: userId } = params;
-  const books = await findWrittenBooks(userId, page, perPage);
+  const books = await findWrittenBooks(userId, query.sort, page, perPage);
 
   return {
     status: 200,

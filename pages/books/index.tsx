@@ -7,15 +7,12 @@ import Books from "$templates/Books";
 import { pagesPath } from "$utils/$path";
 import { TopicSchema } from "$server/models/topic";
 
-function UserBooks(
-  props: Omit<Parameters<typeof Books>[0], "books"> & {
-    userId: UserSchema["id"];
-  }
-) {
-  const userBooks = useUserBooks(props.userId);
-  const books = userBooks.data?.books ?? [];
-  return <Books {...props} books={books} />;
-}
+const UserBooks = (
+  props: { userId: UserSchema["id"] } & Omit<
+    Parameters<typeof Books>[0],
+    keyof ReturnType<typeof useUserBooks>
+  >
+) => <Books {...props} {...useUserBooks(props.userId)} />;
 
 function Index() {
   const router = useRouter();
