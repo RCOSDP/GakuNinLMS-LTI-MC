@@ -36,7 +36,7 @@ export const indexMethod: Method = {
 
 async function index({ query }: { query: IndexQuery }) {
   const page = query.page ?? 0;
-  const perPage = query.per_page ?? 100;
+  const perPage = query.per_page ?? 50;
   const books = await findBooks(query.sort, page, perPage);
 
   return {
