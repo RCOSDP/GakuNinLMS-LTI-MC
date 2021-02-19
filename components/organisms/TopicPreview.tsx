@@ -1,34 +1,42 @@
 import { ReactNode } from "react";
 import clsx from "clsx";
-import { format } from "date-fns";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import Checkbox from "@material-ui/core/Checkbox";
-import { EditOutlined } from "@material-ui/icons";
+import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import { makeStyles } from "@material-ui/core/styles";
 import Video from "$organisms/Video";
 import Item from "$atoms/Item";
-import useCardStyle from "styles/card";
 import { TopicSchema } from "$server/models/topic";
 import { primary, gray } from "theme/colors";
+
+const useCardStyles = makeStyles((theme) => ({
+  root: {
+    border: `1px solid ${gray[400]}`,
+    borderRadius: "12px",
+    boxShadow: "none",
+    padding: `${theme.spacing(1)}px ${theme.spacing(2)}px`,
+  },
+}));
 
 const useStyles = makeStyles((theme) => ({
   root: {
     "& > :not(:last-child)": {
-      marginBottom: theme.spacing(1),
+      marginBottom: theme.spacing(0.5),
     },
   },
   header: {
     display: "flex",
-    height: "calc(1.125rem * 2 * 1.6)",
+    height: "calc(0.875rem * 2 * 1.375)",
+    fontSize: "0.875rem",
+    lineHeight: 1.375,
     alignItems: "center",
   },
   title: {
     flex: 1,
-    fontSize: "1.125rem",
-    maxHeight: "calc(1.125rem * 2 * 1.6)",
+    maxHeight: "calc(0.875rem * 2 * 1.375)",
     overflow: "hidden",
     display: "-webkit-box",
     WebkitBoxOrient: "vertical",
@@ -38,21 +46,17 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: theme.spacing(-1.5),
   },
   editButton: {
-    marginRight: theme.spacing(-2),
+    marginRight: theme.spacing(-1.5),
   },
-  items: {
-    "& > *": {
-      display: "inline-block",
-      marginRight: theme.spacing(1.75),
-      marginBottom: theme.spacing(1),
-    },
+  video: {
+    margin: `0 ${theme.spacing(-2)}px`,
   },
   description: {
     color: gray[700],
     margin: 0,
-    fontSize: "0.875rem",
+    fontSize: "0.75rem",
     lineHeight: 1.43,
-    maxHeight: "calc(0.875rem * 3 * 1.43)",
+    maxHeight: "calc(0.75rem * 2 * 1.43)",
     overflow: "hidden",
   },
   selected: {
@@ -75,6 +79,7 @@ function CheckableTitle(
     <>
       <Checkbox
         className={classes.checkbox}
+        size="small"
         color="primary"
         {...checkboxProps}
       />
@@ -92,7 +97,7 @@ type Props = Parameters<typeof Checkbox>[0] & {
 };
 
 export default function TopicPreview(props: Props) {
-  const cardClasses = useCardStyle();
+  const cardClasses = useCardStyles();
   const classes = useStyles();
   const {
     topic,
@@ -123,18 +128,17 @@ export default function TopicPreview(props: Props) {
           <IconButton
             className={classes.editButton}
             color="primary"
+            size="small"
             onClick={handle(onTopicEditClick)}
           >
-            <EditOutlined />
+            <EditOutlinedIcon />
           </IconButton>
         )}
       </Typography>
-      {"providerUrl" in topic.resource && <Video {...topic.resource} />}
-      <div className={classes.items}>
-        <Item itemKey="作成日" value={format(topic.createdAt, "yyyy.MM.dd")} />
-        <Item itemKey="更新日" value={format(topic.updatedAt, "yyyy.MM.dd")} />
-        <Item itemKey="作成者" value={topic.creator.name} />
-      </div>
+      {"providerUrl" in topic.resource && (
+        <Video className={classes.video} {...topic.resource} />
+      )}
+      <Item itemKey="作成者" value={topic.creator.name} />
       <p className={classes.description}>{topic.description}</p>
       <Button size="small" color="primary" onClick={handle(onTopicDetailClick)}>
         もっと詳しく...

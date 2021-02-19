@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
   },
   topics: {
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fill, 380px)",
+    gridTemplateColumns: "repeat(auto-fill, 290px)",
     gap: `${theme.spacing(2)}px`,
   },
 }));
@@ -56,7 +56,7 @@ export default function Topics(props: Props) {
     onLoadMore,
   });
   return (
-    <Container ref={infiniteRef} classes={containerClasses} maxWidth="lg">
+    <Container ref={infiniteRef} classes={containerClasses} maxWidth="md">
       <ActionHeader
         title={
           <>

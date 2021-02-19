@@ -18,7 +18,7 @@ import useDialogProps from "$utils/useDialogProps";
 const useStyles = makeStyles((theme) => ({
   topics: {
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fill, 380px)",
+    gridTemplateColumns: "repeat(auto-fill, 290px)",
     gap: `${theme.spacing(2)}px`,
   },
   form: {
@@ -75,7 +75,7 @@ export default function TopicImport(props: Props) {
     onLoadMore,
   });
   return (
-    <Container ref={infiniteRef} classes={containerClasses} maxWidth="lg">
+    <Container ref={infiniteRef} classes={containerClasses} maxWidth="md">
       <ActionHeader
         title={
           <>
@@ -111,7 +111,7 @@ export default function TopicImport(props: Props) {
             <Skeleton key={i} height={324 /* NOTE: 適当 */} />
           ))}
       </div>
-      <ActionFooter maxWidth="lg">
+      <ActionFooter maxWidth="md">
         <form className={classes.form} onSubmit={handleSubmit}>
           <Button
             color="primary"
