@@ -15,12 +15,12 @@ async function fetchBook(_: typeof key, id: BookSchema["id"]) {
 }
 
 export function useBook(id: BookSchema["id"]) {
-  const { data } = useSWR<BookSchema>([key, id], fetchBook);
+  const { data, error } = useSWR<BookSchema>([key, id], fetchBook);
   const { updateBook, ...state } = useBookAtom();
   useEffect(() => {
     if (data) updateBook(data);
   }, [data, updateBook]);
-  return state;
+  return { ...state, error };
 }
 
 export async function createBook(body: BookProps): Promise<BookSchema> {

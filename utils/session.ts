@@ -2,7 +2,8 @@ import { useEffect, useMemo } from "react";
 import useSWR, { mutate } from "swr";
 import type { TopicSchema } from "$server/models/topic";
 import type { BookSchema } from "$server/models/book";
-import { Session, isAdministrator, isInstructor } from "$server/utils/session";
+import type { SessionSchema } from "$server/models/session";
+import { isAdministrator, isInstructor } from "$server/utils/session";
 import { useUpdateSessionAtom } from "$store/session";
 import { api } from "./api";
 import topicCreateBy from "./topicCreateBy";
@@ -13,7 +14,7 @@ export * from "$server/utils/session";
 const key = "/api/v2/session";
 
 export function useSessionInit() {
-  const { data, error } = useSWR<Session>(key, async () => {
+  const { data, error } = useSWR<SessionSchema>(key, async () => {
     const res = await api.apiV2SessionGetRaw();
     return res.raw.json();
   });
@@ -42,6 +43,6 @@ export function useSessionInit() {
   return sessionWithState;
 }
 
-export function revalidateSession(): Promise<Session> {
+export function revalidateSession(): Promise<SessionSchema> {
   return mutate(key);
 }

@@ -2,10 +2,10 @@ import { atom } from "jotai";
 import { useAtomValue, useUpdateAtom } from "jotai/utils";
 import type { TopicSchema } from "$server/models/topic";
 import type { BookSchema } from "$server/models/book";
-import type { Session } from "$utils/session";
+import type { SessionSchema } from "$server/models/session";
 
 type SessionWithState = {
-  session: Session | undefined;
+  session: SessionSchema | undefined;
   isAdministrator: boolean;
   isInstructor: boolean;
   isTopicEditable(topic: Pick<TopicSchema, "creator">): boolean;
@@ -32,5 +32,5 @@ export function useUpdateSessionAtom() {
 
 export function useLmsUrl() {
   const { session } = useSessionAtom();
-  return session?.ltiLaunchBody?.launch_presentation_return_url;
+  return session?.ltiLaunchBody.launch_presentation_return_url;
 }

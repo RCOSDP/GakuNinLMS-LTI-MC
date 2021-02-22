@@ -1,6 +1,7 @@
 import { useEffect } from "react";
+import { SessionSchema } from "$server/models/session";
 import { LtiLaunchBody } from "$server/validators/ltiLaunchBody";
-import { Session, isInstructor } from "$utils/session";
+import { isInstructor } from "$utils/session";
 
 const key = "loggerSessionPersister";
 
@@ -32,10 +33,9 @@ function clear() {
  * あとでlogger.tsで使う。
  * もし教員や管理者ならば永続化せず空にする。
  */
-export function useLoggerInit(session: Session | undefined) {
+export function useLoggerInit(session: SessionSchema | undefined) {
   useEffect(() => {
     if (!session) return;
-    if (!session.ltiLaunchBody) return;
     if (isInstructor(session)) clear();
     else save(session.ltiLaunchBody);
   }, [session]);

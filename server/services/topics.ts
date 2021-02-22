@@ -5,12 +5,13 @@ import {
   PaginationProps,
   paginationPropsSchema,
 } from "$server/validators/paginationProps";
+import authUser from "$server/auth/authUser";
+import authInstructor from "$server/auth/authInstructor";
 import findTopics from "$server/utils/topic/findTopics";
-import { authInstructorHandler } from "$server/utils/authInstructorHandler";
 
-export type IndexQuery = PaginationProps;
+export type Query = PaginationProps;
 
-const indexMethod: Method = {
+export const method: Method = {
   get: {
     summary: "トピック一覧",
     description: outdent`
@@ -34,7 +35,11 @@ const indexMethod: Method = {
   },
 };
 
-async function index({ query }: { query: IndexQuery }) {
+export const hooks = {
+  get: { auth: [authUser, authInstructor] },
+};
+
+export async function index({ query }: { query: Query }) {
   const page = query.page ?? 0;
   const perPage = query.per_page ?? 50;
   const topics = await findTopics(query.sort, page, perPage);
@@ -44,9 +49,3 @@ async function index({ query }: { query: IndexQuery }) {
     body: { topics, page, perPage },
   };
 }
-
-export const indexService = {
-  method: indexMethod,
-  get: index,
-  preHandler: authInstructorHandler,
-};

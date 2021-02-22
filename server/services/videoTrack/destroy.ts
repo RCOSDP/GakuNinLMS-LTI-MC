@@ -4,6 +4,8 @@ import {
   VideoTrackParams,
   videoTrackParamsSchema,
 } from "$server/validators/videoTrackParams";
+import authUser from "$server/auth/authUser";
+import authInstructor from "$server/auth/authInstructor";
 import destroyVideoTrack from "$server/utils/videoTrack/destroyVideoTrack";
 
 export const destroySchema: FastifySchema = {
@@ -15,6 +17,10 @@ export const destroySchema: FastifySchema = {
   response: {
     204: { type: "null", description: "成功" },
   },
+};
+
+export const destroyHooks = {
+  auth: [authUser, authInstructor],
 };
 
 export async function destroy({ params }: { params: VideoTrackParams }) {

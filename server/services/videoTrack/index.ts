@@ -1,9 +1,8 @@
 import { ResourceParams } from "$server/validators/resourceParams";
 import { VideoTrackParams } from "$server/validators/videoTrackParams";
-import { authInstructorHandler } from "$server/utils/authInstructorHandler";
-import { showSchema, show } from "./show";
-import { createSchema, create } from "./create";
-import { destroySchema, destroy } from "./destroy";
+import { showSchema, showHooks, show } from "./show";
+import { createSchema, createHooks, create } from "./create";
+import { destroySchema, destroyHooks, destroy } from "./destroy";
 
 export type Params = VideoTrackParams;
 export type CreateParams = ResourceParams;
@@ -15,6 +14,10 @@ export const method = {
   delete: destroySchema,
 };
 
-export const preHandler = authInstructorHandler;
+export const hooks = {
+  get: showHooks,
+  post: createHooks,
+  delete: destroyHooks,
+};
 
 export { show, create, destroy };

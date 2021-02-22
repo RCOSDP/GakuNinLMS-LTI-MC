@@ -1,16 +1,15 @@
 import { FastifyInstance } from "fastify";
+import makeHooks from "$server/utils/makeHooks";
 import handler from "$server/utils/handler";
-import { IndexQuery, indexService } from "$server/services/books";
+import * as service from "$server/services/books";
 
 export async function books(fastify: FastifyInstance) {
-  fastify.get<{
-    Querystring: IndexQuery;
-  }>(
+  const { method, index } = service;
+  const hooks = makeHooks(fastify, service.hooks);
+
+  fastify.get<{ Querystring: service.Query }>(
     "/books",
-    {
-      schema: indexService.method.get,
-      preHandler: indexService.preHandler(fastify),
-    },
-    handler(indexService.get)
+    { schema: method.get, ...hooks.get },
+    handler(index)
   );
 }

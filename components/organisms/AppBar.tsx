@@ -12,7 +12,7 @@ import LogoIcon from "$atoms/LogoIcon";
 import AppBarNavButton from "$atoms/AppBarNavButton";
 import LtiItemDialog from "$organisms/LtiItemDialog";
 import useAppBarStyles from "$styles/appBar";
-import { Session } from "$server/utils/session";
+import { SessionSchema } from "$server/models/session";
 import { gray } from "$theme/colors";
 import { isAdministrator, isInstructor } from "$utils/session";
 
@@ -54,14 +54,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type Props = ComponentProps<typeof MuiAppBar> & {
-  session: Session;
+  session: SessionSchema;
   onBooksClick?(): void;
   onTopicsClick?(): void;
   onBookLinkClick?(): void;
   onDashboardClick?(): void;
 };
 
-const role = (session: Session) => {
+const role = (session: SessionSchema) => {
   if (isAdministrator(session)) return "管理者";
   if (isInstructor(session)) return "教員";
   return "学生";
@@ -121,7 +121,7 @@ export default function AppBar(props: Props) {
             />
           </div>
           <div className={clsx(classes.user, classes.margin)}>
-            {session.user && <p>{session.user.name}</p>}
+            <p>{session.user.name}</p>
             <p className={classes.roles}>{role(session)}</p>
           </div>
           {session && (

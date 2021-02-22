@@ -206,7 +206,7 @@ export interface ApiV2UserUserIdTopicsGetRequest {
 export class DefaultApi extends runtime.BaseAPI {
 
     /**
-     * ブックを削除します。 教員または管理者でなければなりません。 教員の場合は自身のブックでなければなりません。
+     * ブックを削除します。 教員または管理者でなければなりません。 教員の場合は自身の作成したブックでなければなりません。
      * ブックの削除
      */
     async apiV2BookBookIdDeleteRaw(requestParameters: ApiV2BookBookIdDeleteRequest): Promise<runtime.ApiResponse<void>> {
@@ -229,7 +229,7 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * ブックを削除します。 教員または管理者でなければなりません。 教員の場合は自身のブックでなければなりません。
+     * ブックを削除します。 教員または管理者でなければなりません。 教員の場合は自身の作成したブックでなければなりません。
      * ブックの削除
      */
     async apiV2BookBookIdDelete(requestParameters: ApiV2BookBookIdDeleteRequest): Promise<void> {
@@ -237,7 +237,7 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * ブックの詳細を取得します。
+     * ブックの詳細を取得します。 教員または管理者いずれでもない場合、LTIリソースとしてリンクされているブックでなければなりません。
      * ブックの取得
      */
     async apiV2BookBookIdGetRaw(requestParameters: ApiV2BookBookIdGetRequest): Promise<runtime.ApiResponse<InlineResponse2001Books>> {
@@ -260,7 +260,7 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * ブックの詳細を取得します。
+     * ブックの詳細を取得します。 教員または管理者いずれでもない場合、LTIリソースとしてリンクされているブックでなければなりません。
      * ブックの取得
      */
     async apiV2BookBookIdGet(requestParameters: ApiV2BookBookIdGetRequest): Promise<InlineResponse2001Books> {
@@ -269,7 +269,7 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * ブックを更新します。 教員または管理者でなければなりません。
+     * ブックを更新します。 教員または管理者でなければなりません。 教員は自身の作成したブックでなければなりません。
      * ブックの更新
      */
     async apiV2BookBookIdPutRaw(requestParameters: ApiV2BookBookIdPutRequest): Promise<runtime.ApiResponse<InlineResponse2001Books>> {
@@ -295,7 +295,7 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * ブックを更新します。 教員または管理者でなければなりません。
+     * ブックを更新します。 教員または管理者でなければなりません。 教員は自身の作成したブックでなければなりません。
      * ブックの更新
      */
     async apiV2BookBookIdPut(requestParameters: ApiV2BookBookIdPutRequest): Promise<InlineResponse2001Books> {
@@ -878,7 +878,7 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * 自身の学習活動を更新します。 利用者でなければなりません。
+     * 自身の学習活動を更新します。
      * 学習活動の更新
      */
     async apiV2TopicTopicIdActivityPutRaw(requestParameters: ApiV2TopicTopicIdActivityPutRequest): Promise<runtime.ApiResponse<InlineResponse201>> {
@@ -904,7 +904,7 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * 自身の学習活動を更新します。 利用者でなければなりません。
+     * 自身の学習活動を更新します。
      * 学習活動の更新
      */
     async apiV2TopicTopicIdActivityPut(requestParameters: ApiV2TopicTopicIdActivityPutRequest): Promise<InlineResponse201> {
@@ -913,7 +913,7 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * トピックを削除します。 教員または管理者でなければなりません。 教員の場合は自身のトピックでなければなりません。
+     * トピックを削除します。 教員または管理者でなければなりません。 教員の場合は自身の作成したトピックでなければなりません。
      * トピックの削除
      */
     async apiV2TopicTopicIdDeleteRaw(requestParameters: ApiV2TopicTopicIdDeleteRequest): Promise<runtime.ApiResponse<void>> {
@@ -936,7 +936,7 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * トピックを削除します。 教員または管理者でなければなりません。 教員の場合は自身のトピックでなければなりません。
+     * トピックを削除します。 教員または管理者でなければなりません。 教員の場合は自身の作成したトピックでなければなりません。
      * トピックの削除
      */
     async apiV2TopicTopicIdDelete(requestParameters: ApiV2TopicTopicIdDeleteRequest): Promise<void> {
@@ -944,7 +944,7 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * トピックの詳細を取得します。
+     * トピックの詳細を取得します。 教員または管理者でなければなりません。
      * トピックの取得
      */
     async apiV2TopicTopicIdGetRaw(requestParameters: ApiV2TopicTopicIdGetRequest): Promise<runtime.ApiResponse<InlineResponse2001Topics>> {
@@ -967,7 +967,7 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * トピックの詳細を取得します。
+     * トピックの詳細を取得します。 教員または管理者でなければなりません。
      * トピックの取得
      */
     async apiV2TopicTopicIdGet(requestParameters: ApiV2TopicTopicIdGetRequest): Promise<InlineResponse2001Topics> {

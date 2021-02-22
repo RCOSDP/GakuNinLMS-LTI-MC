@@ -5,8 +5,9 @@ import {
   PaginationProps,
   paginationPropsSchema,
 } from "$server/validators/paginationProps";
+import authUser from "$server/auth/authUser";
+import authInstructor from "$server/auth/authInstructor";
 import { findWrittenBooks } from "$server/utils/user";
-import { authInstructorHandler } from "$server/utils/authInstructorHandler";
 import { userBooksSchema } from "$server/models/userBooks";
 
 export type Query = PaginationProps;
@@ -26,7 +27,17 @@ export const method: Method = {
   },
 };
 
-export async function get({ query, params }: { query: Query; params: Params }) {
+export const hooks = {
+  get: { auth: [authUser, authInstructor] },
+};
+
+export async function index({
+  query,
+  params,
+}: {
+  query: Query;
+  params: Params;
+}) {
   const page = query.page ?? 0;
   const perPage = query.per_page ?? 50;
   const { user_id: userId } = params;
@@ -37,5 +48,3 @@ export async function get({ query, params }: { query: Query; params: Params }) {
     body: { books, page, perPage },
   };
 }
-
-export const preHandler = authInstructorHandler;

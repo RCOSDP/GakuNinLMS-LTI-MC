@@ -17,6 +17,10 @@ export const showSchema: FastifySchema = {
   },
 };
 
+export const showHooks = {
+  auth: [], // TODO: 同一オリジンなら authUser を加えて
+};
+
 export async function show({ params }: { params: VideoTrackParams }) {
   const videoTrack = await findVideoTrack(
     params.resource_id,

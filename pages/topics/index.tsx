@@ -13,7 +13,7 @@ const UserTopics = (
 function Index() {
   const router = useRouter();
   const { session } = useSessionAtom();
-  const userId = session?.user?.id;
+  const userId = session?.user.id;
   function handleTopicEditClick({ id }: Pick<TopicSchema, "id">) {
     return router.push(pagesPath.topics.edit.$url({ query: { topicId: id } }));
   }

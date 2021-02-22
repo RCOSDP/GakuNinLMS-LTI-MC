@@ -6,7 +6,10 @@ import {
   topicSchema,
 } from "$server/models/topic";
 import { TopicParams, topicParamsSchema } from "$server/validators/topicParams";
-import { Session, isUserOrAdmin } from "$server/utils/session";
+import { SessionSchema } from "$server/models/session";
+import authUser from "$server/auth/authUser";
+import authInstructor from "$server/auth/authInstructor";
+import { isUserOrAdmin } from "$server/utils/session";
 import topicExists from "$server/utils/topic/topicExists";
 import upsertTopic from "$server/utils/topic/upsertTopic";
 
@@ -26,17 +29,19 @@ export const updateSchema: FastifySchema = {
   },
 };
 
+export const updateHooks = {
+  auth: [authUser, authInstructor],
+};
+
 export async function update({
   session,
   body,
   params,
 }: {
-  session: Session;
+  session: SessionSchema;
   body: TopicProps;
   params: TopicParams;
 }) {
-  if (!session.user) return { status: 400 };
-
   const found = await topicExists(params.topic_id);
 
   if (!found) return { status: 404 };

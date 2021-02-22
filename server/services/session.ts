@@ -1,6 +1,7 @@
 import { FastifyRequest } from "fastify";
 import Method from "$server/types/method";
 import { sessionSchema } from "$server/models/session";
+import authUser from "$server/auth/authUser";
 
 export const method: Method = {
   get: {
@@ -12,17 +13,19 @@ export const method: Method = {
   },
 };
 
-export default {
-  async get({ session }: FastifyRequest) {
-    const { ltiLaunchBody, ltiResourceLink, user } = session;
-
-    return {
-      status: 200,
-      body: {
-        ltiLaunchBody,
-        ltiResourceLink,
-        user,
-      },
-    };
-  },
+export const hooks = {
+  get: { auth: [authUser] },
 };
+
+export async function show({ session }: FastifyRequest) {
+  const { ltiLaunchBody, ltiResourceLink, user } = session;
+
+  return {
+    status: 200,
+    body: {
+      ltiLaunchBody,
+      ltiResourceLink,
+      user,
+    },
+  };
+}

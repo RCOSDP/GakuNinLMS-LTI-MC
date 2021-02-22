@@ -22,6 +22,7 @@ function Show(query: Query) {
     itemExists,
     updateItemIndex,
     nextItemIndex,
+    error,
   } = useBook(query.bookId);
   useActivityTracking();
   const playerTracker = usePlayerTrackerAtom();
@@ -58,6 +59,7 @@ function Show(query: Query) {
     onTopicEditClick: handleTopicEditClick,
   };
 
+  if (error) return <BookNotFoundProblem />;
   if (!book) return <Placeholder />;
 
   return <Book book={book} index={itemIndex} {...handlers} />;
