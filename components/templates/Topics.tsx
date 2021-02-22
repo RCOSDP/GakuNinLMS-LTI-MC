@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
   },
   topics: {
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fill, 380px)",
+    gridTemplateColumns: "repeat(auto-fill, 296px)",
     gap: `${theme.spacing(2)}px`,
   },
 }));

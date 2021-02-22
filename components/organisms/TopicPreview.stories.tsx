@@ -7,7 +7,7 @@ import { topic } from "samples";
 const useStyles = makeStyles((theme) => ({
   grid: {
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fill, 360px)",
+    gridTemplateColumns: "repeat(auto-fill, 290px)",
     gap: `${theme.spacing(2)}px`,
   },
 }));
