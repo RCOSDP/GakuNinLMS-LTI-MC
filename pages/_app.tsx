@@ -21,9 +21,14 @@ function Content({ children }: { children: ReactNode }) {
   const router = useRouter();
   const { session, isInstructor, error } = useSessionInit();
 
-  // TODO: https://github.com/npocccties/ChibiCHiLO/issues/3
+  if (error) {
+    return (
+      <Problem title="セッション情報が得られませんでした">
+        LTIリンクからアクセスしてください
+      </Problem>
+    );
+  }
   if (!session) return <Placeholder />;
-  if (error) return <Problem title="セッション情報が得られませんでした" />;
 
   const handleBooksClick = () => router.push(pagesPath.books.$url());
   const handleTopicsClick = () => router.push(pagesPath.topics.$url());
