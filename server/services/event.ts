@@ -2,6 +2,7 @@ import type { FastifyRequest } from "fastify";
 import { outdent } from "outdent";
 import type Method from "$server/types/method";
 import { Event, eventSchema } from "$server/models/event";
+import authUser from "$server/auth/authUser";
 import eventLogger from "$server/utils/eventLogger";
 
 export const method: Method = {
@@ -16,6 +17,10 @@ export const method: Method = {
       204: { type: "null", description: "成功" },
     },
   },
+};
+
+export const hooks = {
+  post: { auth: [authUser] },
 };
 
 export async function create({

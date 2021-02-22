@@ -8,7 +8,7 @@ import {
 } from "./ltiResourceLink";
 import { UserSchema, userSchema } from "$server/models/user";
 
-export type SessionScheme = {
+export type SessionSchema = {
   ltiLaunchBody: LtiLaunchBody;
   ltiResourceLink: null | LtiResourceLinkSchema;
   user: UserSchema;

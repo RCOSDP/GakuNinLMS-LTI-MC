@@ -9,6 +9,8 @@ import {
   ResourceParams,
   resourceParamsSchema,
 } from "$server/validators/resourceParams";
+import authUser from "$server/auth/authUser";
+import authInstructor from "$server/auth/authInstructor";
 import createVideoTrack from "$server/utils/videoTrack/createVideoTrack";
 
 export type CreateBody = VideoTrackProps;
@@ -24,6 +26,10 @@ export const createSchema: FastifySchema = {
     201: videoTrackSchema,
     400: {},
   },
+};
+
+export const createHooks = {
+  auth: [authUser, authInstructor],
 };
 
 export async function create(

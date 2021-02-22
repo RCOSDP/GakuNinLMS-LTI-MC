@@ -1,22 +1,25 @@
-import Method from "$server/types/method";
 import { BookProps } from "$server/models/book";
 import { BookParams } from "$server/validators/bookParams";
-import { authInstructorHandler } from "$server/utils/authInstructorHandler";
-import { showSchema, show } from "./show";
-import { createSchema, create } from "./create";
-import { updateSchema, update } from "./update";
-import { destroySchema, destroy } from "./destroy";
+import { showSchema, showHooks, show } from "./show";
+import { createSchema, createHooks, create } from "./create";
+import { updateSchema, updateHooks, update } from "./update";
+import { destroySchema, destroyHooks, destroy } from "./destroy";
 
 export type Params = BookParams;
 export type Props = BookProps;
 
-export const method: Method = {
+export const method = {
   get: showSchema,
   post: createSchema,
   put: updateSchema,
   delete: destroySchema,
 };
 
-export const preHandler = authInstructorHandler;
+export const hooks = {
+  get: showHooks,
+  post: createHooks,
+  put: updateHooks,
+  delete: destroyHooks,
+};
 
 export { show, create, update, destroy };

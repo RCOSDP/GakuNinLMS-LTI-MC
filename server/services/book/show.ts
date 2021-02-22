@@ -1,6 +1,7 @@
 import { FastifySchema } from "fastify";
 import { bookSchema } from "$server/models/book";
 import { BookParams, bookParamsSchema } from "$server/validators/bookParams";
+import authUser from "$server/auth/authUser";
 import findBook from "$server/utils/book/findBook";
 
 export const showSchema: FastifySchema = {
@@ -11,6 +12,10 @@ export const showSchema: FastifySchema = {
     200: bookSchema,
     404: {},
   },
+};
+
+export const showHooks = {
+  auth: [authUser],
 };
 
 export async function show({ params }: { params: BookParams }) {

@@ -878,7 +878,7 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * 自身の学習活動を更新します。 利用者でなければなりません。
+     * 自身の学習活動を更新します。
      * 学習活動の更新
      */
     async apiV2TopicTopicIdActivityPutRaw(requestParameters: ApiV2TopicTopicIdActivityPutRequest): Promise<runtime.ApiResponse<InlineResponse201>> {
@@ -904,7 +904,7 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * 自身の学習活動を更新します。 利用者でなければなりません。
+     * 自身の学習活動を更新します。
      * 学習活動の更新
      */
     async apiV2TopicTopicIdActivityPut(requestParameters: ApiV2TopicTopicIdActivityPutRequest): Promise<InlineResponse201> {

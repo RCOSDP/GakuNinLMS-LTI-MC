@@ -17,7 +17,7 @@ const UserBooks = (
 function Index() {
   const router = useRouter();
   const { session, isTopicEditable } = useSessionAtom();
-  const userId = session?.user?.id;
+  const userId = session?.user.id;
   const handlers = {
     onBookClick({ id }: Pick<BookSchema, "id">) {
       return router.push(pagesPath.book.$url({ query: { bookId: id } }));

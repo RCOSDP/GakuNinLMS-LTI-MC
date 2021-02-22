@@ -1,7 +1,10 @@
 import { FastifySchema } from "fastify";
 import { outdent } from "outdent";
 import { TopicParams, topicParamsSchema } from "$server/validators/topicParams";
-import { Session, isUserOrAdmin } from "$server/utils/session";
+import { SessionSchema } from "$server/models/session";
+import authUser from "$server/auth/authUser";
+import authInstructor from "$server/auth/authInstructor";
+import { isUserOrAdmin } from "$server/utils/session";
 import topicExists from "$server/utils/topic/topicExists";
 import destroyTopic from "$server/utils/topic/destroyTopic";
 
@@ -14,21 +17,22 @@ export const destroySchema: FastifySchema = {
   params: topicParamsSchema,
   response: {
     204: { type: "null", description: "成功" },
-    400: {},
     403: {},
     404: {},
   },
+};
+
+export const destroyHooks = {
+  auth: [authUser, authInstructor],
 };
 
 export async function destroy({
   session,
   params,
 }: {
-  session: Session;
+  session: SessionSchema;
   params: TopicParams;
 }) {
-  if (!session.user) return { status: 400 };
-
   const found = await topicExists(params.topic_id);
 
   if (!found) return { status: 404 };

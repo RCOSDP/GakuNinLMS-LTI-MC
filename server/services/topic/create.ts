@@ -5,8 +5,10 @@ import {
   topicPropsSchema,
   topicSchema,
 } from "$server/models/topic";
+import { SessionSchema } from "$server/models/session";
+import authUser from "$server/auth/authUser";
+import authInstructor from "$server/auth/authInstructor";
 import createTopic from "$server/utils/topic/createTopic";
-import { Session } from "$utils/session";
 
 export const createSchema: FastifySchema = {
   summary: "トピックの作成",
@@ -20,15 +22,17 @@ export const createSchema: FastifySchema = {
   },
 };
 
+export const createHooks = {
+  auth: [authUser, authInstructor],
+};
+
 export async function create({
   session,
   body,
 }: {
-  session: Session;
+  session: SessionSchema;
   body: TopicProps;
 }) {
-  if (!session.user) return { status: 400 };
-
   const created = await createTopic(session.user.id, body);
 
   return {

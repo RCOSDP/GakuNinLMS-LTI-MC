@@ -1,25 +1,22 @@
-import { TopicProps } from "$server/models/topic";
-import { TopicParams } from "$server/validators/topicParams";
+import { LtiResourceLinkProps } from "$server/models/ltiResourceLink";
+import { LtiResourceLinkParams } from "$server/validators/ltiResourceLinkParams";
 import { showSchema, showHooks, show } from "./show";
-import { createSchema, createHooks, create } from "./create";
 import { updateSchema, updateHooks, update } from "./update";
 import { destroySchema, destroyHooks, destroy } from "./destroy";
 
-export type Params = TopicParams;
-export type Props = TopicProps;
+export type Params = LtiResourceLinkParams;
+export type Props = LtiResourceLinkProps;
 
 export const method = {
   get: showSchema,
-  post: createSchema,
   put: updateSchema,
   delete: destroySchema,
 };
 
 export const hooks = {
   get: showHooks,
-  post: createHooks,
   put: updateHooks,
   delete: destroyHooks,
 };
 
-export { show, create, update, destroy };
+export { show, update, destroy };

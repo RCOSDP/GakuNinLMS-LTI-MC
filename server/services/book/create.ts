@@ -1,8 +1,10 @@
 import { FastifySchema } from "fastify";
-import { BookProps, bookPropsSchema, bookSchema } from "$server/models/book";
-import createBook from "$server/utils/book/createBook";
-import { Session } from "$utils/session";
 import { outdent } from "outdent";
+import { BookProps, bookPropsSchema, bookSchema } from "$server/models/book";
+import { SessionSchema } from "$server/models/session";
+import authUser from "$server/auth/authUser";
+import authInstructor from "$server/auth/authInstructor";
+import createBook from "$server/utils/book/createBook";
 
 export const createSchema: FastifySchema = {
   summary: "ブックの作成",
@@ -16,15 +18,17 @@ export const createSchema: FastifySchema = {
   },
 };
 
+export const createHooks = {
+  auth: [authUser, authInstructor],
+};
+
 export async function create({
   session,
   body,
 }: {
-  session: Session;
+  session: SessionSchema;
   body: BookProps;
 }) {
-  if (!session.user) return { status: 400 };
-
   const created = await createBook(session.user.id, body);
 
   return {

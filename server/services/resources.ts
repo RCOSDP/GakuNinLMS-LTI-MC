@@ -5,8 +5,9 @@ import {
   PaginationProps,
   paginationPropsSchema,
 } from "$server/validators/paginationProps";
+import authUser from "$server/auth/authUser";
+import authInstructor from "$server/auth/authInstructor";
 import findResources from "$server/utils/resource/findResources";
-import { authInstructorHandler } from "$server/utils/authInstructorHandler";
 
 export type Query = PaginationProps;
 
@@ -34,6 +35,10 @@ export const method: Method = {
   },
 };
 
+export const hooks = {
+  get: { auth: [authUser, authInstructor] },
+};
+
 export async function index({ query }: { query: Query }) {
   const page = query.page ?? 0;
   const perPage = query.per_page ?? 50;
@@ -44,5 +49,3 @@ export async function index({ query }: { query: Query }) {
     body: { resources, page, perPage },
   };
 }
-
-export const preHandler = authInstructorHandler;
