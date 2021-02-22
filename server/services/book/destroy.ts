@@ -13,7 +13,7 @@ export const destroySchema: FastifySchema = {
   description: outdent`
     ブックを削除します。
     教員または管理者でなければなりません。
-    教員の場合は自身のブックでなければなりません。`,
+    教員の場合は自身の作成したブックでなければなりません。`,
   params: bookParamsSchema,
   response: {
     204: { type: "null", description: "成功" },
