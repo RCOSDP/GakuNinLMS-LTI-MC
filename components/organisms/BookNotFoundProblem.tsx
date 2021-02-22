@@ -6,8 +6,8 @@ export default function BookNotFoundProblem() {
   const url = useLmsUrl();
 
   return (
-    <Problem title="トピックがありません">
-      トピックが見つかりませんでした
+    <Problem title="ブックがありません">
+      ブックが見つかりませんでした
       {url && (
         <p>
           <Link href={url}>LMSに戻る</Link>
