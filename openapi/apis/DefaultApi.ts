@@ -237,7 +237,7 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * ブックの詳細を取得します。
+     * ブックの詳細を取得します。 教員または管理者いずれでもない場合、LTIリソースとしてリンクされているブックでなければなりません。
      * ブックの取得
      */
     async apiV2BookBookIdGetRaw(requestParameters: ApiV2BookBookIdGetRequest): Promise<runtime.ApiResponse<InlineResponse2001Books>> {
@@ -260,7 +260,7 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * ブックの詳細を取得します。
+     * ブックの詳細を取得します。 教員または管理者いずれでもない場合、LTIリソースとしてリンクされているブックでなければなりません。
      * ブックの取得
      */
     async apiV2BookBookIdGet(requestParameters: ApiV2BookBookIdGetRequest): Promise<InlineResponse2001Books> {
@@ -944,7 +944,7 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * トピックの詳細を取得します。
+     * トピックの詳細を取得します。 教員または管理者でなければなりません。
      * トピックの取得
      */
     async apiV2TopicTopicIdGetRaw(requestParameters: ApiV2TopicTopicIdGetRequest): Promise<runtime.ApiResponse<InlineResponse2001Topics>> {
@@ -967,7 +967,7 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * トピックの詳細を取得します。
+     * トピックの詳細を取得します。 教員または管理者でなければなりません。
      * トピックの取得
      */
     async apiV2TopicTopicIdGet(requestParameters: ApiV2TopicTopicIdGetRequest): Promise<InlineResponse2001Topics> {
