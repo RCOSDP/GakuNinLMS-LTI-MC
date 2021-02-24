@@ -1,6 +1,8 @@
 export default { title: "templates/BookLink" };
 
 import BookLink from "./BookLink";
+import Slide from "@material-ui/core/Slide";
+import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 import AppBar from "$organisms/AppBar";
 import { books, session } from "samples";
 
@@ -25,16 +27,25 @@ const defaultProps = {
   onBookNewClick: console.log,
 };
 
+function SlideAppBar() {
+  const trigger = useScrollTrigger();
+  return (
+    <Slide appear={false} direction="down" in={!trigger}>
+      <AppBar position="sticky" session={session} {...appBarHandlers} />
+    </Slide>
+  );
+}
+
 export const Default = () => (
   <>
-    <AppBar position="sticky" session={session} {...appBarHandlers} />
+    <SlideAppBar />
     <BookLink {...defaultProps} />
   </>
 );
 
 export const Empty = () => (
   <>
-    <AppBar position="sticky" session={session} {...appBarHandlers} />
+    <SlideAppBar />
     <BookLink {...defaultProps} books={[]} />
   </>
 );

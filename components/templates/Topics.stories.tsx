@@ -1,6 +1,8 @@
 export default { title: "templates/Topics" };
 
 import Topics from "./Topics";
+import Slide from "@material-ui/core/Slide";
+import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 import AppBar from "$organisms/AppBar";
 import { topic, session } from "samples";
 
@@ -17,16 +19,25 @@ const handlers = {
   onTopicNewClick: console.log,
 };
 
+function SlideAppBar() {
+  const trigger = useScrollTrigger();
+  return (
+    <Slide appear={false} direction="down" in={!trigger}>
+      <AppBar position="sticky" session={session} {...appBarHandlers} />
+    </Slide>
+  );
+}
+
 export const Default = () => (
   <>
-    <AppBar position="sticky" session={session} {...appBarHandlers} />
+    <SlideAppBar />
     <Topics topics={topics} {...handlers} />
   </>
 );
 
 export const Empty = () => (
   <>
-    <AppBar position="sticky" session={session} {...appBarHandlers} />
+    <SlideAppBar />
     <Topics topics={[]} {...handlers} />
   </>
 );

@@ -1,6 +1,8 @@
 export default { title: "templates/TopicImport" };
 
 import TopicImport from "./TopicImport";
+import Slide from "@material-ui/core/Slide";
+import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 import AppBar from "$organisms/AppBar";
 import { topic, session } from "samples";
 
@@ -19,23 +21,32 @@ const handlers = {
   isTopicEditable: () => true,
 };
 
+function SlideAppBar() {
+  const trigger = useScrollTrigger();
+  return (
+    <Slide appear={false} direction="down" in={!trigger}>
+      <AppBar position="sticky" session={session} {...appBarHandlers} />
+    </Slide>
+  );
+}
+
 export const Default = () => (
   <>
-    <AppBar position="sticky" session={session} {...appBarHandlers} />
+    <SlideAppBar />
     <TopicImport topics={topics} {...handlers} />
   </>
 );
 
 export const Empty = () => (
   <>
-    <AppBar position="sticky" session={session} {...appBarHandlers} />
+    <SlideAppBar />
     <TopicImport topics={[]} {...handlers} />
   </>
 );
 
 export const Others = () => (
   <>
-    <AppBar position="sticky" session={session} {...appBarHandlers} />
+    <SlideAppBar />
     <TopicImport topics={topics} {...handlers} isTopicEditable={() => false} />
   </>
 );
