@@ -16,6 +16,9 @@ const useStyles = makeStyles((theme) => ({
     "& > *": {
       marginRight: theme.spacing(1),
     },
+    "& > p": {
+      paddingTop: theme.spacing(1),
+    },
   },
   action: {
     display: "flex",
