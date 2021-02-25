@@ -1,4 +1,4 @@
-import type { Event } from "$server/models/event.ts";
+import type { Event } from "$server/models/event";
 import format from "date-fns/format";
 import utcToZoneTime from "date-fns-tz/utcToZonedTime";
 

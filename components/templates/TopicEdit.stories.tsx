@@ -37,15 +37,3 @@ export const Default = () => {
     />
   );
 };
-
-export const Empty = () => {
-  const { addVideoTrack, deleteVideoTrack } = useVideoTrackAtom();
-  return (
-    <TopicEdit
-      topic={null}
-      onSubtitleDelete={({ id }) => deleteVideoTrack(id)}
-      onSubtitleSubmit={handleSubtitleSubmit(addVideoTrack)}
-      {...handlers}
-    />
-  );
-};

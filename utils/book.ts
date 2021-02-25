@@ -76,6 +76,32 @@ export async function updateBook({
   return res as BookSchema;
 }
 
+export async function addTopicToBook(
+  book: BookSchema,
+  topic: Pick<TopicSchema, "id">
+) {
+  const sections = [
+    ...book.sections,
+    { name: null, topics: [{ id: topic.id }] },
+  ];
+  return updateBook({ ...book, sections });
+}
+
+export async function replaceTopicInBook(
+  book: BookSchema,
+  target: Pick<TopicSchema, "id">,
+  by: Pick<TopicSchema, "id">
+) {
+  const sections = book.sections.map((section) => {
+    const topics = section.topics.map((topic) =>
+      topic.id === target.id ? by : topic
+    );
+    return { ...section, topics };
+  });
+
+  return updateBook({ ...book, sections });
+}
+
 export async function destroyBook(id: BookSchema["id"]) {
   await api.apiV2BookBookIdDelete({ bookId: id });
   await revalidateSession();

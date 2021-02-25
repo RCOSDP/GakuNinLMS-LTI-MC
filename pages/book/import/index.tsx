@@ -20,8 +20,9 @@ function Import({ bookId, context }: Query) {
   const booksWithInfiniteProps = useBooks(isBookEditable, isTopicEditable);
   const router = useRouter();
   const bookEditQuery = { bookId, ...(context && { context }) };
+  const action = book && isBookEditable(book) ? "edit" : "generate";
   const back = () =>
-    router.push(pagesPath.book.edit.$url({ query: { bookId } }));
+    router.push(pagesPath.book[action].$url({ query: bookEditQuery }));
   async function handleSubmit({
     topics,
   }: {
@@ -37,7 +38,6 @@ function Import({ bookId, context }: Query) {
     const ids = await Promise.all(connectOrCreateTopics);
     await updateBook({
       ...book,
-      ltiResourceLinks: undefined,
       sections: [...book.sections, ...ids.map((id) => ({ topics: [{ id }] }))],
     });
 
@@ -46,18 +46,19 @@ function Import({ bookId, context }: Query) {
   function handleCancel() {
     return back();
   }
-  function handleBookEditClick({ id: bookId }: Pick<BookSchema, "id">) {
+  function handleBookEditClick(book: Pick<BookSchema, "id" | "author">) {
+    const action = isBookEditable(book) ? "edit" : "generate";
     return router.push(
-      pagesPath.book.edit.$url({
+      pagesPath.book[action].$url({
         // NOTE: ブック編集画面は元のブックインポート画面に戻る手段が無いのでマイブック画面に戻る
         query: { bookId, context: "books" },
       })
     );
   }
-  function handleTopicEditClick({ id: topicId }: Pick<TopicSchema, "id">) {
+  function handleTopicEditClick(topic: Pick<TopicSchema, "id">) {
     return router.push(
       pagesPath.book.import.topic.edit.$url({
-        query: { ...bookEditQuery, topicId },
+        query: { ...bookEditQuery, topicId: topic.id },
       })
     );
   }

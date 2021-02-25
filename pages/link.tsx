@@ -38,10 +38,11 @@ function Index() {
       pagesPath.book.$url({ query: { bookId: ltiResourceLink.bookId } })
     );
   }
-  function handleBookEdit({ id }: Pick<BookSchema, "id">) {
+  function handleBookEdit(book: Pick<BookSchema, "id" | "author">) {
+    const action = isBookEditable(book) ? "edit" : "generate";
     return router.push(
-      pagesPath.book.edit.$url({
-        query: { bookId: id, context: "link" },
+      pagesPath.book[action].$url({
+        query: { bookId: book.id, context: "link" },
       })
     );
   }
