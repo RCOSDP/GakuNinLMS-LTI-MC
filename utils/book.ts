@@ -4,8 +4,6 @@ import { useBookAtom } from "$store/book";
 import { api } from "./api";
 import type { BookProps, BookSchema } from "$server/models/book";
 import type { TopicSchema } from "$server/models/topic";
-import type { SectionSchema } from "$server/models/book/section";
-import { createTopic } from "./topic";
 import { revalidateSession } from "./session";
 
 const key = "/api/v2/book/{book_id}";
@@ -29,41 +27,6 @@ export async function createBook(body: BookProps): Promise<BookSchema> {
   const res = await api.apiV2BookPost({ body });
   await mutate([key, res.id], res);
   return res as BookSchema;
-}
-
-const sectionInput = (
-  isTopicEditable: (topic: Pick<TopicSchema, "creator">) => boolean
-) => async (section: SectionSchema) => {
-  const topics = await Promise.all(
-    section.topics.map(async (topic) => {
-      if (isTopicEditable(topic)) return topic;
-      return createTopic(topic);
-    })
-  );
-  return { ...section, topics };
-};
-
-async function connectOrCreateSections(
-  sections: SectionSchema[],
-  isTopicEditable: (topic: Pick<TopicSchema, "creator">) => boolean
-) {
-  return Promise.all(sections.map(sectionInput(isTopicEditable)));
-}
-
-export async function connectOrCreateBook(
-  book: BookSchema,
-  isBookEditable: (book: Pick<BookSchema, "author">) => boolean,
-  isTopicEditable: (topic: Pick<TopicSchema, "creator">) => boolean
-) {
-  if (isBookEditable(book)) return book;
-  const { ltiResourceLinks: _, ...bookProps } = book;
-  // NOTE: 自身以外の作成したトピックの含まれるセクションに関しては、
-  //       影響を及ぼすのを避ける目的でトピックを複製して更新
-  const sections = await connectOrCreateSections(
-    bookProps.sections,
-    isTopicEditable
-  );
-  return createBook({ ...bookProps, sections });
 }
 
 export async function updateBook({
