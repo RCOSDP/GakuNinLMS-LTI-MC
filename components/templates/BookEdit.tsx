@@ -21,6 +21,9 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     marginBottom: theme.spacing(4),
+  },
+  subtitle: {
+    marginBottom: theme.spacing(2),
     "& span": {
       verticalAlign: "middle",
     },
@@ -31,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   children: {
-    marginBottom: theme.spacing(2),
+    marginBottom: theme.spacing(4),
   },
   form: {
     marginBottom: theme.spacing(2),
@@ -95,11 +98,10 @@ export default function BookEdit(props: Props) {
     >
       <BackButton onClick={onCancel}>戻る</BackButton>
       <Typography className={classes.title} variant="h4">
-        ブックの編集
-        <Typography variant="caption" component="span" aria-hidden="true">
-          <RequiredDot />
-          は必須項目です
-        </Typography>
+        ブック「{book.name}」の編集
+      </Typography>
+      <Typography className={classes.subtitle} variant="h5">
+        トピック・セクションの編集
       </Typography>
       <BookEditChildren
         className={classes.children}
@@ -112,6 +114,13 @@ export default function BookEdit(props: Props) {
         onSectionNewClick={handleSectionNewClick}
         isTopicEditable={isTopicEditable}
       />
+      <Typography className={classes.subtitle} variant="h5">
+        ブックの編集
+        <Typography variant="caption" component="span" aria-hidden="true">
+          <RequiredDot />
+          は必須項目です
+        </Typography>
+      </Typography>
       <BookForm className={classes.form} book={book} onSubmit={onSubmit} />
       <Button size="small" color="primary" onClick={handleDeleteButtonClick}>
         <DeleteOutlined />
