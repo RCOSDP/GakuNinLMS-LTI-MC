@@ -10,7 +10,6 @@ import { gray } from "theme/colors";
 const useStyles = makeStyles((theme) => ({
   root: {
     paddingTop: theme.spacing(5),
-    paddingBottom: theme.spacing(2),
   },
   title: {
     "& > *": {
@@ -24,7 +23,10 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     flexWrap: "wrap",
-    paddingTop: theme.spacing(2),
+    // NOTE: actionにもたせたかったのはspacing(2)で、
+    // 残りの余分なspacing(2)はstickyで張り付く際のネガティブマージン
+    // See also https://github.com/npocccties/ChibiCHiLO/pull/243#issuecomment-785729721
+    paddingTop: theme.spacing(4),
     "& > *": {
       marginRight: theme.spacing(2),
       marginBottom: theme.spacing(2),
@@ -43,17 +45,17 @@ const useStyles = makeStyles((theme) => ({
     }),
   },
   scroll: {
-    top: 0,
+    top: -theme.spacing(2),
     transition: theme.transitions.create("top", {
       duration: theme.transitions.duration.leavingScreen,
       easing: theme.transitions.easing.sharp,
     }),
   },
   desktop: {
-    top: 65,
+    top: 65 - theme.spacing(2),
   },
   mobile: {
-    top: 55,
+    top: 55 - theme.spacing(2),
   },
 }));
 
