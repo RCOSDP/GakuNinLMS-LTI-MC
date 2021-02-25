@@ -19,6 +19,7 @@ function Import({ bookId, context }: BookEditQuery) {
   const router = useRouter();
   const bookEditQuery = { bookId, ...(context && { context }) };
   function back() {
+    // TODO: トピックインポート画面で自身以外のブックへの経路を提供しないならば不要なので取り除きましょう
     const action = book && isBookEditable(book) ? "edit" : "generate";
     return router.push(
       pagesPath.book[action].$url({
