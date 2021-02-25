@@ -4,6 +4,8 @@ import type { AppProps } from "next/app";
 import Head from "next/head";
 import MuiThemeProvider from "@material-ui/styles/ThemeProvider";
 import CssBaseline from "@material-ui/core/CssBaseline";
+import Slide from "@material-ui/core/Slide";
+import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 import { ConfirmProvider } from "material-ui-confirm";
 import theme from "$theme";
 import Placeholder from "$templates/Placeholder";
@@ -20,6 +22,7 @@ import "$styles/video-js.css";
 function Content({ children }: { children: ReactNode }) {
   const router = useRouter();
   const { session, isInstructor, error } = useSessionInit();
+  const trigger = useScrollTrigger();
 
   if (error) {
     return (
@@ -37,13 +40,15 @@ function Content({ children }: { children: ReactNode }) {
   return (
     <>
       {isInstructor && (
-        <AppBar
-          position="sticky"
-          session={session}
-          onBooksClick={handleBooksClick}
-          onTopicsClick={handleTopicsClick}
-          onBookLinkClick={handleBookLinkClick}
-        />
+        <Slide appear={false} direction="down" in={!trigger}>
+          <AppBar
+            position="sticky"
+            session={session}
+            onBooksClick={handleBooksClick}
+            onTopicsClick={handleTopicsClick}
+            onBookLinkClick={handleBookLinkClick}
+          />
+        </Slide>
       )}
       {children}
     </>

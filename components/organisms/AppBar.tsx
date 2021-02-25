@@ -1,4 +1,4 @@
-import { useState, ComponentProps } from "react";
+import { useState, forwardRef, ComponentProps, Ref } from "react";
 import MuiAppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Button from "@material-ui/core/Button";
@@ -67,7 +67,7 @@ const role = (session: SessionSchema) => {
   return "学生";
 };
 
-export default function AppBar(props: Props) {
+function AppBar(props: Props, ref: Ref<unknown>) {
   const {
     session,
     onBooksClick,
@@ -86,7 +86,7 @@ export default function AppBar(props: Props) {
     setOpen(false);
   };
   return (
-    <MuiAppBar classes={appBarClasses} color="default" {...others}>
+    <MuiAppBar classes={appBarClasses} color="default" {...others} ref={ref}>
       <Toolbar color="inherit" disableGutters>
         <div className={classes.inner}>
           <LogoIcon className={clsx(classes.margin, classes.logo)} />
@@ -141,3 +141,5 @@ export default function AppBar(props: Props) {
     </MuiAppBar>
   );
 }
+
+export default forwardRef(AppBar);
