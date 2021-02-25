@@ -51,7 +51,7 @@ function Import({ bookId, context }: Query) {
     return router.push(
       pagesPath.book[action].$url({
         // NOTE: ブック編集画面は元のブックインポート画面に戻る手段が無いのでマイブック画面に戻る
-        query: { bookId, context: "books" },
+        query: { bookId: book.id, context: "books" },
       })
     );
   }
