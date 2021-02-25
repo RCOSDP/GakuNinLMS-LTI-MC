@@ -13,7 +13,6 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: theme.spacing(2),
   },
   title: {
-    marginBottom: 0,
     "& > *": {
       marginRight: theme.spacing(1),
     },
@@ -73,7 +72,7 @@ export default function ActionHeader(props: Props) {
           className={clsx({ [classes.container]: !maxWidth })}
           maxWidth={maxWidth}
         >
-          <Typography className={classes.title} variant="h4" gutterBottom>
+          <Typography className={classes.title} variant="h4">
             {title}
           </Typography>
         </Container>
