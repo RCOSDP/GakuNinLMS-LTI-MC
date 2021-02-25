@@ -15,7 +15,12 @@ import logger from "$utils/eventLogger/logger";
 export type Query = { bookId: BookSchema["id"] };
 
 function Show(query: Query) {
-  const { session, isInstructor } = useSessionAtom();
+  const {
+    session,
+    isInstructor,
+    isBookEditable,
+    isTopicEditable,
+  } = useSessionAtom();
   const {
     book,
     itemIndex,
@@ -36,18 +41,19 @@ function Show(query: Query) {
   };
   const router = useRouter();
   const handleBookEditClick = () => {
-    return router.push(pagesPath.book.edit.$url({ query }));
+    const action = book && isBookEditable(book) ? "edit" : "generate";
+    return router.push(pagesPath.book[action].$url({ query }));
   };
   const handleBookLinkClick = () => router.push(pagesPath.link.$url());
-  const handleTopicEditClick = ({ id }: Pick<TopicSchema, "id">) => {
-    return router.push(
-      pagesPath.book.topic.edit.$url({
-        query: {
-          bookId: query.bookId,
-          topicId: id,
-        },
-      })
-    );
+  const handleTopicEditClick = (topic: Pick<TopicSchema, "id" | "creator">) => {
+    if (!book) return handleBookEditClick();
+    if (!isBookEditable(book)) return handleBookEditClick();
+
+    const action = isTopicEditable(topic) ? "edit" : "generate";
+    const url = pagesPath.book.topic[action].$url({
+      query: { ...query, topicId: topic.id },
+    });
+    return router.push(url);
   };
   const handlers = {
     editable: isInstructor,

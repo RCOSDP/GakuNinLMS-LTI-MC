@@ -1,34 +1,20 @@
 import { useRouter } from "next/router";
-import { BookProps } from "$server/models/book";
 import BookNew from "$templates/BookNew";
-import { createBook } from "$utils/book";
-import { pagesPath } from "$utils/$path";
+import useBookNewHandlers from "$utils/useBookNewHandlers";
 
 export type Query = { context?: "books" | "link" };
 
-function New() {
-  const router = useRouter();
-  async function handleSubmit(book: BookProps) {
-    const { id } = await createBook(book);
-    const { context }: Pick<Query, "context"> = router.query;
-    await router.replace(
-      pagesPath.book.edit.$url({
-        query: {
-          bookId: id,
-          ...(context && { context }),
-        },
-      })
-    );
-  }
-  function handleCancel() {
-    return router.push(pagesPath.books.$url());
-  }
-  const handlers = {
-    onSubmit: handleSubmit,
-    onCancel: handleCancel,
-  };
+function New({ context }: Query) {
+  const handlers = useBookNewHandlers(context);
 
   return <BookNew {...handlers} />;
 }
 
-export default New;
+function Router() {
+  const router = useRouter();
+  const { context }: Pick<Query, "context"> = router.query;
+
+  return <New context={context} />;
+}
+
+export default Router;

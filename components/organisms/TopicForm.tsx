@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type Props = {
-  topic: TopicSchema | null;
+  topic?: TopicSchema;
   className?: string;
   submitLabel?: string;
   onSubmit?(topic: TopicProps): void;

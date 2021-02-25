@@ -24,5 +24,3 @@ const handlers = {
 };
 
 export const Default = () => <BookEdit book={book} {...handlers} />;
-
-export const Empty = () => <BookEdit book={null} {...handlers} />;

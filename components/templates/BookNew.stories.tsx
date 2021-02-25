@@ -5,8 +5,8 @@ import { book } from "samples";
 
 const onSubmit = console.log;
 const onCancel = () => console.log("back");
-const defaultProps = { book, onSubmit, onCancel };
+const defaultProps = { onSubmit, onCancel };
 
-export const Default = () => <BookNew {...defaultProps} />;
+export const Default = () => <BookNew book={book} {...defaultProps} />;
 
-export const Empty = () => <BookNew {...defaultProps} book={null} />;
+export const Empty = () => <BookNew {...defaultProps} />;

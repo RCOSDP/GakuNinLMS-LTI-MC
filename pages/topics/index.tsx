@@ -18,7 +18,7 @@ function Index() {
     return router.push(pagesPath.topics.edit.$url({ query: { topicId: id } }));
   }
   function handleTopicNewClick() {
-    return router.push(pagesPath.topics.new.$url({ query: null }));
+    return router.push(pagesPath.topics.new.$url({ query: {} }));
   }
   const handlers = {
     onTopicEditClick: handleTopicEditClick,

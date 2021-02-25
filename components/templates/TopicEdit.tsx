@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type Props = {
-  topic: TopicSchema | null;
+  topic: TopicSchema;
   onSubmit(topic: TopicProps): void;
   onDelete(topic: TopicSchema): void;
   onCancel(): void;
@@ -56,7 +56,6 @@ export default function TopicEdit(props: Props) {
   const containerClasses = useContainerStyles();
   const confirm = useConfirm();
   const handleDeleteButtonClick = async () => {
-    if (!topic) return;
     await confirm({
       title: `トピック「${topic.name}」を削除します。よろしいですか？`,
       cancellationText: "キャンセル",

@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type Props = {
-  book: BookSchema | null;
+  book: BookSchema;
   onSubmit(book: BookProps): void;
   onDelete(book: BookSchema): void;
   onCancel(): void;
@@ -74,7 +74,6 @@ export default function BookEdit(props: Props) {
   } = useDialogProps<TopicSchema>();
   const handleTopicClick = (topic: TopicSchema) => setPreviewTopic(topic);
   const handleDeleteButtonClick = async () => {
-    if (!book) return;
     await confirm({
       title: `ブック「${book.name}」を削除します。よろしいですか？`,
       cancellationText: "キャンセル",
@@ -104,7 +103,7 @@ export default function BookEdit(props: Props) {
       </Typography>
       <BookEditChildren
         className={classes.children}
-        sections={book?.sections ?? []}
+        sections={book.sections}
         onTopicClick={handleTopicClick}
         onTopicEditClick={onTopicEditClick}
         onTopicImportClick={onTopicImportClick}

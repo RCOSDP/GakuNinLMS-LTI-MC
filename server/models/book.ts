@@ -1,4 +1,4 @@
-import { Book, Prisma } from "@prisma/client";
+import { Book } from "@prisma/client";
 import jsonSchema from "$server/prisma/json-schema.json";
 import { UserSchema, userSchema } from "./user";
 import {
@@ -12,10 +12,12 @@ import {
   ltiResourceLinkSchema,
 } from "./ltiResourceLink";
 
-export type BookProps = Omit<
-  Prisma.BookCreateWithoutAuthorInput,
-  "details" | "sections"
-> & {
+export type BookProps = {
+  name: string;
+  description?: string;
+  language?: string;
+  timeRequired?: number | null;
+  shared?: boolean;
   sections?: SectionProps[];
 };
 

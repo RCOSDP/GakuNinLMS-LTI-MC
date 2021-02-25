@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type Props = {
-  book?: BookSchema | null;
+  book?: BookSchema;
   onSubmit: (book: BookProps) => void;
   onCancel(): void;
 };

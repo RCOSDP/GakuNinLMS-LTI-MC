@@ -5,7 +5,6 @@ import { updateLtiResourceLink } from "$utils/ltiResourceLink";
 import { useBooks } from "$utils/books";
 import BookLink from "$templates/BookLink";
 import Placeholder from "$templates/Placeholder";
-import { connectOrCreateBook } from "$utils/book";
 import { pagesPath } from "$utils/$path";
 
 function Index() {
@@ -21,13 +20,9 @@ function Index() {
     contextTitle: ltiLaunchBody.context_title ?? "",
     contextLabel: ltiLaunchBody.context_label ?? "",
   };
-  async function handleSubmit(book: BookSchema) {
+  async function handleSubmit(book: Pick<BookSchema, "id">) {
     if (ltiResourceLink == null) return;
-    const { id: bookId } = await connectOrCreateBook(
-      book,
-      isBookEditable,
-      isTopicEditable
-    );
+    const bookId = book.id;
     await updateLtiResourceLink({ ...ltiResourceLink, bookId });
     return router.push(pagesPath.book.$url({ query: { bookId } }));
   }
@@ -38,10 +33,11 @@ function Index() {
       pagesPath.book.$url({ query: { bookId: ltiResourceLink.bookId } })
     );
   }
-  function handleBookEdit({ id }: Pick<BookSchema, "id">) {
+  function handleBookEdit(book: Pick<BookSchema, "id" | "author">) {
+    const action = isBookEditable(book) ? "edit" : "generate";
     return router.push(
-      pagesPath.book.edit.$url({
-        query: { bookId: id, context: "link" },
+      pagesPath.book[action].$url({
+        query: { bookId: book.id, context: "link" },
       })
     );
   }

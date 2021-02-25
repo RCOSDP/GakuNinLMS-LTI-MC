@@ -12,6 +12,7 @@ import { pagesPath } from "$utils/$path";
 export type Query = { bookId: BookSchema["id"]; context?: "books" | "link" };
 
 function Edit({ bookId, context }: Query) {
+  const query = { bookId, ...(context && { context }) };
   const { book } = useBook(bookId);
   const { isTopicEditable } = useSessionAtom();
   const router = useRouter();
@@ -21,7 +22,7 @@ function Edit({ bookId, context }: Query) {
       case "link":
         return router.push(pagesPath[context].$url());
       default:
-        return router.push(pagesPath.book.$url({ query: { bookId } }));
+        return router.push(pagesPath.book.$url({ query }));
     }
   };
   async function handleSubmit(props: BookProps) {
@@ -45,37 +46,24 @@ function Edit({ bookId, context }: Query) {
     if (!book) return;
     await updateBook({
       ...book,
-      ltiResourceLinks: undefined,
       sections: [...book?.sections, section],
     });
   }
-  function handleTopicEditClick({ id }: Pick<TopicSchema, "id">) {
-    return router.push(
-      pagesPath.book.edit.topic.edit.$url({
-        query: { bookId, topicId: id },
-      })
-    );
+  function handleTopicEditClick(topic: Pick<TopicSchema, "id" | "creator">) {
+    const action = isTopicEditable(topic) ? "edit" : "generate";
+    const url = pagesPath.book.edit.topic[action].$url({
+      query: { ...query, topicId: topic.id },
+    });
+    return router.push(url);
   }
   function handleTopicNewClick() {
-    return router.push(
-      pagesPath.book.edit.topic.new.$url({
-        query: { bookId, ...(context && { context }) },
-      })
-    );
+    return router.push(pagesPath.book.edit.topic.new.$url({ query }));
   }
   function handleBookImportClick() {
-    return router.push(
-      pagesPath.book.import.$url({
-        query: { bookId, ...(context && { context }) },
-      })
-    );
+    return router.push(pagesPath.book.import.$url({ query }));
   }
   function handleTopicImportClick() {
-    return router.push(
-      pagesPath.book.topic.import.$url({
-        query: { bookId, ...(context && { context }) },
-      })
-    );
+    return router.push(pagesPath.book.topic.import.$url({ query }));
   }
   const handlers = {
     onSubmit: handleSubmit,
@@ -86,7 +74,7 @@ function Edit({ bookId, context }: Query) {
     onTopicImportClick: handleTopicImportClick,
     onTopicNewClick: handleTopicNewClick,
     onTopicEditClick: handleTopicEditClick,
-    isTopicEditable,
+    isTopicEditable: () => true,
   };
   if (!book) return <Placeholder />;
 

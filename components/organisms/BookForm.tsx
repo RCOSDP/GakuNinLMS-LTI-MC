@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type Props = {
-  book?: BookSchema | null;
+  book?: BookSchema;
   className?: string;
   submitLabel?: string;
   onSubmit?: (book: BookProps) => void;
@@ -43,8 +43,8 @@ export default function BookForm(props: Props) {
   const cardClasses = useCardStyles();
   const inputLabelClasses = useInputLabelStyles();
   const classes = useStyles();
-  const defaultValues = {
-    name: book?.name,
+  const defaultValues: BookProps = {
+    name: book?.name ?? "",
     description: book?.description ?? "",
     shared: book?.shared ?? true,
     language: book?.language ?? Object.getOwnPropertyNames(languages)[0],
@@ -60,7 +60,7 @@ export default function BookForm(props: Props) {
       classes={cardClasses}
       className={clsx(classes.margin, className)}
       component="form"
-      onSubmit={handleSubmit((values) => {
+      onSubmit={handleSubmit((values: BookProps) => {
         onSubmit({ ...defaultValues, ...values });
       })}
     >

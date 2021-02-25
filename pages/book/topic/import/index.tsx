@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import TopicImport from "$templates/TopicImport.tsx";
+import TopicImport from "$templates/TopicImport";
 import Placeholder from "$templates/Placeholder";
 import BookNotFoundProblem from "$organisms/TopicNotFoundProblem";
 import { useSessionAtom } from "$store/session";
@@ -13,17 +13,20 @@ import { pagesPath } from "$utils/$path";
 export type Query = BookEditQuery;
 
 function Import({ bookId, context }: BookEditQuery) {
-  const { isTopicEditable } = useSessionAtom();
+  const { isBookEditable, isTopicEditable } = useSessionAtom();
   const { book } = useBook(bookId);
   const topicsWithInfiniteProps = useTopics(isTopicEditable);
   const router = useRouter();
   const bookEditQuery = { bookId, ...(context && { context }) };
-  const back = () =>
-    router.push(
-      pagesPath.book.edit.$url({
+  function back() {
+    // TODO: トピックインポート画面で自身以外のブックへの経路を提供しないならば不要なので取り除きましょう
+    const action = book && isBookEditable(book) ? "edit" : "generate";
+    return router.push(
+      pagesPath.book[action].$url({
         query: bookEditQuery,
       })
     );
+  }
   async function handleSubmit(topics: TopicSchema[]) {
     if (!book) return;
 
@@ -33,7 +36,6 @@ function Import({ bookId, context }: BookEditQuery) {
     const ids = await Promise.all(connectOrCreateTopics);
     await updateBook({
       ...book,
-      ltiResourceLinks: undefined,
       sections: [...book.sections, ...ids.map((id) => ({ topics: [{ id }] }))],
     });
 
@@ -42,10 +44,10 @@ function Import({ bookId, context }: BookEditQuery) {
   function handleCancel() {
     return back();
   }
-  function handleTopicEditClick({ id: topicId }: Pick<TopicSchema, "id">) {
+  function handleTopicEditClick(topic: Pick<TopicSchema, "id">) {
     return router.push(
       pagesPath.book.topic.import.edit.$url({
-        query: { ...bookEditQuery, topicId },
+        query: { ...bookEditQuery, topicId: topic.id },
       })
     );
   }
