@@ -15,12 +15,7 @@ import logger from "$utils/eventLogger/logger";
 export type Query = { bookId: BookSchema["id"] };
 
 function Show(query: Query) {
-  const {
-    session,
-    isInstructor,
-    isBookEditable,
-    isTopicEditable,
-  } = useSessionAtom();
+  const { session, isBookEditable, isTopicEditable } = useSessionAtom();
   const {
     book,
     itemIndex,
@@ -46,9 +41,6 @@ function Show(query: Query) {
   };
   const handleBookLinkClick = () => router.push(pagesPath.link.$url());
   const handleTopicEditClick = (topic: Pick<TopicSchema, "id" | "creator">) => {
-    if (!book) return handleBookEditClick();
-    if (!isBookEditable(book)) return handleBookEditClick();
-
     const action = isTopicEditable(topic) ? "edit" : "generate";
     const url = pagesPath.book.topic[action].$url({
       query: { ...query, topicId: topic.id },
@@ -56,7 +48,6 @@ function Show(query: Query) {
     return router.push(url);
   };
   const handlers = {
-    editable: isInstructor,
     linked: query.bookId === session?.ltiResourceLink?.bookId,
     onTopicEnded: nextItemIndex,
     onItemClick: handleItemClick,
