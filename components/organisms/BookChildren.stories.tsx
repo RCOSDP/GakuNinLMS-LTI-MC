@@ -10,13 +10,19 @@ const handlers = {
 };
 
 export const Default = () => (
-  <BookChildren sections={sections} index={[0, 0]} {...handlers} />
+  <BookChildren
+    sections={sections}
+    index={[0, 0]}
+    isTopicEditable={() => false}
+    {...handlers}
+  />
 );
 
 export const Editable = () => (
   <BookChildren
     sections={sections}
     index={[0, 0]}
+    isTopicEditable={() => true}
     {...handlers}
     onItemEditClick={console.log}
   />

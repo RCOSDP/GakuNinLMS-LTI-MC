@@ -3,7 +3,8 @@ export default { title: "templates/Book" };
 import { useEffect } from "react";
 import { useBookAtom } from "$store/book";
 import Book from "./Book";
-import { book } from "samples";
+import { book, session } from "samples";
+import { useUpdateSessionAtom } from "$store/session";
 
 const defaultProps = {
   book,
@@ -64,21 +65,22 @@ export const EmptySection = () => {
   );
 };
 
-export const ForStudent = () => {
+export const ForInstructor = () => {
   const {
     updateBook,
     itemIndex,
     updateItemIndex,
     nextItemIndex,
   } = useBookAtom();
+  const [, updateSession] = useUpdateSessionAtom();
   useEffect(() => {
     updateBook(defaultProps.book);
-  }, [updateBook]);
+    updateSession({ session, error: false });
+  }, [updateBook, updateSession]);
 
   return (
     <Book
       {...defaultProps}
-      editable={false}
       index={itemIndex}
       onTopicEnded={nextItemIndex}
       onItemClick={updateItemIndex}

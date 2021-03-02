@@ -14,6 +14,7 @@ import BookItemDialog from "$organisms/BookItemDialog";
 import TopicViewer from "$organisms/TopicViewer";
 import type { BookSchema } from "$server/models/book";
 import type { TopicSchema } from "$server/models/topic";
+import { useSessionAtom } from "$store/session";
 import useContainerStyles from "styles/container";
 
 const useStyles = makeStyles((theme) => ({
@@ -54,7 +55,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type Props = {
-  editable?: boolean;
   linked?: boolean;
   book: BookSchema | null;
   index: ItemIndex;
@@ -67,7 +67,6 @@ type Props = {
 
 export default function Book(props: Props) {
   const {
-    editable,
     linked,
     book,
     index: [sectionIndex, topicIndex],
@@ -78,6 +77,7 @@ export default function Book(props: Props) {
     onItemClick,
   } = props;
   const topic = book?.sections[sectionIndex]?.topics[topicIndex];
+  const { isInstructor, isTopicEditable } = useSessionAtom();
   const classes = useStyles();
   const containerClasses = useContainerStyles();
   const theme = useTheme();
@@ -93,13 +93,12 @@ export default function Book(props: Props) {
   const handleItemClick = (_: never, index: ItemIndex) => {
     onItemClick(index);
   };
-  function handleItemEditClick(
-    _: never,
-    [sectionIndex, topicIndex]: ItemIndex
-  ) {
-    const topic = book?.sections[sectionIndex]?.topics[topicIndex];
-    if (topic) onTopicEditClick?.(topic);
-  }
+  const handleItemEditClick = isInstructor
+    ? (_: never, [sectionIndex, topicIndex]: ItemIndex) => {
+        const topic = book?.sections[sectionIndex]?.topics[topicIndex];
+        if (topic) onTopicEditClick?.(topic);
+      }
+    : undefined;
 
   return (
     <Container
@@ -112,14 +111,14 @@ export default function Book(props: Props) {
         <IconButton onClick={handleInfoClick}>
           <InfoOutlinedIcon />
         </IconButton>
-        {editable && (
+        {isInstructor && (
           <>
             <IconButton color="primary" onClick={handleEditClick}>
               <EditOutlinedIcon />
             </IconButton>
           </>
         )}
-        {editable && linked && (
+        {isInstructor && linked && (
           <Button size="small" color="primary" onClick={onBookLinkClick}>
             <LinkIcon className={classes.icon} />
             他のブックをリンク
@@ -144,7 +143,8 @@ export default function Book(props: Props) {
           index={[sectionIndex, topicIndex]}
           sections={book?.sections ?? []}
           onItemClick={handleItemClick}
-          onItemEditClick={editable ? handleItemEditClick : undefined}
+          onItemEditClick={handleItemEditClick}
+          isTopicEditable={isTopicEditable}
         />
       </div>
       {book && <BookItemDialog open={open} onClose={handleClose} book={book} />}

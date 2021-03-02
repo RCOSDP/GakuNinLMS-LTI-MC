@@ -8,6 +8,7 @@ import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import Collapse from "@material-ui/core/Collapse";
 import { makeStyles } from "@material-ui/styles";
 import { ExpandLess, ExpandMore, EditOutlined } from "@material-ui/icons";
+import { TopicSchema } from "$server/models/topic";
 import { SectionSchema } from "$server/models/book/section";
 import { primary } from "$theme/colors";
 
@@ -49,6 +50,7 @@ type Props = {
   className?: string;
   sections: SectionSchema[];
   index: ItemIndex;
+  isTopicEditable(topic: TopicSchema): boolean;
   onItemClick(event: MouseEvent<HTMLElement>, index: ItemIndex): void;
   onItemEditClick?(event: MouseEvent<HTMLElement>, index: ItemIndex): void;
 };
@@ -58,6 +60,7 @@ export default function BookChildren(props: Props) {
     className,
     sections,
     index: [sectionIndex, topicIndex],
+    isTopicEditable,
     onItemClick,
     onItemEditClick,
   } = props;
@@ -107,7 +110,7 @@ export default function BookChildren(props: Props) {
                 {sectionItemIndex + 1}
                 {section.name && `.${topicItemIndex + 1}`} {topic.name}
               </ListItemText>
-              {onItemEditClick && (
+              {isTopicEditable(topic) && (
                 <ListItemSecondaryAction>
                   <IconButton
                     color="primary"
