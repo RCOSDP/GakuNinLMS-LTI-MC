@@ -28,6 +28,10 @@ const useStyles = makeStyles((theme) => ({
       marginLeft: theme.spacing(2),
     },
   },
+  alert: {
+    marginTop: theme.spacing(-2),
+    marginBottom: theme.spacing(2),
+  },
 }));
 
 type Props = {
@@ -62,11 +66,6 @@ export default function TopicNew(props: Props) {
       maxWidth="md"
     >
       <BackButton onClick={onCancel}>戻る</BackButton>
-      {forkFrom && (
-        <Alert severity="info">
-          {forkFrom.name} さんが作成したトピックをフォークしようとしています
-        </Alert>
-      )}
       <Typography className={classes.title} variant="h4">
         トピックの作成
         <Typography variant="caption" component="span" aria-hidden="true">
@@ -74,6 +73,11 @@ export default function TopicNew(props: Props) {
           は必須項目です
         </Typography>
       </Typography>
+      {forkFrom && (
+        <Alert className={classes.alert} severity="info">
+          {forkFrom.name} さんが作成したトピックをフォークしようとしています
+        </Alert>
+      )}
       <TopicForm
         topic={defaultTopic}
         submitLabel="作成"

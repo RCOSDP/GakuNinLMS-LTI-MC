@@ -24,6 +24,10 @@ const useStyles = makeStyles((theme) => ({
       marginLeft: theme.spacing(2),
     },
   },
+  alert: {
+    marginTop: theme.spacing(-2),
+    marginBottom: theme.spacing(2),
+  },
 }));
 
 type Props = {
@@ -50,11 +54,6 @@ export default function BookNew(props: Props) {
       maxWidth="md"
     >
       <BackButton onClick={onCancel}>戻る</BackButton>
-      {forkFrom && (
-        <Alert severity="info">
-          {forkFrom.name} さんが作成したブックをフォークしようとしています
-        </Alert>
-      )}
       <Typography className={classes.title} variant="h4">
         ブックの作成
         <Typography variant="caption" component="span" aria-hidden="true">
@@ -62,6 +61,11 @@ export default function BookNew(props: Props) {
           は必須項目です
         </Typography>
       </Typography>
+      {forkFrom && (
+        <Alert className={classes.alert} severity="info">
+          {forkFrom.name} さんが作成したブックをフォークしようとしています
+        </Alert>
+      )}
       <BookForm book={defaultBook} submitLabel="作成" onSubmit={onSubmit} />
     </Container>
   );
