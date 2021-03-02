@@ -1,5 +1,6 @@
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
+import Alert from "@material-ui/lab/Alert";
 import { makeStyles } from "@material-ui/core/styles";
 import TopicForm from "$organisms/TopicForm";
 import RequiredDot from "$atoms/RequiredDot";
@@ -10,6 +11,7 @@ import type {
   VideoTrackProps,
   VideoTrackSchema,
 } from "$server/models/videoTrack";
+import { useSessionAtom } from "$store/session";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -44,6 +46,12 @@ export default function TopicNew(props: Props) {
     onSubtitleSubmit,
     onCancel,
   } = props;
+  const { isTopicEditable } = useSessionAtom();
+  const forkFrom = topic && !isTopicEditable(topic) && topic.creator;
+  const defaultTopic = topic && {
+    ...topic,
+    ...(forkFrom && { name: [topic.name, "フォーク"].join("_") }),
+  };
   const classes = useStyles();
   const containerClasses = useContainerStyles();
 
@@ -54,6 +62,11 @@ export default function TopicNew(props: Props) {
       maxWidth="md"
     >
       <BackButton onClick={onCancel}>戻る</BackButton>
+      {forkFrom && (
+        <Alert severity="info">
+          {forkFrom.name} さんが作成したトピックをフォークしようとしています
+        </Alert>
+      )}
       <Typography className={classes.title} variant="h4">
         トピックの作成
         <Typography variant="caption" component="span" aria-hidden="true">
@@ -62,7 +75,7 @@ export default function TopicNew(props: Props) {
         </Typography>
       </Typography>
       <TopicForm
-        topic={topic}
+        topic={defaultTopic}
         submitLabel="作成"
         onSubmit={onSubmit}
         onSubtitleDelete={onSubtitleDelete}

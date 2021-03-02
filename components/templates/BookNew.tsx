@@ -1,11 +1,13 @@
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
+import Alert from "@material-ui/lab/Alert";
 import { makeStyles } from "@material-ui/core/styles";
 import BookForm from "$organisms/BookForm";
 import RequiredDot from "$atoms/RequiredDot";
 import BackButton from "$atoms/BackButton";
 import useContainerStyles from "styles/container";
 import { BookProps, BookSchema } from "$server/models/book";
+import { useSessionAtom } from "$store/session";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -32,6 +34,12 @@ type Props = {
 
 export default function BookNew(props: Props) {
   const { book, onSubmit, onCancel } = props;
+  const { isBookEditable } = useSessionAtom();
+  const forkFrom = book && !isBookEditable(book) && book.author;
+  const defaultBook = book && {
+    ...book,
+    ...(forkFrom && { name: [book.name, "フォーク"].join("_") }),
+  };
   const classes = useStyles();
   const containerClasses = useContainerStyles();
 
@@ -42,6 +50,11 @@ export default function BookNew(props: Props) {
       maxWidth="md"
     >
       <BackButton onClick={onCancel}>戻る</BackButton>
+      {forkFrom && (
+        <Alert severity="info">
+          {forkFrom.name} さんが作成したブックをフォークしようとしています
+        </Alert>
+      )}
       <Typography className={classes.title} variant="h4">
         ブックの作成
         <Typography variant="caption" component="span" aria-hidden="true">
@@ -49,7 +62,7 @@ export default function BookNew(props: Props) {
           は必須項目です
         </Typography>
       </Typography>
-      <BookForm book={book} submitLabel="作成" onSubmit={onSubmit} />
+      <BookForm book={defaultBook} submitLabel="作成" onSubmit={onSubmit} />
     </Container>
   );
 }
