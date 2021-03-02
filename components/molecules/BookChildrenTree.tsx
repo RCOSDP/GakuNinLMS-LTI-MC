@@ -92,7 +92,7 @@ export default function BookChildrenTree(props: Props) {
           onTreeChange={onTreeChange}
         >
           {section.topics.map((topic, topicIndex) => {
-            const nodeId = `${bookId}-${section.id}-${topic.id}`;
+            const nodeId = `${bookId}-${section.id}-${topic.id}:${topicIndex}`;
             const handle = (handler: (index: ItemIndex) => void) => (
               event: MouseEvent<HTMLElement>
             ) => {
@@ -104,7 +104,7 @@ export default function BookChildrenTree(props: Props) {
             };
             return (
               <TreeItem
-                key={topic.id}
+                key={`${topic.id}:${topicIndex}`}
                 nodeId={nodeId}
                 classes={treeItemClasses}
                 label={
