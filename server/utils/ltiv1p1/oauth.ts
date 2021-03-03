@@ -4,7 +4,7 @@ import strictUriEncode from "strict-uri-encode";
 /**
  * OAuth 1.0 プロトコルにおける署名の作成。ただし、POST メソッド固定。HMAC-SHA1 固定。
  * @param url スキーマ・ホスト名・パスを含む URL。スキームのデフォルトポートでない場合、ポート番号を含む。
- * @param param パラメーター。LTI v1.1 ではPOSTリクエストボディを解釈したもの。`oauth_signature` を含まない。
+ * @param params パラメーター。LTI v1.1 ではPOSTリクエストボディを解釈したもの。`oauth_signature` を含まない。
  * @param oauthConsumerSecret OAuth Consumer Secret
  */
 export function sign(
@@ -17,8 +17,9 @@ export function sign(
     ...params,
     oauth_signature_method: "HMAC-SHA1",
   })
+    .map((es) => es.map(strictUriEncode).join("\0"))
     .sort()
-    .map((es) => es.map(encodeURIComponent).join("="))
+    .map((s) => s.replace("\0", "="))
     .join("&");
   const signatureBase = [method, url, orderedParams]
     .map(strictUriEncode)
