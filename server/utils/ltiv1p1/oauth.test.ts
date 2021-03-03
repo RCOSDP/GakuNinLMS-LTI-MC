@@ -39,6 +39,30 @@ describe("sign()", function () {
       "gbPiSxjJCBTUnnuQ8jF1pC+Vs8w="
     );
   });
+
+  test("RFC 3986 仕様予約語がパラメータの名前に含まれる場合", function () {
+    const oauthConsumerSecret = "secret";
+    const url = "http://localhost:8080/api/v2/lti/lauch";
+    const params = {
+      oauth_version: "1.0",
+      oauth_nonce: "0878c39c4c274c2072d3af6604a75c64",
+      oauth_timestamp: "1605829208",
+      oauth_consumer_key: "key",
+      oauth_signature_method: "HMAC-SHA1",
+      lti_message_type: "basic-lti-launch-request",
+      lti_version: "LTI-1p0",
+      resource_link_id: "1",
+      a0: "a",
+      // エンコード前後で順番が変わる文字列 ("a%40" < "a0")
+      "a@": "a",
+      // エンコード前後で順番が変わる文字列 ("a" < "a%40")
+      a: "a",
+    } as const;
+
+    expect(sign(url, params, oauthConsumerSecret)).toBe(
+      "g8em84DQAPFyb00SlFyh8BxQkOI="
+    );
+  });
 });
 
 describe("valid()", function () {
