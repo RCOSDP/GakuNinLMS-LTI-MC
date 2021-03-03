@@ -18,7 +18,7 @@ export function sign(
     oauth_signature_method: "HMAC-SHA1",
   })
     .sort()
-    .map((es) => es.map(encodeURIComponent).join("="))
+    .map((es) => es.map(strictUriEncode).join("="))
     .join("&");
   const signatureBase = [method, url, orderedParams]
     .map(strictUriEncode)
