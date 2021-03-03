@@ -4,7 +4,7 @@ import strictUriEncode from "strict-uri-encode";
 /**
  * OAuth 1.0 プロトコルにおける署名の作成。ただし、POST メソッド固定。HMAC-SHA1 固定。
  * @param url スキーマ・ホスト名・パスを含む URL。スキームのデフォルトポートでない場合、ポート番号を含む。
- * @param param パラメーター。LTI v1.1 ではPOSTリクエストボディを解釈したもの。`oauth_signature` を含まない。
+ * @param params パラメーター。LTI v1.1 ではPOSTリクエストボディを解釈したもの。`oauth_signature` を含まない。
  * @param oauthConsumerSecret OAuth Consumer Secret
  */
 export function sign(
