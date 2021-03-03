@@ -19,7 +19,7 @@ export function sign(
   })
     .map((es) => es.map(strictUriEncode).join("\0"))
     .sort()
-    .map((s) => s.replace(/\0/g, "="))
+    .map((s) => s.replace("\0", "="))
     .join("&");
   const signatureBase = [method, url, orderedParams]
     .map(strictUriEncode)
