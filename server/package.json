@@ -8,14 +8,14 @@
   "scripts": {
     "test": "jest",
     "dev": "run-p dev:*",
-    "dev:app": "nodemon --ext js,ts,json --exec 'ncc run -t | pino-pretty'",
+    "dev:app": "nodemon --ext js,ts,json --exec 'ncc run -t --no-asset-builds | pino-pretty'",
     "dev:db": "run-s build:prisma migrate seed",
     "build": "run-s build:prisma build:app",
-    "build:app": "ncc build -t --target es2020",
+    "build:app": "ncc build -t --no-asset-builds --target es2020",
     "build:prisma": "prisma generate",
     "migrate": "prisma migrate deploy --preview-feature",
     "migrate:reset": "prisma migrate reset --preview-feature",
-    "seed": "ncc run -t prisma/seed.ts",
+    "seed": "ncc run -t --no-asset-builds prisma/seed.ts",
     "start": "NODE_ENV=production node dist/index.js"
   },
   "devDependencies": {
