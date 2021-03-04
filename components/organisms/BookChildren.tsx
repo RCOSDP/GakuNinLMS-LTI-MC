@@ -18,19 +18,19 @@ function Section({
   open,
   children,
 }: {
-  section: Pick<SectionSchema, "name">;
+  section: Pick<SectionSchema, "name" | "topics">;
   sectionItemIndex: number;
   onSectionClick(): void;
   open: boolean;
   children: ReactNode;
 }) {
-  if (section.name == null) return <>{children}</>;
+  if (section.name == null && section.topics.length < 2) return <>{children}</>;
 
   return (
     <>
       <ListItem button onClick={onSectionClick}>
         <ListItemText>
-          {sectionItemIndex + 1} {section.name}
+          {sectionItemIndex + 1} {section.name ?? "無名のセクション"}
         </ListItemText>
         {open ? <ExpandLess /> : <ExpandMore />}
       </ListItem>
@@ -105,7 +105,9 @@ export default function BookChildren(props: Props) {
             >
               <ListItemText>
                 {sectionItemIndex + 1}
-                {section.name && `.${topicItemIndex + 1}`} {topic.name}
+                {(Boolean(section.name) || section.topics.length > 1) &&
+                  `.${topicItemIndex + 1}`}{" "}
+                {topic.name}
               </ListItemText>
               {onItemEditClick && (
                 <ListItemSecondaryAction>
