@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import Card from "@material-ui/core/Card";
 import Checkbox from "@material-ui/core/Checkbox";
 import Button from "@material-ui/core/Button";
@@ -6,6 +6,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
+import Autocomplete from "@material-ui/lab/Autocomplete";
 import { useForm, Controller } from "react-hook-form";
 import { useDebouncedCallback } from "use-debounce";
 import clsx from "clsx";
@@ -22,7 +23,7 @@ import type {
   VideoTrackSchema,
 } from "$server/models/videoTrack";
 import languages from "$utils/languages";
-import { parse } from "$utils/videoResource";
+import providers from "$utils/providers";
 import useVideoResourceProps from "$utils/useVideoResourceProps";
 import { useVideoTrackAtom } from "$store/videoTrack";
 
@@ -69,7 +70,7 @@ export default function TopicForm(props: Props) {
   const classes = useStyles();
   const { videoResource, setUrl } = useVideoResourceProps(topic?.resource);
   const handleResourceUrlChange = useDebouncedCallback(
-    () => setUrl(getValues("resource.url")),
+    (event: ChangeEvent<HTMLInputElement>) => setUrl(event.target.value),
     500
   ).callback;
   const { videoTracks } = useVideoTrackAtom();
@@ -93,11 +94,13 @@ export default function TopicForm(props: Props) {
     shared: topic?.shared ?? true,
     language: topic?.language ?? Object.getOwnPropertyNames(languages)[0],
     timeRequired: topic?.timeRequired,
-    resource: topic?.resource,
   };
-  const { handleSubmit, register, control, getValues } = useForm<TopicProps>({
+  const { handleSubmit, register, control } = useForm<
+    Omit<TopicProps, "resource">
+  >({
     defaultValues,
   });
+
   return (
     <>
       <Card
@@ -105,7 +108,11 @@ export default function TopicForm(props: Props) {
         className={clsx(classes.margin, className)}
         component="form"
         onSubmit={handleSubmit((values) => {
-          onSubmit({ ...defaultValues, ...values });
+          onSubmit({
+            ...defaultValues,
+            ...values,
+            resource: videoResource ?? { url: "" },
+          });
         })}
       >
         <TextField
@@ -139,30 +146,37 @@ export default function TopicForm(props: Props) {
             color="primary"
           />
         </div>
-        <TextField
-          name="resource.url"
-          label={
-            <>
-              動画のURL
-              <Typography
-                className={classes.labelDescription}
-                variant="caption"
-                component="span"
-              >
-                YouTube, Vimeo, Wowzaに対応しています
-              </Typography>
-            </>
-          }
-          type="url"
-          defaultValue={defaultValues.resource?.url}
-          inputProps={{
-            ref: register({
-              setValueAs: (value) => parse(value)?.url ?? value,
-            }),
-          }}
-          required
-          fullWidth
-          onChange={handleResourceUrlChange}
+        <Autocomplete
+          id="resource.url"
+          freeSolo
+          options={[...Object.values(providers)].map(({ baseUrl }) => baseUrl)}
+          defaultValue={topic?.resource.url}
+          renderInput={({ InputProps, inputProps }) => (
+            <TextField
+              InputProps={{ ref: InputProps.ref }}
+              inputProps={inputProps}
+              name="resource.url"
+              label={
+                <>
+                  動画のURL
+                  <Typography
+                    className={classes.labelDescription}
+                    variant="caption"
+                    component="span"
+                  >
+                    {[...Object.values(providers)]
+                      .map(({ name }) => name)
+                      .join(", ")}
+                    に対応しています
+                  </Typography>
+                </>
+              }
+              type="url"
+              required
+              fullWidth
+              onChange={handleResourceUrlChange}
+            />
+          )}
         />
         {videoResource && <Video {...videoResource} />}
         <Controller
