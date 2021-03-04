@@ -8,7 +8,7 @@ import {
 import authUser from "$server/auth/authUser";
 import authInstructor from "$server/auth/authInstructor";
 import createTopic from "$server/utils/topic/createTopic";
-import validVideoResource from "$server/utils/validVideoResource";
+import isValidVideoResource from "$server/utils/isValidVideoResource";
 import { WOWZA_BASE_URL } from "$server/utils/env";
 
 export const createSchema: FastifySchema = {
@@ -36,7 +36,7 @@ export async function create({
   Body: TopicProps;
 }>) {
   const additionalProviderUrl = WOWZA_BASE_URL && `${protocol}://${hostname}/`;
-  if (!validVideoResource(body.resource, additionalProviderUrl)) {
+  if (!isValidVideoResource(body.resource, additionalProviderUrl)) {
     return { status: 400 };
   }
 

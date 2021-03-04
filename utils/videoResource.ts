@@ -1,7 +1,7 @@
 import { ResourceSchema } from "$server/models/resource";
 import { VideoResource } from "$server/models/videoResource";
 import { parse } from "$server/utils/videoResource";
-import validVideoResource from "$server/utils/validVideoResource";
+import isValidVideoResource from "$server/utils/isValidVideoResource";
 import { NEXT_PUBLIC_API_BASE_PATH } from "./env";
 
 export { parse };
@@ -12,9 +12,11 @@ export function isVideoResource(
   return resource != null && "tracks" in resource;
 }
 
-export function validVideo(url: string | undefined): VideoResource | undefined {
+export function getValidVideoResource(
+  url: string | undefined
+): VideoResource | undefined {
   if (!url) return;
-  if (!validVideoResource({ url }, NEXT_PUBLIC_API_BASE_PATH)) return;
+  if (!isValidVideoResource({ url }, NEXT_PUBLIC_API_BASE_PATH)) return;
 
   return parse(url);
 }
