@@ -94,7 +94,7 @@ export default function BookEditChildren(props: Props) {
           onClick={handleSortableChange}
         >
           <DragIndicatorIcon fontSize="small" />
-          並び替え
+          並び替え・セクションの編集
         </Button>
       </div>
       <Divider className={classes.divider} />

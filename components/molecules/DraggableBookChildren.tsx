@@ -1,19 +1,56 @@
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import type { DropResult } from "react-beautiful-dnd";
+import clsx from "clsx";
+import AddIcon from "@material-ui/icons/Add";
+import DragIndicatorIcon from "@material-ui/icons/DragIndicator";
 import { makeStyles } from "@material-ui/core/styles";
+import SectionTextField from "$atoms/SectionTextField";
 import { SectionSchema } from "$server/models/book/section";
 import { TopicSchema } from "$server/models/topic";
 import { gray, primary } from "$theme/colors";
 
+const useCreateSectionButtonStyles = makeStyles((theme) => ({
+  root: {
+    display: "flex",
+    alignItems: "center",
+    borderRadius: theme.shape.borderRadius,
+    borderColor: primary[500],
+    borderStyle: "dotted",
+    backgroundColor: primary[50],
+    padding: theme.spacing(2),
+    width: "100%",
+    cursor: "pointer",
+    "&:hover": {
+      backgroundColor: primary[100],
+    },
+  },
+}));
+
+type CreateSectionButtonProps = React.HTMLAttributes<HTMLButtonElement>;
+
+function CreateSectionButton(props: CreateSectionButtonProps) {
+  const classes = useCreateSectionButtonStyles();
+  return (
+    <button className={classes.root} {...props}>
+      <AddIcon htmlColor={primary[500]} />
+      新しいセクション
+    </button>
+  );
+}
+
 const useDraggableSectionStyles = makeStyles((theme) => ({
   root: {
     padding: theme.spacing(2),
-    border: `${gray[500]} 1px solid`,
     marginBottom: theme.spacing(2),
     backgroundColor: gray[50],
+    borderRadius: theme.shape.borderRadius,
+    boxShadow: theme.shadows[1],
+    "&:hover": {
+      backgroundColor: gray[200],
+    },
   },
-  title: {
-    color: primary[500],
+  drag: {
+    backgroundColor: gray[200],
   },
 }));
 
@@ -27,14 +64,21 @@ function DraggableSection({ section, index, children }: DraggableSectionProps) {
   const classes = useDraggableSectionStyles();
   return (
     <Draggable draggableId={`draggable-${section.id}`} index={index}>
-      {(provided) => (
+      {(provided, snapshot) => (
         <div
-          className={classes.root}
+          className={clsx(classes.root, {
+            [classes.drag]: snapshot.isDragging,
+          })}
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
         >
-          <span className={classes.title}>{section.name}</span>
+          <SectionTextField
+            label="セクション"
+            fullWidth
+            disabled={snapshot.isDragging}
+            defaultValue={section.name}
+          />
           {children}
         </div>
       )}
@@ -66,22 +110,39 @@ function DragDropSection({ section, index, children }: DraggableSectionProps) {
   );
 }
 
+const useDraggableTopicStyles = makeStyles((theme) => ({
+  root: {
+    padding: theme.spacing(1),
+    paddingLeft: 0,
+    display: "flex",
+    alignItems: "center",
+  },
+  drag: {
+    backgroundColor: gray[200],
+  },
+}));
+
 type DraggableTopicProps = Omit<DraggableSectionProps, "children"> & {
   topic: TopicSchema;
 };
 
 function DraggableTopic({ section, topic, index }: DraggableTopicProps) {
+  const classes = useDraggableTopicStyles();
   return (
     <Draggable
       draggableId={`draggable-${section.id}-${topic.id}:${index}`}
       index={index}
     >
-      {(provided) => (
+      {(provided, snapshot) => (
         <div
+          className={clsx(classes.root, {
+            [classes.drag]: snapshot.isDragging,
+          })}
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
         >
+          <DragIndicatorIcon htmlColor={gray[700]} fontSize="small" />
           {topic.name}
         </div>
       )}
@@ -136,6 +197,13 @@ const handleTopicDragEnd: DragEndHandler = (
   return sections;
 };
 
+const useStyles = makeStyles((theme) => ({
+  placeholder: {
+    margin: theme.spacing(1),
+    color: gray[700],
+  },
+}));
+
 type Props = {
   sections: SectionSchema[];
   onSectionsUpdate(sections: SectionSchema[]): void;
@@ -144,6 +212,7 @@ type Props = {
 
 export default function DraggableBookChildren(props: Props) {
   const { sections, onSectionsUpdate, onSectionCreate } = props;
+  const classes = useStyles();
   const handleDragEnd = (result: DropResult) => {
     if (!result.destination) return;
     const handler: {
@@ -184,6 +253,11 @@ export default function DraggableBookChildren(props: Props) {
                       index={topicIndex}
                     />
                   ))}
+                  {section.topics.length === 0 && (
+                    <p className={classes.placeholder}>
+                      ここにトピックをドロップ
+                    </p>
+                  )}
                 </DragDropSection>
               ))}
               {provided.placeholder}
@@ -191,7 +265,7 @@ export default function DraggableBookChildren(props: Props) {
           )}
         </Droppable>
       </DragDropContext>
-      <button onClick={handleSectionCreate}>新しいセクション</button>
+      <CreateSectionButton onClick={handleSectionCreate} />
     </>
   );
 }
