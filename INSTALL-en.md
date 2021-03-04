@@ -1,6 +1,6 @@
 # GakuNinLMS-LTI-MC
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https%3A%2F%2Fgithub.com%2Fnpocccties%2FChibiCHiLO&env=NEXT_PUBLIC_API_BASE_PATH,API_BASE_PATH,FRONTEND_ORIGIN,FRONTEND_PATH,SESSION_SECRET,DATABASE_URL)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https%3A%2F%2Fgithub.com%2Fnpocccties%2FChibiCHiLO&env=NEXT_PUBLIC_API_BASE_PATH,FRONTEND_ORIGIN,FRONTEND_PATH,SESSION_SECRET,DATABASE_URL)
 
 GakuNinLMS-LTI-MC, utilizing LTI, is a system that can create and browse learning contents using micro contents.
 

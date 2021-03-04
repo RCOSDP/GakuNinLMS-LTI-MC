@@ -4,7 +4,7 @@ import fileExists from "./fileExists";
 dotenv.config();
 
 const PORT = Number(process.env.PORT ?? "8080");
-const API_BASE_PATH = process.env.API_BASE_PATH ?? "";
+const API_BASE_PATH = process.env.API_BASE_PATH ?? "/api/v2";
 const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN ?? "";
 const FRONTEND_PATH = process.env.FRONTEND_PATH ?? "";
 const SESSION_SECRET = process.env.SESSION_SECRET ?? "";
