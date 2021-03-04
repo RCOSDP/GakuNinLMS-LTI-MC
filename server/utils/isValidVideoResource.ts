@@ -1,7 +1,7 @@
 import { VideoResource } from "$server/models/videoResource";
 import { providerMatch } from "$server/utils/videoResource";
 
-function validVideoResource(
+function isValidVideoResource(
   videoResource: Pick<VideoResource, "url">,
   additionalProviderUrl: string
 ): boolean {
@@ -12,4 +12,4 @@ function validVideoResource(
   );
 }
 
-export default validVideoResource;
+export default isValidVideoResource;

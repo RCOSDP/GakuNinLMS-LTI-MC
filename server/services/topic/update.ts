@@ -11,7 +11,7 @@ import authInstructor from "$server/auth/authInstructor";
 import { isUserOrAdmin } from "$server/utils/session";
 import topicExists from "$server/utils/topic/topicExists";
 import upsertTopic from "$server/utils/topic/upsertTopic";
-import validVideoResource from "$server/utils/validVideoResource";
+import isValidVideoResource from "$server/utils/isValidVideoResource";
 import { WOWZA_BASE_URL } from "$server/utils/env";
 
 export const updateSchema: FastifySchema = {
@@ -50,7 +50,7 @@ export async function update({
   if (!isUserOrAdmin(session, { id: found.creatorId })) return { status: 403 };
 
   const additionalProviderUrl = WOWZA_BASE_URL && `${protocol}://${hostname}/`;
-  if (!validVideoResource(body.resource, additionalProviderUrl)) {
+  if (!isValidVideoResource(body.resource, additionalProviderUrl)) {
     return { status: 400 };
   }
 
