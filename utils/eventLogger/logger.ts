@@ -12,15 +12,11 @@ function send(eventType: EventType, event: PlayerEvent, detail?: string) {
   const body = {
     event: eventType,
     detail,
-    // TODO: Vimeo 未対応
     file:
       event.providerUrl === "https://www.youtube.com/"
         ? new URLSearchParams(event.url.split("?")[1]).get("v") ?? undefined
-        : event.url
-            .split("?")[0]
-            ?.split("/_definst_/")[1]
-            ?.split("/playlist.m3u8")[0],
-    query: event.url.split("?")[1], // TODO: Vimeo 未対応
+        : new URL(event.url).pathname.replace(/^\/(?:api\/v2\/wowza\/)?/, ""),
+    query: event.url.split("?")[1],
     current: event.currentTime.toString(),
     rid: id(ltiLaunchBody.resource_link_id),
     uid: id(ltiLaunchBody.user_id),

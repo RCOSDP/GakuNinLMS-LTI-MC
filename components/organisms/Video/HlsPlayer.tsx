@@ -10,21 +10,16 @@ type PlayerProps = {
   onEnded?: () => void;
 };
 
-/** @todo 未実装 */
-function useWowzaResource(url: string) {
-  return {
-    type: "application/vnd.apple.mpegurl",
-    src: url,
-  };
-}
-
-function WowzaPlayerBase(props: PlayerProps) {
-  const resource = useWowzaResource(props.url);
-
+function HlsPlayerBase(props: PlayerProps) {
   return (
     <VideoJs
       options={{
-        sources: [resource],
+        sources: [
+          {
+            type: "application/vnd.apple.mpegurl",
+            src: props.url,
+          },
+        ],
         autoplay: props.autoplay,
       }}
       tracks={buildTracks(props.tracks)}
@@ -33,4 +28,4 @@ function WowzaPlayerBase(props: PlayerProps) {
   );
 }
 
-export const WowzaPlayer = memo(WowzaPlayerBase);
+export const HlsPlayer = memo(HlsPlayerBase);
