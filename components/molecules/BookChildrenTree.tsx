@@ -9,7 +9,7 @@ import { TopicSchema } from "$server/models/topic";
 
 type SectionProps = {
   bookId: number;
-  section: Pick<SectionSchema, "id" | "name">;
+  section: Pick<SectionSchema, "id" | "name" | "topics">;
   sectionIndex: number;
   children: ReactNode;
   onTreeChange?(nodeId: string): void;
@@ -32,7 +32,7 @@ function SectionTree({
     handler?.(nodeId);
   };
   */
-  if (section.name == null) return <>{children}</>;
+  if (section.name == null && section.topics.length < 2) return <>{children}</>;
   return (
     <TreeItem
       nodeId={nodeId}
@@ -51,7 +51,7 @@ function SectionTree({
               }}
             />
           )*/}
-          {sectionIndex + 1} {section.name}
+          {sectionIndex + 1} {section.name ?? "無名のセクション"}
         </>
       }
     >
@@ -121,7 +121,9 @@ export default function BookChildrenTree(props: Props) {
                       />
                     )}
                     {sectionIndex + 1}
-                    {section.name && `.${topicIndex + 1}`} {topic.name}
+                    {(Boolean(section.name) || section.topics.length > 1) &&
+                      `.${topicIndex + 1}`}{" "}
+                    {topic.name}
                     {isTopicEditable?.(topic) && onItemEditClick && (
                       <IconButton
                         size="small"
