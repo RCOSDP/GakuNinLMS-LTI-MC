@@ -46,9 +46,7 @@ function Edit({ bookId, context }: Query) {
     if (!book) return;
     await updateBook({
       ...book,
-      sections: sections.filter(
-        (section) => section.name !== null || section.topics.length > 0
-      ),
+      sections: sections.filter((section) => section.topics.length > 0),
     });
   }
   async function handleSectionCreate() {
