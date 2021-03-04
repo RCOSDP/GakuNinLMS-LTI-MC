@@ -1,8 +1,6 @@
 import { ComponentProps } from "react";
 import TextField from "@material-ui/core/TextField";
-import InputAdornment from "@material-ui/core/InputAdornment";
 import { makeStyles } from "@material-ui/core/styles";
-import SearchIcon from "@material-ui/icons/Search";
 import gray from "$theme/colors/gray";
 
 // NOTE: https://github.com/mui-org/material-ui/blob/master/packages/material-ui/src/OutlinedInput/OutlinedInput.js
@@ -10,15 +8,13 @@ import gray from "$theme/colors/gray";
 const useOutlinedInputStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: "#fff",
-    borderRadius: "1.25rem",
-    paddingRight: `${theme.spacing(2)}px`,
     "&:hover $notchedOutline": {
-      borderColor: gray[500],
+      borderColor: gray[200],
       borderWidth: "1px",
     },
     "@media (hover: none)": {
       "&:hover $notchedOutline": {
-        borderColor: gray[500],
+        borderColor: gray[200],
       },
     },
     "&$focused $notchedOutline": {
@@ -28,23 +24,22 @@ const useOutlinedInputStyles = makeStyles((theme) => ({
   },
   input: {
     height: "1.25rem",
-    padding: `${theme.spacing(1)}px ${theme.spacing(2)}px`,
-    paddingRight: 0,
+    padding: theme.spacing(1),
   },
   focused: {},
   notchedOutline: {
-    borderColor: gray[500],
+    borderColor: gray[200],
     transition: theme.transitions.create(["border-color"]),
   },
 }));
 
 const useInputLabelStyles = makeStyles((theme) => ({
   outlined: {
-    transform: `translate(${theme.spacing(2)}px, 10px)`,
+    transform: `translate(${theme.spacing(1)}px, 10px)`,
   },
 }));
 
-export default function SearchTextField(
+export default function SectionTextField(
   props: ComponentProps<typeof TextField>
 ) {
   const outlinedInputClasses = useOutlinedInputStyles();
@@ -55,11 +50,6 @@ export default function SearchTextField(
         variant="outlined"
         InputProps={{
           classes: outlinedInputClasses,
-          endAdornment: (
-            <InputAdornment position="end">
-              <SearchIcon style={{ color: gray[700] }} />
-            </InputAdornment>
-          ),
         }}
         InputLabelProps={{ classes: inputLabelClasses }}
         {...props}
