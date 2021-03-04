@@ -3,21 +3,31 @@ import VideoResourceMatcher from "$server/types/videoResourceMatcher";
 import { providerMatchers } from "$server/config/video/provider";
 import validUrl from "./validUrl";
 
+const defaultResource = (url: URL): VideoResource => ({
+  url: url.href,
+  providerUrl: `${url.origin}/`,
+  tracks: [],
+});
+
 const hostMatch = (url: URL) => (matcher: VideoResourceMatcher): boolean =>
   matcher.host.test(url.host);
 
-function match(url: URL): VideoResource | undefined {
-  const location = providerMatchers.find(hostMatch(url));
-  return (
-    location && {
-      providerUrl: location.providerUrl,
-      url: location.url(url),
-      tracks: [],
-    }
-  );
+export function providerMatch(value: string): boolean {
+  const url = validUrl(value);
+  return Boolean(url && providerMatchers.find(hostMatch(url)));
 }
 
 export function parse(value: string): VideoResource | undefined {
   if (!validUrl(value)) return;
-  return match(new URL(value));
+
+  const url = new URL(value);
+  const matcher = providerMatchers.find(hostMatch(url));
+
+  if (!matcher) return defaultResource(url);
+
+  return {
+    providerUrl: matcher.providerUrl,
+    url: matcher.url(url),
+    tracks: [],
+  };
 }

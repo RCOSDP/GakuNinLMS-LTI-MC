@@ -1139,6 +1139,33 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
+     * Wowza Streaming Engine のコンテンツのパスを与えると、 そのコンテンツの playlist.m3u8 ファイルにリダイレクトします。 サーバー管理者によって無効化されている場合 404 を返します。
+     * Wowza Streaming Engine にアクセスするためのエンドポイント
+     */
+    async apiV2WowzaGetRaw(): Promise<runtime.ApiResponse<void>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/api/v2/wowza/*`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * Wowza Streaming Engine のコンテンツのパスを与えると、 そのコンテンツの playlist.m3u8 ファイルにリダイレクトします。 サーバー管理者によって無効化されている場合 404 を返します。
+     * Wowza Streaming Engine にアクセスするためのエンドポイント
+     */
+    async apiV2WowzaGet(): Promise<void> {
+        await this.apiV2WowzaGetRaw();
+    }
+
+    /**
      */
     async optionsRaw(): Promise<runtime.ApiResponse<void>> {
         const queryParameters: runtime.HTTPQuery = {};

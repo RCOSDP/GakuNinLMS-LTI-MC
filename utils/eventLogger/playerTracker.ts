@@ -44,6 +44,8 @@ const nullEvent = {
   currentTime: 0,
 } as const;
 
+const youtubeType = "video/youtube";
+
 /** プレイヤーのトラッキング用 */
 export class PlayerTracker extends (EventEmitter as {
   new (): StrictEventEmitter<EventEmitter, PlayerEvents>;
@@ -149,9 +151,10 @@ function videoJsStats(player: VideoJsPlayer): PlayerEvent {
   if (player.isDisposed()) return nullEvent;
 
   return {
-    // TODO: Wowza の識別子を決めて修正してください
-    // providerUrl: /youtube/.test(player.currentType()) ? "https://www.youtube.com/" : "wowza",
-    providerUrl: "https://www.youtube.com/",
+    providerUrl:
+      player.currentType() === youtubeType
+        ? "https://www.youtube.com/"
+        : `${new URL(player.src()).origin}/`,
     url: player.src(),
     currentTime: player.currentTime(),
   };

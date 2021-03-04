@@ -1,10 +1,10 @@
-import { Resource } from "@prisma/client";
+import { Resource, Video } from "@prisma/client";
 import jsonSchema from "$server/prisma/json-schema.json";
 import { VideoTrackSchema, videoTrackSchema } from "./videoTrack";
 
 export type VideoResource = {
   url: Resource["url"];
-  providerUrl: "https://www.youtube.com/" | "https://vimeo.com/";
+  providerUrl: Video["providerUrl"];
   tracks: VideoTrackSchema[];
 };
 

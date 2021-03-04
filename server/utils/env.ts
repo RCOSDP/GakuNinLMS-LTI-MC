@@ -12,6 +12,10 @@ const OAUTH_CONSUMER_KEY = process.env.OAUTH_CONSUMER_KEY ?? "";
 const OAUTH_CONSUMER_SECRET = process.env.OAUTH_CONSUMER_SECRET ?? "";
 const HTTPS_CERT = fileExists(process.env.HTTPS_CERT_PATH ?? "");
 const HTTPS_KEY = fileExists(process.env.HTTPS_KEY_PATH ?? "");
+const WOWZA_BASE_URL = process.env.WOWZA_BASE_URL ?? "";
+const WOWZA_SECURE_TOKEN = process.env.WOWZA_SECURE_TOKEN ?? "";
+const WOWZA_QUERY_PREFIX = process.env.WOWZA_QUERY_PREFIX ?? "wowzatoken";
+const WOWZA_EXPIRES_IN = Number(process.env.WOWZA_EXPIRES_IN ?? "0");
 
 export {
   PORT,
@@ -23,4 +27,8 @@ export {
   OAUTH_CONSUMER_SECRET,
   HTTPS_CERT,
   HTTPS_KEY,
+  WOWZA_BASE_URL,
+  WOWZA_SECURE_TOKEN,
+  WOWZA_QUERY_PREFIX,
+  WOWZA_EXPIRES_IN,
 };
