@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import type { VideoResource } from "$server/models/videoResource";
 import type { ResourceSchema } from "$server/models/resource";
-import { parse, isVideoResource } from "$utils/videoResource";
+import { isVideoResource, getValidVideoResource } from "$utils/videoResource";
 import { useVideoTrackAtom } from "$store/videoTrack";
 
 function useVideoResourceProps(
@@ -16,7 +16,7 @@ function useVideoResourceProps(
   }, [resource, setVideoTracks]);
   const setUrl = useCallback(
     (url: string | undefined) => {
-      const nextVideoResource = parse(url ?? "");
+      const nextVideoResource = getValidVideoResource(url);
       setVideoResource(
         nextVideoResource && { ...nextVideoResource, tracks: videoTracks }
       );

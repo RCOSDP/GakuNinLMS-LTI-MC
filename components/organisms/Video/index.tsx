@@ -1,7 +1,7 @@
 import { VideoResourceSchema } from "$server/models/videoResource";
 import { YouTubePlayer } from "./YouTubePlayer";
 import { VimeoPlayer } from "./VimeoPlayer";
-import { WowzaPlayer } from "./WowzaPlayer";
+import { HlsPlayer } from "./HlsPlayer";
 
 type VideoProps = Pick<
   VideoResourceSchema,
@@ -30,7 +30,7 @@ export default function Video(props: VideoProps) {
     default:
       return (
         <div className={className}>
-          <WowzaPlayer {...other} />
+          <HlsPlayer {...other} />
         </div>
       );
   }

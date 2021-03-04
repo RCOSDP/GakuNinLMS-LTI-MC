@@ -1,14 +1,15 @@
-import { FastifySchema } from "fastify";
+import { FastifyRequest, FastifySchema } from "fastify";
 import { outdent } from "outdent";
 import {
   TopicProps,
   topicPropsSchema,
   topicSchema,
 } from "$server/models/topic";
-import { SessionSchema } from "$server/models/session";
 import authUser from "$server/auth/authUser";
 import authInstructor from "$server/auth/authInstructor";
 import createTopic from "$server/utils/topic/createTopic";
+import isValidVideoResource from "$server/utils/isValidVideoResource";
+import { WOWZA_BASE_URL } from "$server/utils/env";
 
 export const createSchema: FastifySchema = {
   summary: "トピックの作成",
@@ -27,12 +28,18 @@ export const createHooks = {
 };
 
 export async function create({
+  protocol,
+  hostname,
   session,
   body,
-}: {
-  session: SessionSchema;
-  body: TopicProps;
-}) {
+}: FastifyRequest<{
+  Body: TopicProps;
+}>) {
+  const additionalProviderUrl = WOWZA_BASE_URL && `${protocol}://${hostname}/`;
+  if (!isValidVideoResource(body.resource, additionalProviderUrl)) {
+    return { status: 400 };
+  }
+
   const created = await createTopic(session.user.id, body);
 
   return {
