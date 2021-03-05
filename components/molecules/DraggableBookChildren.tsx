@@ -1,6 +1,10 @@
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
-import type { DropResult } from "react-beautiful-dnd";
+import type { DraggableId, DropResult } from "react-beautiful-dnd";
 import clsx from "clsx";
+import { useDebouncedCallback } from "use-debounce";
+import Tooltip from "@material-ui/core/Tooltip";
+import IconButton from "@material-ui/core/IconButton";
+import RemoveIcon from "@material-ui/icons/Remove";
 import AddIcon from "@material-ui/icons/Add";
 import DragIndicatorIcon from "@material-ui/icons/DragIndicator";
 import { makeStyles } from "@material-ui/core/styles";
@@ -9,7 +13,7 @@ import { SectionSchema } from "$server/models/book/section";
 import { TopicSchema } from "$server/models/topic";
 import { gray, primary } from "$theme/colors";
 
-const useCreateSectionButtonStyles = makeStyles((theme) => ({
+const useSectionCreateButtonStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
     alignItems: "center",
@@ -26,10 +30,10 @@ const useCreateSectionButtonStyles = makeStyles((theme) => ({
   },
 }));
 
-type CreateSectionButtonProps = React.HTMLAttributes<HTMLButtonElement>;
+type SectionCreateButtonProps = React.HTMLAttributes<HTMLButtonElement>;
 
-function CreateSectionButton(props: CreateSectionButtonProps) {
-  const classes = useCreateSectionButtonStyles();
+function SectionCreateButton(props: SectionCreateButtonProps) {
+  const classes = useSectionCreateButtonStyles();
   return (
     <button className={classes.root} {...props}>
       <AddIcon htmlColor={primary[500]} />
@@ -58,12 +62,25 @@ type DraggableSectionProps = {
   section: SectionSchema;
   children: React.ReactNode;
   index: number;
+  onSectionUpdate(section: SectionSchema): void;
 };
 
-function DraggableSection({ section, index, children }: DraggableSectionProps) {
+function DraggableSection({
+  section,
+  index,
+  children,
+  onSectionUpdate,
+}: DraggableSectionProps) {
   const classes = useDraggableSectionStyles();
+  const draggableId = `draggable-${section.id}`;
+  const handleSectionNameChange = useDebouncedCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      onSectionUpdate({ ...section, name: event.target.value || null });
+    },
+    500
+  ).callback;
   return (
-    <Draggable draggableId={`draggable-${section.id}`} index={index}>
+    <Draggable draggableId={draggableId} index={index}>
       {(provided, snapshot) => (
         <div
           className={clsx(classes.root, {
@@ -76,6 +93,7 @@ function DraggableSection({ section, index, children }: DraggableSectionProps) {
           <SectionTextField
             label="セクション"
             fullWidth
+            onChange={handleSectionNameChange}
             disabled={snapshot.isDragging}
             defaultValue={section.name}
           />
@@ -89,9 +107,10 @@ function DraggableSection({ section, index, children }: DraggableSectionProps) {
 function DroppableSection({
   section,
   children,
-}: Omit<DraggableSectionProps, "index">) {
+}: Omit<DraggableSectionProps, "index" | "onSectionUpdate">) {
+  const droppableId = `droppable-${section.id}`;
   return (
-    <Droppable droppableId={`droppable-${section.id}`} type="topic">
+    <Droppable droppableId={droppableId} type="topic">
       {(provided) => (
         <div ref={provided.innerRef} {...provided.droppableProps}>
           {children}
@@ -102,9 +121,18 @@ function DroppableSection({
   );
 }
 
-function DragDropSection({ section, index, children }: DraggableSectionProps) {
+function DragDropSection({
+  section,
+  index,
+  children,
+  onSectionUpdate,
+}: DraggableSectionProps) {
   return (
-    <DraggableSection section={section} index={index}>
+    <DraggableSection
+      section={section}
+      index={index}
+      onSectionUpdate={onSectionUpdate}
+    >
       <DroppableSection section={section}>{children}</DroppableSection>
     </DraggableSection>
   );
@@ -112,27 +140,43 @@ function DragDropSection({ section, index, children }: DraggableSectionProps) {
 
 const useDraggableTopicStyles = makeStyles((theme) => ({
   root: {
-    padding: theme.spacing(1),
-    paddingLeft: 0,
+    padding: `${theme.spacing(1)}px 0`,
     display: "flex",
     alignItems: "center",
+    "&:hover $icon": {
+      color: gray[700],
+    },
+  },
+  icon: {
+    color: gray[500],
   },
   drag: {
     backgroundColor: gray[200],
   },
 }));
 
-type DraggableTopicProps = Omit<DraggableSectionProps, "children"> & {
+type DraggableTopicProps = Omit<
+  DraggableSectionProps,
+  "children" | "onSectionUpdate"
+> & {
   topic: TopicSchema;
+  onTopicRemove(draggableId: DraggableId): void;
 };
 
-function DraggableTopic({ section, topic, index }: DraggableTopicProps) {
+function DraggableTopic({
+  section,
+  topic,
+  index,
+  onTopicRemove,
+}: DraggableTopicProps) {
   const classes = useDraggableTopicStyles();
+  const draggableId = `draggable-${section.id}-${topic.id}:${index}`;
+  const handleTopicRemove = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
+    onTopicRemove(draggableId);
+  };
   return (
-    <Draggable
-      draggableId={`draggable-${section.id}-${topic.id}:${index}`}
-      index={index}
-    >
+    <Draggable draggableId={draggableId} index={index}>
       {(provided, snapshot) => (
         <div
           className={clsx(classes.root, {
@@ -142,8 +186,17 @@ function DraggableTopic({ section, topic, index }: DraggableTopicProps) {
           {...provided.draggableProps}
           {...provided.dragHandleProps}
         >
-          <DragIndicatorIcon htmlColor={gray[700]} fontSize="small" />
+          <DragIndicatorIcon className={classes.icon} fontSize="small" />
           {topic.name}
+          <Tooltip title="このトピックを取り除く">
+            <IconButton
+              size="small"
+              color="primary"
+              onClick={handleTopicRemove}
+            >
+              <RemoveIcon />
+            </IconButton>
+          </Tooltip>
         </div>
       )}
     </Draggable>
@@ -197,6 +250,29 @@ const handleTopicDragEnd: DragEndHandler = (
   return sections;
 };
 
+const updateSection = (
+  initialSections: SectionSchema[],
+  section: SectionSchema
+): SectionSchema[] => {
+  const sections = [...initialSections];
+  const index = sections.findIndex(({ id }) => id === section.id);
+  sections.splice(index, 1, section);
+  return sections;
+};
+
+const removeTopic = (
+  initialSections: SectionSchema[],
+  draggableTopicId: DraggableId
+): SectionSchema[] => {
+  const sections = [...initialSections];
+  const sectionIndex = sections.findIndex(
+    ({ id }) => id === Number(draggableTopicId.split("-")[1])
+  );
+  const topicIndex = Number(draggableTopicId.split(":")[1]);
+  sections[sectionIndex].topics.splice(topicIndex, 1);
+  return sections;
+};
+
 const useStyles = makeStyles((theme) => ({
   placeholder: {
     margin: theme.spacing(1),
@@ -232,6 +308,12 @@ export default function DraggableBookChildren(props: Props) {
       )
     );
   };
+  const handleSectionUpdate = (section: SectionSchema) => {
+    onSectionsUpdate(updateSection(sections, section));
+  };
+  const handleTopicRemove = (draggableId: DraggableId) => {
+    onSectionsUpdate(removeTopic(sections, draggableId));
+  };
   const handleSectionCreate = () => onSectionCreate();
   return (
     <>
@@ -244,6 +326,7 @@ export default function DraggableBookChildren(props: Props) {
                   key={`${section.id}`}
                   section={section}
                   index={sectionIndex}
+                  onSectionUpdate={handleSectionUpdate}
                 >
                   {section.topics.map((topic, topicIndex) => (
                     <DraggableTopic
@@ -251,6 +334,7 @@ export default function DraggableBookChildren(props: Props) {
                       section={section}
                       topic={topic}
                       index={topicIndex}
+                      onTopicRemove={handleTopicRemove}
                     />
                   ))}
                   {section.topics.length === 0 && (
@@ -265,7 +349,7 @@ export default function DraggableBookChildren(props: Props) {
           )}
         </Droppable>
       </DragDropContext>
-      <CreateSectionButton onClick={handleSectionCreate} />
+      <SectionCreateButton onClick={handleSectionCreate} />
     </>
   );
 }
