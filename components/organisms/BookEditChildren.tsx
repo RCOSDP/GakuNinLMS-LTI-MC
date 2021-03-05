@@ -29,6 +29,9 @@ const useStyles = makeStyles((theme) => ({
   icon: {
     marginRight: theme.spacing(0.5),
   },
+  placeholder: {
+    margin: 0,
+  },
 }));
 
 type Props = {
@@ -119,19 +122,26 @@ export default function BookEditChildren(props: Props) {
           onSectionsUpdate={handleSectionsUpdate}
           onSectionCreate={onSectionCreate}
         />
-      )) || (
-        <TreeView
-          defaultCollapseIcon={<ExpandMoreIcon />}
-          defaultExpandIcon={<ChevronRightIcon />}
-        >
-          <BookChildrenTree
-            sections={sections}
-            onItemClick={handleItem(onTopicClick)}
-            onItemEditClick={handleItem(onTopicEditClick)}
-            isTopicEditable={isTopicEditable}
-          />
-        </TreeView>
-      )}
+      )) ||
+        (sections.length === 0 && (
+          <p className={classes.placeholder}>
+            動画等のコンテンツは、トピックという単位で管理されます
+            <br />
+            コンテンツを管理するには、トピックを作成もしくはインポートしてください
+          </p>
+        )) || (
+          <TreeView
+            defaultCollapseIcon={<ExpandMoreIcon />}
+            defaultExpandIcon={<ChevronRightIcon />}
+          >
+            <BookChildrenTree
+              sections={sections}
+              onItemClick={handleItem(onTopicClick)}
+              onItemEditClick={handleItem(onTopicEditClick)}
+              isTopicEditable={isTopicEditable}
+            />
+          </TreeView>
+        )}
     </Card>
   );
 }
