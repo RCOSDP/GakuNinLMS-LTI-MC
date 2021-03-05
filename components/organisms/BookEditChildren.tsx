@@ -11,7 +11,7 @@ import DragIndicatorIcon from "@material-ui/icons/DragIndicator";
 import { makeStyles } from "@material-ui/core/styles";
 import BookChildrenTree from "$molecules/BookChildrenTree";
 import DraggableBookChildren from "$molecules/DraggableBookChildren";
-import { SectionSchema, SectionProps } from "$server/models/book/section";
+import { SectionSchema } from "$server/models/book/section";
 import { TopicSchema } from "$server/models/topic";
 import useCardStyles from "$styles/card";
 
@@ -75,15 +75,30 @@ export default function BookEditChildren(props: Props) {
   return (
     <Card classes={cardClasses} className={className}>
       <div className={classes.items}>
-        <Button size="small" color="primary" onClick={props.onBookImportClick}>
+        <Button
+          size="small"
+          color="primary"
+          disabled={sortable}
+          onClick={props.onBookImportClick}
+        >
           <GetAppIcon className={classes.icon} />
           ブックからインポート
         </Button>
-        <Button size="small" color="primary" onClick={props.onTopicImportClick}>
+        <Button
+          size="small"
+          color="primary"
+          disabled={sortable}
+          onClick={props.onTopicImportClick}
+        >
           <GetAppIcon className={classes.icon} />
           インポート
         </Button>
-        <Button size="small" color="primary" onClick={props.onTopicNewClick}>
+        <Button
+          size="small"
+          color="primary"
+          disabled={sortable}
+          onClick={props.onTopicNewClick}
+        >
           <AddIcon className={classes.icon} />
           トピックの作成
         </Button>
