@@ -95,7 +95,7 @@ export default function BookChildren(props: Props) {
         >
           {section.topics.map((topic, topicItemIndex) => (
             <ListItem
-              key={topic.id}
+              key={`${topic.id}:${topicItemIndex}`}
               className={clsx({
                 [classes.active]:
                   sectionIndex === sectionItemIndex &&
