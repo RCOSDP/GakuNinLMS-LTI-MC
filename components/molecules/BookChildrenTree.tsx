@@ -104,7 +104,7 @@ export default function BookChildrenTree(props: Props) {
             };
             return (
               <TreeItem
-                key={`${topic.id}:${topicIndex}`}
+                key={nodeId}
                 nodeId={nodeId}
                 classes={treeItemClasses}
                 label={
