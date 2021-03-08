@@ -109,7 +109,7 @@ export default function BookChildren(props: Props) {
               <ListItemText>
                 {sectionItemIndex + 1}
                 {(Boolean(section.name) || section.topics.length > 1) &&
-                  `.${topicItemIndex + 1}`}{" "}
+                  `.${topicItemIndex + 1} `}
                 {topic.name}
               </ListItemText>
               {isTopicEditable(topic) && (
