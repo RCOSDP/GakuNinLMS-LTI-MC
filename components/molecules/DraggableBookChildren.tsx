@@ -12,6 +12,7 @@ import SectionTextField from "$atoms/SectionTextField";
 import { SectionSchema } from "$server/models/book/section";
 import { TopicSchema } from "$server/models/topic";
 import { gray, primary } from "$theme/colors";
+import reorder from "$utils/reorder";
 
 const useSectionCreateButtonStyles = makeStyles((theme) => ({
   root: {
@@ -208,14 +209,6 @@ type DragEndHandler = (
   index: { start: number; end: number },
   sectionId: { start: number; end: number }
 ) => SectionSchema[];
-
-function reorder<T>(list: T[], startIndex: number, endIndex: number) {
-  const result = [...list];
-  const [removed] = result.splice(startIndex, 1);
-  result.splice(endIndex, 0, removed);
-
-  return result;
-}
 
 const handleSectionDragEnd: DragEndHandler = (sections, index) => {
   return reorder<SectionSchema>(sections, index.start, index.end);
