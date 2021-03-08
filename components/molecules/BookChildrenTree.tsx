@@ -122,7 +122,7 @@ export default function BookChildrenTree(props: Props) {
                     )}
                     {sectionIndex + 1}
                     {(Boolean(section.name) || section.topics.length > 1) &&
-                      `.${topicIndex + 1}`}{" "}
+                      `.${topicIndex + 1} `}
                     {topic.name}
                     {isTopicEditable?.(topic) && onItemEditClick && (
                       <IconButton
