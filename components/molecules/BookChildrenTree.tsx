@@ -6,6 +6,7 @@ import { EditOutlined } from "@material-ui/icons";
 import useTreeItemStyle from "$styles/treeItem";
 import { SectionSchema } from "$server/models/book/section";
 import { TopicSchema } from "$server/models/topic";
+import { getOutline } from "$utils/outline";
 
 type SectionProps = {
   bookId: number;
@@ -51,7 +52,8 @@ function SectionTree({
               }}
             />
           )*/}
-          {sectionIndex + 1} {section.name ?? "無名のセクション"}
+          {getOutline(section, sectionIndex) + " "}
+          {section.name ?? "無名のセクション"}
         </>
       }
     >
@@ -120,9 +122,7 @@ export default function BookChildrenTree(props: Props) {
                         }}
                       />
                     )}
-                    {sectionIndex + 1}
-                    {(Boolean(section.name) || section.topics.length > 1) &&
-                      `.${topicIndex + 1} `}
+                    {getOutline(section, sectionIndex, topicIndex) + " "}
                     {topic.name}
                     {isTopicEditable?.(topic) && onItemEditClick && (
                       <IconButton
