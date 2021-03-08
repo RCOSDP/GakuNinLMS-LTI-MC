@@ -10,6 +10,7 @@ import { makeStyles } from "@material-ui/styles";
 import { ExpandLess, ExpandMore, EditOutlined } from "@material-ui/icons";
 import { SectionSchema } from "$server/models/book/section";
 import { primary } from "$theme/colors";
+import { getOutline } from "$utils/outline";
 
 function Section({
   section,
@@ -30,7 +31,8 @@ function Section({
     <>
       <ListItem button onClick={onSectionClick}>
         <ListItemText>
-          {sectionItemIndex + 1} {section.name ?? "無名のセクション"}
+          {getOutline(section, sectionItemIndex) + " "}
+          {section.name ?? "無名のセクション"}
         </ListItemText>
         {open ? <ExpandLess /> : <ExpandMore />}
       </ListItem>
@@ -104,9 +106,7 @@ export default function BookChildren(props: Props) {
               onClick={handleItemClick}
             >
               <ListItemText>
-                {sectionItemIndex + 1}
-                {(Boolean(section.name) || section.topics.length > 1) &&
-                  `.${topicItemIndex + 1} `}
+                {getOutline(section, sectionIndex, topicIndex) + " "}
                 {topic.name}
               </ListItemText>
               {onItemEditClick && (
