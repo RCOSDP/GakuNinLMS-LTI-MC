@@ -26,7 +26,11 @@ function Edit({ bookId, context }: Query) {
     }
   };
   async function handleSubmit(props: BookProps) {
-    await updateBook({ id: bookId, ...props });
+    await updateBook({
+      id: bookId,
+      ...props,
+      sections: props.sections?.filter((section) => section.topics.length > 0),
+    });
     return back();
   }
   async function handleDelete({ id }: Pick<BookSchema, "id">) {
