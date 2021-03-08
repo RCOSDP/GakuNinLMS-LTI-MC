@@ -26,7 +26,11 @@ function Edit({ bookId, context }: Query) {
     }
   };
   async function handleSubmit(props: BookProps) {
-    await updateBook({ id: bookId, ...props });
+    await updateBook({
+      id: bookId,
+      ...props,
+      sections: props.sections?.filter((section) => section.topics.length > 0),
+    });
     return back();
   }
   async function handleDelete({ id }: Pick<BookSchema, "id">) {
@@ -42,11 +46,18 @@ function Edit({ bookId, context }: Query) {
   function handleCancel() {
     return back();
   }
-  async function handleAddSection(section: SectionProps) {
+  async function handleSectionsUpdate(sections: SectionProps[]) {
     if (!book) return;
     await updateBook({
       ...book,
-      sections: [...book?.sections, section],
+      sections: sections.filter((section) => section.topics.length > 0),
+    });
+  }
+  async function handleSectionCreate() {
+    if (!book) return;
+    await updateBook({
+      ...book,
+      sections: [...book?.sections, { name: null, topics: [] }],
     });
   }
   function handleTopicEditClick(topic: Pick<TopicSchema, "id" | "creator">) {
@@ -69,7 +80,8 @@ function Edit({ bookId, context }: Query) {
     onSubmit: handleSubmit,
     onDelete: handleDelete,
     onCancel: handleCancel,
-    onAddSection: handleAddSection,
+    onSectionsUpdate: handleSectionsUpdate,
+    onSectionCreate: handleSectionCreate,
     onBookImportClick: handleBookImportClick,
     onTopicImportClick: handleTopicImportClick,
     onTopicNewClick: handleTopicNewClick,

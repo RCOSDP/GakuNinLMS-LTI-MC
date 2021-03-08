@@ -6,10 +6,11 @@ import { EditOutlined } from "@material-ui/icons";
 import useTreeItemStyle from "$styles/treeItem";
 import { SectionSchema } from "$server/models/book/section";
 import { TopicSchema } from "$server/models/topic";
+import { getOutline } from "$utils/outline";
 
 type SectionProps = {
   bookId: number;
-  section: Pick<SectionSchema, "id" | "name">;
+  section: Pick<SectionSchema, "id" | "name" | "topics">;
   sectionIndex: number;
   children: ReactNode;
   onTreeChange?(nodeId: string): void;
@@ -32,7 +33,7 @@ function SectionTree({
     handler?.(nodeId);
   };
   */
-  if (section.name == null) return <>{children}</>;
+  if (section.name == null && section.topics.length < 2) return <>{children}</>;
   return (
     <TreeItem
       nodeId={nodeId}
@@ -51,7 +52,8 @@ function SectionTree({
               }}
             />
           )*/}
-          {sectionIndex + 1} {section.name}
+          {getOutline(section, sectionIndex) + " "}
+          {section.name ?? "無名のセクション"}
         </>
       }
     >
@@ -92,7 +94,7 @@ export default function BookChildrenTree(props: Props) {
           onTreeChange={onTreeChange}
         >
           {section.topics.map((topic, topicIndex) => {
-            const nodeId = `${bookId}-${section.id}-${topic.id}`;
+            const nodeId = `${bookId}-${section.id}-${topic.id}:${topicIndex}`;
             const handle = (handler: (index: ItemIndex) => void) => (
               event: MouseEvent<HTMLElement>
             ) => {
@@ -104,7 +106,7 @@ export default function BookChildrenTree(props: Props) {
             };
             return (
               <TreeItem
-                key={topic.id}
+                key={nodeId}
                 nodeId={nodeId}
                 classes={treeItemClasses}
                 label={
@@ -120,8 +122,8 @@ export default function BookChildrenTree(props: Props) {
                         }}
                       />
                     )}
-                    {sectionIndex + 1}
-                    {section.name && `.${topicIndex + 1}`} {topic.name}
+                    {getOutline(section, sectionIndex, topicIndex) + " "}
+                    {topic.name}
                     {isTopicEditable?.(topic) && onItemEditClick && (
                       <IconButton
                         size="small"

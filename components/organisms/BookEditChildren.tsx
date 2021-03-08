@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import Divider from "@material-ui/core/Divider";
@@ -9,6 +10,7 @@ import GetAppIcon from "@material-ui/icons/GetApp";
 import DragIndicatorIcon from "@material-ui/icons/DragIndicator";
 import { makeStyles } from "@material-ui/core/styles";
 import BookChildrenTree from "$molecules/BookChildrenTree";
+import DraggableBookChildren from "$molecules/DraggableBookChildren";
 import { SectionSchema } from "$server/models/book/section";
 import { TopicSchema } from "$server/models/topic";
 import useCardStyles from "$styles/card";
@@ -27,6 +29,9 @@ const useStyles = makeStyles((theme) => ({
   icon: {
     marginRight: theme.spacing(0.5),
   },
+  placeholder: {
+    margin: 0,
+  },
 }));
 
 type Props = {
@@ -35,8 +40,8 @@ type Props = {
   onBookImportClick?(): void;
   onTopicImportClick?(): void;
   onTopicNewClick?(): void;
-  onSectionNewClick?(): void;
-  onSortableChange?(): void;
+  onSectionsUpdate(sections: SectionSchema[]): void;
+  onSectionCreate(): void;
   onTopicClick(topic: TopicSchema): void;
   onTopicEditClick?(topic: TopicSchema): void;
   isTopicEditable?(topic: TopicSchema): boolean | undefined;
@@ -48,6 +53,8 @@ export default function BookEditChildren(props: Props) {
     className,
     onTopicClick,
     onTopicEditClick,
+    onSectionsUpdate,
+    onSectionCreate,
     isTopicEditable,
   } = props;
   const cardClasses = useCardStyles();
@@ -56,48 +63,85 @@ export default function BookEditChildren(props: Props) {
     sectionIndex,
     topicIndex,
   ]: ItemIndex) => handler?.(sections[sectionIndex].topics[topicIndex]);
+  const [sortable, setSortable] = useState(false);
+  const handleSortableChange = () => {
+    if (sortable) onSectionsUpdate(sortableSections);
+    setSortable(!sortable);
+  };
+  const [sortableSections, setSortableSections] = useState<SectionSchema[]>([]);
+  const handleSectionsUpdate = (sortableSections: SectionSchema[]) => {
+    setSortableSections(sortableSections);
+  };
+  useEffect(() => {
+    setSortableSections(sections);
+  }, [sections]);
   return (
     <Card classes={cardClasses} className={className}>
       <div className={classes.items}>
-        <Button size="small" color="primary" onClick={props.onBookImportClick}>
+        <Button
+          size="small"
+          color="primary"
+          disabled={sortable}
+          onClick={props.onBookImportClick}
+        >
           <GetAppIcon className={classes.icon} />
           ブックからインポート
         </Button>
-        <Button size="small" color="primary" onClick={props.onTopicImportClick}>
+        <Button
+          size="small"
+          color="primary"
+          disabled={sortable}
+          onClick={props.onTopicImportClick}
+        >
           <GetAppIcon className={classes.icon} />
           インポート
         </Button>
-        <Button size="small" color="primary" onClick={props.onTopicNewClick}>
+        <Button
+          size="small"
+          color="primary"
+          disabled={sortable}
+          onClick={props.onTopicNewClick}
+        >
           <AddIcon className={classes.icon} />
           トピックの作成
         </Button>
-        <Button size="small" color="primary" onClick={props.onSectionNewClick}>
-          <AddIcon className={classes.icon} />
-          セクションの作成
-        </Button>
         <Button
           size="small"
-          variant="outlined"
+          variant={sortable ? "contained" : "outlined"}
           color="primary"
-          onClick={props.onSortableChange}
-          disabled // TODO: セクションの並び替え機能を実装したら有効化して
+          onClick={handleSortableChange}
         >
           <DragIndicatorIcon fontSize="small" />
-          並び替え
+          並び替え・セクションの編集
         </Button>
       </div>
       <Divider className={classes.divider} />
-      <TreeView
-        defaultCollapseIcon={<ExpandMoreIcon />}
-        defaultExpandIcon={<ChevronRightIcon />}
-      >
-        <BookChildrenTree
-          sections={sections}
-          onItemClick={handleItem(onTopicClick)}
-          onItemEditClick={handleItem(onTopicEditClick)}
-          isTopicEditable={isTopicEditable}
+      {(sortable && (
+        <DraggableBookChildren
+          sections={sortableSections}
+          onSectionsUpdate={handleSectionsUpdate}
+          onSectionCreate={onSectionCreate}
         />
-      </TreeView>
+      )) ||
+        (sections.length === 0 && (
+          <p className={classes.placeholder}>
+            動画等のコンテンツは、トピックという単位で管理されます
+            <br />
+            コンテンツを管理するには、トピックを作成もしくはインポートしてください
+          </p>
+        )) || (
+          <TreeView
+            defaultCollapseIcon={<ExpandMoreIcon />}
+            defaultExpandIcon={<ChevronRightIcon />}
+          >
+            <BookChildrenTree
+              sections={sections}
+              onItemClick={handleItem(onTopicClick)}
+              onItemEditClick={handleItem(onTopicEditClick)}
+              isTopicEditable={isTopicEditable}
+            />
+          </TreeView>
+        )}
     </Card>
   );
 }

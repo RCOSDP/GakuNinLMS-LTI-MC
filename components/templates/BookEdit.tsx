@@ -46,7 +46,8 @@ type Props = {
   onSubmit(book: BookProps): void;
   onDelete(book: BookSchema): void;
   onCancel(): void;
-  onAddSection(props: SectionProps): void;
+  onSectionsUpdate(sections: SectionProps[]): void;
+  onSectionCreate(): void;
   onTopicImportClick(): void;
   onTopicNewClick(): void;
   onTopicEditClick?(topic: TopicSchema): void;
@@ -60,7 +61,8 @@ export default function BookEdit(props: Props) {
     onSubmit,
     onDelete,
     onCancel,
-    onAddSection,
+    onSectionsUpdate,
+    onSectionCreate,
     onTopicImportClick,
     onTopicNewClick,
     onTopicEditClick,
@@ -84,11 +86,6 @@ export default function BookEdit(props: Props) {
     });
     onDelete(book);
   };
-  const handleSectionNewClick = () => {
-    // TODO: window.prompt は非推奨な API なのでやめたい
-    const name = window.prompt("新しいセクション名を入力してください。");
-    if (name) onAddSection({ name, topics: [] });
-  };
 
   return (
     <Container
@@ -111,7 +108,8 @@ export default function BookEdit(props: Props) {
         onTopicImportClick={onTopicImportClick}
         onTopicNewClick={onTopicNewClick}
         onBookImportClick={onBookImportClick}
-        onSectionNewClick={handleSectionNewClick}
+        onSectionsUpdate={onSectionsUpdate}
+        onSectionCreate={onSectionCreate}
         isTopicEditable={isTopicEditable}
       />
       <Typography className={classes.subtitle} variant="h5">

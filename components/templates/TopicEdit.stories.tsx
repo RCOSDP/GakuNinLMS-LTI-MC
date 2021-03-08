@@ -19,7 +19,7 @@ const handleSubtitleSubmit = (
 ) => (videoTrackProps: VideoTrackProps) => {
   const { language, content } = videoTrackProps;
   handler({
-    id: new Date().getTime(),
+    id: Date.now(),
     kind: "subtitles",
     language,
     url: URL.createObjectURL(new Blob([content])),

@@ -11,6 +11,7 @@ import { ExpandLess, ExpandMore, EditOutlined } from "@material-ui/icons";
 import { TopicSchema } from "$server/models/topic";
 import { SectionSchema } from "$server/models/book/section";
 import { primary } from "$theme/colors";
+import { getOutline } from "$utils/outline";
 
 function Section({
   section,
@@ -19,19 +20,20 @@ function Section({
   open,
   children,
 }: {
-  section: Pick<SectionSchema, "name">;
+  section: Pick<SectionSchema, "name" | "topics">;
   sectionItemIndex: number;
   onSectionClick(): void;
   open: boolean;
   children: ReactNode;
 }) {
-  if (section.name == null) return <>{children}</>;
+  if (section.name == null && section.topics.length < 2) return <>{children}</>;
 
   return (
     <>
       <ListItem button onClick={onSectionClick}>
         <ListItemText>
-          {sectionItemIndex + 1} {section.name}
+          {getOutline(section, sectionItemIndex) + " "}
+          {section.name ?? "無名のセクション"}
         </ListItemText>
         {open ? <ExpandLess /> : <ExpandMore />}
       </ListItem>
@@ -95,7 +97,7 @@ export default function BookChildren(props: Props) {
         >
           {section.topics.map((topic, topicItemIndex) => (
             <ListItem
-              key={topic.id}
+              key={`${topic.id}:${topicItemIndex}`}
               className={clsx({
                 [classes.active]:
                   sectionIndex === sectionItemIndex &&
@@ -107,8 +109,8 @@ export default function BookChildren(props: Props) {
               onClick={handleItemClick}
             >
               <ListItemText>
-                {sectionItemIndex + 1}
-                {section.name && `.${topicItemIndex + 1}`} {topic.name}
+                {getOutline(section, sectionIndex, topicIndex) + " "}
+                {topic.name}
               </ListItemText>
               {isTopicEditable(topic) && (
                 <ListItemSecondaryAction>
