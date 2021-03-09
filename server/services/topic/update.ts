@@ -54,7 +54,7 @@ export async function update({
     return { status: 400 };
   }
 
-  const created = await upsertTopic(session.user.id, {
+  const created = await upsertTopic(found.creatorId, {
     ...body,
     id: params.topic_id,
   });
