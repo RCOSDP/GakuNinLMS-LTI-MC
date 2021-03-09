@@ -14,6 +14,7 @@ import useAppBarStyles from "$styles/appBar";
 import { SessionSchema } from "$server/models/session";
 import { gray } from "$theme/colors";
 import { isAdministrator, isInstructor } from "$utils/session";
+import { NEXT_PUBLIC_BASE_PATH } from "$utils/env";
 
 const useStyles = makeStyles((theme) => ({
   inner: {
@@ -91,7 +92,7 @@ function AppBar(props: Props, ref: Ref<unknown>) {
       <Toolbar color="inherit" disableGutters>
         <div className={classes.inner}>
           <img
-            src="/logo.png"
+            src={`${NEXT_PUBLIC_BASE_PATH}/logo.png`}
             alt="Chibi CHiLO"
             className={clsx(classes.margin, classes.logo)}
           />
