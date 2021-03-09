@@ -2,7 +2,7 @@ import { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
 
 const ltiResourceLinks: readonly Omit<
   LtiResourceLinkSchema,
-  "consumerId" | "bookId"
+  "consumerId" | "bookId" | "authorId"
 >[] = [
   {
     id: "1",
