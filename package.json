@@ -77,7 +77,7 @@
     "lint": "eslint --ext .js,.jsx,.ts,.tsx .",
     "lint:fix": "yarn lint --fix",
     "lint:report": "yarn lint --output-file eslint_report.json --format json",
-    "storybook": "start-storybook"
+    "storybook": "start-storybook -s ./public"
   },
   "engines": {
     "node": ">=12"
