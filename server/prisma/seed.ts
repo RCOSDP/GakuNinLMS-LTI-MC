@@ -48,6 +48,7 @@ async function seed() {
       ...link,
       consumerId: ltiConsumer.id,
       bookId: createdBooks[0].id,
+      authorId,
     });
   }
 }

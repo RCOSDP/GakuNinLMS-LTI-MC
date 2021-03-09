@@ -126,7 +126,7 @@ model LtiContext {
   @@map("lti_context")
 }
 
-/// LTI ResourceLink
+/// LTI Resource Link
 model LtiResourceLink {
   consumer   LtiConsumer @relation(fields: [consumerId], references: [id])
   consumerId String      @map("consumer_id")
@@ -136,6 +136,8 @@ model LtiResourceLink {
   title      String
   book       Book        @relation(fields: [bookId], references: [id])
   bookId     Int         @map("book_id")
+  author     User        @relation(fields: [authorId], references: [id])
+  authorId   Int         @map("author_id")
 
   @@id([consumerId, id])
   @@map("lti_resource_link")
@@ -206,15 +208,16 @@ model TopicSection {
 
 /// 利用者
 model User {
-  id            Int         @id @default(autoincrement())
-  createdTopics Topic[]
-  writtenBooks  Book[]
-  ltiConsumer   LtiConsumer @relation(fields: [ltiConsumerId], references: [id])
-  ltiConsumerId String      @map("lti_consumer_id")
-  ltiUserId     String      @map("lti_user_id")
-  activities    Activity[]
+  id               Int               @id @default(autoincrement())
+  createdTopics    Topic[]
+  writtenBooks     Book[]
+  ltiResourceLinks LtiResourceLink[]
+  ltiConsumer      LtiConsumer       @relation(fields: [ltiConsumerId], references: [id])
+  ltiConsumerId    String            @map("lti_consumer_id")
+  ltiUserId        String            @map("lti_user_id")
+  activities       Activity[]
   /// 氏名
-  name          String
+  name             String
 
   @@unique([ltiConsumerId, ltiUserId])
   @@map("users")

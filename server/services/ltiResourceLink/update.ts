@@ -42,6 +42,7 @@ export async function update({
     ...body,
     consumerId: params.lti_consumer_id,
     id: params.lti_resource_link_id,
+    authorId: session.user.id,
   });
 
   session.ltiResourceLink = link;
