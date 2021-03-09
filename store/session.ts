@@ -3,7 +3,10 @@ import { useAtomValue, useUpdateAtom } from "jotai/utils";
 import type { TopicSchema } from "$server/models/topic";
 import type { BookSchema } from "$server/models/book";
 import type { SessionSchema } from "$server/models/session";
-import { isAdministrator, isInstructor } from "$utils/session";
+import {
+  isAdministrator as isAdministratorSession,
+  isInstructor as isInstructorSession,
+} from "$utils/session";
 import topicCreateBy from "$utils/topicCreateBy";
 import bookCreateBy from "$utils/bookCreateBy";
 
@@ -29,17 +32,17 @@ const updateSessionAtom = atom<
   null,
   { session: SessionSchema; error: boolean }
 >(null, (get, set, { session, error }) => {
+  const isAdministrator = isAdministratorSession(session);
+  const isInstructor = isInstructorSession(session);
   const sessionWithState = {
     session,
-    isAdministrator: isAdministrator(session),
-    isInstructor: isInstructor(session),
+    isAdministrator,
+    isInstructor,
     isTopicEditable(topic: Pick<TopicSchema, "creator">) {
-      // NOTE: 自身以外の作成したトピックに関しては編集不可
-      return topicCreateBy(topic, session.user);
+      return isAdministrator || topicCreateBy(topic, session.user);
     },
     isBookEditable(book: Pick<BookSchema, "author">) {
-      // NOTE: 自身以外の作成したブックに関しては編集不可
-      return bookCreateBy(book, session.user);
+      return isAdministrator || bookCreateBy(book, session.user);
     },
     error,
   };
