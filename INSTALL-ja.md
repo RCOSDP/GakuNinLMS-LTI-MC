@@ -49,3 +49,9 @@ yarn && yarn build
 ```sh
 yarn storybook
 ```
+
+## カスタマイズ
+
+### ロゴ
+
+アプリケーションバーに表示するロゴを変更するにはビルド実行前に `./public/logo.png` をコピー等で上書きする。
