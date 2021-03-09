@@ -91,13 +91,15 @@ function DraggableSection({
           {...provided.draggableProps}
           {...provided.dragHandleProps}
         >
-          <SectionTextField
-            label="セクション"
-            fullWidth
-            onChange={handleSectionNameChange}
-            disabled={snapshot.isDragging}
-            defaultValue={section.name}
-          />
+          {section.topics.length > 1 && (
+            <SectionTextField
+              label="セクション"
+              fullWidth
+              onChange={handleSectionNameChange}
+              disabled={snapshot.isDragging}
+              defaultValue={section.name}
+            />
+          )}
           {children}
         </div>
       )}
