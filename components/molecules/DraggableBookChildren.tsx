@@ -12,7 +12,7 @@ import SectionTextField from "$atoms/SectionTextField";
 import { SectionSchema } from "$server/models/book/section";
 import { TopicSchema } from "$server/models/topic";
 import { gray, primary } from "$theme/colors";
-import reorder from "$utils/reorder";
+import reorder, { insert, remove } from "$utils/reorder";
 
 const useSectionCreateButtonStyles = makeStyles((theme) => ({
   root: {
@@ -225,19 +225,32 @@ const handleTopicDragEnd: DragEndHandler = (
     end: sections.findIndex(({ id }) => id === sectionId.end),
   };
   if (sectionId.start === sectionId.end) {
-    const updated = reorder<TopicSchema>(
+    const topics = reorder<TopicSchema>(
       sections[sectionIndex.start].topics,
       index.start,
       index.end
     );
-    sections[sectionIndex.end].topics = updated;
+    sections[sectionIndex.end] = {
+      ...sections[sectionIndex.end],
+      topics,
+    };
   } else {
-    sections[sectionIndex.end].topics.splice(
-      index.end,
-      0,
-      sections[sectionIndex.start].topics[index.start]
-    );
-    sections[sectionIndex.start].topics.splice(index.start, 1);
+    const topics = {
+      start: remove(sections[sectionIndex.start].topics, index.start),
+      end: insert(
+        sections[sectionIndex.end].topics,
+        index.end,
+        sections[sectionIndex.start].topics[index.start]
+      ),
+    };
+    sections[sectionIndex.start] = {
+      ...sections[sectionIndex.start],
+      topics: topics.start,
+    };
+    sections[sectionIndex.end] = {
+      ...sections[sectionIndex.end],
+      topics: topics.end,
+    };
   }
 
   return sections;
@@ -262,7 +275,11 @@ const removeTopic = (
     ({ id }) => id === Number(draggableTopicId.split("-")[1])
   );
   const topicIndex = Number(draggableTopicId.split(":")[1]);
-  sections[sectionIndex].topics.splice(topicIndex, 1);
+  const topics = remove(sections[sectionIndex].topics, topicIndex);
+  sections[sectionIndex] = {
+    ...sections[sectionIndex],
+    topics,
+  };
   return sections;
 };
 
