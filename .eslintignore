@@ -2,4 +2,4 @@ node_modules/
 /.next/
 /server/dist/
 /openapi/
-public/
+/public/api/v2/swagger/
