@@ -47,7 +47,6 @@ type Props = {
   onDelete(book: BookSchema): void;
   onCancel(): void;
   onSectionsUpdate(sections: SectionProps[]): void;
-  onSectionCreate(): void;
   onTopicImportClick(): void;
   onTopicNewClick(): void;
   onTopicEditClick?(topic: TopicSchema): void;
@@ -62,7 +61,6 @@ export default function BookEdit(props: Props) {
     onDelete,
     onCancel,
     onSectionsUpdate,
-    onSectionCreate,
     onTopicImportClick,
     onTopicNewClick,
     onTopicEditClick,
@@ -109,7 +107,6 @@ export default function BookEdit(props: Props) {
         onTopicNewClick={onTopicNewClick}
         onBookImportClick={onBookImportClick}
         onSectionsUpdate={onSectionsUpdate}
-        onSectionCreate={onSectionCreate}
         isTopicEditable={isTopicEditable}
       />
       <Typography className={classes.subtitle} variant="h5">

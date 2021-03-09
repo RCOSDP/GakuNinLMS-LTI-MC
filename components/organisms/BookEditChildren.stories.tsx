@@ -17,12 +17,6 @@ const handleSectionsUpdate = (
     )
   );
 };
-const handleSectionCreate = (
-  sections: SectionSchema[],
-  setSections: (sections: SectionSchema[]) => void
-) => () => {
-  setSections([...sections, { name: null, id: Date.now(), topics: [] }]);
-};
 
 export const Default = () => {
   const [sections, setSections] = useState<SectionSchema[]>(initialSections);
@@ -31,7 +25,6 @@ export const Default = () => {
       sections={sections}
       onTopicClick={handleTopicClick}
       onSectionsUpdate={handleSectionsUpdate(setSections)}
-      onSectionCreate={handleSectionCreate(sections, setSections)}
     />
   );
 };
@@ -43,7 +36,6 @@ export const Editable = () => {
       sections={sections}
       onTopicClick={handleTopicClick}
       onSectionsUpdate={handleSectionsUpdate(setSections)}
-      onSectionCreate={handleSectionCreate(sections, setSections)}
       onTopicEditClick={handleTopicEditClick}
       isTopicEditable={() => true}
     />
