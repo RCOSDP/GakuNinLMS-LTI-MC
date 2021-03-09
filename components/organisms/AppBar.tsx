@@ -8,7 +8,6 @@ import AssessmentOutlinedIcon from "@material-ui/icons/AssessmentOutlined";
 import LinkIcon from "@material-ui/icons/Link";
 import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
-import LogoIcon from "$atoms/LogoIcon";
 import AppBarNavButton from "$atoms/AppBarNavButton";
 import LtiItemDialog from "$organisms/LtiItemDialog";
 import useAppBarStyles from "$styles/appBar";
@@ -29,8 +28,10 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   logo: {
+    maxWidth: 100,
+    maxHeight: 48,
     width: "auto",
-    height: 14,
+    height: "auto",
   },
   margin: {
     marginRight: theme.spacing(1),
@@ -89,7 +90,11 @@ function AppBar(props: Props, ref: Ref<unknown>) {
     <MuiAppBar classes={appBarClasses} color="default" {...others} ref={ref}>
       <Toolbar color="inherit" disableGutters>
         <div className={classes.inner}>
-          <LogoIcon className={clsx(classes.margin, classes.logo)} />
+          <img
+            src="/logo.png"
+            alt="Chibi CHiLO"
+            className={clsx(classes.margin, classes.logo)}
+          />
           <div className={classes.nav}>
             <AppBarNavButton
               color="inherit"
