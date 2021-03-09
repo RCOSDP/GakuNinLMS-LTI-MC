@@ -116,32 +116,33 @@ export default function BookEditChildren(props: Props) {
         </Button>
       </div>
       <Divider className={classes.divider} />
-      {(sortable && (
+      {sortable && (
         <DraggableBookChildren
           sections={sortableSections}
           onSectionsUpdate={handleSectionsUpdate}
           onSectionCreate={onSectionCreate}
         />
-      )) ||
-        (sections.length === 0 && (
-          <p className={classes.placeholder}>
-            動画等のコンテンツは、トピックという単位で管理されます
-            <br />
-            コンテンツを管理するには、トピックを作成もしくはインポートしてください
-          </p>
-        )) || (
-          <TreeView
-            defaultCollapseIcon={<ExpandMoreIcon />}
-            defaultExpandIcon={<ChevronRightIcon />}
-          >
-            <BookChildrenTree
-              sections={sections}
-              onItemClick={handleItem(onTopicClick)}
-              onItemEditClick={handleItem(onTopicEditClick)}
-              isTopicEditable={isTopicEditable}
-            />
-          </TreeView>
-        )}
+      )}
+      {!sortable && sections.length === 0 && (
+        <p className={classes.placeholder}>
+          動画等のコンテンツは、トピックという単位で管理されます
+          <br />
+          コンテンツを管理するには、トピックを作成もしくはインポートしてください
+        </p>
+      )}
+      {!sortable && sections.length > 0 && (
+        <TreeView
+          defaultCollapseIcon={<ExpandMoreIcon />}
+          defaultExpandIcon={<ChevronRightIcon />}
+        >
+          <BookChildrenTree
+            sections={sections}
+            onItemClick={handleItem(onTopicClick)}
+            onItemEditClick={handleItem(onTopicEditClick)}
+            isTopicEditable={isTopicEditable}
+          />
+        </TreeView>
+      )}
     </Card>
   );
 }
