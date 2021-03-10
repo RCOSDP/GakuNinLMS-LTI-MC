@@ -66,7 +66,9 @@ export default function BookEditChildren(props: Props) {
     if (sortable) onSectionsUpdate(sortableSections);
     setSortable(!sortable);
   };
-  const [sortableSections, setSortableSections] = useState<SectionSchema[]>([]);
+  const [sortableSections, setSortableSections] = useState<SectionSchema[]>(
+    sections
+  );
   const handleSectionsUpdate = (sortableSections: SectionSchema[]) => {
     setSortableSections(sortableSections);
   };
