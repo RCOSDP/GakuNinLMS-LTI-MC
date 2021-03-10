@@ -12,7 +12,7 @@ import SectionTextField from "$atoms/SectionTextField";
 import { SectionSchema } from "$server/models/book/section";
 import { TopicSchema } from "$server/models/topic";
 import { gray, primary } from "$theme/colors";
-import reorder, { insert, remove } from "$utils/reorder";
+import reorder, { insert, update, remove } from "$utils/reorder";
 
 const useSectionCreateButtonStyles = makeStyles((theme) => ({
   root: {
@@ -91,13 +91,15 @@ function DraggableSection({
           {...provided.draggableProps}
           {...provided.dragHandleProps}
         >
-          <SectionTextField
-            label="セクション"
-            fullWidth
-            onChange={handleSectionNameChange}
-            disabled={snapshot.isDragging}
-            defaultValue={section.name}
-          />
+          {section.topics.length > 1 && (
+            <SectionTextField
+              label="セクション"
+              fullWidth
+              onChange={handleSectionNameChange}
+              disabled={snapshot.isDragging}
+              defaultValue={section.name}
+            />
+          )}
           {children}
         </div>
       )}
@@ -251,6 +253,11 @@ const handleTopicDragEnd: DragEndHandler = (
       ...sections[sectionIndex.end],
       topics: topics.end,
     };
+
+    // NOTE: SectionTextFieldが非表示のときセクションは無名として同期
+    if (topics.start.length === 1) {
+      sections[sectionIndex.start].name = null;
+    }
   }
 
   return sections;
@@ -260,9 +267,8 @@ const updateSection = (
   initialSections: SectionSchema[],
   section: SectionSchema
 ): SectionSchema[] => {
-  const sections = [...initialSections];
-  const index = sections.findIndex(({ id }) => id === section.id);
-  sections.splice(index, 1, section);
+  const index = initialSections.findIndex(({ id }) => id === section.id);
+  const sections = update(initialSections, index, section);
   return sections;
 };
 
@@ -280,6 +286,14 @@ const removeTopic = (
     ...sections[sectionIndex],
     topics,
   };
+  return sections;
+};
+
+const removeSection = (
+  initialSections: SectionSchema[],
+  index: number
+): SectionSchema[] => {
+  const sections = remove(initialSections, index);
   return sections;
 };
 
@@ -324,6 +338,9 @@ export default function DraggableBookChildren(props: Props) {
   const handleTopicRemove = (draggableId: DraggableId) => {
     onSectionsUpdate(removeTopic(sections, draggableId));
   };
+  const handleSectionRemove = (index: number) => () => {
+    onSectionsUpdate(removeSection(sections, index));
+  };
   const handleSectionCreate = () => onSectionCreate();
   return (
     <>
@@ -350,6 +367,15 @@ export default function DraggableBookChildren(props: Props) {
                   {section.topics.length === 0 && (
                     <p className={classes.placeholder}>
                       ここにトピックをドロップ
+                      <Tooltip title="このセクションを取り除く">
+                        <IconButton
+                          size="small"
+                          color="primary"
+                          onClick={handleSectionRemove(sectionIndex)}
+                        >
+                          <RemoveIcon />
+                        </IconButton>
+                      </Tooltip>
                     </p>
                   )}
                 </DragDropSection>

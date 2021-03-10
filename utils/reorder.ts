@@ -5,6 +5,13 @@ export function insert<T>(list: T[], index: number, item: T) {
   return result;
 }
 
+export function update<T>(list: T[], index: number, item: T) {
+  const result = [...list];
+  result.splice(index, 1, item);
+
+  return result;
+}
+
 export function remove<T>(list: T[], index: number) {
   const result = [...list];
   result.splice(index, 1);
