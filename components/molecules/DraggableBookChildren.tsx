@@ -12,7 +12,7 @@ import SectionTextField from "$atoms/SectionTextField";
 import { SectionSchema } from "$server/models/book/section";
 import { TopicSchema } from "$server/models/topic";
 import { gray, primary } from "$theme/colors";
-import reorder, { insert, remove } from "$utils/reorder";
+import reorder, { insert, update, remove } from "$utils/reorder";
 
 const useSectionCreateButtonStyles = makeStyles((theme) => ({
   root: {
@@ -262,9 +262,8 @@ const updateSection = (
   initialSections: SectionSchema[],
   section: SectionSchema
 ): SectionSchema[] => {
-  const sections = [...initialSections];
-  const index = sections.findIndex(({ id }) => id === section.id);
-  sections.splice(index, 1, section);
+  const index = initialSections.findIndex(({ id }) => id === section.id);
+  const sections = update(initialSections, index, section);
   return sections;
 };
 
