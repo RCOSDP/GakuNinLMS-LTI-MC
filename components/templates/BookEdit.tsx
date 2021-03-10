@@ -1,13 +1,14 @@
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import Button from "@material-ui/core/Button";
-import { DeleteOutlined } from "@material-ui/icons";
+import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
 import { makeStyles } from "@material-ui/core/styles";
 import BookEditChildren from "$organisms/BookEditChildren";
 import BookForm from "$organisms/BookForm";
 import TopicPreviewDialog from "$organisms/TopicPreviewDialog";
 import RequiredDot from "$atoms/RequiredDot";
 import BackButton from "$atoms/BackButton";
+import CollapsibleContent from "$organisms/CollapsibleContent";
 import useContainerStyles from "styles/container";
 import { BookProps, BookSchema } from "$server/models/book";
 import { SectionProps } from "$server/models/book/section";
@@ -18,12 +19,17 @@ import useDialogProps from "$utils/useDialogProps";
 const useStyles = makeStyles((theme) => ({
   container: {
     marginTop: theme.spacing(1),
+    "& > :not($title):not($form)": {
+      marginBottom: theme.spacing(2),
+    },
   },
   title: {
     marginBottom: theme.spacing(4),
   },
+  form: {
+    marginBottom: theme.spacing(4),
+  },
   subtitle: {
-    marginBottom: theme.spacing(2),
     "& span": {
       verticalAlign: "middle",
     },
@@ -32,12 +38,6 @@ const useStyles = makeStyles((theme) => ({
       marginBottom: theme.spacing(0.75),
       marginLeft: theme.spacing(2),
     },
-  },
-  children: {
-    marginBottom: theme.spacing(4),
-  },
-  form: {
-    marginBottom: theme.spacing(2),
   },
 }));
 
@@ -95,11 +95,24 @@ export default function BookEdit(props: Props) {
       <Typography className={classes.title} variant="h4">
         ブック「{book.name}」の編集
       </Typography>
+      <CollapsibleContent
+        label={
+          <Typography className={classes.subtitle} variant="h5">
+            基本情報
+            <Typography variant="caption" component="span" aria-hidden="true">
+              <RequiredDot />
+              は必須項目です
+            </Typography>
+          </Typography>
+        }
+        expanded={false}
+      >
+        <BookForm className={classes.form} book={book} onSubmit={onSubmit} />
+      </CollapsibleContent>
       <Typography className={classes.subtitle} variant="h5">
-        トピック・セクションの編集
+        トピック・セクション
       </Typography>
       <BookEditChildren
-        className={classes.children}
         sections={book.sections}
         onTopicClick={handleTopicClick}
         onTopicEditClick={onTopicEditClick}
@@ -109,16 +122,8 @@ export default function BookEdit(props: Props) {
         onSectionsUpdate={onSectionsUpdate}
         isTopicEditable={isTopicEditable}
       />
-      <Typography className={classes.subtitle} variant="h5">
-        ブックの編集
-        <Typography variant="caption" component="span" aria-hidden="true">
-          <RequiredDot />
-          は必須項目です
-        </Typography>
-      </Typography>
-      <BookForm className={classes.form} book={book} onSubmit={onSubmit} />
       <Button size="small" color="primary" onClick={handleDeleteButtonClick}>
-        <DeleteOutlined />
+        <DeleteOutlinedIcon />
         ブックを削除
       </Button>
       {previewTopic && (
