@@ -253,6 +253,11 @@ const handleTopicDragEnd: DragEndHandler = (
       ...sections[sectionIndex.end],
       topics: topics.end,
     };
+
+    // NOTE: SectionTextFieldが非表示のときセクションは無名として同期
+    if (topics.start.length === 1) {
+      sections[sectionIndex.start].name = null;
+    }
   }
 
   return sections;
