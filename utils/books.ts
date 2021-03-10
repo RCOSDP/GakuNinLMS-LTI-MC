@@ -3,6 +3,7 @@ import type { SortOrder } from "$server/models/sortOrder";
 import type { BookSchema } from "$server/models/book";
 import type { TopicSchema } from "$server/models/topic";
 import { api } from "./api";
+import getDisplayableBook from "./getDisplayableBook";
 import useInfiniteProps from "./useInfiniteProps";
 import { revalidateBook } from "./book";
 
@@ -27,26 +28,12 @@ async function fetchBooks(
   return books;
 }
 
-function sharedOrCreatedBy(
-  book: BookSchema,
-  isBookEditable: (book: Pick<BookSchema, "author">) => boolean
-) {
-  return book.shared || isBookEditable(book);
-}
-
 const filter = (
   isBookEditable: (book: Pick<BookSchema, "author">) => boolean,
   isTopicEditable: (topic: Pick<TopicSchema, "creator">) => boolean
 ) => (book: BookSchema | undefined) => {
-  if (book === undefined) return [];
-  if (!sharedOrCreatedBy(book, isBookEditable)) return [];
-  const sections = book.sections.map((section) => {
-    const topics = section.topics.filter(
-      (topic) => topic.shared || isTopicEditable(topic)
-    );
-    return { ...section, topics };
-  });
-  return [{ ...book, sections }];
+  const displayable = getDisplayableBook(book, isBookEditable, isTopicEditable);
+  return displayable == null ? [] : [displayable];
 };
 
 export function useBooks(

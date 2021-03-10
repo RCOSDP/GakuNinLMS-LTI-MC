@@ -30,6 +30,9 @@ export class LtiResourceLinkSchema extends LtiResourceLinkProps {
   @IsNotEmpty()
   @IsString()
   id!: string;
+
+  @IsInt()
+  authorId!: number;
 }
 
 export const {

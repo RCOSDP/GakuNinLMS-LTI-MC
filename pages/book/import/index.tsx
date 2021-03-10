@@ -15,8 +15,8 @@ import { pagesPath } from "$utils/$path";
 export type Query = BookEditQuery;
 
 function Import({ bookId, context }: Query) {
-  const { isTopicEditable, isBookEditable } = useSessionAtom();
-  const { book } = useBook(bookId);
+  const { isBookEditable, isTopicEditable } = useSessionAtom();
+  const { book, error } = useBook(bookId, isBookEditable, isTopicEditable);
   const booksWithInfiniteProps = useBooks(isBookEditable, isTopicEditable);
   const router = useRouter();
   const bookEditQuery = { bookId, ...(context && { context }) };
@@ -72,6 +72,7 @@ function Import({ bookId, context }: Query) {
     isBookEditable,
   };
 
+  if (error) return <BookNotFoundProblem />;
   if (!book) return <Placeholder />;
 
   return <BookImport {...booksWithInfiniteProps} {...handlers} />;

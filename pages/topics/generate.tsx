@@ -5,6 +5,7 @@ import Placeholder from "$templates/Placeholder";
 import TopicNotFoundProblem from "$organisms/TopicNotFoundProblem";
 import BookNotFoundProblem from "$organisms/BookNotFoundProblem";
 import type { Query as BookEditQuery } from "$pages/book/edit";
+import { useSessionAtom } from "$store/session";
 import { useBook } from "$utils/book";
 import { useTopic } from "$utils/topic";
 import useTopicNewHandlers from "$utils/useTopicNewHandlers";
@@ -13,9 +14,11 @@ export type Query = { topicId: TopicSchema["id"] } & BookEditQuery;
 
 function Generate({ topicId, bookId, context }: Query) {
   const topic = useTopic(topicId);
-  const { book } = useBook(bookId);
+  const { isBookEditable, isTopicEditable } = useSessionAtom();
+  const { book, error } = useBook(bookId, isBookEditable, isTopicEditable);
   const handlers = useTopicNewHandlers(context, book, topic);
 
+  if (error) return <BookNotFoundProblem />;
   if (!topic) return <Placeholder />;
   if (!book) return <Placeholder />;
 

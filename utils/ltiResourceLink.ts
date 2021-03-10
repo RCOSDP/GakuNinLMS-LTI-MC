@@ -1,6 +1,9 @@
 import useSWR, { mutate } from "swr";
 import { api } from "./api";
-import { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
+import {
+  LtiResourceLinkProps,
+  LtiResourceLinkSchema,
+} from "$server/models/ltiResourceLink";
 import { revalidateSession } from "./session";
 
 const key =
@@ -33,7 +36,7 @@ export async function updateLtiResourceLink({
   consumerId,
   id,
   ...body
-}: LtiResourceLinkSchema) {
+}: Pick<LtiResourceLinkSchema, "consumerId" | "id"> & LtiResourceLinkProps) {
   const res = await api.apiV2LtiLtiConsumerIdResourceLinkLtiResourceLinkIdPut({
     ltiConsumerId: consumerId,
     ltiResourceLinkId: id,
