@@ -13,8 +13,8 @@ export type Query = { bookId: BookSchema["id"]; context?: "books" | "link" };
 
 function Edit({ bookId, context }: Query) {
   const query = { bookId, ...(context && { context }) };
-  const { book } = useBook(bookId);
-  const { isTopicEditable } = useSessionAtom();
+  const { isBookEditable, isTopicEditable } = useSessionAtom();
+  const { book, error } = useBook(bookId, isBookEditable, isTopicEditable);
   const router = useRouter();
   const back = () => {
     switch (context) {
@@ -88,6 +88,8 @@ function Edit({ bookId, context }: Query) {
     onTopicEditClick: handleTopicEditClick,
     isTopicEditable: () => true,
   };
+
+  if (error) return <BookNotFoundProblem />;
   if (!book) return <Placeholder />;
 
   return <BookEdit book={book} {...handlers} />;

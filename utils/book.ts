@@ -1,10 +1,12 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import useSWR, { mutate } from "swr";
 import { useBookAtom } from "$store/book";
 import { api } from "./api";
 import type { BookProps, BookSchema } from "$server/models/book";
 import type { TopicSchema } from "$server/models/topic";
 import { revalidateSession } from "./session";
+import { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
+import getDisplayableBook from "./getDisplayableBook";
 
 const key = "/api/v2/book/{book_id}";
 
@@ -13,13 +15,33 @@ async function fetchBook(_: typeof key, id: BookSchema["id"]) {
   return res as BookSchema;
 }
 
-export function useBook(id: BookSchema["id"]) {
+export function useBook(
+  id: BookSchema["id"],
+  isBookEditable: (book: Pick<BookSchema, "author">) => boolean,
+  isTopicEditable: (topic: Pick<TopicSchema, "creator">) => boolean,
+  ltiResourceLink?: Pick<LtiResourceLinkSchema, "bookId" | "authorId"> | null
+) {
   const { data, error } = useSWR<BookSchema>([key, id], fetchBook);
   const { updateBook, ...state } = useBookAtom();
+  const displayable = useMemo(
+    () =>
+      getDisplayableBook(
+        data,
+        isBookEditable,
+        isTopicEditable,
+        ltiResourceLink ?? undefined
+      ),
+    [data, isBookEditable, isTopicEditable, ltiResourceLink]
+  );
+
   useEffect(() => {
-    if (data) updateBook(data);
-  }, [data, updateBook]);
-  return { ...state, error };
+    if (displayable) updateBook(displayable);
+  }, [data, updateBook, displayable]);
+
+  return {
+    ...state,
+    error: (data !== undefined && displayable === undefined) || error,
+  };
 }
 
 export async function createBook(body: BookProps): Promise<BookSchema> {
