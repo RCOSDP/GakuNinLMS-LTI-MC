@@ -12,17 +12,14 @@ import LinkIcon from "@material-ui/icons/Link";
 import BookChildren from "$organisms/BookChildren";
 import BookItemDialog from "$organisms/BookItemDialog";
 import TopicViewer from "$organisms/TopicViewer";
+import ActionHeader from "$organisms/ActionHeader";
 import type { BookSchema } from "$server/models/book";
 import type { TopicSchema } from "$server/models/topic";
 import { useSessionAtom } from "$store/session";
 import useContainerStyles from "styles/container";
 
 const useStyles = makeStyles((theme) => ({
-  container: {
-    marginTop: theme.spacing(4),
-  },
   title: {
-    marginBottom: theme.spacing(4),
     "& > *": {
       marginRight: theme.spacing(1),
     },
@@ -101,30 +98,34 @@ export default function Book(props: Props) {
     : undefined;
 
   return (
-    <Container
-      classes={containerClasses}
-      className={classes.container}
-      maxWidth="lg"
-    >
-      <Typography className={classes.title} variant="h4" gutterBottom={true}>
-        {book?.name}
-        <IconButton onClick={handleInfoClick}>
-          <InfoOutlinedIcon />
-        </IconButton>
-        {isInstructor && (
-          <>
-            <IconButton color="primary" onClick={handleEditClick}>
-              <EditOutlinedIcon />
+    <Container classes={containerClasses} maxWidth="lg">
+      <ActionHeader
+        action={
+          <Typography
+            className={classes.title}
+            variant="h4"
+            gutterBottom={true}
+          >
+            {book?.name}
+            <IconButton onClick={handleInfoClick}>
+              <InfoOutlinedIcon />
             </IconButton>
-          </>
-        )}
-        {isInstructor && linked && (
-          <Button size="small" color="primary" onClick={onBookLinkClick}>
-            <LinkIcon className={classes.icon} />
-            他のブックをリンク
-          </Button>
-        )}
-      </Typography>
+            {isInstructor && (
+              <>
+                <IconButton color="primary" onClick={handleEditClick}>
+                  <EditOutlinedIcon />
+                </IconButton>
+              </>
+            )}
+            {isInstructor && linked && (
+              <Button size="small" color="primary" onClick={onBookLinkClick}>
+                <LinkIcon className={classes.icon} />
+                他のブックをリンク
+              </Button>
+            )}
+          </Typography>
+        }
+      />
       <div
         className={clsx(
           classes.inner,

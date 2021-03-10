@@ -3,7 +3,10 @@ export default { title: "templates/Book" };
 import { useEffect } from "react";
 import { useBookAtom } from "$store/book";
 import Book from "./Book";
-import { book, session } from "samples";
+import Slide from "@material-ui/core/Slide";
+import useScrollTrigger from "@material-ui/core/useScrollTrigger";
+import AppBar from "$organisms/AppBar";
+import { book, session } from "$samples";
 import { useUpdateSessionAtom } from "$store/session";
 
 const defaultProps = {
@@ -15,6 +18,21 @@ const defaultProps = {
   },
   onTopicEditClick: console.log,
 };
+
+const appBarHandlers = {
+  onBooksClick: console.log,
+  onTopicsClick: console.log,
+  onDashboardClick: console.log,
+};
+
+function SlideAppBar() {
+  const trigger = useScrollTrigger();
+  return (
+    <Slide appear={false} direction="down" in={!trigger}>
+      <AppBar position="sticky" session={session} {...appBarHandlers} />
+    </Slide>
+  );
+}
 
 export const Default = () => {
   const {
@@ -28,12 +46,15 @@ export const Default = () => {
   }, [updateBook]);
 
   return (
-    <Book
-      {...defaultProps}
-      index={itemIndex}
-      onTopicEnded={nextItemIndex}
-      onItemClick={updateItemIndex}
-    />
+    <>
+      <SlideAppBar />
+      <Book
+        {...defaultProps}
+        index={itemIndex}
+        onTopicEnded={nextItemIndex}
+        onItemClick={updateItemIndex}
+      />
+    </>
   );
 };
 
@@ -41,13 +62,16 @@ export const Empty = () => {
   const { itemIndex, updateItemIndex, nextItemIndex } = useBookAtom();
 
   return (
-    <Book
-      {...defaultProps}
-      book={null}
-      index={itemIndex}
-      onTopicEnded={nextItemIndex}
-      onItemClick={updateItemIndex}
-    />
+    <>
+      <SlideAppBar />
+      <Book
+        {...defaultProps}
+        book={null}
+        index={itemIndex}
+        onTopicEnded={nextItemIndex}
+        onItemClick={updateItemIndex}
+      />
+    </>
   );
 };
 
@@ -55,13 +79,16 @@ export const EmptySection = () => {
   const { itemIndex, updateItemIndex, nextItemIndex } = useBookAtom();
 
   return (
-    <Book
-      {...defaultProps}
-      book={{ ...defaultProps.book, sections: [] }}
-      index={itemIndex}
-      onTopicEnded={nextItemIndex}
-      onItemClick={updateItemIndex}
-    />
+    <>
+      <SlideAppBar />
+      <Book
+        {...defaultProps}
+        book={{ ...defaultProps.book, sections: [] }}
+        index={itemIndex}
+        onTopicEnded={nextItemIndex}
+        onItemClick={updateItemIndex}
+      />
+    </>
   );
 };
 
@@ -79,11 +106,14 @@ export const ForInstructor = () => {
   }, [updateBook, updateSession]);
 
   return (
-    <Book
-      {...defaultProps}
-      index={itemIndex}
-      onTopicEnded={nextItemIndex}
-      onItemClick={updateItemIndex}
-    />
+    <>
+      <SlideAppBar />
+      <Book
+        {...defaultProps}
+        index={itemIndex}
+        onTopicEnded={nextItemIndex}
+        onItemClick={updateItemIndex}
+      />
+    </>
   );
 };
