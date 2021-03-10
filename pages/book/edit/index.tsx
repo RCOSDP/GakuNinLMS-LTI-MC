@@ -53,13 +53,6 @@ function Edit({ bookId, context }: Query) {
       sections: sections.filter((section) => section.topics.length > 0),
     });
   }
-  async function handleSectionCreate() {
-    if (!book) return;
-    await updateBook({
-      ...book,
-      sections: [...book?.sections, { name: null, topics: [] }],
-    });
-  }
   function handleTopicEditClick(topic: Pick<TopicSchema, "id" | "creator">) {
     const action = isTopicEditable(topic) ? "edit" : "generate";
     const url = pagesPath.book.edit.topic[action].$url({
@@ -81,7 +74,6 @@ function Edit({ bookId, context }: Query) {
     onDelete: handleDelete,
     onCancel: handleCancel,
     onSectionsUpdate: handleSectionsUpdate,
-    onSectionCreate: handleSectionCreate,
     onBookImportClick: handleBookImportClick,
     onTopicImportClick: handleTopicImportClick,
     onTopicNewClick: handleTopicNewClick,
