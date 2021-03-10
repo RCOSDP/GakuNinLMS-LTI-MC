@@ -289,6 +289,14 @@ const removeTopic = (
   return sections;
 };
 
+const removeSection = (
+  initialSections: SectionSchema[],
+  index: number
+): SectionSchema[] => {
+  const sections = remove(initialSections, index);
+  return sections;
+};
+
 const useStyles = makeStyles((theme) => ({
   placeholder: {
     margin: theme.spacing(1),
@@ -330,6 +338,9 @@ export default function DraggableBookChildren(props: Props) {
   const handleTopicRemove = (draggableId: DraggableId) => {
     onSectionsUpdate(removeTopic(sections, draggableId));
   };
+  const handleSectionRemove = (index: number) => () => {
+    onSectionsUpdate(removeSection(sections, index));
+  };
   const handleSectionCreate = () => onSectionCreate();
   return (
     <>
@@ -356,6 +367,15 @@ export default function DraggableBookChildren(props: Props) {
                   {section.topics.length === 0 && (
                     <p className={classes.placeholder}>
                       ここにトピックをドロップ
+                      <Tooltip title="このセクションを取り除く">
+                        <IconButton
+                          size="small"
+                          color="primary"
+                          onClick={handleSectionRemove(sectionIndex)}
+                        >
+                          <RemoveIcon />
+                        </IconButton>
+                      </Tooltip>
                     </p>
                   )}
                 </DragDropSection>
