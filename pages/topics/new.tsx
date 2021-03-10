@@ -1,7 +1,9 @@
 import { useRouter } from "next/router";
 import TopicNew from "$templates/TopicNew";
 import Placeholder from "$templates/Placeholder";
+import BookNotFoundProblem from "$organisms/BookNotFoundProblem";
 import type { Query as BookEditQuery } from "$pages/book/edit";
+import { useSessionAtom } from "$store/session";
 import { useBook } from "$utils/book";
 import useTopicNewHandlers from "$utils/useTopicNewHandlers";
 
@@ -14,9 +16,11 @@ function New({ context }: Query) {
 }
 
 function NewWithBook({ bookId, context }: BookEditQuery) {
-  const { book } = useBook(bookId);
+  const { isBookEditable, isTopicEditable } = useSessionAtom();
+  const { book, error } = useBook(bookId, isBookEditable, isTopicEditable);
   const handlers = useTopicNewHandlers(context, book);
 
+  if (error) return <BookNotFoundProblem />;
   if (!book) return <Placeholder />;
 
   return <TopicNew {...handlers} />;

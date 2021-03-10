@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import BookNew from "$templates/BookNew";
 import Placeholder from "$templates/Placeholder";
 import BookNotFoundProblem from "$organisms/BookNotFoundProblem";
+import { useSessionAtom } from "$store/session";
 import { useBook } from "$utils/book";
 import useBookNewHandlers from "$utils/useBookNewHandlers";
 import type { Query as BookEditQuery } from "./edit";
@@ -9,7 +10,8 @@ import type { Query as BookEditQuery } from "./edit";
 export type Query = BookEditQuery;
 
 function Generate({ bookId, context }: Query) {
-  const { book, error } = useBook(bookId);
+  const { isBookEditable, isTopicEditable } = useSessionAtom();
+  const { book, error } = useBook(bookId, isBookEditable, isTopicEditable);
   const handlers = useBookNewHandlers(context, bookId);
 
   if (error) return <BookNotFoundProblem />;

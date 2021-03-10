@@ -23,7 +23,12 @@ function Show(query: Query) {
     updateItemIndex,
     nextItemIndex,
     error,
-  } = useBook(query.bookId);
+  } = useBook(
+    query.bookId,
+    isBookEditable,
+    isTopicEditable,
+    session?.ltiResourceLink
+  );
   useActivityTracking();
   const playerTracker = usePlayerTrackerAtom();
   useEffect(() => {
