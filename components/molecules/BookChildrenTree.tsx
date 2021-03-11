@@ -2,11 +2,21 @@ import { ReactNode, MouseEvent } from "react";
 import IconButton from "@material-ui/core/IconButton";
 import TreeItem from "@material-ui/lab/TreeItem";
 import Checkbox from "@material-ui/core/Checkbox";
-import { EditOutlined } from "@material-ui/icons";
+import Tooltip from "@material-ui/core/Tooltip";
+import PublicIcon from "@material-ui/icons/Public";
+import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
+import { makeStyles } from "@material-ui/core/styles";
 import useTreeItemStyle from "$styles/treeItem";
 import { SectionSchema } from "$server/models/book/section";
 import { TopicSchema } from "$server/models/topic";
 import { getOutline } from "$utils/outline";
+import { gray } from "$theme/colors";
+
+const useStyles = makeStyles((theme) => ({
+  shared: {
+    margin: theme.spacing(0, 0.5),
+  },
+}));
 
 type SectionProps = {
   bookId: number;
@@ -82,6 +92,7 @@ export default function BookChildrenTree(props: Props) {
     selectedIndexes,
     isTopicEditable,
   } = props;
+  const classes = useStyles();
   const treeItemClasses = useTreeItemStyle();
   return (
     <>
@@ -124,12 +135,21 @@ export default function BookChildrenTree(props: Props) {
                     )}
                     {getOutline(section, sectionIndex, topicIndex) + " "}
                     {topic.name}
+                    {topic.shared && (
+                      <Tooltip title="教員に共有しています">
+                        <PublicIcon
+                          className={classes.shared}
+                          fontSize="small"
+                          htmlColor={gray[700]}
+                        />
+                      </Tooltip>
+                    )}
                     {isTopicEditable?.(topic) && onItemEditClick && (
                       <IconButton
                         size="small"
                         onClick={handle(onItemEditClick)}
                       >
-                        <EditOutlined />
+                        <EditOutlinedIcon />
                       </IconButton>
                     )}
                   </>
