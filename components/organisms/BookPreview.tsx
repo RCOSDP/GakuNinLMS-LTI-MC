@@ -6,7 +6,8 @@ import Card from "@material-ui/core/Card";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import Radio from "@material-ui/core/Radio";
-import { InfoOutlined, EditOutlined } from "@material-ui/icons";
+import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
+import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import { makeStyles } from "@material-ui/core/styles";
 import Video from "$organisms/Video";
 import CourseChip from "$atoms/CourseChip";
@@ -91,11 +92,11 @@ export default function BookPreview(props: Props) {
           />
           {book.name}
           <IconButton onClick={handleInfoClick}>
-            <InfoOutlined />
+            <InfoOutlinedIcon />
           </IconButton>
           {onEditClick && (
             <IconButton color="primary" onClick={handle(onEditClick)}>
-              <EditOutlined />
+              <EditOutlinedIcon />
             </IconButton>
           )}
         </Typography>
