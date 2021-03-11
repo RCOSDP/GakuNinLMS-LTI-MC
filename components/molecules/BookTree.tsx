@@ -2,12 +2,23 @@ import IconButton from "@material-ui/core/IconButton";
 import TreeItem from "@material-ui/lab/TreeItem";
 // TODO: ブック単位でのインポートの実装
 // import Checkbox from "@material-ui/core/Checkbox";
-import { InfoOutlined, EditOutlined } from "@material-ui/icons";
+import Tooltip from "@material-ui/core/Tooltip";
+import PublicIcon from "@material-ui/icons/Public";
+import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
+import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
+import { makeStyles } from "@material-ui/core/styles";
 import CourseChip from "$atoms/CourseChip";
 import BookChildrenTree from "$molecules/BookChildrenTree";
 import useTreeItemStyle from "$styles/treeItem";
 import { BookSchema } from "$server/models/book";
 import { TopicSchema } from "$server/models/topic";
+import { gray } from "$theme/colors";
+
+const useStyles = makeStyles((theme) => ({
+  shared: {
+    margin: theme.spacing(0, 0.5),
+  },
+}));
 
 type Props = {
   book: BookSchema;
@@ -31,6 +42,7 @@ export default function BookTree(props: Props) {
     selectedIndexes,
     isTopicEditable,
   } = props;
+  const classes = useStyles();
   const treeItemClasses = useTreeItemStyle();
   const nodeId = `${book.id}`;
   const handle = (handler?: (book: BookSchema) => void) => (
@@ -63,12 +75,21 @@ export default function BookTree(props: Props) {
           />
           )*/}
           {book.name}
+          {book.shared && (
+            <Tooltip title="教員に共有しています">
+              <PublicIcon
+                className={classes.shared}
+                fontSize="small"
+                htmlColor={gray[700]}
+              />
+            </Tooltip>
+          )}
           <IconButton size="small" onClick={handle(onBookInfoClick)}>
-            <InfoOutlined />
+            <InfoOutlinedIcon />
           </IconButton>
           {onBookEditClick && (
             <IconButton size="small" onClick={handle(onBookEditClick)}>
-              <EditOutlined />
+              <EditOutlinedIcon />
             </IconButton>
           )}
           {book.ltiResourceLinks.map((ltiResourceLink) => (

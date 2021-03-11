@@ -5,6 +5,8 @@ import Card from "@material-ui/core/Card";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import Checkbox from "@material-ui/core/Checkbox";
+import Tooltip from "@material-ui/core/Tooltip";
+import PublicIcon from "@material-ui/icons/Public";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import { makeStyles } from "@material-ui/core/styles";
 import Video from "$organisms/Video";
@@ -15,9 +17,9 @@ import { primary, gray } from "theme/colors";
 const useCardStyles = makeStyles((theme) => ({
   root: {
     border: `1px solid ${gray[400]}`,
-    borderRadius: "12px",
+    borderRadius: 12,
     boxShadow: "none",
-    padding: `${theme.spacing(1)}px ${theme.spacing(2)}px`,
+    padding: theme.spacing(1, 2),
   },
 }));
 
@@ -45,11 +47,15 @@ const useStyles = makeStyles((theme) => ({
   checkbox: {
     marginLeft: theme.spacing(-1.5),
   },
+  shared: {
+    verticalAlign: "middle",
+    marginLeft: theme.spacing(0.5),
+  },
   editButton: {
     marginRight: theme.spacing(-1.5),
   },
   video: {
-    margin: `0 ${theme.spacing(-2)}px`,
+    margin: theme.spacing(0, -2),
   },
   description: {
     color: gray[700],
@@ -123,6 +129,15 @@ export default function TopicPreview(props: Props) {
           {...checkboxProps}
         >
           {topic.name}
+          {topic.shared && (
+            <Tooltip title="教員に共有しています">
+              <PublicIcon
+                className={classes.shared}
+                fontSize="small"
+                htmlColor={gray[700]}
+              />
+            </Tooltip>
+          )}
         </CheckableTitle>
         {onTopicEditClick && (
           <IconButton
