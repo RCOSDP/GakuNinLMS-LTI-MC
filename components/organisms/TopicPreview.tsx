@@ -15,9 +15,9 @@ import { primary, gray } from "theme/colors";
 const useCardStyles = makeStyles((theme) => ({
   root: {
     border: `1px solid ${gray[400]}`,
-    borderRadius: "12px",
+    borderRadius: 12,
     boxShadow: "none",
-    padding: `${theme.spacing(1)}px ${theme.spacing(2)}px`,
+    padding: theme.spacing(1, 2),
   },
 }));
 
@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(-1.5),
   },
   video: {
-    margin: `0 ${theme.spacing(-2)}px`,
+    margin: theme.spacing(0, -2),
   },
   description: {
     color: gray[700],
