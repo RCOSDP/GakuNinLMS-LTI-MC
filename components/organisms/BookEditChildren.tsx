@@ -1,8 +1,12 @@
-import { useState } from "react";
+import clsx from "clsx";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import Divider from "@material-ui/core/Divider";
 import TreeView from "@material-ui/lab/TreeView";
+import Alert from "@material-ui/lab/Alert";
+import Switch from "@material-ui/core/Switch";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import AddIcon from "@material-ui/icons/Add";
@@ -14,13 +18,21 @@ import DraggableBookChildren from "$molecules/DraggableBookChildren";
 import { SectionSchema } from "$server/models/book/section";
 import { TopicSchema } from "$server/models/topic";
 import useCardStyles from "$styles/card";
+import useSortableSectionsProps from "$utils/useSortableSectionsProps";
 
 const useStyles = makeStyles((theme) => ({
+  root: {
+    overflow: "visible",
+  },
   divider: {
-    margin: `0 ${theme.spacing(-3)}px ${theme.spacing(2)}px`,
+    margin: theme.spacing(0, -3, 2),
+  },
+  label: {
+    display: "flex",
+    alignItems: "center",
   },
   items: {
-    margin: `0 ${theme.spacing(-1)}px`,
+    margin: theme.spacing(0, -1),
     "& > *": {
       marginRight: theme.spacing(1.75),
       marginBottom: theme.spacing(1),
@@ -29,10 +41,31 @@ const useStyles = makeStyles((theme) => ({
   icon: {
     marginRight: theme.spacing(0.5),
   },
+  alert: {
+    marginBottom: theme.spacing(2),
+  },
+  footer: {
+    backgroundColor: "#fff",
+    position: "sticky",
+    bottom: "0px",
+    zIndex: 1,
+    margin: theme.spacing(2, -3, -2),
+    padding: theme.spacing(0, 3, 2),
+    borderRadius: "0 0 12px 12px",
+    "& > *": {
+      marginRight: theme.spacing(1.75),
+    },
+  },
   placeholder: {
     margin: 0,
   },
 }));
+
+const useFormControlLabelStyles = makeStyles({
+  labelPlacementStart: {
+    marginLeft: 0,
+  },
+});
 
 type Props = {
   sections: SectionSchema[];
@@ -57,33 +90,23 @@ export default function BookEditChildren(props: Props) {
   } = props;
   const cardClasses = useCardStyles();
   const classes = useStyles();
+  const formControlLabelClasses = useFormControlLabelStyles();
   const handleItem = (handler?: (topic: TopicSchema) => void) => ([
     sectionIndex,
     topicIndex,
   ]: ItemIndex) => handler?.(sections[sectionIndex].topics[topicIndex]);
-  const [sortable, setSortable] = useState(false);
-  const handleSortableChange = () => {
-    if (sortable) onSectionsUpdate(sortableSections);
-    setSortable(!sortable);
-  };
-  const [sortableSections, setSortableSections] = useState<SectionSchema[]>(
-    sections
-  );
-  const handleSectionsUpdate = (sortableSections: SectionSchema[]) => {
-    setSortableSections(sortableSections);
-  };
-  const handleSectionCreate = () => {
-    setSortableSections([
-      ...sortableSections,
-      {
-        id: Math.floor(Math.random() * Number.MAX_SAFE_INTEGER),
-        name: null,
-        topics: [],
-      },
-    ]);
-  };
+  const {
+    sortable,
+    sortableSections,
+    inProgress,
+    handleSortableChange,
+    handleSectionsUpdate,
+    handleSectionsReset,
+    handleSectionsSave,
+    handleSectionCreate,
+  } = useSortableSectionsProps(sections, onSectionsUpdate);
   return (
-    <Card classes={cardClasses} className={className}>
+    <Card classes={cardClasses} className={clsx(className, classes.root)}>
       <div className={classes.items}>
         <Button
           size="small"
@@ -112,23 +135,60 @@ export default function BookEditChildren(props: Props) {
           <AddIcon className={classes.icon} />
           トピックの作成
         </Button>
-        <Button
-          size="small"
-          variant={sortable ? "contained" : "outlined"}
-          color="primary"
-          onClick={handleSortableChange}
-        >
-          <DragIndicatorIcon fontSize="small" />
-          並び替え・セクションの編集
-        </Button>
+        <FormControlLabel
+          classes={formControlLabelClasses}
+          control={
+            <Switch
+              size="small"
+              color="primary"
+              checked={sortable}
+              onChange={handleSortableChange}
+            />
+          }
+          label={
+            <Typography
+              className={classes.label}
+              variant="button"
+              color="primary"
+            >
+              <DragIndicatorIcon />
+              セクションの編集
+            </Typography>
+          }
+          labelPlacement="start"
+        />
       </div>
       <Divider className={classes.divider} />
+      {inProgress && (
+        <Alert className={classes.alert} severity="info">
+          セクションの編集内容が未保存です。反映する場合はセクションの編集中に保存ボタンをクリックしてください
+        </Alert>
+      )}
       {sortable && (
-        <DraggableBookChildren
-          sections={sortableSections}
-          onSectionsUpdate={handleSectionsUpdate}
-          onSectionCreate={handleSectionCreate}
-        />
+        <>
+          <DraggableBookChildren
+            sections={sortableSections}
+            onSectionsUpdate={handleSectionsUpdate}
+            onSectionCreate={handleSectionCreate}
+          />
+          <div className={classes.footer}>
+            <Divider className={classes.divider} />
+            <Button
+              color="primary"
+              variant="text"
+              onClick={handleSectionsReset}
+            >
+              編集前にリセット
+            </Button>
+            <Button
+              color="primary"
+              variant="contained"
+              onClick={handleSectionsSave}
+            >
+              保存
+            </Button>
+          </div>
+        </>
       )}
       {!sortable && sections.length === 0 && (
         <p className={classes.placeholder}>
