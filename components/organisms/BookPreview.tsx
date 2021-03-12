@@ -6,19 +6,18 @@ import Card from "@material-ui/core/Card";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import Radio from "@material-ui/core/Radio";
-import Tooltip from "@material-ui/core/Tooltip";
-import PublicIcon from "@material-ui/icons/Public";
 import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import { makeStyles } from "@material-ui/core/styles";
 import Video from "$organisms/Video";
 import CourseChip from "$atoms/CourseChip";
 import Item from "$atoms/Item";
+import SharedIndicator from "$atoms/SharedIndicator";
 import BookItemDialog from "$organisms/BookItemDialog";
 import useCardStyle from "styles/card";
 import { BookSchema } from "$server/models/book";
 import { TopicSchema } from "$server/models/topic";
-import { primary, gray } from "theme/colors";
+import { primary } from "theme/colors";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -96,15 +95,7 @@ export default function BookPreview(props: Props) {
             {...radioProps}
           />
           {book.name}
-          {book.shared && (
-            <Tooltip title="教員に共有しています">
-              <PublicIcon
-                className={classes.shared}
-                fontSize="small"
-                htmlColor={gray[700]}
-              />
-            </Tooltip>
-          )}
+          {book.shared && <SharedIndicator className={classes.shared} />}
           <IconButton onClick={handleInfoClick}>
             <InfoOutlinedIcon />
           </IconButton>
