@@ -40,7 +40,8 @@ export default function BookItemDialog(props: Props) {
   const cardClasses = useCardStyles();
   const classes = useStyles();
   const { book, open, onClose } = props;
-  const timeRequired = formatInterval(0, (book.timeRequired ?? 0) * 1000) || "10秒未満"
+  const timeRequired =
+    formatInterval(0, (book.timeRequired ?? 0) * 1000) || "10秒未満";
   return (
     <Dialog
       open={open}
