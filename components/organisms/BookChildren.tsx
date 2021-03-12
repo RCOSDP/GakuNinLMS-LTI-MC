@@ -11,7 +11,7 @@ import { ExpandLess, ExpandMore, EditOutlined } from "@material-ui/icons";
 import { TopicSchema } from "$server/models/topic";
 import { SectionSchema } from "$server/models/book/section";
 import { primary } from "$theme/colors";
-import { getOutline } from "$utils/outline";
+import { isNamedSection, getOutlineNumber } from "$utils/outline";
 
 function Section({
   section,
@@ -26,13 +26,13 @@ function Section({
   open: boolean;
   children: ReactNode;
 }) {
-  if (section.name == null && section.topics.length < 2) return <>{children}</>;
+  if (!isNamedSection(section)) return <>{children}</>;
 
   return (
     <>
       <ListItem button onClick={onSectionClick}>
         <ListItemText>
-          {getOutline(section, sectionItemIndex) + " "}
+          {getOutlineNumber(section, sectionItemIndex) + " "}
           {section.name ?? "無名のセクション"}
         </ListItemText>
         {open ? <ExpandLess /> : <ExpandMore />}
@@ -109,7 +109,8 @@ export default function BookChildren(props: Props) {
               onClick={handleItemClick}
             >
               <ListItemText>
-                {getOutline(section, sectionItemIndex, topicItemIndex) + " "}
+                {getOutlineNumber(section, sectionItemIndex, topicItemIndex) +
+                  " "}
                 {topic.name}
               </ListItemText>
               {isTopicEditable(topic) && (
