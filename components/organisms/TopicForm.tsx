@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useCallback, useState } from "react";
 import Card from "@material-ui/core/Card";
 import Checkbox from "@material-ui/core/Checkbox";
 import Button from "@material-ui/core/Button";
@@ -95,11 +95,19 @@ export default function TopicForm(props: Props) {
     language: topic?.language ?? Object.getOwnPropertyNames(languages)[0],
     timeRequired: topic?.timeRequired,
   };
-  const { handleSubmit, register, control } = useForm<
+  const { handleSubmit, register, control, getValues, setValue } = useForm<
     Omit<TopicProps, "resource">
   >({
     defaultValues,
   });
+  const handleDurationChange = useCallback(
+    (duration: number) => {
+      const { timeRequired } = getValues();
+      if (timeRequired > 0) return;
+      setValue("timeRequired", Math.floor(duration));
+    },
+    [getValues, setValue]
+  );
 
   return (
     <>
@@ -178,7 +186,9 @@ export default function TopicForm(props: Props) {
             />
           )}
         />
-        {videoResource && <Video {...videoResource} />}
+        {videoResource && (
+          <Video {...videoResource} onDurationChange={handleDurationChange} />
+        )}
         <Controller
           name="language"
           control={control}
