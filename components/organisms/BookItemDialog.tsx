@@ -7,6 +7,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Item from "$atoms/Item";
 import { BookSchema } from "$server/models/book";
 import useCardStyles from "$styles/card";
+import languages from "$utils/languages";
 
 function formatInterval(start: Date | number, end: Date | number) {
   const duration = intervalToDuration({ start, end });
@@ -39,6 +40,7 @@ export default function BookItemDialog(props: Props) {
   const cardClasses = useCardStyles();
   const classes = useStyles();
   const { book, open, onClose } = props;
+  const timeRequired = formatInterval(0, (book.timeRequired ?? 0) * 1000) || "10秒未満"
   return (
     <Dialog
       open={open}
@@ -52,15 +54,16 @@ export default function BookItemDialog(props: Props) {
         </Typography>
         <div className={classes.items}>
           <Typography className={classes.title} variant="h6">
-            学習時間
-            {formatInterval(0, book?.timeRequired ?? 0 * 1000) || "10秒未満"}
+            学習時間 {timeRequired}
           </Typography>
           <Typography className={classes.title} variant="h6">
-            日本語
+            {languages[book.language]}
           </Typography>
+          {/* TODO: ブックがライセンスをプロパティに持つようになったら表示してください
           <Typography className={classes.title} variant="h6">
             ライセンス
           </Typography>
+          */}
         </div>
         <div className={classes.items}>
           <Item itemKey="作成日" value={format(book.createdAt, "yyyy.MM.dd")} />
