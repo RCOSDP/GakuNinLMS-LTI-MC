@@ -8,7 +8,7 @@ import SharedIndicator from "$atoms/SharedIndicator";
 import useTreeItemStyle from "$styles/treeItem";
 import { SectionSchema } from "$server/models/book/section";
 import { TopicSchema } from "$server/models/topic";
-import { getOutline } from "$utils/outline";
+import { isNamedSection, getOutlineNumber } from "$utils/outline";
 
 const useStyles = makeStyles((theme) => ({
   shared: {
@@ -41,7 +41,7 @@ function SectionTree({
     handler?.(nodeId);
   };
   */
-  if (section.name == null && section.topics.length < 2) return <>{children}</>;
+  if (!isNamedSection(section)) return <>{children}</>;
   return (
     <TreeItem
       nodeId={nodeId}
@@ -60,7 +60,7 @@ function SectionTree({
               }}
             />
           )*/}
-          {getOutline(section, sectionIndex) + " "}
+          {getOutlineNumber(section, sectionIndex) + " "}
           {section.name ?? "無名のセクション"}
         </>
       }
@@ -131,7 +131,7 @@ export default function BookChildrenTree(props: Props) {
                         }}
                       />
                     )}
-                    {getOutline(section, sectionIndex, topicIndex) + " "}
+                    {getOutlineNumber(section, sectionIndex, topicIndex) + " "}
                     {topic.name}
                     {topic.shared && (
                       <SharedIndicator className={classes.shared} />

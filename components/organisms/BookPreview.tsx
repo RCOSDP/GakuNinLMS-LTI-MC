@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { useState } from "react";
 import clsx from "clsx";
 import { format } from "date-fns";
 import Button from "@material-ui/core/Button";
@@ -17,7 +17,9 @@ import BookItemDialog from "$organisms/BookItemDialog";
 import useCardStyle from "styles/card";
 import { BookSchema } from "$server/models/book";
 import { TopicSchema } from "$server/models/topic";
-import { primary } from "theme/colors";
+import { getSectionsOutline } from "$utils/outline";
+import { primary } from "$theme/colors";
+import useLineClampStyles from "$styles/lineClamp";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -67,6 +69,11 @@ type Props = Parameters<typeof Radio>[0] & {
 export default function BookPreview(props: Props) {
   const cardClasses = useCardStyle();
   const classes = useStyles();
+  const { clamp: outlineClamp } = useLineClampStyles({
+    fontSize: "0.875rem",
+    lineClamp: 2,
+    lineHeight: 1.25,
+  });
   const { book, onEditClick, checked, ...radioProps } = props;
   const [topic] = useState<TopicSchema | undefined>(
     book.sections[0]?.topics[0]
@@ -118,21 +125,7 @@ export default function BookPreview(props: Props) {
           <Item itemKey="更新日" value={format(book.updatedAt, "yyyy.MM.dd")} />
           <Item itemKey="著者" value={book.author.name} />
         </div>
-        {book.sections.map((section, sectionIndex) => (
-          <Fragment key={section.id}>
-            {section.name && (
-              <p>
-                {sectionIndex + 1} {section.name}
-              </p>
-            )}
-            {section.topics.map((topic, topicIndex) => (
-              <p key={topic.id}>
-                {sectionIndex + 1}
-                {section.name && `.${topicIndex + 1}`} {topic.name}
-              </p>
-            ))}
-          </Fragment>
-        ))}
+        <p className={outlineClamp}>{getSectionsOutline(book.sections)}</p>
         <Button size="small" color="primary">
           もっと詳しく...
         </Button>
