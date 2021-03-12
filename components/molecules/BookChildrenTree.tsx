@@ -2,15 +2,13 @@ import { ReactNode, MouseEvent } from "react";
 import IconButton from "@material-ui/core/IconButton";
 import TreeItem from "@material-ui/lab/TreeItem";
 import Checkbox from "@material-ui/core/Checkbox";
-import Tooltip from "@material-ui/core/Tooltip";
-import PublicIcon from "@material-ui/icons/Public";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import { makeStyles } from "@material-ui/core/styles";
+import SharedIndicator from "$atoms/SharedIndicator";
 import useTreeItemStyle from "$styles/treeItem";
 import { SectionSchema } from "$server/models/book/section";
 import { TopicSchema } from "$server/models/topic";
 import { getOutline } from "$utils/outline";
-import { gray } from "$theme/colors";
 
 const useStyles = makeStyles((theme) => ({
   shared: {
@@ -136,13 +134,7 @@ export default function BookChildrenTree(props: Props) {
                     {getOutline(section, sectionIndex, topicIndex) + " "}
                     {topic.name}
                     {topic.shared && (
-                      <Tooltip title="教員に共有しています">
-                        <PublicIcon
-                          className={classes.shared}
-                          fontSize="small"
-                          htmlColor={gray[700]}
-                        />
-                      </Tooltip>
+                      <SharedIndicator className={classes.shared} />
                     )}
                     {isTopicEditable?.(topic) && onItemEditClick && (
                       <IconButton

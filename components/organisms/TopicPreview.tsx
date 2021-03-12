@@ -5,12 +5,11 @@ import Card from "@material-ui/core/Card";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import Checkbox from "@material-ui/core/Checkbox";
-import Tooltip from "@material-ui/core/Tooltip";
-import PublicIcon from "@material-ui/icons/Public";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import { makeStyles } from "@material-ui/core/styles";
 import Video from "$organisms/Video";
 import Item from "$atoms/Item";
+import SharedIndicator from "$atoms/SharedIndicator";
 import { TopicSchema } from "$server/models/topic";
 import { primary, gray } from "theme/colors";
 
@@ -129,15 +128,7 @@ export default function TopicPreview(props: Props) {
           {...checkboxProps}
         >
           {topic.name}
-          {topic.shared && (
-            <Tooltip title="教員に共有しています">
-              <PublicIcon
-                className={classes.shared}
-                fontSize="small"
-                htmlColor={gray[700]}
-              />
-            </Tooltip>
-          )}
+          {topic.shared && <SharedIndicator className={classes.shared} />}
         </CheckableTitle>
         {onTopicEditClick && (
           <IconButton

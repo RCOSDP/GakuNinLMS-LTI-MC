@@ -7,8 +7,6 @@ import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import TreeView from "@material-ui/lab/TreeView";
-import Tooltip from "@material-ui/core/Tooltip";
-import PublicIcon from "@material-ui/icons/Public";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
@@ -17,13 +15,13 @@ import { makeStyles } from "@material-ui/core/styles";
 import BookChildrenTree from "$molecules/BookChildrenTree";
 import CourseChip from "$atoms/CourseChip";
 import Item from "$atoms/Item";
+import SharedIndicator from "$atoms/SharedIndicator";
 import BookItemDialog from "$organisms/BookItemDialog";
 import { BookSchema } from "$server/models/book";
 import { TopicSchema } from "$server/models/topic";
 import useAccordionStyle from "styles/accordion";
 import useAccordionSummaryStyle from "styles/accordionSummary";
 import useAccordionDetailStyle from "styles/accordionDetail";
-import { gray } from "$theme/colors";
 
 const useStyles = makeStyles((theme) => ({
   shared: {
@@ -97,15 +95,7 @@ export default function BookAccordion(props: Props) {
         expandIcon={<ExpandMoreIcon />}
       >
         <Typography variant="h6">{book.name}</Typography>
-        {book.shared && (
-          <Tooltip title="教員に共有しています">
-            <PublicIcon
-              className={classes.shared}
-              fontSize="small"
-              htmlColor={gray[700]}
-            />
-          </Tooltip>
-        )}
+        {book.shared && <SharedIndicator className={classes.shared} />}
         <IconButton onClick={handleInfoClick}>
           <InfoOutlinedIcon />
         </IconButton>
