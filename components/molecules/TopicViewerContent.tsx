@@ -5,6 +5,7 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Video from "$organisms/Video";
 import Item from "$atoms/Item";
+import languages from "$utils/languages";
 
 function formatInterval(start: Date | number, end: Date | number) {
   const duration = intervalToDuration({ start, end });
@@ -61,11 +62,13 @@ export default function TopicViewerContent(props: Props) {
           学習時間 {formatInterval(0, topic.timeRequired * 1000) || "10秒未満"}
         </Typography>
         <Typography className={classes.title} variant="h6">
-          日本語
+          {languages[topic.language]}
         </Typography>
+        {/* TODO: トピックがライセンスをプロパティに持つようになったら表示してください
         <Typography className={classes.title} variant="h6">
           ライセンス
         </Typography>
+        */}
       </div>
       <div className={classes.items}>
         <Item itemKey="作成日" value={format(topic.createdAt, "yyyy.MM.dd")} />
