@@ -5,6 +5,7 @@ type PlayerProps = {
   url: string;
   autoplay?: boolean;
   onEnded?: () => void;
+  onDurationChange?: (duration: number) => void;
 };
 
 function VimeoPlayerBase(props: PlayerProps) {
@@ -16,6 +17,7 @@ function VimeoPlayerBase(props: PlayerProps) {
         autoplay: Boolean(props.autoplay),
       }}
       onEnded={props.onEnded}
+      onDurationChange={props.onDurationChange}
     />
   );
 }

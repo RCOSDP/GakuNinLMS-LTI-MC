@@ -10,6 +10,7 @@ type VideoJsProps = {
   options: VideoJsPlayerOptions;
   tracks?: videojs.TextTrackOptions[];
   onEnded?: () => void;
+  onDurationChange?: (duration: number) => void;
 };
 
 const defaultOptions: VideoJsPlayerOptions = {
@@ -24,7 +25,12 @@ const defaultOptions: VideoJsPlayerOptions = {
   languages: { ja },
 };
 
-export function VideoJs(props: VideoJsProps) {
+export function VideoJs({
+  options,
+  tracks,
+  onEnded,
+  onDurationChange,
+}: VideoJsProps) {
   const ref = useRef(document.createElement("div"));
   const tracking = usePlayerTrackingAtom();
   useEffect(() => {
@@ -32,7 +38,7 @@ export function VideoJs(props: VideoJsProps) {
     const element = document.createElement("video-js");
     element.classList.add("vjs-big-play-centered");
     current.appendChild(element);
-    const player = videojs(element, { ...defaultOptions, ...props.options });
+    const player = videojs(element, { ...defaultOptions, ...options });
     // @ts-expect-error: @types/video.js@^7.3.11 Unsupported
     player.seekButtons({
       forward: 15,
@@ -41,7 +47,15 @@ export function VideoJs(props: VideoJsProps) {
     player.ready(() => {
       tracking(player);
       volumePersister(player);
-      if (props.onEnded) player.on("ended", props.onEnded);
+      if (onEnded) player.on("ended", onEnded);
+      if (onDurationChange) {
+        // NOTE: YouTubeの場合、playイベント発火より前だと`player.duration()`に失敗
+        const handlePlay = () => {
+          onDurationChange(player.duration());
+          player.off("play", handlePlay);
+        };
+        player.on("play", handlePlay);
+      }
     });
     return () => {
       // TODO: played() に失敗するので dispose() せず一時停止して保持
@@ -49,10 +63,10 @@ export function VideoJs(props: VideoJsProps) {
       player.pause();
       current.textContent = "";
     };
-  }, [props.options, props.onEnded, tracking]);
+  }, [options, onEnded, onDurationChange, tracking]);
   const tracksRef = useRef<HTMLTrackElement[]>([]);
   useEffect(() => {
-    if (!props.tracks || props.tracks.length === 0) return;
+    if (!tracks || tracks.length === 0) return;
     const player: VideoJsPlayer | undefined = ref.current.querySelector(
       "video-js"
       // @ts-expect-error: @types/video.js@^7.3.11 Unsupported
@@ -62,10 +76,10 @@ export function VideoJs(props: VideoJsProps) {
       tracksRef.current.forEach((track) => {
         player.removeRemoteTextTrack(track);
       });
-      tracksRef.current = (props.tracks
+      tracksRef.current = (tracks
         ?.map((track) => track && player.addRemoteTextTrack(track, false))
         .filter(Boolean) ?? []) as HTMLTrackElement[];
     });
-  }, [props.tracks]);
+  }, [tracks]);
   return <div ref={ref} />;
 }
