@@ -16,7 +16,6 @@ export type BookProps = {
   name: string;
   description?: string;
   language?: string;
-  timeRequired?: number | null;
   shared?: boolean;
   sections?: SectionProps[];
 };
@@ -32,7 +31,6 @@ const {
   name,
   description,
   language,
-  timeRequired,
   shared,
   publishedAt,
   createdAt,
@@ -46,7 +44,6 @@ export const bookPropsSchema = {
     name,
     description,
     language: { ...language, nullable: true },
-    timeRequired: { ...timeRequired, nullable: true },
     shared: { ...shared, nullable: true },
     sections: {
       type: "array",
@@ -62,7 +59,7 @@ export const bookSchema = {
     name,
     description,
     language,
-    timeRequired,
+    timeRequired: { type: "integer", nullable: true },
     shared,
     publishedAt,
     createdAt,

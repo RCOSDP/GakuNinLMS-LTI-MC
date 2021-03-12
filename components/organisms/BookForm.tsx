@@ -48,7 +48,6 @@ export default function BookForm(props: Props) {
     description: book?.description ?? "",
     shared: Boolean(book?.shared),
     language: book?.language ?? Object.getOwnPropertyNames(languages)[0],
-    timeRequired: book?.timeRequired,
     sections: book?.sections,
   };
   const { handleSubmit, register, control } = useForm<BookProps>({
@@ -107,18 +106,6 @@ export default function BookForm(props: Props) {
             ))}
           </TextField>
         )}
-      />
-      <TextField
-        label="学習時間 (秒)"
-        name="timeRequired"
-        type="number"
-        inputProps={{
-          ref: register({
-            setValueAs: (value) => (value === "" ? null : +value),
-            min: 0,
-          }),
-          min: 0,
-        }}
       />
       <TextField
         label="解説"
