@@ -6,6 +6,7 @@ import volumePersister from "$utils/volumePersister";
 type VimeoProps = {
   options: Options;
   onEnded?: () => void;
+  onDurationChange?: (duration: number) => void;
 };
 
 const defaultOptions: Options = {
@@ -25,12 +26,15 @@ export function Vimeo(props: VimeoProps) {
     tracking(player);
     volumePersister(player);
     if (props.onEnded) player.on("ended", props.onEnded);
+    if (props.onDurationChange) {
+      player.getDuration().then(props.onDurationChange);
+    }
     return () => {
       // TODO: 要素を取り除くと学習活動の記録のために使われている getPlayed() が resolve しないので残す
       //       メモリリークにつながるので避けたほうが望ましく、学習活動の送信後すみやかに取り除くべき
       player.pause();
       element.style.display = "none";
     };
-  }, [props.options, props.onEnded, tracking]);
+  }, [props.options, props.onEnded, props.onDurationChange, tracking]);
   return <div ref={ref} />;
 }

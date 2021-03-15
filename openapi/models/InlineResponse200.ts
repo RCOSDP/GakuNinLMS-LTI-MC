@@ -33,6 +33,12 @@ export interface InlineResponse200 {
     id: string;
     /**
      * 
+     * @type {number}
+     * @memberof InlineResponse200
+     */
+    authorId: number;
+    /**
+     * 
      * @type {string}
      * @memberof InlineResponse200
      */
@@ -75,6 +81,7 @@ export function InlineResponse200FromJSONTyped(json: any, ignoreDiscriminator: b
         
         'consumerId': json['consumerId'],
         'id': json['id'],
+        'authorId': json['authorId'],
         'contextId': json['contextId'],
         'contextTitle': json['contextTitle'],
         'contextLabel': json['contextLabel'],
@@ -94,6 +101,7 @@ export function InlineResponse200ToJSON(value?: InlineResponse200 | null): any {
         
         'consumerId': value.consumerId,
         'id': value.id,
+        'authorId': value.authorId,
         'contextId': value.contextId,
         'contextTitle': value.contextTitle,
         'contextLabel': value.contextLabel,

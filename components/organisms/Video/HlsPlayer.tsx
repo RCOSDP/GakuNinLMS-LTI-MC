@@ -8,6 +8,7 @@ type PlayerProps = {
   tracks: VideoTrackSchema[];
   autoplay?: boolean;
   onEnded?: () => void;
+  onDurationChange?: (duration: number) => void;
 };
 
 function HlsPlayerBase(props: PlayerProps) {
@@ -24,6 +25,7 @@ function HlsPlayerBase(props: PlayerProps) {
       }}
       tracks={buildTracks(props.tracks)}
       onEnded={props.onEnded}
+      onDurationChange={props.onDurationChange}
     />
   );
 }

@@ -10,6 +10,7 @@ type VideoProps = Pick<
   className?: string;
   autoplay?: boolean;
   onEnded?: () => void;
+  onDurationChange?: (duration: number) => void;
 };
 
 export default function Video(props: VideoProps) {
