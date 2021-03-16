@@ -1,5 +1,6 @@
 /.next/
 /openapi/
 node_modules/
+/public/storybook/
 /server/dist/
 /server/prisma/migrations/

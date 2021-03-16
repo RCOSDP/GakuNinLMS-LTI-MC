@@ -1,6 +1,7 @@
 /.next/
 /.vercel/
 /eslint_report.json
+/public/storybook/
 /utils/$path.ts
 node_modules/
 .env*
