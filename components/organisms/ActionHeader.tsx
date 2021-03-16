@@ -6,6 +6,7 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 import { useTheme, makeStyles } from "@material-ui/core/styles";
 import { gray } from "theme/colors";
+import { useSessionAtom } from "$store/session";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -37,26 +38,30 @@ const useStyles = makeStyles((theme) => ({
   },
   sticky: {
     zIndex: 1,
+    top: -theme.spacing(2),
     position: "sticky",
     backgroundColor: gray[50],
     transition: theme.transitions.create("top", {
       duration: theme.transitions.duration.enteringScreen,
       easing: theme.transitions.easing.easeOut,
     }),
+    "&$scroll": {
+      transition: theme.transitions.create("top", {
+        duration: theme.transitions.duration.leavingScreen,
+        easing: theme.transitions.easing.sharp,
+      }),
+    },
+    "&$desktop$instructor": {
+      top: 65 - theme.spacing(2),
+    },
+    "&$mobile$instructor": {
+      top: 55 - theme.spacing(2),
+    },
   },
-  scroll: {
-    top: -theme.spacing(2),
-    transition: theme.transitions.create("top", {
-      duration: theme.transitions.duration.leavingScreen,
-      easing: theme.transitions.easing.sharp,
-    }),
-  },
-  desktop: {
-    top: 65 - theme.spacing(2),
-  },
-  mobile: {
-    top: 55 - theme.spacing(2),
-  },
+  scroll: {},
+  desktop: {},
+  mobile: {},
+  instructor: {},
 }));
 
 type Props = Pick<ComponentProps<typeof Container>, "maxWidth"> & {
@@ -69,6 +74,7 @@ export default function ActionHeader(props: Props) {
   const classes = useStyles();
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up("sm"));
+  const { isInstructor } = useSessionAtom();
   const trigger = useScrollTrigger();
   return (
     <>
@@ -88,6 +94,7 @@ export default function ActionHeader(props: Props) {
         <Container
           className={clsx(
             { [classes.container]: !maxWidth },
+            { [classes.instructor]: isInstructor },
             classes.sticky,
             trigger
               ? classes.scroll
