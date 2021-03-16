@@ -1,6 +1,6 @@
 import IconButton from "@material-ui/core/IconButton";
 import TreeItem from "@material-ui/lab/TreeItem";
-// TODO: ブック単位でのインポートの実装
+// TODO: ブック単位での再利用の実装
 // import Checkbox from "@material-ui/core/Checkbox";
 import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
@@ -49,7 +49,7 @@ export default function BookTree(props: Props) {
     event.stopPropagation();
     handler?.(book);
   };
-  /* TODO: ブック単位でのインポートの実装
+  /* TODO: ブック単位での再利用の実装
   const handleChange = (handler?: (nodeId: string) => void) => () => {
     handler?.(nodeId);
   };
@@ -60,7 +60,7 @@ export default function BookTree(props: Props) {
       classes={treeItemClasses}
       label={
         <>
-          {/* TODO: ブック単位でのインポートの実装
+          {/* TODO: ブック単位での再利用の実装
           onTreeChange && (
           <Checkbox
             checked={selectedIndexes?.has(nodeId)}

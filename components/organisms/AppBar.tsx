@@ -114,7 +114,7 @@ function AppBar(props: Props, ref: Ref<unknown>) {
             <AppBarNavButton
               color="inherit"
               icon={<LinkIcon />}
-              label="LTIリンク"
+              label="ブックの配布"
               onClick={onBookLinkClick}
               disabled={!onBookLinkClick}
             />

@@ -115,7 +115,7 @@ export default function BookEditChildren(props: Props) {
           onClick={props.onBookImportClick}
         >
           <GetAppIcon className={classes.icon} />
-          ブックからインポート
+          ブックの再利用
         </Button>
         <Button
           size="small"
@@ -124,7 +124,7 @@ export default function BookEditChildren(props: Props) {
           onClick={props.onTopicImportClick}
         >
           <GetAppIcon className={classes.icon} />
-          インポート
+          トピックの再利用
         </Button>
         <Button
           size="small"
@@ -192,9 +192,9 @@ export default function BookEditChildren(props: Props) {
       )}
       {!sortable && sections.length === 0 && (
         <p className={classes.placeholder}>
-          動画等のコンテンツは、トピックという単位で管理されます
+          動画は「トピック」という名前の単位で登録されています。
           <br />
-          コンテンツを管理するには、トピックを作成もしくはインポートしてください
+          既存のトピックを再利用する、あるいは新たにトピック作成し、ここにトピックを追加してブックを完成してください。
         </p>
       )}
       {!sortable && sections.length > 0 && (
