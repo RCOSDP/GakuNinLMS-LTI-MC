@@ -7,7 +7,7 @@ export default function UnlinkedProblem() {
 
   return (
     <Problem title="ブックが未連携です">
-      LTIリンクがどのブックとも連携されていません。担当教員にお問い合わせください
+      ブックが配布されていません｡担当教員にお問い合わせください。
       {url && (
         <p>
           <Link href={url}>LMSに戻る</Link>

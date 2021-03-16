@@ -125,9 +125,9 @@ export default function BookImport(props: Props) {
       <ActionHeader
         title={
           <>
-            ブックからインポート
+            ブックの再利用
             <Typography variant="body1">
-              ブックからインポートするトピックを選んでください
+              再利用するトピックを選んで下さい
             </Typography>
           </>
         }
@@ -183,7 +183,7 @@ export default function BookImport(props: Props) {
             variant="contained"
             type="submit"
           >
-            ブックからインポート
+            ブックの再利用
           </Button>
         </form>
       </ActionFooter>

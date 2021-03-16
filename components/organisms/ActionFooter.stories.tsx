@@ -9,7 +9,7 @@ export const Default = () => (
       キャンセル
     </Button>
     <Button size="large" color="primary" variant="contained">
-      インポート
+      再利用
     </Button>
   </ActionFooter>
 );

@@ -79,9 +79,9 @@ export default function TopicImport(props: Props) {
       <ActionHeader
         title={
           <>
-            トピックのインポート
+            トピックの再利用
             <Typography variant="body1">
-              インポートするトピックを選んでください
+              再利用するトピックを選んで下さい
             </Typography>
           </>
         }
@@ -127,7 +127,7 @@ export default function TopicImport(props: Props) {
             variant="contained"
             type="submit"
           >
-            トピックをインポート
+            トピックを再利用
           </Button>
         </form>
       </ActionFooter>

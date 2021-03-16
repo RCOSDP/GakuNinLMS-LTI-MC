@@ -29,14 +29,14 @@ function SectionTree({
   bookId,
   section,
   sectionIndex,
-  // TODO: セクション単位でのインポートの実装
+  // TODO: セクション単位での再利用の実装
   // onTreeChange,
   // selectedIndexes,
   children,
 }: SectionProps) {
   const treeItemClasses = useTreeItemStyle();
   const nodeId = `${bookId}-${section.id}`;
-  /* TODO: セクション単位でのインポートの実装
+  /* TODO: セクション単位での再利用の実装
   const handleChange = (handler?: (nodeId: string) => void) => () => {
     handler?.(nodeId);
   };
@@ -48,7 +48,7 @@ function SectionTree({
       classes={treeItemClasses}
       label={
         <>
-          {/* TODO: セクション単位でのインポートの実装
+          {/* TODO: セクション単位での再利用の実装
           onTreeChange && (
             <Checkbox
               checked={selectedIndexes?.has(nodeId)}

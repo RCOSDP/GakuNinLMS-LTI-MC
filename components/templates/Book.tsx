@@ -135,7 +135,7 @@ export default function Book(props: Props) {
             {isInstructor && linked && (
               <Button size="small" color="primary" onClick={onBookLinkClick}>
                 <LinkIcon className={classes.icon} />
-                他のブックをリンク
+                他のブックを配布
               </Button>
             )}
           </Typography>
