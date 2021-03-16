@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import { TopicSchema } from "$server/models/topic";
 import { format, formatDuration, intervalToDuration } from "date-fns";
 import { ja } from "date-fns/locale";
@@ -14,13 +15,16 @@ function formatInterval(start: Date | number, end: Date | number) {
 
 const useStyles = makeStyles((theme) => ({
   video: {
-    position: "sticky",
-    top: theme.spacing(-2),
     marginTop: theme.spacing(-2),
     marginRight: theme.spacing(-3),
     marginBottom: theme.spacing(2),
     marginLeft: theme.spacing(-3),
+    "&$sticky": {
+      position: "sticky",
+      top: theme.spacing(-2),
+    },
   },
+  sticky: {},
   title: {
     marginBottom: theme.spacing(2),
   },
@@ -39,16 +43,18 @@ const useStyles = makeStyles((theme) => ({
 type Props = {
   topic: TopicSchema;
   onEnded?: () => void;
+  top?: number;
+  sticky?: boolean;
 };
 
 export default function TopicViewerContent(props: Props) {
+  const { topic, onEnded, sticky = false } = props;
   const classes = useStyles();
-  const { topic, onEnded } = props;
   return (
     <>
       {"providerUrl" in topic.resource && (
         <Video
-          className={classes.video}
+          className={clsx(classes.video, { [classes.sticky]: sticky })}
           {...topic.resource}
           onEnded={onEnded}
           autoplay
