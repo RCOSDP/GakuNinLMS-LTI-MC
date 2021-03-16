@@ -144,7 +144,7 @@ export default function TopicForm(props: Props) {
         />
         <div>
           <InputLabel classes={inputLabelClasses} htmlFor="shared">
-            他の編集者にシェア
+            他の教員にシェア
           </InputLabel>
           <Checkbox
             id="shared"
