@@ -6,8 +6,8 @@ export default function UnlinkedProblem() {
   const url = useLmsUrl();
 
   return (
-    <Problem title="ブックが未連携です">
-      ブックが配布されていません｡担当教員にお問い合わせください。
+    <Problem title="ブックが存在していません">
+      担当教員にお問い合わせください。
       {url && (
         <p>
           <Link href={url}>LMSに戻る</Link>

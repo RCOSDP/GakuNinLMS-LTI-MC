@@ -183,7 +183,7 @@ export default function BookImport(props: Props) {
             variant="contained"
             type="submit"
           >
-            ブックの再利用
+            再利用
           </Button>
         </form>
       </ActionFooter>

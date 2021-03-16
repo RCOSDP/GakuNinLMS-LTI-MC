@@ -43,11 +43,11 @@ export const Default = () => {
       </Button>
       <Button size="small" color="primary">
         <LinkIcon className={classes.icon} />
-        「〇〇」と配布
+        「〇〇」で提供
       </Button>
       <Button size="small" variant="contained" color="primary">
         <LinkIcon className={classes.icon} />
-        「〇〇」と配布
+        「〇〇」で提供
       </Button>
       <Button size="small" variant="contained" color="primary">
         <DragIndicatorIcon fontSize="small" />
