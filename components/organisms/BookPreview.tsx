@@ -4,7 +4,6 @@ import { format } from "date-fns";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import IconButton from "@material-ui/core/IconButton";
-import Typography from "@material-ui/core/Typography";
 import Radio from "@material-ui/core/Radio";
 import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
@@ -18,7 +17,7 @@ import useCardStyle from "styles/card";
 import { BookSchema } from "$server/models/book";
 import { TopicSchema } from "$server/models/topic";
 import { getSectionsOutline } from "$utils/outline";
-import { primary } from "$theme/colors";
+import { gray, primary } from "$theme/colors";
 import useLineClampStyles from "$styles/lineClamp";
 
 const useStyles = makeStyles((theme) => ({
@@ -28,6 +27,7 @@ const useStyles = makeStyles((theme) => ({
   },
   left: {
     flex: 1,
+    paddingRight: theme.spacing(1),
   },
   right: {
     flexShrink: 0,
@@ -36,8 +36,13 @@ const useStyles = makeStyles((theme) => ({
   title: {
     display: "flex",
     alignItems: "center",
+    fontWeight: 500,
   },
-  checkBox: {
+  outline: {
+    margin: 0,
+    color: gray[700],
+  },
+  checkbox: {
     marginLeft: theme.spacing(-1.5),
   },
   shared: {
@@ -69,9 +74,14 @@ type Props = Parameters<typeof Radio>[0] & {
 export default function BookPreview(props: Props) {
   const cardClasses = useCardStyle();
   const classes = useStyles();
-  const { clamp: outlineClamp } = useLineClampStyles({
-    fontSize: "0.875rem",
+  const titleClamp = useLineClampStyles({
+    fontSize: "1.25rem",
     lineClamp: 2,
+    lineHeight: 1.6,
+  });
+  const outlineClamp = useLineClampStyles({
+    fontSize: "0.875rem",
+    lineClamp: 3,
     lineHeight: 1.25,
   });
   const { book, onEditClick, checked, ...radioProps } = props;
@@ -88,20 +98,24 @@ export default function BookPreview(props: Props) {
   const handle = (handler?: (book: BookSchema) => void) => () => {
     handler?.(book);
   };
+  const id = `${book.id}`;
   return (
     <Card
       classes={cardClasses}
       className={clsx(classes.root, { [classes.selected]: checked })}
     >
       <div className={classes.left}>
-        <Typography variant="h6" className={classes.title}>
+        <div className={clsx(classes.title, titleClamp.placeholder)}>
           <Radio
-            className={classes.checkBox}
+            className={classes.checkbox}
             color="primary"
             checked={checked}
+            id={id}
             {...radioProps}
           />
-          {book.name}
+          <label className={titleClamp.clamp} htmlFor={id}>
+            {book.name}
+          </label>
           {book.shared && <SharedIndicator className={classes.shared} />}
           <IconButton onClick={handleInfoClick}>
             <InfoOutlinedIcon />
@@ -111,7 +125,7 @@ export default function BookPreview(props: Props) {
               <EditOutlinedIcon />
             </IconButton>
           )}
-        </Typography>
+        </div>
         <div className={classes.chips}>
           {book.ltiResourceLinks.map((ltiResourceLink) => (
             <CourseChip
@@ -125,7 +139,15 @@ export default function BookPreview(props: Props) {
           <Item itemKey="更新日" value={format(book.updatedAt, "yyyy.MM.dd")} />
           <Item itemKey="著者" value={book.author.name} />
         </div>
-        <p className={outlineClamp}>{getSectionsOutline(book.sections)}</p>
+        <p
+          className={clsx(
+            classes.outline,
+            outlineClamp.clamp,
+            outlineClamp.placeholder
+          )}
+        >
+          {getSectionsOutline(book.sections)}
+        </p>
         <Button size="small" color="primary">
           もっと詳しく...
         </Button>
