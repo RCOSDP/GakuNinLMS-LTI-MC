@@ -1,6 +1,9 @@
 node_modules/
 /.next/
+/.vercel/
 /server/dist/
+/server/prisma/migrations/
 /openapi/
 /public/api/v2/swagger/
 /public/storybook/
+/utils/$path.ts
