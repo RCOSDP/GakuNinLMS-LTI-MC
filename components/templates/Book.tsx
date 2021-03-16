@@ -19,10 +19,22 @@ import { useSessionAtom } from "$store/session";
 import useContainerStyles from "styles/container";
 
 const useStyles = makeStyles((theme) => ({
-  title: {
+  header: {
+    display: "flex",
+    alignItems: "baseline",
+    width: "100%",
     "& > *": {
       marginRight: theme.spacing(1),
     },
+    "&$mobile": {
+      fontSize: "1.75rem",
+      alignItems: "center",
+    },
+  },
+  title: {
+    textOverflow: "ellipsis",
+    overflow: "hidden",
+    whiteSpace: "nowrap",
   },
   icon: {
     marginRight: theme.spacing(0.5),
@@ -30,18 +42,19 @@ const useStyles = makeStyles((theme) => ({
   inner: {
     display: "grid",
     gap: `${theme.spacing(2)}px`,
-  },
-  innerDesktop: {
-    gridTemplateAreas: `
+    "&$desktop": {
+      gridTemplateAreas: `
       "bookChildren topicViewer"
     `,
-    gridTemplateColumns: "30% 1fr",
-  },
-  innerMobile: {
-    gridTemplateAreas: `
+      gridTemplateColumns: "30% 1fr",
+    },
+    "&$mobile": {
+      gridTemplateAreas: `
       "topicViewer"
       "bookChildren"
-    `,
+
+`,
+    },
   },
   topicViewer: {
     gridArea: "topicViewer",
@@ -49,6 +62,8 @@ const useStyles = makeStyles((theme) => ({
   bookChildren: {
     gridArea: "bookChildren",
   },
+  desktop: {},
+  mobile: {},
 }));
 
 type Props = {
@@ -102,11 +117,11 @@ export default function Book(props: Props) {
       <ActionHeader
         action={
           <Typography
-            className={classes.title}
+            className={clsx(classes.header, { [classes.mobile]: !matches })}
             variant="h4"
             gutterBottom={true}
           >
-            {book?.name}
+            <span className={classes.title}>{book?.name}</span>
             <IconButton onClick={handleInfoClick}>
               <InfoOutlinedIcon />
             </IconButton>
@@ -129,7 +144,7 @@ export default function Book(props: Props) {
       <div
         className={clsx(
           classes.inner,
-          matches ? classes.innerDesktop : classes.innerMobile
+          matches ? classes.desktop : classes.mobile
         )}
       >
         {topic && (
