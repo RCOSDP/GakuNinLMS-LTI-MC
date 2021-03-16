@@ -3,3 +3,4 @@ node_modules/
 /server/dist/
 /openapi/
 /public/api/v2/swagger/
+/public/storybook/
