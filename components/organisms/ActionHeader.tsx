@@ -60,7 +60,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type Props = Pick<ComponentProps<typeof Container>, "maxWidth"> & {
-  title: React.ReactNode;
+  title?: React.ReactNode;
   action: React.ReactNode;
 };
 
@@ -72,16 +72,18 @@ export default function ActionHeader(props: Props) {
   const trigger = useScrollTrigger();
   return (
     <>
-      <div className={classes.root}>
-        <Container
-          className={clsx({ [classes.container]: !maxWidth })}
-          maxWidth={maxWidth}
-        >
-          <Typography className={classes.title} variant="h4">
-            {title}
-          </Typography>
-        </Container>
-      </div>
+      {title && (
+        <div className={classes.root}>
+          <Container
+            className={clsx({ [classes.container]: !maxWidth })}
+            maxWidth={maxWidth}
+          >
+            <Typography className={classes.title} variant="h4">
+              {title}
+            </Typography>
+          </Container>
+        </div>
+      )}
       {action && (
         <Container
           className={clsx(

@@ -4,7 +4,7 @@ import Topics from "./Topics";
 import Slide from "@material-ui/core/Slide";
 import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 import AppBar from "$organisms/AppBar";
-import { topic, session } from "samples";
+import { topic, session } from "$samples";
 
 const appBarHandlers = {
   onBooksClick: console.log,
