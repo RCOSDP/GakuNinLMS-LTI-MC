@@ -46,15 +46,12 @@ export const Default = () => {
   }, [updateBook]);
 
   return (
-    <>
-      <SlideAppBar />
-      <Book
-        {...defaultProps}
-        index={itemIndex}
-        onTopicEnded={nextItemIndex}
-        onItemClick={updateItemIndex}
-      />
-    </>
+    <Book
+      {...defaultProps}
+      index={itemIndex}
+      onTopicEnded={nextItemIndex}
+      onItemClick={updateItemIndex}
+    />
   );
 };
 
