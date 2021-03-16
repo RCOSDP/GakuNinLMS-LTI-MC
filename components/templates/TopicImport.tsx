@@ -127,7 +127,7 @@ export default function TopicImport(props: Props) {
             variant="contained"
             type="submit"
           >
-            トピックを再利用
+            再利用
           </Button>
         </form>
       </ActionFooter>

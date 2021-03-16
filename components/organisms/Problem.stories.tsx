@@ -4,8 +4,8 @@ import Link from "@material-ui/core/Link";
 import Problem from "./Problem";
 
 export const Default = () => (
-  <Problem title="ブックが未連携です">
-    ブックが配布されていません｡担当教員にお問い合わせください。
+  <Problem title="ブックが存在していません">
+    担当教員にお問い合わせください。
     <p>
       <Link href="#">LMSに戻る</Link>
     </p>

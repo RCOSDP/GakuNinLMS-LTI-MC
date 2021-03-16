@@ -16,7 +16,7 @@ const defaultProps = {
   books,
   ltiResourceLink: {
     id: "1",
-    title: "リンク1",
+    title: "提供1",
     contextId: "2",
     contextTitle: "コース2",
     contextLabel: "C2",
