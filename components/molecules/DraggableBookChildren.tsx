@@ -45,7 +45,9 @@ function SectionCreateButton(props: SectionCreateButtonProps) {
 
 const useDraggableSectionStyles = makeStyles((theme) => ({
   root: {
-    padding: theme.spacing(2),
+    position: "relative",
+    padding: theme.spacing(2, 1),
+    marginLeft: 25,
     marginBottom: theme.spacing(2),
     backgroundColor: gray[50],
     borderRadius: theme.shape.borderRadius,
@@ -53,9 +55,40 @@ const useDraggableSectionStyles = makeStyles((theme) => ({
     "&:hover": {
       backgroundColor: gray[200],
     },
+    "&:hover > $tab": {
+      backgroundColor: gray[200],
+    },
+    "&:hover > [data-rbd-droppable-id]:not(:hover) ~ $tab > $icon": {
+      color: gray[700],
+    },
+  },
+  icon: {
+    color: gray[500],
+  },
+  tab: {
+    display: "flex",
+    alignItems: "center",
+    position: "absolute",
+    transform: "translateY(-50%)",
+    top: "50%",
+    left: -25,
+    width: 25,
+    height: "50%",
+    minHeight: 50,
+    border: `2px solid ${gray[200]}`,
+    borderRight: "none",
+    borderRadius: `4px 0 0 4px`,
+    backgroundColor: gray[50],
+    paddingLeft: theme.spacing(0.25),
   },
   drag: {
     backgroundColor: gray[200],
+    "& $tab": {
+      backgroundColor: gray[200],
+      "& > $icon": {
+        color: gray[700],
+      },
+    },
   },
 }));
 
@@ -101,6 +134,9 @@ function DraggableSection({
             />
           )}
           {children}
+          <div className={classes.tab}>
+            <DragIndicatorIcon className={classes.icon} fontSize="small" />
+          </div>
         </div>
       )}
     </Draggable>
@@ -155,6 +191,9 @@ const useDraggableTopicStyles = makeStyles((theme) => ({
   },
   drag: {
     backgroundColor: gray[200],
+    "& $icon": {
+      color: gray[700],
+    },
   },
 }));
 

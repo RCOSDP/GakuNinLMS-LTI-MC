@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(2, -3, -2),
     padding: theme.spacing(0, 3, 2),
     borderRadius: "0 0 12px 12px",
-    "& > *": {
+    "& > :not(hr)": {
       marginRight: theme.spacing(1.75),
     },
   },
