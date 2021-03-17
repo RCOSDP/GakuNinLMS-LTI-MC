@@ -148,7 +148,11 @@ export default function BookPreview(props: Props) {
         >
           {getSectionsOutline(book.sections)}
         </p>
-        <Button size="small" color="primary">
+        <Button
+          size="small"
+          color="primary"
+          disabled={true /* TODO: BookPreviewDialogを実装したら取り除く */}
+        >
           もっと詳しく...
         </Button>
       </div>
