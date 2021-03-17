@@ -21,16 +21,17 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: theme.spacing(-3),
   },
   title: {
-    marginBottom: theme.spacing(2),
+    marginBottom: theme.spacing(0.5),
   },
   items: {
     "& > *": {
       display: "inline-block",
-      marginRight: theme.spacing(1.75),
-      marginBottom: theme.spacing(1),
+      marginRight: theme.spacing(1.25),
+      marginBottom: theme.spacing(0.25),
     },
   },
   description: {
+    margin: theme.spacing(2.5, 0, 2),
     whiteSpace: "pre-wrap",
   },
 }));
@@ -68,18 +69,18 @@ export default function TopicViewerContent(props: Props) {
           autoplay
         />
       )}
-      <Typography className={classes.title} variant="h5">
+      <Typography className={classes.title} variant="h6">
         {topic.name}
       </Typography>
       <div className={classes.items}>
-        <Typography className={classes.title} variant="h6">
+        <Typography className={classes.title} variant="body1">
           学習時間 {formatInterval(0, topic.timeRequired * 1000) || "10秒未満"}
         </Typography>
-        <Typography className={classes.title} variant="h6">
+        <Typography className={classes.title} variant="body1">
           {languages[topic.language]}
         </Typography>
         {/* TODO: トピックがライセンスをプロパティに持つようになったら表示してください
-        <Typography className={classes.title} variant="h6">
+        <Typography className={classes.title} variant="body1">
           ライセンス
         </Typography>
         */}
