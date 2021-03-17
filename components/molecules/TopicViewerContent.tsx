@@ -73,14 +73,12 @@ export default function TopicViewerContent(props: Props) {
         {topic.name}
       </Typography>
       <div className={classes.items}>
-        <Typography className={classes.title} variant="body1">
+        <Typography variant="body1">
           学習時間 {formatInterval(0, topic.timeRequired * 1000) || "10秒未満"}
         </Typography>
-        <Typography className={classes.title} variant="body1">
-          {languages[topic.language]}
-        </Typography>
+        <Typography variant="body1">{languages[topic.language]}</Typography>
         {/* TODO: トピックがライセンスをプロパティに持つようになったら表示してください
-        <Typography className={classes.title} variant="body1">
+        <Typography variant="body1">
           ライセンス
         </Typography>
         */}
