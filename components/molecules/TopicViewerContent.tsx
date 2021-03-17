@@ -3,9 +3,10 @@ import { TopicSchema } from "$server/models/topic";
 import { format, formatDuration, intervalToDuration } from "date-fns";
 import { ja } from "date-fns/locale";
 import Typography from "@material-ui/core/Typography";
-import { makeStyles } from "@material-ui/core/styles";
+import { useTheme, makeStyles } from "@material-ui/core/styles";
 import Video from "$organisms/Video";
 import Item from "$atoms/Item";
+import useStickyProps from "$utils/useStickyProps";
 import languages from "$utils/languages";
 
 function formatInterval(start: Date | number, end: Date | number) {
@@ -15,16 +16,10 @@ function formatInterval(start: Date | number, end: Date | number) {
 
 const useStyles = makeStyles((theme) => ({
   video: {
-    marginTop: theme.spacing(-2),
     marginRight: theme.spacing(-3),
     marginBottom: theme.spacing(2),
     marginLeft: theme.spacing(-3),
-    "&$sticky": {
-      position: "sticky",
-      top: theme.spacing(-2),
-    },
   },
-  sticky: {},
   title: {
     marginBottom: theme.spacing(2),
   },
@@ -44,17 +39,30 @@ type Props = {
   topic: TopicSchema;
   onEnded?: () => void;
   top?: number;
-  sticky?: boolean;
+  dialog?: boolean;
 };
 
 export default function TopicViewerContent(props: Props) {
-  const { topic, onEnded, sticky = false } = props;
+  const { topic, onEnded, dialog = false, top } = props;
   const classes = useStyles();
+  const theme = useTheme();
+  const { classes: stickyClasses, scroll, desktop, mobile } = useStickyProps({
+    backgroundColor: "transparent",
+    top: top ?? theme.spacing(-2),
+    zIndex: 1,
+    dialog,
+  });
   return (
     <>
       {"providerUrl" in topic.resource && (
         <Video
-          className={clsx(classes.video, { [classes.sticky]: sticky })}
+          className={clsx(
+            classes.video,
+            stickyClasses.sticky,
+            { [stickyClasses.scroll]: scroll },
+            { [stickyClasses.desktop]: desktop },
+            { [stickyClasses.mobile]: mobile }
+          )}
           {...topic.resource}
           onEnded={onEnded}
           autoplay
