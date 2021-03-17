@@ -16,7 +16,7 @@ import ActionHeader from "$organisms/ActionHeader";
 import type { BookSchema } from "$server/models/book";
 import type { TopicSchema } from "$server/models/topic";
 import { useSessionAtom } from "$store/session";
-import useContainerStyles from "styles/container";
+import useStickyProps from "$utils/useStickyProps";
 
 const useStyles = makeStyles((theme) => ({
   header: {
@@ -30,9 +30,11 @@ const useStyles = makeStyles((theme) => ({
       fontSize: "1.75rem",
       alignItems: "center",
     },
+    "& > $title ~ *": {
+      flexShrink: 0,
+    },
   },
   title: {
-    textOverflow: "ellipsis",
     overflow: "hidden",
     whiteSpace: "nowrap",
   },
@@ -44,26 +46,42 @@ const useStyles = makeStyles((theme) => ({
     gap: `${theme.spacing(2)}px`,
     "&$desktop": {
       gridTemplateAreas: `
-      "bookChildren topicViewer"
-    `,
+        "side main"
+      `,
       gridTemplateColumns: "30% 1fr",
+      gridAutoRows: "min-content",
     },
     "&$mobile": {
       gridTemplateAreas: `
-      "topicViewer"
-      "bookChildren"
-
-`,
+        "main"
+        "side"
+      `,
     },
   },
-  topicViewer: {
-    gridArea: "topicViewer",
+  main: {
+    gridArea: "main",
+    "&$desktop": {
+      marginBottom: theme.spacing(2),
+    },
   },
-  bookChildren: {
-    gridArea: "bookChildren",
+  side: {
+    gridArea: "side",
+    "&$desktop": {
+      marginTop: theme.spacing(2),
+    },
+  },
+  scroll: {
+    "&$desktop": {
+      overflowY: "auto",
+      height: "calc(100vh - 96px)",
+    },
+    "&$desktop$appbar": {
+      height: "calc(100vh - 130px - 64px)",
+    },
   },
   desktop: {},
   mobile: {},
+  appbar: {},
 }));
 
 type Props = {
@@ -91,7 +109,11 @@ export default function Book(props: Props) {
   const topic = book?.sections[sectionIndex]?.topics[topicIndex];
   const { isInstructor, isTopicEditable } = useSessionAtom();
   const classes = useStyles();
-  const containerClasses = useContainerStyles();
+  const { classes: stickyClasses, scroll, desktop, mobile } = useStickyProps({
+    backgroundColor: "transparent",
+    top: 80,
+    zIndex: 1,
+  });
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up("md"));
   const [open, setOpen] = useState(false);
@@ -113,7 +135,7 @@ export default function Book(props: Props) {
     : undefined;
 
   return (
-    <Container classes={containerClasses} maxWidth="lg">
+    <Container maxWidth="lg">
       <ActionHeader
         action={
           <Typography
@@ -147,21 +169,29 @@ export default function Book(props: Props) {
           matches ? classes.desktop : classes.mobile
         )}
       >
-        {topic && (
-          <TopicViewer
-            className={classes.topicViewer}
-            topic={topic}
-            onEnded={onTopicEnded}
+        <div className={clsx(classes.main, { [classes.desktop]: matches })}>
+          {topic && (
+            <TopicViewer topic={topic} onEnded={onTopicEnded} top={80} />
+          )}
+        </div>
+        <div className={clsx(classes.side, { [classes.desktop]: matches })}>
+          <BookChildren
+            className={clsx(
+              { [classes.desktop]: matches },
+              classes.scroll,
+              { [classes.appbar]: desktop },
+              stickyClasses.sticky,
+              { [stickyClasses.scroll]: scroll },
+              { [stickyClasses.desktop]: desktop },
+              { [stickyClasses.mobile]: mobile }
+            )}
+            index={[sectionIndex, topicIndex]}
+            sections={book?.sections ?? []}
+            onItemClick={handleItemClick}
+            onItemEditClick={handleItemEditClick}
+            isTopicEditable={isTopicEditable}
           />
-        )}
-        <BookChildren
-          className={classes.bookChildren}
-          index={[sectionIndex, topicIndex]}
-          sections={book?.sections ?? []}
-          onItemClick={handleItemClick}
-          onItemEditClick={handleItemEditClick}
-          isTopicEditable={isTopicEditable}
-        />
+        </div>
       </div>
       {book && <BookItemDialog open={open} onClose={handleClose} book={book} />}
     </Container>
