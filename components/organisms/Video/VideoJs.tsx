@@ -9,8 +9,6 @@ import volumePersister from "$utils/volumePersister";
 type VideoJsProps = {
   options: VideoJsPlayerOptions;
   tracks?: videojs.TextTrackOptions[];
-  onEnded?: () => void;
-  onDurationChange?: (duration: number) => void;
 };
 
 const defaultOptions: VideoJsPlayerOptions = {
@@ -25,12 +23,7 @@ const defaultOptions: VideoJsPlayerOptions = {
   languages: { ja },
 };
 
-export function VideoJs({
-  options,
-  tracks,
-  onEnded,
-  onDurationChange,
-}: VideoJsProps) {
+export function VideoJs({ options, tracks }: VideoJsProps) {
   const ref = useRef(document.createElement("div"));
   const tracking = usePlayerTrackingAtom();
   useEffect(() => {
@@ -47,15 +40,6 @@ export function VideoJs({
     player.ready(() => {
       tracking(player);
       volumePersister(player);
-      if (onEnded) player.on("ended", onEnded);
-      if (onDurationChange) {
-        // NOTE: YouTubeの場合、playイベント発火より前だと`player.duration()`に失敗
-        const handlePlay = () => {
-          onDurationChange(player.duration());
-          player.off("play", handlePlay);
-        };
-        player.on("play", handlePlay);
-      }
     });
     return () => {
       // TODO: played() に失敗するので dispose() せず一時停止して保持
@@ -63,7 +47,7 @@ export function VideoJs({
       player.pause();
       current.textContent = "";
     };
-  }, [options, onEnded, onDurationChange, tracking]);
+  }, [options, tracking]);
   const tracksRef = useRef<HTMLTrackElement[]>([]);
   useEffect(() => {
     if (!tracks || tracks.length === 0) return;
