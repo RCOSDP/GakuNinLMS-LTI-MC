@@ -16,16 +16,17 @@ function formatInterval(start: Date | number, end: Date | number) {
 
 const useStyles = makeStyles((theme) => ({
   title: {
-    marginBottom: theme.spacing(2),
+    marginBottom: theme.spacing(0.5),
   },
   items: {
     "& > *": {
       display: "inline-block",
-      marginRight: theme.spacing(1.75),
-      marginBottom: theme.spacing(1),
+      marginRight: theme.spacing(1.25),
+      marginBottom: theme.spacing(0.25),
     },
   },
   description: {
+    margin: theme.spacing(2.5, 0, 2),
     whiteSpace: "pre-wrap",
   },
 }));
@@ -50,18 +51,14 @@ export default function BookItemDialog(props: Props) {
       fullWidth
     >
       <DialogContent>
-        <Typography className={classes.title} variant="h5">
+        <Typography className={classes.title} variant="h6">
           {book.name}
         </Typography>
         <div className={classes.items}>
-          <Typography className={classes.title} variant="h6">
-            学習時間 {timeRequired}
-          </Typography>
-          <Typography className={classes.title} variant="h6">
-            {languages[book.language]}
-          </Typography>
+          <Typography variant="body1">学習時間 {timeRequired}</Typography>
+          <Typography variant="body1">{languages[book.language]}</Typography>
           {/* TODO: ブックがライセンスをプロパティに持つようになったら表示してください
-          <Typography className={classes.title} variant="h6">
+          <Typography variant="body1">
             ライセンス
           </Typography>
           */}
