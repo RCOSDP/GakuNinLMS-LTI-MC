@@ -19,7 +19,7 @@ export default function TopicPreviewDialog(props: Props) {
       PaperProps={{ classes: cardClasses }}
       fullWidth
     >
-      <TopicViewerContent topic={topic} sticky />
+      <TopicViewerContent topic={topic} dialog />
     </Dialog>
   );
 }

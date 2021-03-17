@@ -2,11 +2,9 @@ import { ComponentProps } from "react";
 import clsx from "clsx";
 import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
-import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 import { useTheme, makeStyles } from "@material-ui/core/styles";
-import { gray } from "theme/colors";
-import { useSessionAtom } from "$store/session";
+import { gray } from "$theme/colors";
+import useStickyProps from "$utils/useStickyProps";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -36,32 +34,6 @@ const useStyles = makeStyles((theme) => ({
   container: {
     padding: 0,
   },
-  sticky: {
-    zIndex: 1,
-    top: -theme.spacing(2),
-    position: "sticky",
-    backgroundColor: gray[50],
-    transition: theme.transitions.create("top", {
-      duration: theme.transitions.duration.enteringScreen,
-      easing: theme.transitions.easing.easeOut,
-    }),
-    "&$scroll": {
-      transition: theme.transitions.create("top", {
-        duration: theme.transitions.duration.leavingScreen,
-        easing: theme.transitions.easing.sharp,
-      }),
-    },
-    "&$desktop$instructor": {
-      top: 65 - theme.spacing(2),
-    },
-    "&$mobile$instructor": {
-      top: 55 - theme.spacing(2),
-    },
-  },
-  scroll: {},
-  desktop: {},
-  mobile: {},
-  instructor: {},
 }));
 
 type Props = Pick<ComponentProps<typeof Container>, "maxWidth"> & {
@@ -73,9 +45,11 @@ export default function ActionHeader(props: Props) {
   const { maxWidth, title, action } = props;
   const classes = useStyles();
   const theme = useTheme();
-  const matches = useMediaQuery(theme.breakpoints.up("sm"));
-  const { isInstructor } = useSessionAtom();
-  const trigger = useScrollTrigger();
+  const { classes: stickyClasses, scroll, desktop, mobile } = useStickyProps({
+    backgroundColor: gray[50],
+    top: theme.spacing(-2),
+    zIndex: 2,
+  });
   return (
     <>
       {title && (
@@ -94,13 +68,10 @@ export default function ActionHeader(props: Props) {
         <Container
           className={clsx(
             { [classes.container]: !maxWidth },
-            { [classes.instructor]: isInstructor },
-            classes.sticky,
-            trigger
-              ? classes.scroll
-              : matches
-              ? classes.desktop
-              : classes.mobile
+            { [stickyClasses.scroll]: scroll },
+            { [stickyClasses.desktop]: desktop },
+            { [stickyClasses.mobile]: mobile },
+            stickyClasses.sticky
           )}
           maxWidth={maxWidth}
         >
