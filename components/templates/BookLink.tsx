@@ -129,14 +129,11 @@ export default function BookLink(props: Props) {
           >
             キャンセル
           </Button>
-          <Button
-            color="primary"
-            size="large"
-            variant="outlined"
-            disabled={true /* TODO: 連携解除機能を追加したら取り除くべき */}
-          >
+          {/* TODO: 連携解除機能の実装
+          <Button color="primary" size="large" variant="outlined">
             提供解除
           </Button>
+          */}
           <Button
             color="primary"
             size="large"
