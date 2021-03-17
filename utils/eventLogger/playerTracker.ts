@@ -23,6 +23,7 @@ type CustomEvents = {
   nextvideo: PlayerEvent & { video: number };
   forward: PlayerEvent;
   back: PlayerEvent;
+  durationchange: PlayerEvent & { duration: number };
 };
 
 export type PlayerEvents = {
@@ -118,6 +119,16 @@ export class PlayerTracker extends (EventEmitter as {
     seekBack.on("click", async () => {
       this.emit("back", await this.stats());
     });
+
+    // NOTE: YouTubeの場合、playイベント発火より前だと`player.duration()`に失敗
+    const handlePlay = async () => {
+      this.emit("durationchange", {
+        ...(await this.stats()),
+        duration: player.duration(),
+      });
+      player.off("play", handlePlay);
+    };
+    player.on("play", handlePlay);
   }
 
   private intoVimeo(player: VimeoPlayer) {
@@ -144,6 +155,13 @@ export class PlayerTracker extends (EventEmitter as {
           language: data.language,
         });
       }
+    );
+
+    Promise.all([
+      this.stats(),
+      player.getDuration(),
+    ]).then(([stats, duration]) =>
+      this.emit("durationchange", { ...stats, duration })
     );
   }
 }

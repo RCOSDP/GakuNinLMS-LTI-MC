@@ -1,4 +1,6 @@
+import { useEffect } from "react";
 import { VideoResourceSchema } from "$server/models/videoResource";
+import { usePlayerTrackerAtom } from "$store/playerTracker";
 import { YouTubePlayer } from "./YouTubePlayer";
 import { VimeoPlayer } from "./VimeoPlayer";
 import { HlsPlayer } from "./HlsPlayer";
@@ -14,7 +16,23 @@ type VideoProps = Pick<
 };
 
 export default function Video(props: VideoProps) {
-  const { className, ...other } = props;
+  const { className, onEnded, onDurationChange, ...other } = props;
+  const playerTracker = usePlayerTrackerAtom();
+
+  useEffect(() => {
+    if (!playerTracker) return;
+    const handleEnded = () => onEnded?.();
+    const handleDurationChange = ({ duration }: { duration: number }) => {
+      onDurationChange?.(duration);
+    };
+    playerTracker.on("ended", handleEnded);
+    playerTracker.on("durationchange", handleDurationChange);
+    return () => {
+      playerTracker.off("ended", handleEnded);
+      playerTracker.off("durationchange", handleDurationChange);
+    };
+  }, [playerTracker, onEnded, onDurationChange]);
+
   switch (props.providerUrl) {
     case "https://www.youtube.com/":
       return (

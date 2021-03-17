@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { useRouter } from "next/router";
 import { BookSchema } from "$server/models/book";
 import { usePlayerTrackerAtom } from "$store/playerTracker";
@@ -19,9 +19,9 @@ function Show(query: Query) {
   const {
     book,
     itemIndex,
+    nextItemIndex,
     itemExists,
     updateItemIndex,
-    nextItemIndex,
     error,
   } = useBook(
     query.bookId,
@@ -34,11 +34,14 @@ function Show(query: Query) {
   useEffect(() => {
     if (playerTracker) logger(playerTracker);
   }, [playerTracker]);
-  const handleItemClick = (index: ItemIndex) => {
-    const topic = itemExists(index);
-    if (topic) playerTracker?.next(topic.id);
-    updateItemIndex(index);
-  };
+  const handleTopicNext = useCallback(
+    (index: ItemIndex = nextItemIndex) => {
+      const topic = itemExists(index);
+      if (topic) playerTracker?.next(topic.id);
+      updateItemIndex(index);
+    },
+    [playerTracker, nextItemIndex, itemExists, updateItemIndex]
+  );
   const router = useRouter();
   const handleBookEditClick = () => {
     const action = book && isBookEditable(book) ? "edit" : "generate";
@@ -54,8 +57,8 @@ function Show(query: Query) {
   };
   const handlers = {
     linked: query.bookId === session?.ltiResourceLink?.bookId,
-    onTopicEnded: nextItemIndex,
-    onItemClick: handleItemClick,
+    onTopicEnded: handleTopicNext,
+    onItemClick: handleTopicNext,
     onBookEditClick: handleBookEditClick,
     onBookLinkClick: handleBookLinkClick,
     onTopicEditClick: handleTopicEditClick,

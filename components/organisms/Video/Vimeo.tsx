@@ -5,15 +5,13 @@ import volumePersister from "$utils/volumePersister";
 
 type VimeoProps = {
   options: Options;
-  onEnded?: () => void;
-  onDurationChange?: (duration: number) => void;
 };
 
 const defaultOptions: Options = {
   responsive: true,
 };
 
-export function Vimeo(props: VimeoProps) {
+export function Vimeo({ options }: VimeoProps) {
   const ref = useRef(document.createElement("div"));
   const tracking = usePlayerTrackingAtom();
   useEffect(() => {
@@ -21,20 +19,16 @@ export function Vimeo(props: VimeoProps) {
     ref.current.appendChild(element);
     const player = new Player(element, {
       ...defaultOptions,
-      ...props.options,
+      ...options,
     });
     tracking(player);
     volumePersister(player);
-    if (props.onEnded) player.on("ended", props.onEnded);
-    if (props.onDurationChange) {
-      player.getDuration().then(props.onDurationChange);
-    }
     return () => {
       // TODO: 要素を取り除くと学習活動の記録のために使われている getPlayed() が resolve しないので残す
       //       メモリリークにつながるので避けたほうが望ましく、学習活動の送信後すみやかに取り除くべき
       player.pause();
       element.style.display = "none";
     };
-  }, [props.options, props.onEnded, props.onDurationChange, tracking]);
+  }, [options, tracking]);
   return <div ref={ref} />;
 }

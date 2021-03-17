@@ -7,8 +7,6 @@ type PlayerProps = {
   url: string;
   tracks: VideoTrackSchema[];
   autoplay?: boolean;
-  onEnded?: () => void;
-  onDurationChange?: (duration: number) => void;
 };
 
 function YouTubePlayerBase(props: PlayerProps) {
@@ -25,8 +23,6 @@ function YouTubePlayerBase(props: PlayerProps) {
         autoplay: props.autoplay,
       }}
       tracks={buildTracks(props.tracks)}
-      onEnded={props.onEnded}
-      onDurationChange={props.onDurationChange}
     />
   );
 }

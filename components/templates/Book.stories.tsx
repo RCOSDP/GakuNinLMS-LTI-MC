@@ -35,12 +35,7 @@ function SlideAppBar() {
 }
 
 export const Default = () => {
-  const {
-    updateBook,
-    itemIndex,
-    updateItemIndex,
-    nextItemIndex,
-  } = useBookAtom();
+  const { updateBook, itemIndex, updateItemIndex } = useBookAtom();
   useEffect(() => {
     updateBook(defaultProps.book);
   }, [updateBook]);
@@ -49,14 +44,14 @@ export const Default = () => {
     <Book
       {...defaultProps}
       index={itemIndex}
-      onTopicEnded={nextItemIndex}
+      onTopicEnded={updateItemIndex}
       onItemClick={updateItemIndex}
     />
   );
 };
 
 export const Empty = () => {
-  const { itemIndex, updateItemIndex, nextItemIndex } = useBookAtom();
+  const { itemIndex, updateItemIndex } = useBookAtom();
 
   return (
     <>
@@ -65,7 +60,7 @@ export const Empty = () => {
         {...defaultProps}
         book={null}
         index={itemIndex}
-        onTopicEnded={nextItemIndex}
+        onTopicEnded={updateItemIndex}
         onItemClick={updateItemIndex}
       />
     </>
@@ -73,7 +68,7 @@ export const Empty = () => {
 };
 
 export const EmptySection = () => {
-  const { itemIndex, updateItemIndex, nextItemIndex } = useBookAtom();
+  const { itemIndex, updateItemIndex } = useBookAtom();
 
   return (
     <>
@@ -82,7 +77,7 @@ export const EmptySection = () => {
         {...defaultProps}
         book={{ ...defaultProps.book, sections: [] }}
         index={itemIndex}
-        onTopicEnded={nextItemIndex}
+        onTopicEnded={updateItemIndex}
         onItemClick={updateItemIndex}
       />
     </>
@@ -90,12 +85,7 @@ export const EmptySection = () => {
 };
 
 export const ForInstructor = () => {
-  const {
-    updateBook,
-    itemIndex,
-    updateItemIndex,
-    nextItemIndex,
-  } = useBookAtom();
+  const { updateBook, itemIndex, updateItemIndex } = useBookAtom();
   const [, updateSession] = useUpdateSessionAtom();
   useEffect(() => {
     updateBook(defaultProps.book);
@@ -108,7 +98,7 @@ export const ForInstructor = () => {
       <Book
         {...defaultProps}
         index={itemIndex}
-        onTopicEnded={nextItemIndex}
+        onTopicEnded={updateItemIndex}
         onItemClick={updateItemIndex}
       />
     </>
