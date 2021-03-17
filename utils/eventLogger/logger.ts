@@ -30,8 +30,8 @@ const buildHandler = <T extends EventType & keyof PlayerEvents>(
   eventType: T
 ) => (event: PlayerEvents[T]) => send(eventType, event);
 
-const buildSender = (event: EventType, tracker: PlayerTracker) => async () =>
-  send(event, await tracker.stats());
+const buildSender = (event: EventType, tracker: PlayerTracker) => () =>
+  send(event, tracker.stats);
 
 /** ロギング開始 */
 function logger(tracker: PlayerTracker) {
@@ -95,17 +95,15 @@ function logger(tracker: PlayerTracker) {
     "visibilitychange",
     prevHandlers.visibilitychange
   );
-  handlers.visibilitychange = async function () {
-    if (document.visibilityState === "hidden")
-      send("hidden-ended", await tracker.stats());
+  handlers.visibilitychange = function () {
+    if (document.visibilityState === "hidden") {
+      send("hidden-ended", tracker.stats);
+    }
   };
   document.addEventListener("visibilitychange", handlers.visibilitychange);
 
   clearInterval(prevHandlers.timer?.());
-  const timer = setInterval(
-    async () => send("current-time", await tracker.stats()),
-    10000
-  );
+  const timer = setInterval(() => send("current-time", tracker.stats), 10000);
   handlers.timer = () => timer;
 
   // @ts-expect-error TODO: Window オブジェクトを介さない排他制御にしたい

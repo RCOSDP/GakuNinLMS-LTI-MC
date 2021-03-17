@@ -23,6 +23,7 @@ type CustomEvents = {
   nextvideo: PlayerEvent & { video: number };
   forward: PlayerEvent;
   back: PlayerEvent;
+  durationchange: PlayerEvent & { duration: number };
 };
 
 export type PlayerEvents = {
@@ -38,12 +39,6 @@ export type PlayerEvents = {
   firstplay: PlayerEvent;
 } & CustomEvents;
 
-const nullEvent = {
-  providerUrl: "https://www.youtube.com/",
-  url: "",
-  currentTime: 0,
-} as const;
-
 const youtubeType = "video/youtube";
 
 /** プレイヤーのトラッキング用 */
@@ -51,7 +46,11 @@ export class PlayerTracker extends (EventEmitter as {
   new (): StrictEventEmitter<EventEmitter, PlayerEvents>;
 }) {
   readonly player: VideoJsPlayer | VimeoPlayer;
-  readonly stats: () => Promise<PlayerEvent>;
+  readonly providerUrl: string;
+  /** ビデオURL */
+  url = "";
+  /** 現在再生時間 */
+  currentTime = 0;
   /** 再生した時間範囲の取得 */
   readonly getPlayed: () => Promise<[number, number][]>;
 
@@ -60,14 +59,18 @@ export class PlayerTracker extends (EventEmitter as {
     this.player = player;
 
     if (player instanceof VimeoPlayer) {
-      this.stats = async () => vimeoStats(player);
+      this.providerUrl = "https://vimeo.com/";
       this.getPlayed = player.getPlayed.bind(player);
       this.intoVimeo(player);
     } else {
       // NOTE: YouTube Player API に存在しない API の再現
       youtubePlayedShims(player);
 
-      this.stats = async () => videoJsStats(player);
+      this.providerUrl =
+        player.currentType() === youtubeType
+          ? "https://www.youtube.com/"
+          : `${new URL(player.src()).origin}/`;
+
       this.getPlayed = async () => {
         const timeRanges = player.played() as TimeRanges;
         return [...Array(timeRanges.length)].map((_, i) => [
@@ -80,100 +83,96 @@ export class PlayerTracker extends (EventEmitter as {
     }
   }
 
-  async next(video: number) {
-    this.emit("nextvideo", { ...(await this.stats()), video });
+  next(video: number) {
+    this.emit("nextvideo", { ...this.stats, video });
+  }
+
+  get stats() {
+    const { providerUrl, url, currentTime } = this;
+    return { providerUrl, url, currentTime };
   }
 
   private intoVideoJs(player: VideoJsPlayer) {
+    this.url = player.src();
+    player.on("timeupdate", () => {
+      this.currentTime = player.currentTime();
+    });
+
     for (const event of basicEventsMap) {
-      player.on(event, async () => this.emit(event, await this.stats()));
+      player.on(event, () => this.emit(event, this.stats));
     }
 
-    player.on("firstplay", async () =>
-      this.emit("firstplay", await this.stats())
-    );
-    player.on("ratechange", async () => {
+    player.on("firstplay", () => this.emit("firstplay", this.stats));
+    player.on("ratechange", () => {
       this.emit("playbackratechange", {
-        ...(await this.stats()),
+        ...this.stats,
         playbackRate: player.playbackRate(),
       });
     });
 
     // NOTE: texttrackchange イベントは表示の都度発火されるため使用しない
-    player.remoteTextTracks().addEventListener("change", async () => {
+    player.remoteTextTracks().addEventListener("change", () => {
       const showingSubtitle = Array.from(player.remoteTextTracks()).find(
         ({ kind, mode }) => kind === "subtitles" && mode === "showing"
       );
       this.emit("texttrackchange", {
-        ...(await this.stats()),
+        ...this.stats,
         language: showingSubtitle?.language,
       });
     });
 
     // @ts-expect-error NOTE: videojs-seek-buttons 由来
     const { seekForward, seekBack } = player.controlBar;
-    seekForward.on("click", async () => {
-      this.emit("forward", await this.stats());
-    });
-    seekBack.on("click", async () => {
-      this.emit("back", await this.stats());
-    });
+    seekForward.on("click", () => this.emit("forward", this.stats));
+    seekBack.on("click", () => this.emit("back", this.stats));
+
+    // NOTE: YouTubeの場合、playイベント発火より前だと`player.duration()`に失敗
+    const handlePlay = () => {
+      this.emit("durationchange", {
+        ...this.stats,
+        duration: player.duration(),
+      });
+      player.off("play", handlePlay);
+    };
+    player.on("play", handlePlay);
   }
 
   private intoVimeo(player: VimeoPlayer) {
+    player.getVideoUrl().then((url) => {
+      this.url = url;
+    });
+    player.on("timeupdate", ({ seconds }: { seconds: number }) => {
+      this.currentTime = seconds;
+    });
+
     for (const event of basicEventsMap) {
-      player.on(event, async () => this.emit(event, await vimeoStats(player)));
+      player.on(event, () => this.emit(event, this.stats));
     }
 
-    player.on("playbackratechange", async (data: { playbackRate: number }) => {
+    player.on("playbackratechange", (data: { playbackRate: number }) => {
       this.emit("playbackratechange", {
-        ...(await this.stats()),
+        ...this.stats,
         playbackRate: data.playbackRate,
       });
     });
     player.on(
       "texttrackchange",
-      async (data: {
+      (data: {
         kind: "captions" | "subtitles";
         label: string;
         language: string;
       }) => {
         if (data.kind !== "subtitles") return;
         this.emit("texttrackchange", {
-          ...(await this.stats()),
+          ...this.stats,
           language: data.language,
         });
       }
     );
-  }
-}
-
-function videoJsStats(player: VideoJsPlayer): PlayerEvent {
-  // @ts-expect-error: @types/video.js@^7.3.11 Unsupported
-  if (player.isDisposed()) return nullEvent;
-
-  return {
-    providerUrl:
-      player.currentType() === youtubeType
-        ? "https://www.youtube.com/"
-        : `${new URL(player.src()).origin}/`,
-    url: player.src(),
-    currentTime: player.currentTime(),
-  };
-}
-
-async function vimeoStats(player: VimeoPlayer): Promise<PlayerEvent> {
-  try {
-    const [url, currentTime] = await Promise.all([
-      player.getVideoUrl(),
-      player.getCurrentTime(),
-    ]);
-    return {
-      providerUrl: "https://vimeo.com/",
-      url,
-      currentTime,
-    };
-  } catch {
-    return nullEvent;
+    player
+      .getDuration()
+      .then((duration) =>
+        this.emit("durationchange", { ...this.stats, duration })
+      );
   }
 }

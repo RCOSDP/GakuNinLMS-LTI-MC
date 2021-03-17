@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { atom, useAtom } from "jotai";
-import { RESET, atomWithReset, useUpdateAtom } from "jotai/utils";
+import { RESET, atomWithReset, useUpdateAtom, useAtomValue } from "jotai/utils";
 import type { BookSchema } from "$server/models/book";
 import type { TopicSchema } from "$server/models/topic";
 
@@ -16,6 +16,18 @@ const bookAtom = atomWithReset<BookState>({
   itemExists: () => undefined,
 });
 
+const nextItemIndexAtom = atom((get) => {
+  const { itemIndex, itemExists } = get(bookAtom);
+  const [prevSectionIndex, prevTopicIndex] = itemIndex;
+  const nextTopicIndex = [prevSectionIndex, prevTopicIndex + 1] as const;
+  const nextSectionIndex = [prevSectionIndex + 1, 0] as const;
+
+  if (itemExists(nextTopicIndex)) return nextTopicIndex;
+  if (itemExists(nextSectionIndex)) return nextSectionIndex;
+
+  return itemIndex;
+});
+
 const updateBookAtom = atom<undefined, BookSchema>(
   () => undefined,
   (_, set, book) => {
@@ -28,9 +40,9 @@ const updateBookAtom = atom<undefined, BookSchema>(
   }
 );
 
-const updateItemIndexAtom = atom<undefined, ItemIndex>(
+const updateItemIndexAtom = atom<undefined, ItemIndex | undefined>(
   () => undefined,
-  (get, set, itemIndex) => {
+  (get, set, itemIndex = get(nextItemIndexAtom)) => {
     const { book, itemExists } = get(bookAtom);
     if (itemExists(itemIndex)) {
       set(bookAtom, { book, itemIndex, itemExists });
@@ -38,39 +50,11 @@ const updateItemIndexAtom = atom<undefined, ItemIndex>(
   }
 );
 
-const nextItemIndexAtom = atom(
-  () => undefined,
-  (get, set) => {
-    const {
-      book,
-      itemIndex: [prevSectionIndex, prevTopicIndex],
-      itemExists,
-    } = get(bookAtom);
-
-    const nextTopicIndex = [prevSectionIndex, prevTopicIndex + 1] as const;
-    const nextSectionIndex = [prevSectionIndex + 1, 0] as const;
-
-    if (itemExists(nextTopicIndex)) {
-      set(bookAtom, {
-        book,
-        itemIndex: nextTopicIndex,
-        itemExists,
-      });
-    } else if (itemExists(nextSectionIndex)) {
-      set(bookAtom, {
-        book,
-        itemIndex: nextSectionIndex,
-        itemExists,
-      });
-    }
-  }
-);
-
 export function useBookAtom() {
   const [state, reset] = useAtom(bookAtom);
+  const nextItemIndex = useAtomValue(nextItemIndexAtom);
   const updateBook = useUpdateAtom(updateBookAtom);
   const updateItemIndex = useUpdateAtom(updateItemIndexAtom);
-  const nextItemIndex = useUpdateAtom(nextItemIndexAtom);
   useEffect(
     () => () => {
       reset(RESET);
