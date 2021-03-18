@@ -107,7 +107,7 @@ export default function Book(props: Props) {
     onItemClick,
   } = props;
   const topic = book?.sections[sectionIndex]?.topics[topicIndex];
-  const { isInstructor, isTopicEditable } = useSessionAtom();
+  const { isInstructor, isBookEditable, isTopicEditable } = useSessionAtom();
   const classes = useStyles();
   const { classes: stickyClasses, scroll, desktop, mobile } = useStickyProps({
     backgroundColor: "transparent",
@@ -147,12 +147,10 @@ export default function Book(props: Props) {
             <IconButton onClick={handleInfoClick}>
               <InfoOutlinedIcon />
             </IconButton>
-            {isInstructor && (
-              <>
-                <IconButton color="primary" onClick={handleEditClick}>
-                  <EditOutlinedIcon />
-                </IconButton>
-              </>
+            {isInstructor && book && (isBookEditable(book) || book.shared) && (
+              <IconButton color="primary" onClick={handleEditClick}>
+                <EditOutlinedIcon />
+              </IconButton>
             )}
             {isInstructor && linked && (
               <Button size="small" color="primary" onClick={onBookLinkClick}>
