@@ -10,6 +10,7 @@ import ActionHeader from "$organisms/ActionHeader";
 import ActionFooter from "$organisms/ActionFooter";
 import BookPreview from "$organisms/BookPreview";
 import SortSelect from "$atoms/SortSelect";
+import CreatorFilter from "$atoms/CreatorFilter";
 import SearchTextField from "$atoms/SearchTextField";
 import type { BookSchema } from "$server/models/book";
 import type { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
@@ -95,6 +96,9 @@ export default function BookLink(props: Props) {
         action={
           <>
             <SortSelect disabled /* TODO: ソート機能を追加したら有効化して */ />
+            <CreatorFilter
+              disabled /* TODO: フィルタリング機能を追加したら有効化して */
+            />
             <SearchTextField
               placeholder="ブック・トピック検索"
               disabled // TODO: ブック・トピック検索機能追加したら有効化して
