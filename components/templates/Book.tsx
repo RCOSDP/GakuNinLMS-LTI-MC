@@ -147,12 +147,10 @@ export default function Book(props: Props) {
             <IconButton onClick={handleInfoClick}>
               <InfoOutlinedIcon />
             </IconButton>
-            {((book && isBookEditable(book)) || book?.shared) && (
-              <>
-                <IconButton color="primary" onClick={handleEditClick}>
-                  <EditOutlinedIcon />
-                </IconButton>
-              </>
+            {isInstructor && book && (isBookEditable(book) || book.shared) && (
+              <IconButton color="primary" onClick={handleEditClick}>
+                <EditOutlinedIcon />
+              </IconButton>
             )}
             {isInstructor && linked && (
               <Button size="small" color="primary" onClick={onBookLinkClick}>
