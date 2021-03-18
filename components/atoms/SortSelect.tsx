@@ -46,7 +46,7 @@ export default function SortSelect(props: Props) {
   const [value, setValue] = useState<SortOrder>("updated");
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     setValue(event.target.value as SortOrder);
-    onSortChange(value);
+    onSortChange?.(value);
   };
   return (
     <MuiSelect
