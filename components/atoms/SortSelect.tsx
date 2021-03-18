@@ -1,4 +1,4 @@
-import { useState, ChangeEvent } from "react";
+import { useState } from "react";
 import MenuItem from "@material-ui/core/MenuItem";
 import MuiSelect from "@material-ui/core/Select";
 import useSelectStyles from "styles/select";
@@ -35,12 +35,18 @@ const options: ReadonlyArray<{
   },
 ];
 
-export default function SortSelect(props: Parameters<typeof MuiSelect>[0]) {
+type Props = Parameters<typeof MuiSelect>[0] & {
+  onSortChange?(value: SortOrder): void;
+};
+
+export default function SortSelect(props: Props) {
+  const { onSortChange, ...other } = props;
   const selectClasses = useSelectStyles();
   const inputClasses = useInputStyles();
-  const [value, setValue] = useState("updated");
-  const handleChange = (event: ChangeEvent<{ value: unknown }>) => {
-    setValue(event.target.value as string);
+  const [value, setValue] = useState<SortOrder>("updated");
+  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    setValue(event.target.value as SortOrder);
+    onSortChange?.(value);
   };
   return (
     <MuiSelect
@@ -48,7 +54,7 @@ export default function SortSelect(props: Parameters<typeof MuiSelect>[0]) {
       disableUnderline={true}
       value={value}
       onChange={handleChange}
-      {...props}
+      {...other}
     >
       {options.map((option) => (
         <MenuItem key={option.value} value={option.value}>
