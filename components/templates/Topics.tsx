@@ -8,6 +8,7 @@ import ActionHeader from "$organisms/ActionHeader";
 import TopicPreview from "$organisms/TopicPreview";
 import TopicPreviewDialog from "$organisms/TopicPreviewDialog";
 import SortSelect from "$atoms/SortSelect";
+import CreatorFilter from "$atoms/CreatorFilter";
 import SearchTextField from "$atoms/SearchTextField";
 import { TopicSchema } from "$server/models/topic";
 import useContainerStyles from "$styles/container";
@@ -70,6 +71,9 @@ export default function Topics(props: Props) {
         action={
           <>
             <SortSelect disabled /* TODO: ソート機能を追加したら有効化して */ />
+            <CreatorFilter
+              disabled /* TODO: フィルタリング機能を追加したら有効化して */
+            />
             <SearchTextField
               placeholder="トピック検索"
               disabled // TODO: ブック・トピック検索機能追加したら有効化して

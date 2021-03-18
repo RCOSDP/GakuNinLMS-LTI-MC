@@ -13,6 +13,7 @@ import ActionFooter from "$organisms/ActionFooter";
 import BookItemDialog from "$organisms/BookItemDialog";
 import BookTree from "$molecules/BookTree";
 import SortSelect from "$atoms/SortSelect";
+import CreatorFilter from "$atoms/CreatorFilter";
 import SearchTextField from "$atoms/SearchTextField";
 import { BookSchema } from "$server/models/book";
 import { SectionSchema } from "$server/models/book/section";
@@ -134,6 +135,9 @@ export default function BookImport(props: Props) {
         action={
           <>
             <SortSelect disabled /* TODO: ソート機能を追加したら有効化して */ />
+            <CreatorFilter
+              disabled /* TODO: フィルタリング機能を追加したら有効化して */
+            />
             <SearchTextField
               placeholder="ブック・トピック検索"
               disabled // TODO: ブック・トピック検索機能追加したら有効化して
