@@ -3,6 +3,7 @@ import type { SortOrder } from "$server/models/sortOrder";
 import type { UserSchema } from "$server/models/user";
 import type { BookSchema } from "$server/models/book";
 import { api } from "./api";
+import useSortOrder from "./useSortOrder";
 import useInfiniteProps from "./useInfiniteProps";
 
 const key = "/api/v2/user/{user_id}/books";
@@ -26,10 +27,11 @@ async function fetchUserBooks(
 }
 
 export function useUserBooks(userId: UserSchema["id"]) {
+  const [sort, onSortChange] = useSortOrder();
   const res = useSWRInfinite<BookSchema[]>(
-    makeKey(userId, "updated"),
+    makeKey(userId, sort),
     fetchUserBooks
   );
   const books = res.data?.flatMap((books) => books) ?? [];
-  return { books, ...useInfiniteProps(res) };
+  return { books, onSortChange, ...useInfiniteProps(res) };
 }

@@ -1,9 +1,10 @@
 import { useSWRInfinite } from "swr";
 import type { TopicSchema } from "$server/models/topic";
+import { SortOrder } from "$server/models/sortOrder";
 import { api } from "./api";
+import useSortOrder from "./useSortOrder";
 import useInfiniteProps from "./useInfiniteProps";
 import { revalidateTopic } from "./topic";
-import { SortOrder } from "$server/models/sortOrder";
 
 const key = "/api/v2/topics";
 
@@ -17,7 +18,7 @@ const makeKey = (sort: SortOrder, perPage: number) => (
 
 async function fetchTopics(
   _: typeof key,
-  sort: string,
+  sort: SortOrder,
   perPage: number,
   page: number
 ): Promise<TopicSchema[]> {
@@ -45,10 +46,8 @@ const filter = (
 export function useTopics(
   isTopicEditable: (topic: Pick<TopicSchema, "creator">) => boolean
 ) {
-  const res = useSWRInfinite<TopicSchema[]>(
-    makeKey("updated", 20),
-    fetchTopics
-  );
+  const [sort, onSortChange] = useSortOrder();
+  const res = useSWRInfinite<TopicSchema[]>(makeKey(sort, 20), fetchTopics);
   const topics = res.data?.flat().flatMap(filter(isTopicEditable)) ?? [];
-  return { topics, ...useInfiniteProps(res) };
+  return { topics, onSortChange, ...useInfiniteProps(res) };
 }

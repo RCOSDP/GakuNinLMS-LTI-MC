@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback } from "react";
 import MenuItem from "@material-ui/core/MenuItem";
 import MuiSelect from "@material-ui/core/Select";
 import useSelectStyles from "styles/select";
@@ -43,16 +43,18 @@ export default function SortSelect(props: Props) {
   const { onSortChange, ...other } = props;
   const selectClasses = useSelectStyles();
   const inputClasses = useInputStyles();
-  const [value, setValue] = useState<SortOrder>("updated");
-  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setValue(event.target.value as SortOrder);
-    onSortChange?.(value);
-  };
+  const handleChange = useCallback(
+    (event: React.ChangeEvent<{ value: unknown }>) => {
+      onSortChange?.(event.target.value as SortOrder);
+    },
+    [onSortChange]
+  );
   return (
     <MuiSelect
       classes={{ ...selectClasses, root: inputClasses.input }}
-      disableUnderline={true}
-      value={value}
+      disableUnderline
+      defaultValue={options[0].value}
+      disabled={!onSortChange}
       onChange={handleChange}
       {...other}
     >

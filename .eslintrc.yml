@@ -1,11 +1,10 @@
 root: true
 parser: "@typescript-eslint/parser"
-parserOptions:
-  project: ./tsconfig.eslint.json
 plugins:
   - react
   - "@typescript-eslint"
   - filenames
+  - tsc
 settings:
   react:
     version: detect
@@ -24,6 +23,7 @@ rules:
     - varsIgnorePattern: "^_"
   react/react-in-jsx-scope: "off"
   filenames/match-exported: error
+  tsc/config: [error, { configFile: "tsconfig.json" }]
 overrides:
   - files:
       - next.config.js
