@@ -1,7 +1,7 @@
 import { useState } from "react";
-import FormGroup from "@material-ui/core/FormGroup";
+import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
+import Radio from "@material-ui/core/Radio";
 import { makeStyles } from "@material-ui/core/styles";
 import { gray } from "$theme/colors";
 
@@ -25,24 +25,32 @@ const useStyles = makeStyles((theme) => ({
     "& > :first-child": {
       marginLeft: 0,
     },
+    "& > :not(:last-child)": {
+      marginRight: theme.spacing(1.5),
+    },
   },
 }));
 
-const useFormControlLabelStyles = makeStyles({
+const useFormControlLabelStyles = makeStyles((theme) => ({
   label: {
     color: gray[800],
     fontSize: "0.875rem",
+    marginLeft: theme.spacing(-0.5),
   },
-});
+}));
 
-const filter = ["none", "self", "other", "all"] as const;
+const filter = ["all", "self", "other"] as const;
 
 type Filter = typeof filter[number];
 
-enum FilterFlags {
-  Self = 1 << 0,
-  Other = 1 << 1,
-}
+const options: ReadonlyArray<{
+  value: Filter;
+  label: string;
+}> = [
+  { value: "all", label: "すべて" },
+  { value: "self", label: "自分" },
+  { value: "other", label: "自分以外" },
+];
 
 type Props = {
   disabled?: boolean;
@@ -53,45 +61,32 @@ function CreatorFilter(props: Props) {
   const { disabled = false, onFilterChange } = props;
   const classes = useStyles();
   const formControlLabelClasses = useFormControlLabelStyles();
-  const [flags, setFlags] = useState<FilterFlags>(
-    FilterFlags.Self | FilterFlags.Other
-  );
-  const handleChange = (flag: FilterFlags) => () => {
-    const newFlags = flags ^ flag;
-    setFlags(newFlags);
-    onFilterChange?.(filter[newFlags]);
+  const [value, setValue] = useState<Filter>("all");
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = event.target.value as Filter;
+    setValue(newValue);
+    onFilterChange?.(newValue);
   };
   return (
     <fieldset className={classes.fieldset}>
       <legend className={classes.legend}>作成者</legend>
-      <FormGroup className={classes.group} row>
-        <FormControlLabel
-          classes={formControlLabelClasses}
-          control={
-            <Checkbox
-              color="primary"
-              size="small"
-              checked={Boolean(flags & FilterFlags.Self)}
-              onChange={handleChange(FilterFlags.Self)}
-            />
-          }
-          label="自分"
-          disabled={disabled}
-        />
-        <FormControlLabel
-          classes={formControlLabelClasses}
-          control={
-            <Checkbox
-              color="primary"
-              size="small"
-              checked={Boolean(flags & FilterFlags.Other)}
-              onChange={handleChange(FilterFlags.Other)}
-            />
-          }
-          label="自分以外"
-          disabled={disabled}
-        />
-      </FormGroup>
+      <RadioGroup
+        className={classes.group}
+        value={value}
+        onChange={handleChange}
+        row
+      >
+        {options.map(({ value, label }) => (
+          <FormControlLabel
+            key={value}
+            classes={formControlLabelClasses}
+            value={value}
+            control={<Radio color="primary" size="small" />}
+            label={label}
+            disabled={disabled}
+          />
+        ))}
+      </RadioGroup>
     </fieldset>
   );
 }
