@@ -39,7 +39,6 @@ function Index() {
         })
       );
     },
-    onSortChange: () => undefined,
     isTopicEditable,
   };
 
