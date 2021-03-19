@@ -11,6 +11,7 @@ import SortSelect from "$atoms/SortSelect";
 import CreatorFilter from "$atoms/CreatorFilter";
 import SearchTextField from "$atoms/SearchTextField";
 import { TopicSchema } from "$server/models/topic";
+import { SortOrder } from "$server/models/sortOrder";
 import useContainerStyles from "$styles/container";
 import useDialogProps from "$utils/useDialogProps";
 
@@ -32,6 +33,7 @@ type Props = {
   onLoadMore?(): void;
   onTopicEditClick(topic: TopicSchema): void;
   onTopicNewClick(): void;
+  onSortChange?(sort: SortOrder): void;
 };
 
 export default function Topics(props: Props) {
@@ -42,6 +44,7 @@ export default function Topics(props: Props) {
     onLoadMore = () => undefined,
     onTopicEditClick,
     onTopicNewClick,
+    onSortChange,
   } = props;
   const classes = useStyles();
   const containerClasses = useContainerStyles();
@@ -70,7 +73,7 @@ export default function Topics(props: Props) {
         }
         action={
           <>
-            <SortSelect disabled /* TODO: ソート機能を追加したら有効化して */ />
+            <SortSelect onSortChange={onSortChange} />
             <CreatorFilter
               disabled /* TODO: フィルタリング機能を追加したら有効化して */
             />

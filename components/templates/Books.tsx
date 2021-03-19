@@ -11,6 +11,7 @@ import CreatorFilter from "$atoms/CreatorFilter";
 import SearchTextField from "$atoms/SearchTextField";
 import type { BookSchema } from "$server/models/book";
 import type { TopicSchema } from "$server/models/topic";
+import { SortOrder } from "$server/models/sortOrder";
 import useContainerStyles from "styles/container";
 
 const useStyles = makeStyles((theme) => ({
@@ -31,6 +32,7 @@ export type Props = {
   onBookEditClick(book: BookSchema): void;
   onBookNewClick(): void;
   onTopicEditClick?(topic: TopicSchema): void;
+  onSortChange?(sort: SortOrder): void;
   isTopicEditable?(topic: TopicSchema): boolean | undefined;
 };
 
@@ -44,6 +46,7 @@ export default function Books(props: Props) {
     onBookEditClick,
     onBookNewClick,
     onTopicEditClick,
+    onSortChange,
     isTopicEditable,
   } = props;
   const handleBookEditClick = (book: BookSchema) => () => onBookEditClick(book);
@@ -71,7 +74,7 @@ export default function Books(props: Props) {
         }
         action={
           <>
-            <SortSelect disabled /* TODO: ソート機能を追加したら有効化して */ />
+            <SortSelect onSortChange={onSortChange} />
             <CreatorFilter
               disabled /* TODO: フィルタリング機能を追加したら有効化して */
             />

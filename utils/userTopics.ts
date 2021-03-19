@@ -3,6 +3,7 @@ import type { SortOrder } from "$server/models/sortOrder";
 import type { UserSchema } from "$server/models/user";
 import type { TopicSchema } from "$server/models/topic";
 import { api } from "./api";
+import useSortOrder from "./useSortOrder";
 import useInfiniteProps from "./useInfiniteProps";
 
 const key = "/api/v2/user/{user_id}/topics";
@@ -36,10 +37,11 @@ async function fetchUserTopics(
 }
 
 export function useUserTopics(userId: UserSchema["id"]) {
+  const [sort, onSortChange] = useSortOrder();
   const res = useSWRInfinite<TopicSchema[]>(
-    makeKey(userId, "updated", 20),
+    makeKey(userId, sort, 20),
     fetchUserTopics
   );
   const topics = res.data?.flatMap((topics) => topics) ?? [];
-  return { topics, ...useInfiniteProps(res) };
+  return { topics, onSortChange, ...useInfiniteProps(res) };
 }

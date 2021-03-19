@@ -14,6 +14,7 @@ import CreatorFilter from "$atoms/CreatorFilter";
 import SearchTextField from "$atoms/SearchTextField";
 import type { BookSchema } from "$server/models/book";
 import type { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
+import { SortOrder } from "$server/models/sortOrder";
 import useContainerStyles from "styles/container";
 
 const useStyles = makeStyles((theme) => ({
@@ -42,6 +43,7 @@ type Props = {
   onCancel(): void;
   onBookEditClick(book: BookSchema): void;
   onBookNewClick(): void;
+  onSortChange?(sort: SortOrder): void;
   isBookEditable?(book: BookSchema): boolean | undefined;
 };
 
@@ -56,6 +58,7 @@ export default function BookLink(props: Props) {
     onCancel,
     onBookEditClick,
     onBookNewClick,
+    onSortChange,
     isBookEditable,
   } = props;
   const classes = useStyles();
@@ -95,7 +98,7 @@ export default function BookLink(props: Props) {
         }
         action={
           <>
-            <SortSelect disabled /* TODO: ソート機能を追加したら有効化して */ />
+            <SortSelect onSortChange={onSortChange} />
             <CreatorFilter
               disabled /* TODO: フィルタリング機能を追加したら有効化して */
             />

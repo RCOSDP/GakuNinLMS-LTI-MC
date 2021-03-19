@@ -4,6 +4,7 @@ import type { BookSchema } from "$server/models/book";
 import type { TopicSchema } from "$server/models/topic";
 import { api } from "./api";
 import getDisplayableBook from "./getDisplayableBook";
+import useSortOrder from "./useSortOrder";
 import useInfiniteProps from "./useInfiniteProps";
 import { revalidateBook } from "./book";
 
@@ -19,7 +20,7 @@ const makeKey = (sort: SortOrder) => (
 
 async function fetchBooks(
   _: typeof key,
-  sort: string,
+  sort: SortOrder,
   page: number
 ): Promise<BookSchema[]> {
   const res = await api.apiV2BooksGet({ sort, page });
@@ -40,8 +41,9 @@ export function useBooks(
   isBookEditable: (book: Pick<BookSchema, "author">) => boolean,
   isTopicEditable: (topic: Pick<TopicSchema, "creator">) => boolean
 ) {
-  const res = useSWRInfinite<BookSchema[]>(makeKey("updated"), fetchBooks);
+  const [sort, onSortChange] = useSortOrder();
+  const res = useSWRInfinite<BookSchema[]>(makeKey(sort), fetchBooks);
   const books =
     res.data?.flat().flatMap(filter(isBookEditable, isTopicEditable)) ?? [];
-  return { books, ...useInfiniteProps(res) };
+  return { books, onSortChange, ...useInfiniteProps(res) };
 }
