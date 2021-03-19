@@ -70,7 +70,7 @@
     "compile:prisma": "yarn --cwd server build:prisma",
     "compile:pathpida": "pathpida",
     "build": "run-s compile build:frontend build:export build:server",
-    "build:frontend": "run-s build:storybook build:next",
+    "build:frontend": "run-p build:{storybook,next}",
     "build:storybook": "build-storybook -o public/storybook",
     "build:next": "next build",
     "build:export": "next export -o server/dist/public",
