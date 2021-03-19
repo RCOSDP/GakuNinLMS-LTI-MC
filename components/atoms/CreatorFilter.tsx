@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback } from "react";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Radio from "@material-ui/core/Radio";
@@ -61,18 +61,18 @@ function CreatorFilter(props: Props) {
   const { disabled = false, onFilterChange } = props;
   const classes = useStyles();
   const formControlLabelClasses = useFormControlLabelStyles();
-  const [value, setValue] = useState<Filter>("all");
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = event.target.value as Filter;
-    setValue(newValue);
-    onFilterChange?.(newValue);
-  };
+  const handleChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      onFilterChange?.(event.target.value as Filter);
+    },
+    [onFilterChange]
+  );
   return (
     <fieldset className={classes.fieldset}>
       <legend className={classes.legend}>作成者</legend>
       <RadioGroup
         className={classes.group}
-        value={value}
+        defaultValue={options[0].value}
         onChange={handleChange}
         row
       >
