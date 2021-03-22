@@ -39,3 +39,11 @@ To confirm some UI on the browser, execute the following command after executing
 ```sh
 yarn storybook
 ```
+
+## Customization
+
+### Logo
+
+Customize the logo image which layout in AppBar be able by overwrite the `./public/logo.png` .
+
+Consider the logo image will be resized in a range of width 100px / height 48px with keeping aspect ratio.

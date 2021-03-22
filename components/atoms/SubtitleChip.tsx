@@ -1,5 +1,5 @@
 import Chip from "@material-ui/core/Chip";
-import { Close } from "@material-ui/icons";
+import CloseIcon from "@material-ui/icons/Close";
 import { makeStyles } from "@material-ui/core/styles";
 import { VideoTrackSchema } from "$server/models/videoTrack";
 import languages from "$utils/languages";
@@ -29,7 +29,7 @@ export default function SubtitleChip(props: Props) {
       size="small"
       label={languages[videoTrack.language]}
       onDelete={handleDelete}
-      deleteIcon={<Close />}
+      deleteIcon={<CloseIcon />}
     />
   );
 }
