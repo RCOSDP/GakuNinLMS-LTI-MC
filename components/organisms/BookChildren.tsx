@@ -7,7 +7,9 @@ import ListItemText from "@material-ui/core/ListItemText";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import Collapse from "@material-ui/core/Collapse";
 import { makeStyles } from "@material-ui/styles";
-import { ExpandLess, ExpandMore, EditOutlined } from "@material-ui/icons";
+import ExpandLessIcon from "@material-ui/icons/ExpandLess";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import { TopicSchema } from "$server/models/topic";
 import { SectionSchema } from "$server/models/book/section";
 import { primary } from "$theme/colors";
@@ -35,7 +37,7 @@ function Section({
           {getOutlineNumber(section, sectionItemIndex) + " "}
           {section.name ?? "無名のセクション"}
         </ListItemText>
-        {open ? <ExpandLess /> : <ExpandMore />}
+        {open ? <ExpandLessIcon /> : <ExpandMoreIcon />}
       </ListItem>
       <Collapse in={open}>{children}</Collapse>
     </>
@@ -122,7 +124,7 @@ export default function BookChildren(props: Props) {
                       topicItemIndex
                     )}
                   >
-                    <EditOutlined />
+                    <EditOutlinedIcon />
                   </IconButton>
                 </ListItemSecondaryAction>
               )}

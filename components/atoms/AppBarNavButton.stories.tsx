@@ -1,8 +1,8 @@
 export default { title: "atoms/AppBarNavButton" };
 
-import { MenuBookOutlined } from "@material-ui/icons";
+import MenuBookOutlinedIcon from "@material-ui/icons/MenuBookOutlined";
 import AppBarNavButton from "./AppBarNavButton";
 
 export const Default = () => (
-  <AppBarNavButton icon={<MenuBookOutlined />} label="マイブック" />
+  <AppBarNavButton icon={<MenuBookOutlinedIcon />} label="マイブック" />
 );
