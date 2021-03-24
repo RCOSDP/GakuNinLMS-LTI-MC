@@ -4,7 +4,7 @@ import Placeholder from "$templates/Placeholder";
 import BookNotFoundProblem from "$organisms/TopicNotFoundProblem";
 import { useSessionAtom } from "$store/session";
 import { updateBook, useBook } from "$utils/book";
-import { useTopics } from "$utils/topics";
+import useTopics from "$utils/useTopics";
 import type { TopicSchema } from "$server/models/topic";
 import type { Query as BookEditQuery } from "$pages/book/edit";
 import { connectOrCreateTopic } from "$utils/topic";
@@ -15,7 +15,7 @@ export type Query = BookEditQuery;
 function Import({ bookId, context }: BookEditQuery) {
   const { isBookEditable, isTopicEditable } = useSessionAtom();
   const { book, error } = useBook(bookId, isBookEditable, isTopicEditable);
-  const topicsProps = useTopics(isTopicEditable);
+  const topicsProps = useTopics();
   const router = useRouter();
   const bookEditQuery = { bookId, ...(context && { context }) };
   function back() {

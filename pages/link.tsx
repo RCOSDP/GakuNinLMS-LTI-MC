@@ -2,15 +2,15 @@ import { useRouter } from "next/router";
 import type { BookSchema } from "$server/models/book";
 import { useSessionAtom } from "$store/session";
 import { updateLtiResourceLink } from "$utils/ltiResourceLink";
-import { useBooks } from "$utils/books";
+import useBooks from "$utils/useBooks";
 import BookLink from "$templates/BookLink";
 import Placeholder from "$templates/Placeholder";
 import { pagesPath } from "$utils/$path";
 
 function Index() {
   const router = useRouter();
-  const { session, isBookEditable, isTopicEditable } = useSessionAtom();
-  const booksProps = useBooks(isBookEditable, isTopicEditable);
+  const { session, isBookEditable } = useSessionAtom();
+  const booksProps = useBooks();
   const ltiLaunchBody = session?.ltiLaunchBody;
   const ltiResourceLink = ltiLaunchBody && {
     consumerId: ltiLaunchBody.oauth_consumer_key,
