@@ -8,6 +8,7 @@ import Video from "$organisms/Video";
 import Item from "$atoms/Item";
 import useStickyProps from "$utils/useStickyProps";
 import languages from "$utils/languages";
+import { gray } from "$theme/colors";
 
 function formatInterval(start: Date | number, end: Date | number) {
   const duration = intervalToDuration({ start, end });
@@ -19,6 +20,7 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(-3),
     marginBottom: theme.spacing(2),
     marginLeft: theme.spacing(-3),
+    backgroundColor: gray[800],
   },
   title: {
     marginBottom: theme.spacing(0.5),
