@@ -21,6 +21,10 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(2),
     marginLeft: theme.spacing(-3),
     backgroundColor: gray[800],
+    "& > *": {
+      maxWidth: "calc(40vh * 16 / 9)",
+      margin: "0 auto",
+    },
   },
   title: {
     marginBottom: theme.spacing(0.5),
