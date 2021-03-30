@@ -25,10 +25,6 @@ const useStyles = makeStyles((theme) => ({
       maxWidth: "calc(40vh * 16 / 9)",
       margin: "0 auto",
     },
-    "& div:empty": {
-      // NOTE: Viemoでiframeがぶら下がる前の高さを確保する
-      paddingTop: "56.25%",
-    },
   },
   title: {
     marginBottom: theme.spacing(0.5),
