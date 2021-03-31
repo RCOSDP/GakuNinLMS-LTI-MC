@@ -22,7 +22,9 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: theme.spacing(-3),
     backgroundColor: gray[800],
     "& > *": {
-      maxWidth: "calc(40vh * 16 / 9)",
+      // NOTE: 各動画プレイヤーのレスポンシブ対応により、高さはpaddingTopによってwidthのpercentage分
+      // 確保されるため、heightによる制限ではなくwidthによる制限をおこなう必要がある
+      maxWidth: "calc(40vh * 4 / 3)",
       margin: "0 auto",
     },
   },
