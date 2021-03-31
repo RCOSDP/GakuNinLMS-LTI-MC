@@ -5,8 +5,8 @@ import volumePersister from "$utils/volumePersister";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles({
-  root: {
-    "& div:empty": {
+  player: {
+    "&:empty": {
       // NOTE: @vimeo/player によって iframe がぶら下がる前の高さを確保する
       paddingTop: "56.25%",
     },
@@ -27,6 +27,7 @@ export function Vimeo({ options }: VimeoProps) {
   const classes = useStyles();
   useEffect(() => {
     const element = document.createElement("div");
+    element.classList.add(classes.player);
     ref.current.appendChild(element);
     const player = new Player(element, {
       ...defaultOptions,
@@ -40,6 +41,6 @@ export function Vimeo({ options }: VimeoProps) {
       player.pause();
       element.style.display = "none";
     };
-  }, [options, tracking]);
-  return <div className={classes.root} ref={ref} />;
+  }, [options, tracking, classes]);
+  return <div ref={ref} />;
 }
