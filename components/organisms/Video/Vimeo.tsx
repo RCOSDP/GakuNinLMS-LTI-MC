@@ -2,6 +2,16 @@ import { useEffect, useRef } from "react";
 import Player, { Options } from "@vimeo/player";
 import { usePlayerTrackingAtom } from "$store/playerTracker";
 import volumePersister from "$utils/volumePersister";
+import { makeStyles } from "@material-ui/core/styles";
+
+const useStyles = makeStyles({
+  player: {
+    "&:empty": {
+      // NOTE: @vimeo/player によって iframe がぶら下がる前の高さを確保する
+      paddingTop: "56.25%",
+    },
+  },
+});
 
 type VimeoProps = {
   options: Options;
@@ -14,8 +24,10 @@ const defaultOptions: Options = {
 export function Vimeo({ options }: VimeoProps) {
   const ref = useRef(document.createElement("div"));
   const tracking = usePlayerTrackingAtom();
+  const classes = useStyles();
   useEffect(() => {
     const element = document.createElement("div");
+    element.classList.add(classes.player);
     ref.current.appendChild(element);
     const player = new Player(element, {
       ...defaultOptions,
@@ -29,6 +41,6 @@ export function Vimeo({ options }: VimeoProps) {
       player.pause();
       element.style.display = "none";
     };
-  }, [options, tracking]);
+  }, [options, tracking, classes]);
   return <div ref={ref} />;
 }

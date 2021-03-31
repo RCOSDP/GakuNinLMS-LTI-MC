@@ -8,6 +8,7 @@ import Video from "$organisms/Video";
 import Item from "$atoms/Item";
 import useStickyProps from "$utils/useStickyProps";
 import languages from "$utils/languages";
+import { gray } from "$theme/colors";
 
 function formatInterval(start: Date | number, end: Date | number) {
   const duration = intervalToDuration({ start, end });
@@ -19,6 +20,14 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(-3),
     marginBottom: theme.spacing(2),
     marginLeft: theme.spacing(-3),
+    backgroundColor: gray[800],
+    "& > *": {
+      /* NOTE: 各動画プレイヤーのレスポンシブ対応により、高さはpaddingTopによってwidthのpercentage分
+       * 確保されるため、heightによる制限ではなくwidthによる制限をおこなう必要がある */
+      // NOTE: 4:3前提なので、16:9では40vhよりも狭い高さになる
+      maxWidth: "calc(40vh * 4 / 3)",
+      margin: "0 auto",
+    },
   },
   title: {
     marginBottom: theme.spacing(0.5),
