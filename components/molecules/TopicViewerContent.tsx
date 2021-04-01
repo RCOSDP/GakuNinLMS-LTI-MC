@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
     "& > *": {
       /* NOTE: 各動画プレイヤーのレスポンシブ対応により、高さはpaddingTopによってwidthのpercentage分
        * 確保されるため、heightによる制限ではなくwidthによる制限をおこなう必要がある */
-      // NOTE: 4:3前提なので、16:9では50vhよりも狭い高さになる
+      // NOTE: 4:3前提になっているが本当はアスペクト比に応じて最大高さを変えたい
       maxWidth: "calc(50vh * 4 / 3)",
       margin: "0 auto",
     },
