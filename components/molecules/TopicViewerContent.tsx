@@ -8,6 +8,7 @@ import Video from "$organisms/Video";
 import Item from "$atoms/Item";
 import useStickyProps from "$utils/useStickyProps";
 import languages from "$utils/languages";
+import { NEXT_PUBLIC_VIDEO_MAX_HEIGHT } from "$utils/env";
 import { gray } from "$theme/colors";
 
 function formatInterval(start: Date | number, end: Date | number) {
@@ -25,7 +26,10 @@ const useStyles = makeStyles((theme) => ({
       /* NOTE: 各動画プレイヤーのレスポンシブ対応により、高さはpaddingTopによってwidthのpercentage分
        * 確保されるため、heightによる制限ではなくwidthによる制限をおこなう必要がある */
       // NOTE: 16:9前提になっているが本当はアスペクト比に応じて最大高さを変えたい
-      maxWidth: "calc(40vh * 16 / 9)",
+      maxWidth:
+        NEXT_PUBLIC_VIDEO_MAX_HEIGHT === "unset"
+          ? "unset"
+          : `calc(${NEXT_PUBLIC_VIDEO_MAX_HEIGHT} * 16 / 9)`,
       margin: "0 auto",
     },
   },
