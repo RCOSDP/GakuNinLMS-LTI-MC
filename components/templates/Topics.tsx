@@ -12,8 +12,10 @@ import CreatorFilter from "$atoms/CreatorFilter";
 import SearchTextField from "$atoms/SearchTextField";
 import { TopicSchema } from "$server/models/topic";
 import { SortOrder } from "$server/models/sortOrder";
+import { Filter } from "$types/filter";
 import useContainerStyles from "$styles/container";
 import useDialogProps from "$utils/useDialogProps";
+import { useSearchAtom } from "$store/search";
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -34,6 +36,7 @@ type Props = {
   onTopicEditClick(topic: TopicSchema): void;
   onTopicNewClick(): void;
   onSortChange?(sort: SortOrder): void;
+  onFilterChange?(filter: Filter): void;
 };
 
 export default function Topics(props: Props) {
@@ -45,6 +48,7 @@ export default function Topics(props: Props) {
     onTopicEditClick,
     onTopicNewClick,
     onSortChange,
+    onFilterChange,
   } = props;
   const classes = useStyles();
   const containerClasses = useContainerStyles();
@@ -53,6 +57,7 @@ export default function Topics(props: Props) {
     dispatch: setPreviewTopic,
     ...dialogProps
   } = useDialogProps<TopicSchema>();
+  const { onSearchInput } = useSearchAtom();
   const handleTopicDetailClick = (topic: TopicSchema) => setPreviewTopic(topic);
   const infiniteRef = useInfiniteScroll<HTMLDivElement>({
     loading,
@@ -64,7 +69,7 @@ export default function Topics(props: Props) {
       <ActionHeader
         title={
           <>
-            マイトピック
+            トピック
             <Button size="small" color="primary" onClick={onTopicNewClick}>
               <AddIcon className={classes.icon} />
               トピックの作成
@@ -74,12 +79,10 @@ export default function Topics(props: Props) {
         action={
           <>
             <SortSelect onSortChange={onSortChange} />
-            <CreatorFilter
-              disabled /* TODO: フィルタリング機能を追加したら有効化して */
-            />
+            <CreatorFilter onFilterChange={onFilterChange} />
             <SearchTextField
               placeholder="トピック検索"
-              disabled // TODO: ブック・トピック検索機能追加したら有効化して
+              onSearchInput={onSearchInput}
             />
           </>
         }

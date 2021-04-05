@@ -15,7 +15,9 @@ import SearchTextField from "$atoms/SearchTextField";
 import type { BookSchema } from "$server/models/book";
 import type { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
 import { SortOrder } from "$server/models/sortOrder";
-import useContainerStyles from "styles/container";
+import { Filter } from "$types/filter";
+import useContainerStyles from "$styles/container";
+import { useSearchAtom } from "$store/search";
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -44,6 +46,7 @@ type Props = {
   onBookEditClick(book: BookSchema): void;
   onBookNewClick(): void;
   onSortChange?(sort: SortOrder): void;
+  onFilterChange?(filter: Filter): void;
   isBookEditable?(book: BookSchema): boolean | undefined;
 };
 
@@ -59,6 +62,7 @@ export default function BookLink(props: Props) {
     onBookEditClick,
     onBookNewClick,
     onSortChange,
+    onFilterChange,
     isBookEditable,
   } = props;
   const classes = useStyles();
@@ -66,6 +70,7 @@ export default function BookLink(props: Props) {
   const [selectedBookId, selectBookId] = useState<BookSchema["id"] | null>(
     null
   );
+  const { query, onSearchInput, onLtiContextClick } = useSearchAtom();
   const handleChecked = (id: BookSchema["id"]) => () => selectBookId(id);
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -99,12 +104,11 @@ export default function BookLink(props: Props) {
         action={
           <>
             <SortSelect onSortChange={onSortChange} />
-            <CreatorFilter
-              disabled /* TODO: フィルタリング機能を追加したら有効化して */
-            />
+            <CreatorFilter onFilterChange={onFilterChange} />
             <SearchTextField
               placeholder="ブック・トピック検索"
-              disabled // TODO: ブック・トピック検索機能追加したら有効化して
+              value={query.input}
+              onSearchInput={onSearchInput}
             />
           </>
         }
@@ -119,6 +123,7 @@ export default function BookLink(props: Props) {
             checked={selectedBookId === book.id}
             onChange={handleChecked(book.id)}
             onEditClick={handleBookEditClick(book)}
+            onLtiContextClick={onLtiContextClick}
           />
         ))}
         {loading &&

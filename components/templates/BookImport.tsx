@@ -19,8 +19,10 @@ import { BookSchema } from "$server/models/book";
 import { SectionSchema } from "$server/models/book/section";
 import { TopicSchema } from "$server/models/topic";
 import { SortOrder } from "$server/models/sortOrder";
+import { Filter } from "$types/filter";
 import useContainerStyles from "$styles/container";
 import useDialogProps from "$utils/useDialogProps";
+import { useSearchAtom } from "$store/search";
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -57,6 +59,7 @@ type Props = {
   onTopicClick?(topic: TopicSchema): void;
   onTopicEditClick?(topic: TopicSchema): void;
   onSortChange?(sort: SortOrder): void;
+  onFilterChange?(filter: Filter): void;
   isBookEditable?(book: BookSchema): boolean | undefined;
   isTopicEditable?(topic: TopicSchema): boolean | undefined;
 };
@@ -73,6 +76,7 @@ export default function BookImport(props: Props) {
     onTopicClick,
     onTopicEditClick,
     onSortChange,
+    onFilterChange,
     isBookEditable,
     isTopicEditable,
   } = props;
@@ -83,6 +87,7 @@ export default function BookImport(props: Props) {
     dispatch: setBook,
     ...dialogProps
   } = useDialogProps<BookSchema>();
+  const { query, onSearchInput, onLtiContextClick } = useSearchAtom();
   const [selectedNodeIds, select] = useState<Set<string>>(new Set());
   const handleTreeChange = (nodeId: string) => {
     select((nodeIds) =>
@@ -95,7 +100,9 @@ export default function BookImport(props: Props) {
     const selectedSections: SectionSchema[] = [];
     const selectedTopics: TopicSchema[] = [];
     selectedNodeIds.forEach((nodeId) => {
+      // TODO: BookTree と BookChildrenTree にある nodeId の構造に合わせて変更
       const [bookId, sectionId, topicId] = nodeId
+        .replace(/:[^:]*$/, "")
         .split("-")
         .map((id) => Number(id));
       const book = books.find((book) => book.id === bookId);
@@ -138,12 +145,11 @@ export default function BookImport(props: Props) {
         action={
           <>
             <SortSelect onSortChange={onSortChange} />
-            <CreatorFilter
-              disabled /* TODO: フィルタリング機能を追加したら有効化して */
-            />
+            <CreatorFilter onFilterChange={onFilterChange} />
             <SearchTextField
               placeholder="ブック・トピック検索"
-              disabled // TODO: ブック・トピック検索機能追加したら有効化して
+              value={query.input}
+              onSearchInput={onSearchInput}
             />
           </>
         }
@@ -167,6 +173,7 @@ export default function BookImport(props: Props) {
               onItemEditClick={handleItem(onTopicEditClick)}
               onBookInfoClick={handleBookInfoClick}
               onBookEditClick={isBookEditable?.(book) && onBookEditClick}
+              onLtiContextClick={onLtiContextClick}
               isTopicEditable={isTopicEditable}
               onTreeChange={handleTreeChange}
             />

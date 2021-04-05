@@ -14,8 +14,10 @@ import CreatorFilter from "$atoms/CreatorFilter";
 import SearchTextField from "$atoms/SearchTextField";
 import { TopicSchema } from "$server/models/topic";
 import { SortOrder } from "$server/models/sortOrder";
+import { Filter } from "$types/filter";
 import useContainerStyles from "$styles/container";
 import useDialogProps from "$utils/useDialogProps";
+import { useSearchAtom } from "$store/search";
 
 const useStyles = makeStyles((theme) => ({
   topics: {
@@ -39,6 +41,7 @@ type Props = {
   onCancel(): void;
   onTopicEditClick(topic: TopicSchema): void;
   onSortChange?(sort: SortOrder): void;
+  onFilterChange?(filter: Filter): void;
   isTopicEditable(topic: TopicSchema): boolean | undefined;
 };
 
@@ -52,11 +55,13 @@ export default function TopicImport(props: Props) {
     onCancel,
     onTopicEditClick,
     onSortChange,
+    onFilterChange,
     isTopicEditable,
   } = props;
   const classes = useStyles();
   const containerClasses = useContainerStyles();
   const [selectedIndexes, select] = useState<Set<number>>(new Set());
+  const { onSearchInput } = useSearchAtom();
   const handleChecked = (index: number) => () =>
     select((indexes) =>
       indexes.delete(index) ? new Set(indexes) : new Set(indexes.add(index))
@@ -92,12 +97,10 @@ export default function TopicImport(props: Props) {
         action={
           <>
             <SortSelect onSortChange={onSortChange} />
-            <CreatorFilter
-              disabled /* TODO: フィルタリング機能を追加したら有効化して */
-            />
+            <CreatorFilter onFilterChange={onFilterChange} />
             <SearchTextField
               placeholder="トピック検索"
-              disabled // TODO: トピック検索機能追加したら有効化して
+              onSearchInput={onSearchInput}
             />
           </>
         }
