@@ -104,12 +104,12 @@ export default function Analysis(props: Props) {
   };
   const ltiResourceMenu = useSelectorProps<LtiResource>(ltiResources[0]);
   const bookMenu = useSelectorProps<BookSchema>(books[0]);
-  const handleLtiResourceClick = (ltiResource: LtiResource) => {
+  const handleLtiResourceClick = (ltiResource: LtiResource) => () => {
     onLtiResourceClick?.(ltiResource);
     ltiResourceMenu.setValue(ltiResource);
     ltiResourceMenu.onClose();
   };
-  const handleBookClick = (book: BookSchema) => {
+  const handleBookClick = (book: BookSchema) => () => {
     onBookClick?.(book);
     bookMenu.setValue(book);
     bookMenu.onClose();
@@ -146,10 +146,7 @@ export default function Analysis(props: Props) {
         onClose={ltiResourceMenu.onClose}
       >
         {ltiResources.map((ltiResource, index) => (
-          <MenuItem
-            key={index}
-            onClick={() => handleLtiResourceClick(ltiResource)}
-          >
+          <MenuItem key={index} onClick={handleLtiResourceClick(ltiResource)}>
             {ltiResource.contextTitle}
           </MenuItem>
         ))}
@@ -182,7 +179,7 @@ export default function Analysis(props: Props) {
         onClose={bookMenu.onClose}
       >
         {books.map((book, index) => (
-          <MenuItem key={index} onClick={() => handleBookClick(book)}>
+          <MenuItem key={index} onClick={handleBookClick(book)}>
             {book.name}
           </MenuItem>
         ))}
