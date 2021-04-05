@@ -159,6 +159,7 @@ export default function Analysis(props: Props) {
           aria-controls="book-menu"
           variant="text"
           onClick={bookMenu.onOpen}
+          disabled={value === 0}
         >
           <ExpandMoreIcon />
           <Typography variant="h5">{bookMenu?.value?.name}</Typography>
