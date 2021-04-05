@@ -19,11 +19,12 @@ API の接続先の情報を変更する場合 .env を適宜書き換える必�
 
 .env:
 
-| 環境変数                             | 説明                                                        |
-| ------------------------------------ | ----------------------------------------------------------- |
-| `NEXT_PUBLIC_API_BASE_PATH`          | API の URL のベースとなるパス (デフォルト: 同一オリジン "") |
-| `NEXT_PUBLIC_BASE_PATH`              | 静的コンテンツの URL のベースとなるパス (デフォルト: "")    |
-| `NEXT_PUBLIC_ACTIVITY_SEND_INTERVAL` | 学習活動の送信間隔 (秒) (デフォルト:`10`)                   |
+| 環境変数                             | 説明                                                               |
+| ------------------------------------ | ------------------------------------------------------------------ |
+| `NEXT_PUBLIC_API_BASE_PATH`          | API の URL のベースとなるパス (デフォルト: 同一オリジン "")        |
+| `NEXT_PUBLIC_BASE_PATH`              | 静的コンテンツの URL のベースとなるパス (デフォルト: "")           |
+| `NEXT_PUBLIC_ACTIVITY_SEND_INTERVAL` | 学習活動の送信間隔 (秒) (デフォルト:`10`)                          |
+| `NEXT_PUBLIC_VIDEO_MAX_HEIGHT`       | スクロール追従する動画プレイヤーの max-height (デフォルト: "40vh") |
 
 ## フロントエンド周りのビルド
 
@@ -75,6 +76,14 @@ yarn build:license
 アプリケーションバーに表示するロゴ画像を変更するには `public/logo.png` を上書き後、ビルドします。
 
 ロゴ画像は最大幅 100px、最大高さ 48px の範囲でアスペクト比を維持してリサイズされます。
+
+### 動画プレイヤー
+
+スクロール追従する動画プレイヤーに高さ制限のスタイルを付与しています。
+
+高さ制限の値を変更するには `NEXT_PUBLIC_VIDEO_MAX_HEIGHT` に [<length> データ型](https://developer.mozilla.org/ja/docs/Web/CSS/Length)を設定します。
+
+高さ制限を解除するには `NEXT_PUBLIC_VIDEO_MAX_HEIGHT` に "unset" を設定します。
 
 ### Storybook
 
