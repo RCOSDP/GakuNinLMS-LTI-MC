@@ -12,14 +12,17 @@ const UserBooks = (
 
 function Index() {
   const router = useRouter();
-  const { isTopicEditable } = useSessionAtom();
+  const { isBookEditable, isTopicEditable } = useSessionAtom();
   const handlers = {
     onBookClick({ id }: Pick<BookSchema, "id">) {
       return router.push(pagesPath.book.$url({ query: { bookId: id } }));
     },
-    onBookEditClick({ id }: Pick<BookSchema, "id">) {
+    onBookEditClick(book: Pick<BookSchema, "id" | "author">) {
+      const action = isBookEditable(book) ? "edit" : "generate";
       return router.push(
-        pagesPath.book.edit.$url({ query: { context: "books", bookId: id } })
+        pagesPath.book[action].$url({
+          query: { context: "books", bookId: book.id },
+        })
       );
     },
     onBookNewClick() {
