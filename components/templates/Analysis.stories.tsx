@@ -1,12 +1,7 @@
 export default { title: "templates/Analysis" };
 
 import Analysis from "./Analysis";
-import {
-  books,
-  ltiResourceLink,
-  analysisOverview,
-  analysisDetail,
-} from "$samples";
+import { session, books, analysisOverview, analysisDetail } from "$samples";
 
 const handlers = {
   onAnalysisBookDownload: console.log,
@@ -16,8 +11,8 @@ const handlers = {
 
 export const Default = () => (
   <Analysis
+    session={session}
     books={books}
-    ltiResources={[ltiResourceLink]}
     analysisBooks={[analysisOverview]}
     analysisTopics={[analysisOverview]}
     analysisUsers={[analysisDetail]}

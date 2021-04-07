@@ -4,13 +4,10 @@ import Container from "@material-ui/core/Container";
 import Card from "@material-ui/core/Card";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
-import Tooltip from "@material-ui/core/Tooltip";
 import Button from "@material-ui/core/Button";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
-import IconButton from "@material-ui/core/IconButton";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import UnfoldMoreIcon from "@material-ui/icons/UnfoldMore";
 import GetAppOutlinedIcon from "@material-ui/icons/GetAppOutlined";
 import { makeStyles } from "@material-ui/core/styles";
 import ActionHeader from "$organisms/ActionHeader";
@@ -19,13 +16,13 @@ import AnalysisDetailItem from "$molecules/AnalysisDetailItem";
 import LearningStatusDot from "$atoms/LearningStatusDot";
 import useContainerStyles from "$styles/container";
 import useCardStyles from "$styles/card";
-// import { useSessionAtom } from "$store/session";
 import useSelectorProps from "$utils/useSelectorProps";
 import type { BookSchema } from "$server/models/book";
 import type { AnalysisOverview } from "$server/models/analysisOverview";
 import type { AnalysisDetail } from "$server/models/analysisDetail";
 import type { LtiResourceLinkProps } from "$server/models/ltiResourceLink";
 import { gray } from "$theme/colors";
+import { SessionSchema } from "$server/models/session";
 
 type TabPanelProps = {
   children?: React.ReactNode;
@@ -73,8 +70,8 @@ const useStyles = makeStyles((theme) => ({
 type LtiResource = Omit<LtiResourceLinkProps, "authorId" | "bookId">;
 
 type Props = {
+  session: SessionSchema;
   books: BookSchema[];
-  ltiResources: LtiResource[];
   analysisBooks: AnalysisOverview[];
   analysisTopics: AnalysisOverview[];
   analysisUsers: AnalysisDetail[];
@@ -85,16 +82,14 @@ type Props = {
 
 export default function Analysis(props: Props) {
   const {
+    session,
     books,
-    ltiResources,
     analysisBooks,
     analysisTopics,
     analysisUsers,
     onAnalysisBookDownload,
-    onLtiResourceClick,
     onBookClick,
   } = props;
-  // const { session } = useSessionAtom();
   const classes = useStyles();
   const containerClasses = useContainerStyles();
   const cardClasses = useCardStyles();
@@ -102,13 +97,7 @@ export default function Analysis(props: Props) {
   const handleChange = (_: React.ChangeEvent<unknown>, value: number) => {
     setValue(value);
   };
-  const ltiResourceMenu = useSelectorProps<LtiResource>(ltiResources[0]);
   const bookMenu = useSelectorProps<BookSchema>(books[0]);
-  const handleLtiResourceClick = (ltiResource: LtiResource) => () => {
-    onLtiResourceClick?.(ltiResource);
-    ltiResourceMenu.setValue(ltiResource);
-    ltiResourceMenu.onClose();
-  };
   const handleBookClick = (book: BookSchema) => () => {
     onBookClick?.(book);
     bookMenu.setValue(book);
@@ -121,36 +110,14 @@ export default function Analysis(props: Props) {
         action={
           <>
             <Typography variant="h6">
-              {ltiResourceMenu?.value?.contextTitle}
+              {session?.ltiResourceLink?.contextTitle}
             </Typography>
             <span className={classes.contextLabel}>
-              {ltiResourceMenu?.value?.contextLabel}
+              {session?.ltiResourceLink?.contextLabel}
             </span>
-            <Tooltip title="他のコースを選択">
-              <IconButton
-                aria-controls="lti-resource-menu"
-                size="small"
-                onClick={ltiResourceMenu.onOpen}
-              >
-                <UnfoldMoreIcon />
-              </IconButton>
-            </Tooltip>
           </>
         }
       />
-      <Menu
-        id="lti-resource-menu"
-        aria-haspopup="true"
-        anchorEl={ltiResourceMenu.anchorEl}
-        open={Boolean(ltiResourceMenu.anchorEl)}
-        onClose={ltiResourceMenu.onClose}
-      >
-        {ltiResources.map((ltiResource, index) => (
-          <MenuItem key={index} onClick={handleLtiResourceClick(ltiResource)}>
-            {ltiResource.contextTitle}
-          </MenuItem>
-        ))}
-      </Menu>
       <div className={classes.action}>
         <Button
           aria-controls="book-menu"
