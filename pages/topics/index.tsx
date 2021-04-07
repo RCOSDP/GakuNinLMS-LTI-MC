@@ -1,17 +1,25 @@
 import type { TopicSchema } from "$server/models/topic";
 import { useRouter } from "next/router";
-import Topics from "$templates/Topics";
+import TopicsTemplate from "$templates/Topics";
+import { useSessionAtom } from "$store/session";
 import { pagesPath } from "$utils/$path";
 import useTopics from "$utils/useTopics";
 
-const UserTopics = (
-  props: Omit<Parameters<typeof Topics>[0], keyof ReturnType<typeof useTopics>>
-) => <Topics {...props} {...useTopics()} />;
+const Topics = (
+  props: Omit<
+    Parameters<typeof TopicsTemplate>[0],
+    keyof ReturnType<typeof useTopics>
+  >
+) => <TopicsTemplate {...props} {...useTopics()} />;
 
 function Index() {
   const router = useRouter();
-  function handleTopicEditClick({ id }: Pick<TopicSchema, "id">) {
-    return router.push(pagesPath.topics.edit.$url({ query: { topicId: id } }));
+  const { isTopicEditable } = useSessionAtom();
+  function handleTopicEditClick(topic: Pick<TopicSchema, "id" | "creator">) {
+    const action = isTopicEditable(topic) ? "edit" : "generate";
+    return router.push(
+      pagesPath.topics[action].$url({ query: { topicId: topic.id } })
+    );
   }
   function handleTopicNewClick() {
     return router.push(pagesPath.topics.new.$url({ query: {} }));
@@ -21,7 +29,7 @@ function Index() {
     onTopicNewClick: handleTopicNewClick,
   };
 
-  return <UserTopics {...handlers} />;
+  return <Topics {...handlers} />;
 }
 
 export default Index;

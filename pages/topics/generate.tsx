@@ -10,9 +10,18 @@ import { useBook } from "$utils/book";
 import { useTopic } from "$utils/topic";
 import useTopicNewHandlers from "$utils/useTopicNewHandlers";
 
-export type Query = { topicId: TopicSchema["id"] } & BookEditQuery;
+export type Query = { topicId: TopicSchema["id"] } & Partial<BookEditQuery>;
 
-function Generate({ topicId, bookId, context }: Query) {
+function Generate({ topicId }: Pick<Query, "topicId">) {
+  const topic = useTopic(topicId);
+  const handlers = useTopicNewHandlers(undefined, undefined, topic);
+
+  if (!topic) return <Placeholder />;
+
+  return <TopicNew topic={topic} {...handlers} />;
+}
+
+function GenerateWithBook({ topicId, bookId, context }: Query & BookEditQuery) {
   const topic = useTopic(topicId);
   const { isBookEditable, isTopicEditable } = useSessionAtom();
   const { book, error } = useBook(bookId, isBookEditable, isTopicEditable);
@@ -32,9 +41,14 @@ function Router() {
   const { context }: Pick<BookEditQuery, "context"> = router.query;
 
   if (!Number.isFinite(topicId)) return <TopicNotFoundProblem />;
-  if (!Number.isFinite(bookId)) return <BookNotFoundProblem />;
 
-  return <Generate topicId={topicId} bookId={bookId} context={context} />;
+  if (Number.isFinite(bookId)) {
+    return (
+      <GenerateWithBook topicId={topicId} bookId={bookId} context={context} />
+    );
+  }
+
+  return <Generate topicId={topicId} />;
 }
 
 export default Router;
