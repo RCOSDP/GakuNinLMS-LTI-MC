@@ -11,16 +11,13 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import GetAppOutlinedIcon from "@material-ui/icons/GetAppOutlined";
 import { makeStyles } from "@material-ui/core/styles";
 import ActionHeader from "$organisms/ActionHeader";
-import AnalysisOverviewItem from "$molecules/AnalysisOverviewItem";
-import AnalysisDetailItem from "$molecules/AnalysisDetailItem";
+import LearningActivityItem from "$molecules/LearningActivityItem";
+import LearnerActivityItem from "$molecules/LearnerActivityItem";
 import LearningStatusDot from "$atoms/LearningStatusDot";
 import useContainerStyles from "$styles/container";
 import useCardStyles from "$styles/card";
 import useSelectorProps from "$utils/useSelectorProps";
-import type { BookSchema } from "$server/models/book";
-import type { AnalysisOverview } from "$server/models/analysisOverview";
-import type { AnalysisDetail } from "$server/models/analysisDetail";
-import type { LtiResourceLinkProps } from "$server/models/ltiResourceLink";
+import type { BookLearningActivitySchema } from "$server/models/bookLearningActivity";
 import { gray } from "$theme/colors";
 import { SessionSchema } from "$server/models/session";
 
@@ -67,28 +64,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-type LtiResource = Omit<LtiResourceLinkProps, "authorId" | "bookId">;
-
 type Props = {
   session: SessionSchema;
-  books: BookSchema[];
-  analysisBooks: AnalysisOverview[];
-  analysisTopics: AnalysisOverview[];
-  analysisUsers: AnalysisDetail[];
-  onAnalysisBookDownload?(): void;
-  onLtiResourceClick?(ltiResource: LtiResource): void;
-  onBookClick?(book: BookSchema): void;
+  bookLearningActivities: BookLearningActivitySchema[];
+  onBookLearningActivitiesDownload?(): void;
+  onBookLearningActivityClick?(book: BookLearningActivitySchema): void;
 };
 
-export default function Analysis(props: Props) {
+export default function Dashboard(props: Props) {
   const {
     session,
-    books,
-    analysisBooks,
-    analysisTopics,
-    analysisUsers,
-    onAnalysisBookDownload,
-    onBookClick,
+    bookLearningActivities,
+    onBookLearningActivitiesDownload,
+    onBookLearningActivityClick,
   } = props;
   const classes = useStyles();
   const containerClasses = useContainerStyles();
@@ -97,10 +85,14 @@ export default function Analysis(props: Props) {
   const handleChange = (_: React.ChangeEvent<unknown>, value: number) => {
     setValue(value);
   };
-  const bookMenu = useSelectorProps<BookSchema>(books[0]);
-  const handleBookClick = (book: BookSchema) => () => {
-    onBookClick?.(book);
-    bookMenu.setValue(book);
+  const bookMenu = useSelectorProps<BookLearningActivitySchema>(
+    bookLearningActivities[0]
+  );
+  const handleBookLearningActivityClick = (
+    bookLearningActivity: BookLearningActivitySchema
+  ) => () => {
+    onBookLearningActivityClick?.(bookLearningActivity);
+    bookMenu.setValue(bookLearningActivity);
     bookMenu.onClose();
   };
   return (
@@ -129,7 +121,7 @@ export default function Analysis(props: Props) {
           <Typography variant="h5">{bookMenu?.value?.name}</Typography>
         </Button>
         <Button
-          onClick={onAnalysisBookDownload}
+          onClick={onBookLearningActivitiesDownload}
           color="primary"
           variant="contained"
           size="small"
@@ -145,9 +137,12 @@ export default function Analysis(props: Props) {
         open={Boolean(bookMenu.anchorEl)}
         onClose={bookMenu.onClose}
       >
-        {books.map((book, index) => (
-          <MenuItem key={index} onClick={handleBookClick(book)}>
-            {book.name}
+        {bookLearningActivities.map((bookLearningActivity, index) => (
+          <MenuItem
+            key={index}
+            onClick={handleBookLearningActivityClick(bookLearningActivity)}
+          >
+            {bookLearningActivity.name}
           </MenuItem>
         ))}
       </Menu>
@@ -163,20 +158,22 @@ export default function Analysis(props: Props) {
           <Tab label="ユーザー" />
         </Tabs>
         <TabPanel value={value} index={0}>
-          {analysisBooks.map((analysisOverview, index) => (
-            <AnalysisOverviewItem
+          {bookLearningActivities.map((bookLearningActivity, index) => (
+            <LearningActivityItem
               key={index}
-              analysisOverview={analysisOverview}
+              learningActivity={bookLearningActivity}
             />
           ))}
         </TabPanel>
         <TabPanel value={value} index={1}>
-          {analysisTopics.map((analysisOverview, index) => (
-            <AnalysisOverviewItem
-              key={index}
-              analysisOverview={analysisOverview}
-            />
-          ))}
+          {bookMenu.value.topicLearningActivities.map(
+            (topicLearningActivity, index) => (
+              <LearningActivityItem
+                key={index}
+                learningActivity={topicLearningActivity}
+              />
+            )
+          )}
         </TabPanel>
         <TabPanel value={value} index={2}>
           <div>
@@ -187,8 +184,11 @@ export default function Analysis(props: Props) {
             <LearningStatusDot type="unopened" />
             <span>未開封</span>
           </div>
-          {analysisUsers.map((analysisDetail, index) => (
-            <AnalysisDetailItem key={index} analysisDetail={analysisDetail} />
+          {bookMenu.value.learnerActivities.map((learnerActivity, index) => (
+            <LearnerActivityItem
+              key={index}
+              learnerActivity={learnerActivity}
+            />
           ))}
         </TabPanel>
       </Card>
