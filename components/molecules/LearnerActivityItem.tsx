@@ -37,15 +37,13 @@ export default function LearnerActivityItem(props: Props) {
     <div className={classes.root}>
       <span className={classes.name}>{learnerActivity.name}</span>
       <div className={classes.dots}>
-        {
-          learnerActivity.activities.map((activity, index) => (
-            <LearningStatusDot
-              key={index}
-              type={activity.completed ? "completed" : "incompleted"}
-              size="large"
-            />
-          ))
-        }
+        {learnerActivity.activities.map((activity, index) => (
+          <LearningStatusDot
+            key={index}
+            type={activity.completed ? "completed" : "incompleted"}
+            size="large"
+          />
+        ))}
       </div>
     </div>
   );
