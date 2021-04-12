@@ -98,9 +98,9 @@ export default function Dashboard(props: Props) {
   const classes = useStyles();
   const containerClasses = useContainerStyles();
   const cardClasses = useCardStyles();
-  const [value, setValue] = useState(0);
+  const [tabIndex, setTabIndex] = useState(0);
   const handleChange = (_: React.ChangeEvent<unknown>, value: number) => {
-    setValue(value);
+    setTabIndex(value);
   };
   const bookLearningActivitiesMenu = useSelectorProps<BookLearningActivitySchema>(
     bookLearningActivities[0]
@@ -127,10 +127,10 @@ export default function Dashboard(props: Props) {
       />
       <div className={classes.action}>
         <Button
-          aria-controls="book-menu"
+          aria-controls="book-learning-acitivities-menu"
           variant="text"
           onClick={bookLearningActivitiesMenu.onOpen}
-          disabled={value === 0}
+          disabled={tabIndex === 0}
         >
           <ExpandMoreIcon />
           <Typography variant="h5">
@@ -148,7 +148,7 @@ export default function Dashboard(props: Props) {
         </Button>
       </div>
       <Menu
-        id="book-menu"
+        id="book-learning-activities-menu"
         aria-haspopup="true"
         anchorEl={bookLearningActivitiesMenu.anchorEl}
         open={Boolean(bookLearningActivitiesMenu.anchorEl)}
@@ -167,14 +167,14 @@ export default function Dashboard(props: Props) {
         <Tabs
           className={classes.tabs}
           indicatorColor="primary"
-          value={value}
+          value={tabIndex}
           onChange={handleChange}
         >
           <Tab label="ブック" />
           <Tab label="トピック" />
           <Tab label="学習者" />
         </Tabs>
-        <TabPanel className={classes.items} value={value} index={0}>
+        <TabPanel className={classes.items} value={tabIndex} index={0}>
           {bookLearningActivities.map((bookLearningActivity, index) => (
             <LearningActivityItem
               key={index}
@@ -185,7 +185,7 @@ export default function Dashboard(props: Props) {
             />
           ))}
         </TabPanel>
-        <TabPanel className={classes.items} value={value} index={1}>
+        <TabPanel className={classes.items} value={tabIndex} index={1}>
           {bookLearningActivitiesMenu.value.topicLearningActivities.map(
             (topicLearningActivity, index) => (
               <LearningActivityItem
@@ -198,7 +198,7 @@ export default function Dashboard(props: Props) {
             )
           )}
         </TabPanel>
-        <TabPanel className={classes.learners} value={value} index={2}>
+        <TabPanel className={classes.learners} value={tabIndex} index={2}>
           <LearningStatusItems className={classes.learnersLabel} />
           {bookLearningActivitiesMenu.value.learnerActivities.map(
             (learnerActivity, index) => (
