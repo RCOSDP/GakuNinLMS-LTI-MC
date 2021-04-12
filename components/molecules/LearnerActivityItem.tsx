@@ -38,7 +38,6 @@ export default function LearnerActivityItem(props: Props) {
       <span className={classes.name}>{learnerActivity.name}</span>
       <div className={classes.dots}>
         {
-          // TODO: divでヒートマップの要素を表現すると重いので1行分のグラフはひとつのsvgで表現する
           learnerActivity.activities.map((activity, index) => (
             <LearningStatusDot
               key={index}
