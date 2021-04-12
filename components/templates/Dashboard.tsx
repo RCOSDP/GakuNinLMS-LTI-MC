@@ -103,7 +103,7 @@ export default function Dashboard(props: Props) {
     setTabIndex(value);
   };
   const bookLearningActivitiesMenu = useSelectorProps<BookLearningActivitySchema>(
-    bookLearningActivities[0]
+    bookLearningActivities.length > 0 ? bookLearningActivities[0] : null
   );
   const handleBookLearningActivityClick = (
     bookLearningActivity: BookLearningActivitySchema
@@ -130,11 +130,11 @@ export default function Dashboard(props: Props) {
           aria-controls="book-learning-acitivities-menu"
           variant="text"
           onClick={bookLearningActivitiesMenu.onOpen}
-          disabled={tabIndex === 0}
+          disabled={tabIndex === 0 || bookLearningActivities.length === 0}
         >
           <ExpandMoreIcon />
           <Typography variant="h5">
-            {bookLearningActivitiesMenu?.value.name}
+            {bookLearningActivitiesMenu.value?.name ?? ""}
           </Typography>
         </Button>
         <Button
@@ -180,34 +180,36 @@ export default function Dashboard(props: Props) {
               key={index}
               learningActivity={bookLearningActivity}
               learnerActivities={
-                bookLearningActivitiesMenu.value.learnerActivities
+                bookLearningActivitiesMenu.value?.learnerActivities ?? []
               }
             />
           ))}
         </TabPanel>
         <TabPanel className={classes.items} value={tabIndex} index={1}>
-          {bookLearningActivitiesMenu.value.topicLearningActivities.map(
-            (topicLearningActivity, index) => (
-              <LearningActivityItem
-                key={index}
-                learningActivity={topicLearningActivity}
-                learnerActivities={
-                  bookLearningActivitiesMenu.value.learnerActivities
-                }
-              />
-            )
-          )}
+          {bookLearningActivitiesMenu.value &&
+            bookLearningActivitiesMenu.value.topicLearningActivities.map(
+              (topicLearningActivity, index) => (
+                <LearningActivityItem
+                  key={index}
+                  learningActivity={topicLearningActivity}
+                  learnerActivities={
+                    bookLearningActivitiesMenu.value?.learnerActivities ?? []
+                  }
+                />
+              )
+            )}
         </TabPanel>
         <TabPanel className={classes.learners} value={tabIndex} index={2}>
           <LearningStatusItems className={classes.learnersLabel} />
-          {bookLearningActivitiesMenu.value.learnerActivities.map(
-            (learnerActivity, index) => (
-              <LearnerActivityItem
-                key={index}
-                learnerActivity={learnerActivity}
-              />
-            )
-          )}
+          {bookLearningActivitiesMenu.value &&
+            bookLearningActivitiesMenu.value.learnerActivities.map(
+              (learnerActivity, index) => (
+                <LearnerActivityItem
+                  key={index}
+                  learnerActivity={learnerActivity}
+                />
+              )
+            )}
         </TabPanel>
       </Card>
     </Container>

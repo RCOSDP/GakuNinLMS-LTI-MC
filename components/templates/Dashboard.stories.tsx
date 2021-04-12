@@ -15,3 +15,7 @@ export const Default = () => (
     {...handlers}
   />
 );
+
+export const Empty = () => (
+  <Dashboard session={session} bookLearningActivities={[]} {...handlers} />
+);
