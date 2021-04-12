@@ -6,7 +6,7 @@ import type { BookLearningActivitySchema } from "$server/models/bookLearningActi
 const bookLearningActivity: BookLearningActivitySchema = {
   id: book.id,
   name: book.name,
-  learnerActivities: [learnerActivity],
+  learnerActivities: [...Array(10)].map(() => learnerActivity),
   topicLearningActivities: [topicLearningActivity],
   totalLearnerCount: 160,
   completedCount: 40,

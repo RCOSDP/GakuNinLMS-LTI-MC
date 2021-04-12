@@ -13,7 +13,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import ActionHeader from "$organisms/ActionHeader";
 import LearningActivityItem from "$molecules/LearningActivityItem";
 import LearnerActivityItem from "$molecules/LearnerActivityItem";
-import LearningStatusDot from "$atoms/LearningStatusDot";
+import LearningStatusItems from "$molecules/LearningStatusItems";
 import useContainerStyles from "$styles/container";
 import useCardStyles from "$styles/card";
 import useSelectorProps from "$utils/useSelectorProps";
@@ -22,15 +22,22 @@ import { gray } from "$theme/colors";
 import { SessionSchema } from "$server/models/session";
 
 type TabPanelProps = {
+  className?: string;
   children?: React.ReactNode;
-  dir?: string;
   index: number;
   value: number;
 };
 
-function TabPanel({ children, value, index, ...other }: TabPanelProps) {
+function TabPanel({
+  className,
+  children,
+  value,
+  index,
+  ...other
+}: TabPanelProps) {
   return (
     <div
+      className={className}
       role="tabpanel"
       hidden={value !== index}
       id={`tabpanel=${index}`}
@@ -61,6 +68,18 @@ const useStyles = makeStyles((theme) => ({
     "& > :not(:last-child)": {
       marginRight: theme.spacing(1),
     },
+  },
+  items: {
+    "& > :not(:last-child)": {
+      marginBottom: theme.spacing(4),
+    },
+  },
+  learners: {
+    overflowX: "auto",
+  },
+  learnersLabel: {
+    marginBottom: theme.spacing(2),
+    marginLeft: "11rem",
   },
 }));
 
@@ -153,35 +172,34 @@ export default function Dashboard(props: Props) {
         >
           <Tab label="ブック" />
           <Tab label="トピック" />
-          <Tab label="ユーザー" />
+          <Tab label="学習者" />
         </Tabs>
-        <TabPanel value={value} index={0}>
+        <TabPanel className={classes.items} value={value} index={0}>
           {bookLearningActivities.map((bookLearningActivity, index) => (
             <LearningActivityItem
               key={index}
               learningActivity={bookLearningActivity}
+              learnerActivities={
+                bookLearningActivitiesMenu.value.learnerActivities
+              }
             />
           ))}
         </TabPanel>
-        <TabPanel value={value} index={1}>
+        <TabPanel className={classes.items} value={value} index={1}>
           {bookLearningActivitiesMenu.value.topicLearningActivities.map(
             (topicLearningActivity, index) => (
               <LearningActivityItem
                 key={index}
                 learningActivity={topicLearningActivity}
+                learnerActivities={
+                  bookLearningActivitiesMenu.value.learnerActivities
+                }
               />
             )
           )}
         </TabPanel>
-        <TabPanel value={value} index={2}>
-          <div>
-            <LearningStatusDot type="completed" />
-            <span>完了</span>
-            <LearningStatusDot type="incompleted" />
-            <span>未完了</span>
-            <LearningStatusDot type="unopened" />
-            <span>未開封</span>
-          </div>
+        <TabPanel className={classes.learners} value={value} index={2}>
+          <LearningStatusItems className={classes.learnersLabel} />
           {bookLearningActivitiesMenu.value.learnerActivities.map(
             (learnerActivity, index) => (
               <LearnerActivityItem

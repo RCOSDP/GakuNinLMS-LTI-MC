@@ -1,17 +1,26 @@
+import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
-import LearningStatusDot from "$atoms/LearningStatusDot";
-import { learningStatus } from "$theme/colors";
+import LearningStatusItems from "$molecules/LearningStatusItems";
+import { learningStatus, gray } from "$theme/colors";
+import useLineClampStyles from "$styles/lineClamp";
 import type { BookLearningActivitySchema } from "$server/models/bookLearningActivity";
 import type { TopicLearningActivitySchema } from "$server/models/topicLearningActivity";
+import type { LearnerActivitySchema } from "$server/models/learnerActivity";
 
-function LearningBargraph(
-  props: BookLearningActivitySchema | TopicLearningActivitySchema
-) {
-  const { totalLearnerCount, completedCount, incompletedCount } = props;
+type LearningBargraphProps = {
+  className?: string;
+  learningActivity: BookLearningActivitySchema | TopicLearningActivitySchema;
+};
+
+function LearningBargraph(props: LearningBargraphProps) {
+  const {
+    className,
+    learningActivity: { totalLearnerCount, completedCount, incompletedCount },
+  } = props;
   const getPercentage = (value: number): string =>
     `${(value / totalLearnerCount) * 100}%`;
   return (
-    <svg viewBox="0 0 200 10">
+    <svg className={className} viewBox="0 0 200 10">
       <rect
         x="0"
         y="0"
@@ -39,43 +48,56 @@ function LearningBargraph(
   );
 }
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
+    alignItems: "center",
   },
   name: {
     flex: 1,
+    display: "flex",
+    alignItems: "center",
+    color: gray[700],
+    marginRight: theme.spacing(1),
   },
-  graph: { maxWidth: "50%" },
-});
+  graph: {
+    maxWidth: 400,
+    width: "50%",
+    "& > svg": {
+      width: "100%",
+      marginBottom: theme.spacing(1),
+    },
+  },
+}));
 
 type Props = {
+  className?: string;
   learningActivity: BookLearningActivitySchema | TopicLearningActivitySchema;
+  learnerActivities: LearnerActivitySchema[];
+  onLearnerActivityClick?(learnerActivity: LearnerActivitySchema): void;
 };
 
 export default function LearningActivityItem(props: Props) {
-  const { learningActivity } = props;
+  const { learningActivity, learnerActivities, onLearnerActivityClick } = props;
   const classes = useStyles();
+  const lineClamp = useLineClampStyles({
+    fontSize: "1rem",
+    lineClamp: 2,
+    lineHeight: 1.375,
+  });
 
   return (
     <div className={classes.root}>
-      <span className={classes.name}>{learningActivity.name}</span>
+      <div className={clsx(classes.name, lineClamp.placeholder)}>
+        <span className={lineClamp.clamp}>{learningActivity.name}</span>
+      </div>
       <div className={classes.graph}>
-        <LearningBargraph {...learningActivity} />
-        <div>
-          <LearningStatusDot type="completed" />
-          <span>完了{learningActivity.completedCount}人</span>
-          <LearningStatusDot type="incompleted" />
-          <span>未完了{learningActivity.incompletedCount}人</span>
-          <LearningStatusDot type="unopened" />
-          <span>
-            未開封
-            {learningActivity.totalLearnerCount -
-              learningActivity.completedCount -
-              learningActivity.incompletedCount}
-            人
-          </span>
-        </div>
+        <LearningBargraph learningActivity={learningActivity} />
+        <LearningStatusItems
+          learningActivity={learningActivity}
+          learnerActivities={learnerActivities}
+          onLearnerActivityClick={onLearnerActivityClick}
+        />
       </div>
     </div>
   );
