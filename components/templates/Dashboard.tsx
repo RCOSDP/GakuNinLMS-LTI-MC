@@ -68,7 +68,6 @@ type Props = {
   session: SessionSchema;
   bookLearningActivities: BookLearningActivitySchema[];
   onBookLearningActivitiesDownload?(): void;
-  onBookLearningActivityClick?(book: BookLearningActivitySchema): void;
 };
 
 export default function Dashboard(props: Props) {
@@ -76,7 +75,6 @@ export default function Dashboard(props: Props) {
     session,
     bookLearningActivities,
     onBookLearningActivitiesDownload,
-    onBookLearningActivityClick,
   } = props;
   const classes = useStyles();
   const containerClasses = useContainerStyles();
@@ -85,15 +83,13 @@ export default function Dashboard(props: Props) {
   const handleChange = (_: React.ChangeEvent<unknown>, value: number) => {
     setValue(value);
   };
-  const bookMenu = useSelectorProps<BookLearningActivitySchema>(
+  const bookLearningActivitiesMenu = useSelectorProps<BookLearningActivitySchema>(
     bookLearningActivities[0]
   );
   const handleBookLearningActivityClick = (
     bookLearningActivity: BookLearningActivitySchema
   ) => () => {
-    onBookLearningActivityClick?.(bookLearningActivity);
-    bookMenu.setValue(bookLearningActivity);
-    bookMenu.onClose();
+    bookLearningActivitiesMenu.onSelect(bookLearningActivity);
   };
   return (
     <Container classes={containerClasses} maxWidth="md">
@@ -114,11 +110,13 @@ export default function Dashboard(props: Props) {
         <Button
           aria-controls="book-menu"
           variant="text"
-          onClick={bookMenu.onOpen}
+          onClick={bookLearningActivitiesMenu.onOpen}
           disabled={value === 0}
         >
           <ExpandMoreIcon />
-          <Typography variant="h5">{bookMenu?.value?.name}</Typography>
+          <Typography variant="h5">
+            {bookLearningActivitiesMenu?.value.name}
+          </Typography>
         </Button>
         <Button
           onClick={onBookLearningActivitiesDownload}
@@ -133,9 +131,9 @@ export default function Dashboard(props: Props) {
       <Menu
         id="book-menu"
         aria-haspopup="true"
-        anchorEl={bookMenu.anchorEl}
-        open={Boolean(bookMenu.anchorEl)}
-        onClose={bookMenu.onClose}
+        anchorEl={bookLearningActivitiesMenu.anchorEl}
+        open={Boolean(bookLearningActivitiesMenu.anchorEl)}
+        onClose={bookLearningActivitiesMenu.onClose}
       >
         {bookLearningActivities.map((bookLearningActivity, index) => (
           <MenuItem
@@ -166,7 +164,7 @@ export default function Dashboard(props: Props) {
           ))}
         </TabPanel>
         <TabPanel value={value} index={1}>
-          {bookMenu.value.topicLearningActivities.map(
+          {bookLearningActivitiesMenu.value.topicLearningActivities.map(
             (topicLearningActivity, index) => (
               <LearningActivityItem
                 key={index}
@@ -184,12 +182,14 @@ export default function Dashboard(props: Props) {
             <LearningStatusDot type="unopened" />
             <span>未開封</span>
           </div>
-          {bookMenu.value.learnerActivities.map((learnerActivity, index) => (
-            <LearnerActivityItem
-              key={index}
-              learnerActivity={learnerActivity}
-            />
-          ))}
+          {bookLearningActivitiesMenu.value.learnerActivities.map(
+            (learnerActivity, index) => (
+              <LearnerActivityItem
+                key={index}
+                learnerActivity={learnerActivity}
+              />
+            )
+          )}
         </TabPanel>
       </Card>
     </Container>

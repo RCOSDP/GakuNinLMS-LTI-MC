@@ -6,12 +6,16 @@ function useSelectorProps<T>(defaultValue: T) {
   const onOpen = (event: React.MouseEvent<HTMLButtonElement>) =>
     setAnchorEl(event.currentTarget);
   const onClose = () => setAnchorEl(null);
+  const onSelect = (value: T) => {
+    setValue(value);
+    onClose();
+  };
   return {
     anchorEl,
+    value,
     onOpen,
     onClose,
-    value,
-    setValue,
+    onSelect,
   };
 }
 
