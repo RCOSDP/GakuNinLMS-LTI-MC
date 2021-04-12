@@ -2,6 +2,7 @@ import type { EventType } from "$server/models/event";
 import { api } from "$utils/api";
 import { PlayerEvent, PlayerEvents, PlayerTracker } from "./playerTracker";
 import { load } from "./loggerSessionPersister";
+import getFilePath from "./getFilePath";
 
 /** v1のときのトラッキング用コードの移植 */
 function send(eventType: EventType, event: PlayerEvent, detail?: string) {
@@ -12,10 +13,7 @@ function send(eventType: EventType, event: PlayerEvent, detail?: string) {
   const body = {
     event: eventType,
     detail,
-    file:
-      event.providerUrl === "https://www.youtube.com/"
-        ? new URLSearchParams(event.url.split("?")[1]).get("v") ?? undefined
-        : new URL(event.url).pathname.replace(/^\/(?:api\/v2\/wowza\/)?/, ""),
+    file: getFilePath(event),
     query: event.url.split("?")[1],
     current: event.currentTime.toString(),
     rid: id(ltiLaunchBody.resource_link_id),
