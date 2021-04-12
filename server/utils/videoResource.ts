@@ -1,7 +1,7 @@
 import { VideoResource } from "$server/models/videoResource";
 import VideoResourceMatcher from "$server/types/videoResourceMatcher";
 import { providerMatchers } from "$server/config/video/provider";
-import validUrl from "./validUrl";
+import getValidUrl from "./getValidUrl";
 
 const defaultResource = (url: URL): VideoResource => ({
   url: url.href,
@@ -13,12 +13,12 @@ const hostMatch = (url: URL) => (matcher: VideoResourceMatcher): boolean =>
   matcher.host.test(url.host);
 
 export function providerMatch(value: string): boolean {
-  const url = validUrl(value);
+  const url = getValidUrl(value);
   return Boolean(url && providerMatchers.find(hostMatch(url)));
 }
 
 export function parse(value: string): VideoResource | undefined {
-  if (!validUrl(value)) return;
+  if (!getValidUrl(value)) return;
 
   const url = new URL(value);
   const matcher = providerMatchers.find(hostMatch(url));
