@@ -1,4 +1,4 @@
-const validUrl = (url: string) => {
+const getValidUrl = (url: string) => {
   try {
     return new URL(url);
   } catch {
@@ -6,4 +6,4 @@ const validUrl = (url: string) => {
   }
 };
 
-export default validUrl;
+export default getValidUrl;
