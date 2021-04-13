@@ -1,17 +1,21 @@
 import { useState } from "react";
 
-function useSelectorProps<T>(defaultValue: T) {
+function useSelectorProps<T>(defaultValue: null | T) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [value, setValue] = useState<T>(defaultValue);
+  const [value, setValue] = useState<null | T>(defaultValue);
   const onOpen = (event: React.MouseEvent<HTMLButtonElement>) =>
     setAnchorEl(event.currentTarget);
   const onClose = () => setAnchorEl(null);
+  const onSelect = (value: T) => {
+    setValue(value);
+    onClose();
+  };
   return {
     anchorEl,
+    value,
     onOpen,
     onClose,
-    value,
-    setValue,
+    onSelect,
   };
 }
 

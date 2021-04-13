@@ -9,3 +9,11 @@ export const Default = () => (
     <LearningStatusDot type="unopened" />
   </>
 );
+
+export const Large = () => (
+  <>
+    <LearningStatusDot type="completed" size="large" />
+    <LearningStatusDot type="incompleted" size="large" />
+    <LearningStatusDot type="unopened" size="large" />
+  </>
+);

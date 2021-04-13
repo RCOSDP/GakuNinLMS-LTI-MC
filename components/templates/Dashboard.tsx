@@ -13,7 +13,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import ActionHeader from "$organisms/ActionHeader";
 import LearningActivityItem from "$molecules/LearningActivityItem";
 import LearnerActivityItem from "$molecules/LearnerActivityItem";
-import LearningStatusDot from "$atoms/LearningStatusDot";
+import LearningStatusItems from "$molecules/LearningStatusItems";
 import useContainerStyles from "$styles/container";
 import useCardStyles from "$styles/card";
 import useSelectorProps from "$utils/useSelectorProps";
@@ -22,15 +22,22 @@ import { gray } from "$theme/colors";
 import { SessionSchema } from "$server/models/session";
 
 type TabPanelProps = {
+  className?: string;
   children?: React.ReactNode;
-  dir?: string;
   index: number;
   value: number;
 };
 
-function TabPanel({ children, value, index, ...other }: TabPanelProps) {
+function TabPanel({
+  className,
+  children,
+  value,
+  index,
+  ...other
+}: TabPanelProps) {
   return (
     <div
+      className={className}
       role="tabpanel"
       hidden={value !== index}
       id={`tabpanel=${index}`}
@@ -62,13 +69,24 @@ const useStyles = makeStyles((theme) => ({
       marginRight: theme.spacing(1),
     },
   },
+  items: {
+    "& > :not(:last-child)": {
+      marginBottom: theme.spacing(4),
+    },
+  },
+  learners: {
+    overflowX: "auto",
+  },
+  learnersLabel: {
+    marginBottom: theme.spacing(2),
+    marginLeft: "11rem",
+  },
 }));
 
 type Props = {
   session: SessionSchema;
   bookLearningActivities: BookLearningActivitySchema[];
   onBookLearningActivitiesDownload?(): void;
-  onBookLearningActivityClick?(book: BookLearningActivitySchema): void;
 };
 
 export default function Dashboard(props: Props) {
@@ -76,24 +94,21 @@ export default function Dashboard(props: Props) {
     session,
     bookLearningActivities,
     onBookLearningActivitiesDownload,
-    onBookLearningActivityClick,
   } = props;
   const classes = useStyles();
   const containerClasses = useContainerStyles();
   const cardClasses = useCardStyles();
-  const [value, setValue] = useState(0);
+  const [tabIndex, setTabIndex] = useState(0);
   const handleChange = (_: React.ChangeEvent<unknown>, value: number) => {
-    setValue(value);
+    setTabIndex(value);
   };
-  const bookMenu = useSelectorProps<BookLearningActivitySchema>(
-    bookLearningActivities[0]
+  const bookLearningActivitiesMenu = useSelectorProps<BookLearningActivitySchema>(
+    bookLearningActivities.length > 0 ? bookLearningActivities[0] : null
   );
   const handleBookLearningActivityClick = (
     bookLearningActivity: BookLearningActivitySchema
   ) => () => {
-    onBookLearningActivityClick?.(bookLearningActivity);
-    bookMenu.setValue(bookLearningActivity);
-    bookMenu.onClose();
+    bookLearningActivitiesMenu.onSelect(bookLearningActivity);
   };
   return (
     <Container classes={containerClasses} maxWidth="md">
@@ -112,13 +127,15 @@ export default function Dashboard(props: Props) {
       />
       <div className={classes.action}>
         <Button
-          aria-controls="book-menu"
+          aria-controls="book-learning-acitivities-menu"
           variant="text"
-          onClick={bookMenu.onOpen}
-          disabled={value === 0}
+          onClick={bookLearningActivitiesMenu.onOpen}
+          disabled={tabIndex === 0 || bookLearningActivities.length === 0}
         >
           <ExpandMoreIcon />
-          <Typography variant="h5">{bookMenu?.value?.name}</Typography>
+          <Typography variant="h5">
+            {bookLearningActivitiesMenu.value?.name ?? ""}
+          </Typography>
         </Button>
         <Button
           onClick={onBookLearningActivitiesDownload}
@@ -131,11 +148,11 @@ export default function Dashboard(props: Props) {
         </Button>
       </div>
       <Menu
-        id="book-menu"
+        id="book-learning-activities-menu"
         aria-haspopup="true"
-        anchorEl={bookMenu.anchorEl}
-        open={Boolean(bookMenu.anchorEl)}
-        onClose={bookMenu.onClose}
+        anchorEl={bookLearningActivitiesMenu.anchorEl}
+        open={Boolean(bookLearningActivitiesMenu.anchorEl)}
+        onClose={bookLearningActivitiesMenu.onClose}
       >
         {bookLearningActivities.map((bookLearningActivity, index) => (
           <MenuItem
@@ -150,46 +167,49 @@ export default function Dashboard(props: Props) {
         <Tabs
           className={classes.tabs}
           indicatorColor="primary"
-          value={value}
+          value={tabIndex}
           onChange={handleChange}
         >
           <Tab label="ブック" />
           <Tab label="トピック" />
-          <Tab label="ユーザー" />
+          <Tab label="学習者" />
         </Tabs>
-        <TabPanel value={value} index={0}>
+        <TabPanel className={classes.items} value={tabIndex} index={0}>
           {bookLearningActivities.map((bookLearningActivity, index) => (
             <LearningActivityItem
               key={index}
               learningActivity={bookLearningActivity}
+              learnerActivities={
+                bookLearningActivitiesMenu.value?.learnerActivities ?? []
+              }
             />
           ))}
         </TabPanel>
-        <TabPanel value={value} index={1}>
-          {bookMenu.value.topicLearningActivities.map(
-            (topicLearningActivity, index) => (
-              <LearningActivityItem
-                key={index}
-                learningActivity={topicLearningActivity}
-              />
-            )
-          )}
+        <TabPanel className={classes.items} value={tabIndex} index={1}>
+          {bookLearningActivitiesMenu.value &&
+            bookLearningActivitiesMenu.value.topicLearningActivities.map(
+              (topicLearningActivity, index) => (
+                <LearningActivityItem
+                  key={index}
+                  learningActivity={topicLearningActivity}
+                  learnerActivities={
+                    bookLearningActivitiesMenu.value?.learnerActivities ?? []
+                  }
+                />
+              )
+            )}
         </TabPanel>
-        <TabPanel value={value} index={2}>
-          <div>
-            <LearningStatusDot type="completed" />
-            <span>完了</span>
-            <LearningStatusDot type="incompleted" />
-            <span>未完了</span>
-            <LearningStatusDot type="unopened" />
-            <span>未開封</span>
-          </div>
-          {bookMenu.value.learnerActivities.map((learnerActivity, index) => (
-            <LearnerActivityItem
-              key={index}
-              learnerActivity={learnerActivity}
-            />
-          ))}
+        <TabPanel className={classes.learners} value={tabIndex} index={2}>
+          <LearningStatusItems className={classes.learnersLabel} />
+          {bookLearningActivitiesMenu.value &&
+            bookLearningActivitiesMenu.value.learnerActivities.map(
+              (learnerActivity, index) => (
+                <LearnerActivityItem
+                  key={index}
+                  learnerActivity={learnerActivity}
+                />
+              )
+            )}
         </TabPanel>
       </Card>
     </Container>

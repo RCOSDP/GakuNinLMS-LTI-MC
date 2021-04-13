@@ -1,16 +1,29 @@
 import { makeStyles } from "@material-ui/core/styles";
 import LearningStatusDot from "$atoms/LearningStatusDot";
+import { gray } from "$theme/colors";
 import type { LearnerActivitySchema } from "$server/models/learnerActivity";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
+    alignItems: "center",
   },
   name: {
-    flex: 1,
+    flexShrink: 0,
+    color: gray[700],
+    fontSize: "1rem",
+    width: "10rem",
+    whiteSpace: "nowrap",
+    textOverflow: "ellipsis",
+    marginRight: "1rem",
   },
-  graph: { maxWidth: "50%" },
-});
+  dots: {
+    whiteSpace: "nowrap",
+    "& > :not(:last-child)": {
+      marginRight: theme.spacing(1),
+    },
+  },
+}));
 
 type Props = {
   learnerActivity: LearnerActivitySchema;
@@ -23,11 +36,12 @@ export default function LearnerActivityItem(props: Props) {
   return (
     <div className={classes.root}>
       <span className={classes.name}>{learnerActivity.name}</span>
-      <div className={classes.graph}>
+      <div className={classes.dots}>
         {learnerActivity.activities.map((activity, index) => (
           <LearningStatusDot
             key={index}
             type={activity.completed ? "completed" : "incompleted"}
+            size="large"
           />
         ))}
       </div>

@@ -5,7 +5,7 @@ import type { LearnerActivitySchema } from "$server/models/learnerActivity";
 const learnerActivity: LearnerActivitySchema = {
   id: user.id,
   name: user.name,
-  activities: [
+  activities: [...Array(50)].flatMap(() => [
     {
       topic,
       completed: true,
@@ -63,7 +63,7 @@ const learnerActivity: LearnerActivitySchema = {
       createdAt: new Date(),
       updatedAt: new Date(),
     },
-  ],
+  ]),
 };
 
 export default learnerActivity;
