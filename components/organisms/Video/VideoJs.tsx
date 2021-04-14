@@ -38,7 +38,7 @@ export function VideoJs({ options, tracks }: VideoJsProps) {
       back: 15,
     });
     player.ready(() => {
-      tracking(player);
+      tracking({ player });
       volumePersister(player);
     });
     return () => {
