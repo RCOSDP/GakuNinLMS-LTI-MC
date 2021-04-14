@@ -45,20 +45,25 @@ const youtubeType = "video/youtube";
 export class PlayerTracker extends (EventEmitter as {
   new (): StrictEventEmitter<EventEmitter, PlayerEvents>;
 }) {
+  /** 動画プレイヤーオブジェクト */
   readonly player: VideoJsPlayer | VimeoPlayer;
+  /** 動画プロバイダーの識別子 */
   readonly providerUrl: string;
   /** ビデオURL */
-  url = "";
+  readonly url: string;
   /** 現在再生時間 */
   currentTime = 0;
   /** 再生した時間範囲の取得 */
   readonly getPlayed: () => Promise<[number, number][]>;
 
-  constructor(player: VideoJsPlayer | VimeoPlayer) {
+  constructor(player: VideoJsPlayer | VimeoPlayer, url = "") {
     super();
     this.player = player;
 
     if (player instanceof VimeoPlayer) {
+      // NOTE: getVideoUrl() はプライバシー設定によって URL の取得を行えないことがあるので使わない
+      //  see also https://github.com/vimeo/player.js/#getvideourl-promisestring-privacyerrorerror
+      this.url = url;
       this.providerUrl = "https://vimeo.com/";
       this.getPlayed = player.getPlayed.bind(player);
       this.intoVimeo(player);
@@ -66,6 +71,7 @@ export class PlayerTracker extends (EventEmitter as {
       // NOTE: YouTube Player API に存在しない API の再現
       youtubePlayedShims(player);
 
+      this.url = url || player.src();
       this.providerUrl =
         player.currentType() === youtubeType
           ? "https://www.youtube.com/"
@@ -93,7 +99,6 @@ export class PlayerTracker extends (EventEmitter as {
   }
 
   private intoVideoJs(player: VideoJsPlayer) {
-    this.url = player.src();
     player.on("timeupdate", () => {
       this.currentTime = player.currentTime();
     });
@@ -138,9 +143,6 @@ export class PlayerTracker extends (EventEmitter as {
   }
 
   private intoVimeo(player: VimeoPlayer) {
-    player.getVideoUrl().then((url) => {
-      this.url = url;
-    });
     player.on("timeupdate", ({ seconds }: { seconds: number }) => {
       this.currentTime = seconds;
     });

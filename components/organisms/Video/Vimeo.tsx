@@ -33,7 +33,7 @@ export function Vimeo({ options }: VimeoProps) {
       ...defaultOptions,
       ...options,
     });
-    tracking(player);
+    tracking({ player, url: options.url });
     volumePersister(player);
     return () => {
       // TODO: 要素を取り除くと学習活動の記録のために使われている getPlayed() が resolve しないので残す
