@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import Card from "@material-ui/core/Card";
@@ -18,6 +18,7 @@ import type { BookActivitySchema } from "$server/models/bookActivity";
 import type { SessionSchema } from "$server/models/session";
 import type { UserSchema } from "$server/models/user";
 import { gray } from "$theme/colors";
+import download from "$utils/bookLearningActivity/download";
 import getLearnerActivities from "$utils/getLearnerActivities";
 import getActivitiesByBooks from "$utils/getActivitiesByBooks";
 
@@ -89,17 +90,10 @@ type Props = {
   learners: Array<Pick<UserSchema, "id" | "name">>;
   courseBooks: CourseBookSchema[];
   bookActivities: BookActivitySchema[];
-  onActivitiesDownload?(): void;
 };
 
 export default function Dashboard(props: Props) {
-  const {
-    session,
-    learners,
-    courseBooks,
-    bookActivities,
-    onActivitiesDownload,
-  } = props;
+  const { session, learners, courseBooks, bookActivities } = props;
   const classes = useStyles();
   const containerClasses = useContainerStyles();
   const cardClasses = useCardStyles();
@@ -107,6 +101,9 @@ export default function Dashboard(props: Props) {
   const handleChange = (_: React.ChangeEvent<unknown>, value: number) => {
     setTabIndex(value);
   };
+  const handleDownloadClick = useCallback(() => {
+    download(bookActivities, "分析データ.csv");
+  }, [bookActivities]);
   const learnerActivities = getLearnerActivities({
     learners,
     courseBooks,
@@ -130,7 +127,7 @@ export default function Dashboard(props: Props) {
               {session?.ltiLaunchBody.context_label}
             </span>
             <Button
-              onClick={onActivitiesDownload}
+              onClick={handleDownloadClick}
               color="primary"
               variant="contained"
               size="small"
