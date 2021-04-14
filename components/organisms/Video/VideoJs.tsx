@@ -7,6 +7,7 @@ import { usePlayerTrackingAtom } from "$store/playerTracker";
 import volumePersister from "$utils/volumePersister";
 
 type VideoJsProps = {
+  className?: string;
   options: VideoJsPlayerOptions;
   tracks?: videojs.TextTrackOptions[];
 };
@@ -23,7 +24,7 @@ const defaultOptions: VideoJsPlayerOptions = {
   languages: { ja },
 };
 
-export function VideoJs({ options, tracks }: VideoJsProps) {
+export function VideoJs({ className, options, tracks }: VideoJsProps) {
   const ref = useRef(document.createElement("div"));
   const tracking = usePlayerTrackingAtom();
   useEffect(() => {
@@ -65,5 +66,5 @@ export function VideoJs({ options, tracks }: VideoJsProps) {
         .filter(Boolean) ?? []) as HTMLTrackElement[];
     });
   }, [tracks]);
-  return <div ref={ref} />;
+  return <div className={className} ref={ref} />;
 }
