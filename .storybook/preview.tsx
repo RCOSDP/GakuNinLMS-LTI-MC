@@ -8,7 +8,6 @@ import theme from "../theme";
 // NOTE: For VideoJs components.
 import "video.js/dist/video-js.css";
 import "videojs-seek-buttons/dist/videojs-seek-buttons.css";
-import "../styles/video-js.css";
 
 function ThemeProvider({ children }: { children: ReactNode }) {
   return (
