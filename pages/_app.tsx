@@ -17,7 +17,6 @@ import { pagesPath } from "$utils/$path";
 // NOTE: For VideoJs components.
 import "video.js/dist/video-js.css";
 import "videojs-seek-buttons/dist/videojs-seek-buttons.css";
-import "$styles/video-js.css";
 
 function Content({ children }: { children: ReactNode }) {
   const router = useRouter();
