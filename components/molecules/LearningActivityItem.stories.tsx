@@ -6,6 +6,6 @@ import { bookLearningActivity } from "$samples";
 export const Default = () => (
   <LearningActivityItem
     bookLearningActivity={bookLearningActivity}
-    onLearnerActivityClick={console.log}
+    onBookLearnerActivityClick={console.log}
   />
 );
