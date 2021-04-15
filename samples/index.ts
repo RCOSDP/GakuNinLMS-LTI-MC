@@ -8,6 +8,7 @@ export { default as sections } from "./sections";
 export { default as book } from "./book";
 export { default as books } from "./books";
 export { default as activity } from "./activity";
+export { default as bookLearnerActivity } from "./bookLearnerActivity";
 export { default as learnerActivity } from "./learnerActivity";
 export { default as topicLearningActivity } from "./topicLearningActivity";
 export { default as bookLearningActivity } from "./bookLearningActivity";

@@ -6,7 +6,7 @@ import LearningStatusDot from "$atoms/LearningStatusDot";
 import useSelectorProps from "$utils/useSelectorProps";
 import type { BookLearningActivitySchema } from "$server/models/bookLearningActivity";
 import type { TopicLearningActivitySchema } from "$server/models/topicLearningActivity";
-import type { LearnerActivitySchema } from "$server/models/learnerActivity";
+import type { BookLearnerActivitySchema } from "$server/models/bookLearnerActivity";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,19 +41,21 @@ const useStyles = makeStyles((theme) => ({
 type Props = {
   className?: string;
   learningActivity?: BookLearningActivitySchema | TopicLearningActivitySchema;
-  learnerActivities?: LearnerActivitySchema[];
-  onLearnerActivityClick?(learnerActivity: LearnerActivitySchema): void;
+  bookLearnerActivities?: BookLearnerActivitySchema[];
+  onBookLearnerActivityClick?(learnerActivity: BookLearnerActivitySchema): void;
 };
 
 export default function LearningStatusItems(props: Props) {
   const {
     className,
     learningActivity,
-    learnerActivities,
-    onLearnerActivityClick,
+    bookLearnerActivities,
+    onBookLearnerActivityClick,
   } = props;
   const classes = useStyles();
-  const learnerActivitiesMenu = useSelectorProps<LearnerActivitySchema>(null);
+  const bookLearnerActivitiesMenu = useSelectorProps<BookLearnerActivitySchema>(
+    null
+  );
 
   const items = [
     {
@@ -77,12 +79,12 @@ export default function LearningStatusItems(props: Props) {
         0,
     },
   ] as const;
-  const clickable = learnerActivities && learnerActivities.length > 0;
+  const clickable = bookLearnerActivities && bookLearnerActivities.length > 0;
   const handleLearnerActivityClick = (
-    learnerActivity: LearnerActivitySchema
+    learnerActivity: BookLearnerActivitySchema
   ) => () => {
-    onLearnerActivityClick?.(learnerActivity);
-    learnerActivitiesMenu.onSelect(learnerActivity);
+    onBookLearnerActivityClick?.(learnerActivity);
+    bookLearnerActivitiesMenu.onSelect(learnerActivity);
   };
 
   return (
@@ -90,11 +92,12 @@ export default function LearningStatusItems(props: Props) {
       {items.map((item, index) => (
         <button
           key={index}
+          aria-controls="book-learner-activities-menu"
           className={clsx(classes.item, classes.button, {
             [classes.clickable]: clickable,
           })}
           disabled={!clickable}
-          onClick={learnerActivitiesMenu.onOpen}
+          onClick={bookLearnerActivitiesMenu.onOpen}
         >
           <LearningStatusDot type={item.type} />
           <span>
@@ -104,14 +107,14 @@ export default function LearningStatusItems(props: Props) {
         </button>
       ))}
       <Menu
-        id="learner-activities-menu"
+        id="book-learner-activities-menu"
         aria-haspopup="true"
-        anchorEl={learnerActivitiesMenu.anchorEl}
-        open={Boolean(learnerActivitiesMenu.anchorEl)}
-        onClose={learnerActivitiesMenu.onClose}
+        anchorEl={bookLearnerActivitiesMenu.anchorEl}
+        open={Boolean(bookLearnerActivitiesMenu.anchorEl)}
+        onClose={bookLearnerActivitiesMenu.onClose}
       >
-        {learnerActivities &&
-          learnerActivities.map((learnerActivity, index) => (
+        {bookLearnerActivities &&
+          bookLearnerActivities.map((learnerActivity, index) => (
             <MenuItem
               key={index}
               onClick={handleLearnerActivityClick(learnerActivity)}

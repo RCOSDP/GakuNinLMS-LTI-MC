@@ -1,6 +1,6 @@
 import type { UserSchema } from "$server/models/user";
-import type { ActivitySchema } from "$server/models/activity";
+import type { BookLearnerActivitySchema } from "$server/models/bookLearnerActivity";
 
 export type LearnerActivitySchema = Pick<UserSchema, "id" | "name"> & {
-  activities: Omit<ActivitySchema, "learner">[];
+  bookLearnerActivities: BookLearnerActivitySchema[];
 };

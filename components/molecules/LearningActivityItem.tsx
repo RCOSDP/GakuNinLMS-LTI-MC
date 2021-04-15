@@ -5,7 +5,7 @@ import { learningStatus, gray } from "$theme/colors";
 import useLineClampStyles from "$styles/lineClamp";
 import type { BookLearningActivitySchema } from "$server/models/bookLearningActivity";
 import type { TopicLearningActivitySchema } from "$server/models/topicLearningActivity";
-import type { LearnerActivitySchema } from "$server/models/learnerActivity";
+import type { BookLearnerActivitySchema } from "$server/models/bookLearnerActivity";
 
 type LearningBargraphProps = {
   className?: string;
@@ -57,8 +57,15 @@ const useStyles = makeStyles((theme) => ({
     flex: 1,
     display: "flex",
     alignItems: "center",
-    color: gray[700],
     marginRight: theme.spacing(1),
+  },
+  bookName: {
+    color: gray[600],
+    margin: 0,
+  },
+  topicName: {
+    fontWeight: "normal",
+    margin: 0,
   },
   graph: {
     maxWidth: 400,
@@ -72,13 +79,14 @@ const useStyles = makeStyles((theme) => ({
 
 type Props = {
   className?: string;
-  learningActivity: BookLearningActivitySchema | TopicLearningActivitySchema;
-  learnerActivities: LearnerActivitySchema[];
-  onLearnerActivityClick?(learnerActivity: LearnerActivitySchema): void;
+  bookLearningActivity: BookLearningActivitySchema;
+  onBookLearnerActivityClick?(
+    bookLearnerActivity: BookLearnerActivitySchema
+  ): void;
 };
 
 export default function LearningActivityItem(props: Props) {
-  const { learningActivity, learnerActivities, onLearnerActivityClick } = props;
+  const { bookLearningActivity, onBookLearnerActivityClick } = props;
   const classes = useStyles();
   const lineClamp = useLineClampStyles({
     fontSize: "1rem",
@@ -87,18 +95,35 @@ export default function LearningActivityItem(props: Props) {
   });
 
   return (
-    <div className={classes.root}>
-      <div className={clsx(classes.name, lineClamp.placeholder)}>
-        <span className={lineClamp.clamp}>{learningActivity.name}</span>
-      </div>
-      <div className={classes.graph}>
-        <LearningBargraph learningActivity={learningActivity} />
-        <LearningStatusItems
-          learningActivity={learningActivity}
-          learnerActivities={learnerActivities}
-          onLearnerActivityClick={onLearnerActivityClick}
-        />
-      </div>
-    </div>
+    <>
+      {bookLearningActivity.topicLearningActivities.map(
+        (topicLearningActivity, index) => (
+          <div key={index} className={classes.root}>
+            <div className={classes.name}>
+              <div>
+                <h5 className={classes.bookName}>
+                  {bookLearningActivity.name}
+                </h5>
+                <div className={lineClamp.placeholder}>
+                  <h6 className={clsx(classes.topicName, lineClamp.clamp)}>
+                    {topicLearningActivity.name}
+                  </h6>
+                </div>
+              </div>
+            </div>
+            <div className={classes.graph}>
+              <LearningBargraph learningActivity={topicLearningActivity} />
+              <LearningStatusItems
+                learningActivity={topicLearningActivity}
+                bookLearnerActivities={
+                  bookLearningActivity.bookLearnerActivities
+                }
+                onBookLearnerActivityClick={onBookLearnerActivityClick}
+              />
+            </div>
+          </div>
+        )
+      )}
+    </>
   );
 }

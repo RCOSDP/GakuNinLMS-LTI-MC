@@ -1,12 +1,12 @@
 import book from "./book";
+import bookLearnerActivity from "./bookLearnerActivity";
 import topicLearningActivity from "./topicLearningActivity";
-import learnerActivity from "./learnerActivity";
 import type { BookLearningActivitySchema } from "$server/models/bookLearningActivity";
 
 const bookLearningActivity: BookLearningActivitySchema = {
   id: book.id,
   name: book.name,
-  learnerActivities: [...Array(10)].map(() => learnerActivity),
+  bookLearnerActivities: [...Array(10)].map(() => bookLearnerActivity),
   topicLearningActivities: [topicLearningActivity],
   totalLearnerCount: 160,
   completedCount: 40,
