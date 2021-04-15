@@ -10,6 +10,13 @@ export const Default = () => (
   </>
 );
 
+export const Tooltip = () => (
+  <LearningStatusDot
+    type="completed"
+    tooltipProps={{ title: "ツールチップ" }}
+  />
+);
+
 export const Large = () => (
   <>
     <LearningStatusDot type="completed" size="large" />

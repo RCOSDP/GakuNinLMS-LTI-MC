@@ -1,12 +1,16 @@
 import clsx from "clsx";
+import Tooltip from "@material-ui/core/Tooltip";
 import { makeStyles } from "@material-ui/core/styles";
 import { learningStatus } from "$theme/colors";
 import type { LearningStatus } from "$server/models/learningStatus";
 
 const useStyles = makeStyles({
   root: {
-    display: "inline-block",
     borderRadius: 4,
+    border: "none",
+    appearance: "none",
+    background: "transparent",
+    padding: 0,
     "&$completed": {
       backgroundColor: learningStatus["completed"],
     },
@@ -25,6 +29,7 @@ const useStyles = makeStyles({
       height: 16,
     },
   },
+  button: {},
   completed: {},
   incompleted: {},
   unopened: {},
@@ -35,10 +40,22 @@ const useStyles = makeStyles({
 type Props = {
   type: LearningStatus;
   size?: "default" | "large";
+  tooltipProps?: Omit<React.ComponentProps<typeof Tooltip>, "children">;
+  onClick?: React.EventHandler<React.MouseEvent<HTMLButtonElement>>;
 };
 
 export default function LearningStatusDot(props: Props) {
-  const { type, size = "default" } = props;
+  const { type, size = "default", onClick, tooltipProps } = props;
   const classes = useStyles();
-  return <div className={clsx(classes.root, classes[type], classes[size])} />;
+  const dotProps = {
+    className: clsx(classes.root, classes[type], classes[size]),
+    onClick,
+    role: !onClick ? "img" : undefined,
+  };
+  if (!tooltipProps) return <button {...dotProps} />;
+  return (
+    <Tooltip {...tooltipProps}>
+      <button {...dotProps} />
+    </Tooltip>
+  );
 }
