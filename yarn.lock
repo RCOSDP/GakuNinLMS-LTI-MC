@@ -2354,6 +2354,13 @@
   dependencies:
     "@types/node" "*"
 
+"@types/lodash.sortedindexof@^4.1.6":
+  version "4.1.6"
+  resolved "https://registry.yarnpkg.com/@types/lodash.sortedindexof/-/lodash.sortedindexof-4.1.6.tgz#5d6791c718184597ca043618b6e8ab69fa81401f"
+  integrity sha512-Ya0u64y/LCd6oXmSclfgdvdGHxP88CblOe5u+xVtd6M09aKF3LFgOkDT4IVpeP+m9S0AgP4w7rO/T+EvHnsWzQ==
+  dependencies:
+    "@types/lodash" "*"
+
 "@types/lodash.throttle@^4.1.6":
   version "4.1.6"
   resolved "https://registry.yarnpkg.com/@types/lodash.throttle/-/lodash.throttle-4.1.6.tgz#f5ba2c22244ee42ff6c2c49e614401a870c1009c"
@@ -8441,6 +8448,14 @@ json-schema-resolver@^1.2.0:
     rfdc "^1.1.4"
     uri-js "^4.2.2"
 
+json-schema-to-ts@^1.6.1:
+  version "1.6.1"
+  resolved "https://registry.yarnpkg.com/json-schema-to-ts/-/json-schema-to-ts-1.6.1.tgz#acfef727076aa87a9c80f4e759a5cb387a7f3133"
+  integrity sha512-r+9goc1QOdiJk7m1pLncnWRm+7PdjO3MHLau+wf+9kQnI+SupuWsa4wNgBw7UfzEq5PJ8Fx9rK8xM7oaB9SFhA==
+  dependencies:
+    "@types/json-schema" "^7.0.6"
+    ts-toolbelt "^6.15.5"
+
 json-schema-traverse@^0.4.1:
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/json-schema-traverse/-/json-schema-traverse-0.4.1.tgz#69f6a87d9513ab8bb8fe63bdb0979c448e684660"
@@ -8848,6 +8863,11 @@ lodash.sortby@^4.7.0:
   version "4.7.0"
   resolved "https://registry.yarnpkg.com/lodash.sortby/-/lodash.sortby-4.7.0.tgz#edd14c824e2cc9c1e0b0a1b42bb5210516a42438"
   integrity sha1-7dFMgk4sycHgsKG0K7UhBRakJDg=
+
+lodash.sortedindexof@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/lodash.sortedindexof/-/lodash.sortedindexof-4.1.0.tgz#7b661d2f86f55668770802d56baa8f02d6620f3c"
+  integrity sha1-e2YdL4b1Vmh3CALVa6qPAtZiDzw=
 
 lodash.throttle@^4.1.1:
   version "4.1.1"
@@ -12631,6 +12651,11 @@ ts-pnp@^1.1.6:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/ts-pnp/-/ts-pnp-1.2.0.tgz#a500ad084b0798f1c3071af391e65912c86bca92"
   integrity sha512-csd+vJOb/gkzvcCHgTGSChYpy5f1/XKNsmvBGO4JXS+z1v2HobugDz4s1IeFXM3wZB44uczs+eazB5Q/ccdhQw==
+
+ts-toolbelt@^6.15.5:
+  version "6.15.5"
+  resolved "https://registry.yarnpkg.com/ts-toolbelt/-/ts-toolbelt-6.15.5.tgz#cb3b43ed725cb63644782c64fbcad7d8f28c0a83"
+  integrity sha512-FZIXf1ksVyLcfr7M317jbB67XFJhOO1YqdTcuGaq9q5jLUoTikukZ+98TPjKiP2jC5CgmYdWWYs0s2nLSU0/1A==
 
 tslib@1.13.0:
   version "1.13.0"

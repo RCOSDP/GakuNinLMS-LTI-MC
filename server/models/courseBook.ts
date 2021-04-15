@@ -1,7 +1,32 @@
-import type { BookSchema } from "./book";
-import type { TopicSchema } from "./topic";
+import { FromSchema } from "json-schema-to-ts";
 
 /** 受講コースのブック */
-export type CourseBookSchema = Pick<BookSchema, "id" | "name"> & {
-  sections: Array<{ topics: Array<Pick<TopicSchema, "id" | "name">> }>;
-};
+export const CourseBookSchema = {
+  type: "object",
+  properties: {
+    id: { type: "integer" },
+    /** ブック名 */
+    name: { type: "string" },
+    /** セクション */
+    sections: {
+      type: "array",
+      items: {
+        type: "object",
+        properties: {
+          topics: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: { id: { type: "integer" }, name: { type: "string" } },
+              required: ["id", "name"],
+            },
+          },
+        },
+        required: ["topics"],
+      },
+    },
+  },
+  required: ["id", "name", "sections"],
+} as const;
+
+export type CourseBookSchema = FromSchema<typeof CourseBookSchema>;

@@ -16,7 +16,7 @@ import useCardStyles from "$styles/card";
 import type { CourseBookSchema } from "$server/models/courseBook";
 import type { BookActivitySchema } from "$server/models/bookActivity";
 import type { SessionSchema } from "$server/models/session";
-import type { UserSchema } from "$server/models/user";
+import type { LearnerSchema } from "$server/models/leaner";
 import { gray } from "$theme/colors";
 import download from "$utils/bookLearningActivity/download";
 import getLearnerActivities from "$utils/getLearnerActivities";
@@ -87,9 +87,9 @@ const useStyles = makeStyles((theme) => ({
 
 type Props = {
   session: SessionSchema;
-  learners: Array<Pick<UserSchema, "id" | "name">>;
-  courseBooks: CourseBookSchema[];
-  bookActivities: BookActivitySchema[];
+  learners: Array<LearnerSchema>;
+  courseBooks: Array<CourseBookSchema>;
+  bookActivities: Array<BookActivitySchema>;
 };
 
 export default function Dashboard(props: Props) {
@@ -121,10 +121,10 @@ export default function Dashboard(props: Props) {
         action={
           <>
             <Typography variant="h6">
-              {session?.ltiLaunchBody.context_title}
+              {session.ltiLaunchBody.context_title}
             </Typography>
             <span className={classes.contextLabel}>
-              {session?.ltiLaunchBody.context_label}
+              {session.ltiLaunchBody.context_label}
             </span>
             <Button
               onClick={handleDownloadClick}

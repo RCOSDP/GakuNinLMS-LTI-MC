@@ -1,6 +1,6 @@
-import { UserSchema } from "$server/models/user";
 import { BookSchema } from "$server/models/book";
 import { TopicSchema } from "$server/models/topic";
+import { LearnerSchema } from "$server/models/leaner";
 import { BookActivitySchema } from "$server/models/bookActivity";
 import { CourseBookSchema } from "$server/models/courseBook";
 
@@ -29,7 +29,7 @@ function getLearnerActivities({
   courseBooks,
   bookActivities,
 }: {
-  learners: Array<Pick<UserSchema, "id" | "name">>;
+  learners: Array<LearnerSchema>;
   courseBooks: Array<CourseBookSchema>;
   bookActivities: Array<BookActivitySchema>;
 }) {
@@ -44,7 +44,7 @@ function getLearnerActivities({
   }
 
   const learnerActivities: Array<
-    [Pick<UserSchema, "id" | "name">, Array<BookActivitySchema>]
+    [LearnerSchema, Array<BookActivitySchema>]
   > = [];
   for (const learner of learners) {
     const activityByLearner = bookActivities.filter(
@@ -59,9 +59,7 @@ function getLearnerActivities({
       const activity = activityByLearner.find(
         (a) => a.book.id === bookId && a.topic.id === topicId
       );
-      activities.push(
-        activity ? activity : { learner, book, topic, status: "unopened" }
-      );
+      activities.push(activity || { learner, book, topic, status: "unopened" });
     }
     learnerActivities.push([learner, activities]);
   }

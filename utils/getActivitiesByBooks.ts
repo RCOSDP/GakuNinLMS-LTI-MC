@@ -1,4 +1,4 @@
-import { UserSchema } from "$server/models/user";
+import { LearnerSchema } from "$server/models/leaner";
 import { BookSchema } from "$server/models/book";
 import { BookActivitySchema } from "$server/models/bookActivity";
 import { CourseBookSchema } from "$server/models/courseBook";
@@ -8,7 +8,7 @@ function getActivitiesByBooks({
   courseBooks,
   bookActivities,
 }: {
-  learners: Array<Pick<UserSchema, "id" | "name">>;
+  learners: Array<LearnerSchema>;
   courseBooks: Array<CourseBookSchema>;
   bookActivities: Array<BookActivitySchema>;
 }) {
