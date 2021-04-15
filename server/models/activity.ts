@@ -19,11 +19,16 @@ export const activityPropsSchema = {
   },
 };
 
+/** 学習活動 */
 export type ActivitySchema = {
   learner: Pick<UserSchema, "id" | "name">;
   topic: Pick<TopicSchema, "id" | "name">;
+  /** 学習状況 - 完了: true, それ以外: false */
   completed: boolean;
+  /** 合計学習時間 (ms) */
   totalTimeMs: number;
+  /** 作成日時 */
   createdAt: Date;
+  /** 更新日時 */
   updatedAt: Date;
 };
