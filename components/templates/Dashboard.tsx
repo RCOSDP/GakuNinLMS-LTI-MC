@@ -13,10 +13,13 @@ import LearnerActivityItem from "$molecules/LearnerActivityItem";
 import LearningStatusItems from "$molecules/LearningStatusItems";
 import useContainerStyles from "$styles/container";
 import useCardStyles from "$styles/card";
-import type { BookLearningActivitySchema } from "$server/models/bookLearningActivity";
-import type { LearnerActivitySchema } from "$server/models/learnerActivity";
+import type { ActivitiesByTopicSchema } from "$server/models/activitiesByTopic";
+import type { CourseBookSchema } from "$server/models/courseBook";
+import type { BookActivitySchema } from "$server/models/bookActivity";
 import type { SessionSchema } from "$server/models/session";
+import type { UserSchema } from "$server/models/user";
 import { gray } from "$theme/colors";
+import getLearnerActivities from "$utils/getLearnerActivities";
 
 type TabPanelProps = {
   className?: string;
@@ -73,16 +76,24 @@ const useStyles = makeStyles((theme) => ({
 
 type Props = {
   session: SessionSchema;
-  bookLearningActivities: BookLearningActivitySchema[];
-  learnerActivities: LearnerActivitySchema[];
+  learners: Array<Pick<UserSchema, "id" | "name">>;
+  completedCount: number;
+  incompletedCount: number;
+  activitiesByTopics: ActivitiesByTopicSchema[];
+  courseBooks: CourseBookSchema[];
+  bookActivities: BookActivitySchema[];
   onBookLearningActivitiesDownload?(): void;
 };
 
 export default function Dashboard(props: Props) {
   const {
     session,
-    bookLearningActivities,
-    learnerActivities,
+    learners,
+    completedCount,
+    incompletedCount,
+    activitiesByTopics,
+    courseBooks,
+    bookActivities,
     onBookLearningActivitiesDownload,
   } = props;
   const classes = useStyles();
@@ -92,6 +103,11 @@ export default function Dashboard(props: Props) {
   const handleChange = (_: React.ChangeEvent<unknown>, value: number) => {
     setTabIndex(value);
   };
+  const learnerActivities = getLearnerActivities({
+    learners,
+    courseBooks,
+    bookActivities,
+  });
   return (
     <Container classes={containerClasses} maxWidth="md">
       <ActionHeader
@@ -99,10 +115,10 @@ export default function Dashboard(props: Props) {
         action={
           <>
             <Typography variant="h6">
-              {session?.ltiResourceLink?.contextTitle}
+              {session?.ltiLaunchBody.context_title}
             </Typography>
             <span className={classes.contextLabel}>
-              {session?.ltiResourceLink?.contextLabel}
+              {session?.ltiLaunchBody.context_label}
             </span>
             <Button
               onClick={onBookLearningActivitiesDownload}
@@ -127,19 +143,23 @@ export default function Dashboard(props: Props) {
           <Tab label="学習者" />
         </Tabs>
         <TabPanel className={classes.items} value={tabIndex} index={0}>
-          {bookLearningActivities.map((bookLearningActivity, index) => (
-            <LearningActivityItem
-              key={index}
-              bookLearningActivity={bookLearningActivity}
-            />
-          ))}
+          <LearningActivityItem
+            totalLearnerCount={learners.length}
+            activitiesByTopics={activitiesByTopics}
+          />
         </TabPanel>
         <TabPanel className={classes.learners} value={tabIndex} index={1}>
-          <LearningStatusItems className={classes.learnersLabel} />
-          {learnerActivities.map((learnerActivity, index) => (
+          <LearningStatusItems
+            className={classes.learnersLabel}
+            totalLearnerCount={learners.length}
+            completedCount={completedCount}
+            incompletedCount={incompletedCount}
+          />
+          {learnerActivities.map(([learner, activities], index) => (
             <LearnerActivityItem
               key={index}
-              learnerActivity={learnerActivity}
+              learner={learner}
+              activities={activities}
             />
           ))}
         </TabPanel>

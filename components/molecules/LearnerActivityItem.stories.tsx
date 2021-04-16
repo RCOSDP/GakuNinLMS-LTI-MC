@@ -1,8 +1,11 @@
 export default { title: "molecules/LearnerActivityItem" };
 
 import LearnerActivityItem from "./LearnerActivityItem";
-import { learnerActivity } from "$samples";
+import { bookActivity } from "$samples";
 
 export const Default = () => (
-  <LearnerActivityItem learnerActivity={learnerActivity} />
+  <LearnerActivityItem
+    learner={bookActivity.learner}
+    activities={[...Array(10)].map(() => bookActivity)}
+  />
 );

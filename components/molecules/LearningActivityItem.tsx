@@ -3,20 +3,21 @@ import { makeStyles } from "@material-ui/core/styles";
 import LearningStatusItems from "$molecules/LearningStatusItems";
 import { learningStatus, gray } from "$theme/colors";
 import useLineClampStyles from "$styles/lineClamp";
-import type { BookLearningActivitySchema } from "$server/models/bookLearningActivity";
-import type { TopicLearningActivitySchema } from "$server/models/topicLearningActivity";
-import type { BookLearnerActivitySchema } from "$server/models/bookLearnerActivity";
+import type { ActivitiesByTopicSchema } from "$server/models/activitiesByTopic";
 
 type LearningBargraphProps = {
   className?: string;
-  learningActivity: BookLearningActivitySchema | TopicLearningActivitySchema;
+  totalLearnerCount: number;
+  activitiesByTopic: ActivitiesByTopicSchema;
 };
 
 function LearningBargraph(props: LearningBargraphProps) {
   const {
     className,
-    learningActivity: { totalLearnerCount, completedCount, incompletedCount },
+    totalLearnerCount,
+    activitiesByTopic: { activities, completedCount },
   } = props;
+  const incompletedCount = activities.length - completedCount;
   const getPercentage = (value: number): string =>
     `${(value / totalLearnerCount) * 100}%`;
   return (
@@ -78,15 +79,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type Props = {
-  className?: string;
-  bookLearningActivity: BookLearningActivitySchema;
-  onBookLearnerActivityClick?(
-    bookLearnerActivity: BookLearnerActivitySchema
-  ): void;
+  totalLearnerCount: number;
+  activitiesByTopics: Array<ActivitiesByTopicSchema>;
 };
 
 export default function LearningActivityItem(props: Props) {
-  const { bookLearningActivity, onBookLearnerActivityClick } = props;
+  const { totalLearnerCount, activitiesByTopics } = props;
   const classes = useStyles();
   const lineClamp = useLineClampStyles({
     fontSize: "1rem",
@@ -96,34 +94,36 @@ export default function LearningActivityItem(props: Props) {
 
   return (
     <>
-      {bookLearningActivity.topicLearningActivities.map(
-        (topicLearningActivity, index) => (
-          <div key={index} className={classes.root}>
-            <div className={classes.name}>
-              <div>
-                <h5 className={classes.bookName}>
-                  {bookLearningActivity.name}
-                </h5>
-                <div className={lineClamp.placeholder}>
-                  <h6 className={clsx(classes.topicName, lineClamp.clamp)}>
-                    {topicLearningActivity.name}
-                  </h6>
-                </div>
+      {activitiesByTopics.map((activitiesByTopic, index) => (
+        <div key={index} className={classes.root}>
+          <div className={classes.name}>
+            <div>
+              <h5 className={classes.bookName}>{activitiesByTopic.name}</h5>
+              <div className={lineClamp.placeholder}>
+                <h6 className={clsx(classes.topicName, lineClamp.clamp)}>
+                  {activitiesByTopic.name}
+                </h6>
               </div>
             </div>
-            <div className={classes.graph}>
-              <LearningBargraph learningActivity={topicLearningActivity} />
-              <LearningStatusItems
-                learningActivity={topicLearningActivity}
-                bookLearnerActivities={
-                  bookLearningActivity.bookLearnerActivities
-                }
-                onBookLearnerActivityClick={onBookLearnerActivityClick}
-              />
-            </div>
           </div>
-        )
-      )}
+          <div className={classes.graph}>
+            <LearningBargraph
+              totalLearnerCount={totalLearnerCount}
+              activitiesByTopic={activitiesByTopic}
+            />
+            <LearningStatusItems
+              totalLearnerCount={totalLearnerCount}
+              completedCount={activitiesByTopic.completedCount}
+              incompletedCount={
+                activitiesByTopic.activities.length -
+                activitiesByTopic.completedCount
+              }
+              // TODO: ひとりの学習者のトピックの学習状況が一覧されるダイアログを実装する
+              // onBookLearnerActivityClick={onBookLearnerActivityClick}
+            />
+          </div>
+        </div>
+      ))}
     </>
   );
 }

@@ -1,8 +1,8 @@
 import { makeStyles } from "@material-ui/core/styles";
 import LearningStatusDot from "$atoms/LearningStatusDot";
 import { gray } from "$theme/colors";
-import type { LearnerActivitySchema } from "$server/models/learnerActivity";
-import type { BookLearnerActivitySchema } from "$server/models/bookLearnerActivity";
+import type { BookActivitySchema } from "$server/models/bookActivity";
+import type { UserSchema } from "$server/models/user";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -27,43 +27,39 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type Props = {
-  learnerActivity: LearnerActivitySchema;
-  onBookLearnerActivityClick?(
-    bookLearnerActivity: BookLearnerActivitySchema
-  ): void;
+  learner: Pick<UserSchema, "name">;
+  activities: Array<BookActivitySchema>;
+  onLearnerActivityClick?(activity: BookActivitySchema): void;
 };
 
 export default function LearnerActivityItem(props: Props) {
-  const { learnerActivity, onBookLearnerActivityClick } = props;
+  const { learner, activities, onLearnerActivityClick } = props;
   const classes = useStyles();
-  const handleBookLearnerActivityClick = (
-    bookLearnerActivity: BookLearnerActivitySchema
-  ) => () => onBookLearnerActivityClick?.(bookLearnerActivity);
+  const handleActivityClick = (activity: BookActivitySchema) => () =>
+    onLearnerActivityClick?.(activity);
 
   return (
     <div className={classes.root}>
-      <span className={classes.name}>{learnerActivity.name}</span>
+      <span className={classes.name}>{learner.name}</span>
       <div className={classes.dots}>
-        {learnerActivity.bookLearnerActivities.map((bookLearnerActivity) =>
-          bookLearnerActivity.activities.map((activity, index) => (
-            <LearningStatusDot
-              key={index}
-              tooltipProps={{
-                title: (
-                  <>
-                    <p>{learnerActivity.name}</p>
-                    <p>{bookLearnerActivity.book.name}</p>
-                    <p>{activity.topic.name}</p>
-                  </>
-                ),
-                arrow: true,
-              }}
-              onClick={handleBookLearnerActivityClick(bookLearnerActivity)}
-              type={activity.completed ? "completed" : "incompleted"}
-              size="large"
-            />
-          ))
-        )}
+        {activities.map((activity, index) => (
+          <LearningStatusDot
+            key={index}
+            tooltipProps={{
+              title: (
+                <>
+                  <p>{activity.learner.name}</p>
+                  <p>{activity.book.name}</p>
+                  <p>{activity.topic.name}</p>
+                </>
+              ),
+              arrow: true,
+            }}
+            onClick={handleActivityClick(activity)}
+            type={activity.status}
+            size="large"
+          />
+        ))}
       </div>
     </div>
   );
