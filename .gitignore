@@ -7,3 +7,4 @@
 /utils/$path.ts
 node_modules/
 .env*
+.*.swp
