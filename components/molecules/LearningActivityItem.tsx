@@ -3,21 +3,20 @@ import { makeStyles } from "@material-ui/core/styles";
 import LearningStatusItems from "$molecules/LearningStatusItems";
 import { learningStatus, gray } from "$theme/colors";
 import useLineClampStyles from "$styles/lineClamp";
-import type { ActivitiesByTopicSchema } from "$server/models/activitiesByTopic";
+import type { ActivitiesByBookSchema } from "$server/models/activitiesByBook";
 
 type LearningBargraphProps = {
   className?: string;
   totalLearnerCount: number;
-  activitiesByTopic: ActivitiesByTopicSchema;
+  activitiesByBook: ActivitiesByBookSchema;
 };
 
 function LearningBargraph(props: LearningBargraphProps) {
   const {
     className,
     totalLearnerCount,
-    activitiesByTopic: { activities, completedCount },
+    activitiesByBook: { completedCount, incompletedCount },
   } = props;
-  const incompletedCount = activities.length - completedCount;
   const getPercentage = (value: number): string =>
     `${(value / totalLearnerCount) * 100}%`;
   return (
@@ -73,11 +72,11 @@ const useStyles = makeStyles((theme) => ({
 
 type Props = {
   totalLearnerCount: number;
-  activitiesByTopic: ActivitiesByTopicSchema;
+  activitiesByBook: ActivitiesByBookSchema;
 };
 
 export default function LearningActivityItem(props: Props) {
-  const { totalLearnerCount, activitiesByTopic } = props;
+  const { totalLearnerCount, activitiesByBook } = props;
   const classes = useStyles();
   const lineClamp = useLineClampStyles({
     fontSize: "1rem",
@@ -88,20 +87,17 @@ export default function LearningActivityItem(props: Props) {
   return (
     <div className={classes.root}>
       <div className={clsx(classes.name, lineClamp.placeholder)}>
-        <span className={lineClamp.clamp}>{activitiesByTopic.name}</span>
+        <span className={lineClamp.clamp}>{activitiesByBook.name}</span>
       </div>
       <div className={classes.graph}>
         <LearningBargraph
           totalLearnerCount={totalLearnerCount}
-          activitiesByTopic={activitiesByTopic}
+          activitiesByBook={activitiesByBook}
         />
         <LearningStatusItems
           totalLearnerCount={totalLearnerCount}
-          completedCount={activitiesByTopic.completedCount}
-          incompletedCount={
-            activitiesByTopic.activities.length -
-            activitiesByTopic.completedCount
-          }
+          completedCount={activitiesByBook.completedCount}
+          incompletedCount={activitiesByBook.incompletedCount}
           // TODO: ひとりの学習者のトピックの学習状況が一覧されるダイアログを実装する
           // onBookLearnerActivityClick={onBookLearnerActivityClick}
         />

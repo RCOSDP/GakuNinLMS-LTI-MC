@@ -13,13 +13,13 @@ import LearningActivityItem from "$molecules/LearningActivityItem";
 import LearnerActivityItem from "$molecules/LearnerActivityItem";
 import useContainerStyles from "$styles/container";
 import useCardStyles from "$styles/card";
-import type { ActivitiesByTopicSchema } from "$server/models/activitiesByTopic";
 import type { CourseBookSchema } from "$server/models/courseBook";
 import type { BookActivitySchema } from "$server/models/bookActivity";
 import type { SessionSchema } from "$server/models/session";
 import type { UserSchema } from "$server/models/user";
 import { gray } from "$theme/colors";
 import getLearnerActivities from "$utils/getLearnerActivities";
+import getActivitiesByBooks from "$utils/getActivitiesByBooks";
 
 type TabPanelProps = {
   className?: string;
@@ -87,7 +87,6 @@ const useStyles = makeStyles((theme) => ({
 type Props = {
   session: SessionSchema;
   learners: Array<Pick<UserSchema, "id" | "name">>;
-  activitiesByTopics: ActivitiesByTopicSchema[];
   courseBooks: CourseBookSchema[];
   bookActivities: BookActivitySchema[];
   onActivitiesDownload?(): void;
@@ -97,7 +96,6 @@ export default function Dashboard(props: Props) {
   const {
     session,
     learners,
-    activitiesByTopics,
     courseBooks,
     bookActivities,
     onActivitiesDownload,
@@ -110,6 +108,11 @@ export default function Dashboard(props: Props) {
     setTabIndex(value);
   };
   const learnerActivities = getLearnerActivities({
+    learners,
+    courseBooks,
+    bookActivities,
+  });
+  const activitiesByBooks = getActivitiesByBooks({
     learners,
     courseBooks,
     bookActivities,
@@ -149,11 +152,11 @@ export default function Dashboard(props: Props) {
           <Tab label="学習者" />
         </Tabs>
         <TabPanel className={classes.items} value={tabIndex} index={0}>
-          {activitiesByTopics.map((activitiesByTopic, index) => (
+          {activitiesByBooks.map((activitiesByBook, index) => (
             <LearningActivityItem
               key={index}
               totalLearnerCount={learners.length}
-              activitiesByTopic={activitiesByTopic}
+              activitiesByBook={activitiesByBook}
             />
           ))}
         </TabPanel>
