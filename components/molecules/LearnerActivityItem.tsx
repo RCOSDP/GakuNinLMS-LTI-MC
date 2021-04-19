@@ -19,6 +19,8 @@ const useStyles = makeStyles((theme) => ({
     marginRight: "1rem",
   },
   dots: {
+    display: "flex",
+    alignItems: "center",
     whiteSpace: "nowrap",
     "& > :not(:last-child)": {
       marginRight: theme.spacing(1),
