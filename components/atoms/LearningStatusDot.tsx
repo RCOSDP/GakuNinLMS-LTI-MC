@@ -25,7 +25,6 @@ const useStyles = makeStyles({
       height: 16,
     },
   },
-  button: {},
   completed: {},
   incompleted: {},
   unopened: {},
