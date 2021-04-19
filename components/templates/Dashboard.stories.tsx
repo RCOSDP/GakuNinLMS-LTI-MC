@@ -4,7 +4,7 @@ import Dashboard from "./Dashboard";
 import { session, user, activitiesByTopic, bookActivity, book } from "$samples";
 
 const handlers = {
-  onBookLearningActivityDownload: console.log,
+  onActivitiesDownload: console.log,
 };
 
 export const Default = () => (

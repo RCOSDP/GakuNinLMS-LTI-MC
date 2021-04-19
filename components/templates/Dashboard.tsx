@@ -82,7 +82,7 @@ type Props = {
   activitiesByTopics: ActivitiesByTopicSchema[];
   courseBooks: CourseBookSchema[];
   bookActivities: BookActivitySchema[];
-  onBookLearningActivitiesDownload?(): void;
+  onActivitiesDownload?(): void;
 };
 
 export default function Dashboard(props: Props) {
@@ -94,7 +94,7 @@ export default function Dashboard(props: Props) {
     activitiesByTopics,
     courseBooks,
     bookActivities,
-    onBookLearningActivitiesDownload,
+    onActivitiesDownload,
   } = props;
   const classes = useStyles();
   const containerClasses = useContainerStyles();
@@ -121,7 +121,7 @@ export default function Dashboard(props: Props) {
               {session?.ltiLaunchBody.context_label}
             </span>
             <Button
-              onClick={onBookLearningActivitiesDownload}
+              onClick={onActivitiesDownload}
               color="primary"
               variant="contained"
               size="small"
