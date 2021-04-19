@@ -7,10 +7,6 @@ import type { LearningStatus } from "$server/models/learningStatus";
 const useStyles = makeStyles({
   root: {
     borderRadius: 4,
-    border: "none",
-    appearance: "none",
-    background: "transparent",
-    padding: 0,
     "&$completed": {
       backgroundColor: learningStatus["completed"],
     },
@@ -41,21 +37,23 @@ type Props = {
   type: LearningStatus;
   size?: "default" | "large";
   tooltipProps?: Omit<React.ComponentProps<typeof Tooltip>, "children">;
-  onClick?: React.EventHandler<React.MouseEvent<HTMLButtonElement>>;
+  onClick?: React.EventHandler<React.MouseEvent<HTMLDivElement>>;
 };
 
 export default function LearningStatusDot(props: Props) {
   const { type, size = "default", onClick, tooltipProps } = props;
   const classes = useStyles();
+  const handleKeyPress = () => onClick;
   const dotProps = {
     className: clsx(classes.root, classes[type], classes[size]),
     onClick,
-    role: !onClick ? "img" : undefined,
+    onKeyPress: handleKeyPress,
+    role: onClick ? "button" : undefined,
   };
-  if (!tooltipProps) return <button {...dotProps} />;
+  if (!tooltipProps) return <div {...dotProps} />;
   return (
     <Tooltip {...tooltipProps}>
-      <button {...dotProps} />
+      <div {...dotProps} />
     </Tooltip>
   );
 }
