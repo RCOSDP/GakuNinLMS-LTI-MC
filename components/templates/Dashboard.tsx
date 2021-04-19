@@ -8,9 +8,9 @@ import Button from "@material-ui/core/Button";
 import GetAppOutlinedIcon from "@material-ui/icons/GetAppOutlined";
 import { makeStyles } from "@material-ui/core/styles";
 import ActionHeader from "$organisms/ActionHeader";
+import LearningStatusDot from "$atoms/LearningStatusDot";
 import LearningActivityItem from "$molecules/LearningActivityItem";
 import LearnerActivityItem from "$molecules/LearnerActivityItem";
-import LearningStatusItems from "$molecules/LearningStatusItems";
 import useContainerStyles from "$styles/container";
 import useCardStyles from "$styles/card";
 import type { ActivitiesByTopicSchema } from "$server/models/activitiesByTopic";
@@ -71,14 +71,22 @@ const useStyles = makeStyles((theme) => ({
   },
   learnersLabel: {
     marginBottom: theme.spacing(2),
+    "& > :not(:last-child)": {
+      marginRight: theme.spacing(1.5),
+    },
+    "& > *": {
+      display: "inline-flex",
+      alignItems: "center",
+      "& > :first-child": {
+        marginRight: theme.spacing(0.5),
+      },
+    },
   },
 }));
 
 type Props = {
   session: SessionSchema;
   learners: Array<Pick<UserSchema, "id" | "name">>;
-  completedCount: number;
-  incompletedCount: number;
   activitiesByTopics: ActivitiesByTopicSchema[];
   courseBooks: CourseBookSchema[];
   bookActivities: BookActivitySchema[];
@@ -89,8 +97,6 @@ export default function Dashboard(props: Props) {
   const {
     session,
     learners,
-    completedCount,
-    incompletedCount,
     activitiesByTopics,
     courseBooks,
     bookActivities,
@@ -149,12 +155,20 @@ export default function Dashboard(props: Props) {
           />
         </TabPanel>
         <TabPanel className={classes.learners} value={tabIndex} index={1}>
-          <LearningStatusItems
-            className={classes.learnersLabel}
-            totalLearnerCount={learners.length}
-            completedCount={completedCount}
-            incompletedCount={incompletedCount}
-          />
+          <div className={classes.learnersLabel}>
+            <div>
+              <LearningStatusDot type="completed" />
+              <span>完了</span>
+            </div>
+            <div>
+              <LearningStatusDot type="incompleted" />
+              <span>未完了</span>
+            </div>
+            <div>
+              <LearningStatusDot type="unopened" />
+              <span>未開封</span>
+            </div>
+          </div>
           {learnerActivities.map(([learner, activities], index) => (
             <LearnerActivityItem
               key={index}

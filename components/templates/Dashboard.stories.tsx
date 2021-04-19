@@ -11,8 +11,6 @@ export const Default = () => (
   <Dashboard
     session={session}
     learners={[...Array(160)].map(() => user)}
-    completedCount={80}
-    incompletedCount={28}
     activitiesByTopics={[...Array(10)].map(() => activitiesByTopic)}
     courseBooks={[...Array(10)].map((_, id) => ({ ...book, id }))}
     bookActivities={[...Array(100)].map((_, i) => ({
