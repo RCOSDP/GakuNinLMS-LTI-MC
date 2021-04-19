@@ -36,18 +36,23 @@ type Props = {
   type: LearningStatus;
   size?: "default" | "large";
   tooltipProps?: Omit<React.ComponentProps<typeof Tooltip>, "children">;
-  onClick?: React.EventHandler<React.MouseEvent<HTMLDivElement>>;
+  onDotClick?(): void;
 };
 
 export default function LearningStatusDot(props: Props) {
-  const { type, size = "default", onClick, tooltipProps } = props;
+  const { type, size = "default", onDotClick, tooltipProps } = props;
   const classes = useStyles();
-  const handleKeyPress = () => onClick;
+  const handleClick = () => {
+    onDotClick?.();
+  };
+  const handleKeyPress = () => {
+    onDotClick?.();
+  };
   const dotProps = {
     className: clsx(classes.root, classes[type], classes[size]),
-    onClick,
+    onClick: handleClick,
     onKeyPress: handleKeyPress,
-    role: onClick ? "button" : undefined,
+    role: onDotClick ? "button" : undefined,
   };
   if (!tooltipProps) return <div {...dotProps} />;
   return (

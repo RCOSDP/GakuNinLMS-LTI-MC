@@ -57,7 +57,7 @@ export default function LearnerActivityItem(props: Props) {
               ),
               arrow: true,
             }}
-            onClick={handleActivityClick(activity)}
+            onDotClick={handleActivityClick(activity)}
             type={activity.status}
             size="large"
           />
