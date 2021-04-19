@@ -149,10 +149,13 @@ export default function Dashboard(props: Props) {
           <Tab label="学習者" />
         </Tabs>
         <TabPanel className={classes.items} value={tabIndex} index={0}>
-          <LearningActivityItem
-            totalLearnerCount={learners.length}
-            activitiesByTopics={activitiesByTopics}
-          />
+          {activitiesByTopics.map((activitiesByTopic, index) => (
+            <LearningActivityItem
+              key={index}
+              totalLearnerCount={learners.length}
+              activitiesByTopic={activitiesByTopic}
+            />
+          ))}
         </TabPanel>
         <TabPanel className={classes.learners} value={tabIndex} index={1}>
           <div className={classes.learnersLabel}>

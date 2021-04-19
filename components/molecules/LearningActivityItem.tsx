@@ -58,15 +58,8 @@ const useStyles = makeStyles((theme) => ({
     flex: 1,
     display: "flex",
     alignItems: "center",
+    color: gray[700],
     marginRight: theme.spacing(1),
-  },
-  bookName: {
-    color: gray[600],
-    margin: 0,
-  },
-  topicName: {
-    fontWeight: "normal",
-    margin: 0,
   },
   graph: {
     maxWidth: 400,
@@ -80,11 +73,11 @@ const useStyles = makeStyles((theme) => ({
 
 type Props = {
   totalLearnerCount: number;
-  activitiesByTopics: Array<ActivitiesByTopicSchema>;
+  activitiesByTopic: ActivitiesByTopicSchema;
 };
 
 export default function LearningActivityItem(props: Props) {
-  const { totalLearnerCount, activitiesByTopics } = props;
+  const { totalLearnerCount, activitiesByTopic } = props;
   const classes = useStyles();
   const lineClamp = useLineClampStyles({
     fontSize: "1rem",
@@ -93,37 +86,26 @@ export default function LearningActivityItem(props: Props) {
   });
 
   return (
-    <>
-      {activitiesByTopics.map((activitiesByTopic, index) => (
-        <div key={index} className={classes.root}>
-          <div className={classes.name}>
-            <div>
-              <h5 className={classes.bookName}>{activitiesByTopic.name}</h5>
-              <div className={lineClamp.placeholder}>
-                <h6 className={clsx(classes.topicName, lineClamp.clamp)}>
-                  {activitiesByTopic.name}
-                </h6>
-              </div>
-            </div>
-          </div>
-          <div className={classes.graph}>
-            <LearningBargraph
-              totalLearnerCount={totalLearnerCount}
-              activitiesByTopic={activitiesByTopic}
-            />
-            <LearningStatusItems
-              totalLearnerCount={totalLearnerCount}
-              completedCount={activitiesByTopic.completedCount}
-              incompletedCount={
-                activitiesByTopic.activities.length -
-                activitiesByTopic.completedCount
-              }
-              // TODO: ひとりの学習者のトピックの学習状況が一覧されるダイアログを実装する
-              // onBookLearnerActivityClick={onBookLearnerActivityClick}
-            />
-          </div>
-        </div>
-      ))}
-    </>
+    <div className={classes.root}>
+      <div className={clsx(classes.name, lineClamp.placeholder)}>
+        <span className={lineClamp.clamp}>{activitiesByTopic.name}</span>
+      </div>
+      <div className={classes.graph}>
+        <LearningBargraph
+          totalLearnerCount={totalLearnerCount}
+          activitiesByTopic={activitiesByTopic}
+        />
+        <LearningStatusItems
+          totalLearnerCount={totalLearnerCount}
+          completedCount={activitiesByTopic.completedCount}
+          incompletedCount={
+            activitiesByTopic.activities.length -
+            activitiesByTopic.completedCount
+          }
+          // TODO: ひとりの学習者のトピックの学習状況が一覧されるダイアログを実装する
+          // onBookLearnerActivityClick={onBookLearnerActivityClick}
+        />
+      </div>
+    </div>
   );
 }

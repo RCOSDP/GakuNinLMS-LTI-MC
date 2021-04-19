@@ -6,6 +6,6 @@ import { activitiesByTopic } from "$samples";
 export const Default = () => (
   <LearningActivityItem
     totalLearnerCount={160}
-    activitiesByTopics={[activitiesByTopic]}
+    activitiesByTopic={activitiesByTopic}
   />
 );
