@@ -12,20 +12,24 @@ export type Query = { context?: "books" | "link" };
 function Import({ context }: Query) {
   const query = { ...(context && { context }) };
   const router = useRouter();
-  const importProps = { json: "" };
+  const importProps: BooksImportParams = { json: "" };
   const back = () => {
     switch (context) {
       case "books":
       case "link":
         return router.push(pagesPath[context].$url());
       default:
-        return router.push(pagesPath.book.$url({ query }));
+        return router.push(pagesPath.books.$url());
     }
   };
   async function handleSubmit(props: BooksImportParams) {
-    const res = await importBooks(props);
-    //return back();
-    console.log(res);
+    try {
+      const res = await importBooks(props);
+      alert(`books: ${JSON.stringify(res["books"])}`);
+    } catch(e) {
+      const res = await e.json();
+      alert(`errors: ${JSON.stringify(res["errors"])}`);
+    }
   }
   function handleCancel() {
     return back();

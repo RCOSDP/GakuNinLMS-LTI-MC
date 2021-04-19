@@ -21,10 +21,16 @@ import { exists, mapValues } from '../runtime';
 export interface InlineResponse201 {
     /**
      * 
-     * @type {string}
+     * @type {Array<object>}
      * @memberof InlineResponse201
      */
-    json?: string;
+    books?: Array<object>;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof InlineResponse201
+     */
+    errors?: Array<string>;
 }
 
 export function InlineResponse201FromJSON(json: any): InlineResponse201 {
@@ -37,7 +43,8 @@ export function InlineResponse201FromJSONTyped(json: any, ignoreDiscriminator: b
     }
     return {
         
-        'json': !exists(json, 'json') ? undefined : json['json'],
+        'books': !exists(json, 'books') ? undefined : json['books'],
+        'errors': !exists(json, 'errors') ? undefined : json['errors'],
     };
 }
 
@@ -50,7 +57,8 @@ export function InlineResponse201ToJSON(value?: InlineResponse201 | null): any {
     }
     return {
         
-        'json': value.json,
+        'books': value.books,
+        'errors': value.errors,
     };
 }
 

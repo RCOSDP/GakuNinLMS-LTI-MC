@@ -1,6 +1,6 @@
 import { FastifySchema } from "fastify";
 import { outdent } from "outdent";
-import { BooksImportParams, booksImportParamsSchema } from "$server/validators/booksImportParams";
+import { BooksImportParams, booksImportParamsSchema, BooksImportResult, booksImportResultSchema } from "$server/validators/booksImportParams";
 import { SessionSchema } from "$server/models/session";
 import authUser from "$server/auth/authUser";
 import authInstructor from "$server/auth/authInstructor";
@@ -15,8 +15,8 @@ export const importSchema: FastifySchema = {
     教員または管理者でなければなりません。`,
   body: booksImportParamsSchema,
   response: {
-    201: booksImportParamsSchema,
-    400: {},
+    201: booksImportResultSchema,
+    400: booksImportResultSchema,
   },
 };
 
@@ -29,12 +29,11 @@ export async function importBooks({
   body,
 }: {
   session: SessionSchema;
-  body: BooksImportParams;
+  body: BooksImportResult;
 }) {
   const imported = await importBooksUtil(session.user.id, body);
-
   return {
-    status: imported == null ? 400 : 201,
+    status: imported.errors && imported.errors.length ? 400 : 201,
     body: imported,
   };
 }
