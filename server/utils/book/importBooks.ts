@@ -16,7 +16,7 @@ async function importBooksUtil(
   try {
     //throw ["aaaa", "bbbb"];
     const obj = JSON.parse(params.json);
-    let importBooks = Array.isArray(obj) ? obj : [obj];
+    const importBooks = Array.isArray(obj) ? obj : [obj];
     const books = [];
 
     for (let i = 0; i < importBooks.length; i++) {
