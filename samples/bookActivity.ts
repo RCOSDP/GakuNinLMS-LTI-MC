@@ -17,8 +17,8 @@ const bookActivity: BookActivitySchema = {
     name: topic.name,
   },
   get status() {
-    return (["completed", "incompleted", "unopened"] as const)[
-      Math.floor(Math.random() * 3)
+    return (["completed", "incompleted"] as const)[
+      Math.floor(Math.random() * 2)
     ];
   },
 };

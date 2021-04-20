@@ -12,10 +12,11 @@ export const Default = () => (
     session={session}
     learners={[...Array(50)].map((_, id) => ({ ...user, id }))}
     courseBooks={[...Array(10)].map((_, id) => ({ ...book, id }))}
-    bookActivities={[...Array(100)].map((_, i) => ({
+    bookActivities={[...Array(1500)].map((_, i) => ({
       ...bookActivity,
       learner: { ...bookActivity.learner, id: i % 50 },
-      book: { ...bookActivity.book, id: i % 10 },
+      book: { ...bookActivity.book, id: Math.floor(Math.random() * 10) },
+      topic: { ...bookActivity.topic, id: (i % 3) + 1 },
     }))}
     {...handlers}
   />
