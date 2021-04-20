@@ -10,10 +10,11 @@ const handlers = {
 export const Default = () => (
   <Dashboard
     session={session}
-    learners={[...Array(160)].map(() => user)}
+    learners={[...Array(50)].map((_, id) => ({ ...user, id }))}
     courseBooks={[...Array(10)].map((_, id) => ({ ...book, id }))}
     bookActivities={[...Array(100)].map((_, i) => ({
       ...bookActivity,
+      learner: { ...bookActivity.learner, id: i % 50 },
       book: { ...bookActivity.book, id: i % 10 },
     }))}
     {...handlers}

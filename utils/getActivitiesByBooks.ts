@@ -31,7 +31,6 @@ function getActivitiesByBooks({
       );
       const completedRate = completedActivities.length / topics.length;
       // NOTE: 完了とみなす割合が決め打ち
-      // FIXME: Storybookのサンプルだと完了した学習活動が母数を上回ることがあるがサンプルの問題？
       completedRate > 0.8 ? completedCount++ : incompletedCount++;
     }
     activitiesByBooks.push({ ...book, completedCount, incompletedCount });
