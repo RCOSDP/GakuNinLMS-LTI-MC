@@ -31,9 +31,9 @@ export async function importBooks({
   session: SessionSchema;
   body: BooksImportResult;
 }) {
-  const imported = await importBooksUtil(session.user.id, body);
+  const result = await importBooksUtil(session.user.id, body);
   return {
-    status: imported.errors && imported.errors.length ? 400 : 201,
-    body: imported,
+    status: result.errors && result.errors.length ? 400 : 201,
+    body: result,
   };
 }
