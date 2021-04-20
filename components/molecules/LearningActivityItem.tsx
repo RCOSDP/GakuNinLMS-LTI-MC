@@ -3,19 +3,19 @@ import { makeStyles } from "@material-ui/core/styles";
 import LearningStatusItems from "$molecules/LearningStatusItems";
 import { learningStatus, gray } from "$theme/colors";
 import useLineClampStyles from "$styles/lineClamp";
-import type { BookLearningActivitySchema } from "$server/models/bookLearningActivity";
-import type { TopicLearningActivitySchema } from "$server/models/topicLearningActivity";
-import type { LearnerActivitySchema } from "$server/models/learnerActivity";
+import type { ActivitiesByBookSchema } from "$server/models/activitiesByBook";
 
 type LearningBargraphProps = {
   className?: string;
-  learningActivity: BookLearningActivitySchema | TopicLearningActivitySchema;
+  totalLearnerCount: number;
+  activitiesByBook: ActivitiesByBookSchema;
 };
 
 function LearningBargraph(props: LearningBargraphProps) {
   const {
     className,
-    learningActivity: { totalLearnerCount, completedCount, incompletedCount },
+    totalLearnerCount,
+    activitiesByBook: { completedCount, incompletedCount },
   } = props;
   const getPercentage = (value: number): string =>
     `${(value / totalLearnerCount) * 100}%`;
@@ -71,14 +71,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type Props = {
-  className?: string;
-  learningActivity: BookLearningActivitySchema | TopicLearningActivitySchema;
-  learnerActivities: LearnerActivitySchema[];
-  onLearnerActivityClick?(learnerActivity: LearnerActivitySchema): void;
+  totalLearnerCount: number;
+  activitiesByBook: ActivitiesByBookSchema;
 };
 
 export default function LearningActivityItem(props: Props) {
-  const { learningActivity, learnerActivities, onLearnerActivityClick } = props;
+  const { totalLearnerCount, activitiesByBook } = props;
   const classes = useStyles();
   const lineClamp = useLineClampStyles({
     fontSize: "1rem",
@@ -89,14 +87,19 @@ export default function LearningActivityItem(props: Props) {
   return (
     <div className={classes.root}>
       <div className={clsx(classes.name, lineClamp.placeholder)}>
-        <span className={lineClamp.clamp}>{learningActivity.name}</span>
+        <span className={lineClamp.clamp}>{activitiesByBook.name}</span>
       </div>
       <div className={classes.graph}>
-        <LearningBargraph learningActivity={learningActivity} />
+        <LearningBargraph
+          totalLearnerCount={totalLearnerCount}
+          activitiesByBook={activitiesByBook}
+        />
         <LearningStatusItems
-          learningActivity={learningActivity}
-          learnerActivities={learnerActivities}
-          onLearnerActivityClick={onLearnerActivityClick}
+          totalLearnerCount={totalLearnerCount}
+          completedCount={activitiesByBook.completedCount}
+          incompletedCount={activitiesByBook.incompletedCount}
+          // TODO: ひとりの学習者のトピックの学習状況が一覧されるダイアログを実装する
+          // onBookLearnerActivityClick={onBookLearnerActivityClick}
         />
       </div>
     </div>

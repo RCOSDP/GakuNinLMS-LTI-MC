@@ -1,7 +1,8 @@
 import { makeStyles } from "@material-ui/core/styles";
 import LearningStatusDot from "$atoms/LearningStatusDot";
 import { gray } from "$theme/colors";
-import type { LearnerActivitySchema } from "$server/models/learnerActivity";
+import type { BookActivitySchema } from "$server/models/bookActivity";
+import type { UserSchema } from "$server/models/user";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -18,6 +19,8 @@ const useStyles = makeStyles((theme) => ({
     marginRight: "1rem",
   },
   dots: {
+    display: "flex",
+    alignItems: "center",
     whiteSpace: "nowrap",
     "& > :not(:last-child)": {
       marginRight: theme.spacing(1),
@@ -26,21 +29,36 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type Props = {
-  learnerActivity: LearnerActivitySchema;
+  learner: Pick<UserSchema, "name">;
+  activities: Array<BookActivitySchema>;
+  onLearnerActivityClick?(activity: BookActivitySchema): void;
 };
 
 export default function LearnerActivityItem(props: Props) {
-  const { learnerActivity } = props;
+  const { learner, activities, onLearnerActivityClick } = props;
   const classes = useStyles();
+  const handleActivityClick = (activity: BookActivitySchema) => () =>
+    onLearnerActivityClick?.(activity);
 
   return (
     <div className={classes.root}>
-      <span className={classes.name}>{learnerActivity.name}</span>
+      <span className={classes.name}>{learner.name}</span>
       <div className={classes.dots}>
-        {learnerActivity.activities.map((activity, index) => (
+        {activities.map((activity, index) => (
           <LearningStatusDot
             key={index}
-            type={activity.completed ? "completed" : "incompleted"}
+            tooltipProps={{
+              title: (
+                <>
+                  <p>{activity.learner.name}</p>
+                  <p>{activity.book.name}</p>
+                  <p>{activity.topic.name}</p>
+                </>
+              ),
+              arrow: true,
+            }}
+            onDotClick={handleActivityClick(activity)}
+            type={activity.status}
             size="large"
           />
         ))}

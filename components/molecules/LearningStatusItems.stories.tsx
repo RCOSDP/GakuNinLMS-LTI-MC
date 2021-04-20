@@ -1,10 +1,11 @@
 export default { title: "molecules/LearningStatusItems" };
 
 import LearningStatusItems from "./LearningStatusItems";
-import { bookLearningActivity } from "$samples";
 
 export const Default = () => (
-  <LearningStatusItems learningActivity={bookLearningActivity} />
+  <LearningStatusItems
+    totalLearnerCount={160}
+    completedCount={50}
+    incompletedCount={28}
+  />
 );
-
-export const Empty = () => <LearningStatusItems />;

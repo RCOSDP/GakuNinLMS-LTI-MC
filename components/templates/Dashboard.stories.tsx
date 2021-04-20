@@ -1,21 +1,23 @@
 export default { title: "templates/Dashboard" };
 
 import Dashboard from "./Dashboard";
-import { session, bookLearningActivity } from "$samples";
+import { session, user, bookActivity, book } from "$samples";
 
 const handlers = {
-  onBookLearningActivityDownload: console.log,
-  onBookLearningActivityClick: console.log,
+  onActivitiesDownload: console.log,
 };
 
 export const Default = () => (
   <Dashboard
     session={session}
-    bookLearningActivities={[...Array(10)].map(() => bookLearningActivity)}
+    learners={[...Array(50)].map((_, id) => ({ ...user, id }))}
+    courseBooks={[...Array(10)].map((_, id) => ({ ...book, id }))}
+    bookActivities={[...Array(1500)].map((_, i) => ({
+      ...bookActivity,
+      learner: { ...bookActivity.learner, id: i % 50 },
+      book: { ...bookActivity.book, id: Math.floor(Math.random() * 10) },
+      topic: { ...bookActivity.topic, id: (i % 3) + 1 },
+    }))}
     {...handlers}
   />
-);
-
-export const Empty = () => (
-  <Dashboard session={session} bookLearningActivities={[]} {...handlers} />
 );

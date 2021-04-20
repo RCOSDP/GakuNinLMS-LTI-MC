@@ -1,12 +1,6 @@
 import clsx from "clsx";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
 import { makeStyles } from "@material-ui/core/styles";
 import LearningStatusDot from "$atoms/LearningStatusDot";
-import useSelectorProps from "$utils/useSelectorProps";
-import type { BookLearningActivitySchema } from "$server/models/bookLearningActivity";
-import type { TopicLearningActivitySchema } from "$server/models/topicLearningActivity";
-import type { LearnerActivitySchema } from "$server/models/learnerActivity";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -40,78 +34,80 @@ const useStyles = makeStyles((theme) => ({
 
 type Props = {
   className?: string;
-  learningActivity?: BookLearningActivitySchema | TopicLearningActivitySchema;
-  learnerActivities?: LearnerActivitySchema[];
-  onLearnerActivityClick?(learnerActivity: LearnerActivitySchema): void;
+  totalLearnerCount: number;
+  completedCount: number;
+  incompletedCount: number;
 };
 
 export default function LearningStatusItems(props: Props) {
   const {
     className,
-    learningActivity,
-    learnerActivities,
-    onLearnerActivityClick,
+    totalLearnerCount,
+    completedCount,
+    incompletedCount,
   } = props;
   const classes = useStyles();
-  const learnerActivitiesMenu = useSelectorProps<LearnerActivitySchema>(null);
+  // TODO: 学習状況別に学習者一覧を得られるようにしましょう
+  // const bookLearnerActivitiesMenu = useSelectorProps<BookLearnerActivitySchema>(
+  //   null
+  // );
 
   const items = [
     {
       type: "completed",
       label: "完了",
-      count: learningActivity?.completedCount,
+      count: completedCount,
     },
     {
       type: "incompleted",
       label: "未完了",
-      count: learningActivity?.incompletedCount,
+      count: incompletedCount,
     },
     {
       type: "unopened",
       label: "未開封",
-      count:
-        (learningActivity &&
-          learningActivity.totalLearnerCount -
-            learningActivity.completedCount -
-            learningActivity.incompletedCount) ||
-        0,
+      count: totalLearnerCount - completedCount - incompletedCount,
     },
   ] as const;
-  const clickable = learnerActivities && learnerActivities.length > 0;
-  const handleLearnerActivityClick = (
-    learnerActivity: LearnerActivitySchema
-  ) => () => {
-    onLearnerActivityClick?.(learnerActivity);
-    learnerActivitiesMenu.onSelect(learnerActivity);
-  };
+  // TODO: 学習状況別に学習者一覧を得られるようにしましょう
+  const clickable = false; // learnerActivities && learnerActivities.length > 0;
+  // const handleLearnerActivityClick = (
+  //   learnerActivity: BookLearnerActivitySchema
+  // ) => () => {
+  //   onBookLearnerActivityClick?.(learnerActivity);
+  //   bookLearnerActivitiesMenu.onSelect(learnerActivity);
+  // };
 
   return (
     <div className={clsx(className, classes.root)}>
       {items.map((item, index) => (
         <button
           key={index}
+          aria-controls="learner-activities-menu"
           className={clsx(classes.item, classes.button, {
             [classes.clickable]: clickable,
           })}
           disabled={!clickable}
-          onClick={learnerActivitiesMenu.onOpen}
+          // TODO: 学習状況別に学習者一覧を得られるようにしましょう
+          // onClick={bookLearnerActivitiesMenu.onOpen}
         >
           <LearningStatusDot type={item.type} />
           <span>
             {item.label}
-            {learningActivity && `${item.count}人`}
+            {item.count}人
           </span>
         </button>
       ))}
-      <Menu
+      {/* TODO: 学習状況別に学習者一覧を得られるようにしましょう */}
+      {/* <Menu
+        anchorEl={bookLearnerActivitiesMenu.anchorEl}
+        open={Boolean(bookLearnerActivitiesMenu.anchorEl)}
+        onClose={bookLearnerActivitiesMenu.onClose}
         id="learner-activities-menu"
         aria-haspopup="true"
-        anchorEl={learnerActivitiesMenu.anchorEl}
-        open={Boolean(learnerActivitiesMenu.anchorEl)}
-        onClose={learnerActivitiesMenu.onClose}
       >
-        {learnerActivities &&
-          learnerActivities.map((learnerActivity, index) => (
+        {bookLearnerActivities &&
+          bookLearnerActivities.map((learnerActivity, index) => (
             <MenuItem
               key={index}
               onClick={handleLearnerActivityClick(learnerActivity)}
@@ -119,7 +115,7 @@ export default function LearningStatusItems(props: Props) {
               {learnerActivity.name}
             </MenuItem>
           ))}
-      </Menu>
+      </Menu> */}
     </div>
   );
 }

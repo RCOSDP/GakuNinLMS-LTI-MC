@@ -5,21 +5,21 @@ import Card from "@material-ui/core/Card";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Button from "@material-ui/core/Button";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import GetAppOutlinedIcon from "@material-ui/icons/GetAppOutlined";
 import { makeStyles } from "@material-ui/core/styles";
 import ActionHeader from "$organisms/ActionHeader";
+import LearningStatusDot from "$atoms/LearningStatusDot";
 import LearningActivityItem from "$molecules/LearningActivityItem";
 import LearnerActivityItem from "$molecules/LearnerActivityItem";
-import LearningStatusItems from "$molecules/LearningStatusItems";
 import useContainerStyles from "$styles/container";
 import useCardStyles from "$styles/card";
-import useSelectorProps from "$utils/useSelectorProps";
-import type { BookLearningActivitySchema } from "$server/models/bookLearningActivity";
+import type { CourseBookSchema } from "$server/models/courseBook";
+import type { BookActivitySchema } from "$server/models/bookActivity";
+import type { SessionSchema } from "$server/models/session";
+import type { UserSchema } from "$server/models/user";
 import { gray } from "$theme/colors";
-import { SessionSchema } from "$server/models/session";
+import getLearnerActivities from "$utils/getLearnerActivities";
+import getActivitiesByBooks from "$utils/getActivitiesByBooks";
 
 type TabPanelProps = {
   className?: string;
@@ -61,14 +61,6 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(0, -3, 2),
     borderBottom: `1px solid ${gray[300]}`,
   },
-  action: {
-    display: "flex",
-    justifyContent: "space-between",
-    marginBottom: theme.spacing(2),
-    "& > :not(:last-child)": {
-      marginRight: theme.spacing(1),
-    },
-  },
   items: {
     "& > :not(:last-child)": {
       marginBottom: theme.spacing(4),
@@ -79,21 +71,34 @@ const useStyles = makeStyles((theme) => ({
   },
   learnersLabel: {
     marginBottom: theme.spacing(2),
-    marginLeft: "11rem",
+    "& > :not(:last-child)": {
+      marginRight: theme.spacing(1.5),
+    },
+    "& > *": {
+      display: "inline-flex",
+      alignItems: "center",
+      "& > :first-child": {
+        marginRight: theme.spacing(0.5),
+      },
+    },
   },
 }));
 
 type Props = {
   session: SessionSchema;
-  bookLearningActivities: BookLearningActivitySchema[];
-  onBookLearningActivitiesDownload?(): void;
+  learners: Array<Pick<UserSchema, "id" | "name">>;
+  courseBooks: CourseBookSchema[];
+  bookActivities: BookActivitySchema[];
+  onActivitiesDownload?(): void;
 };
 
 export default function Dashboard(props: Props) {
   const {
     session,
-    bookLearningActivities,
-    onBookLearningActivitiesDownload,
+    learners,
+    courseBooks,
+    bookActivities,
+    onActivitiesDownload,
   } = props;
   const classes = useStyles();
   const containerClasses = useContainerStyles();
@@ -102,14 +107,16 @@ export default function Dashboard(props: Props) {
   const handleChange = (_: React.ChangeEvent<unknown>, value: number) => {
     setTabIndex(value);
   };
-  const bookLearningActivitiesMenu = useSelectorProps<BookLearningActivitySchema>(
-    bookLearningActivities.length > 0 ? bookLearningActivities[0] : null
-  );
-  const handleBookLearningActivityClick = (
-    bookLearningActivity: BookLearningActivitySchema
-  ) => () => {
-    bookLearningActivitiesMenu.onSelect(bookLearningActivity);
-  };
+  const learnerActivities = getLearnerActivities({
+    learners,
+    courseBooks,
+    bookActivities,
+  });
+  const activitiesByBooks = getActivitiesByBooks({
+    learners,
+    courseBooks,
+    bookActivities,
+  });
   return (
     <Container classes={containerClasses} maxWidth="md">
       <ActionHeader
@@ -117,52 +124,23 @@ export default function Dashboard(props: Props) {
         action={
           <>
             <Typography variant="h6">
-              {session?.ltiResourceLink?.contextTitle}
+              {session?.ltiLaunchBody.context_title}
             </Typography>
             <span className={classes.contextLabel}>
-              {session?.ltiResourceLink?.contextLabel}
+              {session?.ltiLaunchBody.context_label}
             </span>
+            <Button
+              onClick={onActivitiesDownload}
+              color="primary"
+              variant="contained"
+              size="small"
+            >
+              <GetAppOutlinedIcon fontSize="small" />
+              分析データをダウンロード
+            </Button>
           </>
         }
       />
-      <div className={classes.action}>
-        <Button
-          aria-controls="book-learning-acitivities-menu"
-          variant="text"
-          onClick={bookLearningActivitiesMenu.onOpen}
-          disabled={tabIndex === 0 || bookLearningActivities.length === 0}
-        >
-          <ExpandMoreIcon />
-          <Typography variant="h5">
-            {bookLearningActivitiesMenu.value?.name ?? ""}
-          </Typography>
-        </Button>
-        <Button
-          onClick={onBookLearningActivitiesDownload}
-          color="primary"
-          variant="contained"
-          size="small"
-        >
-          <GetAppOutlinedIcon fontSize="small" />
-          分析データをダウンロード
-        </Button>
-      </div>
-      <Menu
-        id="book-learning-activities-menu"
-        aria-haspopup="true"
-        anchorEl={bookLearningActivitiesMenu.anchorEl}
-        open={Boolean(bookLearningActivitiesMenu.anchorEl)}
-        onClose={bookLearningActivitiesMenu.onClose}
-      >
-        {bookLearningActivities.map((bookLearningActivity, index) => (
-          <MenuItem
-            key={index}
-            onClick={handleBookLearningActivityClick(bookLearningActivity)}
-          >
-            {bookLearningActivity.name}
-          </MenuItem>
-        ))}
-      </Menu>
       <Card classes={cardClasses} className={classes.card}>
         <Tabs
           className={classes.tabs}
@@ -171,45 +149,39 @@ export default function Dashboard(props: Props) {
           onChange={handleChange}
         >
           <Tab label="ブック" />
-          <Tab label="トピック" />
           <Tab label="学習者" />
         </Tabs>
         <TabPanel className={classes.items} value={tabIndex} index={0}>
-          {bookLearningActivities.map((bookLearningActivity, index) => (
+          {activitiesByBooks.map((activitiesByBook, index) => (
             <LearningActivityItem
               key={index}
-              learningActivity={bookLearningActivity}
-              learnerActivities={
-                bookLearningActivitiesMenu.value?.learnerActivities ?? []
-              }
+              totalLearnerCount={learners.length}
+              activitiesByBook={activitiesByBook}
             />
           ))}
         </TabPanel>
-        <TabPanel className={classes.items} value={tabIndex} index={1}>
-          {bookLearningActivitiesMenu.value &&
-            bookLearningActivitiesMenu.value.topicLearningActivities.map(
-              (topicLearningActivity, index) => (
-                <LearningActivityItem
-                  key={index}
-                  learningActivity={topicLearningActivity}
-                  learnerActivities={
-                    bookLearningActivitiesMenu.value?.learnerActivities ?? []
-                  }
-                />
-              )
-            )}
-        </TabPanel>
-        <TabPanel className={classes.learners} value={tabIndex} index={2}>
-          <LearningStatusItems className={classes.learnersLabel} />
-          {bookLearningActivitiesMenu.value &&
-            bookLearningActivitiesMenu.value.learnerActivities.map(
-              (learnerActivity, index) => (
-                <LearnerActivityItem
-                  key={index}
-                  learnerActivity={learnerActivity}
-                />
-              )
-            )}
+        <TabPanel className={classes.learners} value={tabIndex} index={1}>
+          <div className={classes.learnersLabel}>
+            <div>
+              <LearningStatusDot type="completed" />
+              <span>完了</span>
+            </div>
+            <div>
+              <LearningStatusDot type="incompleted" />
+              <span>未完了</span>
+            </div>
+            <div>
+              <LearningStatusDot type="unopened" />
+              <span>未開封</span>
+            </div>
+          </div>
+          {learnerActivities.map(([learner, activities], index) => (
+            <LearnerActivityItem
+              key={index}
+              learner={learner}
+              activities={activities}
+            />
+          ))}
         </TabPanel>
       </Card>
     </Container>
