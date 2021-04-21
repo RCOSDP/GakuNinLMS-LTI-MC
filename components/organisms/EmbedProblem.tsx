@@ -5,8 +5,8 @@ export default function EmbedProblem() {
   if (typeof window === "undefined") return null;
 
   return (
-    <Problem title="このコンテンツは埋め込み表示できません">
-      このコンテンツはフレーム内に埋め込み表示できません。新しいウィンドウで開いてください。
+    <Problem title="このコンテンツは別ウィンドウで表示する必要があります">
+      以下をクリックして、新しいウィンドウを表示してください。
       <p>
         <Link href={window.location.href} target="_blank">
           新しいウィンドウで開く
