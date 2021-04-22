@@ -1,6 +1,6 @@
 import { FastifyRequest } from "fastify";
 import { outdent } from "outdent";
-import { LearnerSchema } from "$server/models/leaner";
+import { LearnerSchema } from "$server/models/learner";
 import { CourseBookSchema } from "$server/models/courseBook";
 import { BookActivitySchema } from "$server/models/bookActivity";
 import authUser from "$server/auth/authUser";

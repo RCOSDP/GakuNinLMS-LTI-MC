@@ -1,5 +1,5 @@
 import useSWR from "swr";
-import { LearnerSchema } from "$server/models/leaner";
+import { LearnerSchema } from "$server/models/learner";
 import { CourseBookSchema } from "$server/models/courseBook";
 import { BookActivitySchema } from "$server/models/bookActivity";
 import { api } from "./api";

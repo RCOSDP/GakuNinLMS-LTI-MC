@@ -16,7 +16,7 @@ import useCardStyles from "$styles/card";
 import type { CourseBookSchema } from "$server/models/courseBook";
 import type { BookActivitySchema } from "$server/models/bookActivity";
 import type { SessionSchema } from "$server/models/session";
-import type { LearnerSchema } from "$server/models/leaner";
+import type { LearnerSchema } from "$server/models/learner";
 import { gray } from "$theme/colors";
 import download from "$utils/bookLearningActivity/download";
 import getLearnerActivities from "$utils/getLearnerActivities";

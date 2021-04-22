@@ -1,6 +1,6 @@
 import { BookSchema } from "$server/models/book";
 import { TopicSchema } from "$server/models/topic";
-import { LearnerSchema } from "$server/models/leaner";
+import { LearnerSchema } from "$server/models/learner";
 import { BookActivitySchema } from "$server/models/bookActivity";
 import { CourseBookSchema } from "$server/models/courseBook";
 
