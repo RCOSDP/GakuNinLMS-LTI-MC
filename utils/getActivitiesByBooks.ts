@@ -1,14 +1,11 @@
-import { LearnerSchema } from "$server/models/learner";
 import { BookSchema } from "$server/models/book";
 import { BookActivitySchema } from "$server/models/bookActivity";
 import { CourseBookSchema } from "$server/models/courseBook";
 
 function getActivitiesByBooks({
-  learners,
   courseBooks,
   bookActivities,
 }: {
-  learners: Array<LearnerSchema>;
   courseBooks: Array<CourseBookSchema>;
   bookActivities: Array<BookActivitySchema>;
 }) {
@@ -19,20 +16,19 @@ function getActivitiesByBooks({
     }
   > = [];
   for (const book of courseBooks) {
+    const activities = bookActivities.filter((a) => a.book.id === book.id);
+    const learnerIds = new Set(activities.map((a) => a.learner.id));
     let completedCount = 0;
-    let incompletedCount = 0;
-    for (const learner of learners) {
+    for (const learnerId of learnerIds) {
       const topics = book.sections.flatMap(({ topics }) => topics);
-      const completedActivities = bookActivities.filter(
-        (a) =>
-          a.learner.id === learner.id &&
-          a.book.id === book.id &&
-          a.status === "completed"
+      const completedActivities = activities.filter(
+        (a) => a.learner.id === learnerId && a.status === "completed"
       );
       const completedRate = completedActivities.length / topics.length;
-      // NOTE: 完了とみなす割合が決め打ち
-      completedRate > 0.8 ? completedCount++ : incompletedCount++;
+      // TODO: 完了とみなす割合が決め打ちなので外部化しましょう
+      if (completedRate > 0.8) completedCount++;
     }
+    const incompletedCount = learnerIds.size - completedCount;
     activitiesByBooks.push({ ...book, completedCount, incompletedCount });
   }
   return activitiesByBooks;

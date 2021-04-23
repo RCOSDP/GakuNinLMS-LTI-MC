@@ -110,7 +110,6 @@ export default function Dashboard(props: Props) {
     bookActivities,
   });
   const activitiesByBooks = getActivitiesByBooks({
-    learners,
     courseBooks,
     bookActivities,
   });
