@@ -12,7 +12,9 @@ function isCompleted(
   topic: Pick<TopicSchema, "timeRequired">,
   activity: Pick<ActivitySchema, "totalTimeMs">
 ): boolean {
-  return activity.totalTimeMs / 1e3 / topic.timeRequired >= ACTIVITY_RATE_MIN;
+  const totalTime = activity.totalTimeMs / 1_000;
+  const completedRate = totalTime / topic.timeRequired;
+  return ACTIVITY_RATE_MIN <= completedRate;
 }
 
 export default isCompleted;
