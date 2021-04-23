@@ -14,7 +14,6 @@ export const bookIncludingActivityArg = {
   orderBy: { id: "asc" },
   include: {
     author: true,
-    ltiResourceLinks: true,
     sections: {
       orderBy: { order: "asc" },
       select: {
