@@ -79,6 +79,7 @@ docker-compose down
 | `WOWZA_SECURE_TOKEN` | Wowza SecureToken Shared (デフォルト: "") Secret                            |
 | `WOWZA_QUERY_PREFIX` | Wowza SecureToken Hash Query Parameter Prefix (デフォルト: `wowzatoken`)    |
 | `WOWZA_EXPIRES_IN`   | Wowza SecureToken lifetime (seconds) (デフォルト: いつまでも持続 `0`)       |
+| `ACTIVITY_RATE_MIN`  | 学習活動の完了とみなす最小の視聴時間の割合 (デフォルト:`0.9`)               |
 
 [database_connection_url]: https://www.prisma.io/docs/reference/database-connectors/connection-urls/
 

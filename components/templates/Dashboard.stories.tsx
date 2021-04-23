@@ -3,10 +3,6 @@ export default { title: "templates/Dashboard" };
 import Dashboard from "./Dashboard";
 import { session, user, bookActivity, book } from "$samples";
 
-const handlers = {
-  onActivitiesDownload: console.log,
-};
-
 export const Default = () => (
   <Dashboard
     session={session}
@@ -18,6 +14,5 @@ export const Default = () => (
       book: { ...bookActivity.book, id: Math.floor(Math.random() * 10) },
       topic: { ...bookActivity.topic, id: (i % 3) + 1 },
     }))}
-    {...handlers}
   />
 );
