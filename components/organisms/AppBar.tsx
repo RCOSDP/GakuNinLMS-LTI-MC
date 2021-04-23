@@ -93,7 +93,7 @@ function AppBar(props: Props, ref: Ref<unknown>) {
         <div className={classes.inner}>
           <img
             src={`${NEXT_PUBLIC_BASE_PATH}/logo.png`}
-            alt="Chibi CHiLO"
+            alt="CHiBi-CHiLO"
             className={clsx(classes.margin, classes.logo)}
           />
           <div className={classes.nav}>
