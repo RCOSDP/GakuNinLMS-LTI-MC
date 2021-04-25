@@ -74,11 +74,11 @@ function getTopicSection(authorId: UserSchema["id"], sectionTopic: Object, order
   return topicSection;
 }
 
-function getDate(dateString: String): Date {
+function getDate(dateString: string): Date {
   return dateString ? new Date(dateString) : null;
 }
 
-function getKeywords(keywords: String[]): Object {
+function getKeywords(keywords: string[]): Object {
   return { connectOrCreate: keywords.map(name => { return { create: { name }, where: { name } }; }) };
 }
 
