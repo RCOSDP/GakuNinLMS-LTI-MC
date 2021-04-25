@@ -14,7 +14,6 @@ async function importBooksUtil(
   console.log(params);
 
   try {
-    //throw ["aaaa", "bbbb"];
     const obj = JSON.parse(params.json);
     const importBooks = Array.isArray(obj) ? obj : [obj];
     const books = [];
@@ -25,7 +24,8 @@ async function importBooksUtil(
       book.createdAt = new Date(book.createdAt);
       book.updatedAt = new Date(book.updatedAt);
       book.keywords = { connectOrCreate: book.keywords.map(name => { return { create: { name }, where: { name } }; }) };
-      book.details = JSON.stringify(book.details);
+      book.author = { connect: { id: authorId } };
+      book.ltiResourceLinks = {};
       const sections = [];
       book.timeRequired = 0;
       for (let s = 0; s < book.sections.length; s++) {
@@ -36,19 +36,12 @@ async function importBooksUtil(
           topic.createdAt = new Date(topic.createdAt);
           topic.updatedAt = new Date(topic.updatedAt);
           topic.keywords = { connectOrCreate: topic.keywords.map(name => { return { create: { name }, where: { name } }; }) };
-
           topic.resource.video = { create: { providerUrl: topic.resource.providerUrl, tracks: { create: topic.resource.tracks } } };
           delete topic.resource.providerUrl;
           delete topic.resource.tracks;
           topic.resource = { connectOrCreate: { create: topic.resource, where: { url: topic.resource.url } } };
-          const { id: topicId } = await prisma.topic.create({
-            data: {
-              ...topic,
-              creator: { connect: { id: authorId } }
-            },
-          });
-
-          const topicSection = { order: t+1, topicId };
+          topic.creator = { connect: { id: authorId } };
+          const topicSection = { order: t+1, topic: { create: topic } };
           topicSections.push(topicSection);
           book.timeRequired += topic.timeRequired;
         }
@@ -56,19 +49,12 @@ async function importBooksUtil(
         sections.push(section);
       }
       book.sections = { create: sections };
+      books.push(prisma.book.create({ data: book }));
       console.log(book);
-
-      const { id } = await prisma.book.create({
-        data: {
-          ...book,
-          author: { connect: { id: authorId } },
-          ltiResourceLinks: {}
-        },
-      });
-      books.push(findBook(id));
     }
 
-    const result: BooksImportResult = { books, errors: [] };
+    console.log(books);
+    const result: BooksImportResult = { books: await prisma.$transaction(books), errors: [] };
     return result;
   } catch(e) {
     console.log(e);
