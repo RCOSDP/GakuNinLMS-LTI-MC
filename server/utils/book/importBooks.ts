@@ -10,26 +10,20 @@ async function importBooksUtil(
   authorId: UserSchema["id"],
   params: BooksImportParams
 ): Promise<booksImportResultSchema | undefined> {
-  console.log("importBooksUtil()");
-  console.log(params);
-
   try {
     const obj = JSON.parse(params.json);
     const importBooks = Array.isArray(obj) ? obj : [obj];
     const books = [];
 
     for (const [index, importBook] of importBooks.entries()) {
-console.log(importBook);
       const book: BookProps = getBookProps(authorId, importBook);
       books.push(prisma.book.create({ data: book }));
-      console.log(book);
     }
 
-    console.log(books);
     const result: BooksImportResult = { books: await prisma.$transaction(books), errors: [] };
     return result;
   } catch(e) {
-    console.log(e);
+    console.error(e);
     const errors = Array.isArray(e) ? e : [e.toString()];
     const result: BooksImportResult = { books: [], errors };
     return result;
