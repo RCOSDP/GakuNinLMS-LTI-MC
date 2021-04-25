@@ -18,37 +18,9 @@ async function importBooksUtil(
     const importBooks = Array.isArray(obj) ? obj : [obj];
     const books = [];
 
-    for (let i = 0; i < importBooks.length; i++) {
-      const book: BookProps = { ...importBooks[i] };
-      book.publishedAt = new Date(book.publishedAt);
-      book.createdAt = new Date(book.createdAt);
-      book.updatedAt = new Date(book.updatedAt);
-      book.keywords = { connectOrCreate: book.keywords.map(name => { return { create: { name }, where: { name } }; }) };
-      book.author = { connect: { id: authorId } };
-      book.ltiResourceLinks = {};
-      const sections = [];
-      book.timeRequired = 0;
-      for (let s = 0; s < book.sections.length; s++) {
-        const section = { order: s+1, name: book.sections[s].name };
-        const topicSections = [];
-        for (let t = 0; t < book.sections[s].topics.length; t++) {
-          const topic = book.sections[s].topics[t];
-          topic.createdAt = new Date(topic.createdAt);
-          topic.updatedAt = new Date(topic.updatedAt);
-          topic.keywords = { connectOrCreate: topic.keywords.map(name => { return { create: { name }, where: { name } }; }) };
-          topic.resource.video = { create: { providerUrl: topic.resource.providerUrl, tracks: { create: topic.resource.tracks } } };
-          delete topic.resource.providerUrl;
-          delete topic.resource.tracks;
-          topic.resource = { connectOrCreate: { create: topic.resource, where: { url: topic.resource.url } } };
-          topic.creator = { connect: { id: authorId } };
-          const topicSection = { order: t+1, topic: { create: topic } };
-          topicSections.push(topicSection);
-          book.timeRequired += topic.timeRequired;
-        }
-        section.topicSections = { create: topicSections };
-        sections.push(section);
-      }
-      book.sections = { create: sections };
+    for (const [index, importBook] of importBooks.entries()) {
+console.log(importBook);
+      const book: BookProps = getBookProps(authorId, importBook);
       books.push(prisma.book.create({ data: book }));
       console.log(book);
     }
@@ -62,6 +34,58 @@ async function importBooksUtil(
     const result: BooksImportResult = { books: [], errors };
     return result;
   }
+}
+
+function getBookProps(authorId: UserSchema["id"], importBook: Object): BookProps {
+  const book: BookProps = { ...importBook, timeRequired: 0, author: { connect: { id: authorId } }, ltiResourceLinks: {} };
+  book.publishedAt = getDate(book.publishedAt);
+  book.createdAt = getDate(book.createdAt);
+  book.updatedAt = getDate(book.updatedAt);
+  book.keywords = getKeywords(book.keywords);
+
+  const sections = [];
+  for (const [index, bookSection] of book.sections.entries()) {
+    const section = getSection(authorId, bookSection, index + 1);
+    book.timeRequired += section.timeRequired;
+    delete section.timeRequired;
+    sections.push(section);
+  }
+  book.sections = { create: sections };
+  return book;
+}
+
+function getSection(authorId: UserSchema["id"], bookSection: Object, order: Integer): Object {
+  const section = { order, name: bookSection.name, timeRequired: 0 };
+  const topicSections = [];
+  for (const [index, sectionTopic] of bookSection.topics.entries()) {
+    const topicSection = getTopicSection(authorId, sectionTopic, index + 1);
+    section.timeRequired += topicSection.topic.create.timeRequired;
+    topicSections.push(topicSection);
+  }
+  section.topicSections = { create: topicSections };
+  return section;
+}
+
+function getTopicSection(authorId: UserSchema["id"], sectionTopic: Object, order: Integer): Object {
+  const topic = { ...sectionTopic, creator: { connect: { id: authorId } } };
+  topic.createdAt = getDate(topic.createdAt);
+  topic.updatedAt = getDate(topic.updatedAt);
+  topic.keywords = getKeywords(topic.keywords);
+  topic.resource.video = { create: { providerUrl: topic.resource.providerUrl, tracks: { create: topic.resource.tracks } } };
+  delete topic.resource.providerUrl;
+  delete topic.resource.tracks;
+
+  topic.resource = { connectOrCreate: { create: topic.resource, where: { url: topic.resource.url } } };
+  const topicSection = { order, topic: { create: topic } };
+  return topicSection;
+}
+
+function getDate(dateString: String): Date {
+  return dateString ? new Date(dateString) : null;
+}
+
+function getKeywords(keywords: String[]): Object {
+  return { connectOrCreate: keywords.map(name => { return { create: { name }, where: { name } }; }) };
 }
 
 export default importBooksUtil;
