@@ -13,14 +13,17 @@ async function importBooksUtil(
   try {
     const obj = JSON.parse(params.json);
     const importBooks = Array.isArray(obj) ? obj : [obj];
+    const transactions = [];
     const books = [];
 
-    for (const [index, importBook] of importBooks.entries()) {
-      const book: BookProps = getBookProps(authorId, importBook);
-      books.push(prisma.book.create({ data: book }));
+    for (const importBook of importBooks) {
+      transactions.push(prisma.book.create({ data: getBookProps(authorId, importBook) }));
+    }
+    for (const book of await prisma.$transaction(transactions)) {
+      books.push(await findBook(book.id));
     }
 
-    const result: BooksImportResult = { books: await prisma.$transaction(books), errors: [] };
+    const result: BooksImportResult = { books, errors: [] };
     return result;
   } catch(e) {
     console.error(e);

@@ -101,9 +101,11 @@ export default function BookAccordion(props: Props) {
         <IconButton onClick={handleInfoClick}>
           <InfoOutlinedIcon />
         </IconButton>
-        <IconButton color="primary" onClick={handleEditClick}>
-          <EditOutlinedIcon />
-        </IconButton>
+        {onEditClick &&
+          <IconButton color="primary" onClick={handleEditClick}>
+            <EditOutlinedIcon />
+          </IconButton>
+        }
       </AccordionSummary>
       <AccordionDetails classes={accordionDetailClasses}>
         <div className={classes.chips}>
@@ -116,8 +118,8 @@ export default function BookAccordion(props: Props) {
           ))}
         </div>
         <div className={classes.items}>
-          <Item itemKey="作成日" value={format(book.createdAt, "yyyy.MM.dd")} />
-          <Item itemKey="更新日" value={format(book.updatedAt, "yyyy.MM.dd")} />
+          <Item itemKey="作成日" value={format(new Date(book.createdAt), "yyyy.MM.dd")} />
+          <Item itemKey="更新日" value={format(new Date(book.updatedAt), "yyyy.MM.dd")} />
           <Item itemKey="著者" value={book.author.name} />
         </div>
         <Divider />

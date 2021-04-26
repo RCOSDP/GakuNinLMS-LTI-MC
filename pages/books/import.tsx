@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useRouter } from "next/router";
 import { BooksImportParams, booksImportParamsSchema } from "$server/validators/booksImportParams";
 import { useSessionAtom } from "$store/session";
@@ -13,6 +14,7 @@ function Import({ context }: Query) {
   const query = { ...(context && { context }) };
   const router = useRouter();
   const importProps: BooksImportParams = { json: "" };
+  const [importResult, setImportResult] = useState({ books: [], errors: [] });
   const back = () => {
     switch (context) {
       case "books":
@@ -24,11 +26,9 @@ function Import({ context }: Query) {
   };
   async function handleSubmit(props: BooksImportParams) {
     try {
-      const res = await importBooks(props);
-      alert(`books: ${JSON.stringify(res["books"])}`);
+      setImportResult(await importBooks(props));
     } catch(e) {
-      const res = await e.json();
-      alert(`errors: ${JSON.stringify(res["errors"])}`);
+      setImportResult(await e.json());
     }
   }
   function handleCancel() {
@@ -39,7 +39,7 @@ function Import({ context }: Query) {
     onCancel: handleCancel,
   };
 
-  return <BooksImport importBooks={importProps} {...handlers} />;
+  return <BooksImport importBooks={importProps} importResult={importResult} {...handlers} />;
 }
 
 function Router() {
