@@ -2,7 +2,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import LearningStatusDot from "$atoms/LearningStatusDot";
 import { gray } from "$theme/colors";
 import type { BookActivitySchema } from "$server/models/bookActivity";
-import type { UserSchema } from "$server/models/user";
+import type { LearnerSchema } from "$server/models/learner";
+import type { LearnerActivity } from "$utils/getLearnerActivities";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -29,16 +30,16 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type Props = {
-  learner: Pick<UserSchema, "name">;
+  learner: LearnerSchema;
   activities: Array<BookActivitySchema>;
-  onLearnerActivityClick?(activity: BookActivitySchema): void;
+  onLearnerActivityClick?(learnerActivity: LearnerActivity): void;
 };
 
 export default function LearnerActivityItem(props: Props) {
   const { learner, activities, onLearnerActivityClick } = props;
   const classes = useStyles();
-  const handleActivityClick = (activity: BookActivitySchema) => () =>
-    onLearnerActivityClick?.(activity);
+  const handleLearnerActivityClick = () =>
+    onLearnerActivityClick?.([learner, activities]);
 
   return (
     <div className={classes.root}>
@@ -57,7 +58,7 @@ export default function LearnerActivityItem(props: Props) {
               ),
               arrow: true,
             }}
-            onDotClick={handleActivityClick(activity)}
+            onDotClick={handleLearnerActivityClick}
             type={activity.status}
             size="large"
           />

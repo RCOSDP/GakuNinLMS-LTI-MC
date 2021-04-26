@@ -24,6 +24,8 @@ export function parse(
   return { book: { id: Number(bookId) }, topic: { id: Number(topicId) } };
 }
 
+export type LearnerActivity = [LearnerSchema, Array<BookActivitySchema>];
+
 function getLearnerActivities({
   learners,
   courseBooks,
@@ -43,9 +45,7 @@ function getLearnerActivities({
     }
   }
 
-  const learnerActivities: Array<
-    [LearnerSchema, Array<BookActivitySchema>]
-  > = [];
+  const learnerActivities: Array<LearnerActivity> = [];
   for (const learner of learners) {
     const activityByLearner = bookActivities.filter(
       (a) => a.learner.id === learner.id
