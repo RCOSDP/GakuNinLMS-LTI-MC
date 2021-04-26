@@ -14,44 +14,44 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    InlineResponse200,
-    InlineResponse200FromJSON,
-    InlineResponse200FromJSONTyped,
-    InlineResponse200ToJSON,
-    InlineResponse2001Author,
-    InlineResponse2001AuthorFromJSON,
-    InlineResponse2001AuthorFromJSONTyped,
-    InlineResponse2001AuthorToJSON,
-    InlineResponse2007LtiLaunchBody,
-    InlineResponse2007LtiLaunchBodyFromJSON,
-    InlineResponse2007LtiLaunchBodyFromJSONTyped,
-    InlineResponse2007LtiLaunchBodyToJSON,
+    InlineResponse2003Learner,
+    InlineResponse2003LearnerFromJSON,
+    InlineResponse2003LearnerFromJSONTyped,
+    InlineResponse2003LearnerToJSON,
+    InlineResponse2007BookActivities,
+    InlineResponse2007BookActivitiesFromJSON,
+    InlineResponse2007BookActivitiesFromJSONTyped,
+    InlineResponse2007BookActivitiesToJSON,
+    InlineResponse2007CourseBooks,
+    InlineResponse2007CourseBooksFromJSON,
+    InlineResponse2007CourseBooksFromJSONTyped,
+    InlineResponse2007CourseBooksToJSON,
 } from './';
 
 /**
- * セッション情報
+ * 成功時
  * @export
  * @interface InlineResponse2007
  */
 export interface InlineResponse2007 {
     /**
      * 
-     * @type {InlineResponse2007LtiLaunchBody}
+     * @type {Array<InlineResponse2003Learner>}
      * @memberof InlineResponse2007
      */
-    ltiLaunchBody?: InlineResponse2007LtiLaunchBody;
+    learners: Array<InlineResponse2003Learner>;
     /**
      * 
-     * @type {InlineResponse200}
+     * @type {Array<InlineResponse2007CourseBooks>}
      * @memberof InlineResponse2007
      */
-    ltiResourceLink?: InlineResponse200;
+    courseBooks: Array<InlineResponse2007CourseBooks>;
     /**
      * 
-     * @type {InlineResponse2001Author}
+     * @type {Array<InlineResponse2007BookActivities>}
      * @memberof InlineResponse2007
      */
-    user?: InlineResponse2001Author;
+    bookActivities: Array<InlineResponse2007BookActivities>;
 }
 
 export function InlineResponse2007FromJSON(json: any): InlineResponse2007 {
@@ -64,9 +64,9 @@ export function InlineResponse2007FromJSONTyped(json: any, ignoreDiscriminator: 
     }
     return {
         
-        'ltiLaunchBody': !exists(json, 'ltiLaunchBody') ? undefined : InlineResponse2007LtiLaunchBodyFromJSON(json['ltiLaunchBody']),
-        'ltiResourceLink': !exists(json, 'ltiResourceLink') ? undefined : InlineResponse200FromJSON(json['ltiResourceLink']),
-        'user': !exists(json, 'user') ? undefined : InlineResponse2001AuthorFromJSON(json['user']),
+        'learners': ((json['learners'] as Array<any>).map(InlineResponse2003LearnerFromJSON)),
+        'courseBooks': ((json['courseBooks'] as Array<any>).map(InlineResponse2007CourseBooksFromJSON)),
+        'bookActivities': ((json['bookActivities'] as Array<any>).map(InlineResponse2007BookActivitiesFromJSON)),
     };
 }
 
@@ -79,9 +79,9 @@ export function InlineResponse2007ToJSON(value?: InlineResponse2007 | null): any
     }
     return {
         
-        'ltiLaunchBody': InlineResponse2007LtiLaunchBodyToJSON(value.ltiLaunchBody),
-        'ltiResourceLink': InlineResponse200ToJSON(value.ltiResourceLink),
-        'user': InlineResponse2001AuthorToJSON(value.user),
+        'learners': ((value.learners as Array<any>).map(InlineResponse2003LearnerToJSON)),
+        'courseBooks': ((value.courseBooks as Array<any>).map(InlineResponse2007CourseBooksToJSON)),
+        'bookActivities': ((value.bookActivities as Array<any>).map(InlineResponse2007BookActivitiesToJSON)),
     };
 }
 

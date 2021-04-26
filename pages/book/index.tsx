@@ -9,6 +9,7 @@ import { useSessionAtom } from "$store/session";
 import { useBook } from "$utils/book";
 import { TopicSchema } from "$server/models/topic";
 import { pagesPath } from "$utils/$path";
+import useBookActivity from "$utils/useBookActivity";
 import { useActivityTracking } from "$utils/activity";
 import logger from "$utils/eventLogger/logger";
 
@@ -29,6 +30,7 @@ function Show(query: Query) {
     isTopicEditable,
     session?.ltiResourceLink
   );
+  useBookActivity(query.bookId);
   useActivityTracking();
   const playerTracker = usePlayerTrackerAtom();
   useEffect(() => {

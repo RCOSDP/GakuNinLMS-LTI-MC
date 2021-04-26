@@ -14,14 +14,10 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    InlineResponse2003LearnerActivities,
-    InlineResponse2003LearnerActivitiesFromJSON,
-    InlineResponse2003LearnerActivitiesFromJSONTyped,
-    InlineResponse2003LearnerActivitiesToJSON,
-    InlineResponse2003TopicLearningActivities,
-    InlineResponse2003TopicLearningActivitiesFromJSON,
-    InlineResponse2003TopicLearningActivitiesFromJSONTyped,
-    InlineResponse2003TopicLearningActivitiesToJSON,
+    InlineResponse2003Learner,
+    InlineResponse2003LearnerFromJSON,
+    InlineResponse2003LearnerFromJSONTyped,
+    InlineResponse2003LearnerToJSON,
 } from './';
 
 /**
@@ -32,46 +28,40 @@ import {
 export interface InlineResponse2003Activity {
     /**
      * 
-     * @type {number}
+     * @type {InlineResponse2003Learner}
      * @memberof InlineResponse2003Activity
      */
-    id: number;
+    learner: InlineResponse2003Learner;
     /**
      * 
-     * @type {string}
+     * @type {InlineResponse2003Learner}
      * @memberof InlineResponse2003Activity
      */
-    name: string;
+    topic: InlineResponse2003Learner;
     /**
      * 
-     * @type {Array<InlineResponse2003LearnerActivities>}
+     * @type {boolean}
      * @memberof InlineResponse2003Activity
      */
-    learnerActivities: Array<InlineResponse2003LearnerActivities>;
-    /**
-     * 
-     * @type {Array<InlineResponse2003TopicLearningActivities>}
-     * @memberof InlineResponse2003Activity
-     */
-    topicLearningActivities: Array<InlineResponse2003TopicLearningActivities>;
+    completed: boolean;
     /**
      * 
      * @type {number}
      * @memberof InlineResponse2003Activity
      */
-    totalLearnerCount: number;
+    totalTimeMs: number;
     /**
      * 
-     * @type {number}
+     * @type {Date}
      * @memberof InlineResponse2003Activity
      */
-    completedCount: number;
+    createdAt: Date;
     /**
      * 
-     * @type {number}
+     * @type {Date}
      * @memberof InlineResponse2003Activity
      */
-    incompletedCount: number;
+    updatedAt: Date;
 }
 
 export function InlineResponse2003ActivityFromJSON(json: any): InlineResponse2003Activity {
@@ -84,13 +74,12 @@ export function InlineResponse2003ActivityFromJSONTyped(json: any, ignoreDiscrim
     }
     return {
         
-        'id': json['id'],
-        'name': json['name'],
-        'learnerActivities': ((json['learnerActivities'] as Array<any>).map(InlineResponse2003LearnerActivitiesFromJSON)),
-        'topicLearningActivities': ((json['topicLearningActivities'] as Array<any>).map(InlineResponse2003TopicLearningActivitiesFromJSON)),
-        'totalLearnerCount': json['totalLearnerCount'],
-        'completedCount': json['completedCount'],
-        'incompletedCount': json['incompletedCount'],
+        'learner': InlineResponse2003LearnerFromJSON(json['learner']),
+        'topic': InlineResponse2003LearnerFromJSON(json['topic']),
+        'completed': json['completed'],
+        'totalTimeMs': json['totalTimeMs'],
+        'createdAt': (new Date(json['createdAt'])),
+        'updatedAt': (new Date(json['updatedAt'])),
     };
 }
 
@@ -103,13 +92,12 @@ export function InlineResponse2003ActivityToJSON(value?: InlineResponse2003Activ
     }
     return {
         
-        'id': value.id,
-        'name': value.name,
-        'learnerActivities': ((value.learnerActivities as Array<any>).map(InlineResponse2003LearnerActivitiesToJSON)),
-        'topicLearningActivities': ((value.topicLearningActivities as Array<any>).map(InlineResponse2003TopicLearningActivitiesToJSON)),
-        'totalLearnerCount': value.totalLearnerCount,
-        'completedCount': value.completedCount,
-        'incompletedCount': value.incompletedCount,
+        'learner': InlineResponse2003LearnerToJSON(value.learner),
+        'topic': InlineResponse2003LearnerToJSON(value.topic),
+        'completed': value.completed,
+        'totalTimeMs': value.totalTimeMs,
+        'createdAt': (value.createdAt.toISOString()),
+        'updatedAt': (value.updatedAt.toISOString()),
     };
 }
 

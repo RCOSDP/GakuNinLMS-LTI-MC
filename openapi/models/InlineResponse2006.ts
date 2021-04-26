@@ -13,21 +13,6 @@
  */
 
 import { exists, mapValues } from '../runtime';
-import {
-    InlineResponse2006BookActivities,
-    InlineResponse2006BookActivitiesFromJSON,
-    InlineResponse2006BookActivitiesFromJSONTyped,
-    InlineResponse2006BookActivitiesToJSON,
-    InlineResponse2006CourseBooks,
-    InlineResponse2006CourseBooksFromJSON,
-    InlineResponse2006CourseBooksFromJSONTyped,
-    InlineResponse2006CourseBooksToJSON,
-    InlineResponse2006Learners,
-    InlineResponse2006LearnersFromJSON,
-    InlineResponse2006LearnersFromJSONTyped,
-    InlineResponse2006LearnersToJSON,
-} from './';
-
 /**
  * 成功時
  * @export
@@ -36,22 +21,22 @@ import {
 export interface InlineResponse2006 {
     /**
      * 
-     * @type {Array<InlineResponse2006Learners>}
+     * @type {Array<object>}
      * @memberof InlineResponse2006
      */
-    learners: Array<InlineResponse2006Learners>;
+    resources?: Array<object>;
     /**
      * 
-     * @type {Array<InlineResponse2006CourseBooks>}
+     * @type {number}
      * @memberof InlineResponse2006
      */
-    courseBooks: Array<InlineResponse2006CourseBooks>;
+    page?: number;
     /**
      * 
-     * @type {Array<InlineResponse2006BookActivities>}
+     * @type {number}
      * @memberof InlineResponse2006
      */
-    bookActivities: Array<InlineResponse2006BookActivities>;
+    perPage?: number;
 }
 
 export function InlineResponse2006FromJSON(json: any): InlineResponse2006 {
@@ -64,9 +49,9 @@ export function InlineResponse2006FromJSONTyped(json: any, ignoreDiscriminator: 
     }
     return {
         
-        'learners': ((json['learners'] as Array<any>).map(InlineResponse2006LearnersFromJSON)),
-        'courseBooks': ((json['courseBooks'] as Array<any>).map(InlineResponse2006CourseBooksFromJSON)),
-        'bookActivities': ((json['bookActivities'] as Array<any>).map(InlineResponse2006BookActivitiesFromJSON)),
+        'resources': !exists(json, 'resources') ? undefined : json['resources'],
+        'page': !exists(json, 'page') ? undefined : json['page'],
+        'perPage': !exists(json, 'perPage') ? undefined : json['perPage'],
     };
 }
 
@@ -79,9 +64,9 @@ export function InlineResponse2006ToJSON(value?: InlineResponse2006 | null): any
     }
     return {
         
-        'learners': ((value.learners as Array<any>).map(InlineResponse2006LearnersToJSON)),
-        'courseBooks': ((value.courseBooks as Array<any>).map(InlineResponse2006CourseBooksToJSON)),
-        'bookActivities': ((value.bookActivities as Array<any>).map(InlineResponse2006BookActivitiesToJSON)),
+        'resources': value.resources,
+        'page': value.page,
+        'perPage': value.perPage,
     };
 }
 
