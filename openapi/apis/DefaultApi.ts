@@ -66,6 +66,9 @@ import {
     InlineResponse2006,
     InlineResponse2006FromJSON,
     InlineResponse2006ToJSON,
+    InlineResponse2007,
+    InlineResponse2007FromJSON,
+    InlineResponse2007ToJSON,
     InlineResponse201,
     InlineResponse201FromJSON,
     InlineResponse201ToJSON,
@@ -204,6 +207,34 @@ export interface ApiV2UserUserIdTopicsGetRequest {
  * 
  */
 export class DefaultApi extends runtime.BaseAPI {
+
+    /**
+     * 学習活動の一覧を取得します。 現在のセッションの LTI Context に紐づくブックに含まれる表示可能なトピックの学習活動を得ます。 教員または管理者でなければなりません。 自身以外の作成した共有されていないブック・トピックの学習活動は含みません。
+     * 学習活動一覧
+     */
+    async apiV2ActivityGetRaw(): Promise<runtime.ApiResponse<InlineResponse2006>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/api/v2/activity`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2006FromJSON(jsonValue));
+    }
+
+    /**
+     * 学習活動の一覧を取得します。 現在のセッションの LTI Context に紐づくブックに含まれる表示可能なトピックの学習活動を得ます。 教員または管理者でなければなりません。 自身以外の作成した共有されていないブック・トピックの学習活動は含みません。
+     * 学習活動一覧
+     */
+    async apiV2ActivityGet(): Promise<InlineResponse2006> {
+        const response = await this.apiV2ActivityGetRaw();
+        return await response.value();
+    }
 
     /**
      * ブックを削除します。 教員または管理者でなければなりません。 教員の場合は自身の作成したブックでなければなりません。
@@ -822,7 +853,7 @@ export class DefaultApi extends runtime.BaseAPI {
      * 自身に関する詳細な情報を取得します。
      * セッション情報
      */
-    async apiV2SessionGetRaw(): Promise<runtime.ApiResponse<InlineResponse2006>> {
+    async apiV2SessionGetRaw(): Promise<runtime.ApiResponse<InlineResponse2007>> {
         const queryParameters: runtime.HTTPQuery = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -834,14 +865,14 @@ export class DefaultApi extends runtime.BaseAPI {
             query: queryParameters,
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2006FromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2007FromJSON(jsonValue));
     }
 
     /**
      * 自身に関する詳細な情報を取得します。
      * セッション情報
      */
-    async apiV2SessionGet(): Promise<InlineResponse2006> {
+    async apiV2SessionGet(): Promise<InlineResponse2007> {
         const response = await this.apiV2SessionGetRaw();
         return await response.value();
     }
