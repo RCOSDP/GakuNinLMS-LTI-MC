@@ -99,7 +99,7 @@ echo SESSION_SECRET=$(node -r crypto -pe 'crypto.randomBytes(32).toString("hex")
 次のコマンドを実行し、フロントエンドの静的ファイルを生成し配置します。
 
 ```sh
-git clone https://github.com/npocccties/ChibiCHiLO.git
+git clone https://github.com/npocccties/chibichilo.git
 cd ChibiCHiLO
 yarn
 yarn build

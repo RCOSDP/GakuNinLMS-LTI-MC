@@ -5,7 +5,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/npocccties/ChibiCHiLO",
+    "url": "https://github.com/npocccties/chibichilo",
     "directory": "server"
   },
   "scripts": {
