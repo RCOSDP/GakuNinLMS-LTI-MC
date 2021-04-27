@@ -32,6 +32,8 @@ export const ActivitySchema = {
       properties: { id: { type: "integer" }, name: { type: "string" } },
       required: ["id", "name"],
     },
+    /** 学習状況 - 完了: true, それ以外: false */
+    completed: { type: "boolean" },
     /** 合計学習時間 (ms) */
     totalTimeMs: { type: "integer" },
     /** 作成日時 */
@@ -52,7 +54,7 @@ export const ActivitySchema = {
 /** 学習活動 */
 export type ActivitySchema = Pick<
   FromSchema<typeof ActivitySchema>,
-  "learner" | "topic" | "totalTimeMs"
+  "learner" | "topic" | "completed" | "totalTimeMs"
 > & {
   /** 作成日時 */
   createdAt: Date;
