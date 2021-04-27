@@ -22,4 +22,4 @@ Redpen や、textlint などの文章チェックプログラムでチェック�
 
 # バグ報告の方法
 
-[npocccties/ChibiCHiLO: LTI for Micro contents](https://github.com/npocccties/ChibiCHiLO)　にある、issue へ、バグ報告をしてください。再現テストが可能なように、テンプレートに沿って記入をお願いします。不具合の存在、および回避方法など共有できると、みなさん全体の利益になります。
+[npocccties/chibichilo: LTI for Micro contents](https://github.com/npocccties/chibichilo)　にある、issue へ、バグ報告をしてください。再現テストが可能なように、テンプレートに沿って記入をお願いします。不具合の存在、および回避方法など共有できると、みなさん全体の利益になります。

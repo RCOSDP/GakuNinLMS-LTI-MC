@@ -41,8 +41,8 @@ API の接続先の情報を変更する場合 .env を適宜書き換える必�
 次のコマンドを実行し、フロントエンドの静的ファイルを生成し配置します。
 
 ```sh
-git clone https://github.com/npocccties/ChibiCHiLO.git
-cd ChibiCHiLO
+git clone https://github.com/npocccties/chibichilo.git
+cd chibichilo
 yarn
 yarn build
 ```

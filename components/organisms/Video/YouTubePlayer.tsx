@@ -29,7 +29,7 @@ function YouTubePlayerBase(props: PlayerProps) {
   return (
     <VideoJs
       // NOTE: iframe 内で再生ボタンが機能しない問題への対処と見た目の調整を図る目的
-      //       See also https://github.com/npocccties/ChibiCHiLO/issues/373
+      //       See also https://github.com/npocccties/chibichilo/issues/373
       className={classes.vjsDisabledPlayButton}
       options={{
         techOrder: ["youtube"],
