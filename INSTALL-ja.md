@@ -42,7 +42,7 @@ API の接続先の情報を変更する場合 .env を適宜書き換える必�
 
 ```sh
 git clone https://github.com/npocccties/chibichilo.git
-cd ChibiCHiLO
+cd chibichilo
 yarn
 yarn build
 ```

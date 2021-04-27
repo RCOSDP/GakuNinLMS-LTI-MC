@@ -100,7 +100,7 @@ echo SESSION_SECRET=$(node -r crypto -pe 'crypto.randomBytes(32).toString("hex")
 
 ```sh
 git clone https://github.com/npocccties/chibichilo.git
-cd ChibiCHiLO
+cd chibichilo
 yarn
 yarn build
 ```
