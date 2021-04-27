@@ -1,13 +1,16 @@
-import { useMemo, ComponentProps } from "react";
+import { useMemo } from "react";
 import Chip from "@material-ui/core/Chip";
+import type { ChipProps } from "@material-ui/core/Chip";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import { learningStatus, gray } from "$theme/colors";
 import type { LearningStatus } from "$server/models/learningStatus";
 
-type Props = ComponentProps<typeof Chip> & {
-  type: LearningStatus;
-  component?: React.ElementType;
-};
+type Props<Element extends React.ElementType> = ChipProps<
+  Element,
+  {
+    type: LearningStatus;
+  }
+>;
 
 const label: Readonly<{ [key in LearningStatus]: string }> = {
   completed: "完了",
@@ -15,8 +18,10 @@ const label: Readonly<{ [key in LearningStatus]: string }> = {
   unopened: "未開封",
 };
 
-export default function LearningStatusChip(props: Props) {
-  const { type, component = "div", ...other } = props;
+export default function LearningStatusChip<Element extends React.ElementType>(
+  props: Props<Element>
+) {
+  const { type, ...other } = props;
   const theme = useMemo(
     () =>
       createMuiTheme({
@@ -32,12 +37,7 @@ export default function LearningStatusChip(props: Props) {
 
   return (
     <ThemeProvider theme={theme}>
-      <Chip
-        color="primary"
-        label={label[type]}
-        component={component}
-        {...other}
-      />
+      <Chip color="primary" label={label[type]} {...other} />
     </ThemeProvider>
   );
 }
