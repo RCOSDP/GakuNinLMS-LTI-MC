@@ -1,9 +1,11 @@
 import user from "./user";
 import book from "./book";
 import topic from "./topic";
+import activity from "./activity";
 import type { BookActivitySchema } from "$server/models/bookActivity";
 
 const bookActivity: BookActivitySchema = {
+  ...activity,
   book: {
     id: book.id,
     name: book.name,

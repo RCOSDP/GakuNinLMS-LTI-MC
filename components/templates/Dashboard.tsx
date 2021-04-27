@@ -11,16 +11,19 @@ import ActionHeader from "$organisms/ActionHeader";
 import LearningStatusDot from "$atoms/LearningStatusDot";
 import LearningActivityItem from "$molecules/LearningActivityItem";
 import LearnerActivityItem from "$molecules/LearnerActivityItem";
+import LearnerActivityDialog from "$organisms/LearnerActivityDialog";
 import useContainerStyles from "$styles/container";
 import useCardStyles from "$styles/card";
 import type { CourseBookSchema } from "$server/models/courseBook";
 import type { BookActivitySchema } from "$server/models/bookActivity";
 import type { SessionSchema } from "$server/models/session";
 import type { LearnerSchema } from "$server/models/learner";
+import type { LearnerActivity } from "$utils/getLearnerActivities";
 import { gray } from "$theme/colors";
 import download from "$utils/bookLearningActivity/download";
 import getLearnerActivities from "$utils/getLearnerActivities";
 import getActivitiesByBooks from "$utils/getActivitiesByBooks";
+import useDialogProps from "$utils/useDialogProps";
 
 type TabPanelProps = {
   className?: string;
@@ -98,6 +101,7 @@ export default function Dashboard(props: Props) {
   const containerClasses = useContainerStyles();
   const cardClasses = useCardStyles();
   const [tabIndex, setTabIndex] = useState(0);
+  const { data, dispatch, ...dialogProps } = useDialogProps<LearnerActivity>();
   const handleChange = (_: React.ChangeEvent<unknown>, value: number) => {
     setTabIndex(value);
   };
@@ -176,10 +180,19 @@ export default function Dashboard(props: Props) {
               key={index}
               learner={learner}
               activities={activities}
+              onLearnerActivityClick={dispatch}
             />
           ))}
         </TabPanel>
       </Card>
+      {data && (
+        <LearnerActivityDialog
+          session={session}
+          courseBooks={courseBooks}
+          learnerActivity={data}
+          {...dialogProps}
+        />
+      )}
     </Container>
   );
 }
