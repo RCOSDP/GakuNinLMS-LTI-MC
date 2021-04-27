@@ -28,7 +28,7 @@ function getActivitiesByBooks({
       );
       if (
         activitiesByLearner.length === topicIds.size &&
-        !activitiesByLearner.some(({ status }) => status !== "completed")
+        activitiesByLearner.every(({ status }) => status === "completed")
       ) {
         completedCount++;
       }
