@@ -4,7 +4,10 @@ import authLtiLaunch from "$server/auth/authLtiLaunch";
 import { upsertUser } from "$server/utils/user";
 import { FRONTEND_ORIGIN, FRONTEND_PATH } from "$server/utils/env";
 import { ltiLaunchBodySchema } from "$server/validators/ltiLaunchBody";
-import { findLtiResourceLink } from "$server/utils/ltiResourceLink";
+import {
+  findLtiResourceLink,
+  upsertLtiResourceLink,
+} from "$server/utils/ltiResourceLink";
 
 const frontendUrl = `${FRONTEND_ORIGIN}${FRONTEND_PATH}`;
 
@@ -33,6 +36,15 @@ export async function post({ session }: FastifyRequest) {
     consumerId: ltiLaunchBody.oauth_consumer_key,
     id: ltiLaunchBody.resource_link_id,
   });
+
+  if (ltiResourceLink) {
+    await upsertLtiResourceLink({
+      ...ltiResourceLink,
+      title: ltiLaunchBody.resource_link_title ?? ltiResourceLink.title,
+      contextTitle: ltiLaunchBody.context_title ?? ltiResourceLink.contextTitle,
+      contextLabel: ltiLaunchBody.context_label ?? ltiResourceLink.contextLabel,
+    });
+  }
 
   const user = await upsertUser({
     ltiConsumerId: ltiLaunchBody.oauth_consumer_key,
