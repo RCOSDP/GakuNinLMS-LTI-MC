@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import Chip from "@material-ui/core/Chip";
 import type { ChipProps } from "@material-ui/core/Chip";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
+import { common } from "@material-ui/core/colors";
 import { learningStatus, gray } from "$theme/colors";
 import type { LearningStatus } from "$server/models/learningStatus";
 
@@ -28,7 +29,7 @@ export default function LearningStatusChip<Element extends React.ElementType>(
         palette: {
           primary: {
             main: learningStatus[type],
-            contrastText: type === "incompleted" ? gray[800] : "#fff",
+            contrastText: type === "incompleted" ? gray[800] : common.white,
           },
         },
       }),

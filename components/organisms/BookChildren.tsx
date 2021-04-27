@@ -15,7 +15,7 @@ import { SectionSchema } from "$server/models/book/section";
 import { primary } from "$theme/colors";
 import { isNamedSection, getOutlineNumber } from "$utils/outline";
 import { useActivityAtom } from "$store/activity";
-import LearningStatusBadge from "$atoms/LearningStatusBadge";
+import LearningStatusChip from "$atoms/LearningStatusChip";
 
 function Section({
   section,
@@ -119,7 +119,7 @@ export default function BookChildren(props: Props) {
                 {topic.name}
               </ListItemText>
               {!isTopicEditable(topic) && isCompleted(topic.id) && (
-                <LearningStatusBadge label="完了" />
+                <LearningStatusChip type="completed" size="small" />
               )}
               {isTopicEditable(topic) && (
                 <ListItemSecondaryAction>
