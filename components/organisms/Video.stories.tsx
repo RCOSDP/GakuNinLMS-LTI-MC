@@ -39,5 +39,10 @@ export const Vimeo = () => (
   />
 );
 
-// TODO: 未サポート
-// export const Wowza = () => <Video type="wowza" src="sample.mp4" {...defaultProps} />;
+export const Wowza = () => (
+  <Video
+    providerUrl="https://wowzaec2demo.streamlock.net/"
+    url="https://wowzaec2demo.streamlock.net/vod/mp4/playlist.m3u8"
+    {...defaultProps}
+  />
+);
