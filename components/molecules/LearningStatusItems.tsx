@@ -1,6 +1,12 @@
+import { useCallback, useMemo } from "react";
 import clsx from "clsx";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
 import { makeStyles } from "@material-ui/core/styles";
+import { LearnerSchema } from "$server/models/learner";
+import { LearningStatus } from "$server/models/learningStatus";
 import LearningStatusDot from "$atoms/LearningStatusDot";
+import useSelectorProps from "$utils/useSelectorProps";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -32,90 +38,114 @@ const useStyles = makeStyles((theme) => ({
   clickable: {},
 }));
 
+function LearningStatusItem({
+  type,
+  label,
+  learners,
+  onLearnerClick,
+}: {
+  type: LearningStatus;
+  label: string;
+  learners: Array<LearnerSchema>;
+  onLearnerClick?(learner: LearnerSchema): void;
+}) {
+  const classes = useStyles();
+  const { onOpen, onSelect, ...menuProps } = useSelectorProps<null>(null);
+  const handleLearnerClick = useCallback(
+    (learner: LearnerSchema) => () => {
+      onLearnerClick?.(learner);
+      onSelect(null);
+    },
+    [onSelect, onLearnerClick]
+  );
+  const clickable = learners.length > 0;
+
+  return (
+    <>
+      <button
+        aria-controls={`learner-activities-menu-${type}`}
+        className={clsx(classes.item, classes.button, {
+          [classes.clickable]: clickable,
+        })}
+        disabled={!clickable}
+        onClick={onOpen}
+      >
+        <LearningStatusDot type={type} />
+        <span>
+          {label}
+          {learners.length}人
+        </span>
+      </button>
+      <Menu
+        {...menuProps}
+        id={`learner-activities-menu-${type}`}
+        aria-haspopup="true"
+      >
+        {[...learners].map((learner) => (
+          <MenuItem key={learner.id} onClick={handleLearnerClick(learner)}>
+            {learner.name}
+          </MenuItem>
+        ))}
+      </Menu>
+    </>
+  );
+}
+
 type Props = {
   className?: string;
-  totalLearnerCount: number;
-  completedCount: number;
-  incompletedCount: number;
+  learners: Array<LearnerSchema>;
+  completedLearners: Array<LearnerSchema>;
+  incompletedLearners: Array<LearnerSchema>;
+  onLearnerClick?(learner: LearnerSchema): void;
 };
 
 export default function LearningStatusItems(props: Props) {
   const {
     className,
-    totalLearnerCount,
-    completedCount,
-    incompletedCount,
+    learners,
+    completedLearners,
+    incompletedLearners,
+    onLearnerClick,
   } = props;
+  const unopenedLearners = useMemo(() => {
+    const map = new Map(learners.map(({ id, name }) => [id, name]));
+    [...completedLearners, ...incompletedLearners].forEach(({ id }) =>
+      map.delete(id)
+    );
+    return map;
+  }, [learners, completedLearners, incompletedLearners]);
+  const items = useMemo(
+    () =>
+      [
+        {
+          type: "completed",
+          label: "完了",
+          learners: completedLearners,
+        },
+        {
+          type: "incompleted",
+          label: "未完了",
+          learners: incompletedLearners,
+        },
+        {
+          type: "unopened",
+          label: "未開封",
+          learners: [...unopenedLearners].map(([id, name]) => ({ id, name })),
+        },
+      ] as const,
+    [completedLearners, incompletedLearners, unopenedLearners]
+  );
   const classes = useStyles();
-  // TODO: 学習状況別に学習者一覧を得られるようにしましょう
-  // const bookLearnerActivitiesMenu = useSelectorProps<BookLearnerActivitySchema>(
-  //   null
-  // );
-
-  const items = [
-    {
-      type: "completed",
-      label: "完了",
-      count: completedCount,
-    },
-    {
-      type: "incompleted",
-      label: "未完了",
-      count: incompletedCount,
-    },
-    {
-      type: "unopened",
-      label: "未開封",
-      count: totalLearnerCount - completedCount - incompletedCount,
-    },
-  ] as const;
-  // TODO: 学習状況別に学習者一覧を得られるようにしましょう
-  const clickable = false; // learnerActivities && learnerActivities.length > 0;
-  // const handleLearnerActivityClick = (
-  //   learnerActivity: BookLearnerActivitySchema
-  // ) => () => {
-  //   onBookLearnerActivityClick?.(learnerActivity);
-  //   bookLearnerActivitiesMenu.onSelect(learnerActivity);
-  // };
 
   return (
     <div className={clsx(className, classes.root)}>
       {items.map((item, index) => (
-        <button
+        <LearningStatusItem
           key={index}
-          aria-controls="learner-activities-menu"
-          className={clsx(classes.item, classes.button, {
-            [classes.clickable]: clickable,
-          })}
-          disabled={!clickable}
-          // TODO: 学習状況別に学習者一覧を得られるようにしましょう
-          // onClick={bookLearnerActivitiesMenu.onOpen}
-        >
-          <LearningStatusDot type={item.type} />
-          <span>
-            {item.label}
-            {item.count}人
-          </span>
-        </button>
+          {...item}
+          onLearnerClick={onLearnerClick}
+        />
       ))}
-      {/* TODO: 学習状況別に学習者一覧を得られるようにしましょう */}
-      {/* <Menu
-        anchorEl={bookLearnerActivitiesMenu.anchorEl}
-        open={Boolean(bookLearnerActivitiesMenu.anchorEl)}
-        onClose={bookLearnerActivitiesMenu.onClose}
-        id="learner-activities-menu"
-        aria-haspopup="true"
-      >
-        {bookLearnerActivities &&
-          bookLearnerActivities.map((learnerActivity, index) => (
-            <MenuItem
-              key={index}
-              onClick={handleLearnerActivityClick(learnerActivity)}
-            >
-              {learnerActivity.name}
-            </MenuItem>
-          ))}
-      </Menu> */}
     </div>
   );
 }

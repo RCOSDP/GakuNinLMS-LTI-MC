@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useMemo, useCallback } from "react";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import Card from "@material-ui/core/Card";
@@ -16,9 +16,9 @@ import useContainerStyles from "$styles/container";
 import useCardStyles from "$styles/card";
 import type { CourseBookSchema } from "$server/models/courseBook";
 import type { BookActivitySchema } from "$server/models/bookActivity";
+import type { BookSchema } from "$server/models/book";
 import type { SessionSchema } from "$server/models/session";
 import type { LearnerSchema } from "$server/models/learner";
-import type { LearnerActivity } from "$utils/getLearnerActivities";
 import { gray } from "$theme/colors";
 import download from "$utils/bookLearningActivity/download";
 import getLearnerActivities from "$utils/getLearnerActivities";
@@ -101,22 +101,48 @@ export default function Dashboard(props: Props) {
   const containerClasses = useContainerStyles();
   const cardClasses = useCardStyles();
   const [tabIndex, setTabIndex] = useState(0);
-  const { data, dispatch, ...dialogProps } = useDialogProps<LearnerActivity>();
   const handleChange = (_: React.ChangeEvent<unknown>, value: number) => {
     setTabIndex(value);
   };
   const handleDownloadClick = useCallback(() => {
     download(bookActivities, "分析データ.csv");
   }, [bookActivities]);
-  const learnerActivities = getLearnerActivities({
-    learners,
-    courseBooks,
-    bookActivities,
-  });
-  const activitiesByBooks = getActivitiesByBooks({
-    courseBooks,
-    bookActivities,
-  });
+  const learnerActivities = useMemo(
+    () =>
+      getLearnerActivities({
+        learners,
+        courseBooks,
+        bookActivities,
+      }),
+    [learners, courseBooks, bookActivities]
+  );
+  const activitiesByBooks = useMemo(
+    () =>
+      getActivitiesByBooks({
+        courseBooks,
+        bookActivities,
+      }),
+    [courseBooks, bookActivities]
+  );
+  const { data, dispatch, ...dialogProps } = useDialogProps<{
+    learner: LearnerSchema;
+    bookActivities: Array<BookActivitySchema>;
+  }>();
+  const handleLearnerClick = useCallback(
+    (book: Pick<BookSchema, "id">) => (learner: LearnerSchema) =>
+      dispatch({
+        learner,
+        bookActivities: learnerActivities
+          .filter(([{ id }]) => id === learner.id)
+          .flatMap(([, a]) => a.filter((a) => a.book.id === book.id)),
+      }),
+    [learnerActivities, dispatch]
+  );
+  const handleActivityClick = useCallback(
+    (learner: LearnerSchema, bookActivities: Array<BookActivitySchema>) => () =>
+      dispatch({ learner, bookActivities }),
+    [dispatch]
+  );
   return (
     <Container classes={containerClasses} maxWidth="md">
       <ActionHeader
@@ -155,8 +181,11 @@ export default function Dashboard(props: Props) {
           {activitiesByBooks.map((activitiesByBook, index) => (
             <LearningActivityItem
               key={index}
-              totalLearnerCount={learners.length}
-              activitiesByBook={activitiesByBook}
+              learners={learners}
+              book={activitiesByBook}
+              completedLearners={activitiesByBook.completedLearners}
+              incompletedLearners={activitiesByBook.incompletedLearners}
+              onLearnerClick={handleLearnerClick(activitiesByBook)}
             />
           ))}
         </TabPanel>
@@ -180,16 +209,17 @@ export default function Dashboard(props: Props) {
               key={index}
               learner={learner}
               activities={activities}
-              onLearnerActivityClick={dispatch}
+              onActivityClick={handleActivityClick(learner, activities)}
             />
           ))}
         </TabPanel>
       </Card>
       {data && (
         <LearnerActivityDialog
-          session={session}
+          courseTitle={session.ltiLaunchBody.context_title}
           courseBooks={courseBooks}
-          learnerActivity={data}
+          learner={data.learner}
+          bookActivities={data.bookActivities}
           {...dialogProps}
         />
       )}

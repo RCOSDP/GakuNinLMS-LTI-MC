@@ -9,4 +9,3 @@ export { default as book } from "./book";
 export { default as books } from "./books";
 export { default as activity } from "./activity";
 export { default as bookActivity } from "./bookActivity";
-export { default as activitiesByBook } from "./activitiesByBook";

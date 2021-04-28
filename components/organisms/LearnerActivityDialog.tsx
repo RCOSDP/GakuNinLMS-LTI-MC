@@ -1,4 +1,4 @@
-import { useMemo, Fragment } from "react";
+import { useMemo, Fragment, ReactNode } from "react";
 import { format } from "date-fns";
 import { ja } from "date-fns/locale";
 import Dialog from "@material-ui/core/Dialog";
@@ -11,8 +11,8 @@ import Divider from "@material-ui/core/Divider";
 import { makeStyles } from "@material-ui/core/styles";
 import LearningStatusChip from "$atoms/LearningStatusChip";
 import getActivitiesEachCourseBooks from "$utils/getActivitiesEachCourseBooks";
-import type { LearnerActivity } from "$utils/getLearnerActivities";
-import type { SessionSchema } from "$server/models/session";
+import type { LearnerSchema } from "$server/models/learner";
+import type { BookActivitySchema } from "$server/models/bookActivity";
 import type { CourseBookSchema } from "$server/models/courseBook";
 import { gray } from "$theme/colors";
 
@@ -41,18 +41,20 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type Props = {
-  session: SessionSchema;
+  courseTitle: ReactNode;
   courseBooks: Array<CourseBookSchema>;
-  learnerActivity: LearnerActivity;
+  learner: LearnerSchema;
+  bookActivities: Array<BookActivitySchema>;
   open: boolean;
   onClose: React.MouseEventHandler;
 };
 
 export default function LearnerActivityDialog(props: Props) {
   const {
-    session,
+    courseTitle,
     courseBooks,
-    learnerActivity: [learner, bookActivities],
+    learner,
+    bookActivities,
     open,
     onClose,
   } = props;
@@ -75,11 +77,11 @@ export default function LearnerActivityDialog(props: Props) {
           {learner.name}
         </Typography>
         <Typography variant="subtitle1" component="p">
-          {session.ltiLaunchBody.context_title}
+          {courseTitle}
         </Typography>
       </DialogTitle>
       <DialogContent>
-        {activitiesEachCourseBooks.map(([book, activities], index) => (
+        {activitiesEachCourseBooks.map(([book, activities], index, self) => (
           <Fragment key={index}>
             <Typography className={classes.bookTitle} variant="h6">
               {book.name}
@@ -103,7 +105,7 @@ export default function LearnerActivityDialog(props: Props) {
                 </p>
               </Fragment>
             ))}
-            <Divider />
+            {index < self.length - 1 && <Divider />}
           </Fragment>
         ))}
       </DialogContent>
