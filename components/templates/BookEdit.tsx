@@ -110,7 +110,7 @@ export default function BookEdit(props: Props) {
         <BookForm className={classes.form} book={book} onSubmit={onSubmit} />
       </CollapsibleContent>
       <Typography className={classes.subtitle} variant="h5">
-        トピック・セクション
+        トピック順
       </Typography>
       <BookEditChildren
         sections={book.sections}
