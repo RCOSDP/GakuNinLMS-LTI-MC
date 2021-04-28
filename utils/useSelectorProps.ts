@@ -12,6 +12,7 @@ function useSelectorProps<T>(defaultValue: null | T) {
   };
   return {
     anchorEl,
+    open: Boolean(anchorEl),
     value,
     onOpen,
     onClose,

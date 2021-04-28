@@ -31,7 +31,7 @@ export function parse(
   };
 }
 
-export type LearnerActivity = [LearnerSchema, Array<BookActivitySchema>];
+type LearnerActivity = [LearnerSchema, Array<BookActivitySchema>];
 
 function getLearnerActivities({
   learners,

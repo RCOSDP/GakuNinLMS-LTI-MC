@@ -16,6 +16,7 @@ function getActivitiesEachCourseBooks({
   > = [];
   for (const book of courseBooks) {
     const activities = bookActivities.filter((a) => a.book.id === book.id);
+    if (activities.length === 0) continue;
     activitiesEachCourseBooks.push([book, activities]);
   }
   return activitiesEachCourseBooks;

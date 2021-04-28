@@ -1,6 +1,7 @@
 import { BookSchema } from "$server/models/book";
 import { BookActivitySchema } from "$server/models/bookActivity";
 import { CourseBookSchema } from "$server/models/courseBook";
+import { LearnerSchema } from "$server/models/learner";
 
 function getActivitiesByBooks({
   courseBooks,
@@ -11,8 +12,8 @@ function getActivitiesByBooks({
 }) {
   const activitiesByBooks: Array<
     Pick<BookSchema, "id" | "name"> & {
-      completedCount: number;
-      incompletedCount: number;
+      completedLearners: Map<LearnerSchema["id"], Array<BookActivitySchema>>;
+      incompletedLearners: Map<LearnerSchema["id"], Array<BookActivitySchema>>;
     }
   > = [];
   for (const book of courseBooks) {
@@ -21,7 +22,14 @@ function getActivitiesByBooks({
     );
     const activities = bookActivities.filter((a) => a.book.id === book.id);
     const learnerIds = new Set(activities.map((a) => a.learner.id));
-    let completedCount = 0;
+    const completedLearners: Map<
+      LearnerSchema["id"],
+      Array<BookActivitySchema>
+    > = new Map();
+    const incompletedLearners: Map<
+      LearnerSchema["id"],
+      Array<BookActivitySchema>
+    > = new Map();
     for (const learnerId of learnerIds) {
       const activitiesByLearner = activities.filter(
         (a) => a.learner.id === learnerId
@@ -30,11 +38,12 @@ function getActivitiesByBooks({
         activitiesByLearner.length === topicIds.size &&
         activitiesByLearner.every(({ status }) => status === "completed")
       ) {
-        completedCount++;
+        completedLearners.set(learnerId, activitiesByLearner);
+      } else {
+        incompletedLearners.set(learnerId, activitiesByLearner);
       }
     }
-    const incompletedCount = learnerIds.size - completedCount;
-    activitiesByBooks.push({ ...book, completedCount, incompletedCount });
+    activitiesByBooks.push({ ...book, completedLearners, incompletedLearners });
   }
   return activitiesByBooks;
 }

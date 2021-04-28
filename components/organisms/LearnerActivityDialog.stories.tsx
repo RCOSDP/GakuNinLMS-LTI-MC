@@ -3,13 +3,12 @@ export default { title: "organisms/LearnerActivityDialog" };
 import Button from "@material-ui/core/Button";
 import LearnerActivityDialog from "./LearnerActivityDialog";
 import useDialogProps from "$utils/useDialogProps";
-import { user as learner, bookActivity, book, session } from "$samples";
+import { user as learner, bookActivity, book } from "$samples";
 import getLearnerActivities from "$utils/getLearnerActivities";
-import type { LearnerActivity } from "$utils/getLearnerActivities";
 
 const courseBooks = [...Array(3)].map((_, id) => ({ ...book, id }));
 
-const [learnerActivity] = getLearnerActivities({
+const [[, bookActivities]] = getLearnerActivities({
   learners: [...Array(5)].map((_, id) => ({ ...learner, id })),
   bookActivities: [...Array(40)].map((_, i) => ({
     ...bookActivity,
@@ -21,8 +20,8 @@ const [learnerActivity] = getLearnerActivities({
 });
 
 export const Default = () => {
-  const { data, dispatch, ...dialogProps } = useDialogProps<LearnerActivity>();
-  const handleClick = () => dispatch(learnerActivity);
+  const { data, dispatch, ...dialogProps } = useDialogProps<true>();
+  const handleClick = () => dispatch(true);
   return (
     <>
       <Button variant="contained" color="primary" onClick={handleClick}>
@@ -30,9 +29,10 @@ export const Default = () => {
       </Button>
       {data && (
         <LearnerActivityDialog
-          session={session}
+          courseTitle="2021年度 講義1"
           courseBooks={courseBooks}
-          learnerActivity={data}
+          learner={learner}
+          bookActivities={bookActivities}
           {...dialogProps}
         />
       )}
