@@ -1,19 +1,11 @@
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
-import Button from "@material-ui/core/Button";
-import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
 import { makeStyles } from "@material-ui/core/styles";
-import BookEditChildren from "$organisms/BookEditChildren";
 import BooksImportForm from "$organisms/BooksImportForm";
 import BookAccordion from "$organisms/BookAccordion";
-import TopicPreviewDialog from "$organisms/TopicPreviewDialog";
-import RequiredDot from "$atoms/RequiredDot";
 import BackButton from "$atoms/BackButton";
-import CollapsibleContent from "$organisms/CollapsibleContent";
 import useContainerStyles from "styles/container";
-import { BooksImportParams, booksImportParamsSchema, BooksImportResult, booksImportResultSchema } from "$server/validators/booksImportParams";
-import { useConfirm } from "material-ui-confirm";
-import useDialogProps from "$utils/useDialogProps";
+import { BooksImportParams, BooksImportResult } from "$server/validators/booksImportParams";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -47,8 +39,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type Props = {
-  importBooks?: booksImportParamsSchema;
-  importResult?: booksImportResultSchema
+  importBooks?: BooksImportParams;
+  importResult?: BooksImportResult;
   onSubmit(book: BooksImportParams): void;
   onCancel(): void;
 };
@@ -63,8 +55,8 @@ export default function BooksImport(props: Props) {
   const classes = useStyles();
   const containerClasses = useContainerStyles();
 
-  const showSuccess = importResult.books && importResult.books.length > 0;
-  const showErrors = importResult.errors && importResult.errors.length > 0;
+  const showSuccess = importResult?.books && importResult.books.length > 0;
+  const showErrors = importResult?.errors && importResult.errors.length > 0;
   const showResult = showSuccess || showErrors;
   const showForm = !showSuccess;
 
@@ -90,7 +82,7 @@ export default function BooksImport(props: Props) {
           </Typography>
           {showSuccess &&
             <div className={classes.books}>
-              {importResult.books.map((book) => (
+              {importResult?.books?.map((book) => (
                 <BookAccordion
                   key={book.id}
                   book={book}
@@ -100,7 +92,7 @@ export default function BooksImport(props: Props) {
           }
           {showErrors &&
             <>
-              {importResult.errors.map((error) => (
+              {importResult?.errors?.map((error) => (
                 <>{error}</>
               ))}
             </>

@@ -1,6 +1,6 @@
 import { IsOptional, IsString, ValidateNested } from "class-validator";
 import { validationMetadatasToSchemas } from "class-validator-jsonschema";
-import { BookProps, BookSchema } from "$server/models/book";
+import { BookSchema } from "$server/models/book";
 
 export class BooksImportParams {
   @IsOptional()
@@ -13,7 +13,7 @@ export const booksImportParamsSchema = validationMetadatasToSchemas().BooksImpor
 export class BooksImportResult {
   @IsOptional()
   @ValidateNested({ each: true })
-  books?: BookProps[];
+  books?: BookSchema[];
   @IsOptional()
   @IsString({ each: true })
   errors?: string[];

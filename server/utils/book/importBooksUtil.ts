@@ -1,26 +1,25 @@
 import { UserSchema } from "$server/models/user";
-import { BookProps, BookSchema } from "$server/models/book";
-import { BooksImportParams, booksImportParamsSchema, BooksImportResult, booksImportResultSchema } from "$server/validators/booksImportParams";
+import { BookSchema } from "$server/models/book";
+import { BooksImportParams, BooksImportResult } from "$server/validators/booksImportParams";
 import prisma from "$server/utils/prisma";
-import aggregateTimeRequired from "./aggregateTimeRequired";
 import findBook from "./findBook";
-import sectionCreateInput from "./sectionCreateInput";
 
 async function importBooksUtil(
   authorId: UserSchema["id"],
   params: BooksImportParams
-): Promise<booksImportResultSchema | undefined> {
+): Promise<BooksImportResult> {
   try {
-    const obj = JSON.parse(params.json);
+    const obj = JSON.parse(params.json || "");
     const importBooks = Array.isArray(obj) ? obj : [obj];
     const transactions = [];
-    const books = [];
+    const books: BookSchema[] = [];
 
     for (const importBook of importBooks) {
       transactions.push(prisma.book.create({ data: getBookProps(authorId, importBook) }));
     }
     for (const book of await prisma.$transaction(transactions)) {
-      books.push(await findBook(book.id));
+      const res = await findBook(book.id);
+      if (res) books.push(res);
     }
 
     const result: BooksImportResult = { books, errors: [] };
@@ -33,8 +32,8 @@ async function importBooksUtil(
   }
 }
 
-function getBookProps(authorId: UserSchema["id"], importBook: Object): BookProps {
-  const book: BookProps = { ...importBook, timeRequired: 0, author: { connect: { id: authorId } }, ltiResourceLinks: {} };
+function getBookProps(authorId: UserSchema["id"], importBook: any) {
+  const book = { ...importBook, timeRequired: 0, author: { connect: { id: authorId } }, ltiResourceLinks: {} };
   book.publishedAt = getDate(book.publishedAt);
   book.createdAt = getDate(book.createdAt);
   book.updatedAt = getDate(book.updatedAt);
@@ -51,8 +50,8 @@ function getBookProps(authorId: UserSchema["id"], importBook: Object): BookProps
   return book;
 }
 
-function getSection(authorId: UserSchema["id"], bookSection: Object, order: Integer): Object {
-  const section = { order, name: bookSection.name, timeRequired: 0 };
+function getSection(authorId: UserSchema["id"], bookSection: any, order: number) {
+  const section = { order, name: bookSection.name, timeRequired: 0, topicSections: {} };
   const topicSections = [];
   for (const [index, sectionTopic] of bookSection.topics.entries()) {
     const topicSection = getTopicSection(authorId, sectionTopic, index + 1);
@@ -63,7 +62,7 @@ function getSection(authorId: UserSchema["id"], bookSection: Object, order: Inte
   return section;
 }
 
-function getTopicSection(authorId: UserSchema["id"], sectionTopic: Object, order: Integer): Object {
+function getTopicSection(authorId: UserSchema["id"], sectionTopic: any, order: number) {
   const topic = { ...sectionTopic, creator: { connect: { id: authorId } } };
   topic.createdAt = getDate(topic.createdAt);
   topic.updatedAt = getDate(topic.updatedAt);
@@ -77,11 +76,11 @@ function getTopicSection(authorId: UserSchema["id"], sectionTopic: Object, order
   return topicSection;
 }
 
-function getDate(dateString: string): Date {
+function getDate(dateString: string) {
   return dateString ? new Date(dateString) : null;
 }
 
-function getKeywords(keywords: string[]): Object {
+function getKeywords(keywords: string[]) {
   return { connectOrCreate: keywords.map(name => { return { create: { name }, where: { name } }; }) };
 }
 

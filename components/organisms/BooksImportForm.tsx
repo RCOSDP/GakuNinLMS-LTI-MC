@@ -1,17 +1,12 @@
 import Card from "@material-ui/core/Card";
-import Checkbox from "@material-ui/core/Checkbox";
 import Button from "@material-ui/core/Button";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import clsx from "clsx";
 import TextField from "$atoms/TextField";
 import useCardStyles from "styles/card";
-import useInputLabelStyles from "styles/inputLabel";
 import gray from "theme/colors/gray";
-import { BooksImportParams, booksImportParamsSchema } from "$server/validators/booksImportParams";
+import { BooksImportParams } from "$server/validators/booksImportParams";
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -26,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type Props = {
-  importBooks?: booksImportParamsSchema;
+  importBooks?: BooksImportParams;
   className?: string;
   onSubmit?: (book: BooksImportParams) => void;
 };
@@ -38,12 +33,11 @@ export default function BooksImportForm(props: Props) {
     onSubmit = () => undefined,
   } = props;
   const cardClasses = useCardStyles();
-  const inputLabelClasses = useInputLabelStyles();
   const classes = useStyles();
   const defaultValues: BooksImportParams = {
     json: importBooks?.json ?? "",
   };
-  const { handleSubmit, register, control } = useForm<BooksImportParams>({ defaultValues });
+  const { handleSubmit, register } = useForm<BooksImportParams>({ defaultValues });
 
   return (
     <Card

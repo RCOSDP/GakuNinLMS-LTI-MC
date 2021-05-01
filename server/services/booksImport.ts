@@ -1,10 +1,10 @@
 import { FastifySchema } from "fastify";
 import { outdent } from "outdent";
-import { BooksImportParams, booksImportParamsSchema, BooksImportResult, booksImportResultSchema } from "$server/validators/booksImportParams";
+import { BooksImportParams, booksImportParamsSchema, booksImportResultSchema } from "$server/validators/booksImportParams";
 import { SessionSchema } from "$server/models/session";
 import authUser from "$server/auth/authUser";
 import authInstructor from "$server/auth/authInstructor";
-import importBooksUtil from "$server/utils/book/importBooks";
+import importBooksUtil from "$server/utils/book/importBooksUtil";
 
 export type Params = BooksImportParams;
 
@@ -21,7 +21,7 @@ export const importSchema: FastifySchema = {
 };
 
 export const importHooks = {
-  auth: [authUser, authInstructor],
+  post: { auth: [authUser, authInstructor] },
 };
 
 export async function importBooks({
@@ -29,7 +29,7 @@ export async function importBooks({
   body,
 }: {
   session: SessionSchema;
-  body: BooksImportResult;
+  body: BooksImportParams;
 }) {
   const result = await importBooksUtil(session.user.id, body);
   return {

@@ -18,9 +18,9 @@ export async function books(fastify: FastifyInstance) {
 export async function importBooks(fastify: FastifyInstance) {
   const basePath = "/books/import";
   const { importSchema, importHooks, importBooks } = importService;
-  const hooks = makeHooks(fastify, { importHooks });
+  const hooks = makeHooks(fastify, importHooks);
 
   fastify.post<{
     Body: importService.Params;
-  }>(basePath, { schema: importSchema, ...hooks.importHooks }, handler(importBooks));
+  }>(basePath, { schema: importSchema, ...hooks.post }, handler(importBooks));
 }

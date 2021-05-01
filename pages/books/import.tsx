@@ -1,20 +1,16 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
-import { BooksImportParams, booksImportParamsSchema } from "$server/validators/booksImportParams";
-import { useSessionAtom } from "$store/session";
+import { BooksImportParams, BooksImportResult } from "$server/validators/booksImportParams";
 import BooksImport from "$templates/BooksImport";
-import Placeholder from "$templates/Placeholder";
-import BookNotFoundProblem from "$organisms/TopicNotFoundProblem";
 import { importBooks } from "$utils/books";
 import { pagesPath } from "$utils/$path";
 
 export type Query = { context?: "books" | "link" };
 
 function Import({ context }: Query) {
-  const query = { ...(context && { context }) };
   const router = useRouter();
   const importProps: BooksImportParams = { json: "" };
-  const [importResult, setImportResult] = useState({ books: [], errors: [] });
+  const [importResult, setImportResult] = useState<BooksImportResult>({});
   const back = () => {
     switch (context) {
       case "books":
