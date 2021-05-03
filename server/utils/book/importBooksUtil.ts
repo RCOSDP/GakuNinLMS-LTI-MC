@@ -22,6 +22,7 @@ class ImportBooksUtil {
   timeRequired: number;
   books: BookSchema[];
   errors: string[];
+  now: Date;
 
   constructor(authorId: UserSchema["id"], params: BooksImportParams) {
     this.authorId = authorId;
@@ -29,6 +30,7 @@ class ImportBooksUtil {
     this.timeRequired = 0;
     this.books = [];
     this.errors = [];
+    this.now = new Date();
   }
 
   async importBooks() {
@@ -91,10 +93,13 @@ class ImportBooksUtil {
       author: { connect: { id: this.authorId } },
       ltiResourceLinks: {},
     };
-    book.publishedAt = this.getDate(book.publishedAt);
-    book.createdAt = this.getDate(book.createdAt);
-    book.updatedAt = this.getDate(book.updatedAt);
-    book.keywords = this.getKeywords(book.keywords);
+    book.publishedAt = this.getDate(
+      book.publishedAt,
+      `ブック${order}件目 公開日:`
+    );
+    book.createdAt = this.getDate(book.createdAt, `ブック${order}件目 作成日:`);
+    book.updatedAt = this.getDate(book.updatedAt, `ブック${order}件目 更新日:`);
+    book.keywords = this.getKeywords(book.keywords, `ブック${order}件目:`);
 
     const sections = [];
     for (const [index, bookSection] of book.sections.entries()) {
@@ -121,9 +126,15 @@ class ImportBooksUtil {
       creator: { connect: { id: this.authorId } },
     };
     this.timeRequired += topic.timeRequired;
-    topic.createdAt = this.getDate(topic.createdAt);
-    topic.updatedAt = this.getDate(topic.updatedAt);
-    topic.keywords = this.getKeywords(topic.keywords);
+    topic.createdAt = this.getDate(
+      topic.createdAt,
+      `トピック${order}件目 作成日:`
+    );
+    topic.updatedAt = this.getDate(
+      topic.updatedAt,
+      `トピック${order}件目 更新日:`
+    );
+    topic.keywords = this.getKeywords(topic.keywords, `トピック${order}件目:`);
     topic.resource.video = {
       create: {
         providerUrl: topic.resource.providerUrl,
@@ -143,11 +154,34 @@ class ImportBooksUtil {
     return topicSection;
   }
 
-  getDate(dateString: string) {
-    return dateString ? new Date(dateString) : null;
+  getDate(dateString: string, label: string) {
+    try {
+      const date = dateString ? new Date(dateString) : this.now;
+      if (Number.isNaN(date.getTime())) {
+        this.errors.push(`${label} 日付を解釈できません。`);
+        return null;
+      }
+      return date;
+    } catch (e) {
+      this.errors.push(`${label} 日付を解釈できません。`);
+      return null;
+    }
   }
 
-  getKeywords(keywords: string[]) {
+  getKeywords(keywords: string[], label: string) {
+    if (keywords == null) return {};
+    if (!Array.isArray(keywords)) {
+      this.errors.push(`${label} キーワードがリストではありません。`);
+      return {};
+    }
+    if (!keywords.length) return {};
+    for (const keyword of keywords) {
+      if (typeof keyword != "string" || !keyword.length) {
+        this.errors.push(`${label} キーワードが文字ではないか空です。`);
+        return {};
+      }
+    }
+
     return {
       connectOrCreate: keywords.map((name) => {
         return { create: { name }, where: { name } };
