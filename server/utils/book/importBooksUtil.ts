@@ -1,6 +1,9 @@
 import { UserSchema } from "$server/models/user";
 import { BookSchema } from "$server/models/book";
-import { BooksImportParams, BooksImportResult } from "$server/validators/booksImportParams";
+import {
+  BooksImportParams,
+  BooksImportResult,
+} from "$server/validators/booksImportParams";
 import prisma from "$server/utils/prisma";
 import findBook from "./findBook";
 
@@ -35,25 +38,37 @@ class ImportBooksUtil {
       const transactions = [];
 
       for (const importBook of importBooks) {
-        transactions.push(prisma.book.create({ data: this.getBookProps(importBook) }));
+        transactions.push(
+          prisma.book.create({ data: this.getBookProps(importBook) })
+        );
       }
       for (const book of await prisma.$transaction(transactions)) {
         const res = await findBook(book.id);
         if (res) this.books.push(res);
       }
-    } catch(e) {
+    } catch (e) {
       console.error(e);
-      Array.prototype.push.apply(this.errors, Array.isArray(e) ? e : [e.toString()]);
+      Array.prototype.push.apply(
+        this.errors,
+        Array.isArray(e) ? e : [e.toString()]
+      );
     }
   }
 
   result() {
-    const result: BooksImportResult = { books: this.books, errors: this.errors };
+    const result: BooksImportResult = {
+      books: this.books,
+      errors: this.errors,
+    };
     return result;
   }
 
   getBookProps(importBook: any) {
-    const book = { ...importBook, author: { connect: { id: this.authorId } }, ltiResourceLinks: {} };
+    const book = {
+      ...importBook,
+      author: { connect: { id: this.authorId } },
+      ltiResourceLinks: {},
+    };
     book.publishedAt = this.getDate(book.publishedAt);
     book.createdAt = this.getDate(book.createdAt);
     book.updatedAt = this.getDate(book.updatedAt);
@@ -79,16 +94,29 @@ class ImportBooksUtil {
   }
 
   getTopicSection(sectionTopic: any, order: number) {
-    const topic = { ...sectionTopic, creator: { connect: { id: this.authorId } } };
+    const topic = {
+      ...sectionTopic,
+      creator: { connect: { id: this.authorId } },
+    };
     this.timeRequired += topic.timeRequired;
     topic.createdAt = this.getDate(topic.createdAt);
     topic.updatedAt = this.getDate(topic.updatedAt);
     topic.keywords = this.getKeywords(topic.keywords);
-    topic.resource.video = { create: { providerUrl: topic.resource.providerUrl, tracks: { create: topic.resource.tracks } } };
+    topic.resource.video = {
+      create: {
+        providerUrl: topic.resource.providerUrl,
+        tracks: { create: topic.resource.tracks },
+      },
+    };
     delete topic.resource.providerUrl;
     delete topic.resource.tracks;
 
-    topic.resource = { connectOrCreate: { create: topic.resource, where: { url: topic.resource.url } } };
+    topic.resource = {
+      connectOrCreate: {
+        create: topic.resource,
+        where: { url: topic.resource.url },
+      },
+    };
     const topicSection = { order, topic: { create: topic } };
     return topicSection;
   }
@@ -98,7 +126,11 @@ class ImportBooksUtil {
   }
 
   getKeywords(keywords: string[]) {
-    return { connectOrCreate: keywords.map(name => { return { create: { name }, where: { name } }; }) };
+    return {
+      connectOrCreate: keywords.map((name) => {
+        return { create: { name }, where: { name } };
+      }),
+    };
   }
 }
 

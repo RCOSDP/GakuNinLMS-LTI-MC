@@ -27,17 +27,15 @@ type Props = {
 };
 
 export default function BooksImportForm(props: Props) {
-  const {
-    importBooks,
-    className,
-    onSubmit = () => undefined,
-  } = props;
+  const { importBooks, className, onSubmit = () => undefined } = props;
   const cardClasses = useCardStyles();
   const classes = useStyles();
   const defaultValues: BooksImportParams = {
     json: importBooks?.json ?? "",
   };
-  const { handleSubmit, register } = useForm<BooksImportParams>({ defaultValues });
+  const { handleSubmit, register } = useForm<BooksImportParams>({
+    defaultValues,
+  });
 
   return (
     <Card

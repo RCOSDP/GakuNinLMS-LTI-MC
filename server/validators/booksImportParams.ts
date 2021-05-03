@@ -8,7 +8,8 @@ export class BooksImportParams {
   json?: string;
 }
 
-export const booksImportParamsSchema = validationMetadatasToSchemas().BooksImportParams;
+export const booksImportParamsSchema = validationMetadatasToSchemas()
+  .BooksImportParams;
 
 export class BooksImportResult {
   @IsOptional()
@@ -19,4 +20,5 @@ export class BooksImportResult {
   errors?: string[];
 }
 
-export const booksImportResultSchema = validationMetadatasToSchemas().BooksImportResult;
+export const booksImportResultSchema = validationMetadatasToSchemas()
+  .BooksImportResult;

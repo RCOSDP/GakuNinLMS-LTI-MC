@@ -1,6 +1,9 @@
 import type { SortOrder } from "$server/models/sortOrder";
 import type { BookSchema } from "$server/models/book";
-import { BooksImportParams, BooksImportResult } from "$server/validators/booksImportParams";
+import {
+  BooksImportParams,
+  BooksImportResult,
+} from "$server/validators/booksImportParams";
 import { api } from "./api";
 import { revalidateBook } from "./book";
 
@@ -25,7 +28,9 @@ export async function fetchBooks(
   return books;
 }
 
-export async function importBooks(body: BooksImportParams): Promise<BooksImportResult> {
+export async function importBooks(
+  body: BooksImportParams
+): Promise<BooksImportResult> {
   const res = await api.apiV2BooksImportPost({ body });
   return res as BooksImportResult;
 }

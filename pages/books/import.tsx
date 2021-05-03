@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
-import { BooksImportParams, BooksImportResult } from "$server/validators/booksImportParams";
+import {
+  BooksImportParams,
+  BooksImportResult,
+} from "$server/validators/booksImportParams";
 import BooksImport from "$templates/BooksImport";
 import { importBooks } from "$utils/books";
 import { pagesPath } from "$utils/$path";
@@ -23,7 +26,7 @@ function Import({ context }: Query) {
   async function handleSubmit(props: BooksImportParams) {
     try {
       setImportResult(await importBooks(props));
-    } catch(e) {
+    } catch (e) {
       setImportResult(await e.json());
     }
   }
@@ -35,7 +38,13 @@ function Import({ context }: Query) {
     onCancel: handleCancel,
   };
 
-  return <BooksImport importBooks={importProps} importResult={importResult} {...handlers} />;
+  return (
+    <BooksImport
+      importBooks={importProps}
+      importResult={importResult}
+      {...handlers}
+    />
+  );
 }
 
 function Router() {

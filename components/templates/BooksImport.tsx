@@ -5,7 +5,10 @@ import BooksImportForm from "$organisms/BooksImportForm";
 import BookAccordion from "$organisms/BookAccordion";
 import BackButton from "$atoms/BackButton";
 import useContainerStyles from "styles/container";
-import { BooksImportParams, BooksImportResult } from "$server/validators/booksImportParams";
+import {
+  BooksImportParams,
+  BooksImportResult,
+} from "$server/validators/booksImportParams";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -46,12 +49,7 @@ type Props = {
 };
 
 export default function BooksImport(props: Props) {
-  const {
-    importBooks,
-    importResult,
-    onSubmit,
-    onCancel,
-  } = props;
+  const { importBooks, importResult, onSubmit, onCancel } = props;
   const classes = useStyles();
   const containerClasses = useContainerStyles();
 
@@ -67,38 +65,39 @@ export default function BooksImport(props: Props) {
       maxWidth="md"
     >
       <BackButton onClick={onCancel}>戻る</BackButton>
-      {showForm &&
+      {showForm && (
         <>
           <Typography className={classes.title} variant="h4">
             ブックのインポート
           </Typography>
-          <BooksImportForm importBooks={importBooks} className={classes.form} onSubmit={onSubmit} />
+          <BooksImportForm
+            importBooks={importBooks}
+            className={classes.form}
+            onSubmit={onSubmit}
+          />
         </>
-      }
-      {showResult &&
+      )}
+      {showResult && (
         <>
           <Typography className={classes.title} variant="h4">
             インポート結果
           </Typography>
-          {showSuccess &&
+          {showSuccess && (
             <div className={classes.books}>
               {importResult?.books?.map((book) => (
-                <BookAccordion
-                  key={book.id}
-                  book={book}
-                />
+                <BookAccordion key={book.id} book={book} />
               ))}
             </div>
-          }
-          {showErrors &&
+          )}
+          {showErrors && (
             <>
               {importResult?.errors?.map((error) => (
                 <>{error}</>
               ))}
             </>
-          }
+          )}
         </>
-      }
+      )}
     </Container>
   );
 }

@@ -64,8 +64,14 @@ export default function BookItemDialog(props: Props) {
           */}
         </div>
         <div className={classes.items}>
-          <Item itemKey="作成日" value={format(new Date(book.createdAt), "yyyy.MM.dd")} />
-          <Item itemKey="更新日" value={format(new Date(book.updatedAt), "yyyy.MM.dd")} />
+          <Item
+            itemKey="作成日"
+            value={format(new Date(book.createdAt), "yyyy.MM.dd")}
+          />
+          <Item
+            itemKey="更新日"
+            value={format(new Date(book.updatedAt), "yyyy.MM.dd")}
+          />
           <Item itemKey="著者" value={book.author.name} />
         </div>
         <p className={classes.description}>{book.description}</p>
