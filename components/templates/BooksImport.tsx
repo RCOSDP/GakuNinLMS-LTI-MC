@@ -90,11 +90,13 @@ export default function BooksImport(props: Props) {
             </div>
           )}
           {showErrors && (
-            <>
-              {importResult?.errors?.map((error) => (
-                <>{error}</>
+            <ul>
+              {importResult?.errors?.map((error, index) => (
+                <li key={index}>
+                  <pre>{error}</pre>
+                </li>
               ))}
-            </>
+            </ul>
           )}
         </>
       )}

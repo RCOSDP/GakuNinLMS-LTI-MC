@@ -33,15 +33,18 @@ class ImportBooksUtil {
 
   async importBooks() {
     try {
-      const obj = JSON.parse(this.params.json || "");
-      const importBooks = Array.isArray(obj) ? obj : [obj];
-      const transactions = [];
+      const importBooks = this.parseJson();
+      if (this.errors.length) return;
 
-      for (const importBook of importBooks) {
+      const transactions = [];
+      for (const [index, importBook] of importBooks.entries()) {
         transactions.push(
-          prisma.book.create({ data: this.getBookProps(importBook) })
+          prisma.book.create({ data: this.getBookProps(importBook, index + 1) })
         );
       }
+      this.errors.push("debug");
+      if (this.errors.length) return;
+
       for (const book of await prisma.$transaction(transactions)) {
         const res = await findBook(book.id);
         if (res) this.books.push(res);
@@ -63,7 +66,26 @@ class ImportBooksUtil {
     return result;
   }
 
-  getBookProps(importBook: any) {
+  parseJson() {
+    try {
+      const obj = JSON.parse(this.params.json || "");
+      return Array.isArray(obj) ? obj : [obj];
+    } catch (e) {
+      this.errors.push(`入力されたjsonテキストを解釈できません。\n${e}`);
+      return [];
+    }
+  }
+
+  getBookProps(importBook: any, order: number) {
+    if (
+      typeof importBook != "object" ||
+      Array.isArray(importBook) ||
+      importBook == null
+    ) {
+      this.errors.push(`${order}件目: ブック情報がありません。`);
+      return;
+    }
+
     const book = {
       ...importBook,
       author: { connect: { id: this.authorId } },
