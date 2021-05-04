@@ -17,6 +17,40 @@ async function importBooksUtil(
 }
 
 class ImportBooksUtil {
+  static readonly BOOK_KEYS: string[] = [
+    "name",
+    "description",
+    "language",
+    "shared",
+    "publishedAt",
+    "createdAt",
+    "updatedAt",
+    "details",
+    "keywords",
+    "sections",
+  ];
+  static readonly SECTION_KEYS: string[] = ["name", "topics"];
+  static readonly TOPIC_KEYS: string[] = [
+    "name",
+    "description",
+    "language",
+    "timeRequired",
+    "shared",
+    "createdAt",
+    "updatedAt",
+    "license",
+    "details",
+    "keywords",
+    "resource",
+  ];
+  static readonly RESOURCE_KEYS: string[] = [
+    "url",
+    "providerUrl",
+    "tracks",
+    "details",
+  ];
+  static readonly TRACK_KEYS: string[] = ["kind", "language", "content"];
+
   authorId: UserSchema["id"];
   params: BooksImportParams;
   books: BookSchema[];
@@ -98,6 +132,11 @@ class ImportBooksUtil {
     )
       return;
 
+    this.validateObjectProperty(
+      importBook,
+      ImportBooksUtil.BOOK_KEYS,
+      errorLabel
+    );
     const book = {
       ...importBook,
       author: { connect: { id: this.authorId } },
@@ -131,6 +170,11 @@ class ImportBooksUtil {
     )
       return;
 
+    this.validateObjectProperty(
+      bookSection,
+      ImportBooksUtil.SECTION_KEYS,
+      errorLabel
+    );
     const section = { order, name: bookSection.name, topicSections: {} };
 
     if (!this.validateList(bookSection.topics, false, `${errorLabel} トピック`))
@@ -155,6 +199,11 @@ class ImportBooksUtil {
     )
       return;
 
+    this.validateObjectProperty(
+      sectionTopic,
+      ImportBooksUtil.TOPIC_KEYS,
+      errorLabel
+    );
     const topic = {
       ...sectionTopic,
       creator: { connect: { id: this.authorId } },
@@ -175,6 +224,11 @@ class ImportBooksUtil {
     )
       return;
 
+    this.validateObjectProperty(
+      topic.resource,
+      ImportBooksUtil.RESOURCE_KEYS,
+      errorLabel
+    );
     topic.resource.video = {
       create: {
         providerUrl: topic.resource.providerUrl,
@@ -199,12 +253,20 @@ class ImportBooksUtil {
 
     let error = false;
     for (const [index, track] of tracks.entries()) {
+      const errorLabel = `${label}${index + 1}件目`;
       const err = !this.validateObject(
         track,
         false,
-        `${label}${index + 1}件目: トラック情報がありません。`
+        `${errorLabel}: トラック情報がありません。`
       );
       error ||= err;
+      if (err) continue;
+      const err2 = !this.validateObjectProperty(
+        track,
+        ImportBooksUtil.TRACK_KEYS,
+        errorLabel
+      );
+      error ||= err2;
     }
 
     return error ? {} : { create: tracks };
@@ -252,6 +314,15 @@ class ImportBooksUtil {
     }
     if (typeof obj != "object" || Array.isArray(obj)) {
       this.errors.push(label);
+      return false;
+    }
+    return true;
+  }
+
+  validateObjectProperty(obj: any, allowed: string[], label: string) {
+    const prop = Object.keys(obj).filter((key) => !allowed.includes(key));
+    if (prop.length) {
+      this.errors.push(`${label}: 不明なプロパティがあります。${prop}`);
       return false;
     }
     return true;
