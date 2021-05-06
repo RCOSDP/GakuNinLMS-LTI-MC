@@ -9,7 +9,6 @@ import type { BookSchema } from "$server/models/book";
 import type { SectionSchema } from "$server/models/book/section";
 import type { TopicSchema } from "$server/models/topic";
 import type { Query as BookEditQuery } from "../edit";
-import { connectOrCreateTopic } from "$utils/topic";
 import { pagesPath } from "$utils/$path";
 
 export type Query = BookEditQuery;
@@ -32,10 +31,7 @@ function Import({ bookId, context }: Query) {
   }) {
     if (!book) return;
 
-    const connectOrCreateTopics = topics.map(async (topic) => {
-      return connectOrCreateTopic(topic, isTopicEditable).then(({ id }) => id);
-    });
-    const ids = await Promise.all(connectOrCreateTopics);
+    const ids = topics.map(({ id }) => id);
     await updateBook({
       ...book,
       sections: [...book.sections, ...ids.map((id) => ({ topics: [{ id }] }))],

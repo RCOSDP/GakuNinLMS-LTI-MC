@@ -152,7 +152,7 @@ export default function BookEditChildren(props: Props) {
               color="primary"
             >
               <DragIndicatorIcon />
-              セクションの編集
+              トピック順の編集
             </Typography>
           }
           labelPlacement="start"
@@ -161,7 +161,7 @@ export default function BookEditChildren(props: Props) {
       <Divider className={classes.divider} />
       {inProgress && (
         <Alert className={classes.alert} severity="info">
-          セクションの編集内容が未保存です。反映する場合はセクションの編集中に保存ボタンをクリックしてください
+          トピック順の編集内容が未保存です。反映する場合はトピック順の編集中に保存ボタンをクリックしてください
         </Alert>
       )}
       {sortable && (

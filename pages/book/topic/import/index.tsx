@@ -7,7 +7,6 @@ import { updateBook, useBook } from "$utils/book";
 import useTopics from "$utils/useTopics";
 import type { TopicSchema } from "$server/models/topic";
 import type { Query as BookEditQuery } from "$pages/book/edit";
-import { connectOrCreateTopic } from "$utils/topic";
 import { pagesPath } from "$utils/$path";
 
 export type Query = BookEditQuery;
@@ -30,10 +29,7 @@ function Import({ bookId, context }: BookEditQuery) {
   async function handleSubmit(topics: TopicSchema[]) {
     if (!book) return;
 
-    const connectOrCreateTopics = topics.map(async (topic) => {
-      return connectOrCreateTopic(topic, isTopicEditable).then(({ id }) => id);
-    });
-    const ids = await Promise.all(connectOrCreateTopics);
+    const ids = topics.map(({ id }) => id);
     await updateBook({
       ...book,
       sections: [...book.sections, ...ids.map((id) => ({ topics: [{ id }] }))],

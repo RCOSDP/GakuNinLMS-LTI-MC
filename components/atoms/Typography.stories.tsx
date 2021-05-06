@@ -23,7 +23,7 @@ export const Book = () => (
       ブック「コンピュータ・サイエンス」の編集
     </Typography>
     <Typography variant="h5" gutterBottom={true}>
-      トピック・セクションの編集
+      トピック順の編集
     </Typography>
   </div>
 );
