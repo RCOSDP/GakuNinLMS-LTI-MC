@@ -142,6 +142,26 @@ class ImportBooksUtil {
       author: { connect: { id: this.authorId } },
       ltiResourceLinks: {},
     };
+
+    book.name = this.validateString(book.name, false, "", `${errorLabel} 題名`);
+    book.description = this.validateString(
+      book.description,
+      true,
+      "",
+      `${errorLabel} 概要`
+    );
+    book.language = this.validateString(
+      book.language,
+      true,
+      "ja",
+      `${errorLabel} 言語`
+    );
+    book.shared = this.validateBoolean(
+      book.shared,
+      true,
+      true,
+      `${errorLabel} 共有可否`
+    );
     book.publishedAt = this.getDate(book.publishedAt, `${errorLabel} 公開日`);
     book.createdAt = this.getDate(book.createdAt, `${errorLabel} 作成日`);
     book.updatedAt = this.getDate(book.updatedAt, `${errorLabel} 更新日`);
@@ -176,6 +196,12 @@ class ImportBooksUtil {
       errorLabel
     );
     const section = { order, name: bookSection.name, topicSections: {} };
+    section.name = this.validateString(
+      section.name,
+      true,
+      "",
+      `${errorLabel} 名称`
+    );
 
     if (!this.validateList(bookSection.topics, false, `${errorLabel} トピック`))
       return;
@@ -208,7 +234,37 @@ class ImportBooksUtil {
       ...sectionTopic,
       creator: { connect: { id: this.authorId } },
     };
+    topic.name = this.validateString(
+      topic.name,
+      false,
+      "",
+      `${errorLabel} 名称`
+    );
+    topic.description = this.validateString(
+      topic.description,
+      true,
+      "",
+      `${errorLabel} 説明`
+    );
+    topic.language = this.validateString(
+      topic.language,
+      true,
+      "ja",
+      `${errorLabel} 言語`
+    );
+    topic.timeRequired = this.validateInteger(
+      topic.timeRequired,
+      true,
+      0,
+      `${errorLabel} 学習所要時間`
+    );
     this.timeRequired += topic.timeRequired;
+    topic.shared = this.validateBoolean(
+      topic.shared,
+      true,
+      true,
+      `${errorLabel} 共有可否`
+    );
     topic.createdAt = this.getDate(topic.createdAt, `${errorLabel} 作成日`);
     topic.updatedAt = this.getDate(topic.updatedAt, `${errorLabel} 更新日`);
     topic.keywords = this.getKeywords(
@@ -229,9 +285,20 @@ class ImportBooksUtil {
       ImportBooksUtil.RESOURCE_KEYS,
       errorLabel
     );
+    topic.resource.url = this.validateUrl(
+      topic.resource.url,
+      false,
+      "",
+      `${errorLabel} 外部リソースのアドレス`
+    );
     topic.resource.video = {
       create: {
-        providerUrl: topic.resource.providerUrl,
+        providerUrl: this.validateUrl(
+          topic.resource.providerUrl,
+          false,
+          "",
+          `${errorLabel} 動画プロバイダーの識別子`
+        ),
         tracks: this.getTracks(topic.resource.tracks, `${errorLabel} トラック`),
       },
     };
@@ -267,6 +334,25 @@ class ImportBooksUtil {
         errorLabel
       );
       error ||= err2;
+
+      track.kind = this.validateString(
+        track.kind,
+        true,
+        "",
+        `${errorLabel} 種別`
+      );
+      track.language = this.validateString(
+        track.language,
+        true,
+        "ja",
+        `${errorLabel} 言語`
+      );
+      track.content = this.validateString(
+        track.content,
+        true,
+        "",
+        `${errorLabel} 内容`
+      );
     }
 
     return error ? {} : { create: tracks };
@@ -303,8 +389,91 @@ class ImportBooksUtil {
     };
   }
 
-  validateObject(obj: any, nullable: boolean, label: string) {
-    if (obj == null) {
+  validateString(
+    value: any,
+    nullable: boolean,
+    defaultValue: string,
+    label: string
+  ) {
+    if (value == null) {
+      if (!nullable)
+        this.errors.push(
+          `${label}: 空文字列です。1文字以上の文字列が必要です。`
+        );
+      return defaultValue;
+    }
+    if (typeof value != "string") {
+      this.errors.push(`${label}: 文字列ではありません。`);
+      return defaultValue;
+    }
+    if (!value.length) {
+      if (!nullable)
+        this.errors.push(
+          `${label}: 空文字列です。1文字以上の文字列が必要です。`
+        );
+      return defaultValue;
+    }
+    return value;
+  }
+
+  validateInteger(
+    value: any,
+    nullable: boolean,
+    defaultValue: number,
+    label: string
+  ) {
+    if (value == null) {
+      if (!nullable)
+        this.errors.push(`${label}: 未指定です。整数値を指定してください。`);
+      return defaultValue;
+    }
+    if (!Number.isInteger(value)) {
+      this.errors.push(`${label}: 整数値ではありません。`);
+      return defaultValue;
+    }
+    return value;
+  }
+
+  validateBoolean(
+    value: any,
+    nullable: boolean,
+    defaultValue: boolean,
+    label: string
+  ) {
+    if (value == null) {
+      if (!nullable)
+        this.errors.push(`${label}: 未指定です。真偽値を指定してください。`);
+      return defaultValue;
+    }
+    if (typeof value != "boolean") {
+      this.errors.push(`${label}: 真偽値ではありません。`);
+      return defaultValue;
+    }
+    return value;
+  }
+
+  validateUrl(
+    value: any,
+    nullable: boolean,
+    defaultValue: string,
+    label: string
+  ) {
+    if (value == null) {
+      if (!nullable)
+        this.errors.push(`${label}: 未指定です。URLを指定してください。`);
+      return defaultValue;
+    }
+    try {
+      new URL(value);
+    } catch (e) {
+      this.errors.push(`${label}: URLではありません。`);
+      return defaultValue;
+    }
+    return value;
+  }
+
+  validateObject(value: any, nullable: boolean, label: string) {
+    if (value == null) {
       if (nullable) {
         return true;
       } else {
@@ -312,15 +481,15 @@ class ImportBooksUtil {
         return false;
       }
     }
-    if (typeof obj != "object" || Array.isArray(obj)) {
+    if (typeof value != "object" || Array.isArray(value)) {
       this.errors.push(label);
       return false;
     }
     return true;
   }
 
-  validateObjectProperty(obj: any, allowed: string[], label: string) {
-    const prop = Object.keys(obj).filter((key) => !allowed.includes(key));
+  validateObjectProperty(value: any, allowed: string[], label: string) {
+    const prop = Object.keys(value).filter((key) => !allowed.includes(key));
     if (prop.length) {
       this.errors.push(`${label}: 不明なプロパティがあります。${prop}`);
       return false;
