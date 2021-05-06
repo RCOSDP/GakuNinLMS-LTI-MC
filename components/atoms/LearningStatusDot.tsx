@@ -3,6 +3,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import { makeStyles } from "@material-ui/core/styles";
 import { learningStatus } from "$theme/colors";
 import type { LearningStatus } from "$server/models/learningStatus";
+import { grey } from "@material-ui/core/colors";
 
 const useStyles = makeStyles({
   root: {
@@ -15,6 +16,9 @@ const useStyles = makeStyles({
     },
     "&$unopened": {
       backgroundColor: learningStatus["unopened"],
+      // NOTE: ページ背景色とのコントラストが十分でないので枠線で視認性を向上する
+      border: "1px solid",
+      borderColor: grey[400],
     },
     "&$default": {
       width: 12,
