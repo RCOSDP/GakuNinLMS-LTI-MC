@@ -166,6 +166,12 @@ class ImportBooksUtil {
     book.createdAt = this.getDate(book.createdAt, `${errorLabel} 作成日`);
     book.updatedAt = this.getDate(book.updatedAt, `${errorLabel} 更新日`);
     book.keywords = this.getKeywords(book.keywords, `${errorLabel} キーワード`);
+    book.details = this.validateJson(
+      book.details,
+      true,
+      {},
+      `${errorLabel} 詳細`
+    );
 
     if (!this.validateList(book.sections, false, `${errorLabel} セクション`))
       return;
@@ -293,15 +299,20 @@ class ImportBooksUtil {
     );
     topic.resource.video = {
       create: {
-        providerUrl: this.validateUrl(
+        providerUrl: this.getProviderUrl(
           topic.resource.providerUrl,
-          false,
-          "",
+          topic.resource.url,
           `${errorLabel} 動画プロバイダーの識別子`
         ),
         tracks: this.getTracks(topic.resource.tracks, `${errorLabel} トラック`),
       },
     };
+    topic.resource.details = this.validateJson(
+      topic.resource.details,
+      true,
+      {},
+      `${errorLabel} 外部リソースの詳細`
+    );
     delete topic.resource.providerUrl;
     delete topic.resource.tracks;
 
@@ -311,6 +322,12 @@ class ImportBooksUtil {
         where: { url: topic.resource.url },
       },
     };
+    topic.details = this.validateJson(
+      topic.details,
+      true,
+      {},
+      `${errorLabel} 詳細`
+    );
     const topicSection = { order, topic: { create: topic } };
     return topicSection;
   }
@@ -328,13 +345,12 @@ class ImportBooksUtil {
       );
       error ||= err;
       if (err) continue;
-      const err2 = !this.validateObjectProperty(
+
+      this.validateObjectProperty(
         track,
         ImportBooksUtil.TRACK_KEYS,
         errorLabel
       );
-      error ||= err2;
-
       track.kind = this.validateString(
         track.kind,
         true,
@@ -356,6 +372,19 @@ class ImportBooksUtil {
     }
 
     return error ? {} : { create: tracks };
+  }
+
+  getProviderUrl(providerUrl: string, url: string, label: string) {
+    if (providerUrl == null) {
+      try {
+        return new URL("/", new URL(url)).toString();
+      } catch (e) {
+        this.errors.push(`${label}: 未指定です。URLを指定してください。`);
+        return "";
+      }
+    } else {
+      return this.validateUrl(providerUrl, false, "", label);
+    }
   }
 
   getDate(dateString: string, label: string) {
@@ -472,6 +501,32 @@ class ImportBooksUtil {
     return value;
   }
 
+  validateJson(
+    value: any,
+    nullable: boolean,
+    defaultValue: any,
+    label: string
+  ) {
+    if (value == null) {
+      if (!nullable)
+        this.errors.push(
+          `${label}: 未指定です。JSONオブジェクトを指定してください。`
+        );
+      return defaultValue;
+    }
+    if (typeof value != "object") {
+      this.errors.push(`${label}: JSONオブジェクトではありません。`);
+      return defaultValue;
+    }
+    try {
+      JSON.stringify(value);
+    } catch (e) {
+      this.errors.push(`${label}: JSONオブジェクトではありません。`);
+      return defaultValue;
+    }
+    return value;
+  }
+
   validateObject(value: any, nullable: boolean, label: string) {
     if (value == null) {
       if (nullable) {
@@ -497,7 +552,7 @@ class ImportBooksUtil {
     return true;
   }
 
-  validateList(list: any[], nullable: boolean, label: string) {
+  validateList(list: any, nullable: boolean, label: string) {
     if (list == null) {
       if (nullable) {
         return true;
