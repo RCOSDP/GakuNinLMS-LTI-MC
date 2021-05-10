@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, Fragment } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import LearningStatusDot from "$atoms/LearningStatusDot";
 import { gray } from "$theme/colors";
@@ -23,9 +23,15 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     whiteSpace: "nowrap",
-    "& > :not(:last-child)": {
-      marginRight: theme.spacing(1),
+    "& > *": {
+      margin: theme.spacing(0, 0.5),
     },
+  },
+  separator: {
+    borderRight: "1px solid",
+    color: gray[200],
+    height: 16,
+    padding: 0,
   },
 }));
 
@@ -48,22 +54,28 @@ export default function LearnerActivityItem(props: Props) {
       <span className={classes.name}>{learner.name}</span>
       <div className={classes.dots}>
         {activities.map((activity, index) => (
-          <LearningStatusDot
-            key={index}
-            tooltipProps={{
-              title: (
-                <>
-                  <p>{activity.learner.name}</p>
-                  <p>{activity.book.name}</p>
-                  <p>{activity.topic.name}</p>
-                </>
-              ),
-              arrow: true,
-            }}
-            onDotClick={handleActivityClick(activity)}
-            type={activity.status}
-            size="large"
-          />
+          <Fragment key={index}>
+            <LearningStatusDot
+              tooltipProps={{
+                title: (
+                  <>
+                    <p>{activity.learner.name}</p>
+                    <p>{activity.book.name}</p>
+                    <p>{activity.topic.name}</p>
+                    <p>{activity.status}</p>
+                  </>
+                ),
+                arrow: true,
+              }}
+              onDotClick={handleActivityClick(activity)}
+              type={activity.status}
+              size="large"
+            />
+            {activities[index - 1] &&
+              activities[index - 1].book.id !== activity.book.id && (
+                <div role="separator" className={classes.separator} />
+              )}
+          </Fragment>
         ))}
       </div>
     </div>
