@@ -1,9 +1,10 @@
-import gray from "./gray";
+import { green, grey } from "@material-ui/core/colors";
 
+// NOTE: a11yの観点で明度のみによる識別ができるよう上から明度が昇順になっている
 const learningStatus = {
-  completed: "#27ae60",
-  incompleted: "#f2c94c",
-  unopened: gray[600],
+  completed: green[900],
+  incompleted: green[300],
+  unopened: grey[300],
 };
 
 export default learningStatus;
