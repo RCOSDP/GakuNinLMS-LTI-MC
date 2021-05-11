@@ -192,15 +192,15 @@ export default function Dashboard(props: Props) {
         <TabPanel className={classes.learners} value={tabIndex} index={1}>
           <div className={classes.learnersLabel}>
             <div>
-              <LearningStatusDot type="completed" />
+              <LearningStatusDot status="completed" />
               <span>完了</span>
             </div>
             <div>
-              <LearningStatusDot type="incompleted" />
+              <LearningStatusDot status="incompleted" />
               <span>未完了</span>
             </div>
             <div>
-              <LearningStatusDot type="unopened" />
+              <LearningStatusDot status="unopened" />
               <span>未開封</span>
             </div>
           </div>

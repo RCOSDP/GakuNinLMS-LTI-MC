@@ -1,6 +1,6 @@
-import { useCallback, Fragment } from "react";
+import { Fragment } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import LearningStatusDot from "$atoms/LearningStatusDot";
+import LearnerActivityDot from "$atoms/LearnerActivityDot";
 import { gray } from "$theme/colors";
 import type { BookActivitySchema } from "$server/models/bookActivity";
 import type { LearnerSchema } from "$server/models/learner";
@@ -44,10 +44,6 @@ type Props = {
 export default function LearnerActivityItem(props: Props) {
   const { learner, activities, onActivityClick } = props;
   const classes = useStyles();
-  const handleActivityClick = useCallback(
-    (activity: BookActivitySchema) => () => onActivityClick?.(activity),
-    [onActivityClick]
-  );
 
   return (
     <div className={classes.root}>
@@ -55,21 +51,9 @@ export default function LearnerActivityItem(props: Props) {
       <div className={classes.dots}>
         {activities.map((activity, index) => (
           <Fragment key={index}>
-            <LearningStatusDot
-              tooltipProps={{
-                title: (
-                  <>
-                    <p>{activity.learner.name}</p>
-                    <p>{activity.book.name}</p>
-                    <p>{activity.topic.name}</p>
-                    <p>{activity.status}</p>
-                  </>
-                ),
-                arrow: true,
-              }}
-              onDotClick={handleActivityClick(activity)}
-              type={activity.status}
-              size="large"
+            <LearnerActivityDot
+              activity={activity}
+              onActivityClick={onActivityClick}
             />
             {activities[index - 1] &&
               activities[index - 1].book.id !== activity.book.id && (

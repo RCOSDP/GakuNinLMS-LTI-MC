@@ -7,6 +7,7 @@ import { LearnerSchema } from "$server/models/learner";
 import { LearningStatus } from "$server/models/learningStatus";
 import LearningStatusDot from "$atoms/LearningStatusDot";
 import useSelectorProps from "$utils/useSelectorProps";
+import { grey, common } from "@material-ui/core/colors";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -24,6 +25,24 @@ const useStyles = makeStyles((theme) => ({
       textDecoration: "underline",
     },
   },
+  menuHeader: {
+    display: "flex",
+    position: "sticky",
+    backgroundColor: common.white,
+    zIndex: 1,
+    top: 0,
+    alignItems: "center",
+    margin: 0,
+    padding: theme.spacing(1, 2),
+    "& > :first-child": {
+      marginRight: theme.spacing(0.5),
+    },
+    "& > h6": {
+      margin: 0,
+      fontSize: "0.875rem",
+      color: grey[700],
+    },
+  },
   button: {
     appearance: "none",
     border: "none",
@@ -38,13 +57,13 @@ const useStyles = makeStyles((theme) => ({
   clickable: {},
 }));
 
-function LearningStatusItem({
-  type,
+function LearningStatusLabel({
+  status,
   label,
   learners,
   onLearnerClick,
 }: {
-  type: LearningStatus;
+  status: LearningStatus;
   label: string;
   learners: Array<LearnerSchema>;
   onLearnerClick?(learner: LearnerSchema): void;
@@ -63,14 +82,14 @@ function LearningStatusItem({
   return (
     <>
       <button
-        aria-controls={`learner-activities-menu-${type}`}
+        aria-controls={`learner-activities-menu-${status}`}
         className={clsx(classes.item, classes.button, {
           [classes.clickable]: clickable,
         })}
         disabled={!clickable}
         onClick={onOpen}
       >
-        <LearningStatusDot type={type} />
+        <LearningStatusDot status={status} />
         <span>
           {label}
           {learners.length}人
@@ -78,9 +97,16 @@ function LearningStatusItem({
       </button>
       <Menu
         {...menuProps}
-        id={`learner-activities-menu-${type}`}
+        id={`learner-activities-menu-${status}`}
         aria-haspopup="true"
       >
+        <section className={classes.menuHeader}>
+          <LearningStatusDot status={status} />
+          <h6>
+            {label}
+            {learners.length}人
+          </h6>
+        </section>
         {[...learners].map((learner) => (
           <MenuItem key={learner.id} onClick={handleLearnerClick(learner)}>
             {learner.name}
@@ -99,7 +125,7 @@ type Props = {
   onLearnerClick?(learner: LearnerSchema): void;
 };
 
-export default function LearningStatusItems(props: Props) {
+export default function LearningStatusLabels(props: Props) {
   const {
     className,
     learners,
@@ -118,17 +144,17 @@ export default function LearningStatusItems(props: Props) {
     () =>
       [
         {
-          type: "completed",
+          status: "completed",
           label: "完了",
           learners: completedLearners,
         },
         {
-          type: "incompleted",
+          status: "incompleted",
           label: "未完了",
           learners: incompletedLearners,
         },
         {
-          type: "unopened",
+          status: "unopened",
           label: "未開封",
           learners: [...unopenedLearners].map(([id, name]) => ({ id, name })),
         },
@@ -140,7 +166,7 @@ export default function LearningStatusItems(props: Props) {
   return (
     <div className={clsx(className, classes.root)}>
       {items.map((item, index) => (
-        <LearningStatusItem
+        <LearningStatusLabel
           key={index}
           {...item}
           onLearnerClick={onLearnerClick}
