@@ -43,8 +43,5 @@ type Props = {
 export default function LearningStatusDot(props: Props) {
   const { status, size = "default" } = props;
   const classes = useStyles();
-  const dotProps = {
-    className: clsx(classes.root, classes[status], classes[size]),
-  };
-  return <div role="figure" {...dotProps} />;
+  return <svg className={clsx(classes.root, classes[status], classes[size])} />;
 }
