@@ -6,6 +6,7 @@ import {
 } from "$server/validators/booksImportParams";
 import prisma from "$server/utils/prisma";
 import findBook from "./findBook";
+import parse from "spdx-expression-parse";
 
 async function importBooksUtil(
   authorId: UserSchema["id"],
@@ -271,6 +272,13 @@ class ImportBooksUtil {
       true,
       `${errorLabel} 共有可否`
     );
+    topic.license = this.validateString(
+      topic.license,
+      true,
+      "",
+      `${errorLabel} ライセンス`
+    );
+    this.validateLicense(topic.license, errorLabel);
     topic.createdAt = this.getDate(topic.createdAt, `${errorLabel} 作成日`);
     topic.updatedAt = this.getDate(topic.updatedAt, `${errorLabel} 更新日`);
     topic.keywords = this.getKeywords(
@@ -372,6 +380,19 @@ class ImportBooksUtil {
     }
 
     return error ? {} : { create: tracks };
+  }
+
+  validateLicense(license: string, label: string) {
+    if (license == null || !license.length) {
+      return;
+    }
+    try {
+      parse(license);
+    } catch (e) {
+      this.errors.push(
+        `${label}: ライセンスを識別できません。https://spdx.org/licenses/ から有効なライセンスを選択してください。\n${e}`
+      );
+    }
   }
 
   getProviderUrl(providerUrl: string, url: string, label: string) {

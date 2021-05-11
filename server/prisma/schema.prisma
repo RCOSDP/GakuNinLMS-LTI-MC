@@ -74,6 +74,8 @@ model Topic {
   timeRequired Int            @map("time_required")
   /// 共有可否 (true: シェアする, それ以外: シェアしない)
   shared       Boolean        @default(true)
+  /// ライセンス (https://spdx.org/licenses/ に準拠するものを入力する)
+  license      String         @default("")
   /// 作成者
   creator      User           @relation(fields: [creatorId], references: [id])
   creatorId    Int            @map("creator_id")
