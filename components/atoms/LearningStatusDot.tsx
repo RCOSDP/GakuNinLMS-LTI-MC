@@ -43,5 +43,5 @@ type Props = {
 export default function LearningStatusDot(props: Props) {
   const { status, size = "default" } = props;
   const classes = useStyles();
-  return <svg className={clsx(classes.root, classes[status], classes[size])} />;
+  return <span role="figure" className={clsx(classes.root, classes[status], classes[size])} />;
 }
