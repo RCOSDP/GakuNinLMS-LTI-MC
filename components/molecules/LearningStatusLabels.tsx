@@ -101,13 +101,13 @@ function LearningStatusLabel({
         id={`learner-activities-menu-${status}`}
         aria-haspopup="true"
       >
-        <section className={classes.menuHeader}>
+        <header className={classes.menuHeader}>
           <LearningStatusDot status={status} />
           <h6>
             {label}
             {learners.length}人
           </h6>
-        </section>
+        </header>
         {[...learners].map((learner) => (
           <MenuItem key={learner.id} onClick={handleLearnerClick(learner)}>
             {learner.name}
