@@ -46,7 +46,7 @@ export default function LearningStatusDot(props: Props) {
   const classes = useStyles();
   return (
     <span
-      role="figure"
+      role="img"
       className={clsx(classes.root, classes[status], classes[size])}
     />
   );
