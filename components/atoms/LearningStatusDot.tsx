@@ -6,6 +6,7 @@ import { grey } from "@material-ui/core/colors";
 
 const useStyles = makeStyles({
   root: {
+    display: "block",
     borderRadius: 4,
     "&$completed": {
       backgroundColor: learningStatus["completed"],
