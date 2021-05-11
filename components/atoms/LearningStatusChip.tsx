@@ -2,6 +2,7 @@ import Chip from "@material-ui/core/Chip";
 import type { ChipProps } from "@material-ui/core/Chip";
 import { learningStatus } from "$theme/colors";
 import { makeStyles } from "@material-ui/core/styles";
+import label from "$utils/learningStatusLabel";
 import type { LearningStatus } from "$server/models/learningStatus";
 
 type StyleProps = {
@@ -22,12 +23,6 @@ type Props<Element extends React.ElementType> = ChipProps<
     type: LearningStatus;
   }
 >;
-
-const label: Readonly<{ [key in LearningStatus]: string }> = {
-  completed: "完了",
-  incompleted: "未完了",
-  unopened: "未開封",
-};
 
 export default function LearningStatusChip<Element extends React.ElementType>(
   props: Props<Element>

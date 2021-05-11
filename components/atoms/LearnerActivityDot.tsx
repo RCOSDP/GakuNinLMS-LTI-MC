@@ -1,6 +1,7 @@
 import { makeStyles } from "@material-ui/core/styles";
 import Tooltip from "@material-ui/core/Tooltip";
 import LearningStatusDot from "$atoms/LearningStatusDot";
+import label from "$utils/learningStatusLabel";
 import type { LearningStatus } from "$server/models/learningStatus";
 import type { BookActivitySchema } from "$server/models/bookActivity";
 
@@ -23,11 +24,6 @@ export default function LearnerActivityDot(props: Props) {
   const { activity, onActivityClick } = props;
   const classes = useStyles();
   const handleActivityClick = () => onActivityClick?.(activity);
-  const label = {
-    completed: "完了",
-    incompleted: "未完了",
-    unopened: "未開封",
-  } as const;
   return (
     <Tooltip
       title={

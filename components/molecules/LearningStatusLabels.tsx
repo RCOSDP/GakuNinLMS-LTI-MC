@@ -6,6 +6,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { LearnerSchema } from "$server/models/learner";
 import { LearningStatus } from "$server/models/learningStatus";
 import LearningStatusDot from "$atoms/LearningStatusDot";
+import label from "$utils/learningStatusLabel";
 import useSelectorProps from "$utils/useSelectorProps";
 import { grey, common } from "@material-ui/core/colors";
 
@@ -145,17 +146,17 @@ export default function LearningStatusLabels(props: Props) {
       [
         {
           status: "completed",
-          label: "完了",
+          label: label.completed,
           learners: completedLearners,
         },
         {
           status: "incompleted",
-          label: "未完了",
+          label: label.incompleted,
           learners: incompletedLearners,
         },
         {
           status: "unopened",
-          label: "未開封",
+          label: label.unopened,
           learners: [...unopenedLearners].map(([id, name]) => ({ id, name })),
         },
       ] as const,
