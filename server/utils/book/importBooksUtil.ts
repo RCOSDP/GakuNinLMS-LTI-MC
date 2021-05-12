@@ -179,7 +179,7 @@ class ImportBooksUtil {
     const sections = [];
     for (const [index, bookSection] of book.sections.entries()) {
       this.errorLabelSection = `セクション${index + 1}件目`;
-      sections.push(this.getSection(bookSection, index + 1));
+      sections.push(this.getSection(bookSection, index));
     }
     book.sections = { create: sections };
     book.timeRequired = this.timeRequired;
@@ -215,7 +215,7 @@ class ImportBooksUtil {
     const topicSections = [];
     for (const [index, sectionTopic] of bookSection.topics.entries()) {
       this.errorLabelTopic = `トピック${index + 1}件目`;
-      topicSections.push(this.getTopicSection(sectionTopic, index + 1));
+      topicSections.push(this.getTopicSection(sectionTopic, index));
     }
     section.topicSections = { create: topicSections };
     return section;
