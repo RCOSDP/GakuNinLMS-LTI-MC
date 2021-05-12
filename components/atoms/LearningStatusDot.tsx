@@ -1,12 +1,13 @@
 import clsx from "clsx";
-import Tooltip from "@material-ui/core/Tooltip";
 import { makeStyles } from "@material-ui/core/styles";
 import { learningStatus } from "$theme/colors";
+import label from "$utils/learningStatusLabel";
 import type { LearningStatus } from "$server/models/learningStatus";
 import { grey } from "@material-ui/core/colors";
 
 const useStyles = makeStyles({
   root: {
+    display: "block",
     borderRadius: 4,
     "&$completed": {
       backgroundColor: learningStatus["completed"],
@@ -37,31 +38,18 @@ const useStyles = makeStyles({
 });
 
 type Props = {
-  type: LearningStatus;
+  status: LearningStatus;
   size?: "default" | "large";
-  tooltipProps?: Omit<React.ComponentProps<typeof Tooltip>, "children">;
-  onDotClick?(): void;
 };
 
 export default function LearningStatusDot(props: Props) {
-  const { type, size = "default", onDotClick, tooltipProps } = props;
+  const { status, size = "default" } = props;
   const classes = useStyles();
-  const handleClick = () => {
-    onDotClick?.();
-  };
-  const handleKeyPress = () => {
-    onDotClick?.();
-  };
-  const dotProps = {
-    className: clsx(classes.root, classes[type], classes[size]),
-    onClick: handleClick,
-    onKeyPress: handleKeyPress,
-    role: onDotClick ? "button" : undefined,
-  };
-  if (!tooltipProps) return <div {...dotProps} />;
   return (
-    <Tooltip {...tooltipProps}>
-      <div {...dotProps} />
-    </Tooltip>
+    <span
+      role="img"
+      aria-label={label[status]}
+      className={clsx(classes.root, classes[status], classes[size])}
+    />
   );
 }

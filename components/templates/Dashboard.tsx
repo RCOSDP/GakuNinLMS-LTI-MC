@@ -21,6 +21,7 @@ import type { SessionSchema } from "$server/models/session";
 import type { LearnerSchema } from "$server/models/learner";
 import { gray } from "$theme/colors";
 import download from "$utils/bookLearningActivity/download";
+import label from "$utils/learningStatusLabel";
 import getLearnerActivities from "$utils/getLearnerActivities";
 import getActivitiesByBooks from "$utils/getActivitiesByBooks";
 import useDialogProps from "$utils/useDialogProps";
@@ -192,16 +193,16 @@ export default function Dashboard(props: Props) {
         <TabPanel className={classes.learners} value={tabIndex} index={1}>
           <div className={classes.learnersLabel}>
             <div>
-              <LearningStatusDot type="completed" />
-              <span>完了</span>
+              <LearningStatusDot status="completed" />
+              <span>{label.completed}</span>
             </div>
             <div>
-              <LearningStatusDot type="incompleted" />
-              <span>未完了</span>
+              <LearningStatusDot status="incompleted" />
+              <span>{label.incompleted}</span>
             </div>
             <div>
-              <LearningStatusDot type="unopened" />
-              <span>未開封</span>
+              <LearningStatusDot status="unopened" />
+              <span>{label.unopened}</span>
             </div>
           </div>
           {learnerActivities.map(([learner, activities], index) => (

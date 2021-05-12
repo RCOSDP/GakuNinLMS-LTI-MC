@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
-import LearningStatusItems from "$molecules/LearningStatusItems";
+import LearningStatusLabels from "$molecules/LearningStatusLabels";
 import { learningStatus, gray } from "$theme/colors";
 import useLineClampStyles from "$styles/lineClamp";
 import { BookSchema } from "$server/models/book";
@@ -110,7 +110,7 @@ export default function LearningActivityItem(props: Props) {
           completedCount={completedCount}
           incompletedCount={incompletedCount}
         />
-        <LearningStatusItems
+        <LearningStatusLabels
           learners={learners}
           completedLearners={[...completedLearners.values()].map(
             ([{ learner }]) => learner
