@@ -1,6 +1,7 @@
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
 import { learningStatus } from "$theme/colors";
+import label from "$utils/learningStatusLabel";
 import type { LearningStatus } from "$server/models/learningStatus";
 import { grey } from "@material-ui/core/colors";
 
@@ -47,6 +48,7 @@ export default function LearningStatusDot(props: Props) {
   return (
     <span
       role="img"
+      aria-label={label[status]}
       className={clsx(classes.root, classes[status], classes[size])}
     />
   );
