@@ -1,6 +1,8 @@
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import clsx from "clsx";
 import format from "date-fns/format";
+import { useRemark } from "react-remark";
+import strip from "strip-markdown";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import IconButton from "@material-ui/core/IconButton";
@@ -103,6 +105,10 @@ const useStyles = makeStyles((theme) => ({
   description: {
     color: gray[700],
     margin: 0,
+    "& > *": {
+      display: "inline",
+      margin: 0,
+    },
   },
   selected: {
     backgroundColor: primary[50],
@@ -134,6 +140,10 @@ export default function TopicPreview(props: Props) {
   const handle = (handler: (topic: TopicSchema) => void) => () => {
     handler(topic);
   };
+  const [description, setDescription] = useRemark({ remarkPlugins: [strip] });
+  useEffect(() => {
+    setDescription(topic.description);
+  }, [setDescription, topic.description]);
   return (
     <Card
       classes={cardClasses}
@@ -172,7 +182,7 @@ export default function TopicPreview(props: Props) {
           lineClamp.placeholder
         )}
       >
-        {topic.description}
+        {description}
       </p>
       <Button size="small" color="primary" onClick={handle(onTopicDetailClick)}>
         もっと詳しく...
