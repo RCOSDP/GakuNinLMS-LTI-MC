@@ -60,7 +60,6 @@
     "react-hook-form": "^6.15.4",
     "react-infinite-scroll-hook": "^3.0.0",
     "react-markdown": "^6.0.2",
-    "react-remark": "^2.0.3",
     "remark-gfm": "^1.0.0",
     "strict-event-emitter-types": "^2.0.0",
     "strip-markdown": "^4.0.0",

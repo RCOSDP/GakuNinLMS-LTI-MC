@@ -1,7 +1,7 @@
 import { ReactNode, useEffect } from "react";
 import clsx from "clsx";
 import format from "date-fns/format";
-import { useRemark } from "react-remark";
+import Markdown from "react-markdown";
 import strip from "strip-markdown";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
@@ -140,10 +140,6 @@ export default function TopicPreview(props: Props) {
   const handle = (handler: (topic: TopicSchema) => void) => () => {
     handler(topic);
   };
-  const [description, setDescription] = useRemark({ remarkPlugins: [strip] });
-  useEffect(() => {
-    setDescription(topic.description);
-  }, [setDescription, topic.description]);
   return (
     <Card
       classes={cardClasses}
@@ -175,15 +171,15 @@ export default function TopicPreview(props: Props) {
         <Item itemKey="更新日" value={format(topic.updatedAt, "yyyy.MM.dd")} />
         <Item itemKey="作成者" value={topic.creator.name} />
       </div>
-      <p
+      <div
         className={clsx(
           classes.description,
           lineClamp.clamp,
           lineClamp.placeholder
         )}
       >
-        {description}
-      </p>
+        <Markdown remarkPlugins={[strip]}>{topic.description}</Markdown>
+      </div>
       <Button size="small" color="primary" onClick={handle(onTopicDetailClick)}>
         もっと詳しく...
       </Button>
