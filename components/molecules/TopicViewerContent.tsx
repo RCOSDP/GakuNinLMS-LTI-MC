@@ -2,6 +2,8 @@ import clsx from "clsx";
 import { TopicSchema } from "$server/models/topic";
 import { format, formatDuration, intervalToDuration } from "date-fns";
 import { ja } from "date-fns/locale";
+import Markdown from "react-markdown";
+import gfm from "remark-gfm";
 import Typography from "@material-ui/core/Typography";
 import { useTheme, makeStyles } from "@material-ui/core/styles";
 import Video from "$organisms/Video";
@@ -45,7 +47,6 @@ const useStyles = makeStyles((theme) => ({
   },
   description: {
     margin: theme.spacing(2.5, 0, 2),
-    whiteSpace: "pre-wrap",
   },
 }));
 
@@ -101,7 +102,9 @@ export default function TopicViewerContent(props: Props) {
         <Item itemKey="更新日" value={format(topic.updatedAt, "yyyy.MM.dd")} />
         <Item itemKey="作成者" value={topic.creator.name} />
       </div>
-      <p className={classes.description}>{topic.description}</p>
+      <article className={classes.description}>
+        <Markdown remarkPlugins={[gfm]}>{topic.description}</Markdown>
+      </article>
     </>
   );
 }

@@ -235,7 +235,21 @@ export default function TopicForm(props: Props) {
           </Button>
         </div>
         <TextField
-          label="解説"
+          label={
+            <>
+              解説
+              <Typography
+                className={classes.labelDescription}
+                variant="caption"
+                component="span"
+              >
+                <a href="https://github.github.com/gfm/">
+                  GitHub Flavored Markdown
+                </a>
+                に対応しています
+              </Typography>
+            </>
+          }
           fullWidth
           multiline
           name="description"
