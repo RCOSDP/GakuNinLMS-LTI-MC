@@ -76,6 +76,8 @@ const useStyles = makeStyles((theme) => ({
   },
   learnersLabel: {
     marginBottom: theme.spacing(2),
+    position: "sticky",
+    left: 0,
     "& > :not(:last-child)": {
       marginRight: theme.spacing(1.5),
     },

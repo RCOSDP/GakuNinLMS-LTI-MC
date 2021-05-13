@@ -1,5 +1,6 @@
 import { Fragment } from "react";
 import { makeStyles } from "@material-ui/core/styles";
+import { common } from "@material-ui/core/colors";
 import LearnerActivityDot from "$atoms/LearnerActivityDot";
 import { gray } from "$theme/colors";
 import type { BookActivitySchema } from "$server/models/bookActivity";
@@ -18,6 +19,10 @@ const useStyles = makeStyles((theme) => ({
     whiteSpace: "nowrap",
     textOverflow: "ellipsis",
     marginRight: "1rem",
+    position: "sticky",
+    left: 0,
+    backgroundColor: common.white,
+    borderRight: `1px solid ${gray[200]}`,
   },
   dots: {
     display: "flex",
