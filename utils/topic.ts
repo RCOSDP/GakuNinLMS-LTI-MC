@@ -22,14 +22,6 @@ export async function createTopic(body: TopicProps): Promise<TopicSchema> {
   return res;
 }
 
-export async function connectOrCreateTopic(
-  topic: TopicSchema,
-  isTopicEditable: (topic: Pick<TopicSchema, "creator">) => boolean
-) {
-  if (isTopicEditable(topic)) return topic;
-  return createTopic(topic);
-}
-
 export async function updateTopic({
   id,
   ...body

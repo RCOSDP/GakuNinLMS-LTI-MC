@@ -3,13 +3,24 @@ import videojs, { VideoJsPlayer, VideoJsPlayerOptions } from "video.js";
 import ja from "video.js/dist/lang/ja.json";
 import "videojs-youtube";
 import "videojs-seek-buttons";
+import clsx from "clsx";
+import { makeStyles } from "@material-ui/core/styles";
 import { usePlayerTrackingAtom } from "$store/playerTracker";
 import volumePersister from "$utils/volumePersister";
 
 type VideoJsProps = {
+  className?: string;
   options: VideoJsPlayerOptions;
   tracks?: videojs.TextTrackOptions[];
 };
+
+const useStyles = makeStyles({
+  vjsLargeText: {
+    "& .vjs-modal-dialog-content": {
+      fontSize: "1.5rem !important",
+    },
+  },
+});
 
 const defaultOptions: VideoJsPlayerOptions = {
   controls: true,
@@ -23,9 +34,10 @@ const defaultOptions: VideoJsPlayerOptions = {
   languages: { ja },
 };
 
-export function VideoJs({ options, tracks }: VideoJsProps) {
+export function VideoJs({ className, options, tracks }: VideoJsProps) {
   const ref = useRef(document.createElement("div"));
   const tracking = usePlayerTrackingAtom();
+  const classes = useStyles();
   useEffect(() => {
     const { current } = ref;
     const element = document.createElement("video-js");
@@ -38,7 +50,7 @@ export function VideoJs({ options, tracks }: VideoJsProps) {
       back: 15,
     });
     player.ready(() => {
-      tracking(player);
+      tracking({ player });
       volumePersister(player);
     });
     return () => {
@@ -65,5 +77,13 @@ export function VideoJs({ options, tracks }: VideoJsProps) {
         .filter(Boolean) ?? []) as HTMLTrackElement[];
     });
   }, [tracks]);
-  return <div ref={ref} />;
+  return (
+    <div
+      className={clsx(
+        className,
+        classes.vjsLargeText // NOTE: Video.jsのエラーメッセージを読みやすくする目的
+      )}
+      ref={ref}
+    />
+  );
 }

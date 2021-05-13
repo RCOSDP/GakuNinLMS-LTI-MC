@@ -20,3 +20,6 @@ export const BookNotFound = BookNotFoundProblem;
 
 import TopicNotFoundProblem from "./TopicNotFoundProblem";
 export const TopicNotFound = TopicNotFoundProblem;
+
+import EmbedProblem from "./EmbedProblem";
+export const Embed = EmbedProblem;

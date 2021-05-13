@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
     flexWrap: "wrap",
     // NOTE: actionにもたせたかったのはspacing(2)で、
     // 残りの余分なspacing(2)はstickyで張り付く際のネガティブマージン
-    // See also https://github.com/npocccties/ChibiCHiLO/pull/243#issuecomment-785729721
+    // See also https://github.com/npocccties/chibichilo/pull/243#issuecomment-785729721
     paddingTop: theme.spacing(4),
     "& > *": {
       marginRight: theme.spacing(2),
