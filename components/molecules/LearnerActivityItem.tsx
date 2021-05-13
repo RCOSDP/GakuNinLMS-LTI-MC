@@ -18,6 +18,7 @@ const useStyles = makeStyles((theme) => ({
     width: "10rem",
     whiteSpace: "nowrap",
     textOverflow: "ellipsis",
+    overflow: "hidden",
     marginRight: "1rem",
     position: "sticky",
     left: 0,
