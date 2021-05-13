@@ -4,6 +4,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import Button from "@material-ui/core/Button";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
+import Link from "@material-ui/core/Link";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Autocomplete from "@material-ui/lab/Autocomplete";
@@ -243,9 +244,13 @@ export default function TopicForm(props: Props) {
                 variant="caption"
                 component="span"
               >
-                <a href="https://github.github.com/gfm/">
+                <Link
+                  href="https://github.github.com/gfm/"
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   GitHub Flavored Markdown
-                </a>
+                </Link>
                 に対応しています
               </Typography>
             </>
