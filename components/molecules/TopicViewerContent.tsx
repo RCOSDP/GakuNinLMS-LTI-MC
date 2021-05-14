@@ -2,7 +2,11 @@ import clsx from "clsx";
 import { TopicSchema } from "$server/models/topic";
 import { format, formatDuration, intervalToDuration } from "date-fns";
 import { ja } from "date-fns/locale";
+import Markdown from "react-markdown";
+import gfm from "remark-gfm";
 import Typography from "@material-ui/core/Typography";
+import Link from "@material-ui/core/Link";
+import type { LinkProps } from "@material-ui/core/Link";
 import { useTheme, makeStyles } from "@material-ui/core/styles";
 import Video from "$organisms/Video";
 import Item from "$atoms/Item";
@@ -10,6 +14,12 @@ import useStickyProps from "$utils/useStickyProps";
 import languages from "$utils/languages";
 import { NEXT_PUBLIC_VIDEO_MAX_HEIGHT } from "$utils/env";
 import { gray } from "$theme/colors";
+
+function MarkdownLink<Element extends React.ElementType>(
+  props: LinkProps<Element>
+) {
+  return <Link target="_blank" rel="noreferrer" {...props} />;
+}
 
 function formatInterval(start: Date | number, end: Date | number) {
   const duration = intervalToDuration({ start, end });
@@ -45,7 +55,6 @@ const useStyles = makeStyles((theme) => ({
   },
   description: {
     margin: theme.spacing(2.5, 0, 2),
-    whiteSpace: "pre-wrap",
   },
 }));
 
@@ -66,6 +75,9 @@ export default function TopicViewerContent(props: Props) {
     zIndex: 1,
     dialog,
   });
+  const components = {
+    a: MarkdownLink,
+  };
   return (
     <>
       {"providerUrl" in topic.resource && (
@@ -101,7 +113,11 @@ export default function TopicViewerContent(props: Props) {
         <Item itemKey="更新日" value={format(topic.updatedAt, "yyyy.MM.dd")} />
         <Item itemKey="作成者" value={topic.creator.name} />
       </div>
-      <p className={classes.description}>{topic.description}</p>
+      <article className={classes.description}>
+        <Markdown remarkPlugins={[gfm]} components={components}>
+          {topic.description}
+        </Markdown>
+      </article>
     </>
   );
 }

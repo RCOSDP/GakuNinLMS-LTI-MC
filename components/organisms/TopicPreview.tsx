@@ -1,6 +1,9 @@
 import { ReactNode } from "react";
 import clsx from "clsx";
 import format from "date-fns/format";
+import Markdown from "react-markdown";
+import gfm from "remark-gfm";
+import strip from "strip-markdown";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import IconButton from "@material-ui/core/IconButton";
@@ -172,7 +175,13 @@ export default function TopicPreview(props: Props) {
           lineClamp.placeholder
         )}
       >
-        {topic.description}
+        <Markdown
+          remarkPlugins={[gfm, [strip, { keep: ["delete"] }]]}
+          allowedElements={["del"]}
+          unwrapDisallowed
+        >
+          {topic.description}
+        </Markdown>
       </p>
       <Button size="small" color="primary" onClick={handle(onTopicDetailClick)}>
         もっと詳しく...
