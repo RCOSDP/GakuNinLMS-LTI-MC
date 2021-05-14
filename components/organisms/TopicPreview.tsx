@@ -176,8 +176,8 @@ export default function TopicPreview(props: Props) {
         )}
       >
         <Markdown
-          remarkPlugins={[gfm, strip]}
-          allowedElements={[]}
+          remarkPlugins={[gfm, [strip, { keep: ["delete"] }]]}
+          allowedElements={["del"]}
           unwrapDisallowed
         >
           {topic.description}
