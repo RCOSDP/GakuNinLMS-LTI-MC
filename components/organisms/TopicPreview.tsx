@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 import clsx from "clsx";
 import format from "date-fns/format";
 import Markdown from "react-markdown";
+import gfm from "remark-gfm";
 import strip from "strip-markdown";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
@@ -105,10 +106,6 @@ const useStyles = makeStyles((theme) => ({
   description: {
     color: gray[700],
     margin: 0,
-    "& > *": {
-      display: "inline",
-      margin: 0,
-    },
   },
   selected: {
     backgroundColor: primary[50],
@@ -171,15 +168,21 @@ export default function TopicPreview(props: Props) {
         <Item itemKey="更新日" value={format(topic.updatedAt, "yyyy.MM.dd")} />
         <Item itemKey="作成者" value={topic.creator.name} />
       </div>
-      <div
+      <p
         className={clsx(
           classes.description,
           lineClamp.clamp,
           lineClamp.placeholder
         )}
       >
-        <Markdown remarkPlugins={[strip]}>{topic.description}</Markdown>
-      </div>
+        <Markdown
+          remarkPlugins={[gfm, strip]}
+          allowedElements={[]}
+          unwrapDisallowed
+        >
+          {topic.description}
+        </Markdown>
+      </p>
       <Button size="small" color="primary" onClick={handle(onTopicDetailClick)}>
         もっと詳しく...
       </Button>
