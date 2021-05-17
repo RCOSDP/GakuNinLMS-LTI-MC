@@ -4,7 +4,7 @@ import LearningStatusDot from "$atoms/LearningStatusDot";
 import label from "$utils/learningStatusLabel";
 import type { BookActivitySchema } from "$server/models/bookActivity";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   button: {
     appearance: "none",
     border: "none",
@@ -12,7 +12,20 @@ const useStyles = makeStyles({
     padding: 0,
     cursor: "pointer",
   },
-});
+  descriptionList: {
+    "& > div": {
+      display: "flex",
+      flexWrap: "wrap",
+      margin: theme.spacing(0.5, 0),
+    },
+    "& dt, & dd": {
+      margin: 0,
+    },
+  },
+  delimiter: {
+    marginRight: theme.spacing(0.5),
+  },
+}));
 
 type Props = {
   activity: BookActivitySchema;
@@ -26,12 +39,44 @@ export default function LearnerActivityDot(props: Props) {
   return (
     <Tooltip
       title={
-        <>
-          <p>学習者: {activity.learner.name}</p>
-          <p>ブック: {activity.book.name}</p>
-          <p>トピック: {activity.topic.name}</p>
-          <p>ステータス: {label[activity.status]}</p>
-        </>
+        <dl className={classes.descriptionList}>
+          <div>
+            <dt>
+              学習者
+              <span className={classes.delimiter} aria-hidden>
+                :
+              </span>
+            </dt>
+            <dd>{activity.learner.name}</dd>
+          </div>
+          <div>
+            <dt>
+              ブック
+              <span className={classes.delimiter} aria-hidden>
+                :
+              </span>
+            </dt>
+            <dd>{activity.book.name}</dd>
+          </div>
+          <div>
+            <dt>
+              トピック
+              <span className={classes.delimiter} aria-hidden>
+                :
+              </span>
+            </dt>
+            <dd>{activity.topic.name}</dd>
+          </div>
+          <div>
+            <dt>
+              ステータス
+              <span className={classes.delimiter} aria-hidden>
+                :
+              </span>
+            </dt>
+            <dd>{label[activity.status]}</dd>
+          </div>
+        </dl>
       }
       arrow
     >
