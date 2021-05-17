@@ -1,7 +1,7 @@
 import { makeStyles } from "@material-ui/core/styles";
 import Tooltip from "@material-ui/core/Tooltip";
 import LearningStatusDot from "$atoms/LearningStatusDot";
-import label from "$utils/learningStatusLabel";
+import learningStatusLabel from "$utils/learningStatusLabel";
 import type { BookActivitySchema } from "$server/models/bookActivity";
 
 const useStyles = makeStyles((theme) => ({
@@ -36,46 +36,39 @@ export default function LearnerActivityDot(props: Props) {
   const { activity, onActivityClick } = props;
   const classes = useStyles();
   const handleActivityClick = () => onActivityClick?.(activity);
+  const items = [
+    {
+      label: "学習者",
+      value: activity.learner.name,
+    },
+    {
+      label: "ブック",
+      value: activity.book.name,
+    },
+    {
+      label: "トピック",
+      value: activity.topic.name,
+    },
+    {
+      label: "ステータス",
+      value: learningStatusLabel[activity.status],
+    },
+  ] as const;
   return (
     <Tooltip
       title={
         <dl className={classes.descriptionList}>
-          <div>
-            <dt>
-              学習者
-              <span className={classes.delimiter} aria-hidden>
-                :
-              </span>
-            </dt>
-            <dd>{activity.learner.name}</dd>
-          </div>
-          <div>
-            <dt>
-              ブック
-              <span className={classes.delimiter} aria-hidden>
-                :
-              </span>
-            </dt>
-            <dd>{activity.book.name}</dd>
-          </div>
-          <div>
-            <dt>
-              トピック
-              <span className={classes.delimiter} aria-hidden>
-                :
-              </span>
-            </dt>
-            <dd>{activity.topic.name}</dd>
-          </div>
-          <div>
-            <dt>
-              ステータス
-              <span className={classes.delimiter} aria-hidden>
-                :
-              </span>
-            </dt>
-            <dd>{label[activity.status]}</dd>
-          </div>
+          {items.map((item, index) => (
+            <div key={index}>
+              <dt>
+                {item.label}
+                <span className={classes.delimiter} aria-hidden>
+                  :
+                </span>
+              </dt>
+              <dd>{item.value}</dd>
+            </div>
+          ))}
         </dl>
       }
       arrow
