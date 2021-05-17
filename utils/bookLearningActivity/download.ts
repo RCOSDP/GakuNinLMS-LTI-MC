@@ -1,7 +1,6 @@
 import { flatten } from "flat";
 import jsonexport from "jsonexport";
 import type { UserHandlers } from "jsonexport";
-import formatISO from "date-fns/formatISO";
 import { BookActivitySchema } from "$server/models/bookActivity";
 
 const bom = "\uFEFF";
@@ -25,7 +24,7 @@ const jsonexportHandlers: UserHandlers = {
   },
   typeHandlers: {
     Object: (value) => {
-      if (value instanceof Date) return formatISO(value);
+      if (value instanceof Date) return value.toLocaleString();
       return value;
     },
   },
