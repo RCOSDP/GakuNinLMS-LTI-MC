@@ -10,7 +10,6 @@ const headers: Readonly<{ [key: string]: string }> = {
   "learner.name": "ユーザ名",
   "topic.id": "トピックID",
   "topic.name": "トピック名",
-  completed: "完了",
   totalTimeMs: "ユニーク学習時間 (ms)",
   createdAt: "初回アクセス日時",
   updatedAt: "最終アクセス日時",
@@ -38,7 +37,10 @@ const jsonexportHandlers: UserHandlers = {
  */
 async function download(data: BookActivitySchema[], filename: string) {
   const flattenData = data.map((a) => flatten(a));
-  const csv = await jsonexport(flattenData, { ...jsonexportHandlers });
+  const csv = await jsonexport(flattenData, {
+    headers: Object.keys(headers),
+    ...jsonexportHandlers,
+  });
   const file = new File([bom, csv], filename, { type: "text/csv" });
   const dataUrl = URL.createObjectURL(file);
   const anchor = document.createElement("a");
