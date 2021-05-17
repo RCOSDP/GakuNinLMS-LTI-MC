@@ -26,7 +26,7 @@ CSV ファイルの各カラムの詳細は次のとおりです。
 | `トピックID`            | `topics.id`                | トピック - 識別子                                                       |
 | `トピック名`            | `topics.name`              | トピック - トピック名称                                                 |
 | `ステータス`            | -                          | 学習状況 - 完了: "completed", 未完了: "incompleted", 未開封: "unopened" |
-| `完了`                  | -                          | 学習状況が完了か否か - 完了: "true", 未完了: "false"                    |
+| `完了`                  | -                          | 学習状況が完了か否か - 完了: "true", それ以外: "false"                  |
 | `ユニーク学習時間 (ms)` | `activities.total_time_ms` | 学習活動 - 合計時間 (ms)                                                |
 | `初回アクセス日時`      | `activities.created_at`    | 学習活動 - 作成日                                                       |
 | `最終アクセス日時`      | `activities.updated_at`    | 学習活動 - 更新日                                                       |
