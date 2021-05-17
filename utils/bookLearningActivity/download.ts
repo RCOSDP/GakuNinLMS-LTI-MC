@@ -17,7 +17,7 @@ const headers: Readonly<{ [key: string]: string }> = {
   updatedAt: "最終アクセス日時",
   "book.id": "ブックID",
   "book.name": "ブック名",
-  status: "ステータス",
+  status: "学習状況",
 };
 
 const jsonexportHandlers: UserHandlers = {
