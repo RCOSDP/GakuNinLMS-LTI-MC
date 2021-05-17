@@ -21,6 +21,7 @@ rules:
   "@typescript-eslint/no-unused-vars":
     - "error"
     - varsIgnorePattern: "^_"
+      ignoreRestSiblings: true
   react/react-in-jsx-scope: "off"
   filenames/match-exported: error
   tsc/config: [error, { configFile: "tsconfig.json" }]
