@@ -11,7 +11,12 @@ const bom = "\uFEFF";
  */
 async function download(data: BookActivitySchema[], filename: string) {
   const flattenData = data.map((a) => flatten(a));
-  const csv = await jsonexport(flattenData);
+  const csv = await jsonexport(flattenData, {
+    mapHeaders: (header) =>
+      header
+        .replace(/^createdAt$/, "初回アクセス日")
+        .replace(/^updatedAt$/, "最終アクセス日"),
+  });
   const file = new File([bom, csv], filename, { type: "text/csv" });
   const dataUrl = URL.createObjectURL(file);
   const anchor = document.createElement("a");
