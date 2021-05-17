@@ -27,10 +27,10 @@ export default function LearnerActivityDot(props: Props) {
     <Tooltip
       title={
         <>
-          <p>{activity.learner.name}</p>
-          <p>{activity.book.name}</p>
-          <p>{activity.topic.name}</p>
-          <p>{label[activity.status]}</p>
+          <p>学習者: {activity.learner.name}</p>
+          <p>ブック: {activity.book.name}</p>
+          <p>トピック: {activity.topic.name}</p>
+          <p>ステータス: {label[activity.status]}</p>
         </>
       }
       arrow
