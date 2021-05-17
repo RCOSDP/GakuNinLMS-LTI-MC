@@ -5,20 +5,24 @@ import { BookActivitySchema } from "$server/models/bookActivity";
 
 const bom = "\uFEFF";
 
+const headers: Readonly<{ [key: string]: string }> = {
+  "learner.id": "ユーザID",
+  "learner.name": "ユーザ名",
+  "topic.id": "トピックID",
+  "topic.name": "トピック名",
+  completed: "完了",
+  totalTimeMs: "ユニーク学習時間 (ms)",
+  createdAt: "初回アクセス日時",
+  updatedAt: "最終アクセス日時",
+  "book.id": "ブックID",
+  "book.name": "ブック名",
+  status: "ステータス",
+};
+
 const jsonexportHandlers: UserHandlers = {
-  mapHeaders: (header) =>
-    header
-      .replace(/^learner\.id$/, "ユーザID")
-      .replace(/^learner\.name$/, "ユーザ名")
-      .replace(/^topic\.id$/, "トピックID")
-      .replace(/^topic\.name$/, "トピック名")
-      .replace(/^completed$/, "完了")
-      .replace(/^totalTimeMs$/, "ユニーク学習時間 (ms)")
-      .replace(/^createdAt$/, "初回アクセス日時")
-      .replace(/^updatedAt$/, "最終アクセス日時")
-      .replace(/^book\.id$/, "ブックID")
-      .replace(/^book\.name$/, "ブック名")
-      .replace(/^status$/, "ステータス"),
+  mapHeaders: (header) => {
+    return headers[header];
+  },
   typeHandlers: {
     Object: (value) => {
       if (value instanceof Date) return value.toISOString();
