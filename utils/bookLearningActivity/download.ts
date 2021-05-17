@@ -1,8 +1,6 @@
 import { flatten } from "flat";
 import jsonexport from "jsonexport";
 import type { UserHandlers } from "jsonexport";
-import formatISO from "date-fns/formatISO";
-import utcToZonedTime from "date-fns-tz/utcToZonedTime";
 import { BookActivitySchema } from "$server/models/bookActivity";
 
 const bom = "\uFEFF";
@@ -26,11 +24,7 @@ const jsonexportHandlers: UserHandlers = {
   },
   typeHandlers: {
     Object: (value) => {
-      if (value instanceof Date) {
-        // NOTE: JST (≒UTC+9) 固定
-        const date = utcToZonedTime(value, "Asia/Tokyo");
-        return formatISO(date);
-      }
+      if (value instanceof Date) return value.toISOString();
       return value;
     },
   },
