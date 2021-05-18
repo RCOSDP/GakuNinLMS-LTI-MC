@@ -36,7 +36,13 @@ const jsonexportHandlers: UserHandlers = {
  * @param filename ダウンロードするファイル名
  */
 async function download(data: BookActivitySchema[], filename: string) {
-  const flattenData = data.map((a) => flatten(a));
+  const flattenData = data.map((a) =>
+    Object.fromEntries(
+      Object.entries(flatten(a)).filter(([key]) => {
+        return Object.keys(headers).includes(key);
+      })
+    )
+  );
   const csv = await jsonexport(flattenData, {
     ...jsonexportHandlers,
   });
