@@ -38,9 +38,7 @@ const jsonexportHandlers: UserHandlers = {
 async function download(data: BookActivitySchema[], filename: string) {
   const flattenData = data.map((a) =>
     Object.fromEntries(
-      Object.entries(flatten(a)).filter(([key]) =>
-        Object.keys(headers).includes(key)
-      )
+      Object.entries(flatten(a)).filter(([key]) => key in headers)
     )
   );
   const csv = await jsonexport(flattenData, {
