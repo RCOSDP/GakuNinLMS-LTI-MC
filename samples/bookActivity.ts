@@ -4,8 +4,10 @@ import topic from "./topic";
 import activity from "./activity";
 import type { BookActivitySchema } from "$server/models/bookActivity";
 
+const { completed, ...activityWithoutCompleted } = activity;
+
 const bookActivity: BookActivitySchema = {
-  ...activity,
+  ...activityWithoutCompleted,
   book: {
     id: book.id,
     name: book.name,

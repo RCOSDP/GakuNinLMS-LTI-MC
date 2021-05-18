@@ -50,7 +50,7 @@ export default function LearnerActivityDot(props: Props) {
       value: activity.topic.name,
     },
     {
-      label: "ステータス",
+      label: "学習状況",
       value: learningStatusLabel[activity.status],
     },
   ] as const;
