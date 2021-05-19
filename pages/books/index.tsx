@@ -33,6 +33,11 @@ function Index() {
         pagesPath.book.new.$url({ query: { context: "books" } })
       );
     },
+    onBooksImportClick() {
+      return router.push(
+        pagesPath.books.import.$url({ query: { context: "books" } })
+      );
+    },
     onTopicEditClick({ id }: Pick<TopicSchema, "id">) {
       return router.push(
         pagesPath.books.topic.edit.$url({

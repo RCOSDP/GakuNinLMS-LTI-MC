@@ -33,6 +33,7 @@ export type Props = {
   onBookClick(book: BookSchema): void;
   onBookEditClick(book: BookSchema): void;
   onBookNewClick(): void;
+  onBooksImportClick(): void;
   onTopicEditClick?(topic: TopicSchema): void;
   onSortChange?(sort: SortOrder): void;
   onFilterChange?(filter: Filter): void;
@@ -48,6 +49,7 @@ export default function Books(props: Props) {
     onBookClick,
     onBookEditClick,
     onBookNewClick,
+    onBooksImportClick,
     onTopicEditClick,
     onSortChange,
     onFilterChange,
@@ -57,6 +59,7 @@ export default function Books(props: Props) {
   const handleBookEditClick = (book: BookSchema) => () => onBookEditClick(book);
   const handleTopicClick = (book: BookSchema) => () => onBookClick(book);
   const handleBookNewClick = () => onBookNewClick();
+  const handleBooksImportClick = () => onBooksImportClick();
   const classes = useStyles();
   const containerClasses = useContainerStyles();
   const infiniteRef = useInfiniteScroll<HTMLDivElement>({
@@ -74,6 +77,14 @@ export default function Books(props: Props) {
             <Button size="small" color="primary" onClick={handleBookNewClick}>
               <AddIcon className={classes.icon} />
               ブックの作成
+            </Button>
+            <Button
+              size="small"
+              color="primary"
+              onClick={handleBooksImportClick}
+            >
+              <AddIcon className={classes.icon} />
+              JSONインポート
             </Button>
           </>
         }

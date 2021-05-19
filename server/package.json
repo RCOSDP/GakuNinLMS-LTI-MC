@@ -26,6 +26,7 @@
     "@quixo3/prisma-session-store": "^3.0.1",
     "@types/jest": "^26.0.21",
     "@types/serve-handler": "^6.1.0",
+    "@types/spdx-expression-parse": "^3.0.0",
     "@types/strict-uri-encode": "^2.0.0",
     "@vercel/ncc": "^0.27.0",
     "class-validator": "^0.13.1",
