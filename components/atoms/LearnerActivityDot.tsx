@@ -1,7 +1,7 @@
 import { makeStyles } from "@material-ui/core/styles";
 import Tooltip from "@material-ui/core/Tooltip";
 import LearningStatusDot from "$atoms/LearningStatusDot";
-import learningStatusLabel from "$utils/learningStatusLabel";
+import getLocaleEntries from "$utils/bookLearningActivity/getLocaleEntries";
 import type { BookActivitySchema } from "$server/models/bookActivity";
 
 const useStyles = makeStyles((theme) => ({
@@ -36,37 +36,20 @@ export default function LearnerActivityDot(props: Props) {
   const { activity, onActivityClick } = props;
   const classes = useStyles();
   const handleActivityClick = () => onActivityClick?.(activity);
-  const items = [
-    {
-      label: "学習者",
-      value: activity.learner.name,
-    },
-    {
-      label: "ブック",
-      value: activity.book.name,
-    },
-    {
-      label: "トピック",
-      value: activity.topic.name,
-    },
-    {
-      label: "学習状況",
-      value: learningStatusLabel[activity.status],
-    },
-  ] as const;
+  const items = getLocaleEntries(activity);
   return (
     <Tooltip
       title={
         <dl className={classes.descriptionList}>
-          {items.map((item, index) => (
+          {items.map(([key, value], index) => (
             <div key={index}>
               <dt>
-                {item.label}
+                {key}
                 <span className={classes.delimiter} aria-hidden>
                   :
                 </span>
               </dt>
-              <dd>{item.value}</dd>
+              <dd>{value}</dd>
             </div>
           ))}
         </dl>

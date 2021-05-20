@@ -108,8 +108,8 @@ export default function Dashboard(props: Props) {
     setTabIndex(value);
   };
   const handleDownloadClick = useCallback(() => {
-    download(bookActivities, "分析データ.csv");
-  }, [bookActivities]);
+    download(bookActivities, "分析データ.csv", session.ltiLaunchBody);
+  }, [bookActivities, session.ltiLaunchBody]);
   const learnerActivities = useMemo(
     () =>
       getLearnerActivities({

@@ -1,49 +1,25 @@
-import { flatten } from "flat";
 import jsonexport from "jsonexport";
-import type { UserHandlers } from "jsonexport";
-import { BookActivitySchema } from "$server/models/bookActivity";
+import getLocaleEntries from "./getLocaleEntries";
+import type { BookActivitySchema } from "$server/models/bookActivity";
+import type { SessionSchema } from "$server/models/session";
 
 const bom = "\uFEFF";
-
-const headers: Readonly<{ [key: string]: string }> = {
-  "learner.id": "ユーザID",
-  "learner.name": "ユーザ名",
-  "topic.id": "トピックID",
-  "topic.name": "トピック名",
-  totalTimeMs: "ユニーク学習時間 (ms)",
-  createdAt: "初回アクセス日時",
-  updatedAt: "最終アクセス日時",
-  "book.id": "ブックID",
-  "book.name": "ブック名",
-  status: "学習状況",
-};
-
-const jsonexportHandlers: UserHandlers = {
-  mapHeaders: (header) => {
-    return headers[header];
-  },
-  typeHandlers: {
-    Object: (value) => {
-      if (value instanceof Date) return value.toLocaleString();
-      return value;
-    },
-  },
-};
 
 /**
  * ブラウザーで学習分析データをCSVファイル(BOM付きUTF-8)に変換しエクスポート
  * @param data 学習分析データ
  * @param filename ダウンロードするファイル名
+ * @param ltiLaunchBody 学習者のセッション
  */
-async function download(data: BookActivitySchema[], filename: string) {
-  const flattenData = data.map((a) =>
-    Object.fromEntries(
-      Object.entries(flatten(a)).filter(([key]) => key in headers)
-    )
+async function download(
+  data: BookActivitySchema[],
+  filename: string,
+  ltiLaunchBody?: SessionSchema["ltiLaunchBody"]
+) {
+  const decoratedData = data.map((a) =>
+    Object.fromEntries(getLocaleEntries(a, ltiLaunchBody))
   );
-  const csv = await jsonexport(flattenData, {
-    ...jsonexportHandlers,
-  });
+  const csv = await jsonexport(decoratedData);
   const file = new File([bom, csv], filename, { type: "text/csv" });
   const dataUrl = URL.createObjectURL(file);
   const anchor = document.createElement("a");

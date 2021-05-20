@@ -17,8 +17,12 @@ export const CourseBookSchema = {
             type: "array",
             items: {
               type: "object",
-              properties: { id: { type: "integer" }, name: { type: "string" } },
-              required: ["id", "name"],
+              properties: {
+                id: { type: "integer" },
+                name: { type: "string" },
+                timeRequired: { type: "integer" },
+              },
+              required: ["id", "name", "timeRequired"],
             },
           },
         },
