@@ -1,6 +1,4 @@
 import { useMemo, Fragment, ReactNode } from "react";
-import { format } from "date-fns";
-import { ja } from "date-fns/locale";
 import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -9,6 +7,7 @@ import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import { makeStyles } from "@material-ui/core/styles";
+import Item from "$atoms/Item";
 import LearningStatusChip from "$atoms/LearningStatusChip";
 import getActivitiesEachCourseBooks from "$utils/getActivitiesEachCourseBooks";
 import type { LearnerSchema } from "$server/models/learner";
@@ -34,8 +33,12 @@ const useStyles = makeStyles((theme) => ({
       fontSize: "1rem",
       lineHeight: 1.5,
     },
-    "&> :nth-child(3)": {
-      color: gray[700],
+  },
+  items: {
+    marginTop: theme.spacing(0.25),
+    "& > *": {
+      display: "inline-block",
+      marginRight: theme.spacing(1),
     },
   },
 }));
@@ -95,13 +98,20 @@ export default function LearnerActivityDialog(props: Props) {
                     size="small"
                     component="span"
                   />
-                  {activity.updatedAt && (
-                    <span>
-                      {format(activity.updatedAt, "yoMMMdo", {
-                        locale: ja,
-                      })}
-                    </span>
-                  )}
+                  <div className={classes.items}>
+                    {activity.createdAt && (
+                      <Item
+                        itemKey="初回アクセス"
+                        value={activity.createdAt.toLocaleString()}
+                      />
+                    )}
+                    {activity.updatedAt && (
+                      <Item
+                        itemKey="最終アクセス"
+                        value={activity.updatedAt.toLocaleString()}
+                      />
+                    )}
+                  </div>
                 </p>
               </Fragment>
             ))}
