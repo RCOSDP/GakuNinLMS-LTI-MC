@@ -21,7 +21,7 @@ export const keyOrder = [
   "updatedAt",
 ] as const;
 
-export const label: Readonly<{ [key: string]: string }> = {
+export const label: Readonly<{ [key in typeof keyOrder[number]]: string }> = {
   "learner.id": "ユーザID",
   "learner.name": "ユーザ名",
   "ltiLaunchBody.context_label": "コースID",
