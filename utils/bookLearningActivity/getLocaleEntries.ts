@@ -70,10 +70,9 @@ export function getLocaleEntries(
     createdAt: activity.createdAt?.toLocaleString(),
     updatedAt: activity.updatedAt?.toLocaleString(),
   };
-  return keyOrder.map((key) => [
-    label[key],
-    a[key] as string | number | undefined,
-  ]);
+  return keyOrder
+    .map((key) => [label[key], a[key] as string | number | undefined])
+    .filter(([, value]) => value !== undefined);
 }
 
 export default getLocaleEntries;
