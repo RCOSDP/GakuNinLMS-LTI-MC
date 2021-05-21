@@ -34,10 +34,6 @@ export const label: Readonly<{ [key in typeof keyOrder[number]]: string }> = {
   updatedAt: "最終アクセス",
 };
 
-function getKeyOrderIndex(el?: string) {
-  return keyOrder.findIndex((key) => key === el);
-}
-
 /**
  * 単一の学習分析データをローカライズしたキーバリューに変換
  * @param activity 単一の学習分析データ
@@ -47,7 +43,7 @@ export function getLocaleEntries(
   activity: BookActivitySchema,
   ltiLaunchBody?: SessionSchema["ltiLaunchBody"]
 ) {
-  const flattenActivity: Record<string, unknown> = flatten({
+  const flattenActivity: Record<typeof keyOrder[number], unknown> = flatten({
     ...activity,
     ltiLaunchBody,
   });
@@ -58,10 +54,7 @@ export function getLocaleEntries(
     createdAt: activity.createdAt?.toLocaleString(),
     updatedAt: activity.updatedAt?.toLocaleString(),
   };
-  return Object.entries(a)
-    .filter(([key]) => key in label)
-    .sort(([keyA], [keyB]) => getKeyOrderIndex(keyA) - getKeyOrderIndex(keyB))
-    .map(([key, value]) => [label[key as typeof keyOrder[number]], value]);
+  return keyOrder.map((key) => [label[key], a[key]]);
 }
 
 export default getLocaleEntries;
