@@ -14,10 +14,10 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    InlineResponse2003Learner,
-    InlineResponse2003LearnerFromJSON,
-    InlineResponse2003LearnerFromJSONTyped,
-    InlineResponse2003LearnerToJSON,
+    InlineResponse2003Topic,
+    InlineResponse2003TopicFromJSON,
+    InlineResponse2003TopicFromJSONTyped,
+    InlineResponse2003TopicToJSON,
 } from './';
 
 /**
@@ -28,10 +28,10 @@ import {
 export interface InlineResponse2007Sections {
     /**
      * 
-     * @type {Array<InlineResponse2003Learner>}
+     * @type {Array<InlineResponse2003Topic>}
      * @memberof InlineResponse2007Sections
      */
-    topics: Array<InlineResponse2003Learner>;
+    topics: Array<InlineResponse2003Topic>;
 }
 
 export function InlineResponse2007SectionsFromJSON(json: any): InlineResponse2007Sections {
@@ -44,7 +44,7 @@ export function InlineResponse2007SectionsFromJSONTyped(json: any, ignoreDiscrim
     }
     return {
         
-        'topics': ((json['topics'] as Array<any>).map(InlineResponse2003LearnerFromJSON)),
+        'topics': ((json['topics'] as Array<any>).map(InlineResponse2003TopicFromJSON)),
     };
 }
 
@@ -57,7 +57,7 @@ export function InlineResponse2007SectionsToJSON(value?: InlineResponse2007Secti
     }
     return {
         
-        'topics': ((value.topics as Array<any>).map(InlineResponse2003LearnerToJSON)),
+        'topics': ((value.topics as Array<any>).map(InlineResponse2003TopicToJSON)),
     };
 }
 

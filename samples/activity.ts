@@ -9,9 +9,10 @@ const activity = {
   topic: {
     id: topic.id,
     name: topic.name,
+    timeRequired: topic.timeRequired,
   },
   completed: true,
-  totalTimeMs: 120,
+  totalTimeMs: 60000,
   createdAt: new Date(),
   updatedAt: new Date(),
 };

@@ -24,13 +24,20 @@ export const ActivitySchema = {
   properties: {
     learner: {
       type: "object",
-      properties: { id: { type: "integer" }, name: { type: "string" } },
+      properties: {
+        id: { type: "integer" },
+        name: { type: "string" },
+      },
       required: ["id", "name"],
     },
     topic: {
       type: "object",
-      properties: { id: { type: "integer" }, name: { type: "string" } },
-      required: ["id", "name"],
+      properties: {
+        id: { type: "integer" },
+        name: { type: "string" },
+        timeRequired: { type: "integer" },
+      },
+      required: ["id", "name", "timeRequired"],
     },
     /** 学習状況 - 完了: true, それ以外: false */
     completed: { type: "boolean" },
