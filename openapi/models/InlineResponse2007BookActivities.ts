@@ -18,6 +18,10 @@ import {
     InlineResponse2003LearnerFromJSON,
     InlineResponse2003LearnerFromJSONTyped,
     InlineResponse2003LearnerToJSON,
+    InlineResponse2003Topic,
+    InlineResponse2003TopicFromJSON,
+    InlineResponse2003TopicFromJSONTyped,
+    InlineResponse2003TopicToJSON,
 } from './';
 
 /**
@@ -34,10 +38,10 @@ export interface InlineResponse2007BookActivities {
     learner: InlineResponse2003Learner;
     /**
      * 
-     * @type {InlineResponse2003Learner}
+     * @type {InlineResponse2003Topic}
      * @memberof InlineResponse2007BookActivities
      */
-    topic: InlineResponse2003Learner;
+    topic: InlineResponse2003Topic;
     /**
      * 
      * @type {boolean}
@@ -87,7 +91,7 @@ export function InlineResponse2007BookActivitiesFromJSONTyped(json: any, ignoreD
     return {
         
         'learner': InlineResponse2003LearnerFromJSON(json['learner']),
-        'topic': InlineResponse2003LearnerFromJSON(json['topic']),
+        'topic': InlineResponse2003TopicFromJSON(json['topic']),
         'completed': !exists(json, 'completed') ? undefined : json['completed'],
         'totalTimeMs': !exists(json, 'totalTimeMs') ? undefined : json['totalTimeMs'],
         'createdAt': !exists(json, 'createdAt') ? undefined : (new Date(json['createdAt'])),
@@ -107,7 +111,7 @@ export function InlineResponse2007BookActivitiesToJSON(value?: InlineResponse200
     return {
         
         'learner': InlineResponse2003LearnerToJSON(value.learner),
-        'topic': InlineResponse2003LearnerToJSON(value.topic),
+        'topic': InlineResponse2003TopicToJSON(value.topic),
         'completed': value.completed,
         'totalTimeMs': value.totalTimeMs,
         'createdAt': value.createdAt === undefined ? undefined : (value.createdAt.toISOString()),
