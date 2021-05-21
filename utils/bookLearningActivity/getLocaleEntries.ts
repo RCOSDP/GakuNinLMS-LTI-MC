@@ -15,8 +15,8 @@ export const keyOrder = [
   "topic.name",
   "topic.timeRequired",
   "totalTimeMs",
-  "completionRate",
   "status",
+  "completionRate",
   "createdAt",
   "updatedAt",
 ] as const;
@@ -32,8 +32,8 @@ export const label: Readonly<{ [key: string]: string }> = {
   "topic.name": "トピック名",
   "topic.timeRequired": "動画時間",
   totalTimeMs: "ユニーク視聴時間",
-  completionRate: "学習完了率",
   status: "学習状況",
+  completionRate: "学習完了率",
   createdAt: "初回アクセス",
   updatedAt: "最終アクセス",
 };
