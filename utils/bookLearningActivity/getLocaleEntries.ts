@@ -30,7 +30,7 @@ export const label: Readonly<{ [key in typeof keyOrder[number]]: string }> = {
   "book.name": "ブック名",
   "topic.id": "トピックID",
   "topic.name": "トピック名",
-  "topic.timeRequired": "動画時間",
+  "topic.timeRequired": "動画の長さ",
   totalTimeMs: "ユニーク視聴時間",
   status: "学習状況",
   completionRate: "学習完了率",
