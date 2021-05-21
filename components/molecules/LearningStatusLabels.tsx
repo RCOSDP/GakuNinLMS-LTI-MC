@@ -2,6 +2,7 @@ import { useCallback, useMemo } from "react";
 import clsx from "clsx";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
+import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 import { LearnerSchema } from "$server/models/learner";
 import { LearningStatus } from "$server/models/learningStatus";
@@ -9,6 +10,15 @@ import LearningStatusDot from "$atoms/LearningStatusDot";
 import label from "$utils/learningStatusLabel";
 import useSelectorProps from "$utils/useSelectorProps";
 import { grey, common } from "@material-ui/core/colors";
+
+const useButtonStyles = makeStyles((theme) => ({
+  root: {
+    "&$disabled": {
+      color: theme.palette.text.primary,
+    },
+  },
+  disabled: {},
+}));
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -44,17 +54,6 @@ const useStyles = makeStyles((theme) => ({
       color: grey[700],
     },
   },
-  button: {
-    appearance: "none",
-    border: "none",
-    background: "transparent",
-    padding: theme.spacing(0.5),
-    cursor: "pointer",
-    "&:disabled": {
-      color: "unset",
-      cursor: "default",
-    },
-  },
   clickable: {},
 }));
 
@@ -70,6 +69,7 @@ function LearningStatusLabel({
   onLearnerClick?(learner: LearnerSchema): void;
 }) {
   const classes = useStyles();
+  const buttonClasses = useButtonStyles();
   const { onOpen, onSelect, ...menuProps } = useSelectorProps<null>(null);
   const handleLearnerClick = useCallback(
     (learner: LearnerSchema) => () => {
@@ -82,20 +82,23 @@ function LearningStatusLabel({
 
   return (
     <>
-      <button
-        aria-controls={`learner-activities-menu-${status}`}
-        className={clsx(classes.item, classes.button, {
+      <div
+        className={clsx(classes.item, {
           [classes.clickable]: clickable,
         })}
-        disabled={!clickable}
-        onClick={onOpen}
       >
         <LearningStatusDot status={status} />
-        <span>
+        <Button
+          classes={buttonClasses}
+          aria-controls={`learner-activities-menu-${status}`}
+          variant="text"
+          disabled={!clickable}
+          onClick={onOpen}
+        >
           {label}
           {learners.length}人
-        </span>
-      </button>
+        </Button>
+      </div>
       <Menu
         {...menuProps}
         id={`learner-activities-menu-${status}`}
