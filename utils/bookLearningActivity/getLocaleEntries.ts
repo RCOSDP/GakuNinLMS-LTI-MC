@@ -47,7 +47,10 @@ export function getLocaleEntries(
   activity: BookActivitySchema,
   ltiLaunchBody?: SessionSchema["ltiLaunchBody"]
 ) {
-  const flattenActivity: Record<typeof keyOrder[number], unknown> = flatten({
+  const flattenActivity: Record<
+    typeof keyOrder[number],
+    string | number | Date | undefined
+  > = flatten({
     ...activity,
     ltiLaunchBody,
   });
@@ -67,7 +70,10 @@ export function getLocaleEntries(
     createdAt: activity.createdAt?.toLocaleString(),
     updatedAt: activity.updatedAt?.toLocaleString(),
   };
-  return keyOrder.map((key) => [label[key], a[key]]);
+  return keyOrder.map((key) => [
+    label[key],
+    a[key] as string | number | undefined,
+  ]);
 }
 
 export default getLocaleEntries;
