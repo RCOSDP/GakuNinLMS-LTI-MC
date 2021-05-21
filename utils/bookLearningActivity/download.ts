@@ -9,7 +9,7 @@ const bom = "\uFEFF";
  * ブラウザーで学習分析データをCSVファイル(BOM付きUTF-8)に変換しエクスポート
  * @param data 学習分析データ
  * @param filename ダウンロードするファイル名
- * @param ltiLaunchBody 学習者のセッション
+ * @param ltiLaunchBody 教員のセッション
  */
 async function download(
   data: BookActivitySchema[],

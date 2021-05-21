@@ -41,7 +41,7 @@ function getKeyOrderIndex(el?: string) {
 /**
  * 単一の学習分析データをローカライズしたキーバリューに変換
  * @param activity 単一の学習分析データ
- * @param ltiLaunchBody 学習者のセッション
+ * @param ltiLaunchBody 教員のセッション
  */
 export function getLocaleEntries(
   activity: BookActivitySchema,
