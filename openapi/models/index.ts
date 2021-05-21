@@ -20,7 +20,6 @@ export * from './InlineResponse2002';
 export * from './InlineResponse2003';
 export * from './InlineResponse2003Activity';
 export * from './InlineResponse2003Learner';
-export * from './InlineResponse2003Topic';
 export * from './InlineResponse2004';
 export * from './InlineResponse2005';
 export * from './InlineResponse2006';

@@ -18,10 +18,6 @@ import {
     InlineResponse2003LearnerFromJSON,
     InlineResponse2003LearnerFromJSONTyped,
     InlineResponse2003LearnerToJSON,
-    InlineResponse2003Topic,
-    InlineResponse2003TopicFromJSON,
-    InlineResponse2003TopicFromJSONTyped,
-    InlineResponse2003TopicToJSON,
 } from './';
 
 /**
@@ -38,10 +34,10 @@ export interface InlineResponse2003Activity {
     learner: InlineResponse2003Learner;
     /**
      * 
-     * @type {InlineResponse2003Topic}
+     * @type {InlineResponse2003Learner}
      * @memberof InlineResponse2003Activity
      */
-    topic: InlineResponse2003Topic;
+    topic: InlineResponse2003Learner;
     /**
      * 
      * @type {boolean}
@@ -79,7 +75,7 @@ export function InlineResponse2003ActivityFromJSONTyped(json: any, ignoreDiscrim
     return {
         
         'learner': InlineResponse2003LearnerFromJSON(json['learner']),
-        'topic': InlineResponse2003TopicFromJSON(json['topic']),
+        'topic': InlineResponse2003LearnerFromJSON(json['topic']),
         'completed': json['completed'],
         'totalTimeMs': json['totalTimeMs'],
         'createdAt': (new Date(json['createdAt'])),
@@ -97,7 +93,7 @@ export function InlineResponse2003ActivityToJSON(value?: InlineResponse2003Activ
     return {
         
         'learner': InlineResponse2003LearnerToJSON(value.learner),
-        'topic': InlineResponse2003TopicToJSON(value.topic),
+        'topic': InlineResponse2003LearnerToJSON(value.topic),
         'completed': value.completed,
         'totalTimeMs': value.totalTimeMs,
         'createdAt': (value.createdAt.toISOString()),

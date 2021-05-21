@@ -30,9 +30,7 @@ export const bookIncludingActivityArg = {
                 activities: {
                   select: {
                     learner: { select: { id: true, name: true } },
-                    topic: {
-                      select: { id: true, name: true, timeRequired: true },
-                    },
+                    topic: { select: { id: true, name: true } },
                     totalTimeMs: true,
                     createdAt: true,
                     updatedAt: true,
