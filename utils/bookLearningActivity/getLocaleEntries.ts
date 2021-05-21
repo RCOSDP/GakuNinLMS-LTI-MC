@@ -74,7 +74,7 @@ export function getLocaleEntries(
   return Object.entries(a)
     .filter(([key]) => key in label)
     .sort(([keyA], [keyB]) => getKeyOrderIndex(keyA) - getKeyOrderIndex(keyB))
-    .map(([key, value]) => [label[key], value]);
+    .map(([key, value]) => [label[key as typeof keyOrder[number]], value]);
 }
 
 export default getLocaleEntries;
