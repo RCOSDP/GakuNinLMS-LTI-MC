@@ -216,8 +216,8 @@ export interface ApiV2UserUserIdTopicsGetRequest {
 export class DefaultApi extends runtime.BaseAPI {
 
     /**
-     * 学習活動の一覧を取得します。 現在のセッションの LTI Context に紐づくブックに含まれる表示可能なトピックの学習活動を得ます。 教員または管理者でなければなりません。 自身以外の作成した共有されていないブック・トピックの学習活動は含みません。
-     * 学習活動一覧
+     * 受講者の学習活動の一覧を取得します。 受講者以外の学習活動は含みません。 現在のセッションの LTI Context に紐づくブックに含まれる表示可能なトピックの学習活動を得ます。 教員または管理者でなければなりません。 自身以外の作成した共有されていないブック・トピックの学習活動は含みません。
+     * 受講者の学習活動一覧
      */
     async apiV2ActivityGetRaw(): Promise<runtime.ApiResponse<InlineResponse2007>> {
         const queryParameters: runtime.HTTPQuery = {};
@@ -235,8 +235,8 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * 学習活動の一覧を取得します。 現在のセッションの LTI Context に紐づくブックに含まれる表示可能なトピックの学習活動を得ます。 教員または管理者でなければなりません。 自身以外の作成した共有されていないブック・トピックの学習活動は含みません。
-     * 学習活動一覧
+     * 受講者の学習活動の一覧を取得します。 受講者以外の学習活動は含みません。 現在のセッションの LTI Context に紐づくブックに含まれる表示可能なトピックの学習活動を得ます。 教員または管理者でなければなりません。 自身以外の作成した共有されていないブック・トピックの学習活動は含みません。
+     * 受講者の学習活動一覧
      */
     async apiV2ActivityGet(): Promise<InlineResponse2007> {
         const response = await this.apiV2ActivityGetRaw();
