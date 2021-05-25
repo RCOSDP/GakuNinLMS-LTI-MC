@@ -5,10 +5,10 @@ import { LearnerSchema } from "$server/models/learner";
 import { CourseBookSchema } from "$server/models/courseBook";
 import { BookActivitySchema } from "$server/models/bookActivity";
 import prisma from "$server/utils/prisma";
-import { bookIncludingActivityArg, toSchema } from "./bookWithActivity";
+import { bookIncludingTopicArg, toSchema } from "./bookWithActivity";
 
 /** 受講者の取得 */
-async function findAllLearners(
+async function findLtiMembers(
   instructor: Pick<UserSchema, "id">,
   {
     consumerId,
@@ -17,36 +17,52 @@ async function findAllLearners(
 ) {
   const learners = await prisma.user.findMany({
     orderBy: { name: "asc" },
-    select: { id: true, name: true },
-    where: {
+    select: {
+      id: true,
+      name: true,
       activities: {
-        some: {
+        include: {
+          learner: { select: { id: true, name: true } },
           topic: {
-            topicSection: {
-              some: {
-                section: {
-                  book: {
-                    AND: [
-                      {
-                        ltiResourceLinks: {
-                          some: {
-                            consumerId,
-                            contextId,
+            select: { id: true, name: true, timeRequired: true },
+          },
+        },
+      },
+    },
+    where: {
+      AND: [
+        { ltiMembers: { some: { consumerId, contextId } } },
+        {
+          activities: {
+            some: {
+              topic: {
+                topicSection: {
+                  some: {
+                    section: {
+                      book: {
+                        AND: [
+                          {
+                            ltiResourceLinks: {
+                              some: {
+                                consumerId,
+                                contextId,
+                              },
+                            },
                           },
-                        },
+                          {
+                            // NOTE: 表示可能な範囲 … 共有されているか作成者が一致
+                            OR: [{ shared: true }, { authorId: instructor.id }],
+                          },
+                        ],
                       },
-                      {
-                        // NOTE: 表示可能な範囲 … 共有されているか作成者が一致
-                        OR: [{ shared: true }, { authorId: instructor.id }],
-                      },
-                    ],
+                    },
                   },
                 },
               },
             },
           },
         },
-      },
+      ],
     },
   });
 
@@ -67,25 +83,27 @@ async function findAllActivity({
 }> {
   const consumerId = ltiLaunchBody.oauth_consumer_key;
   const contextId = ltiLaunchBody.context_id;
-  const learners = await findAllLearners(user, { consumerId, contextId });
+  const ltiMembers = await findLtiMembers(user, { consumerId, contextId });
   const ltiResourceLinks = await prisma.ltiResourceLink.findMany({
     where: { consumerId, contextId },
     orderBy: { title: "asc" },
     select: { bookId: true },
   });
   const books = await prisma.book.findMany({
-    ...bookIncludingActivityArg,
+    ...bookIncludingTopicArg,
     where: {
       ltiResourceLinks: { some: { consumerId, contextId } },
     },
   });
+  const activities = ltiMembers.flatMap(({ activities }) => activities);
   const { courseBooks, bookActivities } = toSchema({
     user,
     ltiResourceLinks,
+    activities,
     books,
   });
 
-  return { learners, courseBooks, bookActivities };
+  return { learners: ltiMembers, courseBooks, bookActivities };
 }
 
 export default findAllActivity;

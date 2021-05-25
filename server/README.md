@@ -126,6 +126,14 @@ yarn migrate
 INSERT INTO "lti_consumer" VALUES ('{LMS に登録する OAuth Consumer Key}', '{LMS に登録する OAuth Consumer Secret}');
 ```
 
+### 受講者の設定
+
+次の SQL を実行し、コースの受講者の設定を行います。
+
+```sql
+INSERT INTO "lti_members" VALUES ('{OAuth Consumer Key}', '{LTI Context ID}', '{LTI User ID}');
+```
+
 #### ヒント: PostgreSQL への接続
 
 [psql コマンド](https://www.postgresql.org/docs/current/app-psql.html) を使うことで接続できます。

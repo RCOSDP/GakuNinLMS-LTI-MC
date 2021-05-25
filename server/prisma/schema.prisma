@@ -119,11 +119,24 @@ model LtiContext {
   consumerId    String            @map("consumer_id")
   id            String
   resourceLinks LtiResourceLink[]
+  members       LtiMember[]
   title         String
   label         String
 
   @@id([consumerId, id])
   @@map("lti_context")
+}
+
+/// LTI Member
+model LtiMember {
+  context    LtiContext @relation(fields: [consumerId, contextId], references: [consumerId, id])
+  user       User       @relation(fields: [consumerId, userId], references: [ltiConsumerId, ltiUserId])
+  consumerId String     @map("consumer_id")
+  contextId  String     @map("context_id")
+  userId     String     @map("user_id")
+
+  @@id([consumerId, contextId, userId])
+  @@map("lti_members")
 }
 
 /// LTI Resource Link
@@ -212,6 +225,7 @@ model User {
   createdTopics    Topic[]
   writtenBooks     Book[]
   ltiResourceLinks LtiResourceLink[]
+  ltiMembers       LtiMember[]
   ltiConsumer      LtiConsumer       @relation(fields: [ltiConsumerId], references: [id])
   ltiConsumerId    String            @map("lti_consumer_id")
   ltiUserId        String            @map("lti_user_id")

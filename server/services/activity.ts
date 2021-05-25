@@ -9,9 +9,10 @@ import findAllActivity from "$server/utils/activity/findAllActivity";
 
 export const method = {
   get: {
-    summary: "学習活動一覧",
+    summary: "受講者の学習活動一覧",
     description: outdent`
-      学習活動の一覧を取得します。
+      受講者の学習活動の一覧を取得します。
+      受講者以外の学習活動は含みません。
       現在のセッションの LTI Context に紐づくブックに含まれる表示可能なトピックの学習活動を得ます。
       教員または管理者でなければなりません。
       自身以外の作成した共有されていないブック・トピックの学習活動は含みません。`,

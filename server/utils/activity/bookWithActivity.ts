@@ -8,8 +8,9 @@ import getDisplayableBook from "$server/utils/getDisplayableBook";
 import bookCreateBy from "$server/utils/bookCreateBy";
 import topicCreateBy from "$server/utils/topicCreateBy";
 import isCompleted from "./isCompleted";
+import { ActivitySchema } from "$server/models/activity";
 
-export const bookIncludingActivityArg = {
+export const bookIncludingTopicArg = {
   // NOTE: toSchema() での並び替えの最適化を図る目的
   orderBy: { id: "asc" },
   include: {
@@ -27,17 +28,6 @@ export const bookIncludingActivityArg = {
                 timeRequired: true,
                 creator: true,
                 shared: true,
-                activities: {
-                  select: {
-                    learner: { select: { id: true, name: true } },
-                    topic: {
-                      select: { id: true, name: true, timeRequired: true },
-                    },
-                    totalTimeMs: true,
-                    createdAt: true,
-                    updatedAt: true,
-                  },
-                },
               },
             },
           },
@@ -47,12 +37,9 @@ export const bookIncludingActivityArg = {
   },
 } as const;
 
-type BookWithActivity = Prisma.BookGetPayload<typeof bookIncludingActivityArg>;
+type BookWithTopic = Prisma.BookGetPayload<typeof bookIncludingTopicArg>;
 
-function bookToCourseBook(
-  user: Pick<UserSchema, "id">,
-  book: BookWithActivity
-) {
+function bookToCourseBook(user: Pick<UserSchema, "id">, book: BookWithTopic) {
   const courseBook = getDisplayableBook(
     {
       ...book,
@@ -71,16 +58,23 @@ function bookToCourseBook(
 export function toSchema({
   user,
   ltiResourceLinks,
+  activities,
   books,
 }: {
   user: Pick<UserSchema, "id">;
   ltiResourceLinks: Array<Pick<LtiResourceLinkSchema, "bookId">>;
-  books: Array<BookWithActivity>;
+  activities: Array<
+    Pick<
+      ActivitySchema,
+      "learner" | "topic" | "totalTimeMs" | "createdAt" | "updatedAt"
+    >
+  >;
+  books: Array<BookWithTopic>;
 }): {
   courseBooks: Array<CourseBookSchema>;
   bookActivities: Array<BookActivitySchema>;
 } {
-  const sortedBooks: Array<BookWithActivity> = [];
+  const sortedBooks: Array<BookWithTopic> = [];
   const booksMap = new Map(books.map((book) => [book.id, book] as const));
   const ids = [...booksMap.keys()];
   for (const { bookId } of ltiResourceLinks) {
@@ -97,13 +91,19 @@ export function toSchema({
   const bookActivities = courseBooks.flatMap((book) =>
     book.sections.flatMap(({ topics }) =>
       topics.flatMap((topic) =>
-        topic.activities.map((activity) => ({
-          ...activity,
-          book: { id: book.id, name: book.name },
-          status: isCompleted(topic, activity)
-            ? ("completed" as const)
-            : ("incompleted" as const),
-        }))
+        activities.flatMap((activity) => {
+          if (activity.topic.id !== topic.id) return [];
+
+          return [
+            {
+              ...activity,
+              book: { id: book.id, name: book.name },
+              status: isCompleted(topic, activity)
+                ? ("completed" as const)
+                : ("incompleted" as const),
+            },
+          ];
+        })
       )
     )
   );
