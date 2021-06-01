@@ -5,7 +5,6 @@ import UnlinkedProblem from "$organisms/UnlinkedProblem";
 import Placeholder from "$templates/Placeholder";
 import { pagesPath } from "$utils/$path";
 import { useLoggerInit } from "$utils/eventLogger/loggerSessionPersister";
-import { updateLtiMember } from "$utils/ltiMember";
 
 function Replace(props: { href: string | UrlObject }) {
   const router = useRouter();
@@ -18,8 +17,6 @@ function Router() {
 
   // NOTE: eventLogger のために使用
   useLoggerInit(session);
-
-  updateLtiMember();
 
   const ltiResourceLink = session?.ltiResourceLink;
 

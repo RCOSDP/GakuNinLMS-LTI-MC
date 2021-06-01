@@ -3,7 +3,6 @@ import makeHooks from "$server/utils/makeHooks";
 import handler from "$server/utils/handler";
 import * as ltiLaunchService from "$server/services/ltiLaunch";
 import * as ltiResourceLinkService from "$server/services/ltiResourceLink";
-import * as ltiMemberService from "$server/services/ltiMember";
 
 export async function launch(fastify: FastifyInstance) {
   const path = "/lti/launch";
@@ -30,12 +29,4 @@ export async function resourceLink(fastify: FastifyInstance) {
   fastify.delete<{
     Params: ltiResourceLinkService.Params;
   }>(path, { schema: method.delete, ...hooks.delete }, handler(destroy));
-}
-
-export async function ltiMember(fastify: FastifyInstance) {
-  const path = "/lti/member";
-  const { method, update } = ltiMemberService;
-  const hooks = makeHooks(fastify, ltiMemberService.hooks);
-
-  fastify.put(path, { schema: method.put, ...hooks.put }, handler(update));
 }

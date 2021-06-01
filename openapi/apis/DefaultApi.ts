@@ -743,33 +743,6 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * 受講者を更新します。
-     * 受講者の更新
-     */
-    async apiV2LtiMemberPutRaw(): Promise<runtime.ApiResponse<void>> {
-        const queryParameters: runtime.HTTPQuery = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        const response = await this.request({
-            path: `/api/v2/lti/member`,
-            method: 'PUT',
-            headers: headerParameters,
-            query: queryParameters,
-        });
-
-        return new runtime.VoidApiResponse(response);
-    }
-
-    /**
-     * 受講者を更新します。
-     * 受講者の更新
-     */
-    async apiV2LtiMemberPut(): Promise<void> {
-        await this.apiV2LtiMemberPutRaw();
-    }
-
-    /**
      * 字幕をアップロードします。 教員または管理者でなければなりません。
      * 字幕のアップロード
      */
