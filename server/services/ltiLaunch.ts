@@ -4,10 +4,12 @@ import authLtiLaunch from "$server/auth/authLtiLaunch";
 import { upsertUser } from "$server/utils/user";
 import { FRONTEND_ORIGIN, FRONTEND_PATH } from "$server/utils/env";
 import { ltiLaunchBodySchema } from "$server/validators/ltiLaunchBody";
+import { isInstructor } from "$server/utils/ltiv1p1/roles";
 import {
   findLtiResourceLink,
   upsertLtiResourceLink,
 } from "$server/utils/ltiResourceLink";
+import { upsertLtiMember } from "$server/utils/ltiMember";
 
 const frontendUrl = `${FRONTEND_ORIGIN}${FRONTEND_PATH}`;
 
@@ -51,6 +53,14 @@ export async function post({ session }: FastifyRequest) {
     ltiUserId: ltiLaunchBody.user_id,
     name: ltiLaunchBody.lis_person_name_full ?? "",
   });
+
+  if (ltiResourceLink && !isInstructor(ltiLaunchBody)) {
+    await upsertLtiMember(
+      ltiResourceLink.consumerId,
+      ltiResourceLink.contextId,
+      user.ltiUserId
+    );
+  }
 
   Object.assign(session, { ltiResourceLink, user });
 
