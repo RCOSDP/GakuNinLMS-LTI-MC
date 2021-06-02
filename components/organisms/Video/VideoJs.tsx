@@ -3,6 +3,7 @@ import videojs, { VideoJsPlayer, VideoJsPlayerOptions } from "video.js";
 import ja from "video.js/dist/lang/ja.json";
 import "videojs-youtube";
 import "videojs-seek-buttons";
+import "@videojs/http-streaming";
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
 import { usePlayerTrackingAtom } from "$store/playerTracker";

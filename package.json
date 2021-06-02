@@ -30,6 +30,7 @@
     "@types/vimeo__player": "^2.10.0",
     "@typescript-eslint/eslint-plugin": "^4.18.0",
     "@typescript-eslint/parser": "^4.18.0",
+    "@videojs/http-streaming": "^2.8.2",
     "@vimeo/player": "^2.15.0",
     "babel-loader": "^8.2.2",
     "clsx": "^1.1.1",
