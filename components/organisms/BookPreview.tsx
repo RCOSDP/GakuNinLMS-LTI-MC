@@ -4,7 +4,6 @@ import { format } from "date-fns";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import IconButton from "@material-ui/core/IconButton";
-import Radio from "@material-ui/core/Radio";
 import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import { makeStyles } from "@material-ui/core/styles";
@@ -18,8 +17,9 @@ import { BookSchema } from "$server/models/book";
 import { TopicSchema } from "$server/models/topic";
 import { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
 import { getSectionsOutline } from "$utils/outline";
-import { gray, primary } from "$theme/colors";
+import { gray } from "$theme/colors";
 import useLineClampStyles from "$styles/lineClamp";
+import useDialogProps from "$utils/useDialogProps";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -43,9 +43,6 @@ const useStyles = makeStyles((theme) => ({
     margin: 0,
     color: gray[700],
   },
-  checkbox: {
-    marginLeft: theme.spacing(-1.5),
-  },
   shared: {
     margin: theme.spacing(0, 1),
   },
@@ -62,14 +59,12 @@ const useStyles = makeStyles((theme) => ({
       marginBottom: theme.spacing(1),
     },
   },
-  selected: {
-    backgroundColor: primary[50],
-  },
 }));
 
-type Props = Parameters<typeof Radio>[0] & {
+type Props = {
   book: BookSchema;
-  onEditClick?: ((book: BookSchema) => void) | false | undefined;
+  onBookClick?(book: BookSchema): void;
+  onBookEditClick?(book: BookSchema): void;
   onLtiContextClick?(
     ltiResourceLink: Pick<LtiResourceLinkSchema, "consumerId" | "contextId">
   ): void;
@@ -77,10 +72,9 @@ type Props = Parameters<typeof Radio>[0] & {
 
 export default function BookPreview({
   book,
-  onEditClick,
+  onBookClick,
+  onBookEditClick,
   onLtiContextClick,
-  checked,
-  ...radioProps
 }: Props) {
   const cardClasses = useCardStyle();
   const classes = useStyles();
@@ -97,40 +91,27 @@ export default function BookPreview({
   const [topic] = useState<TopicSchema | undefined>(
     book.sections[0]?.topics[0]
   );
-  const [open, setOpen] = useState(false);
-  const handleInfoClick = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
+  const {
+    data: dialog,
+    open,
+    onClose,
+    dispatch,
+  } = useDialogProps<BookSchema>();
+  const handleInfoClick = () => dispatch(book);
   const handle = (handler?: (book: BookSchema) => void) => () => {
     handler?.(book);
   };
-  const id = `${book.id}`;
   return (
-    <Card
-      classes={cardClasses}
-      className={clsx(classes.root, { [classes.selected]: checked })}
-    >
+    <Card classes={cardClasses} className={classes.root}>
       <div className={classes.left}>
         <div className={clsx(classes.title, titleClamp.placeholder)}>
-          <Radio
-            className={classes.checkbox}
-            color="primary"
-            checked={checked}
-            id={id}
-            {...radioProps}
-          />
-          <label className={titleClamp.clamp} htmlFor={id}>
-            {book.name}
-          </label>
+          <label className={titleClamp.clamp}>{book.name}</label>
           {book.shared && <SharedIndicator className={classes.shared} />}
           <IconButton onClick={handleInfoClick}>
             <InfoOutlinedIcon />
           </IconButton>
-          {onEditClick && (
-            <IconButton color="primary" onClick={handle(onEditClick)}>
+          {onBookEditClick && (
+            <IconButton color="primary" onClick={handle(onBookEditClick)}>
               <EditOutlinedIcon />
             </IconButton>
           )}
@@ -158,11 +139,7 @@ export default function BookPreview({
         >
           {getSectionsOutline(book.sections)}
         </p>
-        <Button
-          size="small"
-          color="primary"
-          disabled={true /* TODO: BookPreviewDialogを実装したら取り除く */}
-        >
+        <Button size="small" color="primary" onClick={handle(onBookClick)}>
           もっと詳しく...
         </Button>
       </div>
@@ -171,7 +148,7 @@ export default function BookPreview({
           <Video {...topic.resource} />
         )}
       </div>
-      {book && <BookItemDialog open={open} onClose={handleClose} book={book} />}
+      {dialog && <BookItemDialog open={open} onClose={onClose} book={dialog} />}
     </Card>
   );
 }

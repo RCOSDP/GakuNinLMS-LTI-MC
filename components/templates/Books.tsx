@@ -5,12 +5,11 @@ import Button from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
 import AddIcon from "@material-ui/icons/Add";
 import ActionHeader from "$organisms/ActionHeader";
-import BookAccordion from "$organisms/BookAccordion";
+import BookPreview from "$organisms/BookPreview";
 import SortSelect from "$atoms/SortSelect";
 import CreatorFilter from "$atoms/CreatorFilter";
 import SearchTextField from "$atoms/SearchTextField";
 import type { BookSchema } from "$server/models/book";
-import type { TopicSchema } from "$server/models/topic";
 import { SortOrder } from "$server/models/sortOrder";
 import { Filter } from "$types/filter";
 import useContainerStyles from "styles/container";
@@ -22,6 +21,9 @@ const useStyles = makeStyles((theme) => ({
   },
   books: {
     marginTop: theme.spacing(1),
+    "& > *": {
+      marginBottom: theme.spacing(2),
+    },
   },
 }));
 
@@ -33,10 +35,8 @@ export type Props = {
   onBookClick(book: BookSchema): void;
   onBookEditClick(book: BookSchema): void;
   onBookNewClick(): void;
-  onTopicEditClick?(topic: TopicSchema): void;
   onSortChange?(sort: SortOrder): void;
   onFilterChange?(filter: Filter): void;
-  isTopicEditable?(topic: TopicSchema): boolean | undefined;
 };
 
 export default function Books(props: Props) {
@@ -48,14 +48,12 @@ export default function Books(props: Props) {
     onBookClick,
     onBookEditClick,
     onBookNewClick,
-    onTopicEditClick,
     onSortChange,
     onFilterChange,
-    isTopicEditable,
   } = props;
   const { query, onSearchInput, onLtiContextClick } = useSearchAtom();
+  const handleBookClick = (book: BookSchema) => () => onBookClick(book);
   const handleBookEditClick = (book: BookSchema) => () => onBookEditClick(book);
-  const handleTopicClick = (book: BookSchema) => () => onBookClick(book);
   const handleBookNewClick = () => onBookNewClick();
   const classes = useStyles();
   const containerClasses = useContainerStyles();
@@ -92,14 +90,12 @@ export default function Books(props: Props) {
       <Container classes={containerClasses} maxWidth="md">
         <div className={classes.books}>
           {books.map((book) => (
-            <BookAccordion
+            <BookPreview
               key={book.id}
               book={book}
-              onEditClick={handleBookEditClick(book)}
-              onTopicClick={handleTopicClick(book)}
-              onTopicEditClick={onTopicEditClick}
+              onBookClick={handleBookClick(book)}
+              onBookEditClick={handleBookEditClick(book)}
               onLtiContextClick={onLtiContextClick}
-              isTopicEditable={isTopicEditable}
             />
           ))}
           {loading &&

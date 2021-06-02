@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const defaultProps = { book, onEditClick: console.log };
+const defaultProps = { book, onBookClick: console.log, onBookEditClick: console.log };
 
 export const Default = () => {
   const classes = useStyles();
@@ -20,17 +20,6 @@ export const Default = () => {
     <div className={classes.margin}>
       {[...Array(10)].map((_value, index) => (
         <BookPreview key={index} {...defaultProps} />
-      ))}
-    </div>
-  );
-};
-
-export const Checked = () => {
-  const classes = useStyles();
-  return (
-    <div className={classes.margin}>
-      {[...Array(10)].map((_value, index) => (
-        <BookPreview key={index} checked={index === 1} {...defaultProps} />
       ))}
     </div>
   );
