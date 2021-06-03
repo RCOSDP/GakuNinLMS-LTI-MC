@@ -61,8 +61,8 @@ export default function LearnerActivityItem(props: Props) {
               activity={activity}
               onActivityClick={onActivityClick}
             />
-            {activities[index - 1] &&
-              activities[index - 1].book.id !== activity.book.id && (
+            {activities[index + 1] &&
+              activities[index + 1].book.id !== activity.book.id && (
                 <div role="separator" className={classes.separator} />
               )}
           </Fragment>
