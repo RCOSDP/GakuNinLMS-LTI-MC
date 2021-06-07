@@ -5,7 +5,7 @@ import { pagesPath } from "./$path";
 import { createBook } from "./book";
 
 function useBookNewHandlers(
-  context: "books" | "link" | undefined,
+  context: "books" | undefined,
   bookId?: BookSchema["id"]
 ) {
   const router = useRouter();
@@ -26,7 +26,6 @@ function useBookNewHandlers(
   const handleCancel = useCallback(() => {
     switch (context) {
       case "books":
-      case "link":
         return router.push(pagesPath[context].$url());
       default:
         return router.push(
