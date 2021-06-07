@@ -12,7 +12,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const defaultProps = { book, onBookClick: console.log, onBookEditClick: console.log };
+const defaultProps = {
+  book,
+  onBookClick: console.log,
+  onBookEditClick: console.log,
+};
 
 export const Default = () => {
   const classes = useStyles();
