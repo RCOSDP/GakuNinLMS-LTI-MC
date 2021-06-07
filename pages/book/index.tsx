@@ -6,6 +6,7 @@ import Book from "$templates/Book";
 import Placeholder from "$templates/Placeholder";
 import BookNotFoundProblem from "$organisms/BookNotFoundProblem";
 import { useSessionAtom } from "$store/session";
+import { updateLtiResourceLink } from "$utils/ltiResourceLink";
 import { useBook } from "$utils/book";
 import { TopicSchema } from "$server/models/topic";
 import { pagesPath } from "$utils/$path";
@@ -47,7 +48,21 @@ function Show(query: Query) {
     const action = book && isBookEditable(book) ? "edit" : "generate";
     return router.push(pagesPath.book[action].$url({ query }));
   };
-  const handleBookLinkClick = () => router.push(pagesPath.link.$url());
+  const handleBookLinkClick = async (book: Pick<BookSchema, "id">) => {
+    const ltiLaunchBody = session?.ltiLaunchBody;
+    const ltiResourceLink = ltiLaunchBody && {
+      consumerId: ltiLaunchBody.oauth_consumer_key,
+      id: ltiLaunchBody.resource_link_id,
+      title: ltiLaunchBody.resource_link_title ?? "",
+      contextId: ltiLaunchBody.context_id,
+      contextTitle: ltiLaunchBody.context_title ?? "",
+      contextLabel: ltiLaunchBody.context_label ?? "",
+    };
+    if (ltiResourceLink == null) return;
+    const bookId = book.id;
+    await updateLtiResourceLink({ ...ltiResourceLink, bookId });
+    return router.push(pagesPath.book.$url({ query: { bookId } }));
+  };
   const handleTopicEditClick = (topic: Pick<TopicSchema, "id" | "creator">) => {
     const action = isTopicEditable(topic) ? "edit" : "generate";
     const url = pagesPath.book.topic[action].$url({

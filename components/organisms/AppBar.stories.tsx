@@ -10,7 +10,7 @@ export const Default = () => (
     onBooksClick={console.log}
     onTopicsClick={console.log}
     onDashboardClick={console.log}
-    onBookLinkClick={console.log}
+    onBookClick={console.log}
   />
 );
 

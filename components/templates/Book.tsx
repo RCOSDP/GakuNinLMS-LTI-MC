@@ -89,7 +89,7 @@ type Props = {
   book: BookSchema | null;
   index: ItemIndex;
   onBookEditClick(book: BookSchema): void;
-  onBookLinkClick(): void;
+  onBookLinkClick(book: BookSchema): void;
   onTopicEditClick?(topic: TopicSchema): void;
   onTopicEnded(): void;
   onItemClick(index: ItemIndex): void;
@@ -123,7 +123,8 @@ export default function Book(props: Props) {
   const handleClose = () => {
     setOpen(false);
   };
-  const handleEditClick = () => book && onBookEditClick(book);
+  const handleBookEditClick = () => book && onBookEditClick(book);
+  const handleBookLinkClick = () => book && onBookLinkClick(book);
   const handleItemClick = (_: never, index: ItemIndex) => {
     onItemClick(index);
   };
@@ -148,16 +149,21 @@ export default function Book(props: Props) {
               <InfoOutlinedIcon />
             </IconButton>
             {isInstructor && book && (isBookEditable(book) || book.shared) && (
-              <IconButton color="primary" onClick={handleEditClick}>
+              <IconButton color="primary" onClick={handleBookEditClick}>
                 <EditOutlinedIcon />
               </IconButton>
             )}
-            {isInstructor && linked && (
-              <Button size="small" color="primary" onClick={onBookLinkClick}>
+            {isInstructor && !linked && (
+              <Button
+                size="small"
+                color="primary"
+                onClick={handleBookLinkClick}
+              >
                 <LinkIcon className={classes.icon} />
-                他のブックを提供
+                このブックを提供
               </Button>
             )}
+            {/* TODO: 「このブックを提供解除」ボタンの実装 */}
           </Typography>
         }
       />

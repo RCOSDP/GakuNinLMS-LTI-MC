@@ -5,7 +5,7 @@ import Button from "@material-ui/core/Button";
 import MenuBookOutlinedIcon from "@material-ui/icons/MenuBookOutlined";
 import LibraryBooksOutlinedIcon from "@material-ui/icons/LibraryBooksOutlined";
 import AssessmentOutlinedIcon from "@material-ui/icons/AssessmentOutlined";
-import LinkIcon from "@material-ui/icons/Link";
+import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
 import AppBarNavButton from "$atoms/AppBarNavButton";
@@ -59,7 +59,7 @@ type Props = ComponentProps<typeof MuiAppBar> & {
   session: SessionSchema;
   onBooksClick?(): void;
   onTopicsClick?(): void;
-  onBookLinkClick?(): void;
+  onBookClick?(): void;
   onDashboardClick?(): void;
 };
 
@@ -74,7 +74,7 @@ function AppBar(props: Props, ref: Ref<unknown>) {
     session,
     onBooksClick,
     onTopicsClick,
-    onBookLinkClick,
+    onBookClick,
     onDashboardClick,
     ...others
   } = props;
@@ -113,10 +113,10 @@ function AppBar(props: Props, ref: Ref<unknown>) {
             />
             <AppBarNavButton
               color="inherit"
-              icon={<LinkIcon />}
-              label="ブックの提供"
-              onClick={onBookLinkClick}
-              disabled={!onBookLinkClick}
+              icon={<VisibilityOutlinedIcon />}
+              label="プレビュー"
+              onClick={onBookClick}
+              disabled={!onBookClick}
             />
             <AppBarNavButton
               color="inherit"
