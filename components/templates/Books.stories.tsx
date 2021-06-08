@@ -24,6 +24,7 @@ const handlers = {
   onBookLinkClick() {
     console.log("onBookLinkClick");
   },
+  onTopicEditClick: console.log,
 };
 
 function SlideAppBar() {

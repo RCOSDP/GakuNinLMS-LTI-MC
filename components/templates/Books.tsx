@@ -7,10 +7,13 @@ import AddIcon from "@material-ui/icons/Add";
 import Alert from "@material-ui/lab/Alert";
 import ActionHeader from "$organisms/ActionHeader";
 import BookPreview from "$organisms/BookPreview";
+import BookPreviewDialog from "$organisms/BookPreviewDialog";
 import SortSelect from "$atoms/SortSelect";
 import CreatorFilter from "$atoms/CreatorFilter";
 import SearchTextField from "$atoms/SearchTextField";
+import useDialogProps from "$utils/useDialogProps";
 import type { BookSchema } from "$server/models/book";
+import type { TopicSchema } from "$server/models/topic";
 import { SortOrder } from "$server/models/sortOrder";
 import { Filter } from "$types/filter";
 import useContainerStyles from "styles/container";
@@ -37,9 +40,11 @@ export type Props = {
   loading?: boolean;
   hasNextPage?: boolean;
   onLoadMore?(): void;
-  onBookClick(book: BookSchema): void;
+  onBookClick?(book: BookSchema): void;
   onBookEditClick(book: BookSchema): void;
+  onBookLinkClick(book: BookSchema): void;
   onBookNewClick(): void;
+  onTopicEditClick(topic: TopicSchema): void;
   onSortChange?(sort: SortOrder): void;
   onFilterChange?(filter: Filter): void;
 };
@@ -50,15 +55,22 @@ export default function Books(props: Props) {
     loading = false,
     hasNextPage = false,
     onLoadMore = () => undefined,
-    onBookClick,
     onBookEditClick,
+    onBookLinkClick,
     onBookNewClick,
+    onTopicEditClick,
     onSortChange,
     onFilterChange,
   } = props;
   const { query, onSearchInput, onLtiContextClick } = useSearchAtom();
   const { session, isInstructor } = useSessionAtom();
-  const handleBookClick = (book: BookSchema) => () => onBookClick(book);
+  const {
+    data: dialog,
+    open,
+    onClose,
+    dispatch,
+  } = useDialogProps<BookSchema>();
+  const handleBookClick = (book: BookSchema) => () => dispatch(book);
   const handleBookEditClick = (book: BookSchema) => () => onBookEditClick(book);
   const handleBookNewClick = () => onBookNewClick();
   const classes = useStyles();
@@ -113,6 +125,16 @@ export default function Books(props: Props) {
             [...Array(5)].map((_, i) => <Skeleton key={i} height={64} />)}
         </div>
       </Container>
+      {dialog && (
+        <BookPreviewDialog
+          open={open}
+          onClose={onClose}
+          book={dialog}
+          onBookEditClick={onBookEditClick}
+          onBookLinkClick={onBookLinkClick}
+          onTopicEditClick={onTopicEditClick}
+        />
+      )}
     </div>
   );
 }

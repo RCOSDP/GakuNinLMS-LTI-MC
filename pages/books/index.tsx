@@ -1,10 +1,12 @@
 import { useRouter } from "next/router";
 import type { BookSchema } from "$server/models/book";
+import type { TopicSchema } from "$server/models/topic";
 import { useSessionAtom } from "$store/session";
 import BooksTemplate from "$templates/Books";
 import useBooks from "$utils/useBooks";
 import { pagesPath } from "$utils/$path";
-import { TopicSchema } from "$server/models/topic";
+import { updateLtiResourceLink } from "$utils/ltiResourceLink";
+import getLtiResourceLink from "$utils/getLtiResourceLink";
 
 const Books = (
   props: Omit<
@@ -15,7 +17,7 @@ const Books = (
 
 function Index() {
   const router = useRouter();
-  const { isBookEditable, isTopicEditable } = useSessionAtom();
+  const { session, isBookEditable, isTopicEditable } = useSessionAtom();
   const handlers = {
     onBookClick({ id }: Pick<BookSchema, "id">) {
       return router.push(pagesPath.book.$url({ query: { bookId: id } }));
@@ -27,6 +29,13 @@ function Index() {
           query: { context: "books", bookId: book.id },
         })
       );
+    },
+    onBookLinkClick: async (book: Pick<BookSchema, "id">) => {
+      const ltiResourceLink = getLtiResourceLink(session);
+      if (ltiResourceLink == null) return;
+      const bookId = book.id;
+      await updateLtiResourceLink({ ...ltiResourceLink, bookId });
+      return router.push(pagesPath.book.$url({ query: { bookId } }));
     },
     onBookNewClick() {
       return router.push(
