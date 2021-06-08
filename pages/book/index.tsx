@@ -11,6 +11,7 @@ import { useBook } from "$utils/book";
 import { TopicSchema } from "$server/models/topic";
 import { pagesPath } from "$utils/$path";
 import { useActivityTracking } from "$utils/activity";
+import getLtiResourceLink from "$utils/getLtiResourceLink";
 import logger from "$utils/eventLogger/logger";
 
 export type Query = { bookId: BookSchema["id"] };
@@ -49,15 +50,7 @@ function Show(query: Query) {
     return router.push(pagesPath.book[action].$url({ query }));
   };
   const handleBookLinkClick = async (book: Pick<BookSchema, "id">) => {
-    const ltiLaunchBody = session?.ltiLaunchBody;
-    const ltiResourceLink = ltiLaunchBody && {
-      consumerId: ltiLaunchBody.oauth_consumer_key,
-      id: ltiLaunchBody.resource_link_id,
-      title: ltiLaunchBody.resource_link_title ?? "",
-      contextId: ltiLaunchBody.context_id,
-      contextTitle: ltiLaunchBody.context_title ?? "",
-      contextLabel: ltiLaunchBody.context_label ?? "",
-    };
+    const ltiResourceLink = getLtiResourceLink(session);
     if (ltiResourceLink == null) return;
     const bookId = book.id;
     await updateLtiResourceLink({ ...ltiResourceLink, bookId });
