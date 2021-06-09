@@ -16,7 +16,8 @@ import ActionHeader from "$organisms/ActionHeader";
 import type { BookSchema } from "$server/models/book";
 import type { TopicSchema } from "$server/models/topic";
 import { useSessionAtom } from "$store/session";
-import useStickyProps from "$utils/useStickyProps";
+import useSticky from "$utils/useSticky";
+import useAppBarOffset from "$utils/useAppBarOffset";
 
 const useStyles = makeStyles((theme) => ({
   header: {
@@ -70,18 +71,12 @@ const useStyles = makeStyles((theme) => ({
       marginTop: theme.spacing(2),
     },
   },
-  scroll: {
-    "&$desktop": {
-      overflowY: "auto",
-      height: "calc(100vh - 96px)",
-    },
-    "&$desktop$appbar": {
-      height: "calc(100vh - 130px - 64px)",
-    },
-  },
+  scroll: ({ offset }: { offset: number }) => ({
+    overflowY: "auto",
+    height: `calc(100vh - ${offset}px - ${theme.spacing(2)}px)`,
+  }),
   desktop: {},
   mobile: {},
-  appbar: {},
 }));
 
 type Props = {
@@ -108,12 +103,9 @@ export default function Book(props: Props) {
   } = props;
   const topic = book?.sections[sectionIndex]?.topics[topicIndex];
   const { isInstructor, isBookEditable, isTopicEditable } = useSessionAtom();
-  const classes = useStyles();
-  const { classes: stickyClasses, scroll, desktop, mobile } = useStickyProps({
-    backgroundColor: "transparent",
-    top: 80,
-    zIndex: 1,
-  });
+  const offset = useAppBarOffset() + 80;
+  const classes = useStyles({ offset });
+  const sticky = useSticky({ offset });
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up("md"));
   const [open, setOpen] = useState(false);
@@ -169,20 +161,18 @@ export default function Book(props: Props) {
       >
         <div className={clsx(classes.main, { [classes.desktop]: matches })}>
           {topic && (
-            <TopicViewer topic={topic} onEnded={onTopicEnded} top={80} />
+            <TopicViewer topic={topic} onEnded={onTopicEnded} offset={offset} />
           )}
         </div>
-        <div className={clsx(classes.side, { [classes.desktop]: matches })}>
+        <div
+          className={clsx(
+            classes.side,
+            { [classes.desktop]: matches },
+            { [classes.scroll]: matches },
+            sticky
+          )}
+        >
           <BookChildren
-            className={clsx(
-              { [classes.desktop]: matches },
-              classes.scroll,
-              { [classes.appbar]: desktop },
-              stickyClasses.sticky,
-              { [stickyClasses.scroll]: scroll },
-              { [stickyClasses.desktop]: desktop },
-              { [stickyClasses.mobile]: mobile }
-            )}
             index={[sectionIndex, topicIndex]}
             sections={book?.sections ?? []}
             onItemClick={handleItemClick}
