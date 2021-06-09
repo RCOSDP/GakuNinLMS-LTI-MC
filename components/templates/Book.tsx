@@ -74,7 +74,7 @@ const useStyles = makeStyles((theme) => ({
   },
   scroll: ({ offset }: { offset: number }) => ({
     overflowY: "auto",
-    height: `calc(100vh - ${offset}px - ${theme.spacing(2)}px)`,
+    height: `calc(100vh - ${offset}px)`,
   }),
   desktop: {},
   mobile: {},
@@ -105,12 +105,13 @@ export default function Book(props: Props) {
   const topic = book?.sections[sectionIndex]?.topics[topicIndex];
   const { isInstructor, isBookEditable, isTopicEditable } = useSessionAtom();
   const trigger = useScrollTrigger();
-  const actionHeaderOffset = trigger ? 80 : 96;
+  const theme = useTheme();
+  const sideOffset = trigger ? theme.spacing(2) : theme.spacing(6);
+  const actionHeaderOffset = 80;
   const appBarOffset = useAppBarOffset();
   const offset = appBarOffset + actionHeaderOffset;
-  const classes = useStyles({ offset });
+  const classes = useStyles({ offset: offset + sideOffset });
   const sticky = useSticky({ offset });
-  const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up("md"));
   const [open, setOpen] = useState(false);
   const handleInfoClick = () => {
