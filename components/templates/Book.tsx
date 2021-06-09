@@ -71,6 +71,9 @@ const useStyles = makeStyles((theme) => ({
     "&$desktop": {
       marginTop: theme.spacing(2),
     },
+    "&$mobile": {
+      marginBottom: theme.spacing(2),
+    },
   },
   scroll: ({ offset }: { offset: number }) => ({
     overflowY: "auto",
@@ -172,7 +175,7 @@ export default function Book(props: Props) {
         <div
           className={clsx(
             classes.side,
-            { [classes.desktop]: matches },
+            matches ? classes.desktop : classes.mobile,
             { [classes.scroll]: matches },
             sticky
           )}
