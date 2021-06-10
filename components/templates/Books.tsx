@@ -5,6 +5,7 @@ import Button from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
 import AddIcon from "@material-ui/icons/Add";
 import Alert from "@material-ui/lab/Alert";
+import Book from "$templates/Book";
 import ActionHeader from "$organisms/ActionHeader";
 import BookPreview from "$organisms/BookPreview";
 import BookPreviewDialog from "$organisms/BookPreviewDialog";
@@ -126,14 +127,16 @@ export default function Books(props: Props) {
         </div>
       </Container>
       {dialog && (
-        <BookPreviewDialog
-          open={open}
-          onClose={onClose}
-          book={dialog}
-          onBookEditClick={onBookEditClick}
-          onBookLinkClick={onBookLinkClick}
-          onTopicEditClick={onTopicEditClick}
-        />
+        <BookPreviewDialog open={open} onClose={onClose} book={dialog}>
+          {(props) => (
+            <Book
+              {...props}
+              onBookEditClick={onBookEditClick}
+              onBookLinkClick={onBookLinkClick}
+              onTopicEditClick={onTopicEditClick}
+            />
+          )}
+        </BookPreviewDialog>
       )}
     </div>
   );

@@ -40,16 +40,17 @@ const useStyles = makeStyles((theme) => ({
 type Props = Pick<ComponentProps<typeof Container>, "maxWidth"> & {
   title?: React.ReactNode;
   action: React.ReactNode;
+  considerAppBar?: boolean;
 };
 
 export default function ActionHeader(props: Props) {
-  const { maxWidth, title, action } = props;
+  const { maxWidth, title, action, considerAppBar = true } = props;
   const classes = useStyles();
   const theme = useTheme();
   const appBarOffset = useAppBarOffset();
   const sticky = useSticky({
     backgroundColor: gray[50],
-    offset: appBarOffset + theme.spacing(-2),
+    offset: considerAppBar ? appBarOffset + theme.spacing(-2) : 0,
     zIndex: 2,
   });
   return (

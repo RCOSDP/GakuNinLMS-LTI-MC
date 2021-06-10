@@ -1,15 +1,14 @@
-import { useEffect, forwardRef } from "react";
+import { useEffect, forwardRef, ComponentProps } from "react";
 import Dialog from "@material-ui/core/Dialog";
 import CloseIcon from "@material-ui/icons/Close";
 import { makeStyles } from "@material-ui/core/styles";
 import Slide from "@material-ui/core/Slide";
 import type { TransitionProps } from "@material-ui/core/transitions";
 import IconButton from "$atoms/IconButton";
-import Book from "$templates/Book";
+import type Book from "$templates/Book";
 import { useBookAtom } from "$store/book";
 import { useSessionAtom } from "$store/session";
 import type { BookSchema } from "$server/models/book";
-import type { TopicSchema } from "$server/models/topic";
 import { gray } from "$theme/colors";
 
 const Transition = forwardRef(function Transition(
@@ -28,7 +27,7 @@ const useDialogStyles = makeStyles({
 const useStyles = makeStyles((theme) => ({
   closeButton: {
     position: "fixed",
-    top: theme.spacing(3),
+    top: theme.spacing(4),
     right: theme.spacing(3),
     zIndex: 3,
   },
@@ -38,20 +37,21 @@ type Props = {
   book: BookSchema;
   open: boolean;
   onClose: React.MouseEventHandler;
-  onBookEditClick(book: BookSchema): void;
-  onBookLinkClick(book: BookSchema): void;
-  onTopicEditClick(topic: TopicSchema): void;
+  children(
+    props: Pick<
+      ComponentProps<typeof Book>,
+      | "book"
+      | "index"
+      | "linked"
+      | "onTopicEnded"
+      | "onItemClick"
+      | "considerAppBar"
+    >
+  ): React.ReactNode;
 };
 
 export default function BookPreviewDialog(props: Props) {
-  const {
-    book,
-    open,
-    onClose,
-    onBookEditClick,
-    onBookLinkClick,
-    onTopicEditClick,
-  } = props;
+  const { book, open, onClose, children } = props;
   const dialogClasses = useDialogStyles();
   const classes = useStyles();
   const { updateBook, itemIndex, updateItemIndex } = useBookAtom();
@@ -74,17 +74,14 @@ export default function BookPreviewDialog(props: Props) {
       >
         <CloseIcon />
       </IconButton>
-      <Book
-        book={book}
-        index={itemIndex}
-        linked={book.id === session?.ltiResourceLink?.bookId}
-        onTopicEnded={updateItemIndex}
-        onItemClick={updateItemIndex}
-        onBookEditClick={onBookEditClick}
-        onBookLinkClick={onBookLinkClick}
-        onTopicEditClick={onTopicEditClick}
-      />
-      ;
+      {children({
+        book,
+        index: itemIndex,
+        linked: book.id === session?.ltiResourceLink?.bookId,
+        onTopicEnded: updateItemIndex,
+        onItemClick: updateItemIndex,
+        considerAppBar: false,
+      })}
     </Dialog>
   );
 }

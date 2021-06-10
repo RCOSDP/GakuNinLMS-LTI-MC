@@ -92,6 +92,7 @@ type Props = {
   onTopicEditClick?(topic: TopicSchema): void;
   onTopicEnded(): void;
   onItemClick(index: ItemIndex): void;
+  considerAppBar?: boolean;
 };
 
 export default function Book(props: Props) {
@@ -104,6 +105,7 @@ export default function Book(props: Props) {
     onTopicEditClick,
     onTopicEnded,
     onItemClick,
+    considerAppBar = true,
   } = props;
   const topic = book?.sections[sectionIndex]?.topics[topicIndex];
   const { isInstructor, isBookEditable, isTopicEditable } = useSessionAtom();
@@ -112,7 +114,7 @@ export default function Book(props: Props) {
   const sideOffset = trigger ? theme.spacing(2) : theme.spacing(6);
   const actionHeaderOffset = 80;
   const appBarOffset = useAppBarOffset();
-  const offset = appBarOffset + actionHeaderOffset;
+  const offset = (considerAppBar ? appBarOffset : 0) + actionHeaderOffset;
   const classes = useStyles({ offset: offset + sideOffset });
   const sticky = useSticky({ offset });
   const matches = useMediaQuery(theme.breakpoints.up("md"));
@@ -138,6 +140,7 @@ export default function Book(props: Props) {
   return (
     <Container maxWidth="lg">
       <ActionHeader
+        considerAppBar={considerAppBar}
         action={
           <Typography
             className={clsx(classes.header, { [classes.mobile]: !matches })}

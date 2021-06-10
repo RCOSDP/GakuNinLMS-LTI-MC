@@ -4,6 +4,7 @@ import Button from "@material-ui/core/Button";
 import type { BookSchema } from "$server/models/book";
 import useDialogProps from "$utils/useDialogProps";
 import BookPreviewDialog from "./BookPreviewDialog";
+import Book from "$templates/Book";
 import { book } from "$samples";
 
 const handlers = {
@@ -20,7 +21,11 @@ export const Default = () => {
       <Button variant="contained" color="primary" onClick={handleClick}>
         ダイアログ
       </Button>
-      {data && <BookPreviewDialog book={data} {...dialogProps} {...handlers} />}
+      {data && (
+        <BookPreviewDialog book={data} {...dialogProps} {...handlers}>
+          {(props) => <Book {...props} {...handlers} />}
+        </BookPreviewDialog>
+      )}
     </>
   );
 };
