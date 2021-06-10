@@ -88,7 +88,7 @@ type Props = {
   book: BookSchema | null;
   index: ItemIndex;
   onBookEditClick(book: BookSchema): void;
-  onBookLinkClick(book: BookSchema): void;
+  onBookLinkClick?(book: BookSchema): void;
   onOtherBookLinkClick(): void;
   onTopicEditClick?(topic: TopicSchema): void;
   onTopicEnded(): void;
@@ -128,7 +128,7 @@ export default function Book(props: Props) {
     setOpen(false);
   };
   const handleBookEditClick = () => book && onBookEditClick(book);
-  const handleBookLinkClick = () => book && onBookLinkClick(book);
+  const handleBookLinkClick = () => book && onBookLinkClick?.(book);
   const handleOtherBookLinkClick = () => onOtherBookLinkClick();
   const handleItemClick = (_: never, index: ItemIndex) => {
     onItemClick(index);
@@ -159,7 +159,7 @@ export default function Book(props: Props) {
                 <EditOutlinedIcon />
               </IconButton>
             )}
-            {isInstructor && !linked && (
+            {isInstructor && !linked && onBookLinkClick && (
               <Button
                 size="small"
                 color="primary"

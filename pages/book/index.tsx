@@ -6,12 +6,10 @@ import Book from "$templates/Book";
 import Placeholder from "$templates/Placeholder";
 import BookNotFoundProblem from "$organisms/BookNotFoundProblem";
 import { useSessionAtom } from "$store/session";
-import { updateLtiResourceLink } from "$utils/ltiResourceLink";
 import { useBook } from "$utils/book";
 import { TopicSchema } from "$server/models/topic";
 import { pagesPath } from "$utils/$path";
 import { useActivityTracking } from "$utils/activity";
-import getLtiResourceLink from "$utils/getLtiResourceLink";
 import logger from "$utils/eventLogger/logger";
 
 export type Query = { bookId: BookSchema["id"] };
@@ -49,13 +47,6 @@ function Show(query: Query) {
     const action = book && isBookEditable(book) ? "edit" : "generate";
     return router.push(pagesPath.book[action].$url({ query }));
   };
-  const handleBookLinkClick = async (book: Pick<BookSchema, "id">) => {
-    const ltiResourceLink = getLtiResourceLink(session);
-    if (ltiResourceLink == null) return;
-    const bookId = book.id;
-    await updateLtiResourceLink({ ...ltiResourceLink, bookId });
-    return router.push(pagesPath.book.$url({ query: { bookId } }));
-  };
   const handleOtherBookLinkClick = () => {
     return router.push(pagesPath.books.$url());
   };
@@ -71,7 +62,6 @@ function Show(query: Query) {
     onTopicEnded: handleTopicNext,
     onItemClick: handleTopicNext,
     onBookEditClick: handleBookEditClick,
-    onBookLinkClick: handleBookLinkClick,
     onOtherBookLinkClick: handleOtherBookLinkClick,
     onTopicEditClick: handleTopicEditClick,
   };
