@@ -10,6 +10,7 @@ import { book } from "$samples";
 const handlers = {
   onBookEditClick: console.log,
   onBookLinkClick: console.log,
+  onOtherBookLinkClick: console.log,
   onTopicEditClick: console.log,
 };
 

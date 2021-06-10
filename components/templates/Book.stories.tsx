@@ -17,6 +17,7 @@ const defaultProps = {
   editable: true,
   onBookEditClick: console.log,
   onBookLinkClick: console.log,
+  onOtherBookLinkClick: console.log,
   onTopicEditClick: console.log,
 };
 
