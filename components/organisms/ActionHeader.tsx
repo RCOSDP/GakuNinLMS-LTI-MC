@@ -4,7 +4,8 @@ import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
 import { useTheme, makeStyles } from "@material-ui/core/styles";
 import { gray } from "$theme/colors";
-import useStickyProps from "$utils/useStickyProps";
+import useSticky from "$utils/useSticky";
+import useAppBarOffset from "$utils/useAppBarOffset";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -45,9 +46,10 @@ export default function ActionHeader(props: Props) {
   const { maxWidth, title, action } = props;
   const classes = useStyles();
   const theme = useTheme();
-  const { classes: stickyClasses, scroll, desktop, mobile } = useStickyProps({
+  const appBarOffset = useAppBarOffset();
+  const sticky = useSticky({
     backgroundColor: gray[50],
-    top: theme.spacing(-2),
+    offset: appBarOffset + theme.spacing(-2),
     zIndex: 2,
   });
   return (
@@ -66,13 +68,7 @@ export default function ActionHeader(props: Props) {
       )}
       {action && (
         <Container
-          className={clsx(
-            { [classes.container]: !maxWidth },
-            { [stickyClasses.scroll]: scroll },
-            { [stickyClasses.desktop]: desktop },
-            { [stickyClasses.mobile]: mobile },
-            stickyClasses.sticky
-          )}
+          className={clsx({ [classes.container]: !maxWidth }, sticky)}
           maxWidth={maxWidth}
         >
           <div className={classes.action}>{action}</div>
