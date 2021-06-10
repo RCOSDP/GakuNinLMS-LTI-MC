@@ -7,7 +7,7 @@ import Books from "./Books";
 import Slide from "@material-ui/core/Slide";
 import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 import AppBar from "$organisms/AppBar";
-import { books, session } from "samples";
+import { book, books, session } from "samples";
 
 const appBarHandlers = {
   onBooksClick: console.log,
@@ -39,7 +39,7 @@ function SlideAppBar() {
 export const Default = () => (
   <>
     <SlideAppBar />
-    <Books books={books} {...handlers} />
+    <Books linkedBook={book} books={books} {...handlers} />
   </>
 );
 
