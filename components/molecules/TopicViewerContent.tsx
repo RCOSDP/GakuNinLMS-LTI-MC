@@ -10,7 +10,7 @@ import type { LinkProps } from "@material-ui/core/Link";
 import { useTheme, makeStyles } from "@material-ui/core/styles";
 import Video from "$organisms/Video";
 import Item from "$atoms/Item";
-import useStickyProps from "$utils/useStickyProps";
+import useSticky from "$utils/useSticky";
 import languages from "$utils/languages";
 import { NEXT_PUBLIC_VIDEO_MAX_HEIGHT } from "$utils/env";
 import { gray } from "$theme/colors";
@@ -61,19 +61,15 @@ const useStyles = makeStyles((theme) => ({
 type Props = {
   topic: TopicSchema;
   onEnded?: () => void;
-  top?: number;
-  dialog?: boolean;
+  offset?: number;
 };
 
 export default function TopicViewerContent(props: Props) {
-  const { topic, onEnded, dialog = false, top } = props;
+  const { topic, onEnded, offset } = props;
   const classes = useStyles();
   const theme = useTheme();
-  const { classes: stickyClasses, scroll, desktop, mobile } = useStickyProps({
-    backgroundColor: "transparent",
-    top: top ?? theme.spacing(-2),
-    zIndex: 1,
-    dialog,
+  const sticky = useSticky({
+    offset: offset ?? theme.spacing(-2),
   });
   const components = {
     a: MarkdownLink,
@@ -82,13 +78,7 @@ export default function TopicViewerContent(props: Props) {
     <>
       {"providerUrl" in topic.resource && (
         <Video
-          className={clsx(
-            classes.video,
-            stickyClasses.sticky,
-            { [stickyClasses.scroll]: scroll },
-            { [stickyClasses.desktop]: desktop },
-            { [stickyClasses.mobile]: mobile }
-          )}
+          className={clsx(classes.video, sticky)}
           {...topic.resource}
           onEnded={onEnded}
           autoplay
