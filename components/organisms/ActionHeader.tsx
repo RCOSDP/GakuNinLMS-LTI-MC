@@ -19,6 +19,9 @@ const useStyles = makeStyles((theme) => ({
       paddingTop: theme.spacing(1),
     },
   },
+  body: {
+    paddingTop: theme.spacing(2),
+  },
   action: {
     display: "flex",
     alignItems: "center",
@@ -39,42 +42,44 @@ const useStyles = makeStyles((theme) => ({
 
 type Props = Pick<ComponentProps<typeof Container>, "maxWidth"> & {
   title?: React.ReactNode;
+  body?: React.ReactNode;
   action: React.ReactNode;
   considerAppBar?: boolean;
 };
 
 export default function ActionHeader(props: Props) {
-  const { maxWidth, title, action, considerAppBar = true } = props;
+  const { maxWidth, title, body, action, considerAppBar = true } = props;
   const classes = useStyles();
   const theme = useTheme();
   const appBarOffset = useAppBarOffset();
   const sticky = useSticky({
     backgroundColor: gray[50],
-    offset: considerAppBar ? appBarOffset + theme.spacing(-2) : 0,
+    offset: (considerAppBar ? appBarOffset : 0) + theme.spacing(-2),
     zIndex: 2,
   });
   return (
     <>
-      {title && (
+      {(title || body) && (
         <div className={classes.root}>
           <Container
             className={clsx({ [classes.container]: !maxWidth })}
             maxWidth={maxWidth}
           >
-            <Typography className={classes.title} variant="h4">
-              {title}
-            </Typography>
+            {title && (
+              <Typography className={classes.title} variant="h4">
+                {title}
+              </Typography>
+            )}
+            {body && <div className={classes.body}>{body}</div>}
           </Container>
         </div>
       )}
-      {action && (
-        <Container
-          className={clsx({ [classes.container]: !maxWidth }, sticky)}
-          maxWidth={maxWidth}
-        >
-          <div className={classes.action}>{action}</div>
-        </Container>
-      )}
+      <Container
+        className={clsx({ [classes.container]: !maxWidth }, sticky)}
+        maxWidth={maxWidth}
+      >
+        <div className={classes.action}>{action}</div>
+      </Container>
     </>
   );
 }

@@ -56,6 +56,9 @@ function Show(query: Query) {
     await updateLtiResourceLink({ ...ltiResourceLink, bookId });
     return router.push(pagesPath.book.$url({ query: { bookId } }));
   };
+  const handleOtherBookLinkClick = () => {
+    return router.push(pagesPath.books.$url());
+  };
   const handleTopicEditClick = (topic: Pick<TopicSchema, "id" | "creator">) => {
     const action = isTopicEditable(topic) ? "edit" : "generate";
     const url = pagesPath.book.topic[action].$url({
@@ -69,6 +72,7 @@ function Show(query: Query) {
     onItemClick: handleTopicNext,
     onBookEditClick: handleBookEditClick,
     onBookLinkClick: handleBookLinkClick,
+    onOtherBookLinkClick: handleOtherBookLinkClick,
     onTopicEditClick: handleTopicEditClick,
   };
 

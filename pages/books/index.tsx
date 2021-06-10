@@ -4,6 +4,7 @@ import type { TopicSchema } from "$server/models/topic";
 import { useSessionAtom } from "$store/session";
 import BooksTemplate from "$templates/Books";
 import useBooks from "$utils/useBooks";
+import { useLinkedBook } from "$utils/book";
 import { pagesPath } from "$utils/$path";
 import { updateLtiResourceLink } from "$utils/ltiResourceLink";
 import getLtiResourceLink from "$utils/getLtiResourceLink";
@@ -18,6 +19,11 @@ const Books = (
 function Index() {
   const router = useRouter();
   const { session, isBookEditable, isTopicEditable } = useSessionAtom();
+  const { linkedBook } = useLinkedBook(
+    session?.ltiResourceLink?.bookId,
+    isBookEditable,
+    isTopicEditable
+  );
   const handlers = {
     onBookClick({ id }: Pick<BookSchema, "id">) {
       return router.push(pagesPath.book.$url({ query: { bookId: id } }));
@@ -52,7 +58,7 @@ function Index() {
     isTopicEditable,
   };
 
-  return <Books {...handlers} />;
+  return <Books linkedBook={linkedBook} {...handlers} />;
 }
 
 export default Index;

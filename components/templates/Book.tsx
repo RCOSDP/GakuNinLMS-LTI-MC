@@ -89,6 +89,7 @@ type Props = {
   index: ItemIndex;
   onBookEditClick(book: BookSchema): void;
   onBookLinkClick(book: BookSchema): void;
+  onOtherBookLinkClick(): void;
   onTopicEditClick?(topic: TopicSchema): void;
   onTopicEnded(): void;
   onItemClick(index: ItemIndex): void;
@@ -102,6 +103,7 @@ export default function Book(props: Props) {
     index: [sectionIndex, topicIndex],
     onBookEditClick,
     onBookLinkClick,
+    onOtherBookLinkClick,
     onTopicEditClick,
     onTopicEnded,
     onItemClick,
@@ -127,6 +129,7 @@ export default function Book(props: Props) {
   };
   const handleBookEditClick = () => book && onBookEditClick(book);
   const handleBookLinkClick = () => book && onBookLinkClick(book);
+  const handleOtherBookLinkClick = () => onOtherBookLinkClick();
   const handleItemClick = (_: never, index: ItemIndex) => {
     onItemClick(index);
   };
@@ -164,6 +167,16 @@ export default function Book(props: Props) {
               >
                 <LinkIcon className={classes.icon} />
                 このブックを提供
+              </Button>
+            )}
+            {isInstructor && linked && (
+              <Button
+                size="small"
+                color="primary"
+                onClick={handleOtherBookLinkClick}
+              >
+                <LinkIcon className={classes.icon} />
+                他のブックを提供
               </Button>
             )}
             {/* TODO: 「このブックを提供解除」ボタンの実装 */}

@@ -3,8 +3,8 @@ import Skeleton from "@material-ui/lab/Skeleton";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
+import Typography from "@material-ui/core/Typography";
 import AddIcon from "@material-ui/icons/Add";
-import Alert from "@material-ui/lab/Alert";
 import Book from "$templates/Book";
 import ActionHeader from "$organisms/ActionHeader";
 import BookPreview from "$organisms/BookPreview";
@@ -19,14 +19,13 @@ import { SortOrder } from "$server/models/sortOrder";
 import { Filter } from "$types/filter";
 import useContainerStyles from "styles/container";
 import { useSearchAtom } from "$store/search";
-import { useSessionAtom } from "$store/session";
 
 const useStyles = makeStyles((theme) => ({
   icon: {
     marginRight: theme.spacing(0.5),
   },
-  alert: {
-    marginTop: theme.spacing(1),
+  title: {
+    marginBottom: theme.spacing(2),
   },
   books: {
     marginTop: theme.spacing(1),
@@ -38,6 +37,7 @@ const useStyles = makeStyles((theme) => ({
 
 export type Props = {
   books: BookSchema[];
+  linkedBook?: BookSchema;
   loading?: boolean;
   hasNextPage?: boolean;
   onLoadMore?(): void;
@@ -53,6 +53,7 @@ export type Props = {
 export default function Books(props: Props) {
   const {
     books,
+    linkedBook,
     loading = false,
     hasNextPage = false,
     onLoadMore = () => undefined,
@@ -64,7 +65,6 @@ export default function Books(props: Props) {
     onFilterChange,
   } = props;
   const { query, onSearchInput, onLtiContextClick } = useSearchAtom();
-  const { session, isInstructor } = useSessionAtom();
   const {
     data: dialog,
     open,
@@ -92,10 +92,27 @@ export default function Books(props: Props) {
               <AddIcon className={classes.icon} />
               ブックの作成
             </Button>
-            {!session?.ltiResourceLink && isInstructor && (
-              <Alert className={classes.alert} severity="info">
-                ブックが提供されていません。提供したいブックの「もっと詳しく...」をクリックしたのち「このブックを提供」をクリックしてください
-              </Alert>
+          </>
+        }
+        body={
+          <>
+            <Typography className={classes.title} variant="h5">
+              提供中のブック
+            </Typography>
+            {linkedBook && (
+              <BookPreview
+                book={linkedBook}
+                onBookClick={handleBookClick(linkedBook)}
+                onBookEditClick={handleBookEditClick(linkedBook)}
+                onLtiContextClick={onLtiContextClick}
+              />
+            )}
+            {!linkedBook && (
+              <Typography variant="body2">
+                提供中のブックがありません。
+                <br />
+                ブックを提供するには、提供したいブックの「もっと詳しく...」をクリックしたのち「このブックを提供」をクリックしてください。
+              </Typography>
             )}
           </>
         }
@@ -133,6 +150,7 @@ export default function Books(props: Props) {
               {...props}
               onBookEditClick={onBookEditClick}
               onBookLinkClick={onBookLinkClick}
+              onOtherBookLinkClick={onClose}
               onTopicEditClick={onTopicEditClick}
             />
           )}
