@@ -116,7 +116,10 @@ function AppBar(props: Props, ref: Ref<unknown>) {
               icon={<VisibilityOutlinedIcon />}
               label="プレビュー"
               onClick={onBookClick}
-              disabled={!onBookClick}
+              disabled={
+                !onBookClick ||
+                !Number.isFinite(session?.ltiResourceLink?.bookId)
+              }
             />
             <AppBarNavButton
               color="inherit"
