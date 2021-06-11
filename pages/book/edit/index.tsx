@@ -9,7 +9,7 @@ import BookNotFoundProblem from "$organisms/TopicNotFoundProblem";
 import { destroyBook, updateBook, useBook } from "$utils/book";
 import { pagesPath } from "$utils/$path";
 
-export type Query = { bookId: BookSchema["id"]; context?: "books" | "link" };
+export type Query = { bookId: BookSchema["id"]; context?: "books" };
 
 function Edit({ bookId, context }: Query) {
   const query = { bookId, ...(context && { context }) };
@@ -19,7 +19,6 @@ function Edit({ bookId, context }: Query) {
   const back = () => {
     switch (context) {
       case "books":
-      case "link":
         return router.push(pagesPath[context].$url());
       default:
         return router.push(pagesPath.book.$url({ query }));
@@ -37,7 +36,6 @@ function Edit({ bookId, context }: Query) {
     await destroyBook(id);
     switch (context) {
       case "books":
-      case "link":
         return router.push(pagesPath[context].$url());
       default:
         return router.push(pagesPath.books.$url());

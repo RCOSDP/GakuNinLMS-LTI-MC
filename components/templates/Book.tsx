@@ -88,10 +88,12 @@ type Props = {
   book: BookSchema | null;
   index: ItemIndex;
   onBookEditClick(book: BookSchema): void;
-  onBookLinkClick(): void;
+  onBookLinkClick?(book: BookSchema): void;
+  onOtherBookLinkClick(): void;
   onTopicEditClick?(topic: TopicSchema): void;
   onTopicEnded(): void;
   onItemClick(index: ItemIndex): void;
+  considerAppBar?: boolean;
 };
 
 export default function Book(props: Props) {
@@ -101,9 +103,11 @@ export default function Book(props: Props) {
     index: [sectionIndex, topicIndex],
     onBookEditClick,
     onBookLinkClick,
+    onOtherBookLinkClick,
     onTopicEditClick,
     onTopicEnded,
     onItemClick,
+    considerAppBar = true,
   } = props;
   const topic = book?.sections[sectionIndex]?.topics[topicIndex];
   const { isInstructor, isBookEditable, isTopicEditable } = useSessionAtom();
@@ -112,7 +116,7 @@ export default function Book(props: Props) {
   const sideOffset = trigger ? theme.spacing(2) : theme.spacing(6);
   const actionHeaderOffset = 80;
   const appBarOffset = useAppBarOffset();
-  const offset = appBarOffset + actionHeaderOffset;
+  const offset = (considerAppBar ? appBarOffset : 0) + actionHeaderOffset;
   const classes = useStyles({ offset: offset + sideOffset });
   const sticky = useSticky({ offset });
   const matches = useMediaQuery(theme.breakpoints.up("md"));
@@ -123,7 +127,9 @@ export default function Book(props: Props) {
   const handleClose = () => {
     setOpen(false);
   };
-  const handleEditClick = () => book && onBookEditClick(book);
+  const handleBookEditClick = () => book && onBookEditClick(book);
+  const handleBookLinkClick = () => book && onBookLinkClick?.(book);
+  const handleOtherBookLinkClick = () => onOtherBookLinkClick();
   const handleItemClick = (_: never, index: ItemIndex) => {
     onItemClick(index);
   };
@@ -137,6 +143,7 @@ export default function Book(props: Props) {
   return (
     <Container maxWidth="lg">
       <ActionHeader
+        considerAppBar={considerAppBar}
         action={
           <Typography
             className={clsx(classes.header, { [classes.mobile]: !matches })}
@@ -148,16 +155,31 @@ export default function Book(props: Props) {
               <InfoOutlinedIcon />
             </IconButton>
             {isInstructor && book && (isBookEditable(book) || book.shared) && (
-              <IconButton color="primary" onClick={handleEditClick}>
+              <IconButton color="primary" onClick={handleBookEditClick}>
                 <EditOutlinedIcon />
               </IconButton>
             )}
+            {isInstructor && !linked && onBookLinkClick && (
+              <Button
+                size="small"
+                color="primary"
+                onClick={handleBookLinkClick}
+              >
+                <LinkIcon className={classes.icon} />
+                このブックを提供
+              </Button>
+            )}
             {isInstructor && linked && (
-              <Button size="small" color="primary" onClick={onBookLinkClick}>
+              <Button
+                size="small"
+                color="primary"
+                onClick={handleOtherBookLinkClick}
+              >
                 <LinkIcon className={classes.icon} />
                 他のブックを提供
               </Button>
             )}
+            {/* TODO: 「このブックを提供解除」ボタンの実装 */}
           </Typography>
         }
       />

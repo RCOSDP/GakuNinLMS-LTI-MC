@@ -21,7 +21,7 @@ function Router() {
   const ltiResourceLink = session?.ltiResourceLink;
 
   if (!ltiResourceLink && isInstructor)
-    return <Replace href={pagesPath.link.$url()} />;
+    return <Replace href={pagesPath.books.$url()} />;
 
   if (!ltiResourceLink) return <UnlinkedProblem />;
 

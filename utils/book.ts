@@ -44,6 +44,26 @@ export function useBook(
   };
 }
 
+export function useLinkedBook(
+  id: BookSchema["id"] | undefined,
+  isBookEditable: (book: Pick<BookSchema, "author">) => boolean,
+  isTopicEditable: (topic: Pick<TopicSchema, "creator">) => boolean
+) {
+  const { data, error } = useSWR<BookSchema>(
+    Number.isFinite(id) ? [key, id] : null,
+    fetchBook
+  );
+  const displayable = useMemo(
+    () => getDisplayableBook(data, isBookEditable, isTopicEditable),
+    [data, isBookEditable, isTopicEditable]
+  );
+
+  return {
+    linkedBook: displayable,
+    error,
+  };
+}
+
 export async function createBook(body: BookProps): Promise<BookSchema> {
   // @ts-expect-error NOTE: body.sections[].topics[].name のUnion型に null 含むか否か異なる
   const res = await api.apiV2BookPost({ body });

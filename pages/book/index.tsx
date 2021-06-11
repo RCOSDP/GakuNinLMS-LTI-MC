@@ -47,7 +47,9 @@ function Show(query: Query) {
     const action = book && isBookEditable(book) ? "edit" : "generate";
     return router.push(pagesPath.book[action].$url({ query }));
   };
-  const handleBookLinkClick = () => router.push(pagesPath.link.$url());
+  const handleOtherBookLinkClick = () => {
+    return router.push(pagesPath.books.$url());
+  };
   const handleTopicEditClick = (topic: Pick<TopicSchema, "id" | "creator">) => {
     const action = isTopicEditable(topic) ? "edit" : "generate";
     const url = pagesPath.book.topic[action].$url({
@@ -60,7 +62,7 @@ function Show(query: Query) {
     onTopicEnded: handleTopicNext,
     onItemClick: handleTopicNext,
     onBookEditClick: handleBookEditClick,
-    onBookLinkClick: handleBookLinkClick,
+    onOtherBookLinkClick: handleOtherBookLinkClick,
     onTopicEditClick: handleTopicEditClick,
   };
 
