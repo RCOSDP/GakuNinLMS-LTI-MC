@@ -1,6 +1,7 @@
 import { useState } from "react";
 import clsx from "clsx";
 import { format } from "date-fns";
+import { useInView } from "react-intersection-observer";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import IconButton from "@material-ui/core/IconButton";
@@ -91,6 +92,7 @@ export default function BookPreview({
   const [topic] = useState<TopicSchema | undefined>(
     book.sections[0]?.topics[0]
   );
+  const { ref, inView } = useInView({ rootMargin: "100px", triggerOnce: true });
   const {
     data: dialog,
     open,
@@ -143,8 +145,8 @@ export default function BookPreview({
           もっと詳しく...
         </Button>
       </div>
-      <div className={classes.right}>
-        {topic && "providerUrl" in topic.resource && (
+      <div ref={ref} className={classes.right}>
+        {topic && "providerUrl" in topic.resource && inView && (
           <Video {...topic.resource} />
         )}
       </div>
