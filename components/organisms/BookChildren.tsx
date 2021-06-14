@@ -115,7 +115,7 @@ export default function BookChildren(props: Props) {
                   " "}
                 {topic.name}
               </ListItemText>
-              {isTopicEditable(topic) && (
+              {isTopicEditable(topic) && onItemEditClick && (
                 <ListItemSecondaryAction>
                   <IconButton
                     color="primary"
