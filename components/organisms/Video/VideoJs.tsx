@@ -1,10 +1,10 @@
 import { useEffect, useRef } from "react";
 import videojs, { VideoJsPlayer, VideoJsPlayerOptions } from "video.js";
 
-// error  Could not find a declaration file for module '@meikidd/videojs-hlsjs-plugin'.
-// './node_modules/@meikidd/videojs-hlsjs-plugin/lib/main.js' implicitly has an 'any' type.
+// error  Could not find a declaration file for module '@meikidd/videojs-hlsjs-plugin/lib/videojs-hlsjs-plugin.js'.
+// './node_modules/@meikidd/videojs-hlsjs-plugin/lib/videojs-hlsjs-plugin.js' implicitly has an 'any' type.
 // eslint-disable-next-line tsc/config
-import videojsHlsjsSourceHandler from "@meikidd/videojs-hlsjs-plugin";
+import vjsPlugin from "@meikidd/videojs-hlsjs-plugin/lib/videojs-hlsjs-plugin.js";
 
 import ja from "video.js/dist/lang/ja.json";
 import "videojs-youtube";
@@ -13,8 +13,6 @@ import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
 import { usePlayerTrackingAtom } from "$store/playerTracker";
 import volumePersister from "$utils/volumePersister";
-
-videojsHlsjsSourceHandler.register(videojs);
 
 type VideoJsProps = {
   className?: string;
@@ -47,6 +45,9 @@ export function VideoJs({ className, options, tracks }: VideoJsProps) {
   const tracking = usePlayerTrackingAtom();
   const classes = useStyles();
   useEffect(() => {
+    vjsPlugin.registerConfigPlugin(videojs);
+    vjsPlugin.registerSourceHandler(videojs);
+
     const { current } = ref;
     const element = document.createElement("video-js");
     element.classList.add("vjs-big-play-centered");
