@@ -87,7 +87,7 @@ type Props = {
   linked?: boolean;
   book: BookSchema | null;
   index: ItemIndex;
-  onBookEditClick(book: BookSchema): void;
+  onBookEditClick?(book: BookSchema): void;
   onBookLinkClick?(book: BookSchema): void;
   onOtherBookLinkClick(): void;
   onTopicEditClick?(topic: TopicSchema): void;
@@ -127,18 +127,19 @@ export default function Book(props: Props) {
   const handleClose = () => {
     setOpen(false);
   };
-  const handleBookEditClick = () => book && onBookEditClick(book);
+  const handleBookEditClick = () => book && onBookEditClick?.(book);
   const handleBookLinkClick = () => book && onBookLinkClick?.(book);
   const handleOtherBookLinkClick = () => onOtherBookLinkClick();
   const handleItemClick = (_: never, index: ItemIndex) => {
     onItemClick(index);
   };
-  const handleItemEditClick = isInstructor
-    ? (_: never, [sectionIndex, topicIndex]: ItemIndex) => {
-        const topic = book?.sections[sectionIndex]?.topics[topicIndex];
-        if (topic) onTopicEditClick?.(topic);
-      }
-    : undefined;
+  const handleItemEditClick =
+    isInstructor && onTopicEditClick
+      ? (_: never, [sectionIndex, topicIndex]: ItemIndex) => {
+          const topic = book?.sections[sectionIndex]?.topics[topicIndex];
+          if (topic) onTopicEditClick?.(topic);
+        }
+      : undefined;
 
   return (
     <Container maxWidth="lg">
@@ -154,11 +155,14 @@ export default function Book(props: Props) {
             <IconButton onClick={handleInfoClick}>
               <InfoOutlinedIcon />
             </IconButton>
-            {isInstructor && book && (isBookEditable(book) || book.shared) && (
-              <IconButton color="primary" onClick={handleBookEditClick}>
-                <EditOutlinedIcon />
-              </IconButton>
-            )}
+            {isInstructor &&
+              book &&
+              onBookEditClick &&
+              (isBookEditable(book) || book.shared) && (
+                <IconButton color="primary" onClick={handleBookEditClick}>
+                  <EditOutlinedIcon />
+                </IconButton>
+              )}
             {isInstructor && !linked && onBookLinkClick && (
               <Button
                 size="small"

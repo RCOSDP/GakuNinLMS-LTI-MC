@@ -1,6 +1,5 @@
 import { useRouter } from "next/router";
 import type { BookSchema } from "$server/models/book";
-import type { TopicSchema } from "$server/models/topic";
 import { useSessionAtom } from "$store/session";
 import BooksTemplate from "$templates/Books";
 import Book from "$templates/Book";
@@ -54,13 +53,6 @@ function Index() {
     await updateLtiResourceLink({ ...ltiResourceLink, bookId });
     return router.push(pagesPath.book.$url({ query: { bookId } }));
   };
-  const handleTopicEditClick = ({ id }: Pick<TopicSchema, "id">) => {
-    return router.push(
-      pagesPath.books.topic.edit.$url({
-        query: { topicId: id },
-      })
-    );
-  };
   const handlers = {
     onBookClick: handleBookClick,
     onBookEditClick: handleBookEditClick,
@@ -75,10 +67,8 @@ function Index() {
           {(props) => (
             <Book
               {...props}
-              onBookEditClick={handleBookEditClick}
               onBookLinkClick={handleBookLinkClick}
               onOtherBookLinkClick={onClose}
-              onTopicEditClick={handleTopicEditClick}
             />
           )}
         </BookPreviewDialog>
