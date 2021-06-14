@@ -1,13 +1,20 @@
 import { useEffect, useRef } from "react";
 import videojs, { VideoJsPlayer, VideoJsPlayerOptions } from "video.js";
+
+// error  Could not find a declaration file for module '@meikidd/videojs-hlsjs-plugin'.
+// './node_modules/@meikidd/videojs-hlsjs-plugin/lib/main.js' implicitly has an 'any' type.
+// eslint-disable-next-line tsc/config
+import videojsHlsjsSourceHandler from "@meikidd/videojs-hlsjs-plugin";
+
 import ja from "video.js/dist/lang/ja.json";
 import "videojs-youtube";
 import "videojs-seek-buttons";
-import "@videojs/http-streaming";
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
 import { usePlayerTrackingAtom } from "$store/playerTracker";
 import volumePersister from "$utils/volumePersister";
+
+videojsHlsjsSourceHandler.register(videojs);
 
 type VideoJsProps = {
   className?: string;
