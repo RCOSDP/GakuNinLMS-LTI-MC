@@ -33,7 +33,7 @@ function Index() {
     onClose,
     dispatch,
   } = useDialogProps<BookSchema>();
-  const handleBookClick = (book: BookSchema) => () => dispatch(book);
+  const handleBookClick = (book: BookSchema) => dispatch(book);
   const handleBookEditClick = (book: Pick<BookSchema, "id" | "author">) => {
     const action = isBookEditable(book) ? "edit" : "generate";
     return router.push(
