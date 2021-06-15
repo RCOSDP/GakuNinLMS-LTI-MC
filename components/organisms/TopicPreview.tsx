@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import clsx from "clsx";
 import format from "date-fns/format";
+import { useInView } from "react-intersection-observer";
 import Markdown from "react-markdown";
 import gfm from "remark-gfm";
 import strip from "strip-markdown";
@@ -133,6 +134,7 @@ export default function TopicPreview(props: Props) {
     checked,
     ...checkboxProps
   } = props;
+  const { ref, inView } = useInView({ rootMargin: "100px", triggerOnce: true });
   const checkable = "onChange" in checkboxProps;
   const handle = (handler: (topic: TopicSchema) => void) => () => {
     handler(topic);
@@ -161,9 +163,11 @@ export default function TopicPreview(props: Props) {
           </IconButton>
         )}
       </CheckableHeader>
-      {"providerUrl" in topic.resource && (
-        <Video className={classes.video} {...topic.resource} />
-      )}
+      <div ref={ref}>
+        {"providerUrl" in topic.resource && inView && (
+          <Video className={classes.video} {...topic.resource} />
+        )}
+      </div>
       <div className={classes.items}>
         <Item itemKey="更新日" value={format(topic.updatedAt, "yyyy.MM.dd")} />
         <Item itemKey="作成者" value={topic.creator.name} />
