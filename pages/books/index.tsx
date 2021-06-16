@@ -64,13 +64,7 @@ function Index() {
       <Books linkedBook={linkedBook} {...handlers} />
       {dialog && (
         <BookPreviewDialog open={open} onClose={onClose} book={dialog}>
-          {(props) => (
-            <Book
-              {...props}
-              onBookLinkClick={handleBookLinkClick}
-              onOtherBookLinkClick={onClose}
-            />
-          )}
+          {(props) => <Book {...props} />}
         </BookPreviewDialog>
       )}
     </>
