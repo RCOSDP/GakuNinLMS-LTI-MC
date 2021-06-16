@@ -2,12 +2,12 @@ import clsx from "clsx";
 import { useTheme, makeStyles } from "@material-ui/core/styles";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import Button from "@material-ui/core/Button";
-import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import LinkIcon from "@material-ui/icons/Link";
 import useScrollTrigger from "@material-ui/core/useScrollTrigger";
+import IconButton from "$atoms/IconButton";
 import BookChildren from "$organisms/BookChildren";
 import TopicViewer from "$organisms/TopicViewer";
 import ActionHeader from "$organisms/ActionHeader";
@@ -146,7 +146,11 @@ export default function Book(props: Props) {
               book &&
               onBookEditClick &&
               (isBookEditable(book) || book.shared) && (
-                <IconButton color="primary" onClick={handleBookEditClick}>
+                <IconButton
+                  tooltipProps={{ title: "ブックを編集" }}
+                  color="primary"
+                  onClick={handleBookEditClick}
+                >
                   <EditOutlinedIcon />
                 </IconButton>
               )}

@@ -1,6 +1,5 @@
 import { ReactNode, MouseEvent, useState } from "react";
 import clsx from "clsx";
-import IconButton from "@material-ui/core/IconButton";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -10,6 +9,7 @@ import { makeStyles } from "@material-ui/styles";
 import ExpandLessIcon from "@material-ui/icons/ExpandLess";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
+import IconButton from "$atoms/IconButton";
 import { TopicSchema } from "$server/models/topic";
 import { SectionSchema } from "$server/models/book/section";
 import { primary } from "$theme/colors";
@@ -118,6 +118,7 @@ export default function BookChildren(props: Props) {
               {isTopicEditable(topic) && onItemEditClick && (
                 <ListItemSecondaryAction>
                   <IconButton
+                    tooltipProps={{ title: "トピックを編集" }}
                     color="primary"
                     onClick={handleItemEditClick(
                       sectionItemIndex,

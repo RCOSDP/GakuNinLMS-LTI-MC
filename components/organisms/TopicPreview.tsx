@@ -7,12 +7,12 @@ import gfm from "remark-gfm";
 import strip from "strip-markdown";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
-import IconButton from "@material-ui/core/IconButton";
 import Checkbox from "@material-ui/core/Checkbox";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import { makeStyles } from "@material-ui/core/styles";
 import Video from "$organisms/Video";
 import Item from "$atoms/Item";
+import IconButton from "$atoms/IconButton";
 import SharedIndicator from "$atoms/SharedIndicator";
 import { TopicSchema } from "$server/models/topic";
 import { primary, gray } from "$theme/colors";
@@ -155,6 +155,7 @@ export default function TopicPreview(props: Props) {
         {onTopicEditClick && (
           <IconButton
             className={classes.editButton}
+            tooltipProps={{ title: "トピックを編集" }}
             color="primary"
             size="small"
             onClick={handle(onTopicEditClick)}

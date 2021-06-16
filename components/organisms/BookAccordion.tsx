@@ -1,7 +1,6 @@
 import Accordion from "@material-ui/core/Accordion";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
-import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import TreeView from "@material-ui/lab/TreeView";
@@ -10,6 +9,7 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import { makeStyles } from "@material-ui/core/styles";
 import BookChildrenTree from "$molecules/BookChildrenTree";
+import IconButton from "$atoms/IconButton";
 import CourseChip from "$atoms/CourseChip";
 import Item from "$atoms/Item";
 import SharedIndicator from "$atoms/SharedIndicator";
@@ -86,7 +86,11 @@ export default function BookAccordion(props: Props) {
       >
         <Typography variant="h6">{book.name}</Typography>
         {book.shared && <SharedIndicator className={classes.shared} />}
-        <IconButton color="primary" onClick={handleEditClick}>
+        <IconButton
+          tooltipProps={{ title: "ブックを編集" }}
+          color="primary"
+          onClick={handleEditClick}
+        >
           <EditOutlinedIcon />
         </IconButton>
       </AccordionSummary>
