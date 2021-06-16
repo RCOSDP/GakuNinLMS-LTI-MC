@@ -1,4 +1,3 @@
-import { useState } from "react";
 import clsx from "clsx";
 import { useTheme, makeStyles } from "@material-ui/core/styles";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
@@ -6,12 +5,10 @@ import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
-import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import LinkIcon from "@material-ui/icons/Link";
 import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 import BookChildren from "$organisms/BookChildren";
-import BookItemDialog from "$organisms/BookItemDialog";
 import TopicViewer from "$organisms/TopicViewer";
 import ActionHeader from "$organisms/ActionHeader";
 import type { BookSchema } from "$server/models/book";
@@ -120,13 +117,6 @@ export default function Book(props: Props) {
   const classes = useStyles({ offset: offset + sideOffset });
   const sticky = useSticky({ offset });
   const matches = useMediaQuery(theme.breakpoints.up("md"));
-  const [open, setOpen] = useState(false);
-  const handleInfoClick = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
   const handleBookEditClick = () => book && onBookEditClick?.(book);
   const handleBookLinkClick = () => book && onBookLinkClick?.(book);
   const handleOtherBookLinkClick = () => onOtherBookLinkClick();
@@ -152,9 +142,6 @@ export default function Book(props: Props) {
             gutterBottom={true}
           >
             <span className={classes.title}>{book?.name}</span>
-            <IconButton onClick={handleInfoClick}>
-              <InfoOutlinedIcon />
-            </IconButton>
             {isInstructor &&
               book &&
               onBookEditClick &&
@@ -215,7 +202,6 @@ export default function Book(props: Props) {
           />
         </div>
       </div>
-      {book && <BookItemDialog open={open} onClose={handleClose} book={book} />}
     </Container>
   );
 }

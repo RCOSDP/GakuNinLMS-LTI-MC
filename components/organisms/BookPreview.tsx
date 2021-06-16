@@ -5,14 +5,12 @@ import { useInView } from "react-intersection-observer";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import IconButton from "@material-ui/core/IconButton";
-import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import { makeStyles } from "@material-ui/core/styles";
 import Video from "$organisms/Video";
 import CourseChip from "$atoms/CourseChip";
 import Item from "$atoms/Item";
 import SharedIndicator from "$atoms/SharedIndicator";
-import BookItemDialog from "$organisms/BookItemDialog";
 import useCardStyle from "styles/card";
 import { BookSchema } from "$server/models/book";
 import { TopicSchema } from "$server/models/topic";
@@ -93,13 +91,6 @@ export default function BookPreview({
     book.sections[0]?.topics[0]
   );
   const { ref, inView } = useInView({ rootMargin: "100px", triggerOnce: true });
-  const {
-    data: dialog,
-    open,
-    onClose,
-    dispatch,
-  } = useDialogProps<BookSchema>();
-  const handleInfoClick = () => dispatch(book);
   const handle = (handler?: (book: BookSchema) => void) => () => {
     handler?.(book);
   };
@@ -109,9 +100,6 @@ export default function BookPreview({
         <div className={clsx(classes.title, titleClamp.placeholder)}>
           <label className={titleClamp.clamp}>{book.name}</label>
           {book.shared && <SharedIndicator className={classes.shared} />}
-          <IconButton onClick={handleInfoClick}>
-            <InfoOutlinedIcon />
-          </IconButton>
           {onBookEditClick && (
             <IconButton color="primary" onClick={handle(onBookEditClick)}>
               <EditOutlinedIcon />
@@ -150,7 +138,6 @@ export default function BookPreview({
           <Video {...topic.resource} />
         )}
       </div>
-      {dialog && <BookItemDialog open={open} onClose={onClose} book={dialog} />}
     </Card>
   );
 }

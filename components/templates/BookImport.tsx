@@ -10,7 +10,6 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import ActionHeader from "$organisms/ActionHeader";
 import ActionFooter from "$organisms/ActionFooter";
-import BookItemDialog from "$organisms/BookItemDialog";
 import BookTree from "$molecules/BookTree";
 import SortSelect from "$atoms/SortSelect";
 import CreatorFilter from "$atoms/CreatorFilter";
@@ -21,7 +20,6 @@ import { TopicSchema } from "$server/models/topic";
 import { SortOrder } from "$server/models/sortOrder";
 import { Filter } from "$types/filter";
 import useContainerStyles from "$styles/container";
-import useDialogProps from "$utils/useDialogProps";
 import { useSearchAtom } from "$store/search";
 
 const useStyles = makeStyles((theme) => ({
@@ -82,11 +80,6 @@ export default function BookImport(props: Props) {
   } = props;
   const classes = useStyles();
   const containerClasses = useContainerStyles();
-  const {
-    data: currentBook,
-    dispatch: setBook,
-    ...dialogProps
-  } = useDialogProps<BookSchema>();
   const { query, onSearchInput, onLtiContextClick } = useSearchAtom();
   const [selectedNodeIds, select] = useState<Set<string>>(new Set());
   const handleTreeChange = (nodeId: string) => {
@@ -164,14 +157,12 @@ export default function BookImport(props: Props) {
             topicIndex,
           ]: ItemIndex) =>
             handler?.(book.sections[sectionIndex].topics[topicIndex]);
-          const handleBookInfoClick = () => setBook(book);
           return (
             <BookTree
               key={book.id}
               book={book}
               onItemClick={handleItem(onTopicClick)}
               onItemEditClick={handleItem(onTopicEditClick)}
-              onBookInfoClick={handleBookInfoClick}
               onBookEditClick={isBookEditable?.(book) && onBookEditClick}
               onLtiContextClick={onLtiContextClick}
               isTopicEditable={isTopicEditable}
@@ -201,7 +192,6 @@ export default function BookImport(props: Props) {
           </Button>
         </form>
       </ActionFooter>
-      {currentBook && <BookItemDialog {...dialogProps} book={currentBook} />}
     </Container>
   );
 }

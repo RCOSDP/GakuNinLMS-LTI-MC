@@ -1,5 +1,3 @@
-import { MouseEvent, useState } from "react";
-import { format } from "date-fns";
 import Accordion from "@material-ui/core/Accordion";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
@@ -9,14 +7,12 @@ import Divider from "@material-ui/core/Divider";
 import TreeView from "@material-ui/lab/TreeView";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import { makeStyles } from "@material-ui/core/styles";
 import BookChildrenTree from "$molecules/BookChildrenTree";
 import CourseChip from "$atoms/CourseChip";
 import Item from "$atoms/Item";
 import SharedIndicator from "$atoms/SharedIndicator";
-import BookItemDialog from "$organisms/BookItemDialog";
 import { BookSchema } from "$server/models/book";
 import { TopicSchema } from "$server/models/topic";
 import { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
@@ -73,19 +69,11 @@ export default function BookAccordion(props: Props) {
   const accordionClasses = useAccordionStyle();
   const accordionSummaryClasses = useAccordionSummaryStyle();
   const accordionDetailClasses = useAccordionDetailStyle();
-  const [open, setOpen] = useState(false);
-  const handleInfoClick = (event: MouseEvent<HTMLButtonElement>) => {
-    event.stopPropagation();
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
   const handleItem = (handler?: (topic: TopicSchema) => void) => ([
     sectionIndex,
     topicIndex,
   ]: ItemIndex) => handler?.(book.sections[sectionIndex].topics[topicIndex]);
-  const handleEditClick = (event: MouseEvent<HTMLButtonElement>) => {
+  const handleEditClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
     onEditClick(book);
   };
@@ -98,9 +86,6 @@ export default function BookAccordion(props: Props) {
       >
         <Typography variant="h6">{book.name}</Typography>
         {book.shared && <SharedIndicator className={classes.shared} />}
-        <IconButton onClick={handleInfoClick}>
-          <InfoOutlinedIcon />
-        </IconButton>
         <IconButton color="primary" onClick={handleEditClick}>
           <EditOutlinedIcon />
         </IconButton>
@@ -134,7 +119,6 @@ export default function BookAccordion(props: Props) {
           />
         </TreeView>
       </AccordionDetails>
-      <BookItemDialog open={open} onClose={handleClose} book={book} />
     </Accordion>
   );
 }

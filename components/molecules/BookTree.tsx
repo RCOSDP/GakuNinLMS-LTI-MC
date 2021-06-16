@@ -2,7 +2,6 @@ import IconButton from "@material-ui/core/IconButton";
 import TreeItem from "@material-ui/lab/TreeItem";
 // TODO: ブック単位での再利用の実装
 // import Checkbox from "@material-ui/core/Checkbox";
-import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import { makeStyles } from "@material-ui/core/styles";
 import CourseChip from "$atoms/CourseChip";
@@ -24,7 +23,6 @@ type Props = {
   onItemClick(index: ItemIndex): void;
   onItemEditClick?(index: ItemIndex): void;
   onTreeChange?(nodeId: string): void;
-  onBookInfoClick(book: BookSchema): void;
   onBookEditClick?: ((book: BookSchema) => void) | false | undefined;
   onLtiContextClick?(
     ltiResourceLink: Pick<LtiResourceLinkSchema, "consumerId" | "contextId">
@@ -39,7 +37,6 @@ export default function BookTree(props: Props) {
     onItemClick,
     onItemEditClick,
     onTreeChange,
-    onBookInfoClick,
     onBookEditClick,
     onLtiContextClick,
     selectedIndexes,
@@ -79,9 +76,6 @@ export default function BookTree(props: Props) {
           )*/}
           {book.name}
           {book.shared && <SharedIndicator className={classes.shared} />}
-          <IconButton size="small" onClick={handle(onBookInfoClick)}>
-            <InfoOutlinedIcon />
-          </IconButton>
           {onBookEditClick && (
             <IconButton size="small" onClick={handle(onBookEditClick)}>
               <EditOutlinedIcon />
