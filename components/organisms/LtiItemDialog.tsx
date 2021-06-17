@@ -2,7 +2,7 @@ import Typography from "@material-ui/core/Typography";
 import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
 import { makeStyles } from "@material-ui/core/styles";
-import Item from "$atoms/Item";
+import DescriptionList from "$atoms/DescriptionList";
 import { SessionSchema } from "$server/models/session";
 import useCardStyles from "$styles/card";
 
@@ -33,9 +33,12 @@ export default function LtiItemDialog(props: Props) {
         <Typography className={classes.title} variant="h5">
           LTI情報
         </Typography>
-        {Object.entries(session.ltiLaunchBody).map(([itemKey, value], key) => (
-          <Item key={key} itemKey={itemKey} value={value} component="p" />
-        ))}
+        <DescriptionList
+          value={Object.entries(session.ltiLaunchBody).map(([key, value]) => ({
+            key,
+            value,
+          }))}
+        />
       </DialogContent>
     </Dialog>
   );

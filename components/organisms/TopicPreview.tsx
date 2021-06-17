@@ -1,6 +1,5 @@
 import { ReactNode } from "react";
 import clsx from "clsx";
-import format from "date-fns/format";
 import { useInView } from "react-intersection-observer";
 import Markdown from "react-markdown";
 import gfm from "remark-gfm";
@@ -10,13 +9,14 @@ import Checkbox from "@material-ui/core/Checkbox";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import { makeStyles } from "@material-ui/core/styles";
-import Video from "$organisms/Video";
-import Item from "$atoms/Item";
 import IconButton from "$atoms/IconButton";
+import DescriptionList from "$atoms/DescriptionList";
 import SharedIndicator from "$atoms/SharedIndicator";
+import Video from "$organisms/Video";
 import { TopicSchema } from "$server/models/topic";
 import { primary, gray } from "$theme/colors";
 import useLineClampStyles from "$styles/lineClamp";
+import getLocaleDateString from "$utils/getLocaleDateString";
 
 const useCardStyles = makeStyles((theme) => ({
   root: {
@@ -99,11 +99,6 @@ const useStyles = makeStyles((theme) => ({
   video: {
     margin: theme.spacing(0, -2),
   },
-  items: {
-    "& > * + *": {
-      marginLeft: theme.spacing(1.25),
-    },
-  },
   description: {
     color: gray[700],
     margin: 0,
@@ -177,10 +172,19 @@ export default function TopicPreview(props: Props) {
           <Video className={classes.video} {...topic.resource} />
         )}
       </div>
-      <div className={classes.items}>
-        <Item itemKey="更新日" value={format(topic.updatedAt, "yyyy.MM.dd")} />
-        <Item itemKey="作成者" value={topic.creator.name} />
-      </div>
+      <DescriptionList
+        nowrap
+        value={[
+          {
+            key: "更新日",
+            value: getLocaleDateString(topic.updatedAt, "ja"),
+          },
+          {
+            key: "作成者",
+            value: topic.creator.name,
+          },
+        ]}
+      />
       <p
         className={clsx(
           classes.description,

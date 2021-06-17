@@ -10,8 +10,8 @@ import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import { makeStyles } from "@material-ui/core/styles";
 import IconButton from "$atoms/IconButton";
 import CourseChip from "$atoms/CourseChip";
-import Item from "$atoms/Item";
 import SharedIndicator from "$atoms/SharedIndicator";
+import DescriptionList from "$atoms/DescriptionList";
 import BookChildrenTree from "$molecules/BookChildrenTree";
 import { BookSchema } from "$server/models/book";
 import { TopicSchema } from "$server/models/topic";
@@ -19,6 +19,7 @@ import { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
 import useAccordionStyle from "styles/accordion";
 import useAccordionSummaryStyle from "styles/accordionSummary";
 import useAccordionDetailStyle from "styles/accordionDetail";
+import getLocaleDateString from "$utils/getLocaleDateString";
 
 const useStyles = makeStyles((theme) => ({
   shared: {
@@ -33,11 +34,6 @@ const useStyles = makeStyles((theme) => ({
   },
   items: {
     padding: theme.spacing(0, 2),
-    "& > *": {
-      display: "inline-block",
-      marginRight: theme.spacing(1.75),
-      marginBottom: theme.spacing(1),
-    },
   },
   tree: {
     margin: theme.spacing(2),
@@ -104,11 +100,15 @@ export default function BookAccordion(props: Props) {
             />
           ))}
         </div>
-        <div className={classes.items}>
-          <Item itemKey="作成日" value={format(book.createdAt, "yyyy.MM.dd")} />
-          <Item itemKey="更新日" value={format(book.updatedAt, "yyyy.MM.dd")} />
-          <Item itemKey="著者" value={book.author.name} />
-        </div>
+        <DescriptionList
+          className={classes.items}
+          inline
+          value={[
+            { key: "作成日", value: getLocaleDateString(book.createdAt, "ja") },
+            { key: "更新日", value: getLocaleDateString(book.updatedAt, "ja") },
+            { key: "著者", value: book.author.name },
+          ]}
+        />
         <Divider />
         <TreeView
           className={classes.tree}

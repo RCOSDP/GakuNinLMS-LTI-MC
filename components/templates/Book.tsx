@@ -8,6 +8,7 @@ import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import LinkIcon from "@material-ui/icons/Link";
 import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 import IconButton from "$atoms/IconButton";
+import DescriptionList from "$atoms/DescriptionList";
 import BookChildren from "$organisms/BookChildren";
 import TopicViewer from "$organisms/TopicViewer";
 import ActionHeader from "$organisms/ActionHeader";
@@ -16,6 +17,7 @@ import type { TopicSchema } from "$server/models/topic";
 import { useSessionAtom } from "$store/session";
 import useSticky from "$utils/useSticky";
 import useAppBarOffset from "$utils/useAppBarOffset";
+import getLocaleDateString from "$utils/getLocaleDateString";
 
 const useStyles = makeStyles((theme) => ({
   header: {
@@ -178,6 +180,25 @@ export default function Book(props: Props) {
           </Typography>
         }
       />
+      {book && (
+        <DescriptionList
+          nowrap
+          value={[
+            {
+              key: "作成日",
+              value: getLocaleDateString(book.createdAt, "ja"),
+            },
+            {
+              key: "更新日",
+              value: getLocaleDateString(book.updatedAt, "ja"),
+            },
+            {
+              key: "著者",
+              value: book.author.name,
+            },
+          ]}
+        />
+      )}
       <div
         className={clsx(
           classes.inner,

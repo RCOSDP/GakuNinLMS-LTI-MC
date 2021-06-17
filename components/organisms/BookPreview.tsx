@@ -1,16 +1,15 @@
 import { useState } from "react";
 import clsx from "clsx";
-import { format } from "date-fns";
 import { useInView } from "react-intersection-observer";
 import Card from "@material-ui/core/Card";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import { makeStyles } from "@material-ui/core/styles";
-import Video from "$organisms/Video";
 import IconButton from "$atoms/IconButton";
 import CourseChip from "$atoms/CourseChip";
-import Item from "$atoms/Item";
 import SharedIndicator from "$atoms/SharedIndicator";
+import DescriptionList from "$atoms/DescriptionList";
+import Video from "$organisms/Video";
 import useCardStyle from "styles/card";
 import { BookSchema } from "$server/models/book";
 import { TopicSchema } from "$server/models/topic";
@@ -18,7 +17,7 @@ import { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
 import { getSectionsOutline } from "$utils/outline";
 import { gray } from "$theme/colors";
 import useLineClampStyles from "$styles/lineClamp";
-import useDialogProps from "$utils/useDialogProps";
+import getLocaleDateString from "$utils/getLocaleDateString";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -126,11 +125,15 @@ export default function BookPreview({
             />
           ))}
         </div>
-        <div className={classes.items}>
-          <Item itemKey="作成日" value={format(book.createdAt, "yyyy.MM.dd")} />
-          <Item itemKey="更新日" value={format(book.updatedAt, "yyyy.MM.dd")} />
-          <Item itemKey="著者" value={book.author.name} />
-        </div>
+        <DescriptionList
+          className={classes.items}
+          nowrap
+          value={[
+            { key: "作成日", value: getLocaleDateString(book.createdAt, "ja") },
+            { key: "更新日", value: getLocaleDateString(book.updatedAt, "ja") },
+            { key: "著者", value: book.author.name },
+          ]}
+        />
         <p
           className={clsx(
             classes.outline,
