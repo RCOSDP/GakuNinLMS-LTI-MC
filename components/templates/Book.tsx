@@ -214,7 +214,7 @@ export default function Book(props: Props) {
                 value: getLocaleDateString(book.updatedAt, "ja"),
               },
               {
-                key: "著者",
+                key: "ブック作成者",
                 value: book.author.name,
               },
             ]}

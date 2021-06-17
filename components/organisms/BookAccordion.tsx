@@ -106,7 +106,7 @@ export default function BookAccordion(props: Props) {
           value={[
             { key: "作成日", value: getLocaleDateString(book.createdAt, "ja") },
             { key: "更新日", value: getLocaleDateString(book.updatedAt, "ja") },
-            { key: "著者", value: book.author.name },
+            { key: "作成者", value: book.author.name },
           ]}
         />
         <Divider />

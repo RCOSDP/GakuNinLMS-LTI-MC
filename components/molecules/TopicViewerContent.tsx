@@ -92,7 +92,7 @@ export default function TopicViewerContent(props: Props) {
             value: getLocaleDateString(topic.updatedAt, "ja"),
           },
           {
-            key: "作成者",
+            key: "トピック作成者",
             value: topic.creator.name,
           },
         ]}
