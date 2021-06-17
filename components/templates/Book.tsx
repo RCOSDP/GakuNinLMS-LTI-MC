@@ -13,6 +13,8 @@ import DescriptionList from "$atoms/DescriptionList";
 import BookChildren from "$organisms/BookChildren";
 import TopicViewer from "$organisms/TopicViewer";
 import ActionHeader from "$organisms/ActionHeader";
+import BookInfo from "$organisms/BookInfo";
+import CollapsibleContent from "$organisms/CollapsibleContent";
 import type { BookSchema } from "$server/models/book";
 import type { TopicSchema } from "$server/models/topic";
 import { useSessionAtom } from "$store/session";
@@ -60,6 +62,9 @@ const useStyles = makeStyles((theme) => ({
         "side"
       `,
     },
+  },
+  info: {
+    margin: theme.spacing(2, 0),
   },
   main: {
     gridArea: "main",
@@ -112,13 +117,25 @@ export default function Book(props: Props) {
   } = props;
   const topic = book?.sections[sectionIndex]?.topics[topicIndex];
   const { isInstructor, isBookEditable, isTopicEditable } = useSessionAtom();
-  const trigger = useScrollTrigger();
+  const descriptionListOffset = 22;
+  const collapsibleContentOffset = 36.5;
   const theme = useTheme();
-  const sideOffset = trigger ? theme.spacing(2) : theme.spacing(6);
+  const trigger = useScrollTrigger({
+    threshold:
+      theme.spacing(4) + descriptionListOffset + collapsibleContentOffset,
+    disableHysteresis: true,
+  });
+  const sideOffset =
+    theme.spacing(2) +
+    (trigger
+      ? 0
+      : theme.spacing(4) + descriptionListOffset + collapsibleContentOffset);
   const actionHeaderOffset = 80;
   const appBarOffset = useAppBarOffset();
   const offset = (considerAppBar ? appBarOffset : 0) + actionHeaderOffset;
-  const classes = useStyles({ offset: offset + sideOffset });
+  const classes = useStyles({
+    offset: offset + sideOffset,
+  });
   const sticky = useSticky({ offset });
   const matches = useMediaQuery(theme.breakpoints.up("md"));
   const handleBookEditClick = () => book && onBookEditClick?.(book);
@@ -184,23 +201,28 @@ export default function Book(props: Props) {
         }
       />
       {book && (
-        <DescriptionList
-          nowrap
-          value={[
-            {
-              key: "作成日",
-              value: getLocaleDateString(book.createdAt, "ja"),
-            },
-            {
-              key: "更新日",
-              value: getLocaleDateString(book.updatedAt, "ja"),
-            },
-            {
-              key: "著者",
-              value: book.author.name,
-            },
-          ]}
-        />
+        <>
+          <DescriptionList
+            nowrap
+            value={[
+              {
+                key: "作成日",
+                value: getLocaleDateString(book.createdAt, "ja"),
+              },
+              {
+                key: "更新日",
+                value: getLocaleDateString(book.updatedAt, "ja"),
+              },
+              {
+                key: "著者",
+                value: book.author.name,
+              },
+            ]}
+          />
+          <CollapsibleContent expanded={false} label="ブック詳細">
+            <BookInfo className={classes.info} book={book} />
+          </CollapsibleContent>
+        </>
       )}
       <div
         className={clsx(

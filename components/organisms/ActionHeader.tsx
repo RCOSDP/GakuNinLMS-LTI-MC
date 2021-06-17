@@ -54,7 +54,9 @@ export default function ActionHeader(props: Props) {
   const appBarOffset = useAppBarOffset();
   const sticky = useSticky({
     backgroundColor: gray[50],
-    offset: (considerAppBar ? appBarOffset : 0) + theme.spacing(-2),
+    offset: considerAppBar
+      ? appBarOffset + theme.spacing(-2)
+      : theme.spacing(-1),
     zIndex: 2,
   });
   return (
