@@ -4,14 +4,12 @@ import formatDuration from "date-fns/formatDuration";
 import intervalToDuration from "date-fns/intervalToDuration";
 import ja from "date-fns/locale/ja";
 import Typography from "@material-ui/core/Typography";
-import Link from "@material-ui/core/Link";
-import type { LinkProps } from "@material-ui/core/Link";
+import Chip from "@material-ui/core/Chip";
 import { useTheme, makeStyles } from "@material-ui/core/styles";
 import Video from "$organisms/Video";
 import DescriptionList from "$atoms/DescriptionList";
 import Markdown from "$atoms/Markdown";
 import useSticky from "$utils/useSticky";
-import languages from "$utils/languages";
 import getLocaleDateString from "$utils/getLocaleDateString";
 import { NEXT_PUBLIC_VIDEO_MAX_HEIGHT } from "$utils/env";
 import { gray } from "$theme/colors";
@@ -39,14 +37,14 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   title: {
+    display: "flex",
+    alignItems: "center",
+    flexWrap: "wrap",
     marginBottom: theme.spacing(0.5),
-  },
-  items: {
-    "& > *": {
-      display: "inline-block",
-      marginRight: theme.spacing(1.25),
-      marginBottom: theme.spacing(0.25),
+    "& > :not(:last-child)": {
+      marginRight: theme.spacing(1),
     },
+    verticalAlign: "middle",
   },
   description: {
     margin: theme.spacing(2.5, 0, 2),
@@ -77,7 +75,10 @@ export default function TopicViewerContent(props: Props) {
         />
       )}
       <Typography className={classes.title} variant="h6">
-        {topic.name}
+        <span>{topic.name}</span>
+        <Chip
+          label={formatInterval(0, topic.timeRequired * 1000) || "10秒未満"}
+        />
       </Typography>
       <DescriptionList
         inline
