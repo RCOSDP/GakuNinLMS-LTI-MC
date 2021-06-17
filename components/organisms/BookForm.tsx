@@ -3,6 +3,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import Button from "@material-ui/core/Button";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
+import Link from "@material-ui/core/Link";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import { useForm, Controller } from "react-hook-form";
@@ -108,7 +109,25 @@ export default function BookForm(props: Props) {
         )}
       />
       <TextField
-        label="解説"
+        label={
+          <>
+            解説
+            <Typography
+              className={classes.labelDescription}
+              variant="caption"
+              component="span"
+            >
+              <Link
+                href="https://github.github.com/gfm/"
+                target="_blank"
+                rel="noreferrer"
+              >
+                GitHub Flavored Markdown
+              </Link>
+              に一部準拠しています
+            </Typography>
+          </>
+        }
         fullWidth
         multiline
         name="description"
