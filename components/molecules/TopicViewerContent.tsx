@@ -1,7 +1,8 @@
 import clsx from "clsx";
 import { TopicSchema } from "$server/models/topic";
-import { formatDuration, intervalToDuration } from "date-fns";
-import { ja } from "date-fns/locale";
+import formatDuration from "date-fns/formatDuration";
+import intervalToDuration from "date-fns/intervalToDuration";
+import ja from "date-fns/locale/ja";
 import Markdown from "react-markdown";
 import gfm from "remark-gfm";
 import Typography from "@material-ui/core/Typography";
