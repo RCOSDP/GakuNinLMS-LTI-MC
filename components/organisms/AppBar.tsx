@@ -121,13 +121,14 @@ function AppBar(props: Props, ref: Ref<unknown>) {
                 !Number.isFinite(session?.ltiResourceLink?.bookId)
               }
             />
-            <AppBarNavButton
-              color="inherit"
-              icon={<AssessmentOutlinedIcon />}
-              label="学習分析"
-              onClick={onDashboardClick}
-              disabled={!onDashboardClick}
-            />
+            {onDashboardClick && (
+              <AppBarNavButton
+                color="inherit"
+                icon={<AssessmentOutlinedIcon />}
+                label="学習分析"
+                onClick={onDashboardClick}
+              />
+            )}
           </div>
           <div className={clsx(classes.user, classes.margin)}>
             <p>{session.user.name}</p>
