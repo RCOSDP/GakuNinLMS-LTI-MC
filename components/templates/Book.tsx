@@ -8,6 +8,7 @@ import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import LinkIcon from "@material-ui/icons/Link";
 import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 import IconButton from "$atoms/IconButton";
+import SharedIndicator from "$atoms/SharedIndicator";
 import DescriptionList from "$atoms/DescriptionList";
 import BookChildren from "$organisms/BookChildren";
 import TopicViewer from "$organisms/TopicViewer";
@@ -38,6 +39,7 @@ const useStyles = makeStyles((theme) => ({
   title: {
     overflow: "hidden",
     whiteSpace: "nowrap",
+    textOverflow: "ellipsis",
   },
   icon: {
     marginRight: theme.spacing(0.5),
@@ -144,6 +146,7 @@ export default function Book(props: Props) {
             gutterBottom={true}
           >
             <span className={classes.title}>{book?.name}</span>
+            {book?.shared && <SharedIndicator />}
             {isInstructor &&
               book &&
               onBookEditClick &&
