@@ -37,7 +37,7 @@ export type Props = {
   loading?: boolean;
   hasNextPage?: boolean;
   onLoadMore?(): void;
-  onBookClick?(book: BookSchema): void;
+  onBookPreviewClick?(book: BookSchema): void;
   onBookEditClick(book: BookSchema): void;
   onBookNewClick(): void;
   onSortChange?(sort: SortOrder): void;
@@ -51,14 +51,15 @@ export default function Books(props: Props) {
     loading = false,
     hasNextPage = false,
     onLoadMore = () => undefined,
-    onBookClick,
+    onBookPreviewClick,
     onBookEditClick,
     onBookNewClick,
     onSortChange,
     onFilterChange,
   } = props;
   const { query, onSearchInput, onLtiContextClick } = useSearchAtom();
-  const handleBookClick = (book: BookSchema) => () => onBookClick?.(book);
+  const handleBookPreviewClick = (book: BookSchema) => () =>
+    onBookPreviewClick?.(book);
   const handleBookEditClick = (book: BookSchema) => () => onBookEditClick(book);
   const handleBookNewClick = () => onBookNewClick();
   const classes = useStyles();
@@ -89,7 +90,7 @@ export default function Books(props: Props) {
             {linkedBook && (
               <BookPreview
                 book={linkedBook}
-                onBookClick={handleBookClick(linkedBook)}
+                onBookPreviewClick={handleBookPreviewClick(linkedBook)}
                 onBookEditClick={handleBookEditClick(linkedBook)}
                 onLtiContextClick={onLtiContextClick}
               />
@@ -121,7 +122,7 @@ export default function Books(props: Props) {
             <BookPreview
               key={book.id}
               book={book}
-              onBookClick={handleBookClick(book)}
+              onBookPreviewClick={handleBookPreviewClick(book)}
               onBookEditClick={handleBookEditClick(book)}
               onLtiContextClick={onLtiContextClick}
             />

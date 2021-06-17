@@ -75,7 +75,8 @@ export default function TopicImport(props: Props) {
     dispatch: setPreviewTopic,
     ...dialogProps
   } = useDialogProps<TopicSchema>();
-  const handleTopicDetailClick = (topic: TopicSchema) => setPreviewTopic(topic);
+  const handleTopicPreviewClick = (topic: TopicSchema) =>
+    setPreviewTopic(topic);
   const handleTopicEditClick = (topic: TopicSchema) =>
     isTopicEditable(topic) && (() => onTopicEditClick(topic));
   const infiniteRef = useInfiniteScroll<HTMLDivElement>({
@@ -112,7 +113,7 @@ export default function TopicImport(props: Props) {
             topic={topic}
             checked={selectedIndexes.has(index)}
             onChange={handleChecked(index)}
-            onTopicDetailClick={handleTopicDetailClick}
+            onTopicPreviewClick={handleTopicPreviewClick}
             onTopicEditClick={handleTopicEditClick(topic)}
           />
         ))}

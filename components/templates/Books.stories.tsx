@@ -16,7 +16,7 @@ const appBarHandlers = {
 };
 
 const handlers = {
-  onBookClick: console.log,
+  onBookPreviewClick: console.log,
   onBookEditClick: console.log,
   onBookNewClick() {
     console.log("onBookNewClick");

@@ -8,6 +8,7 @@ import Container from "@material-ui/core/Container";
 import TreeView from "@material-ui/lab/TreeView";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import TopicPreviewDialog from "$organisms/TopicPreviewDialog";
 import ActionHeader from "$organisms/ActionHeader";
 import ActionFooter from "$organisms/ActionFooter";
 import BookTree from "$molecules/BookTree";
@@ -21,6 +22,7 @@ import { SortOrder } from "$server/models/sortOrder";
 import { Filter } from "$types/filter";
 import useContainerStyles from "$styles/container";
 import { useSearchAtom } from "$store/search";
+import useDialogProps from "$utils/useDialogProps";
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -53,8 +55,8 @@ type Props = {
     topics: TopicSchema[];
   }): void;
   onCancel(): void;
+  onBookPreviewClick?(book: BookSchema): void;
   onBookEditClick?(book: BookSchema): void;
-  onTopicClick?(topic: TopicSchema): void;
   onTopicEditClick?(topic: TopicSchema): void;
   onSortChange?(sort: SortOrder): void;
   onFilterChange?(filter: Filter): void;
@@ -70,8 +72,8 @@ export default function BookImport(props: Props) {
     onLoadMore = () => undefined,
     onSubmit,
     onCancel,
+    onBookPreviewClick,
     onBookEditClick,
-    onTopicClick,
     onTopicEditClick,
     onSortChange,
     onFilterChange,
@@ -119,6 +121,13 @@ export default function BookImport(props: Props) {
       topics: selectedTopics,
     });
   };
+  const {
+    data: previewTopic,
+    dispatch: setPreviewTopic,
+    ...topicPreviewDialogProps
+  } = useDialogProps<TopicSchema>();
+  const handleTopicPreviewClick = (topic: TopicSchema) =>
+    setPreviewTopic(topic);
   const infiniteRef = useInfiniteScroll<HTMLDivElement>({
     loading,
     hasNextPage,
@@ -161,9 +170,12 @@ export default function BookImport(props: Props) {
             <BookTree
               key={book.id}
               book={book}
-              onItemClick={handleItem(onTopicClick)}
+              onItemPreviewClick={handleItem(handleTopicPreviewClick)}
               onItemEditClick={handleItem(onTopicEditClick)}
-              onBookEditClick={isBookEditable?.(book) && onBookEditClick}
+              onBookPreviewClick={onBookPreviewClick}
+              onBookEditClick={
+                isBookEditable?.(book) ? onBookEditClick : undefined
+              }
               onLtiContextClick={onLtiContextClick}
               isTopicEditable={isTopicEditable}
               onTreeChange={handleTreeChange}
@@ -192,6 +204,9 @@ export default function BookImport(props: Props) {
           </Button>
         </form>
       </ActionFooter>
+      {previewTopic && (
+        <TopicPreviewDialog {...topicPreviewDialogProps} topic={previewTopic} />
+      )}
     </Container>
   );
 }

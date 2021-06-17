@@ -5,10 +5,10 @@ import { useInView } from "react-intersection-observer";
 import Markdown from "react-markdown";
 import gfm from "remark-gfm";
 import strip from "strip-markdown";
-import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import Checkbox from "@material-ui/core/Checkbox";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
+import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import { makeStyles } from "@material-ui/core/styles";
 import Video from "$organisms/Video";
 import Item from "$atoms/Item";
@@ -115,7 +115,7 @@ const useStyles = makeStyles((theme) => ({
 
 type Props = Parameters<typeof Checkbox>[0] & {
   topic: TopicSchema;
-  onTopicDetailClick(topic: TopicSchema): void;
+  onTopicPreviewClick(topic: TopicSchema): void;
   onTopicEditClick: ((topic: TopicSchema) => void) | false | undefined;
 };
 
@@ -129,7 +129,7 @@ export default function TopicPreview(props: Props) {
   });
   const {
     topic,
-    onTopicDetailClick,
+    onTopicPreviewClick,
     onTopicEditClick,
     checked,
     ...checkboxProps
@@ -152,6 +152,14 @@ export default function TopicPreview(props: Props) {
         title={topic.name}
       >
         {topic.shared && <SharedIndicator className={classes.shared} />}
+        <IconButton
+          tooltipProps={{ title: "トピックをプレビュー" }}
+          size="small"
+          color="primary"
+          onClick={handle(onTopicPreviewClick)}
+        >
+          <VisibilityOutlinedIcon />
+        </IconButton>
         {onTopicEditClick && (
           <IconButton
             className={classes.editButton}
@@ -188,9 +196,6 @@ export default function TopicPreview(props: Props) {
           {topic.description}
         </Markdown>
       </p>
-      <Button size="small" color="primary" onClick={handle(onTopicDetailClick)}>
-        もっと詳しく...
-      </Button>
     </Card>
   );
 }

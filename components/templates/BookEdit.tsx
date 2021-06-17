@@ -75,7 +75,8 @@ export default function BookEdit(props: Props) {
     dispatch: setPreviewTopic,
     ...dialogProps
   } = useDialogProps<TopicSchema>();
-  const handleTopicClick = (topic: TopicSchema) => setPreviewTopic(topic);
+  const handleTopicPreviewClick = (topic: TopicSchema) =>
+    setPreviewTopic(topic);
   const handleDeleteButtonClick = async () => {
     await confirm({
       title: `ブック「${book.name}」を削除します。よろしいですか？`,
@@ -114,7 +115,7 @@ export default function BookEdit(props: Props) {
       </Typography>
       <BookEditChildren
         sections={book.sections}
-        onTopicClick={handleTopicClick}
+        onTopicPreviewClick={handleTopicPreviewClick}
         onTopicEditClick={onTopicEditClick}
         onTopicImportClick={onTopicImportClick}
         onTopicNewClick={onTopicNewClick}

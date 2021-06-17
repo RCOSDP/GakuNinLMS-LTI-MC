@@ -2,6 +2,7 @@ import TreeItem from "@material-ui/lab/TreeItem";
 // TODO: ブック単位での再利用の実装
 // import Checkbox from "@material-ui/core/Checkbox";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
+import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import { makeStyles } from "@material-ui/core/styles";
 import IconButton from "$atoms/IconButton";
 import CourseChip from "$atoms/CourseChip";
@@ -20,10 +21,12 @@ const useStyles = makeStyles((theme) => ({
 
 type Props = {
   book: BookSchema;
-  onItemClick(index: ItemIndex): void;
+  onItemClick?(index: ItemIndex): void;
+  onItemPreviewClick?(index: ItemIndex): void;
   onItemEditClick?(index: ItemIndex): void;
   onTreeChange?(nodeId: string): void;
-  onBookEditClick?: ((book: BookSchema) => void) | false | undefined;
+  onBookPreviewClick?(book: BookSchema): void;
+  onBookEditClick?(book: BookSchema): void;
   onLtiContextClick?(
     ltiResourceLink: Pick<LtiResourceLinkSchema, "consumerId" | "contextId">
   ): void;
@@ -35,8 +38,10 @@ export default function BookTree(props: Props) {
   const {
     book,
     onItemClick,
+    onItemPreviewClick,
     onItemEditClick,
     onTreeChange,
+    onBookPreviewClick,
     onBookEditClick,
     onLtiContextClick,
     selectedIndexes,
@@ -76,10 +81,19 @@ export default function BookTree(props: Props) {
           )*/}
           {book.name}
           {book.shared && <SharedIndicator className={classes.shared} />}
+          <IconButton
+            tooltipProps={{ title: "ブックをプレビュー" }}
+            size="small"
+            color="primary"
+            onClick={handle(onBookPreviewClick)}
+          >
+            <VisibilityOutlinedIcon />
+          </IconButton>
           {onBookEditClick && (
             <IconButton
               tooltipProps={{ title: "ブックを編集" }}
               size="small"
+              color="primary"
               onClick={handle(onBookEditClick)}
             >
               <EditOutlinedIcon />
@@ -99,6 +113,7 @@ export default function BookTree(props: Props) {
         bookId={book.id}
         sections={book.sections}
         onItemClick={onItemClick}
+        onItemPreviewClick={onItemPreviewClick}
         onItemEditClick={onItemEditClick}
         onTreeChange={onTreeChange}
         selectedIndexes={selectedIndexes}

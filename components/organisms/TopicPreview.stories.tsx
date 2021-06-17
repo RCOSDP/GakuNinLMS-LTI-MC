@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
 
 const defaultProps = {
   topic,
-  onTopicDetailClick: console.log,
+  onTopicPreviewClick: console.log,
   onTopicEditClick: console.log,
 };
 

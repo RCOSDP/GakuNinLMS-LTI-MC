@@ -2,6 +2,7 @@ import { ReactNode, MouseEvent } from "react";
 import TreeItem from "@material-ui/lab/TreeItem";
 import Checkbox from "@material-ui/core/Checkbox";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
+import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import { makeStyles } from "@material-ui/core/styles";
 import IconButton from "$atoms/IconButton";
 import SharedIndicator from "$atoms/SharedIndicator";
@@ -73,7 +74,8 @@ function SectionTree({
 type Props = {
   bookId?: number;
   sections: SectionSchema[];
-  onItemClick(index: ItemIndex): void;
+  onItemClick?(index: ItemIndex): void;
+  onItemPreviewClick?(index: ItemIndex): void;
   onItemEditClick?(index: ItemIndex): void;
   onTreeChange?(nodeId: string): void;
   selectedIndexes?: Set<string>;
@@ -85,6 +87,7 @@ export default function BookChildrenTree(props: Props) {
     bookId = 0,
     sections,
     onItemClick,
+    onItemPreviewClick,
     onItemEditClick,
     onTreeChange,
     selectedIndexes,
@@ -104,11 +107,11 @@ export default function BookChildrenTree(props: Props) {
         >
           {section.topics.map((topic, topicIndex) => {
             const nodeId = `${bookId}-${section.id}-${topic.id}:${topicIndex}`;
-            const handle = (handler: (index: ItemIndex) => void) => (
+            const handle = (handler?: (index: ItemIndex) => void) => (
               event: MouseEvent<HTMLElement>
             ) => {
               event.stopPropagation();
-              handler([sectionIndex, topicIndex]);
+              handler?.([sectionIndex, topicIndex]);
             };
             const handleChange = (handler?: (nodeId: string) => void) => () => {
               handler?.(nodeId);
@@ -136,10 +139,19 @@ export default function BookChildrenTree(props: Props) {
                     {topic.shared && (
                       <SharedIndicator className={classes.shared} />
                     )}
+                    <IconButton
+                      tooltipProps={{ title: "トピックをプレビュー" }}
+                      size="small"
+                      color="primary"
+                      onClick={handle(onItemPreviewClick)}
+                    >
+                      <VisibilityOutlinedIcon />
+                    </IconButton>
                     {isTopicEditable?.(topic) && onItemEditClick && (
                       <IconButton
                         tooltipProps={{ title: "トピックを編集" }}
                         size="small"
+                        color="primary"
                         onClick={handle(onItemEditClick)}
                       >
                         <EditOutlinedIcon />

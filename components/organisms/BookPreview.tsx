@@ -2,9 +2,9 @@ import { useState } from "react";
 import clsx from "clsx";
 import { format } from "date-fns";
 import { useInView } from "react-intersection-observer";
-import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
+import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import { makeStyles } from "@material-ui/core/styles";
 import Video from "$organisms/Video";
 import IconButton from "$atoms/IconButton";
@@ -62,7 +62,7 @@ const useStyles = makeStyles((theme) => ({
 
 type Props = {
   book: BookSchema;
-  onBookClick?(book: BookSchema): void;
+  onBookPreviewClick?(book: BookSchema): void;
   onBookEditClick?(book: BookSchema): void;
   onLtiContextClick?(
     ltiResourceLink: Pick<LtiResourceLinkSchema, "consumerId" | "contextId">
@@ -71,7 +71,7 @@ type Props = {
 
 export default function BookPreview({
   book,
-  onBookClick,
+  onBookPreviewClick,
   onBookEditClick,
   onLtiContextClick,
 }: Props) {
@@ -100,6 +100,13 @@ export default function BookPreview({
         <div className={clsx(classes.title, titleClamp.placeholder)}>
           <label className={titleClamp.clamp}>{book.name}</label>
           {book.shared && <SharedIndicator className={classes.shared} />}
+          <IconButton
+            tooltipProps={{ title: "ブックをプレビュー" }}
+            color="primary"
+            onClick={handle(onBookPreviewClick)}
+          >
+            <VisibilityOutlinedIcon />
+          </IconButton>
           {onBookEditClick && (
             <IconButton
               tooltipProps={{ title: "ブックを編集" }}
@@ -133,9 +140,6 @@ export default function BookPreview({
         >
           {getSectionsOutline(book.sections)}
         </p>
-        <Button size="small" color="primary" onClick={handle(onBookClick)}>
-          もっと詳しく...
-        </Button>
       </div>
       <div ref={ref} className={classes.right}>
         {topic && "providerUrl" in topic.resource && inView && (
