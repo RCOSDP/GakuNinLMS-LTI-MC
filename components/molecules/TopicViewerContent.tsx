@@ -3,25 +3,18 @@ import { TopicSchema } from "$server/models/topic";
 import formatDuration from "date-fns/formatDuration";
 import intervalToDuration from "date-fns/intervalToDuration";
 import ja from "date-fns/locale/ja";
-import Markdown from "react-markdown";
-import gfm from "remark-gfm";
 import Typography from "@material-ui/core/Typography";
 import Link from "@material-ui/core/Link";
 import type { LinkProps } from "@material-ui/core/Link";
 import { useTheme, makeStyles } from "@material-ui/core/styles";
 import Video from "$organisms/Video";
 import DescriptionList from "$atoms/DescriptionList";
+import Markdown from "$atoms/Markdown";
 import useSticky from "$utils/useSticky";
 import languages from "$utils/languages";
 import getLocaleDateString from "$utils/getLocaleDateString";
 import { NEXT_PUBLIC_VIDEO_MAX_HEIGHT } from "$utils/env";
 import { gray } from "$theme/colors";
-
-function MarkdownLink<Element extends React.ElementType>(
-  props: LinkProps<Element>
-) {
-  return <Link target="_blank" rel="noreferrer" {...props} />;
-}
 
 function formatInterval(start: Date | number, end: Date | number) {
   const duration = intervalToDuration({ start, end });
@@ -73,9 +66,6 @@ export default function TopicViewerContent(props: Props) {
   const sticky = useSticky({
     offset: offset ?? theme.spacing(-2),
   });
-  const components = {
-    a: MarkdownLink,
-  };
   return (
     <>
       {"providerUrl" in topic.resource && (
@@ -107,9 +97,7 @@ export default function TopicViewerContent(props: Props) {
         ]}
       />
       <article className={classes.description}>
-        <Markdown remarkPlugins={[gfm]} components={components}>
-          {topic.description}
-        </Markdown>
+        <Markdown>{topic.description}</Markdown>
       </article>
     </>
   );
