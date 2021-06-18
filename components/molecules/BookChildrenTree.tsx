@@ -1,10 +1,9 @@
 import { ReactNode, MouseEvent } from "react";
 import TreeItem from "@material-ui/lab/TreeItem";
 import Checkbox from "@material-ui/core/Checkbox";
-import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
-import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import { makeStyles } from "@material-ui/core/styles";
-import IconButton from "$atoms/IconButton";
+import PreviewButton from "$atoms/PreviewButton";
+import EditButton from "$atoms/PreviewButton";
 import SharedIndicator from "$atoms/SharedIndicator";
 import useTreeItemStyle from "$styles/treeItem";
 import { SectionSchema } from "$server/models/book/section";
@@ -139,23 +138,15 @@ export default function BookChildrenTree(props: Props) {
                     {topic.shared && (
                       <SharedIndicator className={classes.shared} />
                     )}
-                    <IconButton
-                      tooltipProps={{ title: "トピックをプレビュー" }}
-                      size="small"
-                      color="primary"
+                    <PreviewButton
+                      variant="topic"
                       onClick={handle(onItemPreviewClick)}
-                    >
-                      <VisibilityOutlinedIcon />
-                    </IconButton>
+                    />
                     {isTopicEditable?.(topic) && onItemEditClick && (
-                      <IconButton
-                        tooltipProps={{ title: "トピックを編集" }}
-                        size="small"
-                        color="primary"
+                      <EditButton
+                        variant="topic"
                         onClick={handle(onItemEditClick)}
-                      >
-                        <EditOutlinedIcon />
-                      </IconButton>
+                      />
                     )}
                   </>
                 }

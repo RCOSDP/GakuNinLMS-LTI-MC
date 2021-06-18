@@ -6,10 +6,9 @@ import gfm from "remark-gfm";
 import strip from "strip-markdown";
 import Card from "@material-ui/core/Card";
 import Checkbox from "@material-ui/core/Checkbox";
-import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
-import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import { makeStyles } from "@material-ui/core/styles";
-import IconButton from "$atoms/IconButton";
+import PreviewButton from "$atoms/PreviewButton";
+import EditButton from "$atoms/EditButton";
 import DescriptionList from "$atoms/DescriptionList";
 import SharedIndicator from "$atoms/SharedIndicator";
 import Video from "$organisms/Video";
@@ -147,24 +146,13 @@ export default function TopicPreview(props: Props) {
         title={topic.name}
       >
         {topic.shared && <SharedIndicator className={classes.shared} />}
-        <IconButton
-          tooltipProps={{ title: "トピックをプレビュー" }}
-          size="small"
-          color="primary"
-          onClick={handle(onTopicPreviewClick)}
-        >
-          <VisibilityOutlinedIcon />
-        </IconButton>
+        <PreviewButton variant="topic" onClick={handle(onTopicPreviewClick)} />
         {onTopicEditClick && (
-          <IconButton
+          <EditButton
             className={classes.editButton}
-            tooltipProps={{ title: "トピックを編集" }}
-            color="primary"
-            size="small"
+            variant="topic"
             onClick={handle(onTopicEditClick)}
-          >
-            <EditOutlinedIcon />
-          </IconButton>
+          />
         )}
       </CheckableHeader>
       <div ref={ref}>

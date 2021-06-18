@@ -4,10 +4,9 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
-import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import LinkIcon from "@material-ui/icons/Link";
 import useScrollTrigger from "@material-ui/core/useScrollTrigger";
-import IconButton from "$atoms/IconButton";
+import EditButton from "$atoms/EditButton";
 import SharedIndicator from "$atoms/SharedIndicator";
 import DescriptionList from "$atoms/DescriptionList";
 import BookChildren from "$organisms/BookChildren";
@@ -168,13 +167,11 @@ export default function Book(props: Props) {
               book &&
               onBookEditClick &&
               (isBookEditable(book) || book.shared) && (
-                <IconButton
-                  tooltipProps={{ title: "ブックを編集" }}
-                  color="primary"
+                <EditButton
+                  variant="book"
+                  size="medium"
                   onClick={handleBookEditClick}
-                >
-                  <EditOutlinedIcon />
-                </IconButton>
+                />
               )}
             {isInstructor && !linked && onBookLinkClick && (
               <Button

@@ -1,10 +1,9 @@
 import TreeItem from "@material-ui/lab/TreeItem";
 // TODO: ブック単位での再利用の実装
 // import Checkbox from "@material-ui/core/Checkbox";
-import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
-import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import { makeStyles } from "@material-ui/core/styles";
-import IconButton from "$atoms/IconButton";
+import PreviewButton from "$atoms/PreviewButton";
+import EditButton from "$atoms/EditButton";
 import CourseChip from "$atoms/CourseChip";
 import SharedIndicator from "$atoms/SharedIndicator";
 import BookChildrenTree from "$molecules/BookChildrenTree";
@@ -81,23 +80,9 @@ export default function BookTree(props: Props) {
           )*/}
           {book.name}
           {book.shared && <SharedIndicator className={classes.shared} />}
-          <IconButton
-            tooltipProps={{ title: "ブックをプレビュー" }}
-            size="small"
-            color="primary"
-            onClick={handle(onBookPreviewClick)}
-          >
-            <VisibilityOutlinedIcon />
-          </IconButton>
+          <PreviewButton variant="book" onClick={handle(onBookPreviewClick)} />
           {onBookEditClick && (
-            <IconButton
-              tooltipProps={{ title: "ブックを編集" }}
-              size="small"
-              color="primary"
-              onClick={handle(onBookEditClick)}
-            >
-              <EditOutlinedIcon />
-            </IconButton>
+            <EditButton variant="book" onClick={handle(onBookEditClick)} />
           )}
           {book.ltiResourceLinks.map((ltiResourceLink, index) => (
             <CourseChip

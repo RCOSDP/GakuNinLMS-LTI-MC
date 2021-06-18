@@ -2,10 +2,9 @@ import { useState } from "react";
 import clsx from "clsx";
 import { useInView } from "react-intersection-observer";
 import Card from "@material-ui/core/Card";
-import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
-import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import { makeStyles } from "@material-ui/core/styles";
-import IconButton from "$atoms/IconButton";
+import PreviewButton from "$atoms/PreviewButton";
+import EditButton from "$atoms/EditButton";
 import CourseChip from "$atoms/CourseChip";
 import SharedIndicator from "$atoms/SharedIndicator";
 import DescriptionList from "$atoms/DescriptionList";
@@ -99,21 +98,17 @@ export default function BookPreview({
         <div className={clsx(classes.title, titleClamp.placeholder)}>
           <label className={titleClamp.clamp}>{book.name}</label>
           {book.shared && <SharedIndicator className={classes.shared} />}
-          <IconButton
-            tooltipProps={{ title: "ブックをプレビュー" }}
-            color="primary"
+          <PreviewButton
+            variant="book"
+            size="medium"
             onClick={handle(onBookPreviewClick)}
-          >
-            <VisibilityOutlinedIcon />
-          </IconButton>
+          />
           {onBookEditClick && (
-            <IconButton
-              tooltipProps={{ title: "ブックを編集" }}
-              color="primary"
+            <EditButton
+              variant="book"
+              size="medium"
               onClick={handle(onBookEditClick)}
-            >
-              <EditOutlinedIcon />
-            </IconButton>
+            />
           )}
         </div>
         <div className={classes.chips}>

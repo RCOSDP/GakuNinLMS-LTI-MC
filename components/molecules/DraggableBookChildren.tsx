@@ -2,11 +2,10 @@ import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import type { DraggableId, DropResult } from "react-beautiful-dnd";
 import clsx from "clsx";
 import { useDebouncedCallback } from "use-debounce";
-import RemoveIcon from "@material-ui/icons/Remove";
 import AddIcon from "@material-ui/icons/Add";
 import DragIndicatorIcon from "@material-ui/icons/DragIndicator";
 import { makeStyles } from "@material-ui/core/styles";
-import IconButton from "$atoms/IconButton";
+import RemoveButton from "$atoms/RemoveButton";
 import SectionTextField from "$atoms/SectionTextField";
 import { SectionSchema } from "$server/models/book/section";
 import { TopicSchema } from "$server/models/topic";
@@ -229,14 +228,7 @@ function DraggableTopic({
         >
           <DragIndicatorIcon className={classes.icon} fontSize="small" />
           {topic.name}
-          <IconButton
-            tooltipProps={{ title: "このトピックを取り除く" }}
-            size="small"
-            color="primary"
-            onClick={handleTopicRemove}
-          >
-            <RemoveIcon />
-          </IconButton>
+          <RemoveButton variant="topic" onClick={handleTopicRemove} />
         </div>
       )}
     </Draggable>
@@ -404,14 +396,10 @@ export default function DraggableBookChildren(props: Props) {
                   {section.topics.length === 0 && (
                     <p className={classes.placeholder}>
                       ここにトピックをドロップ
-                      <IconButton
-                        tooltipProps={{ title: "このセクションを取り除く" }}
-                        size="small"
-                        color="primary"
+                      <RemoveButton
+                        variant="section"
                         onClick={handleSectionRemove(sectionIndex)}
-                      >
-                        <RemoveIcon />
-                      </IconButton>
+                      />
                     </p>
                   )}
                 </DragDropSection>

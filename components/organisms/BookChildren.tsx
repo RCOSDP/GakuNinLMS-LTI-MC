@@ -8,8 +8,7 @@ import Collapse from "@material-ui/core/Collapse";
 import { makeStyles } from "@material-ui/styles";
 import ExpandLessIcon from "@material-ui/icons/ExpandLess";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
-import IconButton from "$atoms/IconButton";
+import EditButton from "$atoms/EditButton";
 import { TopicSchema } from "$server/models/topic";
 import { SectionSchema } from "$server/models/book/section";
 import { primary } from "$theme/colors";
@@ -117,16 +116,14 @@ export default function BookChildren(props: Props) {
               </ListItemText>
               {isTopicEditable(topic) && onItemEditClick && (
                 <ListItemSecondaryAction>
-                  <IconButton
-                    tooltipProps={{ title: "トピックを編集" }}
-                    color="primary"
+                  <EditButton
+                    variant="topic"
+                    size="medium"
                     onClick={handleItemEditClick(
                       sectionItemIndex,
                       topicItemIndex
                     )}
-                  >
-                    <EditOutlinedIcon />
-                  </IconButton>
+                  />
                 </ListItemSecondaryAction>
               )}
             </ListItem>
