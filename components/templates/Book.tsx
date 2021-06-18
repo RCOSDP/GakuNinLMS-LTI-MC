@@ -1,7 +1,9 @@
+import { useState } from "react";
 import clsx from "clsx";
 import { useTheme, makeStyles } from "@material-ui/core/styles";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import Button from "@material-ui/core/Button";
+import Link from "@material-ui/core/Link";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import LinkIcon from "@material-ui/icons/Link";
@@ -25,25 +27,34 @@ const useStyles = makeStyles((theme) => ({
   header: {
     display: "flex",
     alignItems: "baseline",
+    margin: 0,
     width: "100%",
     "& > *": {
       marginRight: theme.spacing(1),
-    },
-    "&$mobile": {
-      fontSize: "1.75rem",
-      alignItems: "center",
     },
     "& > $title ~ *": {
       flexShrink: 0,
     },
   },
   title: {
+    fontSize: "1.75rem",
     overflow: "hidden",
     whiteSpace: "nowrap",
     textOverflow: "ellipsis",
   },
   icon: {
     marginRight: theme.spacing(0.5),
+  },
+  description: {
+    display: "flex",
+    alignItems: "baseline",
+    "& > dl": {
+      marginRight: theme.spacing(2),
+    },
+    "& > button": {
+      fontSize: "0.75rem",
+      flexShrink: 0,
+    },
   },
   inner: {
     display: "grid",
@@ -63,7 +74,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   info: {
-    margin: theme.spacing(2, 0),
+    marginBottom: theme.spacing(2),
   },
   main: {
     gridArea: "main",
@@ -73,9 +84,6 @@ const useStyles = makeStyles((theme) => ({
   },
   side: {
     gridArea: "side",
-    "&$desktop": {
-      marginTop: theme.spacing(2),
-    },
     "&$mobile": {
       marginBottom: theme.spacing(2),
     },
@@ -116,20 +124,15 @@ export default function Book(props: Props) {
   } = props;
   const topic = book?.sections[sectionIndex]?.topics[topicIndex];
   const { isInstructor, isBookEditable, isTopicEditable } = useSessionAtom();
-  const descriptionListOffset = 22;
-  const collapsibleContentOffset = 36.5;
+  const [expanded, setExpanded] = useState(false);
+  const handleLinkClick = () => setExpanded(!expanded);
   const theme = useTheme();
   const trigger = useScrollTrigger({
-    threshold:
-      theme.spacing(4) + descriptionListOffset + collapsibleContentOffset,
+    threshold: theme.spacing(4),
     disableHysteresis: true,
   });
-  const sideOffset =
-    theme.spacing(2) +
-    (trigger
-      ? 0
-      : theme.spacing(4) + descriptionListOffset + collapsibleContentOffset);
-  const actionHeaderOffset = 80;
+  const sideOffset = theme.spacing(2) + (trigger ? 0 : theme.spacing(4));
+  const actionHeaderOffset = 64;
   const appBarOffset = useAppBarOffset();
   const offset = (considerAppBar ? appBarOffset : 0) + actionHeaderOffset;
   const classes = useStyles({
@@ -156,12 +159,13 @@ export default function Book(props: Props) {
       <ActionHeader
         considerAppBar={considerAppBar}
         action={
-          <Typography
-            className={clsx(classes.header, { [classes.mobile]: !matches })}
-            variant="h4"
-            gutterBottom={true}
-          >
-            <span className={classes.title}>{book?.name}</span>
+          <header className={classes.header}>
+            <Typography
+              className={clsx(classes.title, { [classes.mobile]: !matches })}
+              variant="h4"
+            >
+              {book?.name}
+            </Typography>
             {book?.shared && <SharedIndicator />}
             {isInstructor &&
               book &&
@@ -193,30 +197,38 @@ export default function Book(props: Props) {
                 他のブックを提供
               </Button>
             )}
-            {/* TODO: 「このブックを提供解除」ボタンの実装 */}
-          </Typography>
+          </header>
         }
       />
       {book && (
         <>
-          <DescriptionList
-            nowrap
-            value={[
-              {
-                key: "作成日",
-                value: getLocaleDateString(book.createdAt, "ja"),
-              },
-              {
-                key: "更新日",
-                value: getLocaleDateString(book.updatedAt, "ja"),
-              },
-              {
-                key: "ブック作成者",
-                value: book.author.name,
-              },
-            ]}
-          />
-          <CollapsibleContent expanded={false} label="ブック詳細">
+          <div className={classes.description}>
+            <DescriptionList
+              nowrap
+              value={[
+                {
+                  key: "作成日",
+                  value: getLocaleDateString(book.createdAt, "ja"),
+                },
+                {
+                  key: "更新日",
+                  value: getLocaleDateString(book.updatedAt, "ja"),
+                },
+                {
+                  key: "ブック作成者",
+                  value: book.author.name,
+                },
+              ]}
+            />
+            <Link
+              component="button"
+              aria-expanded={expanded}
+              onClick={handleLinkClick}
+            >
+              ブックの詳細
+            </Link>
+          </div>
+          <CollapsibleContent expanded={expanded}>
             <BookInfo className={classes.info} book={book} />
           </CollapsibleContent>
         </>
@@ -235,8 +247,7 @@ export default function Book(props: Props) {
         <div
           className={clsx(
             classes.side,
-            matches ? classes.desktop : classes.mobile,
-            { [classes.scroll]: matches },
+            matches ? classes.scroll : classes.mobile,
             sticky
           )}
         >
