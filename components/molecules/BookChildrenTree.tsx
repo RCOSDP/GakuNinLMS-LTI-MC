@@ -3,7 +3,7 @@ import TreeItem from "@material-ui/lab/TreeItem";
 import Checkbox from "@material-ui/core/Checkbox";
 import { makeStyles } from "@material-ui/core/styles";
 import PreviewButton from "$atoms/PreviewButton";
-import EditButton from "$atoms/PreviewButton";
+import EditButton from "$atoms/EditButton";
 import SharedIndicator from "$atoms/SharedIndicator";
 import useTreeItemStyle from "$styles/treeItem";
 import { SectionSchema } from "$server/models/book/section";
