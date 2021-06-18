@@ -77,7 +77,7 @@ export default function TopicViewerContent(props: Props) {
       <Typography className={classes.title} variant="h6">
         <span>{topic.name}</span>
         <Chip
-          label={formatInterval(0, topic.timeRequired * 1000) || "10秒未満"}
+          label={`学習時間 ${formatInterval(0, topic.timeRequired * 1000) || "10秒未満"}`}
         />
       </Typography>
       <DescriptionList
