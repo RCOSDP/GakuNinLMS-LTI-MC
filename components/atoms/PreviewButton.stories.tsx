@@ -2,4 +2,6 @@ export default { title: "atoms/PreviewButton" };
 
 import PreviewButton from "./PreviewButton";
 
-export const Default = () => <PreviewButton variant="book" />;
+export const Book = () => <PreviewButton variant="book" />;
+
+export const Topic = () => <PreviewButton variant="topic" />;
