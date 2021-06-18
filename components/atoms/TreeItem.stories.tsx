@@ -5,7 +5,6 @@ import TreeView from "@material-ui/lab/TreeView";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import IconButton from "@material-ui/core/IconButton";
-import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 
 export const Default = () => (
@@ -18,9 +17,6 @@ export const Default = () => (
       label={
         <>
           コンピュータ・サイエンス
-          <IconButton size="small">
-            <InfoOutlinedIcon />
-          </IconButton>
           <IconButton size="small" color="primary">
             <EditOutlinedIcon />
           </IconButton>

@@ -2,12 +2,10 @@ import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import type { DraggableId, DropResult } from "react-beautiful-dnd";
 import clsx from "clsx";
 import { useDebouncedCallback } from "use-debounce";
-import Tooltip from "@material-ui/core/Tooltip";
-import IconButton from "@material-ui/core/IconButton";
-import RemoveIcon from "@material-ui/icons/Remove";
 import AddIcon from "@material-ui/icons/Add";
 import DragIndicatorIcon from "@material-ui/icons/DragIndicator";
 import { makeStyles } from "@material-ui/core/styles";
+import RemoveButton from "$atoms/RemoveButton";
 import SectionTextField from "$atoms/SectionTextField";
 import { SectionSchema } from "$server/models/book/section";
 import { TopicSchema } from "$server/models/topic";
@@ -230,15 +228,7 @@ function DraggableTopic({
         >
           <DragIndicatorIcon className={classes.icon} fontSize="small" />
           {topic.name}
-          <Tooltip title="このトピックを取り除く">
-            <IconButton
-              size="small"
-              color="primary"
-              onClick={handleTopicRemove}
-            >
-              <RemoveIcon />
-            </IconButton>
-          </Tooltip>
+          <RemoveButton variant="topic" onClick={handleTopicRemove} />
         </div>
       )}
     </Draggable>
@@ -406,15 +396,10 @@ export default function DraggableBookChildren(props: Props) {
                   {section.topics.length === 0 && (
                     <p className={classes.placeholder}>
                       ここにトピックをドロップ
-                      <Tooltip title="このセクションを取り除く">
-                        <IconButton
-                          size="small"
-                          color="primary"
-                          onClick={handleSectionRemove(sectionIndex)}
-                        >
-                          <RemoveIcon />
-                        </IconButton>
-                      </Tooltip>
+                      <RemoveButton
+                        variant="section"
+                        onClick={handleSectionRemove(sectionIndex)}
+                      />
                     </p>
                   )}
                 </DragDropSection>

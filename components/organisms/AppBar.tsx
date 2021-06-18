@@ -5,7 +5,7 @@ import Button from "@material-ui/core/Button";
 import MenuBookOutlinedIcon from "@material-ui/icons/MenuBookOutlined";
 import LibraryBooksOutlinedIcon from "@material-ui/icons/LibraryBooksOutlined";
 import AssessmentOutlinedIcon from "@material-ui/icons/AssessmentOutlined";
-import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
+import LinkIcon from "@material-ui/icons/Link";
 import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
 import AppBarNavButton from "$atoms/AppBarNavButton";
@@ -113,21 +113,22 @@ function AppBar(props: Props, ref: Ref<unknown>) {
             />
             <AppBarNavButton
               color="inherit"
-              icon={<VisibilityOutlinedIcon />}
-              label="プレビュー"
+              icon={<LinkIcon />}
+              label="提供中のブック"
               onClick={onBookClick}
               disabled={
                 !onBookClick ||
                 !Number.isFinite(session?.ltiResourceLink?.bookId)
               }
             />
-            <AppBarNavButton
-              color="inherit"
-              icon={<AssessmentOutlinedIcon />}
-              label="学習分析"
-              onClick={onDashboardClick}
-              disabled={!onDashboardClick}
-            />
+            {onDashboardClick && (
+              <AppBarNavButton
+                color="inherit"
+                icon={<AssessmentOutlinedIcon />}
+                label="学習分析"
+                onClick={onDashboardClick}
+              />
+            )}
           </div>
           <div className={clsx(classes.user, classes.margin)}>
             <p>{session.user.name}</p>

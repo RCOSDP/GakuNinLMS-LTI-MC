@@ -1,6 +1,8 @@
 import { useRouter } from "next/router";
 import BookImport from "$templates/BookImport";
 import Placeholder from "$templates/Placeholder";
+import Book from "$templates/Book";
+import BookPreviewDialog from "$organisms/BookPreviewDialog";
 import BookNotFoundProblem from "$organisms/TopicNotFoundProblem";
 import { useSessionAtom } from "$store/session";
 import { updateBook, useBook } from "$utils/book";
@@ -10,6 +12,7 @@ import type { SectionSchema } from "$server/models/book/section";
 import type { TopicSchema } from "$server/models/topic";
 import type { Query as BookEditQuery } from "../edit";
 import { pagesPath } from "$utils/$path";
+import useDialogProps from "$utils/useDialogProps";
 
 export type Query = BookEditQuery;
 
@@ -19,6 +22,12 @@ function Import({ bookId, context }: Query) {
   const booksProps = useBooks();
   const router = useRouter();
   const bookEditQuery = { bookId, ...(context && { context }) };
+  const {
+    data: dialog,
+    open,
+    onClose,
+    dispatch,
+  } = useDialogProps<BookSchema>();
   const action = book && isBookEditable(book) ? "edit" : "generate";
   const back = () =>
     router.push(pagesPath.book[action].$url({ query: bookEditQuery }));
@@ -42,6 +51,9 @@ function Import({ bookId, context }: Query) {
   function handleCancel() {
     return back();
   }
+  function handleBookPreviewClick(book: BookSchema) {
+    dispatch(book);
+  }
   function handleBookEditClick(book: Pick<BookSchema, "id" | "author">) {
     // TODO: ブックインポート画面で自身以外のブックへの経路を提供しないならば不要なので取り除きましょう
     const action = isBookEditable(book) ? "edit" : "generate";
@@ -62,6 +74,7 @@ function Import({ bookId, context }: Query) {
   const handlers = {
     onSubmit: handleSubmit,
     onCancel: handleCancel,
+    onBookPreviewClick: handleBookPreviewClick,
     onBookEditClick: handleBookEditClick,
     onTopicEditClick: handleTopicEditClick,
     isTopicEditable,
@@ -71,7 +84,16 @@ function Import({ bookId, context }: Query) {
   if (error) return <BookNotFoundProblem />;
   if (!book) return <Placeholder />;
 
-  return <BookImport {...booksProps} {...handlers} />;
+  return (
+    <>
+      <BookImport {...booksProps} {...handlers} />
+      {dialog && (
+        <BookPreviewDialog open={open} onClose={onClose} book={dialog}>
+          {(props) => <Book {...props} onOtherBookLinkClick={onClose} />}
+        </BookPreviewDialog>
+      )}
+    </>
+  );
 }
 
 function Router() {

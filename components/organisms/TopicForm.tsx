@@ -251,7 +251,7 @@ export default function TopicForm(props: Props) {
                 >
                   GitHub Flavored Markdown
                 </Link>
-                に対応しています
+                に一部準拠しています
               </Typography>
             </>
           }

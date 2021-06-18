@@ -1,8 +1,8 @@
-import MuiIconButton, { IconButtonProps } from "@material-ui/core/IconButton";
-import Tooltip, { TooltipProps } from "@material-ui/core/Tooltip";
+import MuiIconButton from "@material-ui/core/IconButton";
+import Tooltip from "@material-ui/core/Tooltip";
 
-type Props = IconButtonProps & {
-  tooltipProps: Omit<TooltipProps, "children">;
+type Props = Parameters<typeof MuiIconButton>[0] & {
+  tooltipProps: Omit<Parameters<typeof Tooltip>[0], "children">;
 };
 
 export default function IconButton(props: Props) {

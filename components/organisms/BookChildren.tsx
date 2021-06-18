@@ -1,6 +1,5 @@
 import { ReactNode, MouseEvent, useState } from "react";
 import clsx from "clsx";
-import IconButton from "@material-ui/core/IconButton";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -9,7 +8,7 @@ import Collapse from "@material-ui/core/Collapse";
 import { makeStyles } from "@material-ui/styles";
 import ExpandLessIcon from "@material-ui/icons/ExpandLess";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
+import EditButton from "$atoms/EditButton";
 import { TopicSchema } from "$server/models/topic";
 import { SectionSchema } from "$server/models/book/section";
 import { primary } from "$theme/colors";
@@ -117,15 +116,14 @@ export default function BookChildren(props: Props) {
               </ListItemText>
               {isTopicEditable(topic) && onItemEditClick && (
                 <ListItemSecondaryAction>
-                  <IconButton
-                    color="primary"
+                  <EditButton
+                    variant="topic"
+                    size="medium"
                     onClick={handleItemEditClick(
                       sectionItemIndex,
                       topicItemIndex
                     )}
-                  >
-                    <EditOutlinedIcon />
-                  </IconButton>
+                  />
                 </ListItemSecondaryAction>
               )}
             </ListItem>

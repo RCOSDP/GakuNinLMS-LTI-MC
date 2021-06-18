@@ -1,24 +1,25 @@
-import { useState } from "react";
 import clsx from "clsx";
 import { useTheme, makeStyles } from "@material-ui/core/styles";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import Button from "@material-ui/core/Button";
-import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
-import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
-import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import LinkIcon from "@material-ui/icons/Link";
 import useScrollTrigger from "@material-ui/core/useScrollTrigger";
+import EditButton from "$atoms/EditButton";
+import SharedIndicator from "$atoms/SharedIndicator";
+import DescriptionList from "$atoms/DescriptionList";
 import BookChildren from "$organisms/BookChildren";
-import BookItemDialog from "$organisms/BookItemDialog";
 import TopicViewer from "$organisms/TopicViewer";
 import ActionHeader from "$organisms/ActionHeader";
+import BookInfo from "$organisms/BookInfo";
+import CollapsibleContent from "$organisms/CollapsibleContent";
 import type { BookSchema } from "$server/models/book";
 import type { TopicSchema } from "$server/models/topic";
 import { useSessionAtom } from "$store/session";
 import useSticky from "$utils/useSticky";
 import useAppBarOffset from "$utils/useAppBarOffset";
+import getLocaleDateString from "$utils/getLocaleDateString";
 
 const useStyles = makeStyles((theme) => ({
   header: {
@@ -39,6 +40,7 @@ const useStyles = makeStyles((theme) => ({
   title: {
     overflow: "hidden",
     whiteSpace: "nowrap",
+    textOverflow: "ellipsis",
   },
   icon: {
     marginRight: theme.spacing(0.5),
@@ -59,6 +61,9 @@ const useStyles = makeStyles((theme) => ({
         "side"
       `,
     },
+  },
+  info: {
+    margin: theme.spacing(2, 0),
   },
   main: {
     gridArea: "main",
@@ -111,22 +116,27 @@ export default function Book(props: Props) {
   } = props;
   const topic = book?.sections[sectionIndex]?.topics[topicIndex];
   const { isInstructor, isBookEditable, isTopicEditable } = useSessionAtom();
-  const trigger = useScrollTrigger();
+  const descriptionListOffset = 22;
+  const collapsibleContentOffset = 36.5;
   const theme = useTheme();
-  const sideOffset = trigger ? theme.spacing(2) : theme.spacing(6);
+  const trigger = useScrollTrigger({
+    threshold:
+      theme.spacing(4) + descriptionListOffset + collapsibleContentOffset,
+    disableHysteresis: true,
+  });
+  const sideOffset =
+    theme.spacing(2) +
+    (trigger
+      ? 0
+      : theme.spacing(4) + descriptionListOffset + collapsibleContentOffset);
   const actionHeaderOffset = 80;
   const appBarOffset = useAppBarOffset();
   const offset = (considerAppBar ? appBarOffset : 0) + actionHeaderOffset;
-  const classes = useStyles({ offset: offset + sideOffset });
+  const classes = useStyles({
+    offset: offset + sideOffset,
+  });
   const sticky = useSticky({ offset });
   const matches = useMediaQuery(theme.breakpoints.up("md"));
-  const [open, setOpen] = useState(false);
-  const handleInfoClick = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
   const handleBookEditClick = () => book && onBookEditClick?.(book);
   const handleBookLinkClick = () => book && onBookLinkClick?.(book);
   const handleOtherBookLinkClick = () => onOtherBookLinkClick();
@@ -152,16 +162,16 @@ export default function Book(props: Props) {
             gutterBottom={true}
           >
             <span className={classes.title}>{book?.name}</span>
-            <IconButton onClick={handleInfoClick}>
-              <InfoOutlinedIcon />
-            </IconButton>
+            {book?.shared && <SharedIndicator />}
             {isInstructor &&
               book &&
               onBookEditClick &&
               (isBookEditable(book) || book.shared) && (
-                <IconButton color="primary" onClick={handleBookEditClick}>
-                  <EditOutlinedIcon />
-                </IconButton>
+                <EditButton
+                  variant="book"
+                  size="medium"
+                  onClick={handleBookEditClick}
+                />
               )}
             {isInstructor && !linked && onBookLinkClick && (
               <Button
@@ -187,6 +197,30 @@ export default function Book(props: Props) {
           </Typography>
         }
       />
+      {book && (
+        <>
+          <DescriptionList
+            nowrap
+            value={[
+              {
+                key: "作成日",
+                value: getLocaleDateString(book.createdAt, "ja"),
+              },
+              {
+                key: "更新日",
+                value: getLocaleDateString(book.updatedAt, "ja"),
+              },
+              {
+                key: "ブック作成者",
+                value: book.author.name,
+              },
+            ]}
+          />
+          <CollapsibleContent expanded={false} label="ブック詳細">
+            <BookInfo className={classes.info} book={book} />
+          </CollapsibleContent>
+        </>
+      )}
       <div
         className={clsx(
           classes.inner,
@@ -215,7 +249,6 @@ export default function Book(props: Props) {
           />
         </div>
       </div>
-      {book && <BookItemDialog open={open} onClose={handleClose} book={book} />}
     </Container>
   );
 }

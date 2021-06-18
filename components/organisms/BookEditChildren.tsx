@@ -74,7 +74,7 @@ type Props = {
   onTopicImportClick?(): void;
   onTopicNewClick?(): void;
   onSectionsUpdate(sections: SectionSchema[]): void;
-  onTopicClick(topic: TopicSchema): void;
+  onTopicPreviewClick(topic: TopicSchema): void;
   onTopicEditClick?(topic: TopicSchema): void;
   isTopicEditable?(topic: TopicSchema): boolean | undefined;
 };
@@ -83,7 +83,7 @@ export default function BookEditChildren(props: Props) {
   const {
     sections,
     className,
-    onTopicClick,
+    onTopicPreviewClick,
     onTopicEditClick,
     onSectionsUpdate,
     isTopicEditable,
@@ -201,10 +201,11 @@ export default function BookEditChildren(props: Props) {
         <TreeView
           defaultCollapseIcon={<ExpandMoreIcon />}
           defaultExpandIcon={<ChevronRightIcon />}
+          disableSelection
         >
           <BookChildrenTree
             sections={sections}
-            onItemClick={handleItem(onTopicClick)}
+            onItemPreviewClick={handleItem(onTopicPreviewClick)}
             onItemEditClick={handleItem(onTopicEditClick)}
             isTopicEditable={isTopicEditable}
           />
