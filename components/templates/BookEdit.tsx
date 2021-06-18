@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import Button from "@material-ui/core/Button";
@@ -70,6 +71,8 @@ export default function BookEdit(props: Props) {
   const classes = useStyles();
   const containerClasses = useContainerStyles();
   const confirm = useConfirm();
+  const [expanded, setExpanded] = useState(false);
+  const handleCollapsibleContentClick = () => setExpanded(!expanded);
   const {
     data: previewTopic,
     dispatch: setPreviewTopic,
@@ -97,6 +100,8 @@ export default function BookEdit(props: Props) {
         ブック「{book.name}」の編集
       </Typography>
       <CollapsibleContent
+        expanded={expanded}
+        onCollapsibleContentClick={handleCollapsibleContentClick}
         label={
           <Typography className={classes.subtitle} variant="h5">
             基本情報
@@ -106,7 +111,6 @@ export default function BookEdit(props: Props) {
             </Typography>
           </Typography>
         }
-        expanded={false}
       >
         <BookForm className={classes.form} book={book} onSubmit={onSubmit} />
       </CollapsibleContent>

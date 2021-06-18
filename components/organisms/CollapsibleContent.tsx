@@ -1,4 +1,3 @@
-import { useState } from "react";
 import clsx from "clsx";
 import Button from "@material-ui/core/Button";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
@@ -16,23 +15,32 @@ const useStyles = makeStyles((theme) => ({
 
 type Props = {
   expanded: boolean;
-  label: React.ReactNode;
+  label?: React.ReactNode;
   children: React.ReactNode;
+  onCollapsibleContentClick?: Parameters<typeof Button>[0]["onClick"];
 };
 
-export default function CollapsibleContent(props: Props) {
+export default function CollapsibleContent({
+  expanded,
+  label,
+  children,
+  onCollapsibleContentClick,
+}: Props) {
   const classes = useStyles();
-  const { expanded: initialExpanded, label, children } = props;
-  const [expanded, setExpanded] = useState(initialExpanded);
-  const handleClick = () => setExpanded(!expanded);
   return (
     <>
-      <Button variant="text" aria-expanded={expanded} onClick={handleClick}>
-        <ChevronRightIcon
-          className={clsx(classes.icon, { [classes.expanded]: expanded })}
-        />
-        {label}
-      </Button>
+      {label && (
+        <Button
+          variant="text"
+          aria-expanded={expanded}
+          onClick={onCollapsibleContentClick}
+        >
+          <ChevronRightIcon
+            className={clsx(classes.icon, { [classes.expanded]: expanded })}
+          />
+          {label}
+        </Button>
+      )}
       <Collapse in={expanded}>{children}</Collapse>
     </>
   );
