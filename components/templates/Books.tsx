@@ -38,7 +38,8 @@ export type Props = {
   hasNextPage?: boolean;
   onLoadMore?(): void;
   onBookPreviewClick?(book: BookSchema): void;
-  onBookEditClick(book: BookSchema): void;
+  onBookEditClick?(book: BookSchema): void;
+  onBookLinkClick?(book: BookSchema): void;
   onBookNewClick(): void;
   onSortChange?(sort: SortOrder): void;
   onFilterChange?(filter: Filter): void;
@@ -53,14 +54,13 @@ export default function Books(props: Props) {
     onLoadMore = () => undefined,
     onBookPreviewClick,
     onBookEditClick,
+    onBookLinkClick,
+    onLinkedBookClick,
     onBookNewClick,
     onSortChange,
     onFilterChange,
   } = props;
   const { query, onSearchInput, onLtiContextClick } = useSearchAtom();
-  const handleBookPreviewClick = (book: BookSchema) => () =>
-    onBookPreviewClick?.(book);
-  const handleBookEditClick = (book: BookSchema) => () => onBookEditClick(book);
   const handleBookNewClick = () => onBookNewClick();
   const classes = useStyles();
   const containerClasses = useContainerStyles();
@@ -90,8 +90,8 @@ export default function Books(props: Props) {
             {linkedBook && (
               <BookPreview
                 book={linkedBook}
-                onBookPreviewClick={handleBookPreviewClick(linkedBook)}
-                onBookEditClick={handleBookEditClick(linkedBook)}
+                onBookPreviewClick={onBookPreviewClick}
+                onBookEditClick={onBookEditClick}
                 onLtiContextClick={onLtiContextClick}
               />
             )}
@@ -122,8 +122,8 @@ export default function Books(props: Props) {
             <BookPreview
               key={book.id}
               book={book}
-              onBookPreviewClick={handleBookPreviewClick(book)}
-              onBookEditClick={handleBookEditClick(book)}
+              onBookPreviewClick={onBookPreviewClick}
+              onBookEditClick={onBookEditClick}
               onLtiContextClick={onLtiContextClick}
             />
           ))}

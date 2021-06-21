@@ -2,7 +2,9 @@ import { useState } from "react";
 import clsx from "clsx";
 import { useInView } from "react-intersection-observer";
 import Card from "@material-ui/core/Card";
+import LinkIcon from "@material-ui/icons/Link";
 import { makeStyles } from "@material-ui/core/styles";
+import IconButton from "$atoms/IconButton";
 import PreviewButton from "$atoms/PreviewButton";
 import EditButton from "$atoms/EditButton";
 import CourseChip from "$atoms/CourseChip";
@@ -62,6 +64,7 @@ type Props = {
   book: BookSchema;
   onBookPreviewClick?(book: BookSchema): void;
   onBookEditClick?(book: BookSchema): void;
+  onBookLinkClick?(book: BookSchema): void;
   onLtiContextClick?(
     ltiResourceLink: Pick<LtiResourceLinkSchema, "consumerId" | "contextId">
   ): void;
@@ -71,6 +74,7 @@ export default function BookPreview({
   book,
   onBookPreviewClick,
   onBookEditClick,
+  onBookLinkClick,
   onLtiContextClick,
 }: Props) {
   const cardClasses = useCardStyle();
@@ -109,6 +113,15 @@ export default function BookPreview({
               size="medium"
               onClick={handle(onBookEditClick)}
             />
+          )}
+          {onBookLinkClick && (
+            <IconButton
+              color="primary"
+              tooltipProps={{ title: "このブックを提供" }}
+              onClick={handle(onBookLinkClick)}
+            >
+              <LinkIcon />
+            </IconButton>
           )}
         </div>
         <div className={classes.chips}>

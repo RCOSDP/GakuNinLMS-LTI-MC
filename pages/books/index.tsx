@@ -57,6 +57,7 @@ function Index() {
     onBookPreviewClick: handleBookPreviewClick,
     onBookEditClick: handleBookEditClick,
     onBookNewClick: handleBookNewClick,
+    onBookLinkClick: handleBookLinkClick,
   };
 
   return (
