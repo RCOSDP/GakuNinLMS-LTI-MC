@@ -16,6 +16,7 @@ const useStyles = makeStyles((theme) => ({
 type Props = {
   expanded: boolean;
   label?: React.ReactNode;
+  "aria-controls"?: string;
   children: React.ReactNode;
   onCollapsibleContentClick?: Parameters<typeof Button>[0]["onClick"];
 };
@@ -24,6 +25,7 @@ export default function CollapsibleContent({
   expanded,
   label,
   children,
+  "aria-controls": ariaControls,
   onCollapsibleContentClick,
 }: Props) {
   const classes = useStyles();
@@ -33,6 +35,7 @@ export default function CollapsibleContent({
         <Button
           variant="text"
           aria-expanded={expanded}
+          aria-controls={ariaControls}
           onClick={onCollapsibleContentClick}
         >
           <ChevronRightIcon

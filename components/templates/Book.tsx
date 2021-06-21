@@ -223,13 +223,14 @@ export default function Book(props: Props) {
             <Link
               component="button"
               aria-expanded={expanded}
+              aria-controls="book-info"
               onClick={handleLinkClick}
             >
               ブックの詳細
             </Link>
           </div>
           <CollapsibleContent expanded={expanded}>
-            <BookInfo className={classes.info} book={book} />
+            <BookInfo id="book-info" className={classes.info} book={book} />
           </CollapsibleContent>
         </>
       )}

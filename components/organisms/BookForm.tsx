@@ -29,6 +29,7 @@ const useStyles = makeStyles((theme) => ({
 
 type Props = {
   book?: BookSchema;
+  id?: string;
   className?: string;
   submitLabel?: string;
   onSubmit?: (book: BookProps) => void;
@@ -38,6 +39,7 @@ export default function BookForm(props: Props) {
   const {
     book,
     className,
+    id,
     submitLabel = "更新",
     onSubmit = () => undefined,
   } = props;
@@ -59,6 +61,7 @@ export default function BookForm(props: Props) {
     <Card
       classes={cardClasses}
       className={clsx(classes.margin, className)}
+      id={id}
       component="form"
       onSubmit={handleSubmit((values: BookProps) => {
         onSubmit({ ...defaultValues, ...values });

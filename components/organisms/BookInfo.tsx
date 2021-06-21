@@ -16,14 +16,15 @@ function formatInterval(start: Date | number, end: Date | number) {
 
 type Props = {
   className?: string;
+  id?: string;
   book: BookSchema;
 };
 
-export default function BookInfo({ className, book }: Props) {
+export default function BookInfo({ className, id, book }: Props) {
   const cardClasses = useCardStyle();
 
   return (
-    <Card className={className} classes={cardClasses}>
+    <Card className={className} classes={cardClasses} id={id}>
       <DescriptionList
         color={grey[900]}
         value={[

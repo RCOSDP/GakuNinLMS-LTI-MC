@@ -101,6 +101,7 @@ export default function BookEdit(props: Props) {
       </Typography>
       <CollapsibleContent
         expanded={expanded}
+        aria-controls="book-form"
         onCollapsibleContentClick={handleCollapsibleContentClick}
         label={
           <Typography className={classes.subtitle} variant="h5">
@@ -112,7 +113,12 @@ export default function BookEdit(props: Props) {
           </Typography>
         }
       >
-        <BookForm className={classes.form} book={book} onSubmit={onSubmit} />
+        <BookForm
+          id="book-form"
+          className={classes.form}
+          book={book}
+          onSubmit={onSubmit}
+        />
       </CollapsibleContent>
       <Typography className={classes.subtitle} variant="h5">
         トピック
