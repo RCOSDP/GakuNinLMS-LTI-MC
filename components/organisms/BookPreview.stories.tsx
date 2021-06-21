@@ -16,6 +16,8 @@ const defaultProps = {
   book,
   onBookClick: console.log,
   onBookEditClick: console.log,
+  onBookPreviewClick: console.log,
+  onBookLinkClick: console.log,
 };
 
 export const Default = () => {
@@ -40,4 +42,8 @@ export const EmptySection = () => {
 
 export const NoEditable = () => {
   return <BookPreview book={book} />;
+};
+
+export const Linked = () => {
+  return <BookPreview {...defaultProps} onBookLinkClick={undefined} linked />;
 };
