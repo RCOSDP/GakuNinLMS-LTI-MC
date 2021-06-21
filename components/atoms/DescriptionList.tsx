@@ -14,6 +14,7 @@ const useStyles = makeStyles((theme: Theme) =>
       margin: 0,
       color: ({ color }: StyleProps) => color,
       fontSize: ({ fontSize }: StyleProps) => fontSize,
+      lineHeight: 1.25,
       "& > $item:not(:last-child)": {
         marginBottom: theme.spacing(0.5),
       },

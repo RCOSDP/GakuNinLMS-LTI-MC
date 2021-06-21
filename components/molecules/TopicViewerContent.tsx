@@ -21,9 +21,7 @@ function formatInterval(start: Date | number, end: Date | number) {
 
 const useStyles = makeStyles((theme) => ({
   video: {
-    marginRight: theme.spacing(-3),
-    marginBottom: theme.spacing(2),
-    marginLeft: theme.spacing(-3),
+    margin: theme.spacing(-2, -3, 2),
     backgroundColor: gray[800],
     "& > *": {
       /* NOTE: 各動画プレイヤーのレスポンシブ対応により、高さはpaddingTopによってwidthのpercentage分
