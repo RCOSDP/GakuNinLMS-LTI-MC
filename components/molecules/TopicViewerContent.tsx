@@ -34,14 +34,14 @@ const useStyles = makeStyles((theme) => ({
       margin: "0 auto",
     },
   },
-  title: {
-    display: "flex",
-    alignItems: "center",
-    flexWrap: "wrap",
-    marginBottom: theme.spacing(0.5),
-    "& > :not(:last-child)": {
+  header: {
+    "& > *": {
       marginRight: theme.spacing(1),
+      marginBottom: theme.spacing(0.5),
     },
+  },
+  title: {
+    display: "inline-block",
     verticalAlign: "middle",
   },
   description: {
@@ -72,14 +72,16 @@ export default function TopicViewerContent(props: Props) {
           autoplay
         />
       )}
-      <Typography className={classes.title} variant="h6">
-        <span>{topic.name}</span>
+      <header className={classes.header}>
+        <Typography className={classes.title} variant="h6">
+          {topic.name}
+        </Typography>
         <Chip
           label={`学習時間 ${
             formatInterval(0, topic.timeRequired * 1000) || "10秒未満"
           }`}
         />
-      </Typography>
+      </header>
       <DescriptionList
         inline
         value={[
