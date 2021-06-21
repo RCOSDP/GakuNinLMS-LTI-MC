@@ -40,6 +40,7 @@ export type Props = {
   onBookPreviewClick?(book: BookSchema): void;
   onBookEditClick?(book: BookSchema): void;
   onBookLinkClick?(book: BookSchema): void;
+  onLinkedBookClick?(book: BookSchema): void;
   onBookNewClick(): void;
   onSortChange?(sort: SortOrder): void;
   onFilterChange?(filter: Filter): void;
@@ -90,8 +91,10 @@ export default function Books(props: Props) {
             {linkedBook && (
               <BookPreview
                 book={linkedBook}
+                linked
                 onBookPreviewClick={onBookPreviewClick}
                 onBookEditClick={onBookEditClick}
+                onLinkedBookClick={onLinkedBookClick}
                 onLtiContextClick={onLtiContextClick}
               />
             )}
@@ -118,15 +121,21 @@ export default function Books(props: Props) {
       />
       <Container classes={containerClasses} maxWidth="md">
         <div className={classes.books}>
-          {books.map((book) => (
-            <BookPreview
-              key={book.id}
-              book={book}
-              onBookPreviewClick={onBookPreviewClick}
-              onBookEditClick={onBookEditClick}
-              onLtiContextClick={onLtiContextClick}
-            />
-          ))}
+          {books.map((book) => {
+            const linked = book.id === linkedBook?.id;
+            return (
+              <BookPreview
+                key={book.id}
+                book={book}
+                linked={linked}
+                onBookPreviewClick={onBookPreviewClick}
+                onBookEditClick={onBookEditClick}
+                onBookLinkClick={!linked ? onBookLinkClick : undefined}
+                onLinkedBookClick={onLinkedBookClick}
+                onLtiContextClick={onLtiContextClick}
+              />
+            );
+          })}
           {loading &&
             [...Array(5)].map((_, i) => <Skeleton key={i} height={64} />)}
         </div>

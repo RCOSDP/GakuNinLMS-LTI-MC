@@ -2,6 +2,7 @@ import { useState } from "react";
 import clsx from "clsx";
 import { useInView } from "react-intersection-observer";
 import Card from "@material-ui/core/Card";
+import Chip from "@material-ui/core/Chip";
 import LinkIcon from "@material-ui/icons/Link";
 import { makeStyles } from "@material-ui/core/styles";
 import IconButton from "$atoms/IconButton";
@@ -24,6 +25,8 @@ const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
     alignItems: "center",
+    position: "relative",
+    overflow: "visible",
   },
   left: {
     flex: 1,
@@ -58,13 +61,21 @@ const useStyles = makeStyles((theme) => ({
       marginBottom: theme.spacing(1),
     },
   },
+  linked: {
+    position: "absolute",
+    top: theme.spacing(-1),
+    left: theme.spacing(1.5),
+    zIndex: 1,
+  },
 }));
 
 type Props = {
   book: BookSchema;
+  linked?: boolean;
   onBookPreviewClick?(book: BookSchema): void;
   onBookEditClick?(book: BookSchema): void;
   onBookLinkClick?(book: BookSchema): void;
+  onLinkedBookClick?(book: BookSchema): void;
   onLtiContextClick?(
     ltiResourceLink: Pick<LtiResourceLinkSchema, "consumerId" | "contextId">
   ): void;
@@ -72,9 +83,11 @@ type Props = {
 
 export default function BookPreview({
   book,
+  linked = false,
   onBookPreviewClick,
   onBookEditClick,
   onBookLinkClick,
+  onLinkedBookClick,
   onLtiContextClick,
 }: Props) {
   const cardClasses = useCardStyle();
@@ -98,6 +111,16 @@ export default function BookPreview({
   };
   return (
     <Card classes={cardClasses} className={classes.root}>
+      {linked && (
+        <Chip
+          className={classes.linked}
+          color="primary"
+          size="small"
+          icon={<LinkIcon />}
+          label="このブックを提供中"
+          onClick={handle(onLinkedBookClick)}
+        ></Chip>
+      )}
       <div className={classes.left}>
         <div className={clsx(classes.title, titleClamp.placeholder)}>
           <label className={titleClamp.clamp}>{book.name}</label>
