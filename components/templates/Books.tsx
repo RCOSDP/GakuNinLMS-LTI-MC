@@ -27,11 +27,11 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(2),
   },
   linkedBook: {
-    // NOTE: 決め打ち (動画プレイヤーの高さに依存)
+    // NOTE: BookPreviewに依存する&事前に高さを確定できないので決め打ち
     minHeight: 255,
   },
   linkedBookPlaceholder: {
-    // NOTE: 決め打ち (動画プレイヤーの高さに依存)
+    // NOTE: BookPreviewに依存する&事前に高さを確定できないので決め打ち
     minHeight: 205,
     display: "flex",
     alignItems: "center",
