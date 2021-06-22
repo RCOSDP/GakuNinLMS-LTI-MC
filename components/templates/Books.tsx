@@ -38,7 +38,9 @@ export type Props = {
   hasNextPage?: boolean;
   onLoadMore?(): void;
   onBookPreviewClick?(book: BookSchema): void;
-  onBookEditClick(book: BookSchema): void;
+  onBookEditClick?(book: BookSchema): void;
+  onBookLinkClick?(book: BookSchema): void;
+  onLinkedBookClick?(book: BookSchema): void;
   onBookNewClick(): void;
   onSortChange?(sort: SortOrder): void;
   onFilterChange?(filter: Filter): void;
@@ -53,14 +55,13 @@ export default function Books(props: Props) {
     onLoadMore = () => undefined,
     onBookPreviewClick,
     onBookEditClick,
+    onBookLinkClick,
+    onLinkedBookClick,
     onBookNewClick,
     onSortChange,
     onFilterChange,
   } = props;
   const { query, onSearchInput, onLtiContextClick } = useSearchAtom();
-  const handleBookPreviewClick = (book: BookSchema) => () =>
-    onBookPreviewClick?.(book);
-  const handleBookEditClick = (book: BookSchema) => () => onBookEditClick(book);
   const handleBookNewClick = () => onBookNewClick();
   const classes = useStyles();
   const containerClasses = useContainerStyles();
@@ -90,8 +91,10 @@ export default function Books(props: Props) {
             {linkedBook && (
               <BookPreview
                 book={linkedBook}
-                onBookPreviewClick={handleBookPreviewClick(linkedBook)}
-                onBookEditClick={handleBookEditClick(linkedBook)}
+                linked
+                onBookPreviewClick={onBookPreviewClick}
+                onBookEditClick={onBookEditClick}
+                onLinkedBookClick={onLinkedBookClick}
                 onLtiContextClick={onLtiContextClick}
               />
             )}
@@ -99,7 +102,7 @@ export default function Books(props: Props) {
               <Typography variant="body2">
                 提供中のブックがありません。
                 <br />
-                ブックを提供するには、提供したいブックの「もっと詳しく...」をクリックしたのち「このブックを提供」をクリックしてください。
+                ブックを提供するには、提供したいブックの「このブックを提供」ボタンをクリックしてください。
               </Typography>
             )}
           </>
@@ -122,8 +125,11 @@ export default function Books(props: Props) {
             <BookPreview
               key={book.id}
               book={book}
-              onBookPreviewClick={handleBookPreviewClick(book)}
-              onBookEditClick={handleBookEditClick(book)}
+              linked={book.id === linkedBook?.id}
+              onBookPreviewClick={onBookPreviewClick}
+              onBookEditClick={onBookEditClick}
+              onBookLinkClick={onBookLinkClick}
+              onLinkedBookClick={onLinkedBookClick}
               onLtiContextClick={onLtiContextClick}
             />
           ))}
