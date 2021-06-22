@@ -8,9 +8,6 @@ const input = makeStyles((theme) => ({
     borderRadius: "6px",
     fontSize: "1rem",
     transition: theme.transitions.create(["border-color"]),
-    "&$focused": {
-      borderColor: theme.palette.primary.main,
-    },
   },
   input: {
     height: "100%",
@@ -27,14 +24,15 @@ const input = makeStyles((theme) => ({
     borderRadius: "6px",
     padding: `${theme.spacing(1.25)}px ${theme.spacing(1.75)}px`,
     transition: theme.transitions.create(["border-color"]),
-    "&$focused": {
-      borderColor: theme.palette.primary.main,
-    },
   },
   inputMultiline: {
     padding: 0,
   },
-  focused: {},
+  focused: {
+    "&$root, &$multiline": {
+      borderColor: theme.palette.primary.main,
+    },
+  },
 }));
 
 export default input;
