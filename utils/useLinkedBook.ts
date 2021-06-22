@@ -1,4 +1,4 @@
-import { LinkedBook } from "$types/linkedBook";
+import type { LinkedBook } from "$types/linkedBook";
 import { useSessionAtom } from "$store/session";
 import { useBook } from "./book";
 
