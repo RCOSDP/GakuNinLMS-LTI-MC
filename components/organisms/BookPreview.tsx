@@ -137,7 +137,7 @@ export default function BookPreview({
               onClick={handle(onBookEditClick)}
             />
           )}
-          {onBookLinkClick && (
+          {!linked && onBookLinkClick && (
             <IconButton
               color="primary"
               tooltipProps={{ title: "このブックを提供" }}
