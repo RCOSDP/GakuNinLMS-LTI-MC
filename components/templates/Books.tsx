@@ -2,6 +2,7 @@ import useInfiniteScroll from "react-infinite-scroll-hook";
 import Skeleton from "@material-ui/lab/Skeleton";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
+import Card from "@material-ui/core/Card";
 import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
 import AddIcon from "@material-ui/icons/Add";
@@ -15,6 +16,7 @@ import type { LinkedBook } from "$types/linkedBook";
 import { SortOrder } from "$server/models/sortOrder";
 import { Filter } from "$types/filter";
 import useContainerStyles from "styles/container";
+import useCardStyles from "$styles/card";
 import { useSearchAtom } from "$store/search";
 
 const useStyles = makeStyles((theme) => ({
@@ -23,6 +25,18 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     marginBottom: theme.spacing(2),
+  },
+  linkedBook: {
+    // NOTE: 決め打ち
+    minHeight: 270,
+  },
+  linkedBookPlaceholder: {
+    // NOTE: 決め打ち
+    minHeight: 205,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    borderStyle: "dashed",
   },
   books: {
     marginTop: theme.spacing(1),
@@ -66,6 +80,7 @@ export default function Books(props: Props) {
   const handleBookNewClick = () => onBookNewClick();
   const classes = useStyles();
   const containerClasses = useContainerStyles();
+  const cardClasses = useCardStyles();
   const infiniteRef = useInfiniteScroll<HTMLDivElement>({
     loading,
     hasNextPage,
@@ -85,7 +100,7 @@ export default function Books(props: Props) {
           </>
         }
         body={
-          <>
+          <div className={classes.linkedBook}>
             <Typography className={classes.title} variant="h5">
               提供中のブック
             </Typography>
@@ -102,13 +117,18 @@ export default function Books(props: Props) {
               />
             )}
             {!linkedBook && (
-              <Typography variant="body2">
-                提供中のブックがありません。
-                <br />
-                ブックを提供するには、提供したいブックの「このブックを提供」ボタンをクリックしてください。
-              </Typography>
+              <Card
+                classes={cardClasses}
+                className={classes.linkedBookPlaceholder}
+              >
+                <Typography variant="body2">
+                  提供中のブックがありません。
+                  <br />
+                  ブックを提供するには、提供したいブックの「このブックを提供」ボタンをクリックしてください。
+                </Typography>
+              </Card>
             )}
-          </>
+          </div>
         }
         action={
           <>
