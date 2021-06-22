@@ -94,7 +94,9 @@ export default function Books(props: Props) {
                 book={linkedBook}
                 linked
                 onBookPreviewClick={onBookPreviewClick}
-                onBookEditClick={linkedBook.editable ? onBookEditClick : undefined}
+                onBookEditClick={
+                  linkedBook.editable ? onBookEditClick : undefined
+                }
                 onLinkedBookClick={onLinkedBookClick}
                 onLtiContextClick={onLtiContextClick}
               />
