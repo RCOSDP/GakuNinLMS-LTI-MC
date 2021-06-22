@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
   },
   linkedBook: {
     // NOTE: 決め打ち (動画プレイヤーの高さに依存)
-    minHeight: 270,
+    minHeight: 255,
   },
   linkedBookPlaceholder: {
     // NOTE: 決め打ち (動画プレイヤーの高さに依存)
