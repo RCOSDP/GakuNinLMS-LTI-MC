@@ -1,6 +1,7 @@
 import { ChangeEvent, useCallback, useState } from "react";
 import Card from "@material-ui/core/Card";
 import Checkbox from "@material-ui/core/Checkbox";
+import Divider from "@material-ui/core/Divider";
 import Button from "@material-ui/core/Button";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -37,6 +38,9 @@ const useStyles = makeStyles((theme) => ({
   labelDescription: {
     marginLeft: theme.spacing(0.75),
     color: gray[600],
+  },
+  divider: {
+    margin: theme.spacing(0, -3, 0),
   },
   subtitles: {
     marginTop: theme.spacing(2),
@@ -260,6 +264,7 @@ export default function TopicForm(props: Props) {
           name="description"
           inputRef={register}
         />
+        <Divider className={classes.divider} />
         <Button variant="contained" color="primary" type="submit">
           {submitLabel}
         </Button>

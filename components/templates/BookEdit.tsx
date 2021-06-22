@@ -11,7 +11,8 @@ import RequiredDot from "$atoms/RequiredDot";
 import BackButton from "$atoms/BackButton";
 import CollapsibleContent from "$organisms/CollapsibleContent";
 import useContainerStyles from "styles/container";
-import { BookProps, BookSchema } from "$server/models/book";
+import type { BookSchema } from "$server/models/book";
+import type { BookPropsWithSubmitOptions } from "$types/bookPropsWithSubmitOptions";
 import { SectionProps } from "$server/models/book/section";
 import { TopicSchema } from "$server/models/topic";
 import { useConfirm } from "material-ui-confirm";
@@ -44,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
 
 type Props = {
   book: BookSchema;
-  onSubmit(book: BookProps): void;
+  onSubmit(book: BookPropsWithSubmitOptions): void;
   onDelete(book: BookSchema): void;
   onCancel(): void;
   onSectionsUpdate(sections: SectionProps[]): void;
