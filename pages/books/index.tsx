@@ -47,12 +47,15 @@ function Index() {
     if (ltiResourceLink == null) return;
     const bookId = book.id;
     await updateLtiResourceLink({ ...ltiResourceLink, bookId });
-    return router.push(pagesPath.book.$url({ query: { bookId } }));
   };
+  const handleLinkedBookClick = (book: Pick<BookSchema, "id">) =>
+    router.push(pagesPath.book.$url({ query: { bookId: book.id } }));
   const handlers = {
     onBookPreviewClick: handleBookPreviewClick,
     onBookEditClick: handleBookEditClick,
     onBookNewClick: handleBookNewClick,
+    onBookLinkClick: handleBookLinkClick,
+    onLinkedBookClick: handleLinkedBookClick,
   };
 
   return (
@@ -60,13 +63,7 @@ function Index() {
       <Books linkedBook={linkedBook} {...handlers} />
       {dialog && (
         <BookPreviewDialog open={open} onClose={onClose} book={dialog}>
-          {(props) => (
-            <Book
-              {...props}
-              onBookLinkClick={handleBookLinkClick}
-              onOtherBookLinkClick={onClose}
-            />
-          )}
+          {(props) => <Book {...props} />}
         </BookPreviewDialog>
       )}
     </>

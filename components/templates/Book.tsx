@@ -101,8 +101,7 @@ type Props = {
   book: BookSchema | null;
   index: ItemIndex;
   onBookEditClick?(book: BookSchema): void;
-  onBookLinkClick?(book: BookSchema): void;
-  onOtherBookLinkClick(): void;
+  onOtherBookLinkClick?(): void;
   onTopicEditClick?(topic: TopicSchema): void;
   onTopicEnded(): void;
   onItemClick(index: ItemIndex): void;
@@ -115,7 +114,6 @@ export default function Book(props: Props) {
     book,
     index: [sectionIndex, topicIndex],
     onBookEditClick,
-    onBookLinkClick,
     onOtherBookLinkClick,
     onTopicEditClick,
     onTopicEnded,
@@ -141,8 +139,7 @@ export default function Book(props: Props) {
   const sticky = useSticky({ offset });
   const matches = useMediaQuery(theme.breakpoints.up("md"));
   const handleBookEditClick = () => book && onBookEditClick?.(book);
-  const handleBookLinkClick = () => book && onBookLinkClick?.(book);
-  const handleOtherBookLinkClick = () => onOtherBookLinkClick();
+  const handleOtherBookLinkClick = () => onOtherBookLinkClick?.();
   const handleItemClick = (_: never, index: ItemIndex) => {
     onItemClick(index);
   };
@@ -177,17 +174,7 @@ export default function Book(props: Props) {
                   onClick={handleBookEditClick}
                 />
               )}
-            {isInstructor && !linked && onBookLinkClick && (
-              <Button
-                size="small"
-                color="primary"
-                onClick={handleBookLinkClick}
-              >
-                <LinkIcon className={classes.icon} />
-                このブックを提供
-              </Button>
-            )}
-            {isInstructor && linked && (
+            {isInstructor && linked && onOtherBookLinkClick && (
               <Button
                 size="small"
                 color="primary"
