@@ -19,6 +19,7 @@
     "@openapitools/openapi-generator-cli": "^2.2.2",
     "@rooks/use-previous": "^4.9.2",
     "@storybook/addon-a11y": "^6.2.9",
+    "@storybook/addon-essentials": "^6.2.9",
     "@storybook/react": "^6.2.9",
     "@types/events": "^3.0.0",
     "@types/jest": "^26.0.21",
