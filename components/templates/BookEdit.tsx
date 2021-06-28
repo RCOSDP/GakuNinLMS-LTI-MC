@@ -1,4 +1,3 @@
-import { useState } from "react";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import Button from "@material-ui/core/Button";
@@ -9,7 +8,6 @@ import BookForm from "$organisms/BookForm";
 import TopicPreviewDialog from "$organisms/TopicPreviewDialog";
 import RequiredDot from "$atoms/RequiredDot";
 import BackButton from "$atoms/BackButton";
-import CollapsibleContent from "$organisms/CollapsibleContent";
 import useContainerStyles from "styles/container";
 import type { BookSchema } from "$server/models/book";
 import type { BookPropsWithSubmitOptions } from "$types/bookPropsWithSubmitOptions";
@@ -21,14 +19,14 @@ import useDialogProps from "$utils/useDialogProps";
 const useStyles = makeStyles((theme) => ({
   container: {
     marginTop: theme.spacing(1),
-    "& > :not($title):not($form)": {
+    "& > :not($title):not($content)": {
       marginBottom: theme.spacing(2),
     },
   },
   title: {
     marginBottom: theme.spacing(4),
   },
-  form: {
+  content: {
     marginBottom: theme.spacing(4),
   },
   subtitle: {
@@ -72,8 +70,6 @@ export default function BookEdit(props: Props) {
   const classes = useStyles();
   const containerClasses = useContainerStyles();
   const confirm = useConfirm();
-  const [expanded, setExpanded] = useState(false);
-  const handleCollapsibleContentClick = () => setExpanded(!expanded);
   const {
     data: previewTopic,
     dispatch: setPreviewTopic,
@@ -100,31 +96,11 @@ export default function BookEdit(props: Props) {
       <Typography className={classes.title} variant="h4">
         ブック「{book.name}」の編集
       </Typography>
-      <CollapsibleContent
-        expanded={expanded}
-        aria-controls="book-form"
-        onCollapsibleContentClick={handleCollapsibleContentClick}
-        label={
-          <Typography className={classes.subtitle} variant="h5">
-            基本情報
-            <Typography variant="caption" component="span" aria-hidden="true">
-              <RequiredDot />
-              は必須項目です
-            </Typography>
-          </Typography>
-        }
-      >
-        <BookForm
-          id="book-form"
-          className={classes.form}
-          book={book}
-          onSubmit={onSubmit}
-        />
-      </CollapsibleContent>
       <Typography className={classes.subtitle} variant="h5">
         トピック
       </Typography>
       <BookEditChildren
+        className={classes.content}
         sections={book.sections}
         onTopicPreviewClick={handleTopicPreviewClick}
         onTopicEditClick={onTopicEditClick}
@@ -133,6 +109,19 @@ export default function BookEdit(props: Props) {
         onBookImportClick={onBookImportClick}
         onSectionsUpdate={onSectionsUpdate}
         isTopicEditable={isTopicEditable}
+      />
+      <Typography className={classes.subtitle} variant="h5">
+        基本情報
+        <Typography variant="caption" component="span" aria-hidden="true">
+          <RequiredDot />
+          は必須項目です
+        </Typography>
+      </Typography>
+      <BookForm
+        id="book-form"
+        className={classes.content}
+        book={book}
+        onSubmit={onSubmit}
       />
       <Button size="small" color="primary" onClick={handleDeleteButtonClick}>
         <DeleteOutlinedIcon />
