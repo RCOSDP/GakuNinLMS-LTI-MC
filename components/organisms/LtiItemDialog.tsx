@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import Typography from "@material-ui/core/Typography";
 import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -18,10 +19,32 @@ type Props = {
   onClose: React.MouseEventHandler;
 };
 
+/** LTI v1.1 起動時リクエストっぽいオブジェクトへの変換 */
+function useLtiLaunchBody(session: SessionSchema) {
+  return useMemo(
+    () => ({
+      oauth_nonce: session.oauthClient.nonce,
+      oauth_consumer_key: session.oauthClient.id,
+      lti_version: session.ltiVersion,
+      resource_link_id: session.ltiResourceLinkRequest.id,
+      user_id: session.ltiUser.id,
+      roles: session.ltiRoles.join(","),
+      context_id: session.ltiContext.id,
+      resource_link_title: session.ltiResourceLinkRequest.title,
+      context_title: session.ltiContext.title,
+      context_label: session.ltiContext.label,
+      lis_person_name_full: session.ltiUser.name,
+      launch_presentation_return_url: session.ltiLaunchPresentation?.returnUrl,
+    }),
+    [session]
+  );
+}
+
 export default function LtiItemDialog(props: Props) {
   const cardClasses = useCardStyles();
   const classes = useStyles();
   const { session, open, onClose } = props;
+  const ltiLaunchBody = useLtiLaunchBody(session);
   return (
     <Dialog
       open={open}
@@ -34,10 +57,9 @@ export default function LtiItemDialog(props: Props) {
           LTI情報
         </Typography>
         <DescriptionList
-          value={Object.entries(session.ltiLaunchBody).map(([key, value]) => ({
-            key,
-            value,
-          }))}
+          value={Object.entries(ltiLaunchBody).flatMap(([key, value]) =>
+            value == null ? [] : [{ key, value }]
+          )}
         />
       </DialogContent>
     </Dialog>

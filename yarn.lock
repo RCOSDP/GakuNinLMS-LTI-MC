@@ -9162,6 +9162,14 @@ json-schema-resolver@^1.2.0:
     rfdc "^1.1.4"
     uri-js "^4.2.2"
 
+json-schema-to-ts@^1.6.4:
+  version "1.6.4"
+  resolved "https://registry.yarnpkg.com/json-schema-to-ts/-/json-schema-to-ts-1.6.4.tgz#63e4fe854dff093923be9e8b59b39ee9a7971ba4"
+  integrity sha512-pR4yQ9DHz6itqswtHCm26mw45FSNfQ9rEQjosaZErhn5J3J2sIViQiz8rDaezjKAhFGpmsoczYVBgGHzFw/stA==
+  dependencies:
+    "@types/json-schema" "^7.0.6"
+    ts-toolbelt "^6.15.5"
+
 json-schema-traverse@^0.4.1:
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/json-schema-traverse/-/json-schema-traverse-0.4.1.tgz#69f6a87d9513ab8bb8fe63bdb0979c448e684660"
@@ -13774,6 +13782,11 @@ ts-pnp@^1.1.6:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/ts-pnp/-/ts-pnp-1.2.0.tgz#a500ad084b0798f1c3071af391e65912c86bca92"
   integrity sha512-csd+vJOb/gkzvcCHgTGSChYpy5f1/XKNsmvBGO4JXS+z1v2HobugDz4s1IeFXM3wZB44uczs+eazB5Q/ccdhQw==
+
+ts-toolbelt@^6.15.5:
+  version "6.15.5"
+  resolved "https://registry.yarnpkg.com/ts-toolbelt/-/ts-toolbelt-6.15.5.tgz#cb3b43ed725cb63644782c64fbcad7d8f28c0a83"
+  integrity sha512-FZIXf1ksVyLcfr7M317jbB67XFJhOO1YqdTcuGaq9q5jLUoTikukZ+98TPjKiP2jC5CgmYdWWYs0s2nLSU0/1A==
 
 tslib@1.13.0:
   version "1.13.0"

@@ -66,9 +66,6 @@ import {
     InlineResponse2005,
     InlineResponse2005FromJSON,
     InlineResponse2005ToJSON,
-    InlineResponse2006,
-    InlineResponse2006FromJSON,
-    InlineResponse2006ToJSON,
     InlineResponse201,
     InlineResponse201FromJSON,
     InlineResponse201ToJSON,
@@ -863,7 +860,7 @@ export class DefaultApi extends runtime.BaseAPI {
      * 自身に関する詳細な情報を取得します。
      * セッション情報
      */
-    async apiV2SessionGetRaw(): Promise<runtime.ApiResponse<InlineResponse2006>> {
+    async apiV2SessionGetRaw(): Promise<runtime.ApiResponse<{ [key: string]: object; }>> {
         const queryParameters: runtime.HTTPQuery = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -875,14 +872,14 @@ export class DefaultApi extends runtime.BaseAPI {
             query: queryParameters,
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2006FromJSON(jsonValue));
+        return new runtime.JSONApiResponse<any>(response);
     }
 
     /**
      * 自身に関する詳細な情報を取得します。
      * セッション情報
      */
-    async apiV2SessionGet(): Promise<InlineResponse2006> {
+    async apiV2SessionGet(): Promise<{ [key: string]: object; }> {
         const response = await this.apiV2SessionGetRaw();
         return await response.value();
     }

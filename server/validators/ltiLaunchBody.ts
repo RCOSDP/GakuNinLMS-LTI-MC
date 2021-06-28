@@ -1,6 +1,9 @@
+import { LtiLaunchPresentationSchema } from "$server/models/ltiLaunchPresentation";
+import { SessionSchema } from "$server/models/session";
 import { IsNotEmpty, IsOptional, IsString } from "class-validator";
 import { validationMetadatasToSchemas } from "class-validator-jsonschema";
 
+/** LTI v1.1 起動時リクエスト */
 export class LtiLaunchBody {
   @IsNotEmpty()
   @IsString()
@@ -72,3 +75,31 @@ export class LtiLaunchBody {
 }
 
 export const ltiLaunchBodySchema = validationMetadatasToSchemas().LtiLaunchBody;
+
+export function toSessionSchema(
+  body: LtiLaunchBody
+): Omit<SessionSchema, "ltiResourceLink" | "user"> {
+  let ltiLaunchPresentation: undefined | LtiLaunchPresentationSchema;
+  if ("launch_presentation_return_url" in body) {
+    ltiLaunchPresentation = {
+      returnUrl: body.launch_presentation_return_url,
+    };
+  }
+
+  return {
+    oauthClient: { id: body.oauth_consumer_key, nonce: body.oauth_nonce },
+    ltiVersion: "1.0.0",
+    ltiUser: { id: body.user_id, name: body.lis_person_name_full },
+    ltiRoles: body.roles.split(","),
+    ltiResourceLinkRequest: {
+      id: body.resource_link_id,
+      title: body.resource_link_title,
+    },
+    ltiContext: {
+      id: body.context_id,
+      label: body.context_label,
+      title: body.context_title,
+    },
+    ...(ltiLaunchPresentation && { ltiLaunchPresentation }),
+  };
+}
