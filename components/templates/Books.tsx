@@ -26,13 +26,9 @@ const useStyles = makeStyles((theme) => ({
   title: {
     marginBottom: theme.spacing(2),
   },
-  linkedBook: {
-    // NOTE: BookPreviewに依存する&事前に高さを確定できないので決め打ち
-    minHeight: 255,
-  },
   linkedBookPlaceholder: {
     // NOTE: BookPreviewに依存する&事前に高さを確定できないので決め打ち
-    minHeight: 205,
+    height: 180,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -100,13 +96,13 @@ export default function Books(props: Props) {
           </>
         }
         body={
-          <div className={classes.linkedBook}>
+          <div>
             <Typography className={classes.title} variant="h5">
               提供中のブック
             </Typography>
             {linkedBook && (
               <BookPreview
-                book={linkedBook}
+                book={{ ...linkedBook, ltiResourceLinks: [] }}
                 linked
                 onBookPreviewClick={onBookPreviewClick}
                 onBookEditClick={
