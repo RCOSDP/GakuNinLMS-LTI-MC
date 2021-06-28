@@ -109,7 +109,7 @@ model LtiConsumer {
   users            User[]
   /// OAuth Consumer key ("" は無効)
   id               String            @id
-  /// OAuth Consumer secret
+  /// OAuth Consumer secret (LTI v1.1 の場合: "" は無効)
   secret           String
 
   @@map("lti_consumer")
