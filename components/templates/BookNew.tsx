@@ -67,7 +67,7 @@ export default function BookNew(props: Props) {
           {forkFrom.name} さんが作成したブックをフォークしようとしています
         </Alert>
       )}
-      <BookForm book={defaultBook} submitLabel="作成" onSubmit={onSubmit} />
+      <BookForm book={defaultBook} variant="create" onSubmit={onSubmit} />
     </Container>
   );
 }

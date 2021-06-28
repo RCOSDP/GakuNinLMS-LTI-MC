@@ -36,11 +36,22 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const label = {
+  create: {
+    submit: "作成",
+    submitWithLink: "作成したブックを提供",
+  },
+  update: {
+    submit: "更新",
+    submitWithLink: "更新したブックを提供",
+  },
+} as const;
+
 type Props = {
   book?: BookSchema;
   id?: string;
   className?: string;
-  submitLabel?: string;
+  variant?: "create" | "update";
   onSubmit?: (book: BookPropsWithSubmitOptions) => void;
 };
 
@@ -49,7 +60,7 @@ export default function BookForm(props: Props) {
     book,
     className,
     id,
-    submitLabel = "更新",
+    variant = "create",
     onSubmit = () => undefined,
   } = props;
   const cardClasses = useCardStyles();
@@ -160,11 +171,11 @@ export default function BookForm(props: Props) {
           color="primary"
         />
         <InputLabel classes={inputLabelClasses} htmlFor="submit-with-link">
-          {`${submitLabel}したブックを提供`}
+          {label[variant].submitWithLink}
         </InputLabel>
       </div>
       <Button variant="contained" color="primary" type="submit">
-        {submitLabel}
+        {label[variant].submit}
       </Button>
     </Card>
   );

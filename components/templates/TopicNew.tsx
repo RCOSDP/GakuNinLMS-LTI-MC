@@ -80,6 +80,7 @@ export default function TopicNew(props: Props) {
       )}
       <TopicForm
         topic={defaultTopic}
+        variant="create"
         submitLabel="作成"
         onSubmit={onSubmit}
         onSubtitleDelete={onSubtitleDelete}

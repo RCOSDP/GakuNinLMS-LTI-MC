@@ -52,10 +52,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const label = {
+  create: "作成",
+  update: "更新",
+} as const;
+
 type Props = {
   topic?: TopicSchema;
   className?: string;
-  submitLabel?: string;
+  variant?: "create" | "update";
   onSubmit?(topic: TopicProps): void;
   onSubtitleSubmit(videoTrack: VideoTrackProps): void;
   onSubtitleDelete(videoTrack: VideoTrackSchema): void;
@@ -65,7 +70,7 @@ export default function TopicForm(props: Props) {
   const {
     topic,
     className,
-    submitLabel = "更新",
+    variant = "create",
     onSubmit = () => undefined,
     onSubtitleSubmit,
     onSubtitleDelete,
@@ -266,7 +271,7 @@ export default function TopicForm(props: Props) {
         />
         <Divider className={classes.divider} />
         <Button variant="contained" color="primary" type="submit">
-          {submitLabel}
+          {label[variant]}
         </Button>
       </Card>
 

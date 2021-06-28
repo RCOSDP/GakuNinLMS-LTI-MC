@@ -118,9 +118,9 @@ export default function BookEdit(props: Props) {
         </Typography>
       </Typography>
       <BookForm
-        id="book-form"
         className={classes.content}
         book={book}
+        variant="update"
         onSubmit={onSubmit}
       />
       <Button size="small" color="primary" onClick={handleDeleteButtonClick}>
