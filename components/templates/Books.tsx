@@ -96,7 +96,7 @@ export default function Books(props: Props) {
           </>
         }
         body={
-          <div>
+          <>
             <Typography className={classes.title} variant="h5">
               提供中のブック
             </Typography>
@@ -124,7 +124,7 @@ export default function Books(props: Props) {
                 </Typography>
               </Card>
             )}
-          </div>
+          </>
         }
         action={
           <>
