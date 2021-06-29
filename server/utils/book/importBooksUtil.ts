@@ -1,10 +1,14 @@
 import fs from "fs";
+import path from "path";
 import unzipper from "unzipper";
 // error  Could not find a declaration file for module 'recursive-readdir-synchronous'.
 // './node_modules/recursive-readdir-synchronous/index.js' implicitly has an 'any' type.
 // eslint-disable-next-line tsc/config
 import recursive from "recursive-readdir-synchronous";
+import dateFormat from "dateformat";
 import { Buffer } from "buffer";
+import scp from "node-scp";
+
 import { validate, ValidationError } from "class-validator";
 import { UserSchema } from "$server/models/user";
 import { BookSchema } from "$server/models/book";
@@ -18,6 +22,17 @@ import {
 } from "$server/validators/booksImportParams";
 import prisma from "$server/utils/prisma";
 import findBook from "./findBook";
+import {
+  NEXT_PUBLIC_API_BASE_PATH,
+  API_BASE_PATH,
+  OAUTH_CONSUMER_KEY,
+  WOWZA_SCP_HOST,
+  WOWZA_SCP_PORT,
+  WOWZA_SCP_USERNAME,
+  WOWZA_SCP_PRIVATE_KEY,
+  WOWZA_SCP_PASS_PHRASE,
+  WOWZA_SCP_SERVER_PATH,
+} from "$server/utils/env";
 
 async function importBooksUtil(
   authorId: UserSchema["id"],
@@ -35,6 +50,7 @@ class ImportBooksUtil {
   errors: string[];
   timeRequired: number;
   tmpdir?: string;
+  unzippedFiles: string[];
 
   constructor(authorId: UserSchema["id"], params: BooksImportParams) {
     this.authorId = authorId;
@@ -42,6 +58,7 @@ class ImportBooksUtil {
     this.books = [];
     this.errors = [];
     this.timeRequired = 0;
+    this.unzippedFiles = [];
   }
 
   async importBooks() {
@@ -54,6 +71,11 @@ class ImportBooksUtil {
         forbidNonWhitelisted: true,
       });
       this.parseError(results);
+      if (this.errors.length) return;
+
+      if (this.tmpdir) {
+        await this.uploadFiles(importBooks);
+      }
       if (this.errors.length) return;
 
       const transactions = [];
@@ -138,10 +160,10 @@ class ImportBooksUtil {
       fs.createReadStream(file)
         .pipe(unzipper.Extract({ path: this.tmpdir }))
         .on("close", () => {
-          const jsonfiles: string[] = recursive(
-            this.tmpdir
-            // eslint-disable-next-line tsc/config
-          ).filter((filename) => filename.toLowerCase().endsWith(".json"));
+          this.unzippedFiles = recursive(this.tmpdir);
+          const jsonfiles: string[] = this.unzippedFiles.filter((filename) =>
+            filename.toLowerCase().endsWith(".json")
+          );
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const jsons: any[] = [];
           if (jsonfiles.length) {
@@ -173,6 +195,73 @@ class ImportBooksUtil {
           }
         });
     });
+  }
+
+  async uploadFiles(importBooks: ImportBooks) {
+    const uploadroot = fs.mkdtempSync(`${this.tmpdir}/upload-wowza-`);
+    // recursive:true が利かない https://github.com/nodejs/node/issues/27293
+    const uploaddomain = fs.mkdirSync(`${uploadroot}/${OAUTH_CONSUMER_KEY}`, {
+      recursive: true,
+    });
+    const uploadauthor = fs.mkdirSync(`${uploaddomain}/${this.authorId}`, {
+      recursive: true,
+    });
+    const uploaddir = fs.mkdtempSync(
+      `${uploadauthor}/${dateFormat(new Date(), "yyyymmdd-HHMM")}-`
+    );
+    const uploadsubdir = uploaddir.substring(uploadroot.length);
+
+    const filenames = [];
+    for (const importBook of importBooks.books) {
+      for (const bookSection of importBook.sections) {
+        for (const sectionTopic of bookSection.topics) {
+          if (sectionTopic.resource.file) {
+            if (sectionTopic.resource.providerUrl != "https://www.wowza.com/") {
+              this.errors.push(
+                `${sectionTopic.resource.providerUrl} へのアップロードは対応していません。`
+              );
+            }
+
+            const filename = path.basename(sectionTopic.resource.file);
+            if (filenames.indexOf(filename) > -1) {
+              this.errors.push(
+                `ファイル ${filename} が重複しています。(サブフォルダはまとめられます)`
+              );
+            }
+
+            const fullpath = this.unzippedFiles.find(
+              (element) => path.basename(element) == filename
+            );
+            if (!fullpath) {
+              this.errors.push(`ファイル ${filename} がありません。`);
+              continue;
+            }
+
+            filenames.push(filename);
+            sectionTopic.resource.url = `${NEXT_PUBLIC_API_BASE_PATH}${API_BASE_PATH}/wowza${uploadsubdir}/${filename}`;
+            fs.renameSync(fullpath, `${uploaddir}/${filename}`);
+          }
+        }
+      }
+    }
+    if (this.errors.length) return;
+
+    try {
+      // error  This expression is not callable.
+      // Type 'typeof import("./node_modules/node-scp/lib/index")' has no call signatures
+      // eslint-disable-next-line tsc/config
+      const client = await scp({
+        host: WOWZA_SCP_HOST,
+        port: WOWZA_SCP_PORT,
+        username: WOWZA_SCP_USERNAME,
+        privateKey: fs.readFileSync(WOWZA_SCP_PRIVATE_KEY),
+        passphrase: WOWZA_SCP_PASS_PHRASE,
+      });
+      await client.uploadDir(uploadroot, WOWZA_SCP_SERVER_PATH);
+      client.close();
+    } catch (e) {
+      this.errors.push(`サーバーにアップロードできませんでした。\n${e}`);
+    }
   }
 
   getBookProps(importBook: ImportBook) {

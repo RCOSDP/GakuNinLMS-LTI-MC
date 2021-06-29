@@ -11,6 +11,7 @@ import {
   IsISO8601,
   IsUrl,
   ValidateNested,
+  ValidateIf,
   registerDecorator,
   ValidatorConstraintInterface,
 } from "class-validator";
@@ -98,8 +99,12 @@ export class ImportTrack {
 export const importTrackSchema = validationMetadatasToSchemas().ImportTrack;
 
 export class ImportResource {
+  @ValidateIf((o) => !o.file)
   @IsUrl({}, { message: "動画ページのURLを設定してください。" })
   url = "";
+
+  @IsString({ message: "ファイル名ではないか未設定です。" })
+  file = "";
 
   @IsUrl({}, { message: "アップロード先のサイトのURLを設定してください。" })
   providerUrl = "";
