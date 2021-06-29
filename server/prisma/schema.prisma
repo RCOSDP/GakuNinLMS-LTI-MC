@@ -102,6 +102,18 @@ model Keyword {
 
 // Map Objects/Learning Contents
 
+/// LTI Platform
+model LtiPlatform {
+  /// OpenID Connect Issuer ID
+  issuer   String        @id
+  /// OpenID Connect Issuer Metadata: authorization_endpoint, jwks_uri, token_endpoint etc.
+  metadata Json
+  /// OpenID Connect Clients
+  clients  LtiConsumer[]
+
+  @@map("lti_platform")
+}
+
 /// LTI Consumer
 model LtiConsumer {
   ltiContext       LtiContext[]
@@ -110,7 +122,10 @@ model LtiConsumer {
   /// OAuth Consumer key ("" は無効)
   id               String            @id
   /// OAuth Consumer secret (LTI v1.1 の場合: "" は無効)
-  secret           String
+  secret           String            @default("")
+  /// LTI Platform (LTI v1.3 の場合: 必須)
+  platform         LtiPlatform?      @relation(fields: [platformId], references: [issuer])
+  platformId       String?           @map("platform_id")
 
   @@map("lti_consumer")
 }
