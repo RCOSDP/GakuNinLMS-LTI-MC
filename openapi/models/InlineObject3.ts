@@ -25,6 +25,12 @@ export interface InlineObject3 {
      * @memberof InlineObject3
      */
     json?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineObject3
+     */
+    file?: string;
 }
 
 export function InlineObject3FromJSON(json: any): InlineObject3 {
@@ -38,6 +44,7 @@ export function InlineObject3FromJSONTyped(json: any, ignoreDiscriminator: boole
     return {
         
         'json': !exists(json, 'json') ? undefined : json['json'],
+        'file': !exists(json, 'file') ? undefined : json['file'],
     };
 }
 
@@ -51,6 +58,7 @@ export function InlineObject3ToJSON(value?: InlineObject3 | null): any {
     return {
         
         'json': value.json,
+        'file': value.file,
     };
 }
 

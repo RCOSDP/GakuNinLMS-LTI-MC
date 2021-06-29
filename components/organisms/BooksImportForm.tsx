@@ -1,3 +1,4 @@
+import { Buffer } from "buffer";
 import Card from "@material-ui/core/Card";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
@@ -32,6 +33,7 @@ export default function BooksImportForm(props: Props) {
   const classes = useStyles();
   const defaultValues: BooksImportParams = {
     json: importBooks?.json ?? "",
+    file: importBooks?.file ?? "",
   };
   const { handleSubmit, register } = useForm<BooksImportParams>({
     defaultValues,
@@ -43,7 +45,26 @@ export default function BooksImportForm(props: Props) {
       className={clsx(classes.margin, className)}
       component="form"
       onSubmit={handleSubmit((values: BooksImportParams) => {
-        onSubmit({ ...defaultValues, ...values });
+        if (values?.file?.length) {
+          const reader = new FileReader();
+          reader.addEventListener(
+            "load",
+            function () {
+              onSubmit({
+                ...defaultValues,
+                ...values,
+                file: Buffer.from(reader.result as ArrayBuffer).toString(
+                  "base64"
+                ),
+              });
+            },
+            false
+          );
+          // eslint-disable-next-line tsc/config
+          reader.readAsArrayBuffer(values.file[0] as File);
+        } else {
+          onSubmit({ ...defaultValues, ...values, file: undefined });
+        }
       })}
     >
       <TextField
@@ -53,6 +74,7 @@ export default function BooksImportForm(props: Props) {
         name="json"
         inputRef={register}
       />
+      <TextField label="file" name="file" type="file" inputRef={register} />
       <Button variant="contained" color="primary" type="submit">
         インポート
       </Button>

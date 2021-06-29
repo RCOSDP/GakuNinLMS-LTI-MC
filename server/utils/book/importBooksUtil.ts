@@ -1,3 +1,10 @@
+import fs from "fs";
+import unzipper from "unzipper";
+// error  Could not find a declaration file for module 'recursive-readdir-synchronous'.
+// './node_modules/recursive-readdir-synchronous/index.js' implicitly has an 'any' type.
+// eslint-disable-next-line tsc/config
+import recursive from "recursive-readdir-synchronous";
+import { Buffer } from "buffer";
 import { validate, ValidationError } from "class-validator";
 import { UserSchema } from "$server/models/user";
 import { BookSchema } from "$server/models/book";
@@ -27,6 +34,7 @@ class ImportBooksUtil {
   books: BookSchema[];
   errors: string[];
   timeRequired: number;
+  tmpdir?: string;
 
   constructor(authorId: UserSchema["id"], params: BooksImportParams) {
     this.authorId = authorId;
@@ -38,7 +46,7 @@ class ImportBooksUtil {
 
   async importBooks() {
     try {
-      const importBooks = ImportBooks.init(this.parseJson());
+      const importBooks = ImportBooks.init(await this.parseJson());
       if (this.errors.length) return;
 
       const results = await validate(importBooks, {
@@ -63,6 +71,8 @@ class ImportBooksUtil {
     } catch (e) {
       console.error(e);
       this.errors.push(...(Array.isArray(e) ? e : [e.toString()]));
+    } finally {
+      this.cleanUp();
     }
   }
 
@@ -100,13 +110,69 @@ class ImportBooksUtil {
     return result;
   }
 
-  parseJson() {
+  cleanUp() {
+    if (this.tmpdir) {
+      fs.rmdirSync(this.tmpdir, { recursive: true });
+    }
+  }
+
+  async parseJson() {
+    if (this.params.file) {
+      return await this.parseJsonFromFile();
+    }
+
     try {
       return JSON.parse(this.params.json || "");
     } catch (e) {
       this.errors.push(`入力されたjsonテキストを解釈できません。\n${e}`);
       return {};
     }
+  }
+
+  parseJsonFromFile() {
+    this.tmpdir = fs.mkdtempSync("/tmp/chibichilo-import-");
+    const file = `${this.tmpdir}/file`;
+    fs.writeFileSync(file, Buffer.from(this.params.file as string, "base64"));
+
+    return new Promise((resolve) => {
+      fs.createReadStream(file)
+        .pipe(unzipper.Extract({ path: this.tmpdir }))
+        .on("close", () => {
+          const jsonfiles: string[] = recursive(
+            this.tmpdir
+            // eslint-disable-next-line tsc/config
+          ).filter((filename) => filename.toLowerCase().endsWith(".json"));
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const jsons: any[] = [];
+          if (jsonfiles.length) {
+            for (const jsonfile of jsonfiles) {
+              try {
+                const json = JSON.parse(fs.readFileSync(jsonfile).toString());
+                jsons.push(...(Array.isArray(json) ? json : [json]));
+              } catch (e) {
+                this.errors.push(
+                  `入力されたjsonテキストを解釈できません。\n${e}`
+                );
+              }
+            }
+          } else {
+            this.errors.push("jsonファイルがありません。");
+          }
+          if (this.errors.length) {
+            resolve({});
+          } else {
+            resolve(jsons);
+          }
+        })
+        .on("error", (error) => {
+          try {
+            resolve(JSON.parse(fs.readFileSync(file).toString()));
+          } catch (e) {
+            this.errors.push(`ファイルがzipではありません。\n${error}`);
+            resolve({});
+          }
+        });
+    });
   }
 
   getBookProps(importBook: ImportBook) {

@@ -17,6 +17,7 @@ export const importSchema: FastifySchema = {
   description: outdent`
     ブックをインポートします。
     教員または管理者でなければなりません。`,
+  //consumes: [ "multipart/form-data" ],
   body: booksImportParamsSchema,
   response: {
     201: booksImportResultSchema,

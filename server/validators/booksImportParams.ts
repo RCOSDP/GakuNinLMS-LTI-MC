@@ -22,6 +22,10 @@ export class BooksImportParams {
   @IsOptional()
   @IsString()
   json?: string;
+
+  @IsOptional()
+  @IsString()
+  file?: string;
 }
 
 export const booksImportParamsSchema = validationMetadatasToSchemas()
