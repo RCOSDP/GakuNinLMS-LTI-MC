@@ -67,6 +67,7 @@ docker-compose down
 
 | 名称                 | 説明                                                                        |
 | -------------------- | --------------------------------------------------------------------------- |
+| `NEXT_PUBLIC_API_BASE_PATH` | API の URL のベースとなるパス (デフォルト: `http://localhost:8080`) |
 | `PORT`               | ポート (デフォルト: `8080`)                                                 |
 | `API_BASE_PATH`      | ベースとなるパス (デフォルト: `/api/v2` )                                   |
 | `FRONTEND_ORIGIN`    | フロントエンドのオリジン (デフォルト: 無効 ""、例: `http://localhost:3000`) |
@@ -79,6 +80,12 @@ docker-compose down
 | `WOWZA_SECURE_TOKEN` | Wowza SecureToken Shared (デフォルト: "") Secret                            |
 | `WOWZA_QUERY_PREFIX` | Wowza SecureToken Hash Query Parameter Prefix (デフォルト: `wowzatoken`)    |
 | `WOWZA_EXPIRES_IN`   | Wowza SecureToken lifetime (seconds) (デフォルト: いつまでも持続 `0`)       |
+| `WOWZA_SCP_HOST`     | 一括登録時の動画ファイルのアップロード先 (デフォルト: `localhost`) |
+| `WOWZA_SCP_PORT`     | 一括登録時の動画ファイルのアップロード先 ssh ポート番号 (デフォルト: `22`) |
+| `WOWZA_SCP_USERNAME` | 一括登録時の動画ファイルのアップロード先 ssh ユーザー名 (デフォルト: `www-data`) |
+| `WOWZA_SCP_PRIVATE_KEY` | 一括登録時の動画ファイルのアップロード先 ssh 鍵ファイル (デフォルト: `/var/www/.ssh/id_rsa`) |
+| `WOWZA_SCP_PASS_PHRASE` | 一括登録時の動画ファイルのアップロード先 ssh 鍵パスワード (デフォルト: "") |
+| `WOWZA_SCP_SERVER_PATH` | 一括登録時の動画ファイルのアップロード先フォルダ (デフォルト: `/var/www/wowza-upload`) |
 
 [database_connection_url]: https://www.prisma.io/docs/reference/database-connectors/connection-urls/
 
