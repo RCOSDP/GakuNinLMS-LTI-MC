@@ -63,7 +63,7 @@ class ImportBooksUtil {
 
   async importBooks() {
     try {
-      const importBooks = ImportBooks.init(await this.parseJson());
+      const importBooks = ImportBooks.init(await this.parseJsonFromFile());
       if (this.errors.length) return;
 
       const results = await validate(importBooks, {
@@ -152,6 +152,11 @@ class ImportBooksUtil {
   }
 
   parseJsonFromFile() {
+    if (!this.params.file) {
+      this.errors.push(`ファイルをアップロードしてください。`);
+      return {};
+    }
+
     this.tmpdir = fs.mkdtempSync("/tmp/chibichilo-import-");
     const file = `${this.tmpdir}/file`;
     fs.writeFileSync(file, Buffer.from(this.params.file as string, "base64"));

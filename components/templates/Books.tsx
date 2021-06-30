@@ -84,7 +84,7 @@ export default function Books(props: Props) {
               onClick={handleBooksImportClick}
             >
               <AddIcon className={classes.icon} />
-              JSONインポート
+              一括登録
             </Button>
           </>
         }

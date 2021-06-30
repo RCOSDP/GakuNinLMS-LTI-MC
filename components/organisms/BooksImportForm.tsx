@@ -67,13 +67,6 @@ export default function BooksImportForm(props: Props) {
         }
       })}
     >
-      <TextField
-        label="json"
-        fullWidth
-        multiline
-        name="json"
-        inputRef={register}
-      />
       <TextField label="file" name="file" type="file" inputRef={register} />
       <Button variant="contained" color="primary" type="submit">
         インポート
