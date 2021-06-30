@@ -9,7 +9,11 @@ export async function launch(fastify: FastifyInstance) {
   const { method, post } = ltiLaunchService;
   const hooks = makeHooks(fastify, ltiLaunchService.hooks);
 
-  fastify.post(path, { schema: method.post, ...hooks.post }, handler(post));
+  fastify.post<{ Body: ltiLaunchService.Props }>(
+    path,
+    { schema: method.post, ...hooks.post },
+    handler(post)
+  );
 }
 
 export async function resourceLink(fastify: FastifyInstance) {

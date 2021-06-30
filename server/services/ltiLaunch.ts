@@ -3,11 +3,16 @@ import { outdent } from "outdent";
 import authLtiLaunch from "$server/auth/authLtiLaunch";
 import { upsertUser } from "$server/utils/user";
 import { FRONTEND_ORIGIN, FRONTEND_PATH } from "$server/utils/env";
-import { ltiLaunchBodySchema } from "$server/validators/ltiLaunchBody";
+import {
+  LtiLaunchBody,
+  ltiLaunchBodySchema,
+} from "$server/validators/ltiLaunchBody";
 import {
   findLtiResourceLink,
   upsertLtiResourceLink,
 } from "$server/utils/ltiResourceLink";
+
+export type Props = LtiLaunchBody;
 
 const frontendUrl = `${FRONTEND_ORIGIN}${FRONTEND_PATH}`;
 
@@ -30,34 +35,31 @@ export const hooks = {
   post: { auth: [authLtiLaunch] },
 };
 
-export async function post({ session }: FastifyRequest) {
-  const { ltiLaunchBody } = session;
+export async function post({ body, session }: FastifyRequest<{ Body: Props }>) {
   const ltiResourceLink = await findLtiResourceLink({
-    consumerId: ltiLaunchBody.oauth_consumer_key,
-    id: ltiLaunchBody.resource_link_id,
+    consumerId: body.oauth_consumer_key,
+    id: body.resource_link_id,
   });
 
   if (ltiResourceLink) {
     await upsertLtiResourceLink({
       ...ltiResourceLink,
-      title: ltiLaunchBody.resource_link_title ?? ltiResourceLink.title,
-      contextTitle: ltiLaunchBody.context_title ?? ltiResourceLink.contextTitle,
-      contextLabel: ltiLaunchBody.context_label ?? ltiResourceLink.contextLabel,
+      title: body.resource_link_title ?? ltiResourceLink.title,
+      contextTitle: body.context_title ?? ltiResourceLink.contextTitle,
+      contextLabel: body.context_label ?? ltiResourceLink.contextLabel,
     });
   }
 
   const user = await upsertUser({
-    ltiConsumerId: ltiLaunchBody.oauth_consumer_key,
-    ltiUserId: ltiLaunchBody.user_id,
-    name: ltiLaunchBody.lis_person_name_full ?? "",
+    ltiConsumerId: body.oauth_consumer_key,
+    ltiUserId: body.user_id,
+    name: body.lis_person_name_full ?? "",
   });
 
   Object.assign(session, { ltiResourceLink, user });
 
   return {
     status: 302,
-    headers: {
-      location: frontendUrl,
-    },
+    headers: { location: frontendUrl },
   };
 }
