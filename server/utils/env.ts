@@ -21,6 +21,7 @@ const WOWZA_EXPIRES_IN = Number(process.env.WOWZA_EXPIRES_IN ?? "0");
 const WOWZA_SCP_HOST = process.env.WOWZA_SCP_HOST ?? "localhost";
 const WOWZA_SCP_PORT = Number(process.env.WOWZA_SCP_PORT ?? "22");
 const WOWZA_SCP_USERNAME = process.env.WOWZA_SCP_USERNAME ?? "www-data";
+const WOWZA_SCP_PASSWORD = process.env.WOWZA_SCP_PASSWORD ?? "";
 const WOWZA_SCP_PRIVATE_KEY =
   process.env.WOWZA_SCP_PRIVATE_KEY ?? "/var/www/.ssh/id_rsa";
 const WOWZA_SCP_PASS_PHRASE = process.env.WOWZA_SCP_PASS_PHRASE ?? "";
@@ -45,6 +46,7 @@ export {
   WOWZA_SCP_HOST,
   WOWZA_SCP_PORT,
   WOWZA_SCP_USERNAME,
+  WOWZA_SCP_PASSWORD,
   WOWZA_SCP_PRIVATE_KEY,
   WOWZA_SCP_PASS_PHRASE,
   WOWZA_SCP_SERVER_PATH,

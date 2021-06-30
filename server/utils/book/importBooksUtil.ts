@@ -29,8 +29,7 @@ import {
   WOWZA_SCP_HOST,
   WOWZA_SCP_PORT,
   WOWZA_SCP_USERNAME,
-  WOWZA_SCP_PRIVATE_KEY,
-  WOWZA_SCP_PASS_PHRASE,
+  WOWZA_SCP_PASSWORD,
   WOWZA_SCP_SERVER_PATH,
 } from "$server/utils/env";
 
@@ -259,8 +258,9 @@ class ImportBooksUtil {
         host: WOWZA_SCP_HOST,
         port: WOWZA_SCP_PORT,
         username: WOWZA_SCP_USERNAME,
-        privateKey: fs.readFileSync(WOWZA_SCP_PRIVATE_KEY),
-        passphrase: WOWZA_SCP_PASS_PHRASE,
+        password: WOWZA_SCP_PASSWORD,
+        // privateKey: fs.readFileSync(WOWZA_SCP_PRIVATE_KEY),
+        // passphrase: WOWZA_SCP_PASS_PHRASE,
       });
       await client.uploadDir(uploadroot, WOWZA_SCP_SERVER_PATH);
       client.close();
