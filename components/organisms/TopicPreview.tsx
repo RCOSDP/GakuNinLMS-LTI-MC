@@ -1,21 +1,21 @@
 import { ReactNode } from "react";
 import clsx from "clsx";
-import format from "date-fns/format";
+import { useInView } from "react-intersection-observer";
 import Markdown from "react-markdown";
 import gfm from "remark-gfm";
 import strip from "strip-markdown";
-import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
-import IconButton from "@material-ui/core/IconButton";
 import Checkbox from "@material-ui/core/Checkbox";
-import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import { makeStyles } from "@material-ui/core/styles";
-import Video from "$organisms/Video";
-import Item from "$atoms/Item";
+import PreviewButton from "$atoms/PreviewButton";
+import EditButton from "$atoms/EditButton";
+import DescriptionList from "$atoms/DescriptionList";
 import SharedIndicator from "$atoms/SharedIndicator";
+import Video from "$organisms/Video";
 import { TopicSchema } from "$server/models/topic";
 import { primary, gray } from "$theme/colors";
 import useLineClampStyles from "$styles/lineClamp";
+import getLocaleDateString from "$utils/getLocaleDateString";
 
 const useCardStyles = makeStyles((theme) => ({
   root: {
@@ -98,11 +98,6 @@ const useStyles = makeStyles((theme) => ({
   video: {
     margin: theme.spacing(0, -2),
   },
-  items: {
-    "& > * + *": {
-      marginLeft: theme.spacing(1.25),
-    },
-  },
   description: {
     color: gray[700],
     margin: 0,
@@ -114,7 +109,7 @@ const useStyles = makeStyles((theme) => ({
 
 type Props = Parameters<typeof Checkbox>[0] & {
   topic: TopicSchema;
-  onTopicDetailClick(topic: TopicSchema): void;
+  onTopicPreviewClick(topic: TopicSchema): void;
   onTopicEditClick: ((topic: TopicSchema) => void) | false | undefined;
 };
 
@@ -128,11 +123,12 @@ export default function TopicPreview(props: Props) {
   });
   const {
     topic,
-    onTopicDetailClick,
+    onTopicPreviewClick,
     onTopicEditClick,
     checked,
     ...checkboxProps
   } = props;
+  const { ref, inView } = useInView({ rootMargin: "100px", triggerOnce: true });
   const checkable = "onChange" in checkboxProps;
   const handle = (handler: (topic: TopicSchema) => void) => () => {
     handler(topic);
@@ -150,24 +146,33 @@ export default function TopicPreview(props: Props) {
         title={topic.name}
       >
         {topic.shared && <SharedIndicator className={classes.shared} />}
+        <PreviewButton variant="topic" onClick={handle(onTopicPreviewClick)} />
         {onTopicEditClick && (
-          <IconButton
+          <EditButton
             className={classes.editButton}
-            color="primary"
-            size="small"
+            variant="topic"
             onClick={handle(onTopicEditClick)}
-          >
-            <EditOutlinedIcon />
-          </IconButton>
+          />
         )}
       </CheckableHeader>
-      {"providerUrl" in topic.resource && (
-        <Video className={classes.video} {...topic.resource} />
-      )}
-      <div className={classes.items}>
-        <Item itemKey="更新日" value={format(topic.updatedAt, "yyyy.MM.dd")} />
-        <Item itemKey="作成者" value={topic.creator.name} />
+      <div ref={ref}>
+        {"providerUrl" in topic.resource && inView && (
+          <Video className={classes.video} {...topic.resource} />
+        )}
       </div>
+      <DescriptionList
+        nowrap
+        value={[
+          {
+            key: "更新日",
+            value: getLocaleDateString(topic.updatedAt, "ja"),
+          },
+          {
+            key: "作成者",
+            value: topic.creator.name,
+          },
+        ]}
+      />
       <p
         className={clsx(
           classes.description,
@@ -183,9 +188,6 @@ export default function TopicPreview(props: Props) {
           {topic.description}
         </Markdown>
       </p>
-      <Button size="small" color="primary" onClick={handle(onTopicDetailClick)}>
-        もっと詳しく...
-      </Button>
     </Card>
   );
 }

@@ -1,25 +1,18 @@
 import clsx from "clsx";
 import { TopicSchema } from "$server/models/topic";
-import { format, formatDuration, intervalToDuration } from "date-fns";
-import { ja } from "date-fns/locale";
-import Markdown from "react-markdown";
-import gfm from "remark-gfm";
+import formatDuration from "date-fns/formatDuration";
+import intervalToDuration from "date-fns/intervalToDuration";
+import ja from "date-fns/locale/ja";
 import Typography from "@material-ui/core/Typography";
-import Link from "@material-ui/core/Link";
-import type { LinkProps } from "@material-ui/core/Link";
+import Chip from "@material-ui/core/Chip";
 import { useTheme, makeStyles } from "@material-ui/core/styles";
 import Video from "$organisms/Video";
-import Item from "$atoms/Item";
-import useStickyProps from "$utils/useStickyProps";
-import languages from "$utils/languages";
+import DescriptionList from "$atoms/DescriptionList";
+import Markdown from "$atoms/Markdown";
+import useSticky from "$utils/useSticky";
+import getLocaleDateString from "$utils/getLocaleDateString";
 import { NEXT_PUBLIC_VIDEO_MAX_HEIGHT } from "$utils/env";
 import { gray } from "$theme/colors";
-
-function MarkdownLink<Element extends React.ElementType>(
-  props: LinkProps<Element>
-) {
-  return <Link target="_blank" rel="noreferrer" {...props} />;
-}
 
 function formatInterval(start: Date | number, end: Date | number) {
   const duration = intervalToDuration({ start, end });
@@ -28,9 +21,7 @@ function formatInterval(start: Date | number, end: Date | number) {
 
 const useStyles = makeStyles((theme) => ({
   video: {
-    marginRight: theme.spacing(-3),
-    marginBottom: theme.spacing(2),
-    marginLeft: theme.spacing(-3),
+    margin: theme.spacing(-2, -3, 2),
     backgroundColor: gray[800],
     "& > *": {
       /* NOTE: 各動画プレイヤーのレスポンシブ対応により、高さはpaddingTopによってwidthのpercentage分
@@ -43,15 +34,15 @@ const useStyles = makeStyles((theme) => ({
       margin: "0 auto",
     },
   },
-  title: {
-    marginBottom: theme.spacing(0.5),
-  },
-  items: {
+  header: {
     "& > *": {
-      display: "inline-block",
-      marginRight: theme.spacing(1.25),
-      marginBottom: theme.spacing(0.25),
+      marginRight: theme.spacing(1),
+      marginBottom: theme.spacing(0.5),
     },
+  },
+  title: {
+    display: "inline-block",
+    verticalAlign: "middle",
   },
   description: {
     margin: theme.spacing(2.5, 0, 2),
@@ -61,62 +52,55 @@ const useStyles = makeStyles((theme) => ({
 type Props = {
   topic: TopicSchema;
   onEnded?: () => void;
-  top?: number;
-  dialog?: boolean;
+  offset?: number;
 };
 
 export default function TopicViewerContent(props: Props) {
-  const { topic, onEnded, dialog = false, top } = props;
+  const { topic, onEnded, offset } = props;
   const classes = useStyles();
   const theme = useTheme();
-  const { classes: stickyClasses, scroll, desktop, mobile } = useStickyProps({
-    backgroundColor: "transparent",
-    top: top ?? theme.spacing(-2),
-    zIndex: 1,
-    dialog,
+  const sticky = useSticky({
+    offset: offset ?? theme.spacing(-2),
   });
-  const components = {
-    a: MarkdownLink,
-  };
   return (
     <>
       {"providerUrl" in topic.resource && (
         <Video
-          className={clsx(
-            classes.video,
-            stickyClasses.sticky,
-            { [stickyClasses.scroll]: scroll },
-            { [stickyClasses.desktop]: desktop },
-            { [stickyClasses.mobile]: mobile }
-          )}
+          className={clsx(classes.video, sticky)}
           {...topic.resource}
           onEnded={onEnded}
           autoplay
         />
       )}
-      <Typography className={classes.title} variant="h6">
-        {topic.name}
-      </Typography>
-      <div className={classes.items}>
-        <Typography variant="body1">
-          学習時間 {formatInterval(0, topic.timeRequired * 1000) || "10秒未満"}
+      <header className={classes.header}>
+        <Typography className={classes.title} variant="h6">
+          {topic.name}
         </Typography>
-        <Typography variant="body1">{languages[topic.language]}</Typography>
-        {/* TODO: トピックがライセンスをプロパティに持つようになったら表示してください
-        <Typography variant="body1">
-          ライセンス
-        </Typography>
-        */}
-      </div>
-      <div className={classes.items}>
-        <Item itemKey="作成日" value={format(topic.createdAt, "yyyy.MM.dd")} />
-        <Item itemKey="更新日" value={format(topic.updatedAt, "yyyy.MM.dd")} />
-        <Item itemKey="作成者" value={topic.creator.name} />
-      </div>
+        <Chip
+          label={`学習時間 ${
+            formatInterval(0, topic.timeRequired * 1000) || "10秒未満"
+          }`}
+        />
+      </header>
+      <DescriptionList
+        inline
+        value={[
+          {
+            key: "作成日",
+            value: getLocaleDateString(topic.createdAt, "ja"),
+          },
+          {
+            key: "更新日",
+            value: getLocaleDateString(topic.updatedAt, "ja"),
+          },
+          {
+            key: "トピック作成者",
+            value: topic.creator.name,
+          },
+        ]}
+      />
       <article className={classes.description}>
-        <Markdown remarkPlugins={[gfm]} components={components}>
-          {topic.description}
-        </Markdown>
+        <Markdown>{topic.description}</Markdown>
       </article>
     </>
   );

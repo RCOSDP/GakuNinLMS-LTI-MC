@@ -1,6 +1,7 @@
 import { ChangeEvent, useCallback, useState } from "react";
 import Card from "@material-ui/core/Card";
 import Checkbox from "@material-ui/core/Checkbox";
+import Divider from "@material-ui/core/Divider";
 import Button from "@material-ui/core/Button";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -38,6 +39,9 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: theme.spacing(0.75),
     color: gray[600],
   },
+  divider: {
+    margin: theme.spacing(0, -3, 0),
+  },
   subtitles: {
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(1),
@@ -48,10 +52,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const label = {
+  create: "作成",
+  update: "更新",
+} as const;
+
 type Props = {
   topic?: TopicSchema;
   className?: string;
-  submitLabel?: string;
+  variant?: "create" | "update";
   onSubmit?(topic: TopicProps): void;
   onSubtitleSubmit(videoTrack: VideoTrackProps): void;
   onSubtitleDelete(videoTrack: VideoTrackSchema): void;
@@ -61,7 +70,7 @@ export default function TopicForm(props: Props) {
   const {
     topic,
     className,
-    submitLabel = "更新",
+    variant = "create",
     onSubmit = () => undefined,
     onSubtitleSubmit,
     onSubtitleDelete,
@@ -251,7 +260,7 @@ export default function TopicForm(props: Props) {
                 >
                   GitHub Flavored Markdown
                 </Link>
-                に対応しています
+                に一部準拠しています
               </Typography>
             </>
           }
@@ -260,8 +269,9 @@ export default function TopicForm(props: Props) {
           name="description"
           inputRef={register}
         />
+        <Divider className={classes.divider} />
         <Button variant="contained" color="primary" type="submit">
-          {submitLabel}
+          {label[variant]}
         </Button>
       </Card>
 

@@ -1,8 +1,10 @@
 import Card from "@material-ui/core/Card";
 import Checkbox from "@material-ui/core/Checkbox";
+import Divider from "@material-ui/core/Divider";
 import Button from "@material-ui/core/Button";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
+import Link from "@material-ui/core/Link";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import { useForm, Controller } from "react-hook-form";
@@ -11,7 +13,8 @@ import TextField from "$atoms/TextField";
 import useCardStyles from "styles/card";
 import useInputLabelStyles from "styles/inputLabel";
 import gray from "theme/colors/gray";
-import { BookProps, BookSchema } from "$server/models/book";
+import type { BookSchema } from "$server/models/book";
+import type { BookPropsWithSubmitOptions } from "$types/bookPropsWithSubmitOptions";
 import languages from "$utils/languages";
 
 const useStyles = makeStyles((theme) => ({
@@ -24,33 +27,58 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: theme.spacing(0.75),
     color: gray[600],
   },
+  divider: {
+    margin: theme.spacing(0, -3, 0),
+  },
+  submitOption: {
+    display: "flex",
+    alignItems: "center",
+  },
 }));
+
+const label = {
+  create: {
+    submit: "作成",
+    submitWithLink: "作成したブックを提供",
+  },
+  update: {
+    submit: "更新",
+    submitWithLink: "更新したブックを提供",
+  },
+} as const;
 
 type Props = {
   book?: BookSchema;
+  id?: string;
   className?: string;
-  submitLabel?: string;
-  onSubmit?: (book: BookProps) => void;
+  variant?: "create" | "update";
+  onSubmit?: (book: BookPropsWithSubmitOptions) => void;
 };
 
 export default function BookForm(props: Props) {
   const {
     book,
     className,
-    submitLabel = "更新",
+    id,
+    variant = "create",
     onSubmit = () => undefined,
   } = props;
   const cardClasses = useCardStyles();
   const inputLabelClasses = useInputLabelStyles();
   const classes = useStyles();
-  const defaultValues: BookProps = {
+  const defaultValues: BookPropsWithSubmitOptions = {
     name: book?.name ?? "",
     description: book?.description ?? "",
     shared: Boolean(book?.shared),
     language: book?.language ?? Object.getOwnPropertyNames(languages)[0],
     sections: book?.sections,
+    submitWithLink: false,
   };
-  const { handleSubmit, register, control } = useForm<BookProps>({
+  const {
+    handleSubmit,
+    register,
+    control,
+  } = useForm<BookPropsWithSubmitOptions>({
     defaultValues,
   });
 
@@ -58,8 +86,9 @@ export default function BookForm(props: Props) {
     <Card
       classes={cardClasses}
       className={clsx(classes.margin, className)}
+      id={id}
       component="form"
-      onSubmit={handleSubmit((values: BookProps) => {
+      onSubmit={handleSubmit((values: BookPropsWithSubmitOptions) => {
         onSubmit({ ...defaultValues, ...values });
       })}
     >
@@ -108,14 +137,45 @@ export default function BookForm(props: Props) {
         )}
       />
       <TextField
-        label="解説"
+        label={
+          <>
+            解説
+            <Typography
+              className={classes.labelDescription}
+              variant="caption"
+              component="span"
+            >
+              <Link
+                href="https://github.github.com/gfm/"
+                target="_blank"
+                rel="noreferrer"
+              >
+                GitHub Flavored Markdown
+              </Link>
+              に一部準拠しています
+            </Typography>
+          </>
+        }
         fullWidth
         multiline
         name="description"
         inputRef={register}
       />
+      <Divider className={classes.divider} />
+      <div className={classes.submitOption}>
+        <Checkbox
+          id="submit-with-link"
+          name="submitWithLink"
+          inputRef={register}
+          defaultChecked={defaultValues.submitWithLink}
+          color="primary"
+        />
+        <InputLabel classes={inputLabelClasses} htmlFor="submit-with-link">
+          {label[variant].submitWithLink}
+        </InputLabel>
+      </div>
       <Button variant="contained" color="primary" type="submit">
-        {submitLabel}
+        {label[variant].submit}
       </Button>
     </Card>
   );

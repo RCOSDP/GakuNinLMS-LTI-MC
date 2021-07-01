@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
-import type { BookProps, BookSchema } from "$server/models/book";
+import type { BookSchema } from "$server/models/book";
+import type { BookPropsWithSubmitOptions } from "$types/bookPropsWithSubmitOptions";
 import type { SectionProps } from "$server/models/book/section";
 import type { TopicSchema } from "$server/models/topic";
 import { useSessionAtom } from "$store/session";
@@ -8,36 +9,40 @@ import Placeholder from "$templates/Placeholder";
 import BookNotFoundProblem from "$organisms/TopicNotFoundProblem";
 import { destroyBook, updateBook, useBook } from "$utils/book";
 import { pagesPath } from "$utils/$path";
+import useBookLinkHandler from "$utils/useBookLinkHandler";
 
-export type Query = { bookId: BookSchema["id"]; context?: "books" | "link" };
+export type Query = { bookId: BookSchema["id"]; context?: "books" };
 
 function Edit({ bookId, context }: Query) {
   const query = { bookId, ...(context && { context }) };
   const { isBookEditable, isTopicEditable } = useSessionAtom();
   const { book, error } = useBook(bookId, isBookEditable, isTopicEditable);
   const router = useRouter();
+  const handleBookLink = useBookLinkHandler();
   const back = () => {
     switch (context) {
       case "books":
-      case "link":
         return router.push(pagesPath[context].$url());
       default:
         return router.push(pagesPath.book.$url({ query }));
     }
   };
-  async function handleSubmit(props: BookProps) {
+  async function handleSubmit({
+    submitWithLink,
+    ...props
+  }: BookPropsWithSubmitOptions) {
     await updateBook({
       id: bookId,
       ...props,
       sections: props.sections?.filter((section) => section.topics.length > 0),
     });
+    if (submitWithLink) await handleBookLink({ id: bookId });
     return back();
   }
   async function handleDelete({ id }: Pick<BookSchema, "id">) {
     await destroyBook(id);
     switch (context) {
       case "books":
-      case "link":
         return router.push(pagesPath[context].$url());
       default:
         return router.push(pagesPath.books.$url());

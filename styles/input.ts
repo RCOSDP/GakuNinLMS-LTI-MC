@@ -2,17 +2,16 @@ import { makeStyles } from "@material-ui/core/styles";
 import gray from "theme/colors/gray";
 
 const input = makeStyles((theme) => ({
-  input: {
+  root: {
     backgroundColor: theme.palette.common.white,
     border: `1px solid ${gray[500]}`,
     borderRadius: "6px",
-    height: "100%",
     fontSize: "1rem",
-    padding: `${theme.spacing(1.25)}px ${theme.spacing(1.75)}px`,
     transition: theme.transitions.create(["border-color"]),
-    "&:focus": {
-      borderColor: theme.palette.primary.main,
-    },
+  },
+  input: {
+    height: "100%",
+    padding: `${theme.spacing(1.25)}px ${theme.spacing(1.75)}px`,
   },
   formControl: {
     "label + &": {
@@ -20,7 +19,19 @@ const input = makeStyles((theme) => ({
     },
   },
   multiline: {
+    backgroundColor: theme.palette.common.white,
+    border: `1px solid ${gray[500]}`,
+    borderRadius: "6px",
+    padding: `${theme.spacing(1.25)}px ${theme.spacing(1.75)}px`,
+    transition: theme.transitions.create(["border-color"]),
+  },
+  inputMultiline: {
     padding: 0,
+  },
+  focused: {
+    "&$root, &$multiline": {
+      borderColor: theme.palette.primary.main,
+    },
   },
 }));
 

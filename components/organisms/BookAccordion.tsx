@@ -1,28 +1,24 @@
-import { MouseEvent, useState } from "react";
-import { format } from "date-fns";
 import Accordion from "@material-ui/core/Accordion";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
-import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import TreeView from "@material-ui/lab/TreeView";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
-import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import { makeStyles } from "@material-ui/core/styles";
-import BookChildrenTree from "$molecules/BookChildrenTree";
+import EditButton from "$atoms/EditButton";
 import CourseChip from "$atoms/CourseChip";
-import Item from "$atoms/Item";
 import SharedIndicator from "$atoms/SharedIndicator";
-import BookItemDialog from "$organisms/BookItemDialog";
+import DescriptionList from "$atoms/DescriptionList";
+import BookChildrenTree from "$molecules/BookChildrenTree";
 import { BookSchema } from "$server/models/book";
 import { TopicSchema } from "$server/models/topic";
 import { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
 import useAccordionStyle from "styles/accordion";
 import useAccordionSummaryStyle from "styles/accordionSummary";
 import useAccordionDetailStyle from "styles/accordionDetail";
+import getLocaleDateString from "$utils/getLocaleDateString";
 
 const useStyles = makeStyles((theme) => ({
   shared: {
@@ -37,11 +33,6 @@ const useStyles = makeStyles((theme) => ({
   },
   items: {
     padding: theme.spacing(0, 2),
-    "& > *": {
-      display: "inline-block",
-      marginRight: theme.spacing(1.75),
-      marginBottom: theme.spacing(1),
-    },
   },
   tree: {
     margin: theme.spacing(2),
@@ -73,19 +64,11 @@ export default function BookAccordion(props: Props) {
   const accordionClasses = useAccordionStyle();
   const accordionSummaryClasses = useAccordionSummaryStyle();
   const accordionDetailClasses = useAccordionDetailStyle();
-  const [open, setOpen] = useState(false);
-  const handleInfoClick = (event: MouseEvent<HTMLButtonElement>) => {
-    event.stopPropagation();
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
   const handleItem = (handler?: (topic: TopicSchema) => void) => ([
     sectionIndex,
     topicIndex,
   ]: ItemIndex) => handler?.(book.sections[sectionIndex].topics[topicIndex]);
-  const handleEditClick = (event: MouseEvent<HTMLButtonElement>) => {
+  const handleEditClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
     onEditClick?.(book);
   };
@@ -98,13 +81,8 @@ export default function BookAccordion(props: Props) {
       >
         <Typography variant="h6">{book.name}</Typography>
         {book.shared && <SharedIndicator className={classes.shared} />}
-        <IconButton onClick={handleInfoClick}>
-          <InfoOutlinedIcon />
-        </IconButton>
         {onEditClick && (
-          <IconButton color="primary" onClick={handleEditClick}>
-            <EditOutlinedIcon />
-          </IconButton>
+          <EditButton variant="book" size="medium" onClick={handleEditClick} />
         )}
       </AccordionSummary>
       <AccordionDetails classes={accordionDetailClasses}>
@@ -117,17 +95,15 @@ export default function BookAccordion(props: Props) {
             />
           ))}
         </div>
-        <div className={classes.items}>
-          <Item
-            itemKey="作成日"
-            value={format(new Date(book.createdAt), "yyyy.MM.dd")}
-          />
-          <Item
-            itemKey="更新日"
-            value={format(new Date(book.updatedAt), "yyyy.MM.dd")}
-          />
-          <Item itemKey="著者" value={book.author.name} />
-        </div>
+        <DescriptionList
+          className={classes.items}
+          inline
+          value={[
+            { key: "作成日", value: getLocaleDateString(new Date(book.createdAt), "ja") },
+            { key: "更新日", value: getLocaleDateString(new Date(book.updatedAt), "ja") },
+            { key: "作成者", value: book.author.name },
+          ]}
+        />
         <Divider />
         <TreeView
           className={classes.tree}
@@ -142,7 +118,6 @@ export default function BookAccordion(props: Props) {
           />
         </TreeView>
       </AccordionDetails>
-      <BookItemDialog open={open} onClose={handleClose} book={book} />
     </Accordion>
   );
 }

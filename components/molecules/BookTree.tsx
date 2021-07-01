@@ -1,10 +1,9 @@
-import IconButton from "@material-ui/core/IconButton";
 import TreeItem from "@material-ui/lab/TreeItem";
 // TODO: ブック単位での再利用の実装
 // import Checkbox from "@material-ui/core/Checkbox";
-import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
-import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import { makeStyles } from "@material-ui/core/styles";
+import PreviewButton from "$atoms/PreviewButton";
+import EditButton from "$atoms/EditButton";
 import CourseChip from "$atoms/CourseChip";
 import SharedIndicator from "$atoms/SharedIndicator";
 import BookChildrenTree from "$molecules/BookChildrenTree";
@@ -21,11 +20,12 @@ const useStyles = makeStyles((theme) => ({
 
 type Props = {
   book: BookSchema;
-  onItemClick(index: ItemIndex): void;
+  onItemClick?(index: ItemIndex): void;
+  onItemPreviewClick?(index: ItemIndex): void;
   onItemEditClick?(index: ItemIndex): void;
   onTreeChange?(nodeId: string): void;
-  onBookInfoClick(book: BookSchema): void;
-  onBookEditClick?: ((book: BookSchema) => void) | false | undefined;
+  onBookPreviewClick?(book: BookSchema): void;
+  onBookEditClick?(book: BookSchema): void;
   onLtiContextClick?(
     ltiResourceLink: Pick<LtiResourceLinkSchema, "consumerId" | "contextId">
   ): void;
@@ -37,9 +37,10 @@ export default function BookTree(props: Props) {
   const {
     book,
     onItemClick,
+    onItemPreviewClick,
     onItemEditClick,
     onTreeChange,
-    onBookInfoClick,
+    onBookPreviewClick,
     onBookEditClick,
     onLtiContextClick,
     selectedIndexes,
@@ -79,13 +80,9 @@ export default function BookTree(props: Props) {
           )*/}
           {book.name}
           {book.shared && <SharedIndicator className={classes.shared} />}
-          <IconButton size="small" onClick={handle(onBookInfoClick)}>
-            <InfoOutlinedIcon />
-          </IconButton>
+          <PreviewButton variant="book" onClick={handle(onBookPreviewClick)} />
           {onBookEditClick && (
-            <IconButton size="small" onClick={handle(onBookEditClick)}>
-              <EditOutlinedIcon />
-            </IconButton>
+            <EditButton variant="book" onClick={handle(onBookEditClick)} />
           )}
           {book.ltiResourceLinks.map((ltiResourceLink, index) => (
             <CourseChip
@@ -101,6 +98,7 @@ export default function BookTree(props: Props) {
         bookId={book.id}
         sections={book.sections}
         onItemClick={onItemClick}
+        onItemPreviewClick={onItemPreviewClick}
         onItemEditClick={onItemEditClick}
         onTreeChange={onTreeChange}
         selectedIndexes={selectedIndexes}

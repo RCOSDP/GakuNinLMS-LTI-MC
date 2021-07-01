@@ -59,7 +59,7 @@ type Props = ComponentProps<typeof MuiAppBar> & {
   session: SessionSchema;
   onBooksClick?(): void;
   onTopicsClick?(): void;
-  onBookLinkClick?(): void;
+  onBookClick?(): void;
   onDashboardClick?(): void;
 };
 
@@ -74,7 +74,7 @@ function AppBar(props: Props, ref: Ref<unknown>) {
     session,
     onBooksClick,
     onTopicsClick,
-    onBookLinkClick,
+    onBookClick,
     onDashboardClick,
     ...others
   } = props;
@@ -114,17 +114,21 @@ function AppBar(props: Props, ref: Ref<unknown>) {
             <AppBarNavButton
               color="inherit"
               icon={<LinkIcon />}
-              label="ブックの提供"
-              onClick={onBookLinkClick}
-              disabled={!onBookLinkClick}
+              label="提供中のブック"
+              onClick={onBookClick}
+              disabled={
+                !onBookClick ||
+                !Number.isFinite(session?.ltiResourceLink?.bookId)
+              }
             />
-            <AppBarNavButton
-              color="inherit"
-              icon={<AssessmentOutlinedIcon />}
-              label="学習分析"
-              onClick={onDashboardClick}
-              disabled={!onDashboardClick}
-            />
+            {onDashboardClick && (
+              <AppBarNavButton
+                color="inherit"
+                icon={<AssessmentOutlinedIcon />}
+                label="学習分析"
+                onClick={onDashboardClick}
+              />
+            )}
           </div>
           <div className={clsx(classes.user, classes.margin)}>
             <p>{session.user.name}</p>

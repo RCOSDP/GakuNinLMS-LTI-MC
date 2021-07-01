@@ -12,7 +12,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const defaultProps = { book, onEditClick: console.log };
+const defaultProps = {
+  book,
+  onBookClick: console.log,
+  onBookEditClick: console.log,
+  onBookPreviewClick: console.log,
+  onBookLinkClick: console.log,
+};
 
 export const Default = () => {
   const classes = useStyles();
@@ -20,17 +26,6 @@ export const Default = () => {
     <div className={classes.margin}>
       {[...Array(10)].map((_value, index) => (
         <BookPreview key={index} {...defaultProps} />
-      ))}
-    </div>
-  );
-};
-
-export const Checked = () => {
-  const classes = useStyles();
-  return (
-    <div className={classes.margin}>
-      {[...Array(10)].map((_value, index) => (
-        <BookPreview key={index} checked={index === 1} {...defaultProps} />
       ))}
     </div>
   );
@@ -47,4 +42,8 @@ export const EmptySection = () => {
 
 export const NoEditable = () => {
   return <BookPreview book={book} />;
+};
+
+export const Linked = () => {
+  return <BookPreview {...defaultProps} onBookLinkClick={undefined} linked />;
 };

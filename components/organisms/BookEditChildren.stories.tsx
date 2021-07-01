@@ -5,7 +5,7 @@ import BookEditChildren from "./BookEditChildren";
 import { SectionSchema } from "$server/models/book/section";
 import { sections as initialSections } from "samples";
 
-const handleTopicClick = console.log;
+const handleTopicPreviewClick = console.log;
 const handleTopicEditClick = console.log;
 const handleSectionsUpdate = (
   setSections: (sections: SectionSchema[]) => void
@@ -23,7 +23,7 @@ export const Default = () => {
   return (
     <BookEditChildren
       sections={sections}
-      onTopicClick={handleTopicClick}
+      onTopicPreviewClick={handleTopicPreviewClick}
       onSectionsUpdate={handleSectionsUpdate(setSections)}
     />
   );
@@ -34,7 +34,7 @@ export const Editable = () => {
   return (
     <BookEditChildren
       sections={sections}
-      onTopicClick={handleTopicClick}
+      onTopicPreviewClick={handleTopicPreviewClick}
       onSectionsUpdate={handleSectionsUpdate(setSections)}
       onTopicEditClick={handleTopicEditClick}
       isTopicEditable={() => true}

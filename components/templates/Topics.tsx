@@ -58,7 +58,8 @@ export default function Topics(props: Props) {
     ...dialogProps
   } = useDialogProps<TopicSchema>();
   const { onSearchInput } = useSearchAtom();
-  const handleTopicDetailClick = (topic: TopicSchema) => setPreviewTopic(topic);
+  const handleTopicPreviewClick = (topic: TopicSchema) =>
+    setPreviewTopic(topic);
   const infiniteRef = useInfiniteScroll<HTMLDivElement>({
     loading,
     hasNextPage,
@@ -92,7 +93,7 @@ export default function Topics(props: Props) {
           <TopicPreview
             key={index}
             topic={topic}
-            onTopicDetailClick={handleTopicDetailClick}
+            onTopicPreviewClick={handleTopicPreviewClick}
             onTopicEditClick={onTopicEditClick}
           />
         ))}

@@ -7,7 +7,9 @@ import Books from "./Books";
 import Slide from "@material-ui/core/Slide";
 import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 import AppBar from "$organisms/AppBar";
-import { books, session } from "samples";
+import { book, books, session } from "samples";
+
+const linkedBook = { ...book, editable: true };
 
 const appBarHandlers = {
   onBooksClick: console.log,
@@ -16,7 +18,7 @@ const appBarHandlers = {
 };
 
 const handlers = {
-  onBookClick: console.log,
+  onBookPreviewClick: console.log,
   onBookEditClick: console.log,
   onBookNewClick() {
     console.log("onBookNewClick");
@@ -27,6 +29,7 @@ const handlers = {
   onBookLinkClick() {
     console.log("onBookLinkClick");
   },
+  onTopicEditClick: console.log,
 };
 
 function SlideAppBar() {
@@ -41,7 +44,7 @@ function SlideAppBar() {
 export const Default = () => (
   <>
     <SlideAppBar />
-    <Books books={books} {...handlers} />
+    <Books linkedBook={linkedBook} books={books} {...handlers} />
   </>
 );
 

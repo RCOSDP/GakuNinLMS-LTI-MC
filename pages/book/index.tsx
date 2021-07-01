@@ -7,6 +7,7 @@ import Placeholder from "$templates/Placeholder";
 import BookNotFoundProblem from "$organisms/BookNotFoundProblem";
 import { useSessionAtom } from "$store/session";
 import { useBook } from "$utils/book";
+import { useBookAtom } from "$store/book";
 import { TopicSchema } from "$server/models/topic";
 import { pagesPath } from "$utils/$path";
 import { useActivityTracking } from "$utils/activity";
@@ -16,19 +17,22 @@ export type Query = { bookId: BookSchema["id"] };
 
 function Show(query: Query) {
   const { session, isBookEditable, isTopicEditable } = useSessionAtom();
-  const {
-    book,
-    itemIndex,
-    nextItemIndex,
-    itemExists,
-    updateItemIndex,
-    error,
-  } = useBook(
+  const { book, error } = useBook(
     query.bookId,
     isBookEditable,
     isTopicEditable,
     session?.ltiResourceLink
   );
+  const {
+    updateBook,
+    itemIndex,
+    nextItemIndex,
+    itemExists,
+    updateItemIndex,
+  } = useBookAtom();
+  useEffect(() => {
+    if (book) updateBook(book);
+  }, [book, updateBook]);
   useActivityTracking();
   const playerTracker = usePlayerTrackerAtom();
   useEffect(() => {
@@ -47,7 +51,9 @@ function Show(query: Query) {
     const action = book && isBookEditable(book) ? "edit" : "generate";
     return router.push(pagesPath.book[action].$url({ query }));
   };
-  const handleBookLinkClick = () => router.push(pagesPath.link.$url());
+  const handleOtherBookLinkClick = () => {
+    return router.push(pagesPath.books.$url());
+  };
   const handleTopicEditClick = (topic: Pick<TopicSchema, "id" | "creator">) => {
     const action = isTopicEditable(topic) ? "edit" : "generate";
     const url = pagesPath.book.topic[action].$url({
@@ -60,7 +66,7 @@ function Show(query: Query) {
     onTopicEnded: handleTopicNext,
     onItemClick: handleTopicNext,
     onBookEditClick: handleBookEditClick,
-    onBookLinkClick: handleBookLinkClick,
+    onOtherBookLinkClick: handleOtherBookLinkClick,
     onTopicEditClick: handleTopicEditClick,
   };
 

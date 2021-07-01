@@ -1,9 +1,9 @@
 import { ReactNode, MouseEvent } from "react";
-import IconButton from "@material-ui/core/IconButton";
 import TreeItem from "@material-ui/lab/TreeItem";
 import Checkbox from "@material-ui/core/Checkbox";
-import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import { makeStyles } from "@material-ui/core/styles";
+import PreviewButton from "$atoms/PreviewButton";
+import EditButton from "$atoms/EditButton";
 import SharedIndicator from "$atoms/SharedIndicator";
 import useTreeItemStyle from "$styles/treeItem";
 import { SectionSchema } from "$server/models/book/section";
@@ -73,7 +73,8 @@ function SectionTree({
 type Props = {
   bookId?: number;
   sections: SectionSchema[];
-  onItemClick(index: ItemIndex): void;
+  onItemClick?(index: ItemIndex): void;
+  onItemPreviewClick?(index: ItemIndex): void;
   onItemEditClick?(index: ItemIndex): void;
   onTreeChange?(nodeId: string): void;
   selectedIndexes?: Set<string>;
@@ -85,6 +86,7 @@ export default function BookChildrenTree(props: Props) {
     bookId = 0,
     sections,
     onItemClick,
+    onItemPreviewClick,
     onItemEditClick,
     onTreeChange,
     selectedIndexes,
@@ -104,11 +106,11 @@ export default function BookChildrenTree(props: Props) {
         >
           {section.topics.map((topic, topicIndex) => {
             const nodeId = `${bookId}-${section.id}-${topic.id}:${topicIndex}`;
-            const handle = (handler: (index: ItemIndex) => void) => (
+            const handle = (handler?: (index: ItemIndex) => void) => (
               event: MouseEvent<HTMLElement>
             ) => {
               event.stopPropagation();
-              handler([sectionIndex, topicIndex]);
+              handler?.([sectionIndex, topicIndex]);
             };
             const handleChange = (handler?: (nodeId: string) => void) => () => {
               handler?.(nodeId);
@@ -136,13 +138,15 @@ export default function BookChildrenTree(props: Props) {
                     {topic.shared && (
                       <SharedIndicator className={classes.shared} />
                     )}
+                    <PreviewButton
+                      variant="topic"
+                      onClick={handle(onItemPreviewClick)}
+                    />
                     {isTopicEditable?.(topic) && onItemEditClick && (
-                      <IconButton
-                        size="small"
+                      <EditButton
+                        variant="topic"
                         onClick={handle(onItemEditClick)}
-                      >
-                        <EditOutlinedIcon />
-                      </IconButton>
+                      />
                     )}
                   </>
                 }

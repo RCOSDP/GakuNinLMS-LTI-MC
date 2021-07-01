@@ -1,30 +1,32 @@
 import { useState } from "react";
 import clsx from "clsx";
-import { format } from "date-fns";
-import Button from "@material-ui/core/Button";
+import { useInView } from "react-intersection-observer";
 import Card from "@material-ui/core/Card";
-import IconButton from "@material-ui/core/IconButton";
-import Radio from "@material-ui/core/Radio";
-import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
-import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
+import Chip from "@material-ui/core/Chip";
+import LinkIcon from "@material-ui/icons/Link";
 import { makeStyles } from "@material-ui/core/styles";
-import Video from "$organisms/Video";
+import IconButton from "$atoms/IconButton";
+import PreviewButton from "$atoms/PreviewButton";
+import EditButton from "$atoms/EditButton";
 import CourseChip from "$atoms/CourseChip";
-import Item from "$atoms/Item";
 import SharedIndicator from "$atoms/SharedIndicator";
-import BookItemDialog from "$organisms/BookItemDialog";
+import DescriptionList from "$atoms/DescriptionList";
+import Video from "$organisms/Video";
 import useCardStyle from "styles/card";
 import { BookSchema } from "$server/models/book";
 import { TopicSchema } from "$server/models/topic";
 import { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
 import { getSectionsOutline } from "$utils/outline";
-import { gray, primary } from "$theme/colors";
+import { gray } from "$theme/colors";
 import useLineClampStyles from "$styles/lineClamp";
+import getLocaleDateString from "$utils/getLocaleDateString";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
     alignItems: "center",
+    position: "relative",
+    overflow: "visible",
   },
   left: {
     flex: 1,
@@ -43,9 +45,6 @@ const useStyles = makeStyles((theme) => ({
     margin: 0,
     color: gray[700],
   },
-  checkbox: {
-    marginLeft: theme.spacing(-1.5),
-  },
   shared: {
     margin: theme.spacing(0, 1),
   },
@@ -62,14 +61,21 @@ const useStyles = makeStyles((theme) => ({
       marginBottom: theme.spacing(1),
     },
   },
-  selected: {
-    backgroundColor: primary[50],
+  linked: {
+    position: "absolute",
+    top: theme.spacing(-1),
+    left: theme.spacing(1.5),
+    zIndex: 1,
   },
 }));
 
-type Props = Parameters<typeof Radio>[0] & {
+type Props = {
   book: BookSchema;
-  onEditClick?: ((book: BookSchema) => void) | false | undefined;
+  linked?: boolean;
+  onBookPreviewClick?(book: BookSchema): void;
+  onBookEditClick?(book: BookSchema): void;
+  onBookLinkClick?(book: BookSchema): void;
+  onLinkedBookClick?(book: BookSchema): void;
   onLtiContextClick?(
     ltiResourceLink: Pick<LtiResourceLinkSchema, "consumerId" | "contextId">
   ): void;
@@ -77,10 +83,12 @@ type Props = Parameters<typeof Radio>[0] & {
 
 export default function BookPreview({
   book,
-  onEditClick,
+  linked = false,
+  onBookPreviewClick,
+  onBookEditClick,
+  onBookLinkClick,
+  onLinkedBookClick,
   onLtiContextClick,
-  checked,
-  ...radioProps
 }: Props) {
   const cardClasses = useCardStyle();
   const classes = useStyles();
@@ -97,41 +105,45 @@ export default function BookPreview({
   const [topic] = useState<TopicSchema | undefined>(
     book.sections[0]?.topics[0]
   );
-  const [open, setOpen] = useState(false);
-  const handleInfoClick = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
+  const { ref, inView } = useInView({ rootMargin: "100px", triggerOnce: true });
   const handle = (handler?: (book: BookSchema) => void) => () => {
     handler?.(book);
   };
-  const id = `${book.id}`;
   return (
-    <Card
-      classes={cardClasses}
-      className={clsx(classes.root, { [classes.selected]: checked })}
-    >
+    <Card classes={cardClasses} className={classes.root}>
+      {linked && (
+        <Chip
+          className={classes.linked}
+          color="primary"
+          size="small"
+          icon={<LinkIcon />}
+          label="このブックを提供中"
+          onClick={handle(onLinkedBookClick)}
+        ></Chip>
+      )}
       <div className={classes.left}>
         <div className={clsx(classes.title, titleClamp.placeholder)}>
-          <Radio
-            className={classes.checkbox}
-            color="primary"
-            checked={checked}
-            id={id}
-            {...radioProps}
-          />
-          <label className={titleClamp.clamp} htmlFor={id}>
-            {book.name}
-          </label>
+          <label className={titleClamp.clamp}>{book.name}</label>
           {book.shared && <SharedIndicator className={classes.shared} />}
-          <IconButton onClick={handleInfoClick}>
-            <InfoOutlinedIcon />
-          </IconButton>
-          {onEditClick && (
-            <IconButton color="primary" onClick={handle(onEditClick)}>
-              <EditOutlinedIcon />
+          <PreviewButton
+            variant="book"
+            size="medium"
+            onClick={handle(onBookPreviewClick)}
+          />
+          {onBookEditClick && (
+            <EditButton
+              variant="book"
+              size="medium"
+              onClick={handle(onBookEditClick)}
+            />
+          )}
+          {!linked && onBookLinkClick && (
+            <IconButton
+              color="primary"
+              tooltipProps={{ title: "このブックを提供" }}
+              onClick={handle(onBookLinkClick)}
+            >
+              <LinkIcon />
             </IconButton>
           )}
         </div>
@@ -144,11 +156,15 @@ export default function BookPreview({
             />
           ))}
         </div>
-        <div className={classes.items}>
-          <Item itemKey="作成日" value={format(book.createdAt, "yyyy.MM.dd")} />
-          <Item itemKey="更新日" value={format(book.updatedAt, "yyyy.MM.dd")} />
-          <Item itemKey="著者" value={book.author.name} />
-        </div>
+        <DescriptionList
+          className={classes.items}
+          nowrap
+          value={[
+            { key: "作成日", value: getLocaleDateString(book.createdAt, "ja") },
+            { key: "更新日", value: getLocaleDateString(book.updatedAt, "ja") },
+            { key: "作成者", value: book.author.name },
+          ]}
+        />
         <p
           className={clsx(
             classes.outline,
@@ -158,20 +174,12 @@ export default function BookPreview({
         >
           {getSectionsOutline(book.sections)}
         </p>
-        <Button
-          size="small"
-          color="primary"
-          disabled={true /* TODO: BookPreviewDialogを実装したら取り除く */}
-        >
-          もっと詳しく...
-        </Button>
       </div>
-      <div className={classes.right}>
-        {topic && "providerUrl" in topic.resource && (
+      <div ref={ref} className={classes.right}>
+        {topic && "providerUrl" in topic.resource && inView && (
           <Video {...topic.resource} />
         )}
       </div>
-      {book && <BookItemDialog open={open} onClose={handleClose} book={book} />}
     </Card>
   );
 }
