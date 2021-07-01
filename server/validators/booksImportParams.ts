@@ -105,12 +105,14 @@ export class ImportTrack {
 export const importTrackSchema = validationMetadatasToSchemas().ImportTrack;
 
 export class ImportResource {
+  @ValidateIf((o) => !o.url)
+  @IsString({ message: "ファイル名ではないか未指定です。" })
+  @MinLength(1, { message: "空白です。ファイル名を指定してください。" })
+  file = "";
+
   @ValidateIf((o) => !o.file)
   @IsUrl({}, { message: "動画ページのURLを設定してください。" })
   url = "";
-
-  @IsString({ message: "ファイル名ではないか未設定です。" })
-  file = "";
 
   providerUrl?: string;
 
