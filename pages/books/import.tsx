@@ -8,7 +8,7 @@ import BooksImport from "$templates/BooksImport";
 import { importBooks } from "$utils/books";
 import { pagesPath } from "$utils/$path";
 
-export type Query = { context?: "books" | "link" };
+export type Query = { context?: "books" };
 
 function Import({ context }: Query) {
   const router = useRouter();
@@ -17,7 +17,6 @@ function Import({ context }: Query) {
   const back = () => {
     switch (context) {
       case "books":
-      case "link":
         return router.push(pagesPath[context].$url());
       default:
         return router.push(pagesPath.books.$url());
