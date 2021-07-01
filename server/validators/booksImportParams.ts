@@ -27,6 +27,12 @@ export class BooksImportParams {
   @IsOptional()
   @IsString()
   file?: string;
+
+  @IsString()
+  provider = "";
+
+  @IsString()
+  wowzaBaseUrl = "";
 }
 
 export const booksImportParamsSchema = validationMetadatasToSchemas()

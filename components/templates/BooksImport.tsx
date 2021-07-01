@@ -42,14 +42,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type Props = {
-  importBooks?: BooksImportParams;
   importResult?: BooksImportResult;
   onSubmit(book: BooksImportParams): void;
   onCancel(): void;
 };
 
 export default function BooksImport(props: Props) {
-  const { importBooks, importResult, onSubmit, onCancel } = props;
+  const { importResult, onSubmit, onCancel } = props;
   const classes = useStyles();
   const containerClasses = useContainerStyles();
 
@@ -70,11 +69,7 @@ export default function BooksImport(props: Props) {
           <Typography className={classes.title} variant="h4">
             ブックのインポート
           </Typography>
-          <BooksImportForm
-            importBooks={importBooks}
-            className={classes.form}
-            onSubmit={onSubmit}
-          />
+          <BooksImportForm className={classes.form} onSubmit={onSubmit} />
         </>
       )}
       {showResult && (

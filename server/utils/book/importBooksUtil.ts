@@ -35,16 +35,18 @@ import {
 } from "$server/utils/env";
 
 async function importBooksUtil(
-  authorId: UserSchema["id"],
+  user: UserSchema,
   params: BooksImportParams
 ): Promise<BooksImportResult> {
-  const util = new ImportBooksUtil(authorId, params);
+  const util = new ImportBooksUtil(user, params);
   await util.importBooks();
   return util.result();
 }
 
 class ImportBooksUtil {
-  authorId: UserSchema["id"];
+  user: UserSchema;
+  authorId: number;
+  consumerId: string;
   params: BooksImportParams;
   books: BookSchema[];
   errors: string[];
@@ -52,8 +54,10 @@ class ImportBooksUtil {
   tmpdir?: string;
   unzippedFiles: string[];
 
-  constructor(authorId: UserSchema["id"], params: BooksImportParams) {
-    this.authorId = authorId;
+  constructor(user: UserSchema, params: BooksImportParams) {
+    this.user = user;
+    this.authorId = user.id;
+    this.consumerId = user.ltiConsumerId;
     this.params = params;
     this.books = [];
     this.errors = [];

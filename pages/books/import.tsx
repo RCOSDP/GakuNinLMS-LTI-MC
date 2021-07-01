@@ -12,7 +12,6 @@ export type Query = { context?: "books" };
 
 function Import({ context }: Query) {
   const router = useRouter();
-  const importProps: BooksImportParams = { json: "" };
   const [importResult, setImportResult] = useState<BooksImportResult>({});
   const back = () => {
     switch (context) {
@@ -37,13 +36,7 @@ function Import({ context }: Query) {
     onCancel: handleCancel,
   };
 
-  return (
-    <BooksImport
-      importBooks={importProps}
-      importResult={importResult}
-      {...handlers}
-    />
-  );
+  return <BooksImport importResult={importResult} {...handlers} />;
 }
 
 function Router() {

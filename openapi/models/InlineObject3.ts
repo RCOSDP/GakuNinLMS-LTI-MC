@@ -31,6 +31,18 @@ export interface InlineObject3 {
      * @memberof InlineObject3
      */
     file?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineObject3
+     */
+    provider: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineObject3
+     */
+    wowzaBaseUrl: string;
 }
 
 export function InlineObject3FromJSON(json: any): InlineObject3 {
@@ -45,6 +57,8 @@ export function InlineObject3FromJSONTyped(json: any, ignoreDiscriminator: boole
         
         'json': !exists(json, 'json') ? undefined : json['json'],
         'file': !exists(json, 'file') ? undefined : json['file'],
+        'provider': json['provider'],
+        'wowzaBaseUrl': json['wowzaBaseUrl'],
     };
 }
 
@@ -59,6 +73,8 @@ export function InlineObject3ToJSON(value?: InlineObject3 | null): any {
         
         'json': value.json,
         'file': value.file,
+        'provider': value.provider,
+        'wowzaBaseUrl': value.wowzaBaseUrl,
     };
 }
 
