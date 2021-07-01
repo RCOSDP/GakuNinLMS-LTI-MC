@@ -4,7 +4,7 @@ import videojs, { VideoJsPlayer, VideoJsPlayerOptions } from "video.js";
 // error  Could not find a declaration file for module '@meikidd/videojs-hlsjs-plugin/lib/videojs-hlsjs-plugin.js'.
 // './node_modules/@meikidd/videojs-hlsjs-plugin/lib/videojs-hlsjs-plugin.js' implicitly has an 'any' type.
 // eslint-disable-next-line tsc/config
-import vjsPlugin from "@meikidd/videojs-hlsjs-plugin/lib/videojs-hlsjs-plugin.js";
+import hlsjsPlugin from "@meikidd/videojs-hlsjs-plugin/lib/videojs-hlsjs-plugin.js";
 
 import ja from "video.js/dist/lang/ja.json";
 import "videojs-youtube";
@@ -45,8 +45,8 @@ export function VideoJs({ className, options, tracks }: VideoJsProps) {
   const tracking = usePlayerTrackingAtom();
   const classes = useStyles();
   useEffect(() => {
-    vjsPlugin.registerConfigPlugin(videojs);
-    vjsPlugin.registerSourceHandler(videojs);
+    hlsjsPlugin.registerConfigPlugin(videojs);
+    hlsjsPlugin.registerSourceHandler(videojs);
 
     const { current } = ref;
     const element = document.createElement("video-js");
