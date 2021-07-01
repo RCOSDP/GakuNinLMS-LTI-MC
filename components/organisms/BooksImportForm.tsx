@@ -39,7 +39,7 @@ export default function BooksImportForm(props: Props) {
     json: "",
     file: "",
     provider: wowzaUrl,
-    wowzaBaseUrl: `${NEXT_PUBLIC_API_BASE_PATH}/api/v2/wowza/`,
+    wowzaBaseUrl: `${NEXT_PUBLIC_API_BASE_PATH}/api/v2/wowza`,
   };
   const { handleSubmit, register, control } = useForm<BooksImportParams>({
     defaultValues,
