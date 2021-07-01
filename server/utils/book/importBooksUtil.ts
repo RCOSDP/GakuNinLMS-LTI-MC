@@ -23,9 +23,6 @@ import {
 import prisma from "$server/utils/prisma";
 import findBook from "./findBook";
 import {
-  NEXT_PUBLIC_API_BASE_PATH,
-  API_BASE_PATH,
-  OAUTH_CONSUMER_KEY,
   WOWZA_SCP_HOST,
   WOWZA_SCP_PORT,
   WOWZA_SCP_USERNAME,
@@ -209,7 +206,7 @@ class ImportBooksUtil {
   async uploadFiles(importBooks: ImportBooks) {
     const uploadroot = fs.mkdtempSync(`${this.tmpdir}/upload-wowza-`);
     // recursive:true が利かない https://github.com/nodejs/node/issues/27293
-    const uploaddomain = fs.mkdirSync(`${uploadroot}/${OAUTH_CONSUMER_KEY}`, {
+    const uploaddomain = fs.mkdirSync(`${uploadroot}/${this.consumerId}`, {
       recursive: true,
     });
     const uploadauthor = fs.mkdirSync(`${uploaddomain}/${this.authorId}`, {
@@ -225,7 +222,7 @@ class ImportBooksUtil {
       for (const bookSection of importBook.sections) {
         for (const sectionTopic of bookSection.topics) {
           if (sectionTopic.resource.file) {
-            if (sectionTopic.resource.providerUrl != "https://www.wowza.com/") {
+            if (this.params.provider != "https://www.wowza.com/") {
               this.errors.push(
                 `${sectionTopic.resource.providerUrl} へのアップロードは対応していません。`
               );
@@ -247,13 +244,24 @@ class ImportBooksUtil {
             }
 
             filenames.push(filename);
-            sectionTopic.resource.url = `${NEXT_PUBLIC_API_BASE_PATH}${API_BASE_PATH}/wowza${uploadsubdir}/${filename}`;
+            sectionTopic.resource.providerUrl = this.params.provider;
+            sectionTopic.resource.url = `${this.params.wowzaBaseUrl}${uploadsubdir}/${filename}`;
             fs.renameSync(fullpath, `${uploaddir}/${filename}`);
+          } else {
+            try {
+              sectionTopic.resource.providerUrl = new URL(
+                "/",
+                new URL(sectionTopic.resource.url)
+              ).toString();
+            } catch (e) {
+              // nop
+            }
           }
         }
       }
     }
     if (this.errors.length) return;
+    if (!filenames.length) return;
 
     try {
       // error  This expression is not callable.

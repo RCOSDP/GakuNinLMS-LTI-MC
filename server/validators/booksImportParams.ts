@@ -112,8 +112,7 @@ export class ImportResource {
   @IsString({ message: "ファイル名ではないか未設定です。" })
   file = "";
 
-  @IsUrl({}, { message: "アップロード先のサイトのURLを設定してください。" })
-  providerUrl = "";
+  providerUrl?: string;
 
   @IsObject({ message: "オブジェクト型のデータを設定してください。" })
   details = {};
@@ -129,14 +128,6 @@ export class ImportResource {
     if (typeof obj != "object" || Array.isArray(obj)) return obj;
 
     const resource = Object.assign(new ImportResource(), obj);
-    if (!resource.providerUrl) {
-      try {
-        resource.providerUrl = new URL("/", new URL(resource.url)).toString();
-      } catch (e) {
-        // nop
-      }
-    }
-
     if (Array.isArray(resource.tracks)) {
       for (const [index, track] of resource.tracks.entries()) {
         resource.tracks[index] = ImportTrack.init(track);

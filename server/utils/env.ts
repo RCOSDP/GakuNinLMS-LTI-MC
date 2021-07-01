@@ -3,8 +3,6 @@ import fileExists from "./fileExists";
 
 dotenv.config();
 
-const NEXT_PUBLIC_API_BASE_PATH =
-  process.env.NEXT_PUBLIC_API_BASE_PATH ?? "http://localhost:8080";
 const PORT = Number(process.env.PORT ?? "8080");
 const API_BASE_PATH = process.env.API_BASE_PATH ?? "/api/v2";
 const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN ?? "";
@@ -29,7 +27,6 @@ const WOWZA_SCP_SERVER_PATH =
   process.env.WOWZA_SCP_SERVER_PATH ?? "/var/www/wowza-upload";
 
 export {
-  NEXT_PUBLIC_API_BASE_PATH,
   PORT,
   API_BASE_PATH,
   FRONTEND_ORIGIN,
