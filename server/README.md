@@ -76,13 +76,12 @@ docker-compose down
 | `HTTPS_CERT_PATH`       | HTTPS を使うための証明書のファイルパス (デフォルト: 無効)                                          |
 | `HTTPS_KEY_PATH`        | HTTPS を使うための証明書の秘密鍵のファイルパス (デフォルト: 無効)                                  |
 | `WOWZA_BASE_URL`        | Wowza Content base URL (デフォルト: 無効)                                                          |
-| `WOWZA_SECURE_TOKEN`    | Wowza SecureToken Shared (デフォルト: "") Secret                                                   |
+| `WOWZA_SECURE_TOKEN`    | Wowza SecureToken Shared Secret (デフォルト: "")                                                   |
 | `WOWZA_QUERY_PREFIX`    | Wowza SecureToken Hash Query Parameter Prefix (デフォルト: `wowzatoken`)                           |
 | `WOWZA_EXPIRES_IN`      | Wowza SecureToken lifetime (seconds) (デフォルト: いつまでも持続 `0`)                              |
 | `WOWZA_SCP_HOST`        | 一括登録時の動画ファイルのアップロード先 (デフォルト: `localhost`)                                 |
 | `WOWZA_SCP_PORT`        | 一括登録時の動画ファイルのアップロード先 ssh ポート番号 (デフォルト: `22`)                         |
 | `WOWZA_SCP_USERNAME`    | 一括登録時の動画ファイルのアップロード先 ssh ユーザー名 (デフォルト: `www-data`)                   |
-| `WOWZA_SCP_PASSWORD`    | 一括登録時の動画ファイルのアップロード先 ssh ユーザー名のパスワード (デフォルト: "")               |
 | `WOWZA_SCP_PRIVATE_KEY` | 一括登録時の動画ファイルのアップロード先 ssh ユーザーの秘密鍵 (デフォルト: `/var/www/.ssh/id_rsa`) |
 | `WOWZA_SCP_PASS_PHRASE` | 一括登録時の動画ファイルのアップロード先 ssh ユーザーの秘密鍵のパスワード (デフォルト: "")         |
 | `WOWZA_SCP_SERVER_PATH` | 一括登録時の動画ファイルのアップロード先フォルダ (デフォルト: `/var/www/wowza-upload`)             |

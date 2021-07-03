@@ -22,6 +22,7 @@ import {
 } from "$server/validators/booksImportParams";
 import prisma from "$server/utils/prisma";
 import findBook from "./findBook";
+import { parse as parseProviderUrl } from "$server/utils/videoResource";
 import {
   WOWZA_SCP_HOST,
   WOWZA_SCP_PORT,
@@ -42,8 +43,6 @@ async function importBooksUtil(
 
 class ImportBooksUtil {
   user: UserSchema;
-  authorId: number;
-  consumerId: string;
   params: BooksImportParams;
   books: BookSchema[];
   errors: string[];
@@ -53,8 +52,6 @@ class ImportBooksUtil {
 
   constructor(user: UserSchema, params: BooksImportParams) {
     this.user = user;
-    this.authorId = user.id;
-    this.consumerId = user.ltiConsumerId;
     this.params = params;
     this.books = [];
     this.errors = [];
@@ -206,10 +203,13 @@ class ImportBooksUtil {
   async uploadFiles(importBooks: ImportBooks) {
     const uploadroot = fs.mkdtempSync(`${this.tmpdir}/upload-wowza-`);
     // recursive:true が利かない https://github.com/nodejs/node/issues/27293
-    const uploaddomain = fs.mkdirSync(`${uploadroot}/${this.consumerId}`, {
-      recursive: true,
-    });
-    const uploadauthor = fs.mkdirSync(`${uploaddomain}/${this.authorId}`, {
+    const uploaddomain = fs.mkdirSync(
+      `${uploadroot}/${this.user.ltiConsumerId}`,
+      {
+        recursive: true,
+      }
+    );
+    const uploadauthor = fs.mkdirSync(`${uploaddomain}/${this.user.id}`, {
       recursive: true,
     });
     const uploaddir = fs.mkdtempSync(
@@ -222,12 +222,6 @@ class ImportBooksUtil {
       for (const bookSection of importBook.sections) {
         for (const sectionTopic of bookSection.topics) {
           if (sectionTopic.resource.file) {
-            if (this.params.provider != "https://www.wowza.com/") {
-              this.errors.push(
-                `${sectionTopic.resource.providerUrl} へのアップロードは対応していません。`
-              );
-            }
-
             const filename = path.basename(sectionTopic.resource.file);
             if (filenames.indexOf(filename) > -1) {
               this.errors.push(
@@ -249,10 +243,14 @@ class ImportBooksUtil {
             fs.renameSync(fullpath, `${uploaddir}/${filename}`);
           } else {
             try {
-              sectionTopic.resource.providerUrl = new URL(
-                "/",
-                new URL(sectionTopic.resource.url)
-              ).toString();
+              const parsedResource = parseProviderUrl(
+                sectionTopic.resource.url
+              );
+              sectionTopic.resource.providerUrl =
+                parsedResource?.providerUrl ??
+                sectionTopic.resource.providerUrl;
+              sectionTopic.resource.url =
+                parsedResource?.url ?? sectionTopic.resource.url;
             } catch (e) {
               // nop
             }
@@ -291,7 +289,7 @@ class ImportBooksUtil {
     return {
       ...importBook,
       timeRequired: this.timeRequired,
-      author: { connect: { id: this.authorId } },
+      author: { connect: { id: this.user.id } },
       publishedAt: new Date(importBook.publishedAt),
       createdAt: new Date(importBook.createdAt),
       updatedAt: new Date(importBook.updatedAt),
@@ -337,7 +335,7 @@ class ImportBooksUtil {
 
     const topic = {
       ...sectionTopic,
-      creator: { connect: { id: this.authorId } },
+      creator: { connect: { id: this.user.id } },
       createdAt: new Date(sectionTopic.createdAt),
       updatedAt: new Date(sectionTopic.updatedAt),
       keywords: this.getKeywords(sectionTopic.keywords),

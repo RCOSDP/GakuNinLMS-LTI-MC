@@ -9,7 +9,7 @@ import {
   ArrayNotEmpty,
   IsLocale,
   IsISO8601,
-  IsUrl,
+  Matches,
   ValidateNested,
   ValidateIf,
   registerDecorator,
@@ -42,6 +42,7 @@ export class BooksImportResult {
   @IsOptional()
   @ValidateNested({ each: true })
   books?: BookSchema[];
+
   @IsOptional()
   @IsString({ each: true })
   errors?: string[];
@@ -111,7 +112,15 @@ export class ImportResource {
   file = "";
 
   @ValidateIf((o) => !o.file)
-  @IsUrl({}, { message: "動画ページのURLを設定してください。" })
+  @Matches(
+    new RegExp(
+      "^https://(.+\\.)?youtube\\.com/watch\\?v=.+|^https://youtu\\.be/.+|^https://vimeo\\.com/.+"
+    ),
+    {
+      message:
+        "動画ページのURLを設定してください。対応動画サイトは YouTube, Vimeo です。",
+    }
+  )
   url = "";
 
   providerUrl?: string;

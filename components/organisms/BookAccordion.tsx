@@ -99,14 +99,8 @@ export default function BookAccordion(props: Props) {
           className={classes.items}
           inline
           value={[
-            {
-              key: "作成日",
-              value: getLocaleDateString(new Date(book.createdAt), "ja"),
-            },
-            {
-              key: "更新日",
-              value: getLocaleDateString(new Date(book.updatedAt), "ja"),
-            },
+            { key: "作成日", value: getLocaleDateString(book.createdAt, "ja") },
+            { key: "更新日", value: getLocaleDateString(book.updatedAt, "ja") },
             { key: "作成者", value: book.author.name },
           ]}
         />
