@@ -35,3 +35,16 @@ export const Default = () => {
     />
   );
 };
+
+export const Update = () => {
+  const { addVideoTrack, deleteVideoTrack } = useVideoTrackAtom();
+  return (
+    <TopicForm
+      topic={topic}
+      variant="update"
+      onSubtitleDelete={({ id }) => deleteVideoTrack(id)}
+      onSubtitleSubmit={handleSubtitleSubmit(addVideoTrack)}
+      {...handlers}
+    />
+  );
+};

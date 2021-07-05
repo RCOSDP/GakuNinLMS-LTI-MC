@@ -43,3 +43,10 @@ NoEditable.args = {
   ...Default.args,
   onBookEditClick: undefined,
 };
+
+export const Linked = Template.bind({});
+Linked.args = {
+  ...Default.args,
+  onBookLinkClick: undefined,
+  linked: true,
+};

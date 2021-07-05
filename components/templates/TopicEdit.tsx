@@ -81,6 +81,7 @@ export default function TopicEdit(props: Props) {
       <TopicForm
         className={classes.form}
         topic={topic}
+        variant="update"
         onSubmit={onSubmit}
         onSubtitleDelete={onSubtitleDelete}
         onSubtitleSubmit={onSubtitleSubmit}

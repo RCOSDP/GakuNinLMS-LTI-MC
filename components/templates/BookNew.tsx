@@ -6,7 +6,8 @@ import BookForm from "$organisms/BookForm";
 import RequiredDot from "$atoms/RequiredDot";
 import BackButton from "$atoms/BackButton";
 import useContainerStyles from "styles/container";
-import { BookProps, BookSchema } from "$server/models/book";
+import type { BookSchema } from "$server/models/book";
+import type { BookPropsWithSubmitOptions } from "$types/bookPropsWithSubmitOptions";
 import { useSessionAtom } from "$store/session";
 
 const useStyles = makeStyles((theme) => ({
@@ -32,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
 
 type Props = {
   book?: BookSchema;
-  onSubmit: (book: BookProps) => void;
+  onSubmit: (book: BookPropsWithSubmitOptions) => void;
   onCancel(): void;
 };
 
@@ -66,7 +67,7 @@ export default function BookNew(props: Props) {
           {forkFrom.name} さんが作成したブックをフォークしようとしています
         </Alert>
       )}
-      <BookForm book={defaultBook} submitLabel="作成" onSubmit={onSubmit} />
+      <BookForm book={defaultBook} variant="create" onSubmit={onSubmit} />
     </Container>
   );
 }

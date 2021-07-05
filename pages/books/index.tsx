@@ -5,7 +5,7 @@ import BooksTemplate from "$templates/Books";
 import Book from "$templates/Book";
 import BookPreviewDialog from "$organisms/BookPreviewDialog";
 import useBooks from "$utils/useBooks";
-import { useLinkedBook } from "$utils/book";
+import useLinkedBook from "$utils/useLinkedBook";
 import { pagesPath } from "$utils/$path";
 import { updateLtiResourceLink } from "$utils/ltiResourceLink";
 import getLtiResourceLink from "$utils/getLtiResourceLink";
@@ -20,12 +20,8 @@ const Books = (
 
 function Index() {
   const router = useRouter();
-  const { session, isBookEditable, isTopicEditable } = useSessionAtom();
-  const { linkedBook } = useLinkedBook(
-    session?.ltiResourceLink?.bookId,
-    isBookEditable,
-    isTopicEditable
-  );
+  const { session, isBookEditable } = useSessionAtom();
+  const { linkedBook } = useLinkedBook();
   const {
     data: dialog,
     open,
@@ -46,17 +42,26 @@ function Index() {
       pagesPath.book.new.$url({ query: { context: "books" } })
     );
   };
+  const handleBooksImportClick = () => {
+    return router.push(
+      pagesPath.books.import.$url({ query: { context: "books" } })
+    );
+  };
   const handleBookLinkClick = async (book: Pick<BookSchema, "id">) => {
     const ltiResourceLink = getLtiResourceLink(session);
     if (ltiResourceLink == null) return;
     const bookId = book.id;
     await updateLtiResourceLink({ ...ltiResourceLink, bookId });
-    return router.push(pagesPath.book.$url({ query: { bookId } }));
   };
+  const handleLinkedBookClick = (book: Pick<BookSchema, "id">) =>
+    router.push(pagesPath.book.$url({ query: { bookId: book.id } }));
   const handlers = {
     onBookPreviewClick: handleBookPreviewClick,
     onBookEditClick: handleBookEditClick,
     onBookNewClick: handleBookNewClick,
+    onBooksImportClick: handleBooksImportClick,
+    onBookLinkClick: handleBookLinkClick,
+    onLinkedBookClick: handleLinkedBookClick,
   };
 
   return (
@@ -64,13 +69,7 @@ function Index() {
       <Books linkedBook={linkedBook} {...handlers} />
       {dialog && (
         <BookPreviewDialog open={open} onClose={onClose} book={dialog}>
-          {(props) => (
-            <Book
-              {...props}
-              onBookLinkClick={handleBookLinkClick}
-              onOtherBookLinkClick={onClose}
-            />
-          )}
+          {(props) => <Book {...props} />}
         </BookPreviewDialog>
       )}
     </>

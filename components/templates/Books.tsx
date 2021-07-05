@@ -2,6 +2,7 @@ import useInfiniteScroll from "react-infinite-scroll-hook";
 import Skeleton from "@material-ui/lab/Skeleton";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
+import Card from "@material-ui/core/Card";
 import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
 import AddIcon from "@material-ui/icons/Add";
@@ -11,9 +12,11 @@ import SortSelect from "$atoms/SortSelect";
 import CreatorFilter from "$atoms/CreatorFilter";
 import SearchTextField from "$atoms/SearchTextField";
 import type { BookSchema } from "$server/models/book";
+import type { LinkedBook } from "$types/linkedBook";
 import { SortOrder } from "$server/models/sortOrder";
 import { Filter } from "$types/filter";
 import useContainerStyles from "styles/container";
+import useCardStyles from "$styles/card";
 import { useSearchAtom } from "$store/search";
 
 const useStyles = makeStyles((theme) => ({
@@ -22,6 +25,14 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     marginBottom: theme.spacing(2),
+  },
+  linkedBookPlaceholder: {
+    // NOTE: BookPreviewに依存する&事前に高さを確定できないので決め打ち
+    height: 180,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    borderStyle: "dashed",
   },
   books: {
     marginTop: theme.spacing(1),
@@ -33,13 +44,16 @@ const useStyles = makeStyles((theme) => ({
 
 export type Props = {
   books: BookSchema[];
-  linkedBook?: BookSchema;
+  linkedBook?: LinkedBook;
   loading?: boolean;
   hasNextPage?: boolean;
   onLoadMore?(): void;
   onBookPreviewClick?(book: BookSchema): void;
-  onBookEditClick(book: BookSchema): void;
+  onBookEditClick?(book: BookSchema): void;
+  onBookLinkClick?(book: BookSchema): void;
+  onLinkedBookClick?(book: BookSchema): void;
   onBookNewClick(): void;
+  onBooksImportClick(): void;
   onSortChange?(sort: SortOrder): void;
   onFilterChange?(filter: Filter): void;
 };
@@ -53,17 +67,19 @@ export default function Books(props: Props) {
     onLoadMore = () => undefined,
     onBookPreviewClick,
     onBookEditClick,
+    onBookLinkClick,
+    onLinkedBookClick,
     onBookNewClick,
+    onBooksImportClick,
     onSortChange,
     onFilterChange,
   } = props;
   const { query, onSearchInput, onLtiContextClick } = useSearchAtom();
-  const handleBookPreviewClick = (book: BookSchema) => () =>
-    onBookPreviewClick?.(book);
-  const handleBookEditClick = (book: BookSchema) => () => onBookEditClick(book);
   const handleBookNewClick = () => onBookNewClick();
+  const handleBooksImportClick = () => onBooksImportClick();
   const classes = useStyles();
   const containerClasses = useContainerStyles();
+  const cardClasses = useCardStyles();
   const infiniteRef = useInfiniteScroll<HTMLDivElement>({
     loading,
     hasNextPage,
@@ -80,6 +96,14 @@ export default function Books(props: Props) {
               <AddIcon className={classes.icon} />
               ブックの作成
             </Button>
+            <Button
+              size="small"
+              color="primary"
+              onClick={handleBooksImportClick}
+            >
+              <AddIcon className={classes.icon} />
+              一括登録
+            </Button>
           </>
         }
         body={
@@ -89,18 +113,27 @@ export default function Books(props: Props) {
             </Typography>
             {linkedBook && (
               <BookPreview
-                book={linkedBook}
-                onBookPreviewClick={handleBookPreviewClick(linkedBook)}
-                onBookEditClick={handleBookEditClick(linkedBook)}
+                book={{ ...linkedBook, ltiResourceLinks: [] }}
+                linked
+                onBookPreviewClick={onBookPreviewClick}
+                onBookEditClick={
+                  linkedBook.editable ? onBookEditClick : undefined
+                }
+                onLinkedBookClick={onLinkedBookClick}
                 onLtiContextClick={onLtiContextClick}
               />
             )}
             {!linkedBook && (
-              <Typography variant="body2">
-                提供中のブックがありません。
-                <br />
-                ブックを提供するには、提供したいブックの「もっと詳しく...」をクリックしたのち「このブックを提供」をクリックしてください。
-              </Typography>
+              <Card
+                classes={cardClasses}
+                className={classes.linkedBookPlaceholder}
+              >
+                <Typography variant="body2">
+                  提供中のブックがありません。
+                  <br />
+                  ブックを提供するには、提供したいブックの「このブックを提供」ボタンをクリックしてください。
+                </Typography>
+              </Card>
             )}
           </>
         }
@@ -122,8 +155,11 @@ export default function Books(props: Props) {
             <BookPreview
               key={book.id}
               book={book}
-              onBookPreviewClick={handleBookPreviewClick(book)}
-              onBookEditClick={handleBookEditClick(book)}
+              linked={book.id === linkedBook?.id}
+              onBookPreviewClick={onBookPreviewClick}
+              onBookEditClick={onBookEditClick}
+              onBookLinkClick={onBookLinkClick}
+              onLinkedBookClick={onLinkedBookClick}
               onLtiContextClick={onLtiContextClick}
             />
           ))}
