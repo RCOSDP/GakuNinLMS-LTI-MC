@@ -23,6 +23,9 @@ const handlers = {
   onBookNewClick() {
     console.log("onBookNewClick");
   },
+  onBooksImportClick() {
+    console.log("onBooksImportClick");
+  },
   onBookLinkClick() {
     console.log("onBookLinkClick");
   },

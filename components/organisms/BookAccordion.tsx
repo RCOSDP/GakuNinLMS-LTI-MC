@@ -42,8 +42,8 @@ const useStyles = makeStyles((theme) => ({
 
 type Props = {
   book: BookSchema;
-  onEditClick(book: BookSchema): void;
-  onTopicClick(topic: TopicSchema): void;
+  onEditClick?(book: BookSchema): void;
+  onTopicClick?(topic: TopicSchema): void;
   onTopicEditClick?(topic: TopicSchema): void;
   onLtiContextClick?(
     ltiResourceLink: Pick<LtiResourceLinkSchema, "consumerId" | "contextId">
@@ -70,7 +70,7 @@ export default function BookAccordion(props: Props) {
   ]: ItemIndex) => handler?.(book.sections[sectionIndex].topics[topicIndex]);
   const handleEditClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
-    onEditClick(book);
+    onEditClick?.(book);
   };
   return (
     <Accordion classes={accordionClasses}>
@@ -81,7 +81,9 @@ export default function BookAccordion(props: Props) {
       >
         <Typography variant="h6">{book.name}</Typography>
         {book.shared && <SharedIndicator className={classes.shared} />}
-        <EditButton variant="book" size="medium" onClick={handleEditClick} />
+        {onEditClick && (
+          <EditButton variant="book" size="medium" onClick={handleEditClick} />
+        )}
       </AccordionSummary>
       <AccordionDetails classes={accordionDetailClasses}>
         <div className={classes.chips}>

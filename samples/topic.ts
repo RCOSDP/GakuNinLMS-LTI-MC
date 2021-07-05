@@ -28,6 +28,7 @@ const topic = {
   creator: user,
   shared: true,
   language: "ja",
+  license: "",
   resource,
 };
 

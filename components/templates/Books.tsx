@@ -53,6 +53,7 @@ export type Props = {
   onBookLinkClick?(book: BookSchema): void;
   onLinkedBookClick?(book: BookSchema): void;
   onBookNewClick(): void;
+  onBooksImportClick(): void;
   onSortChange?(sort: SortOrder): void;
   onFilterChange?(filter: Filter): void;
 };
@@ -69,11 +70,13 @@ export default function Books(props: Props) {
     onBookLinkClick,
     onLinkedBookClick,
     onBookNewClick,
+    onBooksImportClick,
     onSortChange,
     onFilterChange,
   } = props;
   const { query, onSearchInput, onLtiContextClick } = useSearchAtom();
   const handleBookNewClick = () => onBookNewClick();
+  const handleBooksImportClick = () => onBooksImportClick();
   const classes = useStyles();
   const containerClasses = useContainerStyles();
   const cardClasses = useCardStyles();
@@ -92,6 +95,14 @@ export default function Books(props: Props) {
             <Button size="small" color="primary" onClick={handleBookNewClick}>
               <AddIcon className={classes.icon} />
               ブックの作成
+            </Button>
+            <Button
+              size="small"
+              color="primary"
+              onClick={handleBooksImportClick}
+            >
+              <AddIcon className={classes.icon} />
+              一括登録
             </Button>
           </>
         }

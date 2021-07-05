@@ -42,6 +42,11 @@ function Index() {
       pagesPath.book.new.$url({ query: { context: "books" } })
     );
   };
+  const handleBooksImportClick = () => {
+    return router.push(
+      pagesPath.books.import.$url({ query: { context: "books" } })
+    );
+  };
   const handleBookLinkClick = async (book: Pick<BookSchema, "id">) => {
     const ltiResourceLink = getLtiResourceLink(session);
     if (ltiResourceLink == null) return;
@@ -54,6 +59,7 @@ function Index() {
     onBookPreviewClick: handleBookPreviewClick,
     onBookEditClick: handleBookEditClick,
     onBookNewClick: handleBookNewClick,
+    onBooksImportClick: handleBooksImportClick,
     onBookLinkClick: handleBookLinkClick,
     onLinkedBookClick: handleLinkedBookClick,
   };
