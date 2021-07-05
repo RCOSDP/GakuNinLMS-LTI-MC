@@ -1,6 +1,15 @@
-export default { title: "atoms/CourseChip" };
-
+import type { Story } from "@storybook/react";
 import CourseChip from "./CourseChip";
 import { ltiResourceLink } from "$samples";
 
-export const Default = () => <CourseChip ltiResourceLink={ltiResourceLink} />;
+export default {
+  title: "atoms/CourseChip",
+  component: CourseChip,
+};
+
+const Template: Story<Parameters<typeof CourseChip>[0]> = (args) => (
+  <CourseChip {...args} />
+);
+
+export const Default = Template.bind({});
+Default.args = { ltiResourceLink };

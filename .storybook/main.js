@@ -22,5 +22,5 @@ module.exports = {
     return config;
   },
   stories: ["../components/**/*.stories.tsx"],
-  addons: ["@storybook/addon-a11y"],
+  addons: ["@storybook/addon-a11y", "@storybook/addon-essentials"],
 };
