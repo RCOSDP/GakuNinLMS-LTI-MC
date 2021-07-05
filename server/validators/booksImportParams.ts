@@ -172,7 +172,7 @@ export class ImportTopic {
   @IsISO8601({}, { message: "ISO8601形式の日時ではないか未設定です。" })
   createdAt = new Date().toISOString();
 
-  @IsISO8601({}, { message: "ISO8601形式の日時ではないか未設定です。" })
+  @IsOptional()
   updatedAt = new Date().toISOString();
 
   @IsString({ message: "文字列ではないか未設定です。" })
@@ -192,7 +192,9 @@ export class ImportTopic {
   static init(obj: any) {
     if (typeof obj != "object" || Array.isArray(obj)) return obj;
 
-    const topic = Object.assign(new ImportTopic(), obj);
+    const topic = Object.assign(new ImportTopic(), obj, {
+      updatedAt: new Date().toISOString(),
+    });
     topic.resource = ImportResource.init(topic.resource);
     return topic;
   }
@@ -247,7 +249,7 @@ export class ImportBook {
   @IsISO8601({}, { message: "ISO8601形式の日時ではないか未設定です。" })
   createdAt = new Date().toISOString();
 
-  @IsISO8601({}, { message: "ISO8601形式の日時ではないか未設定です。" })
+  @IsOptional()
   updatedAt = new Date().toISOString();
 
   @IsString({ each: true, message: "文字列のリストを設定してください。" })
@@ -267,7 +269,9 @@ export class ImportBook {
   static init(obj: any) {
     if (typeof obj != "object" || Array.isArray(obj)) return obj;
 
-    const book = Object.assign(new ImportBook(), obj);
+    const book = Object.assign(new ImportBook(), obj, {
+      updatedAt: new Date().toISOString(),
+    });
     if (Array.isArray(book.sections)) {
       for (const [index, section] of book.sections.entries()) {
         book.sections[index] = ImportSection.init(section);
