@@ -37,16 +37,3 @@ EmptySection.args = {
   ...Default.args,
   book: { ...book, sections: [] },
 };
-
-export const NoEditable = Template.bind({});
-NoEditable.args = {
-  ...Default.args,
-  onBookEditClick: undefined,
-};
-
-export const Linked = Template.bind({});
-Linked.args = {
-  ...Default.args,
-  onBookLinkClick: undefined,
-  linked: true,
-};
