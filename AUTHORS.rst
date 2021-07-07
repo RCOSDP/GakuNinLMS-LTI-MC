@@ -3,6 +3,7 @@ Authors
 
 - Akinobu MAKIMURA <makimura@cccties.org>
 - Hideki AKIBA <hideki.akiba@tuqulore.com>
+- Hiroki ABE <h.rayflood@gmail.com>
 - Kimiaki KUNO <kuno@tuqulore.com>
 - Kohei WATANABE <watanabe@webdino.org>
 - Masumi HORI <hori@cccties.org>
