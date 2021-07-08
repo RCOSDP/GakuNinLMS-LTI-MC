@@ -52,21 +52,22 @@ type Props = {
   onTopicEditClick?(topic: TopicSchema): void;
   onBookImportClick(): void;
   isTopicEditable?(topic: TopicSchema): boolean | undefined;
+  linked?: boolean;
 };
 
-export default function BookEdit(props: Props) {
-  const {
-    book,
-    onSubmit,
-    onDelete,
-    onCancel,
-    onSectionsUpdate,
-    onTopicImportClick,
-    onTopicNewClick,
-    onTopicEditClick,
-    onBookImportClick,
-    isTopicEditable,
-  } = props;
+export default function BookEdit({
+  book,
+  onSubmit,
+  onDelete,
+  onCancel,
+  onSectionsUpdate,
+  onTopicImportClick,
+  onTopicNewClick,
+  onTopicEditClick,
+  onBookImportClick,
+  isTopicEditable,
+  linked = false,
+}: Props) {
   const classes = useStyles();
   const containerClasses = useContainerStyles();
   const confirm = useConfirm();
@@ -120,6 +121,7 @@ export default function BookEdit(props: Props) {
       <BookForm
         className={classes.content}
         book={book}
+        linked={linked}
         variant="update"
         onSubmit={onSubmit}
       />

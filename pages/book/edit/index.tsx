@@ -15,7 +15,7 @@ export type Query = { bookId: BookSchema["id"]; context?: "books" };
 
 function Edit({ bookId, context }: Query) {
   const query = { bookId, ...(context && { context }) };
-  const { isBookEditable, isTopicEditable } = useSessionAtom();
+  const { session, isBookEditable, isTopicEditable } = useSessionAtom();
   const { book, error } = useBook(bookId, isBookEditable, isTopicEditable);
   const router = useRouter();
   const handleBookLink = useBookLinkHandler();
@@ -75,6 +75,7 @@ function Edit({ bookId, context }: Query) {
     return router.push(pagesPath.book.topic.import.$url({ query }));
   }
   const handlers = {
+    linked: bookId === session?.ltiResourceLink?.bookId,
     onSubmit: handleSubmit,
     onDelete: handleDelete,
     onCancel: handleCancel,
