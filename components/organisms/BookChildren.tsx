@@ -10,17 +10,17 @@ import { SectionSchema } from "$server/models/book/section";
 import { primary } from "$theme/colors";
 import { isNamedSection, getOutlineNumber } from "$utils/outline";
 
-function Section({
+function SectionItem({
   section,
   sectionItemIndex,
   end,
-  onSectionClick,
+  onSectionItemClick,
   children,
 }: {
   section: Pick<SectionSchema, "name" | "topics">;
   sectionItemIndex: number;
   end: boolean;
-  onSectionClick(event: MouseEvent<HTMLElement>): void;
+  onSectionItemClick(): void;
   children: ReactNode;
 }) {
   if (!isNamedSection(section)) return <>{children}</>;
@@ -33,7 +33,7 @@ function Section({
         name={section.name}
         end={end}
         button
-        onClick={onSectionClick}
+        onClick={onSectionItemClick}
       />
       {children}
     </>
@@ -51,42 +51,37 @@ type Props = {
   sections: SectionSchema[];
   index: ItemIndex;
   isTopicEditable(topic: TopicSchema): boolean;
-  onItemClick(event: MouseEvent<HTMLElement>, index: ItemIndex): void;
-  onItemEditClick?(event: MouseEvent<HTMLElement>, index: ItemIndex): void;
+  onItemClick(index: ItemIndex): void;
+  onItemEditClick?(index: ItemIndex): void;
 };
 
-export default function BookChildren(props: Props) {
-  const {
-    className,
-    sections,
-    index: [sectionIndex, topicIndex],
-    isTopicEditable,
-    onItemClick,
-    onItemEditClick,
-  } = props;
+export default function BookChildren({
+  className,
+  sections,
+  index: [sectionIndex, topicIndex],
+  isTopicEditable,
+  onItemClick,
+  onItemEditClick,
+}: Props) {
   const classes = useStyles();
-  const handleItemClick = (event: MouseEvent<HTMLElement>) => {
-    const { section, topic } = event.currentTarget.dataset;
-    onItemClick(event, ([section, topic].map(Number) as unknown) as ItemIndex);
-  };
-  const handleSectionClick = (sectionItemIndex: number) => (
-    event: MouseEvent<HTMLElement>
-  ) => onItemClick(event, [sectionItemIndex, 0]);
-  const handleItemEditClick = (...index: ItemIndex) => (
+  const handleItemClick = (index: ItemIndex) => () => onItemClick(index);
+  const handleSectionItemClick = (sectionItemIndex: number) => () =>
+    onItemClick([sectionItemIndex, 0]);
+  const handleItemEditClick = (index: ItemIndex) => (
     event: MouseEvent<HTMLButtonElement>
   ) => {
     event.stopPropagation();
-    onItemEditClick?.(event, index);
+    onItemEditClick?.(index);
   };
   return (
     <List disablePadding className={className}>
       {sections.map((section, sectionItemIndex) => (
-        <Section
+        <SectionItem
           key={section.id}
           section={section}
           sectionItemIndex={sectionItemIndex}
           end={sectionItemIndex === sections.length - 1}
-          onSectionClick={handleSectionClick(sectionItemIndex)}
+          onSectionItemClick={handleSectionItemClick(sectionItemIndex)}
         >
           {section.topics.map((topic, topicItemIndex) => (
             <BookChildrenItem
@@ -111,25 +106,23 @@ export default function BookChildren(props: Props) {
               }
               depth={section.topics.length > 1 ? 1 : 0}
               button
-              data-section={sectionItemIndex}
-              data-topic={topicItemIndex}
-              onClick={handleItemClick}
+              onClick={handleItemClick([sectionItemIndex, topicItemIndex])}
             >
               {isTopicEditable(topic) && onItemEditClick && (
                 <ListItemSecondaryAction>
                   <EditButton
                     variant="topic"
                     size="medium"
-                    onClick={handleItemEditClick(
+                    onClick={handleItemEditClick([
                       sectionItemIndex,
-                      topicItemIndex
-                    )}
+                      topicItemIndex,
+                    ])}
                   />
                 </ListItemSecondaryAction>
               )}
             </BookChildrenItem>
           ))}
-        </Section>
+        </SectionItem>
       ))}
     </List>
   );
