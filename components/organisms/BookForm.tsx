@@ -30,10 +30,6 @@ const useStyles = makeStyles((theme) => ({
   divider: {
     margin: theme.spacing(0, -3, 0),
   },
-  submitOption: {
-    display: "flex",
-    alignItems: "center",
-  },
 }));
 
 const label = {
@@ -50,19 +46,20 @@ const label = {
 type Props = {
   book?: BookSchema;
   id?: string;
+  linked?: boolean;
   className?: string;
   variant?: "create" | "update";
   onSubmit?: (book: BookPropsWithSubmitOptions) => void;
 };
 
-export default function BookForm(props: Props) {
-  const {
-    book,
-    className,
-    id,
-    variant = "create",
-    onSubmit = () => undefined,
-  } = props;
+export default function BookForm({
+  book,
+  className,
+  id,
+  linked = false,
+  variant = "create",
+  onSubmit = () => undefined,
+}: Props) {
   const cardClasses = useCardStyles();
   const inputLabelClasses = useInputLabelStyles();
   const classes = useStyles();
@@ -162,18 +159,20 @@ export default function BookForm(props: Props) {
         inputRef={register}
       />
       <Divider className={classes.divider} />
-      <div className={classes.submitOption}>
-        <Checkbox
-          id="submit-with-link"
-          name="submitWithLink"
-          inputRef={register}
-          defaultChecked={defaultValues.submitWithLink}
-          color="primary"
-        />
-        <InputLabel classes={inputLabelClasses} htmlFor="submit-with-link">
-          {label[variant].submitWithLink}
-        </InputLabel>
-      </div>
+      {!linked && (
+        <div>
+          <InputLabel classes={inputLabelClasses} htmlFor="submit-with-link">
+            {label[variant].submitWithLink}
+          </InputLabel>
+          <Checkbox
+            id="submit-with-link"
+            name="submitWithLink"
+            inputRef={register}
+            defaultChecked={defaultValues.submitWithLink}
+            color="primary"
+          />
+        </div>
+      )}
       <Button variant="contained" color="primary" type="submit">
         {label[variant].submit}
       </Button>
