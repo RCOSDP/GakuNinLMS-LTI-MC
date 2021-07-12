@@ -140,12 +140,10 @@ export default function Book(props: Props) {
   const matches = useMediaQuery(theme.breakpoints.up("md"));
   const handleBookEditClick = () => book && onBookEditClick?.(book);
   const handleOtherBookLinkClick = () => onOtherBookLinkClick?.();
-  const handleItemClick = (_: never, index: ItemIndex) => {
-    onItemClick(index);
-  };
+  const handleItemClick = (index: ItemIndex) => onItemClick(index);
   const handleItemEditClick =
     isInstructor && onTopicEditClick
-      ? (_: never, [sectionIndex, topicIndex]: ItemIndex) => {
+      ? ([sectionIndex, topicIndex]: ItemIndex) => {
           const topic = book?.sections[sectionIndex]?.topics[topicIndex];
           if (topic) onTopicEditClick?.(topic);
         }

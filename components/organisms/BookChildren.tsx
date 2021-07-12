@@ -1,44 +1,41 @@
-import { ReactNode, MouseEvent, useState } from "react";
+import { ReactNode, MouseEvent } from "react";
 import clsx from "clsx";
 import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
-import Collapse from "@material-ui/core/Collapse";
 import { makeStyles } from "@material-ui/styles";
-import ExpandLessIcon from "@material-ui/icons/ExpandLess";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import EditButton from "$atoms/EditButton";
+import BookChildrenItem from "$atoms/BookChildrenItem";
 import { TopicSchema } from "$server/models/topic";
 import { SectionSchema } from "$server/models/book/section";
 import { primary } from "$theme/colors";
 import { isNamedSection, getOutlineNumber } from "$utils/outline";
 
-function Section({
+function SectionItem({
   section,
   sectionItemIndex,
-  onSectionClick,
-  open,
+  end,
+  onSectionItemClick,
   children,
 }: {
   section: Pick<SectionSchema, "name" | "topics">;
   sectionItemIndex: number;
-  onSectionClick(): void;
-  open: boolean;
+  end: boolean;
+  onSectionItemClick(): void;
   children: ReactNode;
 }) {
   if (!isNamedSection(section)) return <>{children}</>;
 
   return (
     <>
-      <ListItem button onClick={onSectionClick}>
-        <ListItemText>
-          {getOutlineNumber(section, sectionItemIndex) + " "}
-          {section.name ?? "無名のセクション"}
-        </ListItemText>
-        {open ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-      </ListItem>
-      <Collapse in={open}>{children}</Collapse>
+      <BookChildrenItem
+        variant="section"
+        outlineNumber={getOutlineNumber(section, sectionItemIndex)}
+        name={section.name}
+        end={end}
+        button
+        onClick={onSectionItemClick}
+      />
+      {children}
     </>
   );
 }
@@ -54,81 +51,77 @@ type Props = {
   sections: SectionSchema[];
   index: ItemIndex;
   isTopicEditable(topic: TopicSchema): boolean;
-  onItemClick(event: MouseEvent<HTMLElement>, index: ItemIndex): void;
-  onItemEditClick?(event: MouseEvent<HTMLElement>, index: ItemIndex): void;
+  onItemClick(index: ItemIndex): void;
+  onItemEditClick?(index: ItemIndex): void;
 };
 
-export default function BookChildren(props: Props) {
-  const {
-    className,
-    sections,
-    index: [sectionIndex, topicIndex],
-    isTopicEditable,
-    onItemClick,
-    onItemEditClick,
-  } = props;
+export default function BookChildren({
+  className,
+  sections,
+  index: [sectionIndex, topicIndex],
+  isTopicEditable,
+  onItemClick,
+  onItemEditClick,
+}: Props) {
   const classes = useStyles();
-  const [open, setOpen] = useState<boolean[]>(sections.map(() => true));
-  const handleItemClick = (event: MouseEvent<HTMLElement>) => {
-    const { section, topic } = event.currentTarget.dataset;
-    onItemClick(event, ([section, topic].map(Number) as unknown) as ItemIndex);
-  };
-  const handleSectionClick = (sectionItemIndex: number) => () => {
-    setOpen((open) => {
-      const newOpen = open.slice();
-      newOpen[sectionItemIndex] = !newOpen[sectionItemIndex];
-      return newOpen;
-    });
-  };
-  const handleItemEditClick = (...index: ItemIndex) => (
+  const handleItemClick = (index: ItemIndex) => () => onItemClick(index);
+  const handleSectionItemClick = (sectionItemIndex: number) => () =>
+    onItemClick([sectionItemIndex, 0]);
+  const handleItemEditClick = (index: ItemIndex) => (
     event: MouseEvent<HTMLButtonElement>
   ) => {
     event.stopPropagation();
-    onItemEditClick?.(event, index);
+    onItemEditClick?.(index);
   };
   return (
     <List disablePadding className={className}>
       {sections.map((section, sectionItemIndex) => (
-        <Section
+        <SectionItem
           key={section.id}
           section={section}
           sectionItemIndex={sectionItemIndex}
-          onSectionClick={handleSectionClick(sectionItemIndex)}
-          open={open[sectionItemIndex]}
+          end={sectionItemIndex === sections.length - 1}
+          onSectionItemClick={handleSectionItemClick(sectionItemIndex)}
         >
           {section.topics.map((topic, topicItemIndex) => (
-            <ListItem
+            <BookChildrenItem
               key={`${topic.id}:${topicItemIndex}`}
               className={clsx({
                 [classes.active]:
                   sectionIndex === sectionItemIndex &&
                   topicIndex === topicItemIndex,
               })}
+              variant="topic"
+              outlineNumber={getOutlineNumber(
+                section,
+                sectionItemIndex,
+                topicItemIndex
+              )}
+              name={topic.name}
+              end={
+                isNamedSection(section)
+                  ? topicItemIndex === section.topics.length - 1
+                  : sectionItemIndex === sections.length - 1
+              }
+              depth={isNamedSection(section) ? 1 : 0}
               button
-              data-section={sectionItemIndex}
-              data-topic={topicItemIndex}
-              onClick={handleItemClick}
+              onClick={handleItemClick([sectionItemIndex, topicItemIndex])}
             >
-              <ListItemText>
-                {getOutlineNumber(section, sectionItemIndex, topicItemIndex) +
-                  " "}
-                {topic.name}
-              </ListItemText>
               {isTopicEditable(topic) && onItemEditClick && (
                 <ListItemSecondaryAction>
                   <EditButton
                     variant="topic"
                     size="medium"
-                    onClick={handleItemEditClick(
+                    onClick={handleItemEditClick([
                       sectionItemIndex,
-                      topicItemIndex
-                    )}
+                      topicItemIndex,
+                    ])}
                   />
                 </ListItemSecondaryAction>
               )}
-            </ListItem>
+            </BookChildrenItem>
           ))}
-        </Section>
+        </SectionItem>
       ))}
     </List>
   );

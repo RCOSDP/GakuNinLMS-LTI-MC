@@ -1,29 +1,16 @@
-export default { title: "organisms/BookChildren" };
-
+import type { Story } from "@storybook/react";
 import BookChildren from "./BookChildren";
 import { sections } from "samples";
 
-const handlers = {
-  onItemClick(_: never, index: ItemIndex) {
-    console.log(index);
-  },
+export default { title: "organisms/BookChildren", component: BookChildren };
+
+const Template: Story<Parameters<typeof BookChildren>[0]> = (args) => (
+  <BookChildren {...args} />
+);
+
+export const Default = Template.bind({});
+Default.args = {
+  sections,
+  index: [0, 0],
+  isTopicEditable: () => false,
 };
-
-export const Default = () => (
-  <BookChildren
-    sections={sections}
-    index={[0, 0]}
-    isTopicEditable={() => false}
-    {...handlers}
-  />
-);
-
-export const Editable = () => (
-  <BookChildren
-    sections={sections}
-    index={[0, 0]}
-    isTopicEditable={() => true}
-    {...handlers}
-    onItemEditClick={console.log}
-  />
-);
