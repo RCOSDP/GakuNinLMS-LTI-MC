@@ -99,12 +99,11 @@ export default function BookChildren({
               )}
               name={topic.name}
               end={
-                (section.topics.length > 1 &&
-                  topicItemIndex === section.topics.length - 1) ||
-                (section.topics.length === 1 &&
-                  sectionItemIndex === sections.length - 1)
+                isNamedSection(section)
+                  ? topicItemIndex === section.topics.length - 1
+                  : sectionItemIndex === sections.length - 1
               }
-              depth={section.topics.length > 1 ? 1 : 0}
+              depth={isNamedSection(section) ? 1 : 0}
               button
               onClick={handleItemClick([sectionItemIndex, topicItemIndex])}
             >
