@@ -132,7 +132,7 @@ export class PlayerTracker extends (EventEmitter as {
     seekBack.on("click", () => this.emit("back", this.stats));
 
     // NOTE: YouTubeの場合、playイベント発火より前だと`player.duration()`に失敗
-    const handlePlay = async () => {
+    const handlePlay = () => {
       player.off("play", handlePlay);
       // NOTE: wowza(hlsjs)の場合、play直後は再生時間が取れないため、ほんの少し待機する
       const intervalID = setInterval(() => {
