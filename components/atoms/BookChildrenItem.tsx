@@ -56,7 +56,7 @@ type Props = Parameters<typeof ListItem>[0] & {
   end?: boolean;
   outlineNumber?: string;
   name: string | null;
-  children?: React.Node;
+  children?: React.ReactNode;
 };
 
 export default function BookChildrenItem({
