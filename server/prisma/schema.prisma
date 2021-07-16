@@ -1,0 +1,280 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator jsonSchema {
+  provider = "prisma-json-schema-generator"
+  output   = "."
+}
+
+// Resource Objects
+
+/// 教育用外部リソース
+model Resource {
+  id      Int     @id @default(autoincrement())
+  topics  Topic[]
+  video   Video?  @relation(fields: [videoId], references: [id])
+  videoId Int?    @map("video_id")
+  /// 外部リソースのアドレス
+  url     String  @unique
+  /// 詳細
+  details Json
+
+  @@map("resources")
+}
+
+/// ビデオ
+model Video {
+  id          Int       @id @default(autoincrement())
+  resource    Resource?
+  tracks      Track[]
+  /// 動画プロバイダーの識別子
+  providerUrl String?   @map("provider_url")
+
+  @@map("videos")
+}
+
+/// ビデオのトラック (字幕・キャプション)
+model Track {
+  id       Int    @id @default(autoincrement())
+  video    Video  @relation(fields: [videoId], references: [id])
+  videoId  Int    @map("video_id")
+  /// 種別 "subtitles": 字幕
+  kind     String @default("subtitles")
+  /// 言語 ISO 639-1 code
+  language String
+  /// WebVTT ファイルの実体
+  content  String
+
+  @@map("tracks")
+}
+
+// Topic Objects
+
+/// トピック
+model Topic {
+  id           Int            @id @default(autoincrement())
+  resource     Resource       @relation(fields: [resourceId], references: [id])
+  resourceId   Int            @map("resource_id")
+  keywords     Keyword[]      @relation(references: [id])
+  topicSection TopicSection[]
+  activities   Activity[]
+  /// トピック名称
+  name         String
+  /// 説明 (Markdown)
+  description  String
+  /// 言語 ISO 639-1 code
+  language     String         @default("ja")
+  /// 学習所要時間 (秒)
+  timeRequired Int            @map("time_required")
+  /// 共有可否 (true: シェアする, それ以外: シェアしない)
+  shared       Boolean        @default(true)
+  /// ライセンス (https://spdx.org/licenses/ に準拠するものを入力する)
+  license      String         @default("")
+  /// 作成者
+  creator      User           @relation(fields: [creatorId], references: [id])
+  creatorId    Int            @map("creator_id")
+  /// 作成日
+  createdAt    DateTime       @default(now()) @map("created_at")
+  /// 更新日
+  updatedAt    DateTime       @default(now()) @map("updated_at")
+  /// 詳細
+  details      Json
+
+  @@map("topics")
+}
+
+/// キーワード
+model Keyword {
+  id     Int     @id @default(autoincrement())
+  topics Topic[] @relation(references: [id])
+  books  Book[]  @relation(references: [id])
+  /// 名称 (カンマ "," を含めない)
+  name   String  @unique
+
+  @@map("keywords")
+}
+
+// Map Objects/Learning Contents
+
+/// LTI Consumer
+model LtiConsumer {
+  ltiContext       LtiContext[]
+  ltiResourceLinks LtiResourceLink[]
+  users            User[]
+  /// OAuth Consumer key ("" は無効)
+  id               String            @id
+  /// OAuth Consumer secret
+  secret           String
+
+  @@map("lti_consumer")
+}
+
+/// LTI Context
+model LtiContext {
+  consumer      LtiConsumer       @relation(fields: [consumerId], references: [id])
+  consumerId    String            @map("consumer_id")
+  id            String
+  resourceLinks LtiResourceLink[]
+  title         String
+  label         String
+
+  @@id([consumerId, id])
+  @@map("lti_context")
+}
+
+/// LTI Resource Link
+model LtiResourceLink {
+  consumer   LtiConsumer @relation(fields: [consumerId], references: [id])
+  consumerId String      @map("consumer_id")
+  id         String
+  context    LtiContext  @relation(fields: [consumerId, contextId], references: [consumerId, id])
+  contextId  String      @map("context_id")
+  title      String
+  book       Book        @relation(fields: [bookId], references: [id])
+  bookId     Int         @map("book_id")
+  author     User        @relation(fields: [authorId], references: [id])
+  authorId   Int         @map("author_id")
+
+  @@id([consumerId, id])
+  @@map("lti_resource_link")
+}
+
+/// ブック
+model Book {
+  id               Int               @id @default(autoincrement())
+  keywords         Keyword[]         @relation(references: [id])
+  sections         Section[]
+  ltiResourceLinks LtiResourceLink[]
+  /// 題名
+  name             String
+  /// 説明 (Markdown)
+  description      String            @default("")
+  /// 言語 ISO 639-1 code
+  language         String            @default("ja")
+  /// 学習所要時間 (秒)
+  timeRequired     Int?              @map("time_required")
+  /// 共有可否 (true: シェアする, それ以外: シェアしない)
+  shared           Boolean           @default(true)
+  /// 著作者
+  author           User              @relation(fields: [authorId], references: [id])
+  authorId         Int               @map("author_id")
+  /// 公開日
+  publishedAt      DateTime          @default(now()) @map("published_at")
+  /// 作成日
+  createdAt        DateTime          @default(now()) @map("created_at")
+  /// 更新日
+  updatedAt        DateTime          @default(now()) @map("updated_at")
+  /// 詳細
+  details          Json
+
+  @@index([authorId], name: "author_id")
+  @@map("books")
+}
+
+/// セクション
+model Section {
+  id            Int            @id @default(autoincrement())
+  book          Book           @relation(fields: [bookId], references: [id])
+  bookId        Int            @map("book_id")
+  topicSections TopicSection[]
+  /// 順番 (昇順)
+  order         Int
+  /// 名称 (nullならば匿名のトピックの集まり)
+  name          String?
+
+  @@index([bookId], name: "book_id")
+  @@map("sections")
+}
+
+/// セクション内トピック
+model TopicSection {
+  id        Int     @id @default(autoincrement())
+  section   Section @relation(fields: [sectionId], references: [id])
+  sectionId Int     @map("section_id")
+  topic     Topic   @relation(fields: [topicId], references: [id])
+  topicId   Int     @map("topic_id")
+  /// 順番 (昇順)
+  order     Int
+
+  @@index([sectionId], name: "section_id")
+  @@map("topic_sections")
+}
+
+// Actors
+
+/// 利用者
+model User {
+  id               Int               @id @default(autoincrement())
+  createdTopics    Topic[]
+  writtenBooks     Book[]
+  ltiResourceLinks LtiResourceLink[]
+  ltiConsumer      LtiConsumer       @relation(fields: [ltiConsumerId], references: [id])
+  ltiConsumerId    String            @map("lti_consumer_id")
+  ltiUserId        String            @map("lti_user_id")
+  activities       Activity[]
+  /// 氏名
+  name             String
+
+  @@unique([ltiConsumerId, ltiUserId])
+  @@map("users")
+}
+
+/// 学習活動
+model Activity {
+  id          Int                 @id @default(autoincrement())
+  timeRanges  ActivityTimeRange[]
+  topic       Topic               @relation(fields: [topicId], references: [id])
+  topicId     Int                 @map("topic_id")
+  learner     User                @relation(fields: [learnerId], references: [id])
+  learnerId   Int                 @map("learner_id")
+  /// 合計時間 (ms)
+  totalTimeMs Int                 @map("total_time_ms")
+  /// 作成日
+  createdAt   DateTime            @default(now()) @map("created_at")
+  /// 更新日
+  updatedAt   DateTime            @default(now()) @map("updated_at")
+
+  @@unique([topicId, learnerId])
+  @@map("activities")
+}
+
+// 学習活動の時間範囲
+model ActivityTimeRange {
+  activity   Activity @relation(fields: [activityId], references: [id])
+  activityId Int      @map("activity_id")
+  /// 開始時間 (ms)
+  startMs    Int      @map("start_ms")
+  /// 終了時間 (ms)
+  endMs      Int      @map("end_ms")
+
+  @@id([activityId, startMs])
+  @@map("activities_time_ranges")
+}
+
+// Etc.
+
+/// セッションストア
+model Session {
+  id        String   @id
+  sid       String   @unique @default(cuid())
+  data      String
+  expiresAt DateTime @map("expires_at")
+
+  @@map("sessions")
+}
+
+/// OAuth Account
+model Account {
+  id        Int    @id @default(autoincrement())
+  nonce     String
+  timestamp Int
+
+  @@unique([nonce, timestamp])
+  @@map("accounts")
+}

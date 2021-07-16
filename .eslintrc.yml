@@ -1,0 +1,44 @@
+root: true
+parser: "@typescript-eslint/parser"
+plugins:
+  - react
+  - "@typescript-eslint"
+  - filenames
+  - tsc
+settings:
+  react:
+    version: detect
+extends:
+  - eslint:recommended
+  - plugin:@typescript-eslint/eslint-recommended
+  - plugin:@typescript-eslint/recommended
+  - plugin:jsx-a11y/recommended
+  - plugin:react-hooks/recommended
+  - plugin:react/recommended
+  - prettier
+rules:
+  "@typescript-eslint/explicit-module-boundary-types": "off"
+  "@typescript-eslint/no-unused-vars":
+    - "error"
+    - varsIgnorePattern: "^_"
+  react/react-in-jsx-scope: "off"
+  filenames/match-exported: error
+  tsc/config: [error, { configFile: "tsconfig.json" }]
+overrides:
+  - files:
+      - jest.config.js
+      - next.config.js
+    env:
+      node: true
+    rules:
+      "@typescript-eslint/no-var-requires": "off"
+  - files:
+      - samples/**
+    rules:
+      no-irregular-whitespace: "off"
+  - files: pages/**
+    rules:
+      filenames/match-exported: "off"
+  - files: [types/**, server/types/**]
+    rules:
+      filenames/match-exported: [error, camel]

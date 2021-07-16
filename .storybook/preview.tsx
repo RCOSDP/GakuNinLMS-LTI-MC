@@ -1,28 +1,35 @@
-import * as nextRouter from "next/router";
-import { addDecorator } from "@storybook/react";
-import { ThemeProvider } from "@material-ui/styles";
+import type { ReactNode } from "react";
+import type { Story } from "@storybook/react";
+import { Provider } from "jotai";
+import MuiThemeProvider from "@material-ui/styles/ThemeProvider";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import Container from "@material-ui/core/Container";
 import { ConfirmProvider } from "material-ui-confirm";
-import { SnackbarProvider } from "material-ui-snackbar-provider";
-import { StateProvider } from "../components/state";
-import { theme } from "../components/theme";
+import theme from "../theme";
 // NOTE: For VideoJs components.
 import "video.js/dist/video-js.css";
+import "videojs-seek-buttons/dist/videojs-seek-buttons.css";
 
-// NOTE: Mock useRouter
-// @ts-ignore
-nextRouter.useRouter = () => ({ route: "/", query: {} });
-
-addDecorator((story) => (
-  <StateProvider>
-    <ThemeProvider theme={theme}>
+function ThemeProvider({ children }: { children: ReactNode }) {
+  return (
+    <MuiThemeProvider theme={theme}>
       <CssBaseline />
-      <ConfirmProvider>
-        <SnackbarProvider SnackbarProps={{ autoHideDuration: 5e3 }}>
-        <Container>{story()}</Container>
-      </SnackbarProvider>
-      </ConfirmProvider>
-    </ThemeProvider>
-  </StateProvider>
-));
+      {children}
+    </MuiThemeProvider>
+  );
+}
+
+export const decorators = [
+  (Story: Story) => (
+    <Provider>
+      <ThemeProvider>
+        <ConfirmProvider>
+          <Story />
+        </ConfirmProvider>
+      </ThemeProvider>
+    </Provider>
+  ),
+];
+
+export const parameters = {
+  actions: { argTypesRegex: "^on[A-Z].*" },
+};

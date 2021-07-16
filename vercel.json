@@ -1,0 +1,7 @@
+{
+  "functions": { "api/v2.ts": { "includeFiles": "server/dist/*" } },
+  "rewrites": [
+    { "source": "/(api/v2/swagger/static/.*)", "destination": "/public/$1" },
+    { "source": "/api/v2/((?!swagger/static/).*)", "destination": "/api/v2.ts" }
+  ]
+}
