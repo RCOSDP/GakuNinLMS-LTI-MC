@@ -56,6 +56,7 @@ type Props = Parameters<typeof ListItem>[0] & {
   end?: boolean;
   outlineNumber?: string;
   name: string | null;
+  children?: React.ReactNode;
 };
 
 export default function BookChildrenItem({
@@ -64,6 +65,7 @@ export default function BookChildrenItem({
   end,
   outlineNumber,
   name,
+  children,
   ...other
 }: Props) {
   const classes = useStyles({ depth });
@@ -74,6 +76,7 @@ export default function BookChildrenItem({
       <ListItemText>
         <span className={classes.title}>{name}</span>
       </ListItemText>
+      {children}
     </ListItem>
   );
 }
