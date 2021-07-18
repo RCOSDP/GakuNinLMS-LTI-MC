@@ -80,9 +80,10 @@ yarn build:license
 
 ### Favicon
 
-tabに表示するfavicoon画像を変更するには`public/favicons/favicon.ico` を上書き後、ビルドします。
+tab に表示する favicoon 画像を変更するには`public/favicons/favicon.ico` を上書き後、ビルドします。
 
 サイズは下記の通り
+
 - 16px × 16px
 - 32px × 32px
 - 48px × 48px
