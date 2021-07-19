@@ -5,7 +5,6 @@ import { LtiRolesSchema } from "$server/models/ltiRoles";
 import { LtiResourceLinkRequestSchema } from "$server/models/ltiResourceLinkRequest";
 import { LtiContextSchema } from "$server/models/ltiContext";
 import { LtiLaunchPresentationSchema } from "$server/models/ltiLaunchPresentation";
-import { FRONTEND_ORIGIN, FRONTEND_PATH } from "$server/utils/env";
 import findClient from "$server/utils/ltiv1p3/findClient";
 import init from "./init";
 
@@ -14,18 +13,16 @@ export type Props = {
   state: string;
 };
 
-const frontendUrl = `${FRONTEND_ORIGIN}${FRONTEND_PATH}`;
-
 export const method = {
   post: {
     summary: "LTI v1.3 リダイレクトURI",
     description: outdent`
       LTIツールとして起動するためのエンドポイントです。
       このエンドポイントをLMSのLTIツールのリダイレクトURIに指定して利用します。
-      成功時 ${frontendUrl} にリダイレクトします。`,
+      成功時 ${init.frontendUrl} にリダイレクトします。`,
     consumes: ["application/x-www-form-urlencoded"],
     response: {
-      302: {},
+      ...init.response,
       401: {},
     },
   },
@@ -82,12 +79,7 @@ export async function post(req: FastifyRequest<{ Body: Props }>) {
       ...(ltiLaunchPresentation && { ltiLaunchPresentation }),
     });
 
-    await init(req);
-
-    return {
-      status: 302,
-      headers: { location: frontendUrl },
-    };
+    return await init(req);
   } catch (error) {
     req.log.error(error);
     await new Promise(req.destroySession.bind(req));

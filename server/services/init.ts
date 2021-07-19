@@ -1,9 +1,12 @@
 import { FastifyRequest } from "fastify";
+import { FRONTEND_ORIGIN, FRONTEND_PATH } from "$server/utils/env";
 import { upsertUser } from "$server/utils/user";
 import {
   findLtiResourceLink,
   upsertLtiResourceLink,
 } from "$server/utils/ltiResourceLink";
+
+const frontendUrl = `${FRONTEND_ORIGIN}${FRONTEND_PATH}`;
 
 /** 起動時の初期化プロセス */
 async function init({ session }: FastifyRequest) {
@@ -28,6 +31,17 @@ async function init({ session }: FastifyRequest) {
   });
 
   Object.assign(session, { ltiResourceLink, user });
+
+  return {
+    status: 302,
+    headers: { location: frontendUrl },
+  } as const;
 }
+
+/** OpenAPI Responses Object */
+init.response = { 302: {} } as const;
+
+/** 成功時のリダイレクト先のフロントエンドのURL */
+init.frontendUrl = frontendUrl;
 
 export default init;
