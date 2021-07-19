@@ -108,6 +108,11 @@ export interface ApiV2EventPostRequest {
     body?: InlineObject8;
 }
 
+export interface ApiV2LtiCallbackPostRequest {
+    state: string;
+    idToken: string;
+}
+
 export interface ApiV2LtiLaunchPostRequest {
     oauthVersion: string;
     oauthNonce: string;
@@ -126,6 +131,24 @@ export interface ApiV2LtiLaunchPostRequest {
     contextLabel?: string;
     lisPersonNameFull?: string;
     launchPresentationReturnUrl?: string;
+}
+
+export interface ApiV2LtiLoginGetRequest {
+    iss: string;
+    loginHint: string;
+    targetLinkUri: string;
+    clientId: string;
+    ltiMessageHint?: string;
+    ltiDeploymentId?: string;
+}
+
+export interface ApiV2LtiLoginPostRequest {
+    iss: string;
+    loginHint: string;
+    targetLinkUri: string;
+    clientId: string;
+    ltiMessageHint?: string;
+    ltiDeploymentId?: string;
 }
 
 export interface ApiV2LtiLtiConsumerIdResourceLinkLtiResourceLinkIdDeleteRequest {
@@ -446,16 +469,47 @@ export class DefaultApi extends runtime.BaseAPI {
      * LTIツールとして起動するためのエンドポイントです。 このエンドポイントをLMSのLTIツールのリダイレクトURIに指定して利用します。 成功時 http://localhost:3000/ にリダイレクトします。
      * LTI v1.3 リダイレクトURI
      */
-    async apiV2LtiCallbackPostRaw(): Promise<runtime.ApiResponse<void>> {
+    async apiV2LtiCallbackPostRaw(requestParameters: ApiV2LtiCallbackPostRequest): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters.state === null || requestParameters.state === undefined) {
+            throw new runtime.RequiredError('state','Required parameter requestParameters.state was null or undefined when calling apiV2LtiCallbackPost.');
+        }
+
+        if (requestParameters.idToken === null || requestParameters.idToken === undefined) {
+            throw new runtime.RequiredError('idToken','Required parameter requestParameters.idToken was null or undefined when calling apiV2LtiCallbackPost.');
+        }
+
         const queryParameters: runtime.HTTPQuery = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
+
+        const consumes: runtime.Consume[] = [
+            { contentType: 'application/x-www-form-urlencoded' },
+        ];
+        // @ts-ignore: canConsumeForm may be unused
+        const canConsumeForm = runtime.canConsumeForm(consumes);
+
+        let formParams: { append(param: string, value: any): any };
+        let useForm = false;
+        if (useForm) {
+            formParams = new FormData();
+        } else {
+            formParams = new URLSearchParams();
+        }
+
+        if (requestParameters.state !== undefined) {
+            formParams.append('state', requestParameters.state as any);
+        }
+
+        if (requestParameters.idToken !== undefined) {
+            formParams.append('id_token', requestParameters.idToken as any);
+        }
 
         const response = await this.request({
             path: `/api/v2/lti/callback`,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
+            body: formParams,
         });
 
         return new runtime.VoidApiResponse(response);
@@ -465,8 +519,8 @@ export class DefaultApi extends runtime.BaseAPI {
      * LTIツールとして起動するためのエンドポイントです。 このエンドポイントをLMSのLTIツールのリダイレクトURIに指定して利用します。 成功時 http://localhost:3000/ にリダイレクトします。
      * LTI v1.3 リダイレクトURI
      */
-    async apiV2LtiCallbackPost(): Promise<void> {
-        await this.apiV2LtiCallbackPostRaw();
+    async apiV2LtiCallbackPost(requestParameters: ApiV2LtiCallbackPostRequest): Promise<void> {
+        await this.apiV2LtiCallbackPostRaw(requestParameters);
     }
 
     /**
@@ -631,8 +685,48 @@ export class DefaultApi extends runtime.BaseAPI {
      * LTIツールとして起動するためのエンドポイントです。 このエンドポイントをLMSのLTIツールのログイン初期化エンドポイントに指定して利用します。 Authorizationエンドポイントにリダイレクトします。
      * LTI v1.3 ログイン初期化エンドポイント
      */
-    async apiV2LtiLoginGetRaw(): Promise<runtime.ApiResponse<void>> {
+    async apiV2LtiLoginGetRaw(requestParameters: ApiV2LtiLoginGetRequest): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters.iss === null || requestParameters.iss === undefined) {
+            throw new runtime.RequiredError('iss','Required parameter requestParameters.iss was null or undefined when calling apiV2LtiLoginGet.');
+        }
+
+        if (requestParameters.loginHint === null || requestParameters.loginHint === undefined) {
+            throw new runtime.RequiredError('loginHint','Required parameter requestParameters.loginHint was null or undefined when calling apiV2LtiLoginGet.');
+        }
+
+        if (requestParameters.targetLinkUri === null || requestParameters.targetLinkUri === undefined) {
+            throw new runtime.RequiredError('targetLinkUri','Required parameter requestParameters.targetLinkUri was null or undefined when calling apiV2LtiLoginGet.');
+        }
+
+        if (requestParameters.clientId === null || requestParameters.clientId === undefined) {
+            throw new runtime.RequiredError('clientId','Required parameter requestParameters.clientId was null or undefined when calling apiV2LtiLoginGet.');
+        }
+
         const queryParameters: runtime.HTTPQuery = {};
+
+        if (requestParameters.iss !== undefined) {
+            queryParameters['iss'] = requestParameters.iss;
+        }
+
+        if (requestParameters.loginHint !== undefined) {
+            queryParameters['login_hint'] = requestParameters.loginHint;
+        }
+
+        if (requestParameters.targetLinkUri !== undefined) {
+            queryParameters['target_link_uri'] = requestParameters.targetLinkUri;
+        }
+
+        if (requestParameters.ltiMessageHint !== undefined) {
+            queryParameters['lti_message_hint'] = requestParameters.ltiMessageHint;
+        }
+
+        if (requestParameters.ltiDeploymentId !== undefined) {
+            queryParameters['lti_deployment_id'] = requestParameters.ltiDeploymentId;
+        }
+
+        if (requestParameters.clientId !== undefined) {
+            queryParameters['client_id'] = requestParameters.clientId;
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -650,24 +744,79 @@ export class DefaultApi extends runtime.BaseAPI {
      * LTIツールとして起動するためのエンドポイントです。 このエンドポイントをLMSのLTIツールのログイン初期化エンドポイントに指定して利用します。 Authorizationエンドポイントにリダイレクトします。
      * LTI v1.3 ログイン初期化エンドポイント
      */
-    async apiV2LtiLoginGet(): Promise<void> {
-        await this.apiV2LtiLoginGetRaw();
+    async apiV2LtiLoginGet(requestParameters: ApiV2LtiLoginGetRequest): Promise<void> {
+        await this.apiV2LtiLoginGetRaw(requestParameters);
     }
 
     /**
      * LTIツールとして起動するためのエンドポイントです。 このエンドポイントをLMSのLTIツールのログイン初期化エンドポイントに指定して利用します。 Authorizationエンドポイントにリダイレクトします。
      * LTI v1.3 ログイン初期化エンドポイント
      */
-    async apiV2LtiLoginPostRaw(): Promise<runtime.ApiResponse<void>> {
+    async apiV2LtiLoginPostRaw(requestParameters: ApiV2LtiLoginPostRequest): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters.iss === null || requestParameters.iss === undefined) {
+            throw new runtime.RequiredError('iss','Required parameter requestParameters.iss was null or undefined when calling apiV2LtiLoginPost.');
+        }
+
+        if (requestParameters.loginHint === null || requestParameters.loginHint === undefined) {
+            throw new runtime.RequiredError('loginHint','Required parameter requestParameters.loginHint was null or undefined when calling apiV2LtiLoginPost.');
+        }
+
+        if (requestParameters.targetLinkUri === null || requestParameters.targetLinkUri === undefined) {
+            throw new runtime.RequiredError('targetLinkUri','Required parameter requestParameters.targetLinkUri was null or undefined when calling apiV2LtiLoginPost.');
+        }
+
+        if (requestParameters.clientId === null || requestParameters.clientId === undefined) {
+            throw new runtime.RequiredError('clientId','Required parameter requestParameters.clientId was null or undefined when calling apiV2LtiLoginPost.');
+        }
+
         const queryParameters: runtime.HTTPQuery = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
+
+        const consumes: runtime.Consume[] = [
+            { contentType: 'application/x-www-form-urlencoded' },
+        ];
+        // @ts-ignore: canConsumeForm may be unused
+        const canConsumeForm = runtime.canConsumeForm(consumes);
+
+        let formParams: { append(param: string, value: any): any };
+        let useForm = false;
+        if (useForm) {
+            formParams = new FormData();
+        } else {
+            formParams = new URLSearchParams();
+        }
+
+        if (requestParameters.iss !== undefined) {
+            formParams.append('iss', requestParameters.iss as any);
+        }
+
+        if (requestParameters.loginHint !== undefined) {
+            formParams.append('login_hint', requestParameters.loginHint as any);
+        }
+
+        if (requestParameters.targetLinkUri !== undefined) {
+            formParams.append('target_link_uri', requestParameters.targetLinkUri as any);
+        }
+
+        if (requestParameters.ltiMessageHint !== undefined) {
+            formParams.append('lti_message_hint', requestParameters.ltiMessageHint as any);
+        }
+
+        if (requestParameters.ltiDeploymentId !== undefined) {
+            formParams.append('lti_deployment_id', requestParameters.ltiDeploymentId as any);
+        }
+
+        if (requestParameters.clientId !== undefined) {
+            formParams.append('client_id', requestParameters.clientId as any);
+        }
 
         const response = await this.request({
             path: `/api/v2/lti/login`,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
+            body: formParams,
         });
 
         return new runtime.VoidApiResponse(response);
@@ -677,8 +826,8 @@ export class DefaultApi extends runtime.BaseAPI {
      * LTIツールとして起動するためのエンドポイントです。 このエンドポイントをLMSのLTIツールのログイン初期化エンドポイントに指定して利用します。 Authorizationエンドポイントにリダイレクトします。
      * LTI v1.3 ログイン初期化エンドポイント
      */
-    async apiV2LtiLoginPost(): Promise<void> {
-        await this.apiV2LtiLoginPostRaw();
+    async apiV2LtiLoginPost(requestParameters: ApiV2LtiLoginPostRequest): Promise<void> {
+        await this.apiV2LtiLoginPostRaw(requestParameters);
     }
 
     /**
