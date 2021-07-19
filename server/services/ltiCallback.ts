@@ -35,10 +35,7 @@ export async function post(req: FastifyRequest<{ Body: Props }>) {
   const client = await findClient(req.session.oauthClient.id);
 
   if (!client) {
-    await new Promise((res) =>
-      req.sessionStore.destroy(req.session.sessionId, res)
-    );
-
+    await new Promise(req.destroySession.bind(req));
     return { status: 401 };
   }
 
@@ -82,10 +79,7 @@ export async function post(req: FastifyRequest<{ Body: Props }>) {
       headers: { location: frontendUrl },
     };
   } catch {
-    await new Promise((res) =>
-      req.sessionStore.destroy(req.session.sessionId, res)
-    );
-
+    await new Promise(req.destroySession.bind(req));
     return { status: 401 };
   }
 }
