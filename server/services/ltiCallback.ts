@@ -4,6 +4,7 @@ import { SessionSchema } from "$server/models/session";
 import { LtiRolesSchema } from "$server/models/ltiRoles";
 import { LtiResourceLinkRequestSchema } from "$server/models/ltiResourceLinkRequest";
 import { LtiContextSchema } from "$server/models/ltiContext";
+import { LtiLaunchPresentationSchema } from "$server/models/ltiLaunchPresentation";
 import { FRONTEND_ORIGIN, FRONTEND_PATH } from "$server/utils/env";
 import findClient from "$server/utils/ltiv1p3/findClient";
 import init from "./init";
@@ -64,13 +65,21 @@ export async function post(req: FastifyRequest<{ Body: Props }>) {
       ] as LtiContextSchema,
       ltiResourceLink: null,
     } as const;
-    const ltiLaunchPresentation =
-      claims["https://purl.imsglobal.org/spec/lti/claim/launch_presentation"];
+    let ltiLaunchPresentation: undefined | LtiLaunchPresentationSchema;
+    if (
+      "https://purl.imsglobal.org/spec/lti/claim/launch_presentation" in claims
+    ) {
+      ltiLaunchPresentation = {
+        returnUrl: (claims[
+          "https://purl.imsglobal.org/spec/lti/claim/launch_presentation"
+        ] as { return_url?: string }).return_url,
+      };
+    }
 
     Object.assign(req.session, {
       state: null,
       ...session,
-      ...{ ltiLaunchPresentation },
+      ...(ltiLaunchPresentation && { ltiLaunchPresentation }),
     });
 
     await init(req);
