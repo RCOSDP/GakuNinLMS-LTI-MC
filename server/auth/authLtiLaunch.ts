@@ -35,8 +35,11 @@ export default authLtiLaunch;
 async function lookupSecret(oauthConsumerKey: string) {
   const found = await prisma.ltiConsumer.findUnique({
     where: { id: oauthConsumerKey },
-    select: { secret: true },
+    select: { secret: true, platformId: true },
   });
+
+  // NOTE: LTI v1.3 なので無効
+  if (found?.platformId != null) return;
 
   return found?.secret;
 }
