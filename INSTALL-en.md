@@ -52,7 +52,7 @@ Consider the logo image will be resized in a range of width 100px / height 48px 
 
 ### Favicon
 
-Customize the favicon image which layout in tab be able by overwrite the `./public/favicons/favicon.ico` .
+Customize the favicon image which layout in tab be able by overwrite the `./public/favicon.ico` .
 
 The sizes are as follows.
 
