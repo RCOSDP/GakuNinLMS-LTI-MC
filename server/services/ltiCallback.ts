@@ -35,6 +35,7 @@ export async function post(req: FastifyRequest<{ Body: Props }>) {
   const client = await findClient(req.session.oauthClient.id);
 
   if (!client) {
+    req.log.error(`Client "${req.session.oauthClient.id}" が存在しません`);
     await new Promise(req.destroySession.bind(req));
     return { status: 401 };
   }
@@ -78,7 +79,8 @@ export async function post(req: FastifyRequest<{ Body: Props }>) {
       status: 302,
       headers: { location: frontendUrl },
     };
-  } catch {
+  } catch (error) {
+    req.log.error(error);
     await new Promise(req.destroySession.bind(req));
     return { status: 401 };
   }
