@@ -11,7 +11,7 @@ type IconProps = Pick<Parameters<typeof SvgIcon>[0], "className"> &
 function Icon({ variant, end = false, ...other }: IconProps) {
   const d = {
     section: {
-      middle: "M16 26C16 20.0582 15 16.3333 8.5 12C2 7.66667 1 1 1 1V13",
+      middle: "M16 26C16 20.0582 15 16.3333 8.5 12C2 7.66667 1 1 1 1V9",
       end: "M1 1C1 1 2 7.66667 8.5 12C15 16.3333 16 20.0582 16 26",
     },
     topic: {
@@ -32,13 +32,13 @@ function Icon({ variant, end = false, ...other }: IconProps) {
       {variant === "section" && !end && (
         <>
           <path
-            d="M1 24V26"
+            d="M1 21V26"
             stroke={gray[700]}
             strokeWidth="2"
             strokeLinecap="round"
           />
           <path
-            d="M1 16V21"
+            d="M1 12V18"
             stroke={gray[700]}
             strokeWidth="2"
             strokeLinecap="round"
