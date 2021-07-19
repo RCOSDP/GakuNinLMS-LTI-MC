@@ -11,7 +11,7 @@ type IconProps = Pick<Parameters<typeof SvgIcon>[0], "className"> &
 function Icon({ variant, end = false, ...other }: IconProps) {
   const d = {
     section: {
-      middle: "M16 26C16 20.0582 15 16.3333 8.5 12C2 7.66667 1 1 1 1V26",
+      middle: "M16 26C16 20.0582 15 16.3333 8.5 12C2 7.66667 1 1 1 1V9",
       end: "M1 1C1 1 2 7.66667 8.5 12C15 16.3333 16 20.0582 16 26",
     },
     topic: {
@@ -20,7 +20,7 @@ function Icon({ variant, end = false, ...other }: IconProps) {
     },
   } as const;
   return (
-    <SvgIcon {...other} viewBox="0 0 19 27">
+    <SvgIcon {...other} viewBox="0 0 20 28">
       <path
         d={d[variant][end ? "end" : "middle"]}
         fill="none"
@@ -29,6 +29,22 @@ function Icon({ variant, end = false, ...other }: IconProps) {
         strokeLinecap="round"
         strokeLinejoin="round"
       />
+      {variant === "section" && !end && (
+        <>
+          <path
+            d="M1 21V26"
+            stroke={gray[700]}
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+          <path
+            d="M1 12V18"
+            stroke={gray[700]}
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+        </>
+      )}
       {variant === "topic" && (
         <circle cx="15.5" cy="14.5" r="3.5" fill={gray[700]} />
       )}
@@ -46,7 +62,11 @@ const useStyles = makeStyles((theme: Theme) =>
       marginRight: theme.spacing(1),
       lineHeight: 1,
     },
-    title: {},
+    title: {
+      overflow: "hidden",
+      whiteSpace: "nowrap",
+      textOverflow: "ellipsis",
+    },
   })
 );
 
@@ -70,11 +90,11 @@ export default function BookChildrenItem({
 }: Props) {
   const classes = useStyles({ depth });
   return (
-    <ListItem {...other}>
+    <ListItem dense {...other}>
       <Icon className={classes.icon} variant={variant} end={end} />
       <span className={classes.outlineNumber}>{outlineNumber}</span>
-      <ListItemText>
-        <span className={classes.title}>{name}</span>
+      <ListItemText className={classes.title} disableTypography>
+        {name}
       </ListItemText>
       {children}
     </ListItem>
