@@ -7,11 +7,9 @@ import { LtiContextSchema } from "$server/models/ltiContext";
 import { LtiLaunchPresentationSchema } from "$server/models/ltiLaunchPresentation";
 import findClient from "$server/utils/ltiv1p3/findClient";
 import init from "./init";
+import { LtiCallbackBody } from "$server/validators/ltiCallbackBody";
 
-export type Props = {
-  id_token: string;
-  state: string;
-};
+export type Props = LtiCallbackBody;
 
 export const method = {
   post: {
@@ -21,6 +19,7 @@ export const method = {
       このエンドポイントをLMSのLTIツールのリダイレクトURIに指定して利用します。
       成功時 ${init.frontendUrl} にリダイレクトします。`,
     consumes: ["application/x-www-form-urlencoded"],
+    body: LtiCallbackBody,
     response: {
       ...init.response,
       401: {},

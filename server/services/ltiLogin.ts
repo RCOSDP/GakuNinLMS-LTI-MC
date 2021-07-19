@@ -2,16 +2,10 @@ import { FastifyRequest } from "fastify";
 import { outdent } from "outdent";
 import { LtiVersionSchema } from "$server/models/ltiVersion";
 import { OauthClientSchema } from "$server/models/oauthClient";
+import { LtiLoginProps } from "$server/validators/ltiLoginProps";
 import createAccount from "$server/utils/ltiv1p3/createAccount";
 
-export type Props = {
-  client_id: string;
-  iss: string;
-  login_hint: string;
-  target_link_uri: string;
-  lti_message_hint?: string;
-  lti_deployment_id?: string;
-};
+export type Props = LtiLoginProps;
 
 const baseSchema = {
   summary: "LTI v1.3 ログイン初期化エンドポイント",
@@ -19,15 +13,22 @@ const baseSchema = {
     LTIツールとして起動するためのエンドポイントです。
     このエンドポイントをLMSのLTIツールのログイン初期化エンドポイントに指定して利用します。
     Authorizationエンドポイントにリダイレクトします。`,
-  consumes: [],
   response: {
     302: {},
   },
 };
 
 export const method = {
-  get: baseSchema,
-  post: { ...baseSchema, consumes: ["application/x-www-form-urlencoded"] },
+  get: {
+    ...baseSchema,
+    consumes: [],
+    querystring: LtiLoginProps,
+  },
+  post: {
+    ...baseSchema,
+    consumes: ["application/x-www-form-urlencoded"],
+    body: LtiLoginProps,
+  },
 };
 
 async function baseAction(req: FastifyRequest, props: Props) {
