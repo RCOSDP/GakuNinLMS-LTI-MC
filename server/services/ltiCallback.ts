@@ -1,13 +1,12 @@
 import { FastifyRequest } from "fastify";
 import { outdent } from "outdent";
+import { validateOrReject } from "class-validator";
 import { SessionSchema } from "$server/models/session";
-import { LtiRolesSchema } from "$server/models/ltiRoles";
-import { LtiResourceLinkRequestSchema } from "$server/models/ltiResourceLinkRequest";
-import { LtiContextSchema } from "$server/models/ltiContext";
 import { LtiLaunchPresentationSchema } from "$server/models/ltiLaunchPresentation";
 import findClient from "$server/utils/ltiv1p3/findClient";
 import init from "./init";
 import { LtiCallbackBody } from "$server/validators/ltiCallbackBody";
+import { LtiClaims } from "$server/validators/ltiClaims";
 
 export type Props = LtiCallbackBody;
 
@@ -43,6 +42,8 @@ export async function post(req: FastifyRequest<{ Body: Props }>) {
       nonce: req.session.oauthClient.nonce,
     });
     const claims = token.claims();
+    const ltiClaims = new LtiClaims(claims as Partial<LtiClaims>);
+    await validateOrReject(ltiClaims);
     const session: Omit<SessionSchema, "user"> = {
       oauthClient: req.session.oauthClient,
       ltiVersion: "1.3.0",
@@ -50,25 +51,23 @@ export async function post(req: FastifyRequest<{ Body: Props }>) {
         id: claims.sub,
         name: claims.name,
       },
-      ltiRoles: claims[
-        "https://purl.imsglobal.org/spec/lti/claim/roles"
-      ] as LtiRolesSchema,
-      ltiResourceLinkRequest: claims[
-        "https://purl.imsglobal.org/spec/lti/claim/resource_link"
-      ] as LtiResourceLinkRequestSchema,
-      ltiContext: claims[
-        "https://purl.imsglobal.org/spec/lti/claim/context"
-      ] as LtiContextSchema,
+      ltiRoles: ltiClaims["https://purl.imsglobal.org/spec/lti/claim/roles"],
+      ltiResourceLinkRequest:
+        ltiClaims["https://purl.imsglobal.org/spec/lti/claim/resource_link"],
+      ltiContext:
+        ltiClaims["https://purl.imsglobal.org/spec/lti/claim/context"],
       ltiResourceLink: null,
     } as const;
     let ltiLaunchPresentation: undefined | LtiLaunchPresentationSchema;
     if (
-      "https://purl.imsglobal.org/spec/lti/claim/launch_presentation" in claims
+      "https://purl.imsglobal.org/spec/lti/claim/launch_presentation" in
+      ltiClaims
     ) {
       ltiLaunchPresentation = {
-        returnUrl: (claims[
-          "https://purl.imsglobal.org/spec/lti/claim/launch_presentation"
-        ] as { return_url?: string }).return_url,
+        returnUrl:
+          ltiClaims[
+            "https://purl.imsglobal.org/spec/lti/claim/launch_presentation"
+          ]?.return_url,
       };
     }
 
