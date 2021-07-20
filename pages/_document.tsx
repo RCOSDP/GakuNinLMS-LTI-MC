@@ -31,7 +31,9 @@ async function getInitialProps(ctx: DocumentContext) {
 const template = (
   // TODO: i18n 対応したい
   <Html lang="ja" dir="ltr">
-    <Head />
+    <Head>
+      <link rel="icon" href="/favicon.ico" />
+    </Head>
     <body>
       <Main />
       <NextScript />

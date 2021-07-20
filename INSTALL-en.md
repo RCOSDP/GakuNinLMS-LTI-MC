@@ -50,6 +50,16 @@ Customize the logo image which layout in AppBar be able by overwrite the `./publ
 
 Consider the logo image will be resized in a range of width 100px / height 48px with keeping aspect ratio.
 
+### Favicon
+
+Customize the favicon image which layout in tab be able by overwrite the `./public/favicon.ico` .
+
+The sizes are as follows.
+
+- 16px × 16px
+- 32px × 32px
+- 48px × 48px
+
 ### Video player
 
 Some video player has scroll-follow and has been applied height limitation by css.
