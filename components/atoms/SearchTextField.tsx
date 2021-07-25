@@ -59,7 +59,7 @@ export default function SearchTextField({
   const handleInput = useCallback(
     (event: FormEvent<HTMLInputElement>) => {
       onSearchInput?.(event.currentTarget.value);
-      setText(event.target.value);
+      setText(event.currentTarget.value);
     },
     [onSearchInput]
   );
