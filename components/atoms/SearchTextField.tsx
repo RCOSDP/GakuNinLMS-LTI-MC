@@ -1,8 +1,11 @@
 import { ComponentProps, FormEvent, useCallback } from "react";
+import { useState } from "react";
 import TextField from "@material-ui/core/TextField";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import { makeStyles } from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
+import ClearButton from "./ClearButton";
+import Divider from "@material-ui/core/Divider";
 import gray from "$theme/colors/gray";
 
 // NOTE: https://github.com/mui-org/material-ui/blob/master/packages/material-ui/src/OutlinedInput/OutlinedInput.js
@@ -50,18 +53,22 @@ export default function SearchTextField({
 }: {
   onSearchInput?: (input: string) => void;
 } & ComponentProps<typeof TextField>) {
+  const [text, setText] = useState("");
   const outlinedInputClasses = useOutlinedInputStyles();
   const inputLabelClasses = useInputLabelStyles();
   const handleInput = useCallback(
     (event: FormEvent<HTMLInputElement>) => {
       onSearchInput?.(event.currentTarget.value);
+      setText(event.target.value);
     },
     [onSearchInput]
   );
+  const handleClick = () => setText("");
   return (
     <div>
       <TextField
         variant="outlined"
+        value={text}
         inputProps={{
           onInput: handleInput,
           ...props.inputProps,
@@ -70,6 +77,17 @@ export default function SearchTextField({
           classes: outlinedInputClasses,
           endAdornment: (
             <InputAdornment position="end">
+              <ClearButton
+                onClick={handleClick}
+                style={{ visibility: text ? "visible" : "hidden" }}
+              />
+              <Divider
+                style={{
+                  height: 28,
+                  margin: 4,
+                }}
+                orientation="vertical"
+              />
               <SearchIcon style={{ color: gray[700] }} />
             </InputAdornment>
           ),
