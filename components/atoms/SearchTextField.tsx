@@ -1,10 +1,11 @@
 import { ComponentProps, FormEvent, useCallback } from "react";
 import { useState } from "react";
+import clsx from "clsx";
 import TextField from "@material-ui/core/TextField";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import { makeStyles } from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
-import ClearButton from "./ClearButton";
+import SearchClearButton from "./SearchClearButton";
 import Divider from "@material-ui/core/Divider";
 import gray from "$theme/colors/gray";
 
@@ -38,6 +39,10 @@ const useOutlinedInputStyles = makeStyles((theme) => ({
   notchedOutline: {
     borderColor: gray[500],
     transition: theme.transitions.create(["border-color"]),
+  },
+  divider: { height: 28, margin: 4 },
+  hide: {
+    visibility: "hidden",
   },
 }));
 
@@ -77,16 +82,15 @@ export default function SearchTextField({
           classes: outlinedInputClasses,
           endAdornment: (
             <InputAdornment position="end">
-              <ClearButton
+              <SearchClearButton
                 onClick={handleClick}
-                style={{ visibility: text ? "visible" : "hidden" }}
+                className={clsx({
+                  [outlinedInputClasses.hide]: !text,
+                })}
               />
               <Divider
-                style={{
-                  height: 28,
-                  margin: 4,
-                }}
                 orientation="vertical"
+                className={outlinedInputClasses.divider}
               />
               <SearchIcon style={{ color: gray[700] }} />
             </InputAdornment>
