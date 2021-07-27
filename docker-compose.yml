@@ -2,12 +2,12 @@
 version: "3"
 services:
   mariadb:
-    image: "mariadb:10"
+    image: "mariadb:10.5.11-focal"
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
       MYSQL_DATABASE: bitnami_moodle
   moodle:
-    image: "bitnami/moodle:3"
+    image: "bitnami/moodle:3.11.1-debian-10-r13"
     ports: ["8081:8080"]
     environment:
       MOODLE_USERNAME: user
@@ -17,13 +17,13 @@ services:
       BITNAMI_DEBUG: "true"
     depends_on: [mariadb]
   db:
-    image: postgres:13-alpine
+    image: "postgres:13.3-alpine3.14"
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
     ports: ["5432:5432"]
   app:
-    image: node:lts-alpine
+    image: "node:14.17-alpine3.14"
     environment:
       FRONTEND_ORIGIN: "http://localhost:3000"
       SESSION_SECRET: super_secret_characters_for_session
