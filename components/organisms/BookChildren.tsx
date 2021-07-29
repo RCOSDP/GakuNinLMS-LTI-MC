@@ -1,50 +1,76 @@
 import { ReactNode, MouseEvent } from "react";
 import clsx from "clsx";
 import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemText from "@material-ui/core/ListItemText";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
-import { makeStyles } from "@material-ui/styles";
+import { makeStyles, createStyles } from "@material-ui/styles";
+import type { Theme } from "@material-ui/core/styles";
 import EditButton from "$atoms/EditButton";
-import BookChildrenItem from "$atoms/BookChildrenItem";
 import { TopicSchema } from "$server/models/topic";
 import { SectionSchema } from "$server/models/book/section";
-import { primary } from "$theme/colors";
+import { primary, gray } from "$theme/colors";
 import { isNamedSection, getOutlineNumber } from "$utils/outline";
 
 function SectionItem({
   section,
   sectionItemIndex,
-  end,
-  onSectionItemClick,
   children,
 }: {
   section: Pick<SectionSchema, "name" | "topics">;
   sectionItemIndex: number;
-  end: boolean;
-  onSectionItemClick(): void;
   children: ReactNode;
 }) {
-  if (!isNamedSection(section)) return <>{children}</>;
+  const classes = useStyles();
+  if (!isNamedSection(section)) return <List disablePadding>{children}</List>;
 
   return (
-    <>
-      <BookChildrenItem
-        variant="section"
-        outlineNumber={getOutlineNumber(section, sectionItemIndex)}
-        name={section.name}
-        end={end}
-        button
-        onClick={onSectionItemClick}
-      />
+    <List className={classes.indent}>
+      <ListItem dense>
+        <span className={clsx(classes.outline, classes.outlineNumber)}>
+          {getOutlineNumber(section, sectionItemIndex)}
+        </span>
+        <ListItemText
+          className={clsx(classes.ellipsis, classes.outline)}
+          disableTypography
+        >
+          {section.name}
+        </ListItemText>
+      </ListItem>
       {children}
-    </>
+    </List>
   );
 }
 
-const useStyles = makeStyles({
-  active: {
-    backgroundColor: primary[50],
-  },
-});
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    outline: {
+      color: gray[800],
+      fontSize: "0.75rem",
+      fontWeight: "bold",
+      lineHeight: 1.25,
+    },
+    outlineNumber: {
+      marginRight: theme.spacing(1),
+    },
+    ellipsis: {
+      overflow: "hidden",
+      whiteSpace: "nowrap",
+      textOverflow: "ellipsis",
+    },
+    topic: {
+      fontSize: "0.875rem",
+    },
+    indent: {
+      "& > :not(:first-child) > $outlineNumber": {
+        marginLeft: `${0.875 * 1.2}rem`,
+      },
+    },
+    active: {
+      backgroundColor: primary[50],
+    },
+  })
+);
 
 type Props = {
   className?: string;
@@ -65,8 +91,6 @@ export default function BookChildren({
 }: Props) {
   const classes = useStyles();
   const handleItemClick = (index: ItemIndex) => () => onItemClick(index);
-  const handleSectionItemClick = (sectionItemIndex: number) => () =>
-    onItemClick([sectionItemIndex, 0]);
   const handleItemEditClick = (index: ItemIndex) => (
     event: MouseEvent<HTMLButtonElement>
   ) => {
@@ -74,39 +98,33 @@ export default function BookChildren({
     onItemEditClick?.(index);
   };
   return (
-    <List disablePadding className={className}>
+    <div className={className}>
       {sections.map((section, sectionItemIndex) => (
         <SectionItem
           key={section.id}
           section={section}
           sectionItemIndex={sectionItemIndex}
-          end={sectionItemIndex === sections.length - 1}
-          onSectionItemClick={handleSectionItemClick(sectionItemIndex)}
         >
           {section.topics.map((topic, topicItemIndex) => (
-            <BookChildrenItem
+            <ListItem
               key={`${topic.id}:${topicItemIndex}`}
               className={clsx({
                 [classes.active]:
                   sectionIndex === sectionItemIndex &&
                   topicIndex === topicItemIndex,
               })}
-              variant="topic"
-              outlineNumber={getOutlineNumber(
-                section,
-                sectionItemIndex,
-                topicItemIndex
-              )}
-              name={topic.name}
-              end={
-                isNamedSection(section)
-                  ? topicItemIndex === section.topics.length - 1
-                  : sectionItemIndex === sections.length - 1
-              }
-              depth={isNamedSection(section) ? 1 : 0}
               button
               onClick={handleItemClick([sectionItemIndex, topicItemIndex])}
             >
+              <span className={clsx(classes.outline, classes.outlineNumber)}>
+                {getOutlineNumber(section, sectionItemIndex, topicItemIndex)}
+              </span>
+              <ListItemText
+                className={clsx(classes.topic, classes.ellipsis)}
+                disableTypography
+              >
+                {topic.name}
+              </ListItemText>
               {isTopicEditable(topic) && onItemEditClick && (
                 <ListItemSecondaryAction>
                   <EditButton
@@ -119,10 +137,10 @@ export default function BookChildren({
                   />
                 </ListItemSecondaryAction>
               )}
-            </BookChildrenItem>
+            </ListItem>
           ))}
         </SectionItem>
       ))}
-    </List>
+    </div>
   );
 }
