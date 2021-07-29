@@ -12,14 +12,6 @@ import { SectionSchema } from "$server/models/book/section";
 import { primary, gray } from "$theme/colors";
 import { isNamedSection, getOutlineNumber } from "$utils/outline";
 
-const useListStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    padding: {
-      padding: theme.spacing(3, 0),
-    },
-  })
-);
-
 function SectionItem({
   section,
   sectionItemIndex,
@@ -29,18 +21,17 @@ function SectionItem({
   sectionItemIndex: number;
   children: ReactNode;
 }) {
-  const listClasses = useListStyles();
   const classes = useStyles();
   if (!isNamedSection(section)) return <List disablePadding>{children}</List>;
 
   return (
-    <List classes={listClasses}>
+    <List className={classes.indent}>
       <ListItem dense>
         <span className={clsx(classes.outline, classes.outlineNumber)}>
           {getOutlineNumber(section, sectionItemIndex)}
         </span>
         <ListItemText
-          className={clsx(classes.title, classes.outline)}
+          className={clsx(classes.ellipsis, classes.outline)}
           disableTypography
         >
           {section.name}
@@ -62,10 +53,18 @@ const useStyles = makeStyles((theme: Theme) =>
     outlineNumber: {
       marginRight: theme.spacing(1),
     },
-    title: {
+    ellipsis: {
       overflow: "hidden",
       whiteSpace: "nowrap",
       textOverflow: "ellipsis",
+    },
+    topic: {
+      fontSize: "0.875rem",
+    },
+    indent: {
+      "& > :not(:first-child) > $outlineNumber": {
+        marginLeft: `${0.875 * 1.2}rem`,
+      },
     },
     active: {
       backgroundColor: primary[50],
@@ -120,7 +119,10 @@ export default function BookChildren({
               <span className={clsx(classes.outline, classes.outlineNumber)}>
                 {getOutlineNumber(section, sectionItemIndex, topicItemIndex)}
               </span>
-              <ListItemText className={classes.title} disableTypography>
+              <ListItemText
+                className={clsx(classes.topic, classes.ellipsis)}
+                disableTypography
+              >
                 {topic.name}
               </ListItemText>
               {isTopicEditable(topic) && onItemEditClick && (
