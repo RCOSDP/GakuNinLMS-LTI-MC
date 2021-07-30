@@ -1,5 +1,4 @@
 import { ComponentProps, FormEvent, useCallback } from "react";
-import { useState } from "react";
 import clsx from "clsx";
 import TextField from "@material-ui/core/TextField";
 import InputAdornment from "@material-ui/core/InputAdornment";
@@ -41,9 +40,6 @@ const useOutlinedInputStyles = makeStyles((theme) => ({
     transition: theme.transitions.create(["border-color"]),
   },
   divider: { height: 28, margin: 4 },
-  hide: {
-    visibility: "hidden",
-  },
 }));
 
 const useInputLabelStyles = makeStyles((theme) => ({
@@ -52,28 +48,35 @@ const useInputLabelStyles = makeStyles((theme) => ({
   },
 }));
 
+const useStyles = makeStyles(() => ({
+  hide: {
+    visibility: "hidden",
+  },
+}));
+type Props = {
+  value: string;
+  onSearchInput: (input: string) => void;
+  onSearchInputReset: () => void;
+} & Omit<ComponentProps<typeof TextField>, "value">;
+
 export default function SearchTextField({
   onSearchInput,
+  onSearchInputReset,
   ...props
-}: {
-  onSearchInput?: (input: string) => void;
-} & ComponentProps<typeof TextField>) {
-  const [text, setText] = useState("");
+}: Props) {
   const outlinedInputClasses = useOutlinedInputStyles();
   const inputLabelClasses = useInputLabelStyles();
+  const classes = useStyles();
   const handleInput = useCallback(
     (event: FormEvent<HTMLInputElement>) => {
       onSearchInput?.(event.currentTarget.value);
-      setText(event.currentTarget.value);
     },
     [onSearchInput]
   );
-  const handleClick = () => setText("");
   return (
     <div>
       <TextField
         variant="outlined"
-        value={text}
         inputProps={{
           onInput: handleInput,
           ...props.inputProps,
@@ -83,9 +86,9 @@ export default function SearchTextField({
           endAdornment: (
             <InputAdornment position="end">
               <SearchClearButton
-                onClick={handleClick}
+                onClick={onSearchInputReset}
                 className={clsx({
-                  [outlinedInputClasses.hide]: !text,
+                  [classes.hide]: !props.value,
                 })}
               />
               <Divider

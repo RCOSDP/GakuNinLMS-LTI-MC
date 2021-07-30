@@ -58,10 +58,10 @@ export default function TopicImport(props: Props) {
     onFilterChange,
     isTopicEditable,
   } = props;
+  const { query, onSearchInput, onSearchInputReset } = useSearchAtom();
   const classes = useStyles();
   const containerClasses = useContainerStyles();
   const [selectedIndexes, select] = useState<Set<number>>(new Set());
-  const { onSearchInput } = useSearchAtom();
   const handleChecked = (index: number) => () =>
     select((indexes) =>
       indexes.delete(index) ? new Set(indexes) : new Set(indexes.add(index))
@@ -100,8 +100,9 @@ export default function TopicImport(props: Props) {
             <SortSelect onSortChange={onSortChange} />
             <CreatorFilter onFilterChange={onFilterChange} />
             <SearchTextField
-              placeholder="トピック検索"
+              value={query.input}
               onSearchInput={onSearchInput}
+              onSearchInputReset={onSearchInputReset}
             />
           </>
         }
