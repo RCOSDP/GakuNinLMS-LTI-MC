@@ -39,7 +39,6 @@ const useOutlinedInputStyles = makeStyles((theme) => ({
     borderColor: gray[500],
     transition: theme.transitions.create(["border-color"]),
   },
-  divider: { height: 28, margin: 4 },
 }));
 
 const useInputLabelStyles = makeStyles((theme) => ({
@@ -52,6 +51,7 @@ const useStyles = makeStyles(() => ({
   hide: {
     visibility: "hidden",
   },
+  divider: { height: 28, margin: 4 },
 }));
 type Props = {
   value: string;
@@ -91,10 +91,7 @@ export default function SearchTextField({
                   [classes.hide]: !props.value,
                 })}
               />
-              <Divider
-                orientation="vertical"
-                className={outlinedInputClasses.divider}
-              />
+              <Divider orientation="vertical" className={classes.divider} />
               <SearchIcon style={{ color: gray[700] }} />
             </InputAdornment>
           ),
