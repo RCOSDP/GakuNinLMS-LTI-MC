@@ -62,7 +62,7 @@ const useStyles = makeStyles((theme: Theme) =>
       fontSize: "0.875rem",
     },
     indent: {
-      "& > :not(:first-child) > $outlineNumber": {
+      "& > :not(:first-child) $outlineNumber": {
         marginLeft: `${0.875 * 1.2}rem`,
       },
     },
