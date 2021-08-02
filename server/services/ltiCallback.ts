@@ -1,0 +1,91 @@
+import { FastifyRequest } from "fastify";
+import { outdent } from "outdent";
+import { SessionSchema } from "$server/models/session";
+import { LtiRolesSchema } from "$server/models/ltiRoles";
+import { LtiResourceLinkRequestSchema } from "$server/models/ltiResourceLinkRequest";
+import { LtiContextSchema } from "$server/models/ltiContext";
+import { FRONTEND_ORIGIN, FRONTEND_PATH } from "$server/utils/env";
+import findClient from "$server/utils/ltiv1p3/findClient";
+import init from "./init";
+
+export type Props = {
+  id_token: string;
+  state: string;
+};
+
+const frontendUrl = `${FRONTEND_ORIGIN}${FRONTEND_PATH}`;
+
+export const method = {
+  post: {
+    summary: "LTI v1.3 リダイレクトURI",
+    description: outdent`
+      LTIツールとして起動するためのエンドポイントです。
+      このエンドポイントをLMSのLTIツールのリダイレクトURIに指定して利用します。
+      成功時 ${frontendUrl} にリダイレクトします。`,
+    consumes: ["application/x-www-form-urlencoded"],
+    response: {
+      302: {},
+      401: {},
+    },
+  },
+};
+
+export async function post(req: FastifyRequest<{ Body: Props }>) {
+  const callbackUrl = `${req.protocol}://${req.hostname}/api/v2/lti/callback`;
+  const client = await findClient(req.session.oauthClient.id);
+
+  if (!client) {
+    await new Promise((res) =>
+      req.sessionStore.destroy(req.session.sessionId, res)
+    );
+
+    return { status: 401 };
+  }
+
+  try {
+    const token = await client.callback(callbackUrl, req.body, {
+      state: req.session.state,
+      nonce: req.session.oauthClient.nonce,
+    });
+    const claims = token.claims();
+    const session: Omit<SessionSchema, "user"> = {
+      oauthClient: req.session.oauthClient,
+      ltiVersion: "1.3.0",
+      ltiUser: {
+        id: claims.sub,
+        name: claims.name,
+      },
+      ltiRoles: claims[
+        "https://purl.imsglobal.org/spec/lti/claim/roles"
+      ] as LtiRolesSchema,
+      ltiResourceLinkRequest: claims[
+        "https://purl.imsglobal.org/spec/lti/claim/resource_link"
+      ] as LtiResourceLinkRequestSchema,
+      ltiContext: claims[
+        "https://purl.imsglobal.org/spec/lti/claim/context"
+      ] as LtiContextSchema,
+      ltiResourceLink: null,
+    } as const;
+    const ltiLaunchPresentation =
+      claims["https://purl.imsglobal.org/spec/lti/claim/launch_presentation"];
+
+    Object.assign(req.session, {
+      state: null,
+      ...session,
+      ...{ ltiLaunchPresentation },
+    });
+
+    await init(req);
+
+    return {
+      status: 302,
+      headers: { location: frontendUrl },
+    };
+  } catch {
+    await new Promise((res) =>
+      req.sessionStore.destroy(req.session.sessionId, res)
+    );
+
+    return { status: 401 };
+  }
+}

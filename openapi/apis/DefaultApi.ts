@@ -443,6 +443,33 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
+     * LTIツールとして起動するためのエンドポイントです。 このエンドポイントをLMSのLTIツールのリダイレクトURIに指定して利用します。 成功時 http://localhost:3000/ にリダイレクトします。
+     * LTI v1.3 リダイレクトURI
+     */
+    async apiV2LtiCallbackPostRaw(): Promise<runtime.ApiResponse<void>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/api/v2/lti/callback`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * LTIツールとして起動するためのエンドポイントです。 このエンドポイントをLMSのLTIツールのリダイレクトURIに指定して利用します。 成功時 http://localhost:3000/ にリダイレクトします。
+     * LTI v1.3 リダイレクトURI
+     */
+    async apiV2LtiCallbackPost(): Promise<void> {
+        await this.apiV2LtiCallbackPostRaw();
+    }
+
+    /**
      * LTIツールとして起動するためのエンドポイントです。 このエンドポイントをLMSのLTIツールのURLに指定して利用します。 成功時 http://localhost:3000/ にリダイレクトします。
      * LTI起動エンドポイント
      */
@@ -598,6 +625,60 @@ export class DefaultApi extends runtime.BaseAPI {
      */
     async apiV2LtiLaunchPost(requestParameters: ApiV2LtiLaunchPostRequest): Promise<void> {
         await this.apiV2LtiLaunchPostRaw(requestParameters);
+    }
+
+    /**
+     * LTIツールとして起動するためのエンドポイントです。 このエンドポイントをLMSのLTIツールのログイン初期化エンドポイントに指定して利用します。 Authorizationエンドポイントにリダイレクトします。
+     * LTI v1.3 ログイン初期化エンドポイント
+     */
+    async apiV2LtiLoginGetRaw(): Promise<runtime.ApiResponse<void>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/api/v2/lti/login`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * LTIツールとして起動するためのエンドポイントです。 このエンドポイントをLMSのLTIツールのログイン初期化エンドポイントに指定して利用します。 Authorizationエンドポイントにリダイレクトします。
+     * LTI v1.3 ログイン初期化エンドポイント
+     */
+    async apiV2LtiLoginGet(): Promise<void> {
+        await this.apiV2LtiLoginGetRaw();
+    }
+
+    /**
+     * LTIツールとして起動するためのエンドポイントです。 このエンドポイントをLMSのLTIツールのログイン初期化エンドポイントに指定して利用します。 Authorizationエンドポイントにリダイレクトします。
+     * LTI v1.3 ログイン初期化エンドポイント
+     */
+    async apiV2LtiLoginPostRaw(): Promise<runtime.ApiResponse<void>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/api/v2/lti/login`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * LTIツールとして起動するためのエンドポイントです。 このエンドポイントをLMSのLTIツールのログイン初期化エンドポイントに指定して利用します。 Authorizationエンドポイントにリダイレクトします。
+     * LTI v1.3 ログイン初期化エンドポイント
+     */
+    async apiV2LtiLoginPost(): Promise<void> {
+        await this.apiV2LtiLoginPostRaw();
     }
 
     /**
