@@ -58,7 +58,7 @@ export class Event {
 
   /**
    * LTIに送られたリソース情報
-   * LtiLaunchBody["oauth_consumer_key"] + ":" + LtiLaunchBody["resource_link_id"]
+   * OauthClient["id"] + ":" + LtiResourceLinkRequest["id"]
    * ツール起動時に sessionStorage に記録したセッション情報を使い続け、ウィンドウ間で共有しない
    */
   @IsOptional()
@@ -67,7 +67,7 @@ export class Event {
 
   /**
    * LTIに送られたユーザ情報
-   * LtiLaunchBody["oauth_consumer_key"] + ":" + LtiLaunchBody["user_id"]
+   * OauthClient["id"] + ":" + LtiUser["id"]
    * ツール起動時に sessionStorage に記録したセッション情報を使い続け、ウィンドウ間で共有しない
    */
   @IsOptional()
@@ -76,7 +76,7 @@ export class Event {
 
   /**
    * LTIに送られたコース情報
-   * LtiLaunchBody["oauth_consumer_key"] + ":" + LtiLaunchBody["context_id"]
+   * OauthClient["id"] + ":" + LtiContext["id"]
    * ツール起動時に sessionStorage に記録したセッション情報を使い続け、ウィンドウ間で共有しない
    */
   @IsOptional()
@@ -85,7 +85,7 @@ export class Event {
 
   /**
    * LTIに送られたnonce
-   * ウィンドウ間で共有しない LtiLaunchBody["oauth_nonce"]
+   * ウィンドウ間で共有しない OauthClient["nonce"]
    * ツール起動時に sessionStorage に記録したセッション情報を使い続ける
    */
   @IsOptional()

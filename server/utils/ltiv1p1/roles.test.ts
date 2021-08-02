@@ -1,5 +1,8 @@
 import { isInstructor } from "./roles";
-import { LtiLaunchBody } from "$server/validators/ltiLaunchBody";
+import {
+  LtiLaunchBody,
+  toSessionSchema,
+} from "$server/validators/ltiLaunchBody";
 
 describe("isInstructor()", function () {
   test("ロールが管理者", function () {
@@ -22,7 +25,7 @@ describe("isInstructor()", function () {
       lis_person_name_full: "Admin User",
     });
 
-    expect(isInstructor(ltiLaunchBody)).toBe(true);
+    expect(isInstructor(toSessionSchema(ltiLaunchBody).ltiRoles)).toBe(true);
   });
 
   test("LIS Context Role 名前空間の省略", function () {
@@ -44,6 +47,6 @@ describe("isInstructor()", function () {
       lis_person_name_full: "Instructor User",
     });
 
-    expect(isInstructor(ltiLaunchBody)).toBe(true);
+    expect(isInstructor(toSessionSchema(ltiLaunchBody).ltiRoles)).toBe(true);
   });
 });

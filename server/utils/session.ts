@@ -1,7 +1,7 @@
 import { User } from "@prisma/client";
 import { SessionSchema } from "$server/models/session";
-import { LtiLaunchBody } from "$server/validators/ltiLaunchBody";
-import * as ltiRoles from "./ltiv1p1/roles";
+import { LtiRolesSchema } from "$server/models/ltiRoles";
+import * as ltiv1p1Roles from "./ltiv1p1/roles";
 
 /**
  * セッションが管理者のものであるか否か
@@ -9,7 +9,7 @@ import * as ltiRoles from "./ltiv1p1/roles";
  * @return セッションが管理者のものの場合 true、それ以外の場合 false
  */
 export function isAdministrator(session: SessionSchema) {
-  return hasRole(session, ltiRoles.isAdministrator);
+  return hasRole(session, ltiv1p1Roles.isAdministrator);
 }
 
 /**
@@ -18,7 +18,7 @@ export function isAdministrator(session: SessionSchema) {
  * @return セッションが教員または管理者のものの場合 true、それ以外の場合 false
  */
 export function isInstructor(session: SessionSchema) {
-  return hasRole(session, ltiRoles.isInstructor);
+  return hasRole(session, ltiv1p1Roles.isInstructor);
 }
 
 /**
@@ -39,9 +39,9 @@ export function isUserOrAdmin(session: SessionSchema, user: Pick<User, "id">) {
  */
 function hasRole(
   session: SessionSchema,
-  roleToFind: (ltiLaunchBody: LtiLaunchBody) => boolean
+  roleToFind: (ltiRoles: LtiRolesSchema) => boolean
 ) {
-  return roleToFind(session.ltiLaunchBody);
+  return roleToFind(session.ltiRoles);
 }
 
 /**

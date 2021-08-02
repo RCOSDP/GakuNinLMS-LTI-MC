@@ -18,14 +18,8 @@ export const hooks = {
 };
 
 export async function show({ session }: FastifyRequest) {
-  const { ltiLaunchBody, ltiResourceLink, user } = session;
-
   return {
     status: 200,
-    body: {
-      ltiLaunchBody,
-      ltiResourceLink,
-      user,
-    },
+    body: session,
   };
 }
