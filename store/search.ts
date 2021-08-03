@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { atom, useAtom } from "jotai";
 import { RESET, atomWithReset, useUpdateAtom } from "jotai/utils";
 import clsx from "clsx";
@@ -33,11 +33,15 @@ export function useSearchAtom() {
   const [query, reset] = useAtom(queryAtom);
   const onSearchInput = useUpdateAtom(updateQueryAtom);
   const onLtiContextClick = useUpdateAtom(addLtiContextQueryAtom);
+  const onSearchInputReset = useCallback(() => {
+    reset(RESET);
+  }, [reset]);
+
   useEffect(
     () => () => {
       reset(RESET);
     },
     [reset]
   );
-  return { query, onSearchInput, onLtiContextClick };
+  return { query, onSearchInput, onLtiContextClick, onSearchInputReset };
 }

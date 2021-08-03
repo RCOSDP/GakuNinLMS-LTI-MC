@@ -82,7 +82,12 @@ export default function BookImport(props: Props) {
   } = props;
   const classes = useStyles();
   const containerClasses = useContainerStyles();
-  const { query, onSearchInput, onLtiContextClick } = useSearchAtom();
+  const {
+    query,
+    onSearchInput,
+    onLtiContextClick,
+    onSearchInputReset,
+  } = useSearchAtom();
   const [selectedNodeIds, select] = useState<Set<string>>(new Set());
   const handleTreeChange = (nodeId: string) => {
     select((nodeIds) =>
@@ -152,6 +157,7 @@ export default function BookImport(props: Props) {
               placeholder="ブック・トピック検索"
               value={query.input}
               onSearchInput={onSearchInput}
+              onSearchInputReset={onSearchInputReset}
             />
           </>
         }

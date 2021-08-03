@@ -50,6 +50,7 @@ export default function Topics(props: Props) {
     onSortChange,
     onFilterChange,
   } = props;
+  const { query, onSearchInput, onSearchInputReset } = useSearchAtom();
   const classes = useStyles();
   const containerClasses = useContainerStyles();
   const {
@@ -57,7 +58,6 @@ export default function Topics(props: Props) {
     dispatch: setPreviewTopic,
     ...dialogProps
   } = useDialogProps<TopicSchema>();
-  const { onSearchInput } = useSearchAtom();
   const handleTopicPreviewClick = (topic: TopicSchema) =>
     setPreviewTopic(topic);
   const infiniteRef = useInfiniteScroll<HTMLDivElement>({
@@ -83,7 +83,9 @@ export default function Topics(props: Props) {
             <CreatorFilter onFilterChange={onFilterChange} />
             <SearchTextField
               placeholder="トピック検索"
+              value={query.input}
               onSearchInput={onSearchInput}
+              onSearchInputReset={onSearchInputReset}
             />
           </>
         }
