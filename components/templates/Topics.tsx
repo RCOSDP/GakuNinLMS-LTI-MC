@@ -82,7 +82,7 @@ export default function Topics(props: Props) {
             <SortSelect onSortChange={onSortChange} />
             <CreatorFilter onFilterChange={onFilterChange} />
             <SearchTextField
-              placeholder="トピック検索"
+              label="トピック検索"
               value={query.input}
               onSearchInput={onSearchInput}
               onSearchInputReset={onSearchInputReset}

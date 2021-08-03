@@ -147,7 +147,7 @@ export default function Books(props: Props) {
             <SortSelect onSortChange={onSortChange} />
             <CreatorFilter onFilterChange={onFilterChange} />
             <SearchTextField
-              placeholder="ブック・トピック検索"
+              label="ブック・トピック検索"
               value={query.input}
               onSearchInput={onSearchInput}
               onSearchInputReset={onSearchInputReset}
