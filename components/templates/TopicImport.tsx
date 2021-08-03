@@ -100,6 +100,7 @@ export default function TopicImport(props: Props) {
             <SortSelect onSortChange={onSortChange} />
             <CreatorFilter onFilterChange={onFilterChange} />
             <SearchTextField
+              placeholder="トピック検索"
               value={query.input}
               onSearchInput={onSearchInput}
               onSearchInputReset={onSearchInputReset}
