@@ -1,56 +1,53 @@
-import { useEffect } from "react";
+import { useMemo, useEffect } from "react";
 import { VideoResourceSchema } from "$server/models/videoResource";
-import { usePlayerTrackerAtom } from "$store/playerTracker";
-import { YouTubePlayer } from "./YouTubePlayer";
-import { VimeoPlayer } from "./VimeoPlayer";
-import { HlsPlayer } from "./HlsPlayer";
+import VimeoPlayer from "@vimeo/player";
+import Vimeo from "./Vimeo";
+import VideoJs from "./VideoJs";
+import getPlayer from "$utils/video/getPlayer";
+import buildTracks from "$utils/buildTracks";
 
-type VideoProps = Pick<
-  VideoResourceSchema,
-  "providerUrl" | "url" | "tracks"
-> & {
+type Props = Pick<VideoResourceSchema, "providerUrl" | "url" | "tracks"> & {
   className?: string;
-  autoplay?: boolean;
   onEnded?: () => void;
   onDurationChange?: (duration: number) => void;
+  autoplay?: boolean;
 };
 
-export default function Video(props: VideoProps) {
-  const { className, onEnded, onDurationChange, ...other } = props;
-  const playerTracker = usePlayerTrackerAtom();
-
+export default function Video({
+  providerUrl,
+  url,
+  tracks,
+  className,
+  onEnded,
+  onDurationChange,
+  autoplay = false,
+}: Props) {
+  const { element, player, videoTracks } = useMemo(() => {
+    return {
+      ...getPlayer({ providerUrl, url }, autoplay),
+      videoTracks: buildTracks(tracks ?? []),
+    };
+  }, [providerUrl, url, autoplay, tracks]);
   useEffect(() => {
-    if (!playerTracker) return;
     const handleEnded = () => onEnded?.();
     const handleDurationChange = ({ duration }: { duration: number }) => {
       onDurationChange?.(duration);
     };
-    playerTracker.on("ended", handleEnded);
-    playerTracker.on("durationchange", handleDurationChange);
+    player.on("ended", handleEnded);
+    player.on("durationchange", handleDurationChange);
     return () => {
-      playerTracker.off("ended", handleEnded);
-      playerTracker.off("durationchange", handleDurationChange);
+      player.off("ended", handleEnded);
+      player.off("durationchange", handleDurationChange);
     };
-  }, [playerTracker, onEnded, onDurationChange]);
+  }, [player, onEnded, onDurationChange]);
 
-  switch (props.providerUrl) {
-    case "https://www.youtube.com/":
-      return (
-        <div className={className}>
-          <YouTubePlayer {...other} />
-        </div>
-      );
-    case "https://vimeo.com/":
-      return (
-        <div className={className}>
-          <VimeoPlayer {...other} />
-        </div>
-      );
-    default:
-      return (
-        <div className={className}>
-          <HlsPlayer {...other} />
-        </div>
-      );
-  }
+  return (
+    <div className={className}>
+      {player instanceof VimeoPlayer ? (
+        <Vimeo element={element as HTMLDivElement} player={player} />
+      ) : (
+        <VideoJs element={element} player={player} tracks={videoTracks} />
+      )}
+    </div>
+  );
 }
