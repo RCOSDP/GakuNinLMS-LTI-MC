@@ -1,11 +1,6 @@
 import { useEffect, useRef } from "react";
 import videojs, { VideoJsPlayer, VideoJsPlayerOptions } from "video.js";
-
-// error  Could not find a declaration file for module '@meikidd/videojs-hlsjs-plugin/lib/videojs-hlsjs-plugin.js'.
-// './node_modules/@meikidd/videojs-hlsjs-plugin/lib/videojs-hlsjs-plugin.js' implicitly has an 'any' type.
-// eslint-disable-next-line tsc/config
 import hlsjsPlugin from "@meikidd/videojs-hlsjs-plugin/lib/videojs-hlsjs-plugin.js";
-
 import ja from "video.js/dist/lang/ja.json";
 import "videojs-youtube";
 import "videojs-seek-buttons";
