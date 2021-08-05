@@ -1,10 +1,8 @@
 import { useMemo, useEffect } from "react";
 import { VideoResourceSchema } from "$server/models/videoResource";
-import VimeoPlayer from "@vimeo/player";
 import Vimeo from "./Vimeo";
 import VideoJs from "./VideoJs";
-import getPlayer from "$utils/video/getPlayer";
-import buildTracks from "$utils/buildTracks";
+import getVideoInstance from "$utils/video/getVideoInstance";
 
 type Props = Pick<VideoResourceSchema, "providerUrl" | "url" | "tracks"> & {
   className?: string;
@@ -16,19 +14,20 @@ type Props = Pick<VideoResourceSchema, "providerUrl" | "url" | "tracks"> & {
 export default function Video({
   providerUrl,
   url,
-  tracks,
+  tracks: resourceTracks,
   className,
   onEnded,
   onDurationChange,
   autoplay = false,
 }: Props) {
-  const { element, player, videoTracks } = useMemo(() => {
-    return {
-      ...getPlayer({ providerUrl, url }, autoplay),
-      videoTracks: buildTracks(tracks ?? []),
-    };
-  }, [providerUrl, url, autoplay, tracks]);
+  const videoInstance = useMemo(() => {
+    return getVideoInstance(
+      { providerUrl, url, tracks: resourceTracks },
+      autoplay
+    );
+  }, [providerUrl, url, autoplay, resourceTracks]);
   useEffect(() => {
+    const { player } = videoInstance;
     const handleEnded = () => onEnded?.();
     const handleDurationChange = ({ duration }: { duration: number }) => {
       onDurationChange?.(duration);
@@ -39,15 +38,13 @@ export default function Video({
       player.off("ended", handleEnded);
       player.off("durationchange", handleDurationChange);
     };
-  }, [player, onEnded, onDurationChange]);
+  }, [videoInstance, onEnded, onDurationChange]);
 
   return (
     <div className={className}>
-      {player instanceof VimeoPlayer ? (
-        <Vimeo element={element as HTMLDivElement} player={player} />
-      ) : (
-        <VideoJs element={element} player={player} tracks={videoTracks} />
-      )}
+      {videoInstance.type === "vimeo" && <Vimeo {...videoInstance} />}
+      {videoInstance.type === "youtube" && <VideoJs {...videoInstance} />}
+      {videoInstance.type === "wowza" && <VideoJs {...videoInstance} />}
     </div>
   );
 }

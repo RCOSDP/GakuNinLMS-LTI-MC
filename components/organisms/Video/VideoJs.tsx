@@ -1,14 +1,9 @@
 import { useEffect, useRef } from "react";
-import type videojs from "video.js";
-import type { VideoJsPlayer } from "video.js";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
 import volumePersister from "$utils/volumePersister";
+import type { VideoJsInstance } from "$types/videoInstance";
 
-type Props = {
-  element: HTMLElement;
-  player: VideoJsPlayer;
-  tracks?: videojs.TextTrackOptions[];
-};
+type Props = Omit<VideoJsInstance, "type">;
 
 const useStyles = makeStyles(
   createStyles({

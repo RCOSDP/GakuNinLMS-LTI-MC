@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
-import type Player from "@vimeo/player";
 import volumePersister from "$utils/volumePersister";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
+import type { VimeoInstance } from "$types/videoInstance";
 
 const useStyles = makeStyles(
   createStyles({
@@ -14,10 +14,7 @@ const useStyles = makeStyles(
   })
 );
 
-type Props = {
-  element: HTMLDivElement;
-  player: Player;
-};
+type Props = Omit<VimeoInstance, "type">;
 
 function Vimeo({ element, player }: Props) {
   const ref = useRef(document.createElement("div"));
