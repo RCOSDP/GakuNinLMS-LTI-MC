@@ -12,6 +12,7 @@ import Markdown from "$atoms/Markdown";
 import useSticky from "$utils/useSticky";
 import getLocaleDateString from "$utils/getLocaleDateString";
 import { NEXT_PUBLIC_VIDEO_MAX_HEIGHT } from "$utils/env";
+import { isVideoResource } from "$utils/videoResource";
 import { gray } from "$theme/colors";
 
 function formatInterval(start: Date | number, end: Date | number) {
@@ -64,7 +65,7 @@ export default function TopicViewerContent(props: Props) {
   });
   return (
     <>
-      {"providerUrl" in topic.resource && (
+      {isVideoResource(topic.resource) && (
         <Video
           className={clsx(classes.video, sticky)}
           {...topic.resource}
