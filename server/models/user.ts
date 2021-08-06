@@ -1,7 +1,7 @@
 import { User } from "@prisma/client";
 import jsonSchema from "$server/prisma/json-schema.json";
 
-export type UserProps = Omit<User, "id">;
+export type UserProps = Omit<User, "id" | "settings">;
 
 export type UserSchema = User;
 
