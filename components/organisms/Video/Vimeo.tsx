@@ -22,7 +22,7 @@ function Vimeo({ element, player }: Props) {
   useEffect(() => {
     const { current } = ref;
     element.classList.add(classes.player);
-    ref.current.appendChild(element);
+    current.appendChild(element);
     volumePersister(player);
     return () => {
       // TODO: 要素を取り除くと学習活動の記録のために使われている getPlayed() が resolve しないので残す
