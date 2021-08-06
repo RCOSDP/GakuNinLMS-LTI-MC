@@ -1,7 +1,6 @@
-import { useMemo, useEffect } from "react";
-import { VideoResourceSchema } from "$server/models/videoResource";
-import Vimeo from "./Vimeo";
-import VideoJs from "./VideoJs";
+import { useMemo } from "react";
+import type { VideoResourceSchema } from "$server/models/videoResource";
+import VideoPlayer from "./VideoPlayer";
 import getVideoInstance from "$utils/video/getVideoInstance";
 
 type Props = Pick<VideoResourceSchema, "providerUrl" | "url" | "tracks"> & {
@@ -15,10 +14,8 @@ export default function Video({
   providerUrl,
   url,
   tracks: resourceTracks,
-  className,
-  onEnded,
-  onDurationChange,
   autoplay = false,
+  ...other
 }: Props) {
   const videoInstance = useMemo(() => {
     return getVideoInstance(
@@ -26,25 +23,6 @@ export default function Video({
       autoplay
     );
   }, [providerUrl, url, autoplay, resourceTracks]);
-  useEffect(() => {
-    const { player } = videoInstance;
-    const handleEnded = () => onEnded?.();
-    const handleDurationChange = ({ duration }: { duration: number }) => {
-      onDurationChange?.(duration);
-    };
-    player.on("ended", handleEnded);
-    player.on("durationchange", handleDurationChange);
-    return () => {
-      player.off("ended", handleEnded);
-      player.off("durationchange", handleDurationChange);
-    };
-  }, [videoInstance, onEnded, onDurationChange]);
 
-  return (
-    <div className={className}>
-      {videoInstance.type === "vimeo" && <Vimeo {...videoInstance} />}
-      {videoInstance.type === "youtube" && <VideoJs {...videoInstance} />}
-      {videoInstance.type === "wowza" && <VideoJs {...videoInstance} />}
-    </div>
-  );
+  return <VideoPlayer videoInstance={videoInstance} {...other} />;
 }
