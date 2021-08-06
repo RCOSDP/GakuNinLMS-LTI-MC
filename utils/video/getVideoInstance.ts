@@ -5,7 +5,7 @@ import getVideoJsPlayer from "./getVideoJsPlayer";
 import getVimeoPlayer from "./getVimeoPlayer";
 
 /**
- *動画プレイヤーのインスタンスを生成
+ * 動画プレイヤーのインスタンスを生成
  * @param resource VideoResourceSchema
  * @param autoplay インスタンス生成時に自動再生するか否か
  * @returns プレイヤーのHTML要素、インスタンス、video.jsであれば字幕トラック
