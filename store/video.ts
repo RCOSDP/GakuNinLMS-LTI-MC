@@ -8,7 +8,7 @@ import { isVideoResource } from "$utils/videoResource";
 import getVideoInstance from "$utils/video/getVideoInstance";
 
 const videoAtom = atomWithReset<{
-  video: Map<ResourceSchema["url"], VideoInstance | undefined>;
+  video: Map<ResourceSchema["url"], VideoInstance>;
   key: ResourceSchema["url"];
 }>({
   video: new Map(),
@@ -23,10 +23,11 @@ const updateVideoAtom = atom(
       topics.map(({ resource }) => resource)
     );
     for (const resource of resources) {
-      video.set(
-        resource.url,
-        isVideoResource(resource) ? getVideoInstance(resource) : undefined
-      );
+      if (!isVideoResource(resource)) {
+        video.delete(resource.url);
+        continue;
+      }
+      video.set(resource.url, getVideoInstance(resource));
     }
     set(videoAtom, { video, key });
   }
