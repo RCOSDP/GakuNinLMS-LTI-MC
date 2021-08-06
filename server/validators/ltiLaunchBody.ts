@@ -71,6 +71,10 @@ export class LtiLaunchBody {
 
   @IsOptional()
   @IsString()
+  lis_person_contact_email_primary?: string;
+
+  @IsOptional()
+  @IsString()
   launch_presentation_return_url?: string;
 }
 
@@ -89,7 +93,11 @@ export function toSessionSchema(
   return {
     oauthClient: { id: body.oauth_consumer_key, nonce: body.oauth_nonce },
     ltiVersion: "1.0.0",
-    ltiUser: { id: body.user_id, name: body.lis_person_name_full },
+    ltiUser: {
+      id: body.user_id,
+      name: body.lis_person_name_full,
+      email: body.lis_person_contact_email_primary,
+    },
     ltiRoles: body.roles.split(","),
     ltiResourceLinkRequest: {
       id: body.resource_link_id,

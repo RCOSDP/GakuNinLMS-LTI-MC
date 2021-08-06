@@ -1,6 +1,6 @@
 import { FastifyRequest } from "fastify";
 import { FRONTEND_ORIGIN, FRONTEND_PATH } from "$server/utils/env";
-import { upsertUser } from "$server/utils/user";
+import { upsertUser, findUser } from "$server/utils/user";
 import {
   findLtiResourceLink,
   upsertLtiResourceLink,
@@ -24,10 +24,14 @@ async function init({ session }: FastifyRequest) {
     });
   }
 
+  const existUser = await findUser(session.oauthClient.id, session.ltiUser.id);
+
   const user = await upsertUser({
     ltiConsumerId: session.oauthClient.id,
     ltiUserId: session.ltiUser.id,
     name: session.ltiUser.name ?? "",
+    email: session.ltiUser.email ?? "",
+    settings: existUser?.settings ?? {},
   });
 
   Object.assign(session, { ltiResourceLink, user });

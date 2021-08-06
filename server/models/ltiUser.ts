@@ -7,6 +7,7 @@ export const LtiUserSchema = {
   properties: {
     id: { title: "End-User ID", type: "string" },
     name: { title: "End-User's full name in displayable", type: "string" },
+    email: { title: "End-User's email in displayable", type: "string" },
   },
   additionalProperties: false,
 } as const;
