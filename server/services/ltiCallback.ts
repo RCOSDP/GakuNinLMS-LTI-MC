@@ -50,6 +50,7 @@ export async function post(req: FastifyRequest<{ Body: Props }>) {
       ltiUser: {
         id: claims.sub,
         name: claims.name,
+        email: claims.email,
       },
       ltiRoles: ltiClaims["https://purl.imsglobal.org/spec/lti/claim/roles"],
       ltiResourceLinkRequest:
