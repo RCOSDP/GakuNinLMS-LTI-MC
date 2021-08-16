@@ -4,10 +4,12 @@ import { Query } from "./query";
 function getTextContent(book: BookSchema): string {
   let str = book.name;
 
+  if (book.author.name) str += ` ${book.author.name}`;
   for (const section of book.sections) {
     if (section.name) str += ` ${section.name}`;
     for (const topic of section.topics) {
       if (topic.name) str += ` ${topic.name}`;
+      if (topic.creator.name) str += ` ${topic.creator.name}`;
     }
   }
 
