@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import type { VideoInstance } from "$types/videoInstance";
 import Vimeo from "./Vimeo";
 import VideoJs from "./VideoJs";
+import videoJsDurationChangeShims from "$utils/videoJsDurationChangeShims";
 
 type Props = {
   videoInstance: VideoInstance;
@@ -22,8 +23,12 @@ export default function VideoPlayer({
     const handleDurationChange = ({ duration }: { duration: number }) => {
       onDurationChange?.(duration);
     };
+
     player.on("ended", handleEnded);
     player.on("durationchange", handleDurationChange);
+    if (videoInstance.type != "vimeo") {
+      videoJsDurationChangeShims(videoInstance.player, handleDurationChange);
+    }
     return () => {
       player.off("ended", handleEnded);
       player.off("durationchange", handleDurationChange);
