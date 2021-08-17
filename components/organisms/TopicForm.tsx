@@ -9,7 +9,7 @@ import Link from "@material-ui/core/Link";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Autocomplete from "@material-ui/lab/Autocomplete";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useDebouncedCallback } from "use-debounce";
 import clsx from "clsx";
 import TextField from "$atoms/TextField";
@@ -105,7 +105,7 @@ export default function TopicForm(props: Props) {
     language: topic?.language ?? Object.getOwnPropertyNames(languages)[0],
     timeRequired: topic?.timeRequired,
   };
-  const { handleSubmit, register, control, getValues, setValue } = useForm<
+  const { handleSubmit, register, getValues, setValue } = useForm<
     Omit<TopicProps, "resource">
   >({
     defaultValues,
@@ -126,16 +126,15 @@ export default function TopicForm(props: Props) {
         className={clsx(classes.margin, className)}
         component="form"
         onSubmit={handleSubmit((values) => {
+          const resource = videoResource ?? { url: "" };
           onSubmit({
-            ...defaultValues,
             ...values,
-            resource: videoResource ?? { url: "" },
+            resource,
           });
         })}
       >
         <TextField
-          name="name"
-          inputRef={register}
+          inputProps={register("name")}
           label={
             <>
               タイトル
@@ -148,7 +147,6 @@ export default function TopicForm(props: Props) {
               </Typography>
             </>
           }
-          defaultValue={defaultValues.name}
           required
           fullWidth
         />
@@ -159,7 +157,7 @@ export default function TopicForm(props: Props) {
           <Checkbox
             id="shared"
             name="shared"
-            inputRef={register}
+            onChange={(_, checked) => setValue("shared", checked)}
             defaultChecked={defaultValues.shared}
             color="primary"
           />
@@ -199,29 +197,23 @@ export default function TopicForm(props: Props) {
         {videoResource && (
           <Video {...videoResource} onDurationChange={handleDurationChange} />
         )}
-        <Controller
-          name="language"
-          control={control}
-          defaultValue={defaultValues.language}
-          render={(props) => (
-            <TextField label="教材の主要な言語" select inputProps={props}>
-              {Object.entries(languages).map(([value, label]) => (
-                <MenuItem key={value} value={value}>
-                  {label}
-                </MenuItem>
-              ))}
-            </TextField>
-          )}
-        />
         <TextField
-          name="timeRequired"
+          label="教材の主要な言語"
+          select
+          defaultValue={defaultValues.language}
+          inputProps={register("language")}
+        >
+          {Object.entries(languages).map(([value, label]) => (
+            <MenuItem key={value} value={value}>
+              {label}
+            </MenuItem>
+          ))}
+        </TextField>
+        <TextField
           label="学習時間 (秒)"
           type="number"
           inputProps={{
-            ref: register({
-              setValueAs: (value) => (value === "" ? null : +value),
-              min: 0,
-            }),
+            ...register("timeRequired", { valueAsNumber: true }),
             min: 0,
           }}
         />
@@ -266,8 +258,7 @@ export default function TopicForm(props: Props) {
           }
           fullWidth
           multiline
-          name="description"
-          inputRef={register}
+          inputProps={register("description")}
         />
         <Divider className={classes.divider} />
         <Button variant="contained" color="primary" type="submit">
