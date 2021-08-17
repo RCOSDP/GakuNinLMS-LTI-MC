@@ -214,7 +214,8 @@ export default function TopicForm(props: Props) {
           type="number"
           inputProps={{
             ...register("timeRequired", { valueAsNumber: true }),
-            min: 0,
+            required: true,
+            min: 1,
           }}
         />
         <div>
