@@ -1,82 +1,63 @@
 import { useEffect, useRef } from "react";
-import videojs, { VideoJsPlayer, VideoJsPlayerOptions } from "video.js";
-
-// error  Could not find a declaration file for module '@meikidd/videojs-hlsjs-plugin/lib/videojs-hlsjs-plugin.js'.
-// './node_modules/@meikidd/videojs-hlsjs-plugin/lib/videojs-hlsjs-plugin.js' implicitly has an 'any' type.
-// eslint-disable-next-line tsc/config
-import hlsjsPlugin from "@meikidd/videojs-hlsjs-plugin/lib/videojs-hlsjs-plugin.js";
-
-import ja from "video.js/dist/lang/ja.json";
-import "videojs-youtube";
-import "videojs-seek-buttons";
-import clsx from "clsx";
-import { makeStyles } from "@material-ui/core/styles";
-import { usePlayerTrackingAtom } from "$store/playerTracker";
+import { createStyles, makeStyles } from "@material-ui/core/styles";
 import volumePersister from "$utils/volumePersister";
+import type { VideoJsInstance } from "$types/videoInstance";
 
-type VideoJsProps = {
-  className?: string;
-  options: VideoJsPlayerOptions;
-  tracks?: videojs.TextTrackOptions[];
-};
+type Props = Omit<VideoJsInstance, "type">;
 
-const useStyles = makeStyles({
-  vjsLargeText: {
-    "& .vjs-modal-dialog-content": {
-      fontSize: "1.5rem !important",
+const useStyles = makeStyles(
+  createStyles({
+    // NOTE: Video.jsのエラーメッセージを読みやすくする目的
+    vjsLargeText: {
+      "& .vjs-modal-dialog-content": {
+        fontSize: "1.5rem !important",
+      },
     },
-  },
-});
+    // NOTE: iframe 内で再生ボタンが機能しない問題への対処と見た目の調整を図る目的
+    //       See also https://github.com/npocccties/chibichilo/issues/373
+    vjsDisabledPlayButton: {
+      "&.vjs-youtube .vjs-poster": {
+        display: "none !important",
+      },
+      "&.vjs-youtube .vjs-loading-spinner": {
+        display: "none !important",
+      },
+      "&.vjs-youtube .vjs-big-play-button": {
+        display: "none !important",
+      },
+    },
+  })
+);
 
-const defaultOptions: VideoJsPlayerOptions = {
-  controls: true,
-  fluid: true,
-  controlBar: {
-    // FIXME: https://github.com/videojs/videojs-youtube/issues/562
-    pictureInPictureToggle: false,
-  },
-  playbackRates: [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2],
-  language: "ja",
-  languages: { ja },
-};
-
-export function VideoJs({ className, options, tracks }: VideoJsProps) {
+function VideoJs({ element, player, tracks }: Props) {
   const ref = useRef(document.createElement("div"));
-  const tracking = usePlayerTrackingAtom();
   const classes = useStyles();
   useEffect(() => {
-    hlsjsPlugin.registerConfigPlugin(videojs);
-    hlsjsPlugin.registerSourceHandler(videojs);
-
     const { current } = ref;
-    const element = document.createElement("video-js");
-    element.classList.add("vjs-big-play-centered");
+    element.classList.add(
+      "vjs-big-play-centered",
+      classes.vjsLargeText,
+      classes.vjsDisabledPlayButton
+    );
     current.appendChild(element);
-    const player = videojs(element, { ...defaultOptions, ...options });
-    // @ts-expect-error: @types/video.js@^7.3.11 Unsupported
-    player.seekButtons({
-      forward: 15,
-      back: 15,
-    });
     player.ready(() => {
-      tracking({ player });
       volumePersister(player);
     });
     return () => {
       // TODO: played() に失敗するので dispose() せず一時停止して保持
       //       メモリリークにつながるので避けたほうが望ましい
       player.pause();
-      current.textContent = "";
+      element.classList.remove(
+        "vjs-big-play-centered",
+        classes.vjsLargeText,
+        classes.vjsDisabledPlayButton
+      );
+      current.removeChild(element);
     };
-  }, [options, tracking]);
+  }, [element, player, classes]);
   const tracksRef = useRef<HTMLTrackElement[]>([]);
   useEffect(() => {
     if (!tracks || tracks.length === 0) return;
-    const player: VideoJsPlayer | undefined = ref.current.querySelector(
-      "video-js"
-      // @ts-expect-error: @types/video.js@^7.3.11 Unsupported
-    )?.player;
-    if (!player) return;
     player.ready(() => {
       tracksRef.current.forEach((track) => {
         player.removeRemoteTextTrack(track);
@@ -85,14 +66,8 @@ export function VideoJs({ className, options, tracks }: VideoJsProps) {
         ?.map((track) => track && player.addRemoteTextTrack(track, false))
         .filter(Boolean) ?? []) as HTMLTrackElement[];
     });
-  }, [tracks]);
-  return (
-    <div
-      className={clsx(
-        className,
-        classes.vjsLargeText // NOTE: Video.jsのエラーメッセージを読みやすくする目的
-      )}
-      ref={ref}
-    />
-  );
+  }, [player, tracks]);
+  return <div ref={ref} />;
 }
+
+export default VideoJs;

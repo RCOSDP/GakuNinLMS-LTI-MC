@@ -130,21 +130,6 @@ export class PlayerTracker extends (EventEmitter as {
     const { seekForward, seekBack } = player.controlBar;
     seekForward.on("click", () => this.emit("forward", this.stats));
     seekBack.on("click", () => this.emit("back", this.stats));
-
-    // NOTE: YouTubeの場合、playイベント発火より前だと`player.duration()`に失敗
-    const handlePlay = () => {
-      player.off("play", handlePlay);
-      // NOTE: wowza(hlsjs)の場合、play直後は再生時間が取れないため、ほんの少し待機する
-      const intervalID = setInterval(() => {
-        const duration = player.duration();
-        this.emit("durationchange", { ...this.stats, duration });
-        if (duration) clearInterval(intervalID);
-      }, 100);
-      setTimeout(() => {
-        clearInterval(intervalID);
-      }, 2000);
-    };
-    player.on("play", handlePlay);
   }
 
   private intoVimeo(player: VimeoPlayer) {

@@ -9,7 +9,7 @@ export { parse };
 export function isVideoResource(
   resource: ResourceSchema | VideoResource | undefined
 ): resource is VideoResource {
-  return resource != null && "tracks" in resource;
+  return resource != null && "providerUrl" in resource;
 }
 
 export function getValidVideoResource(

@@ -1,13 +1,17 @@
 import { useCallback, useEffect } from "react";
 import { useRouter } from "next/router";
 import { BookSchema } from "$server/models/book";
-import { usePlayerTrackerAtom } from "$store/playerTracker";
+import {
+  usePlayerTrackerAtom,
+  usePlayerTrackingAtom,
+} from "$store/playerTracker";
 import Book from "$templates/Book";
 import Placeholder from "$templates/Placeholder";
 import BookNotFoundProblem from "$organisms/BookNotFoundProblem";
 import { useSessionAtom } from "$store/session";
 import { useBook } from "$utils/book";
 import { useBookAtom } from "$store/book";
+import { useVideoAtom } from "$store/video";
 import { TopicSchema } from "$server/models/topic";
 import { pagesPath } from "$utils/$path";
 import { useActivityTracking } from "$utils/activity";
@@ -34,6 +38,30 @@ function Show(query: Query) {
     if (book) updateBook(book);
   }, [book, updateBook]);
   useActivityTracking();
+  const { video, key, updateVideo, updateVideoKey } = useVideoAtom();
+  useEffect(() => {
+    const topic = itemExists(itemIndex);
+    if (!topic) return;
+    updateVideoKey(topic.resource.url);
+  }, [itemExists, itemIndex, updateVideoKey]);
+  const tracking = usePlayerTrackingAtom();
+  useEffect(() => {
+    if (!book) return;
+    updateVideo(book.sections);
+    const videoInstance = video.get(key);
+    if (!videoInstance) return;
+    switch (videoInstance.type) {
+      case "youtube":
+      case "wowza":
+        videoInstance.player.ready(() => {
+          tracking({ player: videoInstance.player });
+        });
+        break;
+      case "vimeo":
+        tracking({ player: videoInstance.player, url: key });
+        break;
+    }
+  }, [book, video, key, updateVideo, tracking]);
   const playerTracker = usePlayerTrackerAtom();
   useEffect(() => {
     if (playerTracker) logger(playerTracker);

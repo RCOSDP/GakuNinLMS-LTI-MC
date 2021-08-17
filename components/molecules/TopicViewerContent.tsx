@@ -7,11 +7,14 @@ import Typography from "@material-ui/core/Typography";
 import Chip from "@material-ui/core/Chip";
 import { useTheme, makeStyles } from "@material-ui/core/styles";
 import Video from "$organisms/Video";
+import VideoPlayer from "$organisms/Video/VideoPlayer";
 import DescriptionList from "$atoms/DescriptionList";
 import Markdown from "$atoms/Markdown";
 import useSticky from "$utils/useSticky";
+import type { VideoInstance } from "$types/videoInstance";
 import getLocaleDateString from "$utils/getLocaleDateString";
 import { NEXT_PUBLIC_VIDEO_MAX_HEIGHT } from "$utils/env";
+import { isVideoResource } from "$utils/videoResource";
 import { gray } from "$theme/colors";
 
 function formatInterval(start: Date | number, end: Date | number) {
@@ -52,11 +55,16 @@ const useStyles = makeStyles((theme) => ({
 type Props = {
   topic: TopicSchema;
   onEnded?: () => void;
+  videoInstance?: VideoInstance;
   offset?: number;
 };
 
-export default function TopicViewerContent(props: Props) {
-  const { topic, onEnded, offset } = props;
+export default function TopicViewerContent({
+  topic,
+  onEnded,
+  videoInstance,
+  offset,
+}: Props) {
   const classes = useStyles();
   const theme = useTheme();
   const sticky = useSticky({
@@ -64,7 +72,14 @@ export default function TopicViewerContent(props: Props) {
   });
   return (
     <>
-      {"providerUrl" in topic.resource && (
+      {videoInstance && (
+        <VideoPlayer
+          className={clsx(classes.video, sticky)}
+          videoInstance={videoInstance}
+          onEnded={onEnded}
+        />
+      )}
+      {!videoInstance && isVideoResource(topic.resource) && (
         <Video
           className={clsx(classes.video, sticky)}
           {...topic.resource}
