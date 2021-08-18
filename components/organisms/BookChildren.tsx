@@ -11,6 +11,7 @@ import { TopicSchema } from "$server/models/topic";
 import { SectionSchema } from "$server/models/book/section";
 import { primary, gray } from "$theme/colors";
 import { isNamedSection, getOutlineNumber } from "$utils/outline";
+import formatInterval from "$utils/formatInterval";
 
 function SectionItem({
   section,
@@ -58,8 +59,17 @@ const useStyles = makeStyles((theme: Theme) =>
       whiteSpace: "nowrap",
       textOverflow: "ellipsis",
     },
+    columns: {
+      display: "flex",
+      flexDirection: "column",
+    },
     topic: {
       fontSize: "0.875rem",
+    },
+    timeRequired: {
+      color: gray[700],
+      fontSize: "0.625rem",
+      fontWeight: "bold",
     },
     indent: {
       "& > :not(:first-child) $outlineNumber": {
@@ -119,11 +129,13 @@ export default function BookChildren({
               <span className={clsx(classes.outline, classes.outlineNumber)}>
                 {getOutlineNumber(section, sectionItemIndex, topicItemIndex)}
               </span>
-              <ListItemText
-                className={clsx(classes.topic, classes.ellipsis)}
-                disableTypography
-              >
-                {topic.name}
+              <ListItemText className={classes.columns} disableTypography>
+                <span className={clsx(classes.topic, classes.ellipsis)}>
+                  {topic.name}
+                </span>
+                <span className={classes.timeRequired}>
+                  {formatInterval(0, topic.timeRequired * 1000) || "10秒未満"}
+                </span>
               </ListItemText>
               {isTopicEditable(topic) && onItemEditClick && (
                 <ListItemSecondaryAction>
