@@ -1,8 +1,5 @@
 import clsx from "clsx";
 import { TopicSchema } from "$server/models/topic";
-import formatDuration from "date-fns/formatDuration";
-import intervalToDuration from "date-fns/intervalToDuration";
-import ja from "date-fns/locale/ja";
 import Typography from "@material-ui/core/Typography";
 import Chip from "@material-ui/core/Chip";
 import { useTheme, makeStyles } from "@material-ui/core/styles";
@@ -13,14 +10,10 @@ import Markdown from "$atoms/Markdown";
 import useSticky from "$utils/useSticky";
 import type { VideoInstance } from "$types/videoInstance";
 import getLocaleDateString from "$utils/getLocaleDateString";
+import formatInterval from "$utils/formatInterval";
 import { NEXT_PUBLIC_VIDEO_MAX_HEIGHT } from "$utils/env";
 import { isVideoResource } from "$utils/videoResource";
 import { gray } from "$theme/colors";
-
-function formatInterval(start: Date | number, end: Date | number) {
-  const duration = intervalToDuration({ start, end });
-  return formatDuration(duration, { locale: ja });
-}
 
 const useStyles = makeStyles((theme) => ({
   video: {
