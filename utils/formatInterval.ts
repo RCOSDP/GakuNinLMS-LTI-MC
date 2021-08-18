@@ -3,10 +3,10 @@ import intervalToDuration from "date-fns/intervalToDuration";
 import ja from "date-fns/locale/ja";
 
 /**
- * 相対時間を日本語表記で表示する
+ * 時間間隔を日本語表記で表示する
  * @param start 開始日時
  * @param end 終了日時
- * @returns 日本語表記の相対時間
+ * @returns 日本語表記の時間間隔
  */
 function formatInterval(start: Date | number, end: Date | number) {
   const duration = intervalToDuration({ start, end });
