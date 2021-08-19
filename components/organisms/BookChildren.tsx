@@ -4,6 +4,7 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
+import Typography from "@material-ui/core/Typography";
 import { makeStyles, createStyles } from "@material-ui/styles";
 import type { Theme } from "@material-ui/core/styles";
 import EditButton from "$atoms/EditButton";
@@ -11,6 +12,7 @@ import { TopicSchema } from "$server/models/topic";
 import { SectionSchema } from "$server/models/book/section";
 import { primary, gray } from "$theme/colors";
 import { isNamedSection, getOutlineNumber } from "$utils/outline";
+import formatInterval from "$utils/formatInterval";
 
 function SectionItem({
   section,
@@ -57,6 +59,10 @@ const useStyles = makeStyles((theme: Theme) =>
       overflow: "hidden",
       whiteSpace: "nowrap",
       textOverflow: "ellipsis",
+    },
+    columns: {
+      display: "flex",
+      flexDirection: "column",
     },
     topic: {
       fontSize: "0.875rem",
@@ -119,11 +125,13 @@ export default function BookChildren({
               <span className={clsx(classes.outline, classes.outlineNumber)}>
                 {getOutlineNumber(section, sectionItemIndex, topicItemIndex)}
               </span>
-              <ListItemText
-                className={clsx(classes.topic, classes.ellipsis)}
-                disableTypography
-              >
-                {topic.name}
+              <ListItemText className={classes.columns} disableTypography>
+                <span className={clsx(classes.topic, classes.ellipsis)}>
+                  {topic.name}
+                </span>
+                <Typography component="span" variant="caption">
+                  {formatInterval(0, topic.timeRequired * 1000)}
+                </Typography>
               </ListItemText>
               {isTopicEditable(topic) && onItemEditClick && (
                 <ListItemSecondaryAction>
