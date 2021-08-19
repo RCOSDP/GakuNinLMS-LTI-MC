@@ -3,7 +3,7 @@ import Card from "@material-ui/core/Card";
 import Button from "@material-ui/core/Button";
 import MenuItem from "@material-ui/core/MenuItem";
 import { makeStyles } from "@material-ui/core/styles";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import clsx from "clsx";
 import TextField from "$atoms/TextField";
 import useCardStyles from "styles/card";
@@ -41,7 +41,7 @@ export default function BooksImportForm(props: Props) {
     provider: wowzaUrl,
     wowzaBaseUrl: `${NEXT_PUBLIC_API_BASE_PATH}/api/v2/wowza`,
   };
-  const { handleSubmit, register, control } = useForm<BooksImportParams>({
+  const { handleSubmit, register } = useForm<BooksImportParams>({
     defaultValues,
   });
 
@@ -57,7 +57,6 @@ export default function BooksImportForm(props: Props) {
             "load",
             function () {
               onSubmit({
-                ...defaultValues,
                 ...values,
                 file: Buffer.from(reader.result as ArrayBuffer).toString(
                   "base64"
@@ -66,32 +65,25 @@ export default function BooksImportForm(props: Props) {
             },
             false
           );
-          // eslint-disable-next-line tsc/config
-          reader.readAsArrayBuffer(values.file[0] as File);
+          reader.readAsArrayBuffer((values.file[0] as unknown) as File);
         } else {
-          onSubmit({ ...defaultValues, ...values, file: undefined });
+          onSubmit({ ...values, file: undefined });
         }
       })}
     >
-      <TextField label="file" name="file" type="file" inputRef={register} />
-      <Controller
-        name="provider"
-        control={control}
+      <TextField label="file" type="file" inputProps={register("file")} />
+      <TextField
+        label="動画ファイルをアップロードするサービス"
+        select
         defaultValue={defaultValues.provider}
-        render={(props) => (
-          <TextField
-            label="動画ファイルをアップロードするサービス"
-            select
-            inputProps={props}
-          >
-            {Object.entries(providers).map(([label, value]) => (
-              <MenuItem key={value} value={value}>
-                {label}
-              </MenuItem>
-            ))}
-          </TextField>
-        )}
-      />
+        inputProps={register("provider")}
+      >
+        {Object.entries(providers).map(([label, value]) => (
+          <MenuItem key={value} value={value}>
+            {label}
+          </MenuItem>
+        ))}
+      </TextField>
       <Button variant="contained" color="primary" type="submit">
         インポート
       </Button>
