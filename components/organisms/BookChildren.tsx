@@ -4,6 +4,7 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
+import Typography from "@material-ui/core/Typography";
 import { makeStyles, createStyles } from "@material-ui/styles";
 import type { Theme } from "@material-ui/core/styles";
 import EditButton from "$atoms/EditButton";
@@ -65,11 +66,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     topic: {
       fontSize: "0.875rem",
-    },
-    timeRequired: {
-      color: gray[700],
-      fontSize: "0.625rem",
-      fontWeight: "bold",
     },
     indent: {
       "& > :not(:first-child) $outlineNumber": {
@@ -133,9 +129,9 @@ export default function BookChildren({
                 <span className={clsx(classes.topic, classes.ellipsis)}>
                   {topic.name}
                 </span>
-                <span className={classes.timeRequired}>
+                <Typography component="span" variant="caption">
                   {formatInterval(0, topic.timeRequired * 1000) || "10秒未満"}
-                </span>
+                </Typography>
               </ListItemText>
               {isTopicEditable(topic) && onItemEditClick && (
                 <ListItemSecondaryAction>
