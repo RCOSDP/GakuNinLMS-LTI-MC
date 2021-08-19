@@ -10,7 +10,7 @@ import ja from "date-fns/locale/ja";
  */
 function formatInterval(start: Date | number, end: Date | number) {
   const duration = intervalToDuration({ start, end });
-  return formatDuration(duration, { locale: ja });
+  return formatDuration(duration, { locale: ja }) || "1秒未満";
 }
 
 export default formatInterval;

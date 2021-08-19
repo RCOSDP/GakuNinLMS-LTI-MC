@@ -130,7 +130,7 @@ export default function BookChildren({
                   {topic.name}
                 </span>
                 <Typography component="span" variant="caption">
-                  {formatInterval(0, topic.timeRequired * 1000) || "10秒未満"}
+                  {formatInterval(0, topic.timeRequired * 1000)}
                 </Typography>
               </ListItemText>
               {isTopicEditable(topic) && onItemEditClick && (

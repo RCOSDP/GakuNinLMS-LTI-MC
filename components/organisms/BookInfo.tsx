@@ -23,8 +23,7 @@ export default function BookInfo({ className, id, book }: Props) {
         value={[
           {
             key: "学習時間",
-            value:
-              formatInterval(0, (book.timeRequired ?? 0) * 1000) || "10秒未満",
+            value: formatInterval(0, (book.timeRequired ?? 0) * 1000),
           },
           {
             key: "教材の主要な言語",
