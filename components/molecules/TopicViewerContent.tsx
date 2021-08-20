@@ -85,9 +85,7 @@ export default function TopicViewerContent({
           {topic.name}
         </Typography>
         <Chip
-          label={`学習時間 ${
-            formatInterval(0, topic.timeRequired * 1000) || "10秒未満"
-          }`}
+          label={`学習時間 ${formatInterval(0, topic.timeRequired * 1000)}`}
         />
       </header>
       <DescriptionList
