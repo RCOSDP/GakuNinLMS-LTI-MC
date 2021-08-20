@@ -38,30 +38,22 @@ function Show(query: Query) {
     if (book) updateBook(book);
   }, [book, updateBook]);
   useActivityTracking();
-  const { video, key, updateVideo, updateVideoKey } = useVideoAtom();
-  useEffect(() => {
-    const topic = itemExists(itemIndex);
-    if (!topic) return;
-    updateVideoKey(topic.resource.url);
-  }, [itemExists, itemIndex, updateVideoKey]);
+  const { video, updateVideo } = useVideoAtom();
   const tracking = usePlayerTrackingAtom();
   useEffect(() => {
     if (!book) return;
     updateVideo(book.sections);
-    const videoInstance = video.get(key);
+    const url = itemExists(itemIndex)?.resource.url;
+    const videoInstance = video.get(url ?? "");
     if (!videoInstance) return;
-    switch (videoInstance.type) {
-      case "youtube":
-      case "wowza":
-        videoInstance.player.ready(() => {
-          tracking({ player: videoInstance.player });
-        });
-        break;
-      case "vimeo":
-        tracking({ player: videoInstance.player, url: key });
-        break;
+    if (videoInstance.type === "vimeo") {
+      tracking({ player: videoInstance.player, url });
+    } else {
+      videoInstance.player.ready(() => {
+        tracking({ player: videoInstance.player });
+      });
     }
-  }, [book, video, key, updateVideo, tracking]);
+  }, [book, video, updateVideo, itemExists, itemIndex, tracking]);
   const playerTracker = usePlayerTrackerAtom();
   useEffect(() => {
     if (playerTracker) logger(playerTracker);

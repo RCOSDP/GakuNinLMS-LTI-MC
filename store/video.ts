@@ -9,16 +9,14 @@ import getVideoInstance from "$utils/video/getVideoInstance";
 
 const videoAtom = atomWithReset<{
   video: Map<ResourceSchema["url"], VideoInstance>;
-  key: ResourceSchema["url"];
 }>({
   video: new Map(),
-  key: "",
 });
 
 const updateVideoAtom = atom(
   null,
   (get, set, sections: Pick<SectionSchema, "topics">[]) => {
-    const { video, key } = get(videoAtom);
+    const { video } = get(videoAtom);
     const resources = sections.flatMap(({ topics }) =>
       topics.map(({ resource }) => resource)
     );
@@ -30,26 +28,18 @@ const updateVideoAtom = atom(
       }
       video.set(resource.url, getVideoInstance(resource, autoplay));
     }
-    set(videoAtom, { video, key });
-  }
-);
-
-const updateVideoKeyAtom = atom(
-  null,
-  (get, set, key: ResourceSchema["url"]) => {
-    set(videoAtom, { ...get(videoAtom), key });
+    set(videoAtom, { video });
   }
 );
 
 export function useVideoAtom() {
   const [state, reset] = useAtom(videoAtom);
   const updateVideo = useUpdateAtom(updateVideoAtom);
-  const updateVideoKey = useUpdateAtom(updateVideoKeyAtom);
   useEffect(
     () => () => {
       reset(RESET);
     },
     [reset]
   );
-  return { ...state, updateVideo, updateVideoKey };
+  return { ...state, updateVideo };
 }
