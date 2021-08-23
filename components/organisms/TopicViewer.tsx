@@ -38,10 +38,7 @@ export default function TopicViewer({
     updateVideo(book.sections);
   }, [book, updateVideo]);
   useEffect(() => {
-    if (
-      prevItemIndex &&
-      (prevItemIndex[0] != itemIndex[0] || prevItemIndex[1] != itemIndex[1])
-    ) {
+    if (prevItemIndex?.some((v, i) => v !== itemIndex[i])) {
       video.get(itemExists(prevItemIndex)?.resource.url ?? "")?.player.pause();
     }
     const videoInstance = video.get(itemExists(itemIndex)?.resource.url ?? "");
