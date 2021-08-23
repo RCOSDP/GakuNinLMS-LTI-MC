@@ -47,23 +47,18 @@ function Show(query: Query) {
   }, [book, updateVideo]);
   const prevItemIndex = usePrevious(itemIndex);
   useEffect(() => {
+    prevItemIndex &&
+      video.get(itemExists(prevItemIndex)?.resource.url ?? "")?.player.pause();
     const videoInstance = video.get(itemExists(itemIndex)?.resource.url ?? "");
     if (!videoInstance) return;
     if (videoInstance.type === "vimeo") {
       tracking({ player: videoInstance.player, url: videoInstance.url });
+      videoInstance.player.play();
     } else {
       videoInstance.player.ready(() => {
         tracking({ player: videoInstance.player });
-      });
-    }
-    prevItemIndex &&
-      video.get(itemExists(prevItemIndex)?.resource.url ?? "")?.player.pause();
-    if (videoInstance.type != "vimeo") {
-      videoInstance.player.ready(() => {
         videoInstance.player.play();
       });
-    } else {
-      videoInstance.player.play();
     }
   }, [video, itemExists, itemIndex, prevItemIndex, tracking]);
   const playerTracker = usePlayerTrackerAtom();
