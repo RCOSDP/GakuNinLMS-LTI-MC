@@ -38,8 +38,12 @@ export default function TopicViewer({
     updateVideo(book.sections);
   }, [book, updateVideo]);
   useEffect(() => {
-    prevItemIndex &&
+    if (
+      prevItemIndex &&
+      (prevItemIndex[0] != itemIndex[0] || prevItemIndex[1] != itemIndex[1])
+    ) {
       video.get(itemExists(prevItemIndex)?.resource.url ?? "")?.player.pause();
+    }
     const videoInstance = video.get(itemExists(itemIndex)?.resource.url ?? "");
     if (!videoInstance) return;
     if (videoInstance.type == "vimeo") {
