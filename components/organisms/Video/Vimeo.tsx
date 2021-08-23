@@ -14,7 +14,7 @@ const useStyles = makeStyles(
   })
 );
 
-type Props = Omit<VimeoInstance, "type">;
+type Props = Omit<VimeoInstance, "type" | "url">;
 
 function Vimeo({ element, player }: Props) {
   const ref = useRef(document.createElement("div"));

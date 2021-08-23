@@ -43,11 +43,10 @@ function Show(query: Query) {
   useEffect(() => {
     if (!book) return;
     updateVideo(book.sections);
-    const url = itemExists(itemIndex)?.resource.url;
-    const videoInstance = video.get(url ?? "");
+    const videoInstance = video.get(itemExists(itemIndex)?.resource.url ?? "");
     if (!videoInstance) return;
     if (videoInstance.type === "vimeo") {
-      tracking({ player: videoInstance.player, url });
+      tracking({ player: videoInstance.player, url: videoInstance.url });
     } else {
       videoInstance.player.ready(() => {
         tracking({ player: videoInstance.player });

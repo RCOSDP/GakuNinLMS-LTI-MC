@@ -18,6 +18,7 @@ function getVideoInstance(
     case "https://www.youtube.com/":
       return {
         type: "youtube",
+        url: resource.url,
         ...getVideoJsPlayer({
           techOrder: ["youtube"],
           sources: [
@@ -33,11 +34,13 @@ function getVideoInstance(
     case "https://vimeo.com/":
       return {
         type: "vimeo",
+        url: resource.url,
         ...getVimeoPlayer({ url: resource.url, autoplay }),
       };
     default:
       return {
         type: "wowza",
+        url: resource.url,
         ...getVideoJsPlayer({
           sources: [
             { type: "application/vnd.apple.mpegurl", src: resource.url },

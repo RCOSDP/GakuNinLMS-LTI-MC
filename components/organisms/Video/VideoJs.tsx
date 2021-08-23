@@ -3,7 +3,7 @@ import { createStyles, makeStyles } from "@material-ui/core/styles";
 import volumePersister from "$utils/volumePersister";
 import type { VideoJsInstance } from "$types/videoInstance";
 
-type Props = Omit<VideoJsInstance, "type">;
+type Props = Omit<VideoJsInstance, "type" | "url">;
 
 const useStyles = makeStyles(
   createStyles({
