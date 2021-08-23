@@ -7,8 +7,8 @@ import type {
 import type { Query as BookEditQuery } from "$pages/book/edit";
 import Placeholder from "$templates/Placeholder";
 import TopicEdit from "$templates/TopicEdit";
-import TopicNotFoundProblem from "$organisms/BookNotFoundProblem";
-import BookNotFoundProblem from "$organisms/TopicNotFoundProblem";
+import TopicNotFoundProblem from "$templates/BookNotFoundProblem";
+import BookNotFoundProblem from "$templates/TopicNotFoundProblem";
 import { useVideoTrackAtom } from "$store/videoTrack";
 import { destroyTopic, updateTopic, useTopic } from "$utils/topic";
 import { destroyVideoTrack, uploadVideoTrack } from "$utils/videoTrack";

@@ -7,7 +7,7 @@ import {
 } from "$store/playerTracker";
 import Book from "$templates/Book";
 import Placeholder from "$templates/Placeholder";
-import BookNotFoundProblem from "$organisms/BookNotFoundProblem";
+import BookNotFoundProblem from "$templates/BookNotFoundProblem";
 import { useSessionAtom } from "$store/session";
 import { useBook } from "$utils/book";
 import { useBookAtom } from "$store/book";
