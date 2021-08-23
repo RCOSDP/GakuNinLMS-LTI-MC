@@ -22,10 +22,12 @@ export default function Problem(props: Props) {
       className={classes.container}
       maxWidth="md"
     >
-      <Typography variant="h4" gutterBottom={true}>
-        {title}
+      <Typography variant="body1" component="section">
+        <Typography variant="h4" gutterBottom={true}>
+          {title}
+        </Typography>
+        {children}
       </Typography>
-      <Typography variant="body1">{children}</Typography>
     </Container>
   );
 }
