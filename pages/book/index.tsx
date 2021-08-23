@@ -1,6 +1,5 @@
 import { useCallback, useEffect } from "react";
 import { useRouter } from "next/router";
-import usePrevious from "@rooks/use-previous";
 import { BookSchema } from "$server/models/book";
 import {
   usePlayerTrackerAtom,
@@ -39,28 +38,19 @@ function Show(query: Query) {
     if (book) updateBook(book);
   }, [book, updateBook]);
   useActivityTracking();
-  const { video, updateVideo } = useVideoAtom();
+  const { video } = useVideoAtom();
   const tracking = usePlayerTrackingAtom();
   useEffect(() => {
-    if (!book) return;
-    updateVideo(book.sections);
-  }, [book, updateVideo]);
-  const prevItemIndex = usePrevious(itemIndex);
-  useEffect(() => {
-    prevItemIndex &&
-      video.get(itemExists(prevItemIndex)?.resource.url ?? "")?.player.pause();
     const videoInstance = video.get(itemExists(itemIndex)?.resource.url ?? "");
     if (!videoInstance) return;
     if (videoInstance.type === "vimeo") {
       tracking({ player: videoInstance.player, url: videoInstance.url });
-      videoInstance.player.play();
     } else {
       videoInstance.player.ready(() => {
         tracking({ player: videoInstance.player });
-        videoInstance.player.play();
       });
     }
-  }, [video, itemExists, itemIndex, prevItemIndex, tracking]);
+  }, [video, itemExists, itemIndex, tracking]);
   const playerTracker = usePlayerTrackerAtom();
   useEffect(() => {
     if (playerTracker) logger(playerTracker);
