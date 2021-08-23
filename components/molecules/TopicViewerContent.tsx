@@ -8,11 +8,11 @@ import VideoPlayer from "$organisms/Video/VideoPlayer";
 import DescriptionList from "$atoms/DescriptionList";
 import Markdown from "$atoms/Markdown";
 import useSticky from "$utils/useSticky";
-import type { VideoInstance } from "$types/videoInstance";
 import getLocaleDateString from "$utils/getLocaleDateString";
 import formatInterval from "$utils/formatInterval";
 import { NEXT_PUBLIC_VIDEO_MAX_HEIGHT } from "$utils/env";
 import { isVideoResource } from "$utils/videoResource";
+import { useVideoAtom } from "$store/video";
 import { gray } from "$theme/colors";
 
 const useStyles = makeStyles((theme) => ({
@@ -28,6 +28,12 @@ const useStyles = makeStyles((theme) => ({
           ? "unset"
           : `calc(${NEXT_PUBLIC_VIDEO_MAX_HEIGHT} * 16 / 9)`,
       margin: "0 auto",
+    },
+  },
+  hidden: {
+    width: 0,
+    "& *": {
+      visibility: "hidden",
     },
   },
   header: {
@@ -48,31 +54,29 @@ const useStyles = makeStyles((theme) => ({
 type Props = {
   topic: TopicSchema;
   onEnded?: () => void;
-  videoInstance?: VideoInstance;
   offset?: number;
 };
 
-export default function TopicViewerContent({
-  topic,
-  onEnded,
-  videoInstance,
-  offset,
-}: Props) {
+export default function TopicViewerContent({ topic, onEnded, offset }: Props) {
   const classes = useStyles();
   const theme = useTheme();
   const sticky = useSticky({
     offset: offset ?? theme.spacing(-2),
   });
+  const { video } = useVideoAtom();
   return (
     <>
-      {videoInstance && (
+      {Array.from(video.values()).map((videoInstance) => (
         <VideoPlayer
-          className={clsx(classes.video, sticky)}
+          key={videoInstance.url}
+          className={clsx(classes.video, sticky, {
+            [classes.hidden]: topic.resource.url != videoInstance.url,
+          })}
           videoInstance={videoInstance}
           onEnded={onEnded}
         />
-      )}
-      {!videoInstance && isVideoResource(topic.resource) && (
+      ))}
+      {video.size === 0 && isVideoResource(topic.resource) && (
         <Video
           className={clsx(classes.video, sticky)}
           {...topic.resource}

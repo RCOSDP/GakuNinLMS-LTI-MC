@@ -20,13 +20,12 @@ const updateVideoAtom = atom(
     const resources = sections.flatMap(({ topics }) =>
       topics.map(({ resource }) => resource)
     );
-    const autoplay = true;
     for (const resource of resources) {
       if (!isVideoResource(resource)) {
         video.delete(resource.url);
         continue;
       }
-      video.set(resource.url, getVideoInstance(resource, autoplay));
+      video.set(resource.url, getVideoInstance(resource));
     }
     set(videoAtom, { video });
   }

@@ -3,7 +3,6 @@ import { TopicSchema } from "$server/models/topic";
 import Card from "@material-ui/core/Card";
 import { makeStyles } from "@material-ui/core/styles";
 import TopicViewerContent from "$molecules/TopicViewerContent";
-import { useVideoAtom } from "$store/video";
 import useCardStyles from "$styles/card";
 
 const useStyles = makeStyles({
@@ -23,16 +22,9 @@ export default function TopicViewer(props: Props) {
   const classes = useStyles();
   const cardClasses = useCardStyles();
   const { className, topic, onEnded, offset } = props;
-  const { video, key } = useVideoAtom();
-  const videoInstance = video.get(key);
   return (
     <Card classes={cardClasses} className={clsx(classes.root, className)}>
-      <TopicViewerContent
-        topic={topic}
-        videoInstance={videoInstance}
-        onEnded={onEnded}
-        offset={offset}
-      />
+      <TopicViewerContent topic={topic} onEnded={onEnded} offset={offset} />
     </Card>
   );
 }
