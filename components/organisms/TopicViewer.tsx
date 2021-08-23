@@ -4,7 +4,7 @@ import clsx from "clsx";
 import { TopicSchema } from "$server/models/topic";
 import Card from "@material-ui/core/Card";
 import { makeStyles } from "@material-ui/core/styles";
-import TopicViewerContent from "$molecules/TopicViewerContent";
+import TopicViewerContent from "$organisms/TopicViewerContent";
 import useCardStyles from "$styles/card";
 import { useBookAtom } from "$store/book";
 import { useVideoAtom } from "$store/video";
