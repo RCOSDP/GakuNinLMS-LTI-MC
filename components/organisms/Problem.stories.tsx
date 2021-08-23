@@ -1,25 +1,25 @@
-export default { title: "organisms/Problem" };
-
-import Link from "@material-ui/core/Link";
+import type { Story } from "@storybook/react";
 import Problem from "./Problem";
+import Link from "@material-ui/core/Link";
 
-export const Default = () => (
-  <Problem title="ブックが存在していません">
-    担当教員にお問い合わせください。
-    <p>
-      <Link href="#">LMSに戻る</Link>
-    </p>
-  </Problem>
+export default {
+  title: "organisms/Problem",
+  component: Problem,
+};
+
+const Template: Story<Parameters<typeof Problem>[0]> = (args) => (
+  <Problem {...args} />
 );
 
-import UnlinkedProblem from "./UnlinkedProblem";
-export const Unlinked = UnlinkedProblem;
-
-import BookNotFoundProblem from "./BookNotFoundProblem";
-export const BookNotFound = BookNotFoundProblem;
-
-import TopicNotFoundProblem from "./TopicNotFoundProblem";
-export const TopicNotFound = TopicNotFoundProblem;
-
-import EmbedProblem from "./EmbedProblem";
-export const Embed = EmbedProblem;
+export const Default = Template.bind({});
+Default.args = {
+  title: "ブックが存在していません",
+  children: (
+    <>
+      担当教員にお問い合わせください。
+      <p>
+        <Link href="#">LMSに戻る</Link>
+      </p>
+    </>
+  ),
+};
