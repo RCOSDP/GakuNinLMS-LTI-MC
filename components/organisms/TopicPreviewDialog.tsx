@@ -1,5 +1,5 @@
 import Dialog from "@material-ui/core/Dialog";
-import TopicViewerContent from "$molecules/TopicViewerContent";
+import TopicViewerContent from "$organisms/TopicViewerContent";
 import { TopicSchema } from "$server/models/topic";
 import useCardStyles from "$styles/card";
 
