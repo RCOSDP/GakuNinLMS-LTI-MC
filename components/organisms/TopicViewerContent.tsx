@@ -32,6 +32,7 @@ const useStyles = makeStyles((theme) => ({
   },
   hidden: {
     width: 0,
+    margin: 0,
     "& *": {
       visibility: "hidden",
     },
