@@ -18,8 +18,13 @@ const defaultOptions: VideoJsPlayerOptions = {
 };
 
 function getVideoJsPlayer(options: VideoJsPlayerOptions) {
-  hlsjsPlugin.registerConfigPlugin(videojs);
-  hlsjsPlugin.registerSourceHandler(videojs);
+  if (!videojs.getPlugin("streamrootHls")) {
+    hlsjsPlugin.registerConfigPlugin(videojs);
+  }
+  // @ts-expect-error @types/video.js Unsupported
+  if (!videojs.Html5Hlsjs) {
+    hlsjsPlugin.registerSourceHandler(videojs);
+  }
   const element = document.createElement("video-js");
   element.classList.add("vjs-big-play-centered");
   const player = videojs(element, { ...defaultOptions, ...options });
