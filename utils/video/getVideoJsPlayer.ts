@@ -26,6 +26,7 @@ function getVideoJsPlayer(options: VideoJsPlayerOptions) {
     hlsjsPlugin.registerSourceHandler(videojs);
   }
   const element = document.createElement("video-js");
+  document.body.appendChild(element);
   element.classList.add("vjs-big-play-centered");
   const player = videojs(element, { ...defaultOptions, ...options });
   // @ts-expect-error: @types/video.js@^7.3.11 Unsupported

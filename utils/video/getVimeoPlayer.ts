@@ -7,6 +7,7 @@ const defaultOptions: Options = {
 
 function getVimeoPlayer(options: Options) {
   const element = document.createElement("div");
+  document.body.appendChild(element);
   const player = new Player(element, { ...defaultOptions, ...options });
   return { element, player };
 }
