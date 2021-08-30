@@ -1,5 +1,6 @@
 import Player from "@vimeo/player";
 import type { Options } from "@vimeo/player";
+import getVideoHolder from "./getVideoHolder";
 
 const defaultOptions: Options = {
   responsive: true,
@@ -7,7 +8,7 @@ const defaultOptions: Options = {
 
 function getVimeoPlayer(options: Options) {
   const element = document.createElement("div");
-  document.body.appendChild(element);
+  getVideoHolder().appendChild(element);
   const player = new Player(element, { ...defaultOptions, ...options });
   return { element, player };
 }
