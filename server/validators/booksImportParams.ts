@@ -35,8 +35,8 @@ export class BooksImportParams {
   wowzaBaseUrl = "";
 }
 
-export const booksImportParamsSchema = validationMetadatasToSchemas()
-  .BooksImportParams;
+export const booksImportParamsSchema =
+  validationMetadatasToSchemas().BooksImportParams;
 
 export class BooksImportResult {
   @IsOptional()
@@ -48,8 +48,8 @@ export class BooksImportResult {
   errors?: string[];
 }
 
-export const booksImportResultSchema = validationMetadatasToSchemas()
-  .BooksImportResult;
+export const booksImportResultSchema =
+  validationMetadatasToSchemas().BooksImportResult;
 
 class IsLicenseConstraint implements ValidatorConstraintInterface {
   message = "";
@@ -148,8 +148,8 @@ export class ImportResource {
   }
 }
 
-export const importResourceSchema = validationMetadatasToSchemas()
-  .ImportResource;
+export const importResourceSchema =
+  validationMetadatasToSchemas().ImportResource;
 
 export class ImportTopic {
   @IsString({ message: "文字列ではないか未設定です。" })

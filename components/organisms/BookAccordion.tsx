@@ -64,10 +64,10 @@ export default function BookAccordion(props: Props) {
   const accordionClasses = useAccordionStyle();
   const accordionSummaryClasses = useAccordionSummaryStyle();
   const accordionDetailClasses = useAccordionDetailStyle();
-  const handleItem = (handler?: (topic: TopicSchema) => void) => ([
-    sectionIndex,
-    topicIndex,
-  ]: ItemIndex) => handler?.(book.sections[sectionIndex].topics[topicIndex]);
+  const handleItem =
+    (handler?: (topic: TopicSchema) => void) =>
+    ([sectionIndex, topicIndex]: ItemIndex) =>
+      handler?.(book.sections[sectionIndex].topics[topicIndex]);
   const handleEditClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
     onEditClick?.(book);

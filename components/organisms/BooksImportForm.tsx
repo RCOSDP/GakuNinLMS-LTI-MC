@@ -65,7 +65,7 @@ export default function BooksImportForm(props: Props) {
             },
             false
           );
-          reader.readAsArrayBuffer((values.file[0] as unknown) as File);
+          reader.readAsArrayBuffer(values.file[0] as unknown as File);
         } else {
           onSubmit({ ...values, file: undefined });
         }

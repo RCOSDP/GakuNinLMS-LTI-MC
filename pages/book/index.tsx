@@ -27,13 +27,8 @@ function Show(query: Query) {
     isTopicEditable,
     session?.ltiResourceLink
   );
-  const {
-    updateBook,
-    itemIndex,
-    nextItemIndex,
-    itemExists,
-    updateItemIndex,
-  } = useBookAtom();
+  const { updateBook, itemIndex, nextItemIndex, itemExists, updateItemIndex } =
+    useBookAtom();
   useEffect(() => {
     if (book) updateBook(book);
   }, [book, updateBook]);

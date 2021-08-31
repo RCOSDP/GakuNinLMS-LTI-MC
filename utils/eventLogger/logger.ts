@@ -24,9 +24,10 @@ function send(eventType: EventType, event: PlayerEvent, detail?: string) {
   return api.apiV2EventPost({ body });
 }
 
-const buildHandler = <T extends EventType & keyof PlayerEvents>(
-  eventType: T
-) => (event: PlayerEvents[T]) => send(eventType, event);
+const buildHandler =
+  <T extends EventType & keyof PlayerEvents>(eventType: T) =>
+  (event: PlayerEvents[T]) =>
+    send(eventType, event);
 
 const buildSender = (event: EventType, tracker: PlayerTracker) => () =>
   send(event, tracker.stats);
