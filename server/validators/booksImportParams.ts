@@ -61,7 +61,7 @@ class IsLicenseConstraint implements ValidatorConstraintInterface {
       parse(value);
       return true;
     } catch (e) {
-      this.message = e.toString();
+      this.message = String(e);
       return false;
     }
   }

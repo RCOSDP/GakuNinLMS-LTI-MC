@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useSWRInfinite } from "swr";
+import useSWRInfinite from "swr/infinite";
 import type { BookSchema } from "$server/models/book";
 import type { TopicSchema } from "$server/models/topic";
 import type { UserSchema } from "$server/models/user";

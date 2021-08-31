@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useSWRInfinite } from "swr";
+import useSWRInfinite from "swr/infinite";
 import type { TopicSchema } from "$server/models/topic";
 import type { UserSchema } from "$server/models/user";
 import type { Filter } from "$types/filter";

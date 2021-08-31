@@ -85,11 +85,7 @@ export default function Books(props: Props) {
   const classes = useStyles();
   const containerClasses = useContainerStyles();
   const cardClasses = useCardStyles();
-  const infiniteRef = useInfiniteScroll<HTMLDivElement>({
-    loading,
-    hasNextPage,
-    onLoadMore,
-  });
+  const [infiniteRef] = useInfiniteScroll({ loading, hasNextPage, onLoadMore });
   return (
     <div ref={infiniteRef}>
       <ActionHeader
