@@ -834,7 +834,7 @@ export class DefaultApi extends runtime.BaseAPI {
      * LTI Resource Linkを削除します。 教員または管理者でなければなりません。
      * LTI Resource Linkの削除
      */
-    async apiV2LtiLtiConsumerIdResourceLinkLtiResourceLinkIdDeleteRaw(requestParameters: ApiV2LtiLtiConsumerIdResourceLinkLtiResourceLinkIdDeleteRequest): Promise<runtime.ApiResponse<void>> {
+    async apiV2LtiLtiConsumerIdResourceLinkLtiResourceLinkIdDeleteRaw(requestParameters: ApiV2LtiLtiConsumerIdResourceLinkLtiResourceLinkIdDeleteRequest): Promise<runtime.ApiResponse<object>> {
         if (requestParameters.ltiConsumerId === null || requestParameters.ltiConsumerId === undefined) {
             throw new runtime.RequiredError('ltiConsumerId','Required parameter requestParameters.ltiConsumerId was null or undefined when calling apiV2LtiLtiConsumerIdResourceLinkLtiResourceLinkIdDelete.');
         }
@@ -854,15 +854,16 @@ export class DefaultApi extends runtime.BaseAPI {
             query: queryParameters,
         });
 
-        return new runtime.VoidApiResponse(response);
+        return new runtime.JSONApiResponse<any>(response);
     }
 
     /**
      * LTI Resource Linkを削除します。 教員または管理者でなければなりません。
      * LTI Resource Linkの削除
      */
-    async apiV2LtiLtiConsumerIdResourceLinkLtiResourceLinkIdDelete(requestParameters: ApiV2LtiLtiConsumerIdResourceLinkLtiResourceLinkIdDeleteRequest): Promise<void> {
-        await this.apiV2LtiLtiConsumerIdResourceLinkLtiResourceLinkIdDeleteRaw(requestParameters);
+    async apiV2LtiLtiConsumerIdResourceLinkLtiResourceLinkIdDelete(requestParameters: ApiV2LtiLtiConsumerIdResourceLinkLtiResourceLinkIdDeleteRequest): Promise<object> {
+        const response = await this.apiV2LtiLtiConsumerIdResourceLinkLtiResourceLinkIdDeleteRaw(requestParameters);
+        return await response.value();
     }
 
     /**
@@ -1431,29 +1432,6 @@ export class DefaultApi extends runtime.BaseAPI {
      */
     async apiV2WowzaGet(): Promise<void> {
         await this.apiV2WowzaGetRaw();
-    }
-
-    /**
-     */
-    async optionsRaw(): Promise<runtime.ApiResponse<void>> {
-        const queryParameters: runtime.HTTPQuery = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        const response = await this.request({
-            path: `/*`,
-            method: 'OPTIONS',
-            headers: headerParameters,
-            query: queryParameters,
-        });
-
-        return new runtime.VoidApiResponse(response);
-    }
-
-    /**
-     */
-    async options(): Promise<void> {
-        await this.optionsRaw();
     }
 
 }
