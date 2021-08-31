@@ -1,7 +1,7 @@
-import { createMuiTheme } from "@material-ui/core/styles";
+import { createTheme } from "@material-ui/core/styles";
 import { primary } from "./colors";
 
-export default createMuiTheme({
+export default createTheme({
   palette: {
     primary: {
       light: primary[300],
