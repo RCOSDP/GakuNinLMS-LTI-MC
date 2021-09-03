@@ -242,6 +242,7 @@ model User {
 
   @@unique([ltiConsumerId, ltiUserId])
   @@map("users")
+  @@index([email])
 }
 
 /// 学習活動
