@@ -82,12 +82,8 @@ export default function BookImport(props: Props) {
   } = props;
   const classes = useStyles();
   const containerClasses = useContainerStyles();
-  const {
-    query,
-    onSearchInput,
-    onLtiContextClick,
-    onSearchInputReset,
-  } = useSearchAtom();
+  const { query, onSearchInput, onLtiContextClick, onSearchInputReset } =
+    useSearchAtom();
   const [selectedNodeIds, select] = useState<Set<string>>(new Set());
   const handleTreeChange = (nodeId: string) => {
     select((nodeIds) =>
@@ -133,11 +129,7 @@ export default function BookImport(props: Props) {
   } = useDialogProps<TopicSchema>();
   const handleTopicPreviewClick = (topic: TopicSchema) =>
     setPreviewTopic(topic);
-  const infiniteRef = useInfiniteScroll<HTMLDivElement>({
-    loading,
-    hasNextPage,
-    onLoadMore,
-  });
+  const [infiniteRef] = useInfiniteScroll({ loading, hasNextPage, onLoadMore });
   return (
     <Container ref={infiniteRef} classes={containerClasses} maxWidth="md">
       <ActionHeader
@@ -167,11 +159,10 @@ export default function BookImport(props: Props) {
         defaultExpandIcon={<ChevronRightIcon />}
       >
         {books.map((book) => {
-          const handleItem = (handler?: (topic: TopicSchema) => void) => ([
-            sectionIndex,
-            topicIndex,
-          ]: ItemIndex) =>
-            handler?.(book.sections[sectionIndex].topics[topicIndex]);
+          const handleItem =
+            (handler?: (topic: TopicSchema) => void) =>
+            ([sectionIndex, topicIndex]: ItemIndex) =>
+              handler?.(book.sections[sectionIndex].topics[topicIndex]);
           return (
             <BookTree
               key={book.id}

@@ -49,12 +49,12 @@ export default function BookTree(props: Props) {
   const classes = useStyles();
   const treeItemClasses = useTreeItemStyle();
   const nodeId = `${book.id}`;
-  const handle = (handler?: (book: BookSchema) => void) => (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
-    event.stopPropagation();
-    handler?.(book);
-  };
+  const handle =
+    (handler?: (book: BookSchema) => void) =>
+    (event: React.MouseEvent<HTMLButtonElement>) => {
+      event.stopPropagation();
+      handler?.(book);
+    };
   /* TODO: ブック単位での再利用の実装
   const handleChange = (handler?: (nodeId: string) => void) => () => {
     handler?.(nodeId);

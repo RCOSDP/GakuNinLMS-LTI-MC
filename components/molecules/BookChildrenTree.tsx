@@ -106,12 +106,12 @@ export default function BookChildrenTree(props: Props) {
         >
           {section.topics.map((topic, topicIndex) => {
             const nodeId = `${bookId}-${section.id}-${topic.id}:${topicIndex}`;
-            const handle = (handler?: (index: ItemIndex) => void) => (
-              event: MouseEvent<HTMLElement>
-            ) => {
-              event.stopPropagation();
-              handler?.([sectionIndex, topicIndex]);
-            };
+            const handle =
+              (handler?: (index: ItemIndex) => void) =>
+              (event: MouseEvent<HTMLElement>) => {
+                event.stopPropagation();
+                handler?.([sectionIndex, topicIndex]);
+              };
             const handleChange = (handler?: (nodeId: string) => void) => () => {
               handler?.(nodeId);
             };

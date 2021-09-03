@@ -79,11 +79,7 @@ export default function TopicImport(props: Props) {
     setPreviewTopic(topic);
   const handleTopicEditClick = (topic: TopicSchema) =>
     isTopicEditable(topic) && (() => onTopicEditClick(topic));
-  const infiniteRef = useInfiniteScroll<HTMLDivElement>({
-    loading,
-    hasNextPage,
-    onLoadMore,
-  });
+  const [infiniteRef] = useInfiniteScroll({ loading, hasNextPage, onLoadMore });
   return (
     <Container ref={infiniteRef} classes={containerClasses} maxWidth="lg">
       <ActionHeader

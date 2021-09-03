@@ -23,4 +23,5 @@ module.exports = {
   },
   stories: ["../components/**/*.stories.tsx"],
   addons: ["@storybook/addon-a11y", "@storybook/addon-essentials"],
+  core: { builder: "webpack5" },
 };

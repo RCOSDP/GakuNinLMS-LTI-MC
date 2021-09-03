@@ -97,12 +97,11 @@ export default function BookChildren({
 }: Props) {
   const classes = useStyles();
   const handleItemClick = (index: ItemIndex) => () => onItemClick(index);
-  const handleItemEditClick = (index: ItemIndex) => (
-    event: MouseEvent<HTMLButtonElement>
-  ) => {
-    event.stopPropagation();
-    onItemEditClick?.(index);
-  };
+  const handleItemEditClick =
+    (index: ItemIndex) => (event: MouseEvent<HTMLButtonElement>) => {
+      event.stopPropagation();
+      onItemEditClick?.(index);
+    };
   return (
     <div className={className}>
       {sections.map((section, sectionItemIndex) => (

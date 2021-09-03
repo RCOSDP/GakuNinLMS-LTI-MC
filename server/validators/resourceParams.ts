@@ -6,5 +6,5 @@ export class ResourceParams {
   resource_id!: number;
 }
 
-export const resourceParamsSchema = validationMetadatasToSchemas()
-  .ResourceParams;
+export const resourceParamsSchema =
+  validationMetadatasToSchemas().ResourceParams;

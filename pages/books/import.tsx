@@ -25,6 +25,7 @@ function Import({ context }: Query) {
     try {
       setImportResult(await importBooks(props));
     } catch (e) {
+      // @ts-expect-error TODO: Object is of type 'unknown'
       setImportResult(await e.json());
     }
   }

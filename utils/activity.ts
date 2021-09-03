@@ -11,19 +11,17 @@ import { NEXT_PUBLIC_ACTIVITY_SEND_INTERVAL } from "./env";
 
 const secToMs = (sec: number) => Math.floor(sec * 1000);
 
-const buildUpdateHandler = (
-  topicId: TopicSchema["id"],
-  playerTracker: PlayerTracker
-) => async () => {
-  const timeRanges = await playerTracker.getPlayed();
-  const body = {
-    timeRanges: timeRanges.map(([low, high]) => ({
-      startMs: secToMs(low),
-      endMs: secToMs(high),
-    })),
+const buildUpdateHandler =
+  (topicId: TopicSchema["id"], playerTracker: PlayerTracker) => async () => {
+    const timeRanges = await playerTracker.getPlayed();
+    const body = {
+      timeRanges: timeRanges.map(([low, high]) => ({
+        startMs: secToMs(low),
+        endMs: secToMs(high),
+      })),
+    };
+    await api.apiV2TopicTopicIdActivityPut({ topicId, body });
   };
-  await api.apiV2TopicTopicIdActivityPut({ topicId, body });
-};
 
 /** 学習活動のトラッキングの開始 (要: useBook()) */
 export function useActivityTracking() {

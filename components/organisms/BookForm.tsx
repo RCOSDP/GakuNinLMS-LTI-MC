@@ -71,13 +71,10 @@ export default function BookForm({
     sections: book?.sections,
     submitWithLink: false,
   };
-  const {
-    handleSubmit,
-    register,
-    setValue,
-  } = useForm<BookPropsWithSubmitOptions>({
-    defaultValues,
-  });
+  const { handleSubmit, register, setValue } =
+    useForm<BookPropsWithSubmitOptions>({
+      defaultValues,
+    });
 
   return (
     <Card

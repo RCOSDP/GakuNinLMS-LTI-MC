@@ -5,18 +5,16 @@ import { api } from "./api";
 
 const key = "/api/v2/user/{user_id}/topics";
 
-export const makeUserTopicsKey = (
-  userId: UserSchema["id"],
-  sort: SortOrder,
-  perPage: number
-) => (
-  page: number,
-  prev: TopicSchema[] | null
-): Parameters<typeof fetchUserTopics> | null => {
-  if (Number.isNaN(userId)) return null;
-  if (prev && prev.length === 0) return null;
-  return [key, userId, sort, perPage, page];
-};
+export const makeUserTopicsKey =
+  (userId: UserSchema["id"], sort: SortOrder, perPage: number) =>
+  (
+    page: number,
+    prev: TopicSchema[] | null
+  ): Parameters<typeof fetchUserTopics> | null => {
+    if (Number.isNaN(userId)) return null;
+    if (prev && prev.length === 0) return null;
+    return [key, userId, sort, perPage, page];
+  };
 
 export async function fetchUserTopics(
   _: typeof key,

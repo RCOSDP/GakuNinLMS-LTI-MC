@@ -74,22 +74,14 @@ export default function Books(props: Props) {
     onSortChange,
     onFilterChange,
   } = props;
-  const {
-    query,
-    onSearchInput,
-    onLtiContextClick,
-    onSearchInputReset,
-  } = useSearchAtom();
+  const { query, onSearchInput, onLtiContextClick, onSearchInputReset } =
+    useSearchAtom();
   const handleBookNewClick = () => onBookNewClick();
   const handleBooksImportClick = () => onBooksImportClick();
   const classes = useStyles();
   const containerClasses = useContainerStyles();
   const cardClasses = useCardStyles();
-  const infiniteRef = useInfiniteScroll<HTMLDivElement>({
-    loading,
-    hasNextPage,
-    onLoadMore,
-  });
+  const [infiniteRef] = useInfiniteScroll({ loading, hasNextPage, onLoadMore });
   return (
     <div ref={infiniteRef}>
       <ActionHeader

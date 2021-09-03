@@ -9,13 +9,15 @@ import { revalidateBook } from "./book";
 
 const key = "/api/v2/books";
 
-export const makeBooksKey = (sort: SortOrder) => (
-  page: number,
-  prev: BookSchema[] | null
-): Parameters<typeof fetchBooks> | null => {
-  if (prev && prev.length === 0) return null;
-  return [key, sort, page];
-};
+export const makeBooksKey =
+  (sort: SortOrder) =>
+  (
+    page: number,
+    prev: BookSchema[] | null
+  ): Parameters<typeof fetchBooks> | null => {
+    if (prev && prev.length === 0) return null;
+    return [key, sort, page];
+  };
 
 export async function fetchBooks(
   _: typeof key,

@@ -91,10 +91,10 @@ export default function BookEditChildren(props: Props) {
   const cardClasses = useCardStyles();
   const classes = useStyles();
   const formControlLabelClasses = useFormControlLabelStyles();
-  const handleItem = (handler?: (topic: TopicSchema) => void) => ([
-    sectionIndex,
-    topicIndex,
-  ]: ItemIndex) => handler?.(sections[sectionIndex].topics[topicIndex]);
+  const handleItem =
+    (handler?: (topic: TopicSchema) => void) =>
+    ([sectionIndex, topicIndex]: ItemIndex) =>
+      handler?.(sections[sectionIndex].topics[topicIndex]);
   const {
     sortable,
     sortableSections,
