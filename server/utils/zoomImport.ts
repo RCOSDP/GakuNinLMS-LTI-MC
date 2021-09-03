@@ -3,21 +3,17 @@ import schedule from "node-schedule";
 import jwt from "jsonwebtoken";
 import rp from "request-promise";
 import dateFormat from "dateformat";
-import getUnixTime from "date-fns/getUnixTime";
 
 import prisma from "$server/utils/prisma";
 import type { User } from "@prisma/client";
 import { findUserByEmail } from "$server/utils/user";
 import { scpUpload } from "$server/utils/wowza/scpUpload";
-import { query } from "$server/utils/wowza/token";
 
 import {
-  WOWZA_BASE_URL,
-  WOWZA_SECURE_TOKEN,
-  WOWZA_QUERY_PREFIX,
-  WOWZA_EXPIRES_IN,
+  API_BASE_PATH,
   ZOOM_API_KEY,
   ZOOM_API_SECRET,
+  ZOOM_IMPORT_WOWZA_BASE_URL,
 } from "$server/utils/env";
 
 export async function setupZoomImportScheduler() {
@@ -37,6 +33,8 @@ class ZoomImport {
   createdAt: string;
   errors: string[];
   tmpdir?: string;
+  uploadauthor?: string;
+  user?: User | null;
 
   constructor(userId: string, email: string, createdAt: string) {
     this.userId = userId;
@@ -47,24 +45,33 @@ class ZoomImport {
 
   async importTopics() {
     try {
-      const user = await findUserByEmail(this.email);
-      if (!user) return;
+      this.user = await findUserByEmail(this.email);
+      if (!this.user) return;
+
+      this.tmpdir = fs.mkdtempSync("/tmp/zoom-import-");
+      // recursive:true が利かない https://github.com/nodejs/node/issues/27293
+      const uploaddomain = fs.mkdirSync(
+        `${this.tmpdir}/${this.user.ltiConsumerId}`,
+        { recursive: true }
+      );
+      this.uploadauthor = fs.mkdirSync(`${uploaddomain}/${this.user.id}`, {
+        recursive: true,
+      });
 
       const meetings = await zoomListRequest(
         `/users/${this.userId}/recordings`,
         "meetings",
         { page_size: 300, from: this.fromDate() }
       );
-      this.tmpdir = fs.mkdtempSync("/tmp/zoom-import-");
-      const uploadroot = fs.mkdtempSync(`${this.tmpdir}/upload-wowza-`);
+      meetings.sort((a, b) => a.start_time.localeCompare(b.start_time));
       const transactions = [];
       for (const meeting of meetings) {
-        const data = await this.getTopic(meeting, user, uploadroot);
+        const data = await this.getTopic(meeting);
         if (data) transactions.push(prisma.topic.create({ data }));
       }
-      if (this.errors.length) return;
+      if (!transactions.length) return;
 
-      await scpUpload(uploadroot);
+      await scpUpload(this.tmpdir);
       await prisma.$transaction(transactions);
     } catch (e) {
       this.errors.push(...(Array.isArray(e) ? e : [e.toString()]));
@@ -73,67 +80,67 @@ class ZoomImport {
     }
   }
 
-  async getTopic(meeting: ZoomResponse, user: User, uploadroot: string) {
-    const meetingDetail = await this.getMeetingDetail(meeting);
+  async getTopic(meeting: ZoomResponse) {
+    if (!this.user || !this.tmpdir || !this.uploadauthor) return;
 
-    const recordingFiles: ZoomResponse[] = meeting.recording_files;
-    const downloadUrl = recordingFiles.find((file) => file.file_type == "MP4")
-      ?.download_url;
-    if (!downloadUrl) return;
+    let uploaddir;
+    try {
+      const meetingDetail = await this.getMeetingDetail(meeting);
 
-    const startTime = new Date(meeting.start_time);
-    // recursive:true が利かない https://github.com/nodejs/node/issues/27293
-    const uploaddomain = fs.mkdirSync(`${uploadroot}/${user.ltiConsumerId}`, {
-      recursive: true,
-    });
-    const uploadauthor = fs.mkdirSync(`${uploaddomain}/${user.id}`, {
-      recursive: true,
-    });
-    const uploaddir = fs.mkdtempSync(
-      `${uploadauthor}/${dateFormat(startTime, "yyyymmdd-HHMM")}-`
-    );
-    const file = `${uploaddir}/${meeting.id}.mp4`;
+      const recordingFiles: ZoomResponse[] = meeting.recording_files;
+      const downloadUrl = recordingFiles.find((file) => file.file_type == "MP4")
+        ?.download_url;
+      if (!downloadUrl) return;
 
-    const option = {
-      uri: `${downloadUrl}?access_token=${zoomRequestToken()}`,
-      encoding: null,
-    };
-    await rp(option)
-      .then((response) => {
+      const startTime = new Date(meeting.start_time);
+      uploaddir = fs.mkdtempSync(
+        `${this.uploadauthor}/${dateFormat(startTime, "yyyymmdd-HHMM")}-`
+      );
+      const file = `${uploaddir}/${meeting.id}.mp4`;
+
+      const option = {
+        uri: `${downloadUrl}?access_token=${zoomRequestToken()}`,
+        encoding: null,
+      };
+      await rp(option).then((response) => {
         fs.writeFileSync(file, Buffer.from(response));
-      })
-      .catch((error) => {
-        this.errors.push(error);
       });
 
-    const video = {
-      create: {
-        providerUrl: "https://www.wowza.com/",
-      },
-    };
-
-    const url = await wowzaUrl(file.substring(uploadroot.length));
-    const resource = {
-      connectOrCreate: {
+      const video = {
         create: {
-          video,
-          url,
-          details: {},
+          providerUrl: "https://www.wowza.com/",
         },
-        where: { url },
-      },
-    };
+      };
 
-    return {
-      name: "📽 " + meeting.topic,
-      description: meetingDetail.agenda,
-      timeRequired: meeting.duration,
-      creator: { connect: { id: user.id } },
-      createdAt: startTime,
-      updatedAt: new Date(),
-      resource,
-      details: {},
-    };
+      const url = `${ZOOM_IMPORT_WOWZA_BASE_URL}${API_BASE_PATH}/wowza${file.substring(
+        this.tmpdir.length
+      )}`;
+      const resource = {
+        connectOrCreate: {
+          create: {
+            video,
+            url,
+            details: {},
+          },
+          where: { url },
+        },
+      };
+
+      return {
+        name: "📽 " + meeting.topic,
+        description: meetingDetail.agenda,
+        timeRequired: meeting.duration,
+        creator: { connect: { id: this.user.id } },
+        createdAt: startTime,
+        updatedAt: new Date(),
+        resource,
+        details: {},
+      };
+    } catch (e) {
+      this.errors.push(e.toString());
+      if (uploaddir) fs.rmdirSync(uploaddir, { recursive: true });
+      return;
+    }
   }
 
   async getMeetingDetail(meeting: ZoomResponse) {
@@ -153,27 +160,10 @@ class ZoomImport {
     if (this.tmpdir) {
       fs.rmdirSync(this.tmpdir, { recursive: true });
     }
+    if (this.errors.length) {
+      console.log(this.errors);
+    }
   }
-}
-
-async function wowzaUrl(path: string) {
-  const expires: Record<string, string> =
-    WOWZA_EXPIRES_IN > 0
-      ? {
-          endtime: `${getUnixTime(new Date()) + WOWZA_EXPIRES_IN}`,
-        }
-      : {};
-  const contentPath = new URL(path, WOWZA_BASE_URL).pathname.replace(/^\//, "");
-  return new URL(
-    `/${contentPath}/playlist.m3u8?${query(
-      contentPath,
-      expires,
-      WOWZA_QUERY_PREFIX,
-      WOWZA_SECURE_TOKEN,
-      "sha512" /* TODO: SHA-512 以外未サポート */
-    )}`,
-    WOWZA_BASE_URL
-  ).href;
 }
 
 interface ZoomQuery {
