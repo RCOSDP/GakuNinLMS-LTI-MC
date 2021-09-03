@@ -22,10 +22,13 @@ model Resource {
   videoId Int?    @map("video_id")
   /// 外部リソースのアドレス
   url     String  @unique
+  /// インポート済みデータid
+  importedId String @map("imported_id") @default("")
   /// 詳細
   details Json
 
   @@map("resources")
+  @@index([importedId])
 }
 
 /// ビデオ

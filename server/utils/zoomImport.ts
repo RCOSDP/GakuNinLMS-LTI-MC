@@ -7,6 +7,7 @@ import dateFormat from "dateformat";
 import prisma from "$server/utils/prisma";
 import type { User } from "@prisma/client";
 import { findUserByEmail } from "$server/utils/user";
+import { findResourceByImportedId } from "$server/utils/resource/findResource";
 import { scpUpload } from "$server/utils/wowza/scpUpload";
 
 import {
@@ -85,6 +86,10 @@ class ZoomImport {
 
     let uploaddir;
     try {
+      const importedId = "zoom_" + meeting.id;
+      const importedResource = await findResourceByImportedId(importedId);
+      if (importedResource) return;
+
       const meetingDetail = await this.getMeetingDetail(meeting);
 
       const recordingFiles: ZoomResponse[] = meeting.recording_files;
@@ -120,6 +125,7 @@ class ZoomImport {
           create: {
             video,
             url,
+            importedId,
             details: {},
           },
           where: { url },
