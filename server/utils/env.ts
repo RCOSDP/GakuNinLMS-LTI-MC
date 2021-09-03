@@ -27,8 +27,11 @@ const WOWZA_SCP_SERVER_PATH =
   process.env.WOWZA_SCP_SERVER_PATH ?? "/var/www/wowza-upload";
 const ZOOM_API_KEY = process.env.ZOOM_API_KEY ?? "";
 const ZOOM_API_SECRET = process.env.ZOOM_API_SECRET ?? "";
+const ZOOM_IMPORT_INTERVAL = process.env.ZOOM_IMPORT_INTERVAL ?? "";
+const ZOOM_IMPORT_TO = process.env.ZOOM_IMPORT_TO ?? "";
 const ZOOM_IMPORT_WOWZA_BASE_URL =
   process.env.ZOOM_IMPORT_WOWZA_BASE_URL ?? `http://localhost:${PORT}`;
+const ZOOM_IMPORT_AUTODELETE = process.env.ZOOM_IMPORT_AUTODELETE ?? "";
 
 export {
   PORT,
@@ -53,5 +56,8 @@ export {
   WOWZA_SCP_SERVER_PATH,
   ZOOM_API_KEY,
   ZOOM_API_SECRET,
+  ZOOM_IMPORT_INTERVAL,
+  ZOOM_IMPORT_TO,
   ZOOM_IMPORT_WOWZA_BASE_URL,
+  ZOOM_IMPORT_AUTODELETE,
 };
