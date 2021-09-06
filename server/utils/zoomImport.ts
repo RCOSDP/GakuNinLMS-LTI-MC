@@ -27,12 +27,20 @@ export async function setupZoomImportScheduler() {
     !ZOOM_API_SECRET ||
     !ZOOM_IMPORT_INTERVAL ||
     !ZOOM_IMPORT_TO
-  )
+  ) {
+    logger(
+      "INFO",
+      `zoom import is not disabled. ZOOM_API_KEY:${ZOOM_API_KEY} ZOOM_API_SECRET:${ZOOM_API_SECRET} ZOOM_IMPORT_INTERVAL:${ZOOM_IMPORT_INTERVAL} ZOOM_IMPORT_TO:${ZOOM_IMPORT_TO}`
+    );
     return;
-  if (ZOOM_IMPORT_TO == "wowza" && !ZOOM_IMPORT_WOWZA_BASE_URL) return;
+  }
+  if (ZOOM_IMPORT_TO == "wowza" && !ZOOM_IMPORT_WOWZA_BASE_URL) {
+    logger("INFO", `ZOOM_IMPORT_WOWZA_BASE_URL is not defined.`);
+    return;
+  }
 
-  const job = schedule.scheduleJob(ZOOM_IMPORT_INTERVAL, async () => {
-    job.cancel();
+  schedule.scheduleJob(ZOOM_IMPORT_INTERVAL, async () => {
+    logger("INFO", `${new Date()}: start zoom import...`);
 
     const users = await zoomListRequest("/users", "users", { page_size: 300 });
     for (const user of users) {
@@ -224,7 +232,7 @@ class ZoomImport {
       fs.rmdirSync(this.tmpdir, { recursive: true });
     }
     if (this.errors.length) {
-      console.log(this.errors);
+      logger("ERROR", this.errors.toString());
     }
   }
 }
@@ -289,4 +297,8 @@ async function zoomListRequest(
     next_page_token = response.next_page_token;
   } while (next_page_token);
   return list;
+}
+
+function logger(level: string, output: string) {
+  console.log(level, output);
 }
