@@ -1,7 +1,7 @@
-export default { title: "molecules/DraggableBookChildren" };
+export default { title: "molecules/DraggableSections" };
 
 import { useState } from "react";
-import DraggableBookChildren from "./DraggableBookChildren";
+import DraggableSections from "./DraggableSections";
 import { SectionSchema } from "$server/models/book/section";
 import { sections as initialSections } from "$samples";
 
@@ -14,5 +14,5 @@ export const Default = () => {
     onSectionsUpdate: setSections,
     onSectionCreate: handleSectionCreate,
   };
-  return <DraggableBookChildren sections={sections} {...handlers} />;
+  return <DraggableSections sections={sections} {...handlers} />;
 };

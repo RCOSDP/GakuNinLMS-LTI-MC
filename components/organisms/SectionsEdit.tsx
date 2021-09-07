@@ -14,7 +14,7 @@ import GetAppIcon from "@material-ui/icons/GetApp";
 import DragIndicatorIcon from "@material-ui/icons/DragIndicator";
 import { makeStyles } from "@material-ui/core/styles";
 import BookChildrenTree from "$molecules/BookChildrenTree";
-import DraggableBookChildren from "$molecules/DraggableBookChildren";
+import DraggableSections from "$molecules/DraggableSections";
 import { SectionSchema } from "$server/models/book/section";
 import { TopicSchema } from "$server/models/topic";
 import useCardStyles from "$styles/card";
@@ -166,7 +166,7 @@ export default function SectionsEdit(props: Props) {
       )}
       {sortable && (
         <>
-          <DraggableBookChildren
+          <DraggableSections
             sections={sortableSections}
             onSectionsUpdate={handleSectionsUpdate}
             onSectionCreate={handleSectionCreate}

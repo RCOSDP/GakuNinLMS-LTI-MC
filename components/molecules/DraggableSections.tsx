@@ -339,7 +339,7 @@ type Props = {
   onSectionCreate(): void;
 };
 
-export default function DraggableBookChildren(props: Props) {
+export default function DraggableSections(props: Props) {
   const { sections, onSectionsUpdate, onSectionCreate } = props;
   const classes = useStyles();
   const handleDragEnd = (result: DropResult) => {
