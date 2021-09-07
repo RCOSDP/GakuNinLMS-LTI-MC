@@ -11,7 +11,7 @@ import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 import EditButton from "$atoms/EditButton";
 import SharedIndicator from "$atoms/SharedIndicator";
 import DescriptionList from "$atoms/DescriptionList";
-import BookChildren from "$organisms/BookChildren";
+import Sections from "$organisms/Sections";
 import TopicViewer from "$organisms/TopicViewer";
 import ActionHeader from "$organisms/ActionHeader";
 import BookInfo from "$organisms/BookInfo";
@@ -237,7 +237,7 @@ export default function Book(props: Props) {
             sticky
           )}
         >
-          <BookChildren
+          <Sections
             index={[sectionIndex, topicIndex]}
             sections={book?.sections ?? []}
             onItemClick={handleItemClick}
