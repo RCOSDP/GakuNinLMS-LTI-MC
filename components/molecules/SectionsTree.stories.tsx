@@ -1,6 +1,6 @@
-export default { title: "molecules/BookChildrenTree" };
+export default { title: "molecules/SectionsTree" };
 
-import BookChildrenTree from "./BookChildrenTree";
+import SectionsTree from "./SectionsTree";
 import TreeView from "@material-ui/lab/TreeView";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
@@ -16,7 +16,7 @@ export const Default = () => (
     defaultCollapseIcon={<ExpandMoreIcon />}
     defaultExpandIcon={<ChevronRightIcon />}
   >
-    <BookChildrenTree {...defaultProps} />
+    <SectionsTree {...defaultProps} />
   </TreeView>
 );
 
@@ -25,7 +25,7 @@ export const Editable = () => (
     defaultCollapseIcon={<ExpandMoreIcon />}
     defaultExpandIcon={<ChevronRightIcon />}
   >
-    <BookChildrenTree
+    <SectionsTree
       {...defaultProps}
       onItemEditClick={console.log}
       isTopicEditable={() => true}
@@ -38,6 +38,6 @@ export const Selectable = () => (
     defaultCollapseIcon={<ExpandMoreIcon />}
     defaultExpandIcon={<ChevronRightIcon />}
   >
-    <BookChildrenTree {...defaultProps} onTreeChange={console.log} />
+    <SectionsTree {...defaultProps} onTreeChange={console.log} />
   </TreeView>
 );
