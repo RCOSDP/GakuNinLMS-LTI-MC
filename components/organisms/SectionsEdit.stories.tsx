@@ -1,15 +1,14 @@
-export default { title: "organisms/SectionsEdit" };
-
+import type { Story } from "@storybook/react";
 import { useState } from "react";
 import SectionsEdit from "./SectionsEdit";
-import { SectionSchema } from "$server/models/book/section";
-import { sections as initialSections } from "samples";
+import type { SectionSchema } from "$server/models/book/section";
+import { sections as initialSections } from "$samples";
 
-const handleTopicPreviewClick = console.log;
-const handleTopicEditClick = console.log;
-const handleSectionsUpdate =
-  (setSections: (sections: SectionSchema[]) => void) =>
-  (sections: SectionSchema[]) => {
+export default { title: "organisms/SectionsEdit", component: SectionsEdit };
+
+const Template: Story<Parameters<typeof SectionsEdit>[0]> = (args) => {
+  const [sections, setSections] = useState<SectionSchema[]>(initialSections);
+  const handleSectionsUpdate = (sections: SectionSchema[]) => {
     setSections(
       sections.filter(
         (section: SectionSchema) =>
@@ -18,26 +17,18 @@ const handleSectionsUpdate =
     );
   };
 
-export const Default = () => {
-  const [sections, setSections] = useState<SectionSchema[]>(initialSections);
   return (
     <SectionsEdit
+      {...args}
       sections={sections}
-      onTopicPreviewClick={handleTopicPreviewClick}
-      onSectionsUpdate={handleSectionsUpdate(setSections)}
+      onSectionsUpdate={handleSectionsUpdate}
     />
   );
 };
 
-export const Editable = () => {
-  const [sections, setSections] = useState<SectionSchema[]>(initialSections);
-  return (
-    <SectionsEdit
-      sections={sections}
-      onTopicPreviewClick={handleTopicPreviewClick}
-      onSectionsUpdate={handleSectionsUpdate(setSections)}
-      onTopicEditClick={handleTopicEditClick}
-      isTopicEditable={() => true}
-    />
-  );
+export const Default = Template.bind({});
+
+export const Editable = Template.bind({});
+Editable.args = {
+  isTopicEditable: () => true,
 };

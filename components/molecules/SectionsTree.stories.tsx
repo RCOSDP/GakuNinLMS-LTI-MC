@@ -1,43 +1,30 @@
-export default { title: "molecules/SectionsTree" };
-
+import type { Story } from "@storybook/react";
 import SectionsTree from "./SectionsTree";
 import TreeView from "@material-ui/lab/TreeView";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import { sections } from "$samples";
 
-const defaultProps = {
-  sections,
-  onItemClick: console.log,
+export default { title: "molecules/SectionsTree", component: SectionsTree };
+
+const Template: Story<Parameters<typeof SectionsTree>[0]> = (args) => {
+  return (
+    <TreeView
+      defaultCollapseIcon={<ExpandMoreIcon />}
+      defaultExpandIcon={<ChevronRightIcon />}
+    >
+      <SectionsTree {...args} />
+    </TreeView>
+  );
 };
 
-export const Default = () => (
-  <TreeView
-    defaultCollapseIcon={<ExpandMoreIcon />}
-    defaultExpandIcon={<ChevronRightIcon />}
-  >
-    <SectionsTree {...defaultProps} />
-  </TreeView>
-);
+export const Default = Template.bind({});
+Default.args = {
+  sections,
+};
 
-export const Editable = () => (
-  <TreeView
-    defaultCollapseIcon={<ExpandMoreIcon />}
-    defaultExpandIcon={<ChevronRightIcon />}
-  >
-    <SectionsTree
-      {...defaultProps}
-      onItemEditClick={console.log}
-      isTopicEditable={() => true}
-    />
-  </TreeView>
-);
-
-export const Selectable = () => (
-  <TreeView
-    defaultCollapseIcon={<ExpandMoreIcon />}
-    defaultExpandIcon={<ChevronRightIcon />}
-  >
-    <SectionsTree {...defaultProps} onTreeChange={console.log} />
-  </TreeView>
-);
+export const Editable = Template.bind({});
+Editable.args = {
+  ...Default.args,
+  isTopicEditable: () => true,
+};
