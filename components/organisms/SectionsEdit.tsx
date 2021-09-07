@@ -79,7 +79,7 @@ type Props = {
   isTopicEditable?(topic: TopicSchema): boolean | undefined;
 };
 
-export default function BookEditChildren(props: Props) {
+export default function SectionsEdit(props: Props) {
   const {
     sections,
     className,

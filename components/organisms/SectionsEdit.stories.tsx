@@ -1,7 +1,7 @@
-export default { title: "organisms/BookEditChildren" };
+export default { title: "organisms/SectionsEdit" };
 
 import { useState } from "react";
-import BookEditChildren from "./BookEditChildren";
+import SectionsEdit from "./SectionsEdit";
 import { SectionSchema } from "$server/models/book/section";
 import { sections as initialSections } from "samples";
 
@@ -21,7 +21,7 @@ const handleSectionsUpdate =
 export const Default = () => {
   const [sections, setSections] = useState<SectionSchema[]>(initialSections);
   return (
-    <BookEditChildren
+    <SectionsEdit
       sections={sections}
       onTopicPreviewClick={handleTopicPreviewClick}
       onSectionsUpdate={handleSectionsUpdate(setSections)}
@@ -32,7 +32,7 @@ export const Default = () => {
 export const Editable = () => {
   const [sections, setSections] = useState<SectionSchema[]>(initialSections);
   return (
-    <BookEditChildren
+    <SectionsEdit
       sections={sections}
       onTopicPreviewClick={handleTopicPreviewClick}
       onSectionsUpdate={handleSectionsUpdate(setSections)}
