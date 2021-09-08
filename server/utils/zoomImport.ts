@@ -35,16 +35,29 @@ export async function setupZoomImportScheduler() {
     return;
   }
   if (ZOOM_IMPORT_TO == "wowza" && !ZOOM_IMPORT_WOWZA_BASE_URL) {
-    logger("INFO", `ZOOM_IMPORT_WOWZA_BASE_URL is not defined.`);
+    logger(
+      "INFO",
+      `zoom import is not disabled. ZOOM_IMPORT_WOWZA_BASE_URL is not defined.`
+    );
     return;
   }
 
   schedule.scheduleJob(ZOOM_IMPORT_INTERVAL, async () => {
-    logger("INFO", `${new Date()}: start zoom import...`);
+    logger("INFO", "start zoom import...");
 
-    const users = await zoomListRequest("/users", "users", { page_size: 300 });
-    for (const user of users) {
-      await new ZoomImport(user.id, user.email, user.created_at).importTopics();
+    try {
+      const users = await zoomListRequest("/users", "users", {
+        page_size: 300,
+      });
+      for (const user of users) {
+        await new ZoomImport(
+          user.id,
+          user.email,
+          user.created_at
+        ).importTopics();
+      }
+    } catch (e) {
+      logger("ERROR", e.toString(), e);
     }
   });
 }
@@ -53,7 +66,6 @@ class ZoomImport {
   userId: string;
   email: string;
   createdAt: string;
-  errors: string[];
   tmpdir?: string;
   uploadauthor?: string;
   user?: User | null;
@@ -62,7 +74,6 @@ class ZoomImport {
     this.userId = userId;
     this.email = email;
     this.createdAt = createdAt;
-    this.errors = [];
   }
 
   async importTopics() {
@@ -110,7 +121,7 @@ class ZoomImport {
         );
       }
     } catch (e) {
-      this.errors.push(e.toString());
+      logger("ERROR", `${e.toString()}: email:${this.email}`, e);
     } finally {
       this.cleanUp();
     }
@@ -175,7 +186,11 @@ class ZoomImport {
         details: {},
       };
     } catch (e) {
-      this.errors.push(e.toString());
+      logger(
+        "ERROR",
+        `${e.toString()}: email:${this.email} meeting.id:${meeting.id}`,
+        e
+      );
       if (uploaddir) fs.rmdirSync(uploaddir, { recursive: true });
       return;
     }
@@ -230,9 +245,6 @@ class ZoomImport {
   cleanUp() {
     if (this.tmpdir) {
       fs.rmdirSync(this.tmpdir, { recursive: true });
-    }
-    if (this.errors.length) {
-      logger("ERROR", this.errors.toString());
     }
   }
 }
@@ -299,6 +311,12 @@ async function zoomListRequest(
   return list;
 }
 
-function logger(level: string, output: string) {
-  console.log(level, output);
+function logger(level: string, output: string, error?: Error) {
+  console.log(
+    dateFormat(new Date(), "yyyy/mm/dd HH:MM:ss"),
+    level,
+    output,
+    "ZoomImportLog"
+  );
+  if (error) console.log(error.stack);
 }
