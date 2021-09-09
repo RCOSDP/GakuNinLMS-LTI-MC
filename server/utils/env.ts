@@ -29,8 +29,7 @@ const ZOOM_API_KEY = process.env.ZOOM_API_KEY ?? "";
 const ZOOM_API_SECRET = process.env.ZOOM_API_SECRET ?? "";
 const ZOOM_IMPORT_INTERVAL = process.env.ZOOM_IMPORT_INTERVAL ?? "";
 const ZOOM_IMPORT_TO = process.env.ZOOM_IMPORT_TO ?? "";
-const ZOOM_IMPORT_WOWZA_BASE_URL =
-  process.env.ZOOM_IMPORT_WOWZA_BASE_URL ?? `http://localhost:${PORT}`;
+const ZOOM_IMPORT_WOWZA_BASE_URL = process.env.ZOOM_IMPORT_WOWZA_BASE_URL ?? "";
 const ZOOM_IMPORT_AUTODELETE = process.env.ZOOM_IMPORT_AUTODELETE ?? "";
 
 export {
