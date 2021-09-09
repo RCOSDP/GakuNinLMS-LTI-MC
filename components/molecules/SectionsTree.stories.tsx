@@ -8,7 +8,7 @@ import { sections } from "$samples";
 export default {
   title: "molecules/SectionsTree",
   component: SectionsTree,
-  argTypes: { selectable: { controls: "boolean" } },
+  argTypes: { selectable: { control: "boolean" } },
 };
 
 type ArgTypes = {
