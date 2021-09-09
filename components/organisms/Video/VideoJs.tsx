@@ -1,6 +1,5 @@
 import { useEffect, useRef } from "react";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
-import volumePersister from "$utils/volumePersister";
 import type { VideoJsInstance } from "$types/videoInstance";
 
 type Props = Omit<VideoJsInstance, "type" | "url">;
@@ -40,9 +39,6 @@ function VideoJs({ element, player, tracks }: Props) {
       classes.vjsDisabledPlayButton
     );
     current.appendChild(element);
-    player.ready(() => {
-      volumePersister(player);
-    });
     return () => {
       // TODO: played() に失敗するので dispose() せず一時停止して保持
       //       メモリリークにつながるので避けたほうが望ましい

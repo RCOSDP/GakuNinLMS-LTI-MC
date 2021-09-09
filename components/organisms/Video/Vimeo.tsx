@@ -1,5 +1,4 @@
 import { useEffect, useRef } from "react";
-import volumePersister from "$utils/volumePersister";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
 import type { VimeoInstance } from "$types/videoInstance";
 
@@ -23,7 +22,6 @@ function Vimeo({ element, player }: Props) {
     const { current } = ref;
     element.classList.add(classes.player);
     current.appendChild(element);
-    volumePersister(player);
     return () => {
       // TODO: 要素を取り除くと学習活動の記録のために使われている getPlayed() が resolve しないので残す
       //       メモリリークにつながるので避けたほうが望ましく、学習活動の送信後すみやかに取り除くべき
