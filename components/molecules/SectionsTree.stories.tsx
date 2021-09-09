@@ -44,8 +44,3 @@ Editable.args = {
   isTopicEditable: () => true,
 };
 
-export const Selectable = Template.bind({});
-Selectable.args = {
-  ...Default.args,
-  selectable: true,
-};
