@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import type { VideoInstance } from "$types/videoInstance";
+import useVolume from "$utils/useVolume";
 import Vimeo from "./Vimeo";
 import VideoJs from "./VideoJs";
 import videoJsDurationChangeShims from "$utils/videoJsDurationChangeShims";
@@ -17,6 +18,7 @@ export default function VideoPlayer({
   onEnded,
   onDurationChange,
 }: Props) {
+  useVolume(videoInstance.player);
   useEffect(() => {
     const { player } = videoInstance;
     const handleEnded = () => onEnded?.();
