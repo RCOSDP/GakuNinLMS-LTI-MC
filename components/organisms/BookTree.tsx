@@ -6,7 +6,7 @@ import PreviewButton from "$atoms/PreviewButton";
 import EditButton from "$atoms/EditButton";
 import CourseChip from "$atoms/CourseChip";
 import SharedIndicator from "$atoms/SharedIndicator";
-import BookChildrenTree from "$molecules/BookChildrenTree";
+import SectionsTree from "$molecules/SectionsTree";
 import useTreeItemStyle from "$styles/treeItem";
 import { BookSchema } from "$server/models/book";
 import { TopicSchema } from "$server/models/topic";
@@ -94,7 +94,7 @@ export default function BookTree(props: Props) {
         </>
       }
     >
-      <BookChildrenTree
+      <SectionsTree
         bookId={book.id}
         sections={book.sections}
         onItemClick={onItemClick}

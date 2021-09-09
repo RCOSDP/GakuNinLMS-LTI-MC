@@ -87,7 +87,7 @@ type Props = {
   onItemEditClick?(index: ItemIndex): void;
 };
 
-export default function BookChildren({
+export default function Sections({
   className,
   sections,
   index: [sectionIndex, topicIndex],

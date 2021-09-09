@@ -13,8 +13,8 @@ import AddIcon from "@material-ui/icons/Add";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import DragIndicatorIcon from "@material-ui/icons/DragIndicator";
 import { makeStyles } from "@material-ui/core/styles";
-import BookChildrenTree from "$molecules/BookChildrenTree";
-import DraggableBookChildren from "$molecules/DraggableBookChildren";
+import SectionsTree from "$molecules/SectionsTree";
+import DraggableSections from "$molecules/DraggableSections";
 import { SectionSchema } from "$server/models/book/section";
 import { TopicSchema } from "$server/models/topic";
 import useCardStyles from "$styles/card";
@@ -79,7 +79,7 @@ type Props = {
   isTopicEditable?(topic: TopicSchema): boolean | undefined;
 };
 
-export default function BookEditChildren(props: Props) {
+export default function SectionsEdit(props: Props) {
   const {
     sections,
     className,
@@ -166,7 +166,7 @@ export default function BookEditChildren(props: Props) {
       )}
       {sortable && (
         <>
-          <DraggableBookChildren
+          <DraggableSections
             sections={sortableSections}
             onSectionsUpdate={handleSectionsUpdate}
             onSectionCreate={handleSectionCreate}
@@ -203,7 +203,7 @@ export default function BookEditChildren(props: Props) {
           defaultExpandIcon={<ChevronRightIcon />}
           disableSelection
         >
-          <BookChildrenTree
+          <SectionsTree
             sections={sections}
             onItemPreviewClick={handleItem(onTopicPreviewClick)}
             onItemEditClick={handleItem(onTopicEditClick)}

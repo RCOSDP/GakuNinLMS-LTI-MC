@@ -81,7 +81,7 @@ type Props = {
   isTopicEditable?(topic: TopicSchema): boolean | undefined;
 };
 
-export default function BookChildrenTree(props: Props) {
+export default function SectionsTree(props: Props) {
   const {
     bookId = 0,
     sections,

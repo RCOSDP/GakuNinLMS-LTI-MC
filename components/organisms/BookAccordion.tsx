@@ -11,7 +11,7 @@ import EditButton from "$atoms/EditButton";
 import CourseChip from "$atoms/CourseChip";
 import SharedIndicator from "$atoms/SharedIndicator";
 import DescriptionList from "$atoms/DescriptionList";
-import BookChildrenTree from "$molecules/BookChildrenTree";
+import SectionsTree from "$molecules/SectionsTree";
 import { BookSchema } from "$server/models/book";
 import { TopicSchema } from "$server/models/topic";
 import { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
@@ -110,7 +110,7 @@ export default function BookAccordion(props: Props) {
           defaultCollapseIcon={<ExpandMoreIcon />}
           defaultExpandIcon={<ChevronRightIcon />}
         >
-          <BookChildrenTree
+          <SectionsTree
             sections={book.sections}
             onItemClick={handleItem(onTopicClick)}
             onItemEditClick={handleItem(onTopicEditClick)}

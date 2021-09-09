@@ -96,7 +96,7 @@ export default function BookImport(props: Props) {
     const selectedSections: SectionSchema[] = [];
     const selectedTopics: TopicSchema[] = [];
     selectedNodeIds.forEach((nodeId) => {
-      // TODO: BookTree と BookChildrenTree にある nodeId の構造に合わせて変更
+      // TODO: BookTree と SectionsTree にある nodeId の構造に合わせて変更
       const [bookId, sectionId, topicId] = nodeId
         .replace(/:[^:]*$/, "")
         .split("-")
