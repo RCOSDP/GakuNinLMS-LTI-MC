@@ -43,4 +43,3 @@ Editable.args = {
   ...Default.args,
   isTopicEditable: () => true,
 };
-
