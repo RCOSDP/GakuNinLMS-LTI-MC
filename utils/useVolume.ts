@@ -70,18 +70,9 @@ function useVolume(player: Player) {
       player instanceof VimeoPlayer ||
       // NOTE: videojs-youtube はバッファリングが行われるまで誤った値が得られうるため待機
       player.readyState() === 4 /* HaveEnoughData */,
-    {
-      refreshInterval: interval,
-      revalidateIfStale: false,
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-    }
+    { refreshInterval: interval }
   );
-  const { data, mutate } = useSWRImmutable<Volume>(key, load, {
-    revalidateIfStale: false,
-    revalidateOnFocus: false,
-    revalidateOnReconnect: false,
-  });
+  const { data, mutate } = useSWRImmutable<Volume>(key, load);
   const update = useCallback(async () => {
     save(await getVolume(player));
     await mutate();
