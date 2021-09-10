@@ -80,9 +80,11 @@ function useVolume(player: Player) {
   const onChange = useDebouncedCallback(update, wait);
   useEffect(() => {
     if (data) setVolume(player, data);
-    if (data && ready) player.on("volumechange", onChange);
+  }, [player, data]);
+  useEffect(() => {
+    if (ready) player.on("volumechange", onChange);
     return () => player.off("volumechange", onChange);
-  }, [player, ready, data, onChange]);
+  }, [player, ready, onChange]);
 }
 
 export default useVolume;
