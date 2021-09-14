@@ -44,9 +44,11 @@ export default function TopicViewer({
     const videoInstance = video.get(itemExists(itemIndex)?.resource.url ?? "");
     if (!videoInstance) return;
     if (videoInstance.type == "vimeo") {
+      videoInstance.player.setCurrentTime(0);
       videoInstance.player.play();
     } else {
       videoInstance.player.ready(() => {
+        videoInstance.player.currentTime(0);
         videoInstance.player.play();
       });
     }
