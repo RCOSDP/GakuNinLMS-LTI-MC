@@ -5,7 +5,8 @@ import unzipper from "unzipper";
 // './node_modules/recursive-readdir-synchronous/index.js' implicitly has an 'any' type.
 // eslint-disable-next-line tsc/config
 import recursive from "recursive-readdir-synchronous";
-import dateFormat from "dateformat";
+import format from "date-fns/format";
+import utcToZoneTime from "date-fns-tz/utcToZonedTime";
 import { Buffer } from "buffer";
 
 import { validate, ValidationError } from "class-validator";
@@ -205,7 +206,10 @@ class ImportBooksUtil {
       recursive: true,
     });
     const uploaddir = fs.mkdtempSync(
-      `${uploadauthor}/${dateFormat(new Date(), "yyyymmdd-HHMM")}-`
+      `${uploadauthor}/${format(
+        utcToZoneTime(new Date(), "Asia/Tokyo"),
+        "yyyyMMdd-HHmm"
+      )}-`
     );
     const uploadsubdir = uploaddir.substring(uploadroot.length);
 

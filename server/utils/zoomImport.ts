@@ -1,8 +1,10 @@
 import fs from "fs";
 import schedule from "node-schedule";
 import jwt from "jsonwebtoken";
-import rp from "request-promise";
-import dateFormat from "dateformat";
+import got from "got";
+import type { Method } from "got";
+import format from "date-fns/format";
+import utcToZoneTime from "date-fns-tz/utcToZonedTime";
 
 import prisma from "$server/utils/prisma";
 import type { User } from "@prisma/client";
@@ -141,17 +143,17 @@ class ZoomImport {
 
       const startTime = new Date(meeting.start_time);
       uploaddir = fs.mkdtempSync(
-        `${this.uploadauthor}/${dateFormat(startTime, "yyyymmdd-HHMM")}-`
+        `${this.uploadauthor}/${format(
+          utcToZoneTime(startTime, "Asia/Tokyo"),
+          "yyyyMMdd-HHmm"
+        )}-`
       );
       const file = `${uploaddir}/${meeting.id}.mp4`;
 
-      const option = {
-        uri: `${downloadUrl}?access_token=${zoomRequestToken()}`,
-        encoding: null,
-      };
-      await rp(option).then((response) => {
-        fs.writeFileSync(file, Buffer.from(response));
-      });
+      const responsePromise = got(
+        `${downloadUrl}?access_token=${zoomRequestToken()}`
+      );
+      fs.writeFileSync(file, await responsePromise.buffer());
 
       const video = {
         create: {
@@ -259,38 +261,25 @@ interface ZoomResponse {
 }
 
 function zoomRequestToken() {
-  return jwt.sign(
-    {
-      iss: ZOOM_API_KEY,
-      exp: new Date().getTime() + 1000,
-    },
-    ZOOM_API_SECRET
-  );
+  return jwt.sign({}, ZOOM_API_SECRET, {
+    issuer: ZOOM_API_KEY,
+    expiresIn: "2s",
+  });
 }
 
 async function zoomRequest(
   path: string,
-  qs: ZoomQuery = {},
-  method = "GET"
+  searchParams: ZoomQuery = {},
+  method: Method = "GET"
 ): Promise<ZoomResponse> {
-  const option = {
-    uri: "https://api.zoom.us/v2" + path,
-    qs,
+  return await got("https://api.zoom.us/v2" + path, {
+    searchParams,
     method,
-    auth: { bearer: zoomRequestToken() },
-    headers: { "content-type": "application/json" },
-    json: true,
-  };
-
-  return new Promise((resolve, reject) => {
-    rp(option)
-      .then((response) => {
-        resolve(response);
-      })
-      .catch((error) => {
-        reject(error);
-      });
-  });
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${zoomRequestToken()}`,
+    },
+  }).json();
 }
 
 async function zoomListRequest(
@@ -313,7 +302,7 @@ async function zoomListRequest(
 
 function logger(level: string, output: string, error?: Error) {
   console.log(
-    dateFormat(new Date(), "yyyy/mm/dd HH:MM:ss"),
+    format(utcToZoneTime(new Date(), "Asia/Tokyo"), "yyyy-MM-dd HH:mm:ss"),
     level,
     output,
     "ZoomImportLog"
