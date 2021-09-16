@@ -2,13 +2,14 @@ import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import { makeStyles } from "@material-ui/core/styles";
 import BooksImportForm from "$organisms/BooksImportForm";
-import BookAccordion from "$organisms/BookAccordion";
+import BookPreview from "$organisms/BookPreview";
 import BackButton from "$atoms/BackButton";
 import useContainerStyles from "styles/container";
 import {
   BooksImportParams,
   BooksImportResult,
 } from "$server/validators/booksImportParams";
+import type { BookSchema } from "$server/models/book";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -38,17 +39,25 @@ const useStyles = makeStyles((theme) => ({
   },
   books: {
     marginTop: theme.spacing(1),
+    "& > *": {
+      marginBottom: theme.spacing(2),
+    },
   },
 }));
 
 type Props = {
   importResult?: BooksImportResult;
+  onBookPreviewClick?(book: BookSchema): void;
   onSubmit(book: BooksImportParams): void;
   onCancel(): void;
 };
 
-export default function BooksImport(props: Props) {
-  const { importResult, onSubmit, onCancel } = props;
+export default function BooksImport({
+  importResult,
+  onBookPreviewClick,
+  onSubmit,
+  onCancel,
+}: Props) {
   const classes = useStyles();
   const containerClasses = useContainerStyles();
 
@@ -80,7 +89,11 @@ export default function BooksImport(props: Props) {
           {showSuccess && (
             <div className={classes.books}>
               {importResult?.books?.map((book) => (
-                <BookAccordion key={book.id} book={book} />
+                <BookPreview
+                  key={book.id}
+                  book={book}
+                  onBookPreviewClick={onBookPreviewClick}
+                />
               ))}
             </div>
           )}
