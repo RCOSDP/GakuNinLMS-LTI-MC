@@ -9,6 +9,7 @@ import {
   BooksImportParams,
   BooksImportResult,
 } from "$server/validators/booksImportParams";
+import type { BookSchema } from "$server/models/book";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -46,12 +47,17 @@ const useStyles = makeStyles((theme) => ({
 
 type Props = {
   importResult?: BooksImportResult;
+  onBookPreviewClick?(book: BookSchema): void;
   onSubmit(book: BooksImportParams): void;
   onCancel(): void;
 };
 
-export default function BooksImport(props: Props) {
-  const { importResult, onSubmit, onCancel } = props;
+export default function BooksImport({
+  importResult,
+  onBookPreviewClick,
+  onSubmit,
+  onCancel,
+}: Props) {
   const classes = useStyles();
   const containerClasses = useContainerStyles();
 
@@ -83,7 +89,11 @@ export default function BooksImport(props: Props) {
           {showSuccess && (
             <div className={classes.books}>
               {importResult?.books?.map((book) => (
-                <BookPreview key={book.id} book={book} />
+                <BookPreview
+                  key={book.id}
+                  book={book}
+                  onBookPreviewClick={onBookPreviewClick}
+                />
               ))}
             </div>
           )}
