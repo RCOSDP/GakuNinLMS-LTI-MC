@@ -15,9 +15,12 @@ import {
   registerDecorator,
   ValidatorConstraintInterface,
 } from "class-validator";
-import { validationMetadatasToSchemas } from "class-validator-jsonschema";
+import {
+  validationMetadatasToSchemas,
+  JSONSchema,
+} from "class-validator-jsonschema";
 import parse from "spdx-expression-parse";
-import { BookSchema } from "$server/models/book";
+import { BookSchema, bookSchema } from "$server/models/book";
 
 export class BooksImportParams {
   @IsOptional()
@@ -40,7 +43,12 @@ export const booksImportParamsSchema =
 
 export class BooksImportResult {
   @IsOptional()
-  @ValidateNested({ each: true })
+  @ValidateNested()
+  @JSONSchema({
+    type: "array",
+    // @ts-expect-error NOTE: json-schema.json由来で型チェックが効かない
+    items: bookSchema,
+  })
   books?: BookSchema[];
 
   @IsOptional()

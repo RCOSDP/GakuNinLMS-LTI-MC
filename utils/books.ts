@@ -34,11 +34,5 @@ export async function importBooks(
   body: BooksImportParams
 ): Promise<BooksImportResult> {
   const res = await api.apiV2BooksImportPost({ body });
-  const books = (res["books"] ?? []) as BookSchema[];
-  books.map((t) => {
-    t.publishedAt = new Date(t.publishedAt);
-    t.createdAt = new Date(t.createdAt);
-    t.updatedAt = new Date(t.updatedAt);
-  });
   return res as BooksImportResult;
 }
