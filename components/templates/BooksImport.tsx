@@ -2,7 +2,7 @@ import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import { makeStyles } from "@material-ui/core/styles";
 import BooksImportForm from "$organisms/BooksImportForm";
-import BookAccordion from "$organisms/BookAccordion";
+import BookPreview from "$organisms/BookPreview";
 import BackButton from "$atoms/BackButton";
 import useContainerStyles from "styles/container";
 import {
@@ -38,6 +38,9 @@ const useStyles = makeStyles((theme) => ({
   },
   books: {
     marginTop: theme.spacing(1),
+    "& > *": {
+      marginBottom: theme.spacing(2),
+    },
   },
 }));
 
@@ -80,7 +83,7 @@ export default function BooksImport(props: Props) {
           {showSuccess && (
             <div className={classes.books}>
               {importResult?.books?.map((book) => (
-                <BookAccordion key={book.id} book={book} />
+                <BookPreview key={book.id} book={book} />
               ))}
             </div>
           )}
