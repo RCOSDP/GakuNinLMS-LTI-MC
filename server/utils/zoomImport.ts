@@ -112,7 +112,9 @@ class ZoomImport {
         const data = await this.getTopic(meeting);
         if (data && data.topic && data.zoomMeeting) {
           transactions.push(prisma.topic.create({ data: data.topic }));
-          transactions.push(prisma.zoomMeeting.create({ data: data.zoomMeeting }));
+          transactions.push(
+            prisma.zoomMeeting.create({ data: data.zoomMeeting })
+          );
           if (ZOOM_IMPORT_AUTODELETE) deletemeetings.push(meeting.id);
         }
       }
@@ -193,7 +195,7 @@ class ZoomImport {
 
       const zoomMeeting = {
         id: meeting.id,
-        resource
+        resource,
       };
 
       return { topic, zoomMeeting };
