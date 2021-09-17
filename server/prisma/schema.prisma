@@ -14,21 +14,28 @@ generator jsonSchema {
 
 // Resource Objects
 
+/// Zoomインポート履歴
+model ZoomMeeting {
+  id         BigInt   @id
+  resource   Resource @relation(fields: [resourceId], references: [id])
+  resourceId Int      @map("resource_id")
+
+  @@map("zoom_meetings")
+}
+
 /// 教育用外部リソース
 model Resource {
   id      Int     @id @default(autoincrement())
   topics  Topic[]
+  zoomMeetings ZoomMeeting[]
   video   Video?  @relation(fields: [videoId], references: [id])
   videoId Int?    @map("video_id")
   /// 外部リソースのアドレス
   url     String  @unique
-  /// インポート済みデータid
-  importedId String @map("imported_id") @default("")
   /// 詳細
   details Json
 
   @@map("resources")
-  @@index([importedId])
 }
 
 /// ビデオ

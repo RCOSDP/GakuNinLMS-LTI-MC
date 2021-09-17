@@ -6,7 +6,6 @@ const resource = {
   videoId: 1,
   url: "https://www.youtube.com/watch?v=YzVwrvbz_XA",
   providerUrl: "https://www.youtube.com/",
-  importedId: "",
   tracks: [
     {
       id: 1,

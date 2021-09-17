@@ -10,7 +10,7 @@ import prisma from "$server/utils/prisma";
 import type { User } from "@prisma/client";
 import type { UserSettings } from "$server/validators/userSettings";
 import { findUserByEmail } from "$server/utils/user";
-import { findResourceByImportedId } from "$server/utils/resource/findResource";
+import { findZoomMeeting } from "$server/utils/zoomMeeting/findZoomMeeting";
 import { scpUpload } from "$server/utils/wowza/scpUpload";
 
 import {
@@ -44,8 +44,9 @@ export async function setupZoomImportScheduler() {
     return;
   }
 
-  schedule.scheduleJob(ZOOM_IMPORT_INTERVAL, async () => {
-    logger("INFO", "start zoom import...");
+  const job = schedule.scheduleJob(ZOOM_IMPORT_INTERVAL, async () => {
+    job.cancel();
+    logger("INFO", "begin zoom import...");
 
     try {
       const users = await zoomListRequest("/users", "users", {
@@ -60,6 +61,9 @@ export async function setupZoomImportScheduler() {
       }
     } catch (e) {
       logger("ERROR", e.toString(), e);
+    } finally {
+      logger("INFO", "end zoom import...");
+      job.reschedule(ZOOM_IMPORT_INTERVAL);
     }
   });
 }
@@ -106,8 +110,9 @@ class ZoomImport {
       const deletemeetings = [];
       for (const meeting of meetings) {
         const data = await this.getTopic(meeting);
-        if (data) {
-          transactions.push(prisma.topic.create({ data }));
+        if (data && data.topic && data.zoomMeeting) {
+          transactions.push(prisma.topic.create({ data: data.topic }));
+          transactions.push(prisma.zoomMeeting.create({ data: data.zoomMeeting }));
           if (ZOOM_IMPORT_AUTODELETE) deletemeetings.push(meeting.id);
         }
       }
@@ -134,8 +139,7 @@ class ZoomImport {
 
     let uploaddir;
     try {
-      const importedId = "zoom_" + meeting.id;
-      const importedResource = await findResourceByImportedId(importedId);
+      const importedResource = await findZoomMeeting(meeting.id);
       if (importedResource) return;
 
       const downloadUrl = this.getDownloadUrl(meeting);
@@ -144,7 +148,7 @@ class ZoomImport {
       const startTime = new Date(meeting.start_time);
       uploaddir = fs.mkdtempSync(
         `${this.uploadauthor}/${format(
-          utcToZoneTime(startTime, "Asia/Tokyo"),
+          utcToZoneTime(startTime, meeting.timezone || "Asia/Tokyo"),
           "yyyyMMdd-HHmm"
         )}-`
       );
@@ -169,7 +173,6 @@ class ZoomImport {
           create: {
             video,
             url,
-            importedId,
             details: {},
           },
           where: { url },
@@ -177,16 +180,23 @@ class ZoomImport {
       };
 
       const meetingDetail = await this.getMeetingDetail(meeting);
-      return {
+      const topic = {
         name: "📽 " + meeting.topic,
         description: meetingDetail.agenda,
-        timeRequired: meeting.duration,
+        timeRequired: meeting.duration * 60,
         creator: { connect: { id: this.user.id } },
         createdAt: startTime,
         updatedAt: new Date(),
         resource,
         details: {},
       };
+
+      const zoomMeeting = {
+        id: meeting.id,
+        resource
+      };
+
+      return { topic, zoomMeeting };
     } catch (e) {
       logger(
         "ERROR",
@@ -255,6 +265,12 @@ interface ZoomQuery {
   [key: string]: string | number | boolean;
 }
 
+// zoom apiのレスポンスデータ全般を扱う型
+// apiによって内容は違うが、文字列のキー名と任意の型の値という形式は共通しており
+// これらの形式をtypescriptの警告やエラーを回避しつつ利用できるようにするため
+// any型を許容する。具体的な利用例は以下の通り
+// value = response[keyname];
+// next_page_token = response.next_page_token;
 interface ZoomResponse {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any;

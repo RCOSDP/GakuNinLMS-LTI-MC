@@ -25,7 +25,6 @@ test("トピック名による絞り込み", () => {
       videoId: 1,
       url: "https://example/",
       providerUrl: "https://example/",
-      importedId: "",
       details: {},
     },
     details: {},
