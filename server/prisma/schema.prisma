@@ -18,7 +18,7 @@ generator jsonSchema {
 model ZoomMeeting {
   id         BigInt   @id
   resource   Resource @relation(fields: [resourceId], references: [id])
-  resourceId Int      @map("resource_id")
+  resourceId Int      @unique @map("resource_id")
 
   @@map("zoom_meetings")
 }
@@ -27,7 +27,7 @@ model ZoomMeeting {
 model Resource {
   id      Int     @id @default(autoincrement())
   topics  Topic[]
-  zoomMeetings ZoomMeeting[]
+  zoomMeeting ZoomMeeting?
   video   Video?  @relation(fields: [videoId], references: [id])
   videoId Int?    @map("video_id")
   /// 外部リソースのアドレス
