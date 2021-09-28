@@ -1,5 +1,5 @@
 import IconButton from "$atoms/IconButton";
-import CloseIcon from "@material-ui/icons/Close";
+import CloseIcon from "@mui/icons-material/Close";
 
 type Props = Omit<Parameters<typeof IconButton>[0], "tooltipProps">;
 

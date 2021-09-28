@@ -1,6 +1,6 @@
 import { useCallback } from "react";
-import MenuItem from "@material-ui/core/MenuItem";
-import MuiSelect from "@material-ui/core/Select";
+import MenuItem from "@mui/material/MenuItem";
+import MuiSelect from "@mui/material/Select";
 import useSelectStyles from "styles/select";
 import useInputStyles from "styles/input";
 import type { SortOrder } from "$server/models/sortOrder";

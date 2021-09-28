@@ -1,12 +1,12 @@
 import { useState, forwardRef, ComponentProps, Ref } from "react";
-import MuiAppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import Button from "@material-ui/core/Button";
-import MenuBookOutlinedIcon from "@material-ui/icons/MenuBookOutlined";
-import LibraryBooksOutlinedIcon from "@material-ui/icons/LibraryBooksOutlined";
-import AssessmentOutlinedIcon from "@material-ui/icons/AssessmentOutlined";
-import LinkIcon from "@material-ui/icons/Link";
-import { makeStyles } from "@material-ui/core/styles";
+import MuiAppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import Button from "@mui/material/Button";
+import MenuBookOutlinedIcon from "@mui/icons-material/MenuBookOutlined";
+import LibraryBooksOutlinedIcon from "@mui/icons-material/LibraryBooksOutlined";
+import AssessmentOutlinedIcon from "@mui/icons-material/AssessmentOutlined";
+import LinkIcon from "@mui/icons-material/Link";
+import makeStyles from "@mui/styles/makeStyles";
 import clsx from "clsx";
 import AppBarNavButton from "$atoms/AppBarNavButton";
 import LtiItemDialog from "$organisms/LtiItemDialog";
@@ -20,12 +20,12 @@ const useStyles = makeStyles((theme) => ({
   inner: {
     display: "flex",
     alignItems: "center",
-    maxWidth: theme.breakpoints.width("lg"),
+    maxWidth: theme.breakpoints.values.lg,
     width: "100%",
     margin: "0 auto",
-    padding: `0 ${theme.spacing(3)}px`,
-    [theme.breakpoints.down("xs")]: {
-      padding: `0 ${theme.spacing(2)}px`,
+    padding: `0 ${theme.spacing(3)}`,
+    [theme.breakpoints.down("sm")]: {
+      padding: `0 ${theme.spacing(2)}`,
     },
   },
   logo: {

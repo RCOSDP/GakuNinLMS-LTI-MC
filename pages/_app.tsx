@@ -3,10 +3,10 @@ import { Provider } from "jotai";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import MuiThemeProvider from "@material-ui/styles/ThemeProvider";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import Slide from "@material-ui/core/Slide";
-import useScrollTrigger from "@material-ui/core/useScrollTrigger";
+import MuiThemeProvider from "@mui/styles/ThemeProvider";
+import CssBaseline from "@mui/material/CssBaseline";
+import Slide from "@mui/material/Slide";
+import useScrollTrigger from "@mui/material/useScrollTrigger";
 import { ConfirmProvider } from "material-ui-confirm";
 import theme from "$theme";
 import Placeholder from "$templates/Placeholder";
@@ -66,10 +66,12 @@ function ThemeProvider({ children }: { children: ReactNode }) {
         <meta name="viewport" content="width=device-width" />
         <meta name="theme-color" content={theme.palette.primary.main} />
       </Head>
-      <MuiThemeProvider theme={theme}>
-        <CssBaseline />
-        <Content>{children}</Content>
-      </MuiThemeProvider>
+      <StyledEngineProvider injectFirst>
+        <MuiThemeProvider theme={theme}>
+          <CssBaseline />
+          <Content>{children}</Content>
+        </MuiThemeProvider>
+      </StyledEngineProvider>
     </>
   );
 }

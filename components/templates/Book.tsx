@@ -1,13 +1,14 @@
 import { useState } from "react";
 import clsx from "clsx";
-import { useTheme, makeStyles } from "@material-ui/core/styles";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
-import Button from "@material-ui/core/Button";
-import Link from "@material-ui/core/Link";
-import Typography from "@material-ui/core/Typography";
-import Container from "@material-ui/core/Container";
-import LinkIcon from "@material-ui/icons/Link";
-import useScrollTrigger from "@material-ui/core/useScrollTrigger";
+import { useTheme } from "@mui/material/styles";
+import makeStyles from "@mui/styles/makeStyles";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import Button from "@mui/material/Button";
+import Link from "@mui/material/Link";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import LinkIcon from "@mui/icons-material/Link";
+import useScrollTrigger from "@mui/material/useScrollTrigger";
 import EditButton from "$atoms/EditButton";
 import SharedIndicator from "$atoms/SharedIndicator";
 import DescriptionList from "$atoms/DescriptionList";
@@ -58,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
   },
   inner: {
     display: "grid",
-    gap: `${theme.spacing(2)}px`,
+    gap: theme.spacing(2),
     "&$desktop": {
       gridTemplateAreas: `
         "side main"

@@ -4,8 +4,8 @@ export default {
 };
 
 import Topics from "./Topics";
-import Slide from "@material-ui/core/Slide";
-import useScrollTrigger from "@material-ui/core/useScrollTrigger";
+import Slide from "@mui/material/Slide";
+import useScrollTrigger from "@mui/material/useScrollTrigger";
 import AppBar from "$organisms/AppBar";
 import { topic, session } from "$samples";
 

@@ -1,4 +1,4 @@
-import Link from "@material-ui/core/Link";
+import Link from "@mui/material/Link";
 import Problem from "$organisms/Problem";
 
 export default function EmbedProblem() {

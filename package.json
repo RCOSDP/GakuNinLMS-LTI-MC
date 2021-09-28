@@ -12,11 +12,13 @@
     "server"
   ],
   "devDependencies": {
-    "@material-ui/core": "^4.12.3",
-    "@material-ui/icons": "^4.11.2",
-    "@material-ui/lab": "^4.0.0-alpha.60",
-    "@material-ui/styles": "^4.11.4",
+    "@emotion/react": "^11.4.1",
+    "@emotion/styled": "^11.3.0",
     "@meikidd/videojs-hlsjs-plugin": "^1.0.18",
+    "@mui/icons-material": "^5.0.1",
+    "@mui/lab": "^5.0.0-alpha.48",
+    "@mui/material": "^5.0.1",
+    "@mui/styles": "^5.0.1",
     "@openapitools/openapi-generator-cli": "^2.3.10",
     "@rooks/use-previous": "^4.11.2",
     "@storybook/addon-a11y": "^6.3.7",

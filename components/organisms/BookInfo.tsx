@@ -1,5 +1,5 @@
-import Card from "@material-ui/core/Card";
-import { grey } from "@material-ui/core/colors";
+import Card from "@mui/material/Card";
+import { grey } from "@mui/material/colors";
 import DescriptionList from "$atoms/DescriptionList";
 import Markdown from "$atoms/Markdown";
 import useCardStyle from "$styles/card";

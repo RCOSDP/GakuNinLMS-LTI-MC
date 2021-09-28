@@ -1,6 +1,6 @@
 export default { title: "organisms/TopicPreview" };
 
-import { makeStyles } from "@material-ui/core/styles";
+import makeStyles from "@mui/styles/makeStyles";
 import TopicPreview from "./TopicPreview";
 import { topic } from "samples";
 
@@ -8,7 +8,7 @@ const useStyles = makeStyles((theme) => ({
   grid: {
     display: "grid",
     gridTemplateColumns: "repeat(auto-fill, 290px)",
-    gap: `${theme.spacing(2)}px`,
+    gap: theme.spacing(2),
   },
 }));
 

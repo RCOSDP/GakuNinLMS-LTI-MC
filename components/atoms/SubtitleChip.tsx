@@ -1,6 +1,6 @@
-import Chip from "@material-ui/core/Chip";
-import CloseIcon from "@material-ui/icons/Close";
-import { makeStyles } from "@material-ui/core/styles";
+import Chip from "@mui/material/Chip";
+import CloseIcon from "@mui/icons-material/Close";
+import makeStyles from "@mui/styles/makeStyles";
 import { VideoTrackSchema } from "$server/models/videoTrack";
 import languages from "$utils/languages";
 import { gray } from "$theme/colors";

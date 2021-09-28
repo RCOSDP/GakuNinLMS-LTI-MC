@@ -1,10 +1,10 @@
 import { FormEvent, useState } from "react";
 import useInfiniteScroll from "react-infinite-scroll-hook";
-import Skeleton from "@material-ui/lab/Skeleton";
-import { makeStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
-import Typography from "@material-ui/core/Typography";
-import Container from "@material-ui/core/Container";
+import Skeleton from "@mui/material/Skeleton";
+import makeStyles from "@mui/styles/makeStyles";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
 import ActionHeader from "$organisms/ActionHeader";
 import ActionFooter from "$organisms/ActionFooter";
 import TopicPreview from "$organisms/TopicPreview";
@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
   topics: {
     display: "grid",
     gridTemplateColumns: "repeat(auto-fill, 296px)",
-    gap: `${theme.spacing(2)}px`,
+    gap: theme.spacing(2),
   },
   form: {
     "& > *": {

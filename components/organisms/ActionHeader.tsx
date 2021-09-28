@@ -1,8 +1,9 @@
 import { ComponentProps } from "react";
 import clsx from "clsx";
-import Container from "@material-ui/core/Container";
-import Typography from "@material-ui/core/Typography";
-import { useTheme, makeStyles } from "@material-ui/core/styles";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
+import { useTheme } from "@mui/material/styles";
+import makeStyles from "@mui/styles/makeStyles";
 import { gray } from "$theme/colors";
 import useSticky from "$utils/useSticky";
 import useAppBarOffset from "$utils/useAppBarOffset";

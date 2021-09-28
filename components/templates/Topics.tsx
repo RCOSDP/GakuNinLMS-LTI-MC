@@ -1,9 +1,9 @@
 import useInfiniteScroll from "react-infinite-scroll-hook";
-import Skeleton from "@material-ui/lab/Skeleton";
-import { makeStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
-import Container from "@material-ui/core/Container";
-import AddIcon from "@material-ui/icons/Add";
+import Skeleton from "@mui/material/Skeleton";
+import makeStyles from "@mui/styles/makeStyles";
+import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
+import AddIcon from "@mui/icons-material/Add";
 import ActionHeader from "$organisms/ActionHeader";
 import TopicPreview from "$organisms/TopicPreview";
 import TopicPreviewDialog from "$organisms/TopicPreviewDialog";
@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
   topics: {
     display: "grid",
     gridTemplateColumns: "repeat(auto-fill, 296px)",
-    gap: `${theme.spacing(2)}px`,
+    gap: theme.spacing(2),
   },
 }));
 

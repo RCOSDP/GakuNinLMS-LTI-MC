@@ -1,6 +1,6 @@
 import { ComponentProps, ReactNode } from "react";
-import Button from "@material-ui/core/Button";
-import makeStyles from "@material-ui/styles/makeStyles";
+import Button from "@mui/material/Button";
+import makeStyles from "@mui/styles/makeStyles";
 
 const useButtonStyles = makeStyles({
   label: {

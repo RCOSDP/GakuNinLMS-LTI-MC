@@ -1,8 +1,9 @@
 import clsx from "clsx";
 import { TopicSchema } from "$server/models/topic";
-import Typography from "@material-ui/core/Typography";
-import Chip from "@material-ui/core/Chip";
-import { useTheme, makeStyles } from "@material-ui/core/styles";
+import Typography from "@mui/material/Typography";
+import Chip from "@mui/material/Chip";
+import { useTheme } from "@mui/material/styles";
+import makeStyles from "@mui/styles/makeStyles";
 import Video from "$organisms/Video";
 import VideoPlayer from "$organisms/Video/VideoPlayer";
 import DescriptionList from "$atoms/DescriptionList";

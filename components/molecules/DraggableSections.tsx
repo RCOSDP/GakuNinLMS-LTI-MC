@@ -2,9 +2,9 @@ import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import type { DraggableId, DropResult } from "react-beautiful-dnd";
 import clsx from "clsx";
 import { useDebouncedCallback } from "use-debounce";
-import AddIcon from "@material-ui/icons/Add";
-import DragIndicatorIcon from "@material-ui/icons/DragIndicator";
-import { makeStyles } from "@material-ui/core/styles";
+import AddIcon from "@mui/icons-material/Add";
+import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
+import makeStyles from "@mui/styles/makeStyles";
 import RemoveButton from "$atoms/RemoveButton";
 import SectionTextField from "$atoms/SectionTextField";
 import { SectionSchema } from "$server/models/book/section";
@@ -177,7 +177,7 @@ function DragDropSection({
 
 const useDraggableTopicStyles = makeStyles((theme) => ({
   root: {
-    padding: `${theme.spacing(1)}px 0`,
+    padding: `${theme.spacing(1)} 0`,
     display: "flex",
     alignItems: "center",
     "&:hover $icon": {

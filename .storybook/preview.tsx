@@ -1,8 +1,8 @@
 import type { ReactNode } from "react";
 import type { Story } from "@storybook/react";
 import { Provider } from "jotai";
-import MuiThemeProvider from "@material-ui/styles/ThemeProvider";
-import CssBaseline from "@material-ui/core/CssBaseline";
+import MuiThemeProvider from "@mui/styles/ThemeProvider";
+import CssBaseline from "@mui/material/CssBaseline";
 import { ConfirmProvider } from "material-ui-confirm";
 import theme from "../theme";
 // NOTE: For VideoJs components.
@@ -11,10 +11,12 @@ import "videojs-seek-buttons/dist/videojs-seek-buttons.css";
 
 function ThemeProvider({ children }: { children: ReactNode }) {
   return (
-    <MuiThemeProvider theme={theme}>
-      <CssBaseline />
-      {children}
-    </MuiThemeProvider>
+    <StyledEngineProvider injectFirst>
+      <MuiThemeProvider theme={theme}>
+        <CssBaseline />
+        {children}
+      </MuiThemeProvider>
+    </StyledEngineProvider>
   );
 }
 

@@ -1,11 +1,11 @@
 export default { title: "atoms/IconButton" };
 
-import CloseIcon from "@material-ui/icons/Close";
+import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "./IconButton";
 
 export const Default = () => {
   return (
-    <IconButton tooltipProps={{ title: "閉じる" }}>
+    <IconButton tooltipProps={{ title: "閉じる" }} size="large">
       <CloseIcon />
     </IconButton>
   );

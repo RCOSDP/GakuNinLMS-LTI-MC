@@ -1,6 +1,6 @@
 import { ComponentProps } from "react";
-import TextField from "@material-ui/core/TextField";
-import { makeStyles } from "@material-ui/core/styles";
+import TextField from "@mui/material/TextField";
+import makeStyles from "@mui/styles/makeStyles";
 import gray from "$theme/colors/gray";
 
 // NOTE: https://github.com/mui-org/material-ui/blob/master/packages/material-ui/src/OutlinedInput/OutlinedInput.js
@@ -35,7 +35,7 @@ const useOutlinedInputStyles = makeStyles((theme) => ({
 
 const useInputLabelStyles = makeStyles((theme) => ({
   outlined: {
-    transform: `translate(${theme.spacing(1)}px, 10px)`,
+    transform: `translate(${theme.spacing(1)}, 10px)`,
   },
 }));
 
