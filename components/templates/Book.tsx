@@ -23,6 +23,7 @@ import { useSessionAtom } from "$store/session";
 import useSticky from "$utils/useSticky";
 import useAppBarOffset from "$utils/useAppBarOffset";
 import getLocaleDateString from "$utils/getLocaleDateString";
+import extractNumberFromPx from "$utils/extractNumberFromPx";
 
 const useStyles = makeStyles((theme) => ({
   header: {
@@ -127,11 +128,13 @@ export default function Book(props: Props) {
   const handleLinkClick = () => setExpanded(!expanded);
   const theme = useTheme();
   const trigger = useScrollTrigger({
-    threshold: 64,
+    threshold: extractNumberFromPx(theme.spacing(4)),
     disableHysteresis: true,
   });
-  const sideOffset = 32 + (trigger ? 0 : 64);
-  const actionHeaderOffset = 64;
+  const sideOffset =
+    extractNumberFromPx(theme.spacing(2)) +
+    (trigger ? 0 : extractNumberFromPx(theme.spacing(4)));
+  const actionHeaderOffset = extractNumberFromPx(theme.spacing(4));
   const appBarOffset = useAppBarOffset();
   const offset = (considerAppBar ? appBarOffset : 0) + actionHeaderOffset;
   const classes = useStyles({

@@ -2,6 +2,7 @@ import clsx from "clsx";
 import { TopicSchema } from "$server/models/topic";
 import Typography from "@mui/material/Typography";
 import Chip from "@mui/material/Chip";
+import { useTheme } from "@mui/material/styles";
 import makeStyles from "@mui/styles/makeStyles";
 import Video from "$organisms/Video";
 import VideoPlayer from "$organisms/Video/VideoPlayer";
@@ -14,6 +15,7 @@ import { NEXT_PUBLIC_VIDEO_MAX_HEIGHT } from "$utils/env";
 import { isVideoResource } from "$utils/videoResource";
 import { useVideoAtom } from "$store/video";
 import { gray } from "$theme/colors";
+import extractNumberFromPx from "$utils/extractNumberFromPx";
 
 const useStyles = makeStyles((theme) => ({
   video: {
@@ -60,8 +62,9 @@ type Props = {
 
 export default function TopicViewerContent({ topic, onEnded, offset }: Props) {
   const classes = useStyles();
+  const theme = useTheme();
   const sticky = useSticky({
-    offset: offset ?? -32,
+    offset: offset ?? extractNumberFromPx(theme.spacing(-2)),
   });
   const { video } = useVideoAtom();
   return (
