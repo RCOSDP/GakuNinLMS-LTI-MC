@@ -143,7 +143,7 @@ export default function Book(props: Props) {
     considerAppBar ? appBarOffset : "0px"
   );
   const classes = useStyles({
-    offset: offset + sideOffset,
+    offset: sumPixels(offset, sideOffset),
   });
   const sticky = useSticky({ offset });
   const matches = useMediaQuery(theme.breakpoints.up("md"));
