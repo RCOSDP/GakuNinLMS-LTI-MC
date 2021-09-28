@@ -8,6 +8,7 @@ import { StyledEngineProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import Slide from "@mui/material/Slide";
 import useScrollTrigger from "@mui/material/useScrollTrigger";
+import { ConfirmProvider } from "material-ui-confirm";
 import theme from "$theme";
 import Placeholder from "$templates/Placeholder";
 import AppBar from "$organisms/AppBar";
@@ -80,7 +81,9 @@ function App({ Component, pageProps }: AppProps) {
   return (
     <Provider>
       <ThemeProvider>
-        <Component {...pageProps} />
+        <ConfirmProvider>
+          <Component {...pageProps} />
+        </ConfirmProvider>
       </ThemeProvider>
     </Provider>
   );

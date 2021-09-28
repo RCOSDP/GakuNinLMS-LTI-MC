@@ -4,6 +4,7 @@ import { Provider } from "jotai";
 import MuiThemeProvider from "@mui/styles/ThemeProvider";
 import { StyledEngineProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
+import { ConfirmProvider } from "material-ui-confirm";
 import theme from "../theme";
 // NOTE: For VideoJs components.
 import "video.js/dist/video-js.css";
@@ -24,7 +25,9 @@ export const decorators = [
   (Story: Story) => (
     <Provider>
       <ThemeProvider>
-        <Story />
+        <ConfirmProvider>
+          <Story />
+        </ConfirmProvider>
       </ThemeProvider>
     </Provider>
   ),
