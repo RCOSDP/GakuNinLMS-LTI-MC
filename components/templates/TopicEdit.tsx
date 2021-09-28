@@ -12,7 +12,6 @@ import type {
   VideoTrackProps,
   VideoTrackSchema,
 } from "$server/models/videoTrack";
-import { useConfirm } from "material-ui-confirm";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -54,13 +53,8 @@ export default function TopicEdit(props: Props) {
   } = props;
   const classes = useStyles();
   const containerClasses = useContainerStyles();
-  const confirm = useConfirm();
   const handleDeleteButtonClick = async () => {
-    await confirm({
-      title: `トピック「${topic.name}」を削除します。よろしいですか？`,
-      cancellationText: "キャンセル",
-      confirmationText: "OK",
-    });
+    // TODO: MUI v5 対応のダイアログを使う
     onDelete(topic);
   };
 

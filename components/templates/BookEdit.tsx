@@ -13,7 +13,6 @@ import type { BookSchema } from "$server/models/book";
 import type { BookPropsWithSubmitOptions } from "$types/bookPropsWithSubmitOptions";
 import { SectionProps } from "$server/models/book/section";
 import { TopicSchema } from "$server/models/topic";
-import { useConfirm } from "material-ui-confirm";
 import useDialogProps from "$utils/useDialogProps";
 
 const useStyles = makeStyles((theme) => ({
@@ -70,7 +69,6 @@ export default function BookEdit({
 }: Props) {
   const classes = useStyles();
   const containerClasses = useContainerStyles();
-  const confirm = useConfirm();
   const {
     data: previewTopic,
     dispatch: setPreviewTopic,
@@ -79,11 +77,7 @@ export default function BookEdit({
   const handleTopicPreviewClick = (topic: TopicSchema) =>
     setPreviewTopic(topic);
   const handleDeleteButtonClick = async () => {
-    await confirm({
-      title: `ブック「${book.name}」を削除します。よろしいですか？`,
-      cancellationText: "キャンセル",
-      confirmationText: "OK",
-    });
+    // TODO: MUI v5 対応のダイアログを使う
     onDelete(book);
   };
 
