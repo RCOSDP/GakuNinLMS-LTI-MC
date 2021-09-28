@@ -7,7 +7,7 @@ import makeStyles from "@mui/styles/makeStyles";
 import { gray } from "$theme/colors";
 import useSticky from "$utils/useSticky";
 import useAppBarOffset from "$utils/useAppBarOffset";
-import extractNumberFromPx from "$utils/extractNumberFromPx";
+import sumPixels from "$utils/sumPixels";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -57,8 +57,8 @@ export default function ActionHeader(props: Props) {
   const sticky = useSticky({
     backgroundColor: gray[50],
     offset: considerAppBar
-      ? appBarOffset + extractNumberFromPx(theme.spacing(-2))
-      : extractNumberFromPx(theme.spacing(-1)),
+      ? sumPixels(appBarOffset, theme.spacing(-2))
+      : theme.spacing(-1),
     zIndex: 2,
   });
   return (

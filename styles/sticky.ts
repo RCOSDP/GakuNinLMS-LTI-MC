@@ -2,14 +2,14 @@ import makeStyles from "@mui/styles/makeStyles";
 
 export type StickyProps = {
   backgroundColor?: string;
-  offset?: number;
+  offset?: string;
   zIndex?: number;
 };
 
 const sticky = makeStyles((theme) => ({
   sticky: ({
     backgroundColor = "transparent",
-    offset = 0,
+    offset = "0",
     zIndex = 1,
   }: StickyProps) => ({
     zIndex,

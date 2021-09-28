@@ -19,7 +19,7 @@ type Props = {
   className?: string;
   topic: TopicSchema;
   onEnded?: () => void;
-  offset?: number;
+  offset?: string;
 };
 
 export default function TopicViewer({

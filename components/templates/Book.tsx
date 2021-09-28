@@ -24,6 +24,7 @@ import useSticky from "$utils/useSticky";
 import useAppBarOffset from "$utils/useAppBarOffset";
 import getLocaleDateString from "$utils/getLocaleDateString";
 import extractNumberFromPx from "$utils/extractNumberFromPx";
+import sumPixels from "$utils/sumPixels";
 
 const useStyles = makeStyles((theme) => ({
   header: {
@@ -90,9 +91,9 @@ const useStyles = makeStyles((theme) => ({
       marginBottom: theme.spacing(2),
     },
   },
-  scroll: ({ offset }: { offset: number }) => ({
+  scroll: ({ offset }: { offset: string }) => ({
     overflowY: "auto",
-    height: `calc(100vh - ${offset}px)`,
+    height: `calc(100vh - ${offset})`,
   }),
   desktop: {},
   mobile: {},
@@ -131,12 +132,16 @@ export default function Book(props: Props) {
     threshold: extractNumberFromPx(theme.spacing(4)),
     disableHysteresis: true,
   });
-  const sideOffset =
-    extractNumberFromPx(theme.spacing(2)) +
-    (trigger ? 0 : extractNumberFromPx(theme.spacing(4)));
-  const actionHeaderOffset = extractNumberFromPx(theme.spacing(4));
+  const sideOffset = sumPixels(
+    theme.spacing(2),
+    trigger ? "0px" : theme.spacing(4)
+  );
+  const actionHeaderOffset = theme.spacing(4);
   const appBarOffset = useAppBarOffset();
-  const offset = (considerAppBar ? appBarOffset : 0) + actionHeaderOffset;
+  const offset = sumPixels(
+    actionHeaderOffset,
+    considerAppBar ? appBarOffset : "0px"
+  );
   const classes = useStyles({
     offset: offset + sideOffset,
   });

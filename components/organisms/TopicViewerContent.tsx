@@ -15,7 +15,6 @@ import { NEXT_PUBLIC_VIDEO_MAX_HEIGHT } from "$utils/env";
 import { isVideoResource } from "$utils/videoResource";
 import { useVideoAtom } from "$store/video";
 import { gray } from "$theme/colors";
-import extractNumberFromPx from "$utils/extractNumberFromPx";
 
 const useStyles = makeStyles((theme) => ({
   video: {
@@ -57,14 +56,14 @@ const useStyles = makeStyles((theme) => ({
 type Props = {
   topic: TopicSchema;
   onEnded?: () => void;
-  offset?: number;
+  offset?: string;
 };
 
 export default function TopicViewerContent({ topic, onEnded, offset }: Props) {
   const classes = useStyles();
   const theme = useTheme();
   const sticky = useSticky({
-    offset: offset ?? extractNumberFromPx(theme.spacing(-2)),
+    offset: offset ?? theme.spacing(-2),
   });
   const { video } = useVideoAtom();
   return (
