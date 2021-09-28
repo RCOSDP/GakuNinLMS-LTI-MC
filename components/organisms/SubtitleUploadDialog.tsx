@@ -48,7 +48,6 @@ export default function SubtitleUploadDialog(props: Props) {
       onClose={onClose}
       PaperProps={{
         classes: cardClasses,
-        component: "form",
         onSubmit: handleSubmit(({ contentFile, ...values }) => {
           const content = contentFile?.[0] ?? defaultValues.content;
           onSubmit({ ...values, content });

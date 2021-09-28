@@ -1,6 +1,7 @@
 import { useCallback } from "react";
 import MenuItem from "@mui/material/MenuItem";
 import MuiSelect from "@mui/material/Select";
+import type { SelectChangeEvent } from "@mui/material/Select";
 import useSelectStyles from "styles/select";
 import useInputStyles from "styles/input";
 import type { SortOrder } from "$server/models/sortOrder";
@@ -44,7 +45,7 @@ export default function SortSelect(props: Props) {
   const selectClasses = useSelectStyles();
   const inputClasses = useInputStyles();
   const handleChange = useCallback(
-    (event: React.ChangeEvent<{ value: unknown }>) => {
+    (event: SelectChangeEvent<unknown>) => {
       onSortChange?.(event.target.value as SortOrder);
     },
     [onSortChange]

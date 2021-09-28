@@ -69,7 +69,7 @@ const role = (session: SessionSchema) => {
   return "学生";
 };
 
-function AppBar(props: Props, ref: Ref<unknown>) {
+function AppBar(props: Props, ref: Ref<HTMLDivElement>) {
   const {
     session,
     onBooksClick,

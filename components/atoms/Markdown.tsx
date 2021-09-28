@@ -15,6 +15,7 @@ const MarkdownLink: NormalComponents["a"] = ({
     rel="noreferrer"
     // @ts-expect-error TODO: 文字列形式のrefは非推奨なので避けて
     ref={legacyRef}
+    component="a"
     {...props}
   />
 );

@@ -2,7 +2,6 @@ import { ComponentProps } from "react";
 import clsx from "clsx";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
-import { useTheme } from "@mui/material/styles";
 import makeStyles from "@mui/styles/makeStyles";
 import { gray } from "$theme/colors";
 import useSticky from "$utils/useSticky";
@@ -51,13 +50,10 @@ type Props = Pick<ComponentProps<typeof Container>, "maxWidth"> & {
 export default function ActionHeader(props: Props) {
   const { maxWidth, title, body, action, considerAppBar = true } = props;
   const classes = useStyles();
-  const theme = useTheme();
   const appBarOffset = useAppBarOffset();
   const sticky = useSticky({
     backgroundColor: gray[50],
-    offset: considerAppBar
-      ? appBarOffset + theme.spacing(-2)
-      : theme.spacing(-1),
+    offset: considerAppBar ? appBarOffset + -32 : -16,
     zIndex: 2,
   });
   return (

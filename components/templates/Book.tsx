@@ -127,10 +127,10 @@ export default function Book(props: Props) {
   const handleLinkClick = () => setExpanded(!expanded);
   const theme = useTheme();
   const trigger = useScrollTrigger({
-    threshold: theme.spacing(4),
+    threshold: 64,
     disableHysteresis: true,
   });
-  const sideOffset = theme.spacing(2) + (trigger ? 0 : theme.spacing(4));
+  const sideOffset = 32 + (trigger ? 0 : 64);
   const actionHeaderOffset = 64;
   const appBarOffset = useAppBarOffset();
   const offset = (considerAppBar ? appBarOffset : 0) + actionHeaderOffset;
