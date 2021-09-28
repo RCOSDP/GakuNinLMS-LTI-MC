@@ -8,8 +8,6 @@ import SearchClearButton from "./SearchClearButton";
 import Divider from "@mui/material/Divider";
 import gray from "$theme/colors/gray";
 
-// NOTE: https://github.com/mui-org/material-ui/blob/master/packages/material-ui/src/OutlinedInput/OutlinedInput.js
-
 const useOutlinedInputStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: "#fff",
