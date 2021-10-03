@@ -28,7 +28,10 @@ async function init({ session }: FastifyRequest) {
     ltiConsumerId: session.oauthClient.id,
     ltiUserId: session.ltiUser.id,
     name: session.ltiUser.name ?? "",
-    email: session.ltiUser.email ?? "",
+    email:
+      session.ltiUser.email && isTeacher(session.ltiRoles)
+        ? session.ltiUser.email
+        : "",
   });
 
   Object.assign(session, { ltiResourceLink, user });
@@ -37,6 +40,23 @@ async function init({ session }: FastifyRequest) {
     status: 302,
     headers: { location: frontendUrl },
   } as const;
+}
+
+function isTeacher(ltiRoles: string[]) {
+  // http://www.imsglobal.org/specs/ltiv1p0/implementation-guide#toc-9
+  for (const ltiRole of ltiRoles) {
+    if (
+      [
+        "Instructor",
+        "Administrator",
+        "TeachingAssistant",
+        "ContentDeveloper",
+        "Mentor",
+      ].includes(ltiRole)
+    )
+      return true;
+  }
+  return false;
 }
 
 /** OpenAPI Responses Object */
