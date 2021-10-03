@@ -9,7 +9,7 @@ import utcToZoneTime from "date-fns-tz/utcToZonedTime";
 import prisma from "$server/utils/prisma";
 import type { User } from "@prisma/client";
 import type { UserSettings } from "$server/validators/userSettings";
-import { findUserByEmail } from "$server/utils/user";
+import { findUserByEmailAndLtiConsumerId } from "$server/utils/user";
 import { findZoomMeeting } from "$server/utils/zoomMeeting/findZoomMeeting";
 import { scpUpload } from "$server/utils/wowza/scpUpload";
 
@@ -17,6 +17,7 @@ import {
   API_BASE_PATH,
   ZOOM_API_KEY,
   ZOOM_API_SECRET,
+  ZOOM_IMPORT_CONSUMER_KEY,
   ZOOM_IMPORT_INTERVAL,
   ZOOM_IMPORT_TO,
   ZOOM_IMPORT_WOWZA_BASE_URL,
@@ -27,12 +28,13 @@ export async function setupZoomImportScheduler() {
   if (
     !ZOOM_API_KEY ||
     !ZOOM_API_SECRET ||
+    !ZOOM_IMPORT_CONSUMER_KEY ||
     !ZOOM_IMPORT_INTERVAL ||
     !ZOOM_IMPORT_TO
   ) {
     logger(
       "INFO",
-      `zoom import is not disabled. ZOOM_API_KEY:${ZOOM_API_KEY} ZOOM_API_SECRET:${ZOOM_API_SECRET} ZOOM_IMPORT_INTERVAL:${ZOOM_IMPORT_INTERVAL} ZOOM_IMPORT_TO:${ZOOM_IMPORT_TO}`
+      `zoom import is not disabled. ZOOM_API_KEY:${ZOOM_API_KEY} ZOOM_API_SECRET:${ZOOM_API_SECRET} ZOOM_IMPORT_CONSUMER_KEY:${ZOOM_IMPORT_CONSUMER_KEY} ZOOM_IMPORT_INTERVAL:${ZOOM_IMPORT_INTERVAL} ZOOM_IMPORT_TO:${ZOOM_IMPORT_TO}`
     );
     return;
   }
@@ -84,7 +86,10 @@ class ZoomImport {
 
   async importTopics() {
     try {
-      this.user = await findUserByEmail(this.email);
+      this.user = await findUserByEmailAndLtiConsumerId(
+        this.email,
+        ZOOM_IMPORT_CONSUMER_KEY
+      );
       if (!this.user) return;
       const settings = this.user.settings as UserSettings;
       if (!settings?.zoom_import?.enabled) return;
