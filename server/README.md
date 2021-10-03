@@ -87,6 +87,7 @@ docker-compose down
 | `WOWZA_SCP_SERVER_PATH`      | 一括登録時の動画ファイルのアップロード先フォルダ (デフォルト: `/var/www/wowza-upload`)                                          |
 | `ZOOM_API_KEY`               | Zoom API アクセスキー                                                                                                           |
 | `ZOOM_API_SECRET`            | Zoom API シークレット                                                                                                           |
+| `ZOOM_IMPORT_CONSUMER_KEY`   | Zoom インポートのユーザー検索に用いるコンシューマーキー (デフォルト: 無効 ""、例: 設定値 `OAUTH_CONSUMER_KEY` と同じ値)         |
 | `ZOOM_IMPORT_INTERVAL`       | Zoom インポートの実行時間 (デフォルト: 無効 ""、例: 毎朝 6 時実行 `1 6 * * *`)                                                  |
 | `ZOOM_IMPORT_TO`             | Zoom からインポートした動画のアップロード先 (デフォルト: 無効 ""、例: `wowza`)                                                  |
 | `ZOOM_IMPORT_WOWZA_BASE_URL` | Zoom からインポートした動画の URL のルート (デフォルト: 無効 ""、例: フロント側の設定値の `NEXT_PUBLIC_API_BASE_PATH` と同じ値) |
