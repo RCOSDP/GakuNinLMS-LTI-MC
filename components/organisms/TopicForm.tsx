@@ -8,7 +8,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import makeStyles from "@mui/styles/makeStyles";
-import Autocomplete from "@mui/material/Autocomplete";
+import Autocomplete from "$atoms/Autocomplete";
 import { useForm } from "react-hook-form";
 import { useDebouncedCallback } from "use-debounce";
 import clsx from "clsx";
