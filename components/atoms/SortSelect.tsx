@@ -53,7 +53,6 @@ export default function SortSelect(props: Props) {
   return (
     <MuiSelect
       classes={{ ...selectClasses, root: inputClasses.input }}
-      disableUnderline
       defaultValue={options[0].value}
       disabled={!onSortChange}
       onChange={handleChange}

@@ -21,7 +21,6 @@ export default function TextField(props: ComponentProps<typeof MuiTextField>) {
         {
           ...InputProps,
           classes: inputClasses,
-          disableUnderline: true,
         } as Exclude<typeof InputProps, Partial<OutlinedInputProps> | undefined>
       }
       InputLabelProps={{
