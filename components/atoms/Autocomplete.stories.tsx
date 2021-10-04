@@ -2,7 +2,10 @@ import type { Story } from "@storybook/react";
 import Autocomplete from "./Autocomplete";
 import TextField from "$atoms/TextField";
 
-export default { title: "atoms/Autocomplete", complete: Autocomplete };
+export default {
+  title: "atoms/Autocomplete",
+  component: Autocomplete,
+};
 
 const Template: Story<Parameters<typeof Autocomplete>[0]> = (args) => (
   <Autocomplete {...args} />
