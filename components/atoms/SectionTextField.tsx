@@ -34,7 +34,11 @@ const useOutlinedInputStyles = makeStyles((theme) => ({
 const useInputLabelStyles = makeStyles((theme) => ({
   outlined: {
     transform: `translate(${theme.spacing(1)}, 10px)`,
+    "&$shrink": {
+      transform: "translate(14px, -9px) scale(0.75)",
+    },
   },
+  shrink: {},
 }));
 
 export default function SectionTextField(
