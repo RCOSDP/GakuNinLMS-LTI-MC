@@ -23,9 +23,9 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: theme.breakpoints.values.lg,
     width: "100%",
     margin: "0 auto",
-    padding: `0 ${theme.spacing(3)}`,
+    padding: theme.spacing(0, 3),
     [theme.breakpoints.down("sm")]: {
-      padding: `0 ${theme.spacing(2)}`,
+      padding: theme.spacing(0, 2),
     },
   },
   logo: {

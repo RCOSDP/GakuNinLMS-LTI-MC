@@ -11,7 +11,7 @@ const input = makeStyles((theme) => ({
   },
   input: {
     height: "100%",
-    padding: `${theme.spacing(1.25)} ${theme.spacing(1.75)}`,
+    padding: theme.spacing(1.25, 1.75),
   },
   formControl: {
     "label + &": {
@@ -22,7 +22,7 @@ const input = makeStyles((theme) => ({
     backgroundColor: theme.palette.common.white,
     border: `1px solid ${gray[500]}`,
     borderRadius: "6px",
-    padding: `${theme.spacing(1.25)} ${theme.spacing(1.75)}`,
+    padding: theme.spacing(1.25, 1.75),
     transition: theme.transitions.create(["border-color"]),
   },
   inputMultiline: {

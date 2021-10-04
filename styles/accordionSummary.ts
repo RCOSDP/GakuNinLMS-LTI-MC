@@ -6,9 +6,9 @@ const accordionSummary = makeStyles((theme) => ({
   },
   content: {
     alignItems: "center",
-    margin: `${theme.spacing(1)} 0`,
+    margin: theme.spacing(1, 0),
     "&$expanded": {
-      margin: `${theme.spacing(1)} 0`,
+      margin: theme.spacing(1, 0),
     },
   },
   expanded: {},

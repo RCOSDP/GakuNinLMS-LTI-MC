@@ -29,7 +29,7 @@ const useOutlinedInputStyles = makeStyles((theme) => ({
   },
   input: {
     height: "1.25rem",
-    padding: `${theme.spacing(1)} ${theme.spacing(2)}`,
+    padding: theme.spacing(1, 2),
     paddingRight: 0,
   },
   focused: {},
