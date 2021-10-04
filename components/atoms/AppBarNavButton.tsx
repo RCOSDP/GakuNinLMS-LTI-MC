@@ -3,7 +3,7 @@ import Button from "@mui/material/Button";
 import makeStyles from "@mui/styles/makeStyles";
 
 const useButtonStyles = makeStyles({
-  label: {
+  root: {
     flexDirection: "column",
     lineHeight: 1.5,
   },
