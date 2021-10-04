@@ -41,7 +41,7 @@ const useOutlinedInputStyles = makeStyles((theme) => ({
 
 const useInputLabelStyles = makeStyles((theme) => ({
   outlined: {
-    transform: `translate(${theme.spacing(2)}, 10px)`,
+    transform: `translate(${theme.spacing(2)}, 6px)`,
     "&$shrink": {
       transform: "translate(14px, -9px) scale(0.75)",
     },
