@@ -44,6 +44,8 @@ const useStyles = makeStyles((theme) => ({
     overflow: "hidden",
     whiteSpace: "nowrap",
     textOverflow: "ellipsis",
+    // NOTE: IconButtonの有無で高さが変わることへの対処
+    minHeight: 40,
   },
   icon: {
     marginRight: theme.spacing(0.5),
@@ -136,7 +138,7 @@ export default function Book(props: Props) {
     theme.spacing(2),
     trigger ? "0px" : theme.spacing(4)
   );
-  const actionHeaderOffset = theme.spacing(4);
+  const actionHeaderOffset = sumPixels("40px", theme.spacing(2));
   const appBarOffset = useAppBarOffset();
   const offset = sumPixels(
     actionHeaderOffset,
