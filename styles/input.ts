@@ -28,6 +28,9 @@ const input = makeStyles((theme) => ({
   inputMultiline: {
     padding: 0,
   },
+  notchedOutline: {
+    display: "none",
+  },
   focused: {
     "&$root, &$multiline": {
       borderColor: theme.palette.primary.main,
