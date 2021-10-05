@@ -28,7 +28,7 @@ export const Editable = () => (
     <BookChildrenTree
       {...defaultProps}
       onItemEditClick={console.log}
-      isTopicEditable={() => true}
+      isContentEditable={() => true}
     />
   </TreeView>
 );

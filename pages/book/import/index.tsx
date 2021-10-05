@@ -17,8 +17,8 @@ import useDialogProps from "$utils/useDialogProps";
 export type Query = BookEditQuery;
 
 function Import({ bookId, context }: Query) {
-  const { isBookEditable, isTopicEditable } = useSessionAtom();
-  const { book, error } = useBook(bookId, isBookEditable, isTopicEditable);
+  const { isContentEditable } = useSessionAtom();
+  const { book, error } = useBook(bookId, isContentEditable);
   const booksProps = useBooks();
   const router = useRouter();
   const bookEditQuery = { bookId, ...(context && { context }) };
@@ -28,7 +28,7 @@ function Import({ bookId, context }: Query) {
     onClose,
     dispatch,
   } = useDialogProps<BookSchema>();
-  const action = book && isBookEditable(book) ? "edit" : "generate";
+  const action = book && isContentEditable(book) ? "edit" : "generate";
   const back = () =>
     router.push(pagesPath.book[action].$url({ query: bookEditQuery }));
   async function handleSubmit({
@@ -56,7 +56,7 @@ function Import({ bookId, context }: Query) {
   }
   function handleBookEditClick(book: Pick<BookSchema, "id" | "creator">) {
     // TODO: ブックインポート画面で自身以外のブックへの経路を提供しないならば不要なので取り除きましょう
-    const action = isBookEditable(book) ? "edit" : "generate";
+    const action = isContentEditable(book) ? "edit" : "generate";
     return router.push(
       pagesPath.book[action].$url({
         // NOTE: ブック編集画面は元のブックインポート画面に戻る手段が無いのでブック一覧画面に戻る
@@ -77,8 +77,7 @@ function Import({ bookId, context }: Query) {
     onBookPreviewClick: handleBookPreviewClick,
     onBookEditClick: handleBookEditClick,
     onTopicEditClick: handleTopicEditClick,
-    isTopicEditable,
-    isBookEditable,
+    isContentEditable,
   };
 
   if (error) return <BookNotFoundProblem />;

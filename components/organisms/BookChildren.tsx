@@ -76,7 +76,7 @@ type Props = {
   className?: string;
   sections: SectionSchema[];
   index: ItemIndex;
-  isTopicEditable(topic: TopicSchema): boolean;
+  isContentEditable(topic: Pick<TopicSchema, "creator">): boolean;
   onItemClick(index: ItemIndex): void;
   onItemEditClick?(index: ItemIndex): void;
 };
@@ -85,7 +85,7 @@ export default function BookChildren({
   className,
   sections,
   index: [sectionIndex, topicIndex],
-  isTopicEditable,
+  isContentEditable,
   onItemClick,
   onItemEditClick,
 }: Props) {
@@ -125,7 +125,7 @@ export default function BookChildren({
               >
                 {topic.name}
               </ListItemText>
-              {isTopicEditable(topic) && onItemEditClick && (
+              {isContentEditable(topic) && onItemEditClick && (
                 <ListItemSecondaryAction>
                   <EditButton
                     variant="topic"

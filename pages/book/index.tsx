@@ -16,11 +16,10 @@ import logger from "$utils/eventLogger/logger";
 export type Query = { bookId: BookSchema["id"] };
 
 function Show(query: Query) {
-  const { session, isBookEditable, isTopicEditable } = useSessionAtom();
+  const { session, isContentEditable } = useSessionAtom();
   const { book, error } = useBook(
     query.bookId,
-    isBookEditable,
-    isTopicEditable,
+    isContentEditable,
     session?.ltiResourceLink
   );
   const {
@@ -48,14 +47,14 @@ function Show(query: Query) {
   );
   const router = useRouter();
   const handleBookEditClick = () => {
-    const action = book && isBookEditable(book) ? "edit" : "generate";
+    const action = book && isContentEditable(book) ? "edit" : "generate";
     return router.push(pagesPath.book[action].$url({ query }));
   };
   const handleOtherBookLinkClick = () => {
     return router.push(pagesPath.books.$url());
   };
   const handleTopicEditClick = (topic: Pick<TopicSchema, "id" | "creator">) => {
-    const action = isTopicEditable(topic) ? "edit" : "generate";
+    const action = isContentEditable(topic) ? "edit" : "generate";
     const url = pagesPath.book.topic[action].$url({
       query: { ...query, topicId: topic.id },
     });

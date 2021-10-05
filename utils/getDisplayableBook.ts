@@ -7,27 +7,28 @@ function isDisplayableBook(
   ltiResourceLink:
     | Pick<LtiResourceLinkSchema, "bookId" | "creatorId">
     | undefined,
-  isBookEditable: (book: Pick<BookSchema, "creator">) => boolean
+  isContentEditable: (content: Pick<BookSchema, "creator">) => boolean
 ) {
   const linked = book.id === ltiResourceLink?.bookId;
-  return book.shared || linked || isBookEditable(book);
+  return book.shared || linked || isContentEditable(book);
 }
 
 function getDisplayableBook(
   book: BookSchema | undefined,
-  isBookEditable: (book: Pick<BookSchema, "creator">) => boolean,
-  isTopicEditable: (topic: Pick<TopicSchema, "creator">) => boolean,
+  isContentEditable: (
+    content: Pick<BookSchema, "creator"> | Pick<TopicSchema, "creator">
+  ) => boolean,
   ltiResourceLink?: Pick<LtiResourceLinkSchema, "bookId" | "creatorId">
 ): BookSchema | undefined {
   if (book === undefined) return;
-  if (!isDisplayableBook(book, ltiResourceLink, isBookEditable)) return;
+  if (!isDisplayableBook(book, ltiResourceLink, isContentEditable)) return;
 
   const sections = book.sections.flatMap((section) => {
     const topics = section.topics.filter(
       (topic) =>
         topic.shared ||
         topic.creator.id === ltiResourceLink?.creatorId ||
-        isTopicEditable(topic)
+        isContentEditable(topic)
     );
     return topics.length > 0 ? [{ ...section, topics }] : [];
   });

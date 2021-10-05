@@ -51,7 +51,7 @@ type Props = {
   onTopicNewClick(): void;
   onTopicEditClick?(topic: TopicSchema): void;
   onBookImportClick(): void;
-  isTopicEditable?(topic: TopicSchema): boolean | undefined;
+  isContentEditable?(topic: Pick<TopicSchema, "creator">): boolean | undefined;
   linked?: boolean;
 };
 
@@ -65,7 +65,7 @@ export default function BookEdit({
   onTopicNewClick,
   onTopicEditClick,
   onBookImportClick,
-  isTopicEditable,
+  isContentEditable,
   linked = false,
 }: Props) {
   const classes = useStyles();
@@ -109,7 +109,7 @@ export default function BookEdit({
         onTopicNewClick={onTopicNewClick}
         onBookImportClick={onBookImportClick}
         onSectionsUpdate={onSectionsUpdate}
-        isTopicEditable={isTopicEditable}
+        isContentEditable={isContentEditable}
       />
       <Typography className={classes.subtitle} variant="h5">
         基本情報

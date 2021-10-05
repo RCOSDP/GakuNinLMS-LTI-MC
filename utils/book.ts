@@ -16,8 +16,9 @@ async function fetchBook(_: typeof key, id: BookSchema["id"]) {
 
 export function useBook(
   id: BookSchema["id"] | undefined,
-  isBookEditable: (book: Pick<BookSchema, "creator">) => boolean,
-  isTopicEditable: (topic: Pick<TopicSchema, "creator">) => boolean,
+  isContentEditable: (
+    content: Pick<BookSchema, "creator"> | Pick<TopicSchema, "creator">
+  ) => boolean,
   ltiResourceLink?: Pick<LtiResourceLinkSchema, "bookId" | "creatorId"> | null
 ) {
   const { data, error } = useSWR<BookSchema>(
@@ -26,13 +27,8 @@ export function useBook(
   );
   const displayable = useMemo(
     () =>
-      getDisplayableBook(
-        data,
-        isBookEditable,
-        isTopicEditable,
-        ltiResourceLink ?? undefined
-      ),
-    [data, isBookEditable, isTopicEditable, ltiResourceLink]
+      getDisplayableBook(data, isContentEditable, ltiResourceLink ?? undefined),
+    [data, isContentEditable, ltiResourceLink]
   );
 
   return {

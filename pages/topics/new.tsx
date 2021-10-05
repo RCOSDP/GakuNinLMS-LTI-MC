@@ -16,8 +16,8 @@ function New({ context }: Query) {
 }
 
 function NewWithBook({ bookId, context }: BookEditQuery) {
-  const { isBookEditable, isTopicEditable } = useSessionAtom();
-  const { book, error } = useBook(bookId, isBookEditable, isTopicEditable);
+  const { isContentEditable } = useSessionAtom();
+  const { book, error } = useBook(bookId, isContentEditable);
   const handlers = useTopicNewHandlers(context, book);
 
   if (error) return <BookNotFoundProblem />;

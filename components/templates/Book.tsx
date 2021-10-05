@@ -121,7 +121,7 @@ export default function Book(props: Props) {
     considerAppBar = true,
   } = props;
   const topic = book?.sections[sectionIndex]?.topics[topicIndex];
-  const { isInstructor, isBookEditable, isTopicEditable } = useSessionAtom();
+  const { isInstructor, isContentEditable } = useSessionAtom();
   const [expanded, setExpanded] = useState(false);
   const handleLinkClick = () => setExpanded(!expanded);
   const theme = useTheme();
@@ -165,7 +165,7 @@ export default function Book(props: Props) {
             {isInstructor &&
               book &&
               onBookEditClick &&
-              (isBookEditable(book) || book.shared) && (
+              (isContentEditable(book) || book.shared) && (
                 <EditButton
                   variant="book"
                   size="medium"
@@ -242,7 +242,7 @@ export default function Book(props: Props) {
             sections={book?.sections ?? []}
             onItemClick={handleItemClick}
             onItemEditClick={handleItemEditClick}
-            isTopicEditable={isTopicEditable}
+            isContentEditable={isContentEditable}
           />
         </div>
       </div>

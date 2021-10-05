@@ -24,7 +24,7 @@ export const Editable = () => (
         key={index}
         {...defaultProps}
         onTopicEditClick={console.log}
-        isTopicEditable={() => true}
+        isContentEditable={() => true}
       />
     ))}
   </div>

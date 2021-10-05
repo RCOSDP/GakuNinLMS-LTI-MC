@@ -37,7 +37,7 @@ export const Editable = () => {
       onTopicPreviewClick={handleTopicPreviewClick}
       onSectionsUpdate={handleSectionsUpdate(setSections)}
       onTopicEditClick={handleTopicEditClick}
-      isTopicEditable={() => true}
+      isContentEditable={() => true}
     />
   );
 };

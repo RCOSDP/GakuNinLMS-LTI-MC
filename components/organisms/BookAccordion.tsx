@@ -48,7 +48,7 @@ type Props = {
   onLtiContextClick?(
     ltiResourceLink: Pick<LtiResourceLinkSchema, "consumerId" | "contextId">
   ): void;
-  isTopicEditable?(topic: TopicSchema): boolean | undefined;
+  isContentEditable?(topic: Pick<TopicSchema, "creator">): boolean | undefined;
 };
 
 export default function BookAccordion(props: Props) {
@@ -58,7 +58,7 @@ export default function BookAccordion(props: Props) {
     onTopicClick,
     onTopicEditClick,
     onLtiContextClick,
-    isTopicEditable,
+    isContentEditable,
   } = props;
   const classes = useStyles();
   const accordionClasses = useAccordionStyle();
@@ -114,7 +114,7 @@ export default function BookAccordion(props: Props) {
             sections={book.sections}
             onItemClick={handleItem(onTopicClick)}
             onItemEditClick={handleItem(onTopicEditClick)}
-            isTopicEditable={isTopicEditable}
+            isContentEditable={isContentEditable}
           />
         </TreeView>
       </AccordionDetails>

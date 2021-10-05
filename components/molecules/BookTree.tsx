@@ -30,7 +30,9 @@ type Props = {
     ltiResourceLink: Pick<LtiResourceLinkSchema, "consumerId" | "contextId">
   ): void;
   selectedIndexes?: Set<string>;
-  isTopicEditable?(topic: TopicSchema): boolean | undefined;
+  isContentEditable?(
+    content: Pick<TopicSchema, "creator">
+  ): boolean | undefined;
 };
 
 export default function BookTree(props: Props) {
@@ -44,7 +46,7 @@ export default function BookTree(props: Props) {
     onBookEditClick,
     onLtiContextClick,
     selectedIndexes,
-    isTopicEditable,
+    isContentEditable,
   } = props;
   const classes = useStyles();
   const treeItemClasses = useTreeItemStyle();
@@ -102,7 +104,7 @@ export default function BookTree(props: Props) {
         onItemEditClick={onItemEditClick}
         onTreeChange={onTreeChange}
         selectedIndexes={selectedIndexes}
-        isTopicEditable={isTopicEditable}
+        isContentEditable={isContentEditable}
       />
     </TreeItem>
   );
