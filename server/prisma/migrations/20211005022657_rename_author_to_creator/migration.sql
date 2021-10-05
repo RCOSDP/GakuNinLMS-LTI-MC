@@ -11,17 +11,14 @@ ALTER TABLE "books" DROP CONSTRAINT "books_author_id_fkey";
 -- DropForeignKey
 ALTER TABLE "lti_resource_link" DROP CONSTRAINT "lti_resource_link_author_id_fkey";
 
--- DropIndex
-DROP INDEX "author_id";
+-- AlterIndex
+ALTER INDEX "author_id" RENAME TO "creator_id";
 
 -- AlterTable
 ALTER TABLE "books" RENAME COLUMN "author_id" TO "creator_id";
 
 -- AlterTable
 ALTER TABLE "lti_resource_link" RENAME COLUMN "author_id" TO "creator_id";
-
--- CreateIndex
-CREATE INDEX "creator_id" ON "books"("creator_id");
 
 -- AddForeignKey
 ALTER TABLE "books" ADD FOREIGN KEY ("creator_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
