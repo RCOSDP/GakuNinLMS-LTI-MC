@@ -3,8 +3,6 @@
 
   - You are about to rename the `author_id` column of the `books` table to `creator_id`.
   - You are about to rename the `author_id` column of the `lti_resource_link` table to `creator_id`.
-  - Added the required column `creator_id` to the `books` table without a default value. This is not possible if the table is not empty.
-  - Added the required column `creator_id` to the `lti_resource_link` table without a default value. This is not possible if the table is not empty.
 
 */
 -- DropForeignKey
