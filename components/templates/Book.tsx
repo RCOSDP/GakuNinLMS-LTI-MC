@@ -201,7 +201,7 @@ export default function Book(props: Props) {
                 },
                 {
                   key: "ブック作成者",
-                  value: book.author.name,
+                  value: book.creator.name,
                 },
               ]}
             />

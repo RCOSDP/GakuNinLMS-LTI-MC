@@ -16,9 +16,9 @@ async function fetchBook(_: typeof key, id: BookSchema["id"]) {
 
 export function useBook(
   id: BookSchema["id"] | undefined,
-  isBookEditable: (book: Pick<BookSchema, "author">) => boolean,
+  isBookEditable: (book: Pick<BookSchema, "creator">) => boolean,
   isTopicEditable: (topic: Pick<TopicSchema, "creator">) => boolean,
-  ltiResourceLink?: Pick<LtiResourceLinkSchema, "bookId" | "authorId"> | null
+  ltiResourceLink?: Pick<LtiResourceLinkSchema, "bookId" | "creatorId"> | null
 ) {
   const { data, error } = useSWR<BookSchema>(
     Number.isFinite(id) ? [key, id] : null,

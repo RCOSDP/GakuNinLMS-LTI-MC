@@ -9,7 +9,7 @@ const book = {
   language: "ja",
   timeRequired: null,
   shared: true,
-  author: user,
+  creator: user,
   ltiResourceLinks: [ltiResourceLink],
   createdAt: new Date(),
   publishedAt: new Date(),

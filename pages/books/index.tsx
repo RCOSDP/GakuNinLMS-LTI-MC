@@ -29,7 +29,7 @@ function Index() {
     dispatch,
   } = useDialogProps<BookSchema>();
   const handleBookPreviewClick = (book: BookSchema) => dispatch(book);
-  const handleBookEditClick = (book: Pick<BookSchema, "id" | "author">) => {
+  const handleBookEditClick = (book: Pick<BookSchema, "id" | "creator">) => {
     const action = isBookEditable(book) ? "edit" : "generate";
     return router.push(
       pagesPath.book[action].$url({

@@ -29,7 +29,7 @@ export async function upsertLtiResourceLink(
     contextTitle,
     contextLabel,
     bookId,
-    authorId,
+    creatorId,
     ...link
   } = props;
 
@@ -47,7 +47,7 @@ export async function upsertLtiResourceLink(
     context: { connect: { consumerId_id: { consumerId, id: contextId } } },
     book: { connect: { id: bookId } },
     consumer: { connect: { id: consumerId } },
-    author: { connect: { id: authorId } },
+    creator: { connect: { id: creatorId } },
   };
 
   await prisma.$transaction([

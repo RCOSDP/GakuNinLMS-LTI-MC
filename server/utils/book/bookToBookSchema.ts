@@ -14,7 +14,7 @@ import {
 
 export const bookIncludingTopicsArg = {
   include: {
-    author: true,
+    creator: true,
     ltiResourceLinks: ltiResourceLinkIncludingContextArg,
     sections: {
       orderBy: { order: "asc" },

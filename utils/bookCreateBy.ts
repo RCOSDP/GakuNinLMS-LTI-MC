@@ -8,10 +8,10 @@ import { UserSchema } from "$server/models/user";
  * @returns ブックの作成者がユーザーの場合: true、それ以外: false
  */
 function bookCreateBy(
-  book: Pick<BookSchema, "author">,
+  book: Pick<BookSchema, "creator">,
   by?: Pick<UserSchema, "id">
 ): boolean {
-  return book.author.id === by?.id;
+  return book.creator.id === by?.id;
 }
 
 export default bookCreateBy;

@@ -15,7 +15,7 @@ type SessionWithState = {
   isAdministrator: boolean;
   isInstructor: boolean;
   isTopicEditable(topic: Pick<TopicSchema, "creator">): boolean;
-  isBookEditable(book: Pick<BookSchema, "author">): boolean;
+  isBookEditable(book: Pick<BookSchema, "creator">): boolean;
   error: boolean;
 };
 
@@ -41,7 +41,7 @@ const updateSessionAtom = atom<
     isTopicEditable(topic: Pick<TopicSchema, "creator">) {
       return isAdministrator || topicCreateBy(topic, session?.user);
     },
-    isBookEditable(book: Pick<BookSchema, "author">) {
+    isBookEditable(book: Pick<BookSchema, "creator">) {
       return isAdministrator || bookCreateBy(book, session?.user);
     },
     error,

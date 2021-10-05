@@ -54,7 +54,7 @@ function Import({ bookId, context }: Query) {
   function handleBookPreviewClick(book: BookSchema) {
     dispatch(book);
   }
-  function handleBookEditClick(book: Pick<BookSchema, "id" | "author">) {
+  function handleBookEditClick(book: Pick<BookSchema, "id" | "creator">) {
     // TODO: ブックインポート画面で自身以外のブックへの経路を提供しないならば不要なので取り除きましょう
     const action = isBookEditable(book) ? "edit" : "generate";
     return router.push(

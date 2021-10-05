@@ -18,7 +18,7 @@ import { makeBooksKey, fetchBooks } from "./books";
 const makeFilter = (
   filter: Filter,
   userId: UserSchema["id"],
-  isBookEditable: (book: Pick<BookSchema, "author">) => boolean,
+  isBookEditable: (book: Pick<BookSchema, "creator">) => boolean,
   isTopicEditable: (topic: Pick<TopicSchema, "creator">) => boolean
 ) => (book: BookSchema | undefined) => {
   if (book === undefined) return [];

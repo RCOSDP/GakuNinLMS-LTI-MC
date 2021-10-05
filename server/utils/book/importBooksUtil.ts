@@ -209,11 +209,11 @@ class ImportBooksUtil {
         recursive: true,
       }
     );
-    const uploadauthor = fs.mkdirSync(`${uploaddomain}/${this.user.id}`, {
+    const uploadcreator = fs.mkdirSync(`${uploaddomain}/${this.user.id}`, {
       recursive: true,
     });
     const uploaddir = fs.mkdtempSync(
-      `${uploadauthor}/${dateFormat(new Date(), "yyyymmdd-HHMM")}-`
+      `${uploadcreator}/${dateFormat(new Date(), "yyyymmdd-HHMM")}-`
     );
     const uploadsubdir = uploaddir.substring(uploadroot.length);
 
@@ -289,7 +289,7 @@ class ImportBooksUtil {
     return {
       ...importBook,
       timeRequired: this.timeRequired,
-      author: { connect: { id: this.user.id } },
+      creator: { connect: { id: this.user.id } },
       publishedAt: new Date(importBook.publishedAt),
       createdAt: new Date(importBook.createdAt),
       updatedAt: new Date(importBook.updatedAt),
