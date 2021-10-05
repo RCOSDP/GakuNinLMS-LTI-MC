@@ -1,5 +1,5 @@
-import { createTheme } from "@material-ui/core/styles";
-import { primary } from "./colors";
+import { createTheme } from "@mui/material/styles";
+import { primary, gray } from "./colors";
 
 export default createTheme({
   palette: {
@@ -8,6 +8,9 @@ export default createTheme({
       main: primary[500],
       dark: primary[700],
       contrastText: "#fff",
+    },
+    background: {
+      default: gray[50],
     },
   },
   typography: {

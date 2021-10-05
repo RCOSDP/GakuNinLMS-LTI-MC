@@ -1,6 +1,6 @@
 import type { Story } from "@storybook/react";
 import Problem from "./Problem";
-import Link from "@material-ui/core/Link";
+import Link from "@mui/material/Link";
 
 export default {
   title: "organisms/Problem",

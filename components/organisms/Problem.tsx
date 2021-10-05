@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
-import Container from "@material-ui/core/Container";
+import makeStyles from "@mui/styles/makeStyles";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
 import useContainerStyles from "styles/container";
 
 const useStyles = makeStyles((theme) => ({

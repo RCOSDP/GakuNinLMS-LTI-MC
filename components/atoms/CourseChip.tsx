@@ -1,7 +1,7 @@
 import { MouseEvent, useCallback, useState } from "react";
-import Chip from "@material-ui/core/Chip";
-import Popover from "@material-ui/core/Popover";
-import { makeStyles } from "@material-ui/core/styles";
+import Chip from "@mui/material/Chip";
+import Popover from "@mui/material/Popover";
+import makeStyles from "@mui/styles/makeStyles";
 import { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
 
 const useStyles = makeStyles((theme) => ({

@@ -1,7 +1,7 @@
 import { ReactNode, MouseEvent } from "react";
-import TreeItem from "@material-ui/lab/TreeItem";
-import Checkbox from "@material-ui/core/Checkbox";
-import { makeStyles } from "@material-ui/core/styles";
+import TreeItem from "@mui/lab/TreeItem";
+import Checkbox from "@mui/material/Checkbox";
+import makeStyles from "@mui/styles/makeStyles";
 import PreviewButton from "$atoms/PreviewButton";
 import EditButton from "$atoms/EditButton";
 import SharedIndicator from "$atoms/SharedIndicator";

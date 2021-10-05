@@ -1,7 +1,5 @@
-import TreeItem from "@material-ui/lab/TreeItem";
-// TODO: ブック単位での再利用の実装
-// import Checkbox from "@material-ui/core/Checkbox";
-import { makeStyles } from "@material-ui/core/styles";
+import TreeItem from "@mui/lab/TreeItem";
+import makeStyles from "@mui/styles/makeStyles";
 import PreviewButton from "$atoms/PreviewButton";
 import EditButton from "$atoms/EditButton";
 import CourseChip from "$atoms/CourseChip";

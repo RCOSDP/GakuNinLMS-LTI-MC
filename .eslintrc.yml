@@ -45,3 +45,6 @@ overrides:
   - files: [types/**, server/types/**]
     rules:
       filenames/match-exported: [error, camel]
+  - files: [types/defaultTheme.d.ts]
+    rules:
+      "@typescript-eslint/no-empty-interface": "off"

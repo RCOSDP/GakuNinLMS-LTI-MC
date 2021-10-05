@@ -2,7 +2,7 @@ import ReactMarkdown from "react-markdown";
 import { NormalComponents } from "react-markdown/lib/complex-types";
 import gfm from "remark-gfm";
 import breaks from "remark-breaks";
-import Link from "@material-ui/core/Link";
+import Link from "@mui/material/Link";
 
 // NOTE: 型に差異があるので変換
 const MarkdownLink: NormalComponents["a"] = ({
@@ -15,6 +15,7 @@ const MarkdownLink: NormalComponents["a"] = ({
     rel="noreferrer"
     // @ts-expect-error TODO: 文字列形式のrefは非推奨なので避けて
     ref={legacyRef}
+    component="a"
     {...props}
   />
 );

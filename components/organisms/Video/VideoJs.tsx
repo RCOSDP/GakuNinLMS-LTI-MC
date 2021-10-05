@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
-import { createStyles, makeStyles } from "@material-ui/core/styles";
+import createStyles from "@mui/styles/createStyles";
+import makeStyles from "@mui/styles/makeStyles";
 import type { VideoJsInstance } from "$types/videoInstance";
 
 type Props = Omit<VideoJsInstance, "type" | "url">;

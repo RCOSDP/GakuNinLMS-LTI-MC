@@ -1,4 +1,4 @@
-import Dialog from "@material-ui/core/Dialog";
+import Dialog from "@mui/material/Dialog";
 import TopicViewerContent from "$organisms/TopicViewerContent";
 import { TopicSchema } from "$server/models/topic";
 import useCardStyles from "$styles/card";

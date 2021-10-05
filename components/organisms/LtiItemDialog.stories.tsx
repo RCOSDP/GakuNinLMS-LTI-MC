@@ -1,7 +1,7 @@
 export default { title: "organisms/LtiItemDialog" };
 
 import { useState } from "react";
-import Button from "@material-ui/core/Button";
+import Button from "@mui/material/Button";
 import LtiItemDialog from "./LtiItemDialog";
 import { session } from "$samples";
 

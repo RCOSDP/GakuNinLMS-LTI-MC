@@ -1,4 +1,4 @@
-import red from "@material-ui/core/colors/red";
+import { red } from "@mui/material/colors";
 
 export default function RequiredDot() {
   return (
