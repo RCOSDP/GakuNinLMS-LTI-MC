@@ -24,25 +24,25 @@ export interface InlineResponse2001Creator {
      * @type {number}
      * @memberof InlineResponse2001Creator
      */
-    id?: number;
+    id: number;
     /**
      * 
      * @type {string}
      * @memberof InlineResponse2001Creator
      */
-    ltiConsumerId?: string;
+    ltiConsumerId: string;
     /**
      * 
      * @type {string}
      * @memberof InlineResponse2001Creator
      */
-    ltiUserId?: string;
+    ltiUserId: string;
     /**
      * 
      * @type {string}
      * @memberof InlineResponse2001Creator
      */
-    name?: string;
+    name: string;
 }
 
 export function InlineResponse2001CreatorFromJSON(json: any): InlineResponse2001Creator {
@@ -55,10 +55,10 @@ export function InlineResponse2001CreatorFromJSONTyped(json: any, ignoreDiscrimi
     }
     return {
         
-        'id': !exists(json, 'id') ? undefined : json['id'],
-        'ltiConsumerId': !exists(json, 'ltiConsumerId') ? undefined : json['ltiConsumerId'],
-        'ltiUserId': !exists(json, 'ltiUserId') ? undefined : json['ltiUserId'],
-        'name': !exists(json, 'name') ? undefined : json['name'],
+        'id': json['id'],
+        'ltiConsumerId': json['ltiConsumerId'],
+        'ltiUserId': json['ltiUserId'],
+        'name': json['name'],
     };
 }
 

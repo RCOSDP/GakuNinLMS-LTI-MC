@@ -6,7 +6,7 @@ import {
   resourcePropsSchema,
   resourceSchema,
 } from "./resource";
-import { UserSchema, userSchema } from "./user";
+import { UserSchema } from "./user";
 
 export type TopicProps = Pick<
   Prisma.TopicCreateWithoutCreatorInput,
@@ -56,7 +56,7 @@ export const topicSchema = {
     createdAt,
     updatedAt,
     details,
-    creator: userSchema,
+    creator: UserSchema,
     resource: resourceSchema,
   },
 };

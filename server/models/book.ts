@@ -1,6 +1,6 @@
 import { Book } from "@prisma/client";
 import jsonSchema from "$server/prisma/json-schema.json";
-import { UserSchema, userSchema } from "./user";
+import { UserSchema } from "./user";
 import {
   SectionProps,
   sectionPropsSchema,
@@ -65,7 +65,7 @@ export const bookSchema = {
     createdAt,
     updatedAt,
     details,
-    creator: userSchema,
+    creator: UserSchema,
     sections: {
       type: "array",
       items: sectionSchema,
