@@ -15,5 +15,5 @@ export class PaginationProps {
   per_page?: number;
 }
 
-export const paginationPropsSchema = validationMetadatasToSchemas()
-  .PaginationProps;
+export const paginationPropsSchema =
+  validationMetadatasToSchemas().PaginationProps;

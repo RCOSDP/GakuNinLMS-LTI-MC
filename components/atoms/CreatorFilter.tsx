@@ -1,8 +1,8 @@
 import { useCallback } from "react";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Radio from "@material-ui/core/Radio";
-import { makeStyles } from "@material-ui/core/styles";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Radio from "@mui/material/Radio";
+import makeStyles from "@mui/styles/makeStyles";
 import { gray } from "$theme/colors";
 import { Filter } from "$types/filter";
 

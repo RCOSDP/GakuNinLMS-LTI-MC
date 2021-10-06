@@ -1,5 +1,5 @@
-import MuiIconButton from "@material-ui/core/IconButton";
-import Tooltip from "@material-ui/core/Tooltip";
+import MuiIconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
 
 type Props = Parameters<typeof MuiIconButton>[0] & {
   tooltipProps: Omit<Parameters<typeof Tooltip>[0], "children">;

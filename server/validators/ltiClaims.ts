@@ -12,15 +12,19 @@ export class LtiClaims {
   constructor(props?: Partial<LtiClaims>) {
     Object.assign(this, {
       ...props,
-      "https://purl.imsglobal.org/spec/lti/claim/resource_link": new ResourceLinkClaim(
-        props?.["https://purl.imsglobal.org/spec/lti/claim/resource_link"]
-      ),
+      "https://purl.imsglobal.org/spec/lti/claim/resource_link":
+        new ResourceLinkClaim(
+          props?.["https://purl.imsglobal.org/spec/lti/claim/resource_link"]
+        ),
       "https://purl.imsglobal.org/spec/lti/claim/context": new ContextClaim(
         props?.["https://purl.imsglobal.org/spec/lti/claim/context"]
       ),
-      "https://purl.imsglobal.org/spec/lti/claim/launch_presentation": new LaunchPresentationClaim(
-        props?.["https://purl.imsglobal.org/spec/lti/claim/launch_presentation"]
-      ),
+      "https://purl.imsglobal.org/spec/lti/claim/launch_presentation":
+        new LaunchPresentationClaim(
+          props?.[
+            "https://purl.imsglobal.org/spec/lti/claim/launch_presentation"
+          ]
+        ),
     });
   }
   @Equals("LtiResourceLinkRequest")

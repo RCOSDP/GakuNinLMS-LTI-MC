@@ -6,8 +6,8 @@ export default {
 import { useEffect } from "react";
 import { useBookAtom } from "$store/book";
 import Book from "./Book";
-import Slide from "@material-ui/core/Slide";
-import useScrollTrigger from "@material-ui/core/useScrollTrigger";
+import Slide from "@mui/material/Slide";
+import useScrollTrigger from "@mui/material/useScrollTrigger";
 import AppBar from "$organisms/AppBar";
 import { book, session } from "$samples";
 import { useUpdateSessionAtom } from "$store/session";

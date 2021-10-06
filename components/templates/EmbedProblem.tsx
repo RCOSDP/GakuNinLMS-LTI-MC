@@ -1,5 +1,5 @@
-import Link from "@material-ui/core/Link";
-import Problem from "./Problem";
+import Link from "@mui/material/Link";
+import Problem from "$organisms/Problem";
 
 export default function EmbedProblem() {
   if (typeof window === "undefined") return null;

@@ -1,7 +1,7 @@
 export default { title: "organisms/SubtitleUploadDialog" };
 
 import { useState } from "react";
-import Button from "@material-ui/core/Button";
+import Button from "@mui/material/Button";
 import SubtitleUploadDialog from "./SubtitleUploadDialog";
 
 export const Default = () => {

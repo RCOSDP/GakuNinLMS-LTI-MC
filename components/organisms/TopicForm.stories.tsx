@@ -12,17 +12,17 @@ const handlers = {
   onSubmit: console.log,
 };
 
-const handleSubtitleSubmit = (
-  handler: (videoTrack: VideoTrackSchema) => void
-) => (videoTrackProps: VideoTrackProps) => {
-  const { language, content } = videoTrackProps;
-  handler({
-    id: new Date().getTime(),
-    kind: "subtitles",
-    language,
-    url: URL.createObjectURL(new Blob([content])),
-  });
-};
+const handleSubtitleSubmit =
+  (handler: (videoTrack: VideoTrackSchema) => void) =>
+  (videoTrackProps: VideoTrackProps) => {
+    const { language, content } = videoTrackProps;
+    handler({
+      id: new Date().getTime(),
+      kind: "subtitles",
+      language,
+      url: URL.createObjectURL(new Blob([content])),
+    });
+  };
 
 export const Default = () => {
   const { addVideoTrack, deleteVideoTrack } = useVideoTrackAtom();
