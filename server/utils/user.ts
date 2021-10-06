@@ -29,14 +29,14 @@ export async function upsertUser({ ltiConsumerId, ...user }: UserProps) {
   });
 }
 
-export async function findWrittenBooks(
+export async function findCreatedBooks(
   userId: User["id"],
   sort = "updated",
   page: number,
   perPage: number
 ): Promise<BookSchema[]> {
   const user = prisma.user.findUnique({ where: { id: userId } });
-  const books = await user.writtenBooks({
+  const books = await user.createdBooks({
     ...bookIncludingTopicsArg,
     orderBy: makeSortOrderQuery(sort),
     skip: page * perPage,

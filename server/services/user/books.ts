@@ -7,7 +7,7 @@ import {
 } from "$server/validators/paginationProps";
 import authUser from "$server/auth/authUser";
 import authInstructor from "$server/auth/authInstructor";
-import { findWrittenBooks } from "$server/utils/user";
+import { findCreatedBooks } from "$server/utils/user";
 import { userBooksSchema } from "$server/models/userBooks";
 
 export type Query = PaginationProps;
@@ -41,7 +41,7 @@ export async function index({
   const page = query.page ?? 0;
   const perPage = query.per_page ?? 50;
   const { user_id: userId } = params;
-  const books = await findWrittenBooks(userId, query.sort, page, perPage);
+  const books = await findCreatedBooks(userId, query.sort, page, perPage);
 
   return {
     status: 200,

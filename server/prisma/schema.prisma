@@ -176,7 +176,7 @@ model Book {
   timeRequired     Int?              @map("time_required")
   /// 共有可否 (true: シェアする, それ以外: シェアしない)
   shared           Boolean           @default(true)
-  /// 著作者
+  /// 作成者
   creator          User              @relation(fields: [creatorId], references: [id])
   creatorId        Int               @map("creator_id")
   /// 公開日
@@ -227,7 +227,7 @@ model TopicSection {
 model User {
   id               Int               @id @default(autoincrement())
   createdTopics    Topic[]
-  writtenBooks     Book[]
+  createdBooks     Book[]
   ltiResourceLinks LtiResourceLink[]
   ltiConsumer      LtiConsumer       @relation(fields: [ltiConsumerId], references: [id])
   ltiConsumerId    String            @map("lti_consumer_id")
