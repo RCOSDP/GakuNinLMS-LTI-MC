@@ -153,8 +153,8 @@ model LtiResourceLink {
   title      String
   book       Book        @relation(fields: [bookId], references: [id])
   bookId     Int         @map("book_id")
-  creator     User        @relation(fields: [creatorId], references: [id])
-  creatorId   Int         @map("creator_id")
+  creator    User        @relation(fields: [creatorId], references: [id])
+  creatorId  Int         @map("creator_id")
 
   @@id([consumerId, id])
   @@map("lti_resource_link")
@@ -177,8 +177,8 @@ model Book {
   /// 共有可否 (true: シェアする, それ以外: シェアしない)
   shared           Boolean           @default(true)
   /// 著作者
-  creator           User              @relation(fields: [creatorId], references: [id])
-  creatorId         Int               @map("creator_id")
+  creator          User              @relation(fields: [creatorId], references: [id])
+  creatorId        Int               @map("creator_id")
   /// 公開日
   publishedAt      DateTime          @default(now()) @map("published_at")
   /// 作成日
@@ -241,8 +241,8 @@ model User {
   settings         Json              @default("{}")
 
   @@unique([ltiConsumerId, ltiUserId])
-  @@map("users")
   @@index([email])
+  @@map("users")
 }
 
 /// 学習活動
