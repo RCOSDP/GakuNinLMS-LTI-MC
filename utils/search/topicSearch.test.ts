@@ -10,6 +10,7 @@ test("トピック名による絞り込み", () => {
     timeRequired: 10,
     shared: true,
     license: "",
+    authors: [],
     creator: {
       id: 1,
       name: "",

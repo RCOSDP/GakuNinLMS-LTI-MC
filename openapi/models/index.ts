@@ -13,6 +13,7 @@ export * from './InlineObject7';
 export * from './InlineObject8';
 export * from './InlineResponse200';
 export * from './InlineResponse2001';
+export * from './InlineResponse2001Authors';
 export * from './InlineResponse2001Books';
 export * from './InlineResponse2001Creator';
 export * from './InlineResponse2001Sections';

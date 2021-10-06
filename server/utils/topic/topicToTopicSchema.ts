@@ -1,5 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { TopicSchema } from "$server/models/topic";
+import { AuthorSchema } from "$server/models/author";
 import {
   resourceWithVideoArg,
   resourceToResourceSchema,
@@ -14,5 +15,10 @@ export type TopicWithResource = Prisma.TopicGetPayload<
 >;
 
 export function topicToTopicSchema(topic: TopicWithResource): TopicSchema {
-  return { ...topic, resource: resourceToResourceSchema(topic.resource) };
+  return {
+    ...topic,
+    // TODO: 複数著者に対応してほしい
+    authors: [{ ...topic.creator, roleName: AuthorSchema._roleNames.author }],
+    resource: resourceToResourceSchema(topic.resource),
+  };
 }

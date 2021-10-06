@@ -74,6 +74,8 @@ model Topic {
   timeRequired Int            @map("time_required")
   /// 共有可否 (true: シェアする, それ以外: シェアしない)
   shared       Boolean        @default(true)
+  /// 著作者
+  authors      Authorship[]
   /// ライセンス (https://spdx.org/licenses/ に準拠するものを入力する)
   license      String         @default("")
   /// 作成者
@@ -176,6 +178,8 @@ model Book {
   timeRequired     Int?              @map("time_required")
   /// 共有可否 (true: シェアする, それ以外: シェアしない)
   shared           Boolean           @default(true)
+  /// 著作者
+  authors          Authorship[]
   /// 作成者
   creator          User              @relation(fields: [creatorId], references: [id])
   creatorId        Int               @map("creator_id")
@@ -228,6 +232,7 @@ model User {
   id               Int               @id @default(autoincrement())
   createdTopics    Topic[]
   createdBooks     Book[]
+  editableContents Authorship[]
   ltiResourceLinks LtiResourceLink[]
   ltiConsumer      LtiConsumer       @relation(fields: [ltiConsumerId], references: [id])
   ltiConsumerId    String            @map("lti_consumer_id")
@@ -275,6 +280,32 @@ model ActivityTimeRange {
 
   @@id([activityId, startMs])
   @@map("activities_time_ranges")
+}
+
+// 著作
+model Authorship {
+  id      Int         @id @default(autoincrement())
+  user    User        @relation(fields: [userId], references: [id])
+  userId  Int         @map("user_id")
+  role    ContentRole @relation(fields: [roleId], references: [id])
+  roleId  Int         @map("role_id")
+  topic   Topic?      @relation(fields: [topicId], references: [id])
+  topicId Int?        @map("topic_id")
+  book    Book?       @relation(fields: [bookId], references: [id])
+  bookId  Int?        @map("book_id")
+
+  @@map("authorships")
+}
+
+// コンテンツでの役割
+model ContentRole {
+  id          Int          @id @default(autoincrement())
+  /// 役割の名前
+  roleName    String       @map("role_name")
+  /// 著作
+  authorships Authorship[]
+
+  @@map("content_roles")
 }
 
 // Etc.
