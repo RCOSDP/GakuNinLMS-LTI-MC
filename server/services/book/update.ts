@@ -41,9 +41,9 @@ export async function update({
   const found = await bookExists(params.book_id);
 
   if (!found) return { status: 404 };
-  if (!isUserOrAdmin(session, { id: found.authorId })) return { status: 403 };
+  if (!isUserOrAdmin(session, { id: found.creatorId })) return { status: 403 };
 
-  const created = await updateBook(found.authorId, {
+  const created = await updateBook(found.creatorId, {
     ...body,
     id: params.book_id,
   });

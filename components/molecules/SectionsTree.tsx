@@ -78,7 +78,9 @@ type Props = {
   onItemEditClick?(index: ItemIndex): void;
   onTreeChange?(nodeId: string): void;
   selectedIndexes?: Set<string>;
-  isTopicEditable?(topic: TopicSchema): boolean | undefined;
+  isContentEditable?(
+    content: Pick<TopicSchema, "creator">
+  ): boolean | undefined;
 };
 
 export default function SectionsTree(props: Props) {
@@ -90,7 +92,7 @@ export default function SectionsTree(props: Props) {
     onItemEditClick,
     onTreeChange,
     selectedIndexes,
-    isTopicEditable,
+    isContentEditable,
   } = props;
   const classes = useStyles();
   const treeItemClasses = useTreeItemStyle();
@@ -142,7 +144,7 @@ export default function SectionsTree(props: Props) {
                       variant="topic"
                       onClick={handle(onItemPreviewClick)}
                     />
-                    {isTopicEditable?.(topic) && onItemEditClick && (
+                    {isContentEditable?.(topic) && onItemEditClick && (
                       <EditButton
                         variant="topic"
                         onClick={handle(onItemEditClick)}

@@ -39,8 +39,8 @@ type Props = {
 
 export default function BookNew(props: Props) {
   const { book, onSubmit, onCancel } = props;
-  const { isBookEditable } = useSessionAtom();
-  const forkFrom = book && !isBookEditable(book) && book.author;
+  const { isContentEditable } = useSessionAtom();
+  const forkFrom = book && !isContentEditable(book) && book.creator;
   const defaultBook = book && {
     ...book,
     ...(forkFrom && { name: [book.name, "フォーク"].join("_") }),

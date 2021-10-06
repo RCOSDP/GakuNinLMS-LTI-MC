@@ -76,7 +76,7 @@ type Props = {
   onSectionsUpdate(sections: SectionSchema[]): void;
   onTopicPreviewClick(topic: TopicSchema): void;
   onTopicEditClick?(topic: TopicSchema): void;
-  isTopicEditable?(topic: TopicSchema): boolean | undefined;
+  isContentEditable?(topic: Pick<TopicSchema, "creator">): boolean | undefined;
 };
 
 export default function SectionsEdit(props: Props) {
@@ -86,7 +86,7 @@ export default function SectionsEdit(props: Props) {
     onTopicPreviewClick,
     onTopicEditClick,
     onSectionsUpdate,
-    isTopicEditable,
+    isContentEditable,
   } = props;
   const cardClasses = useCardStyles();
   const classes = useStyles();
@@ -207,7 +207,7 @@ export default function SectionsEdit(props: Props) {
             sections={sections}
             onItemPreviewClick={handleItem(onTopicPreviewClick)}
             onItemEditClick={handleItem(onTopicEditClick)}
-            isTopicEditable={isTopicEditable}
+            isContentEditable={isContentEditable}
           />
         </TreeView>
       )}

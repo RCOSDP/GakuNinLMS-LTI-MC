@@ -7,15 +7,15 @@ import {
   isAdministrator as isAdministratorSession,
   isInstructor as isInstructorSession,
 } from "$utils/session";
-import topicCreateBy from "$utils/topicCreateBy";
-import bookCreateBy from "$utils/bookCreateBy";
+import contentCreateBy from "$utils/contentCreateBy";
 
 type SessionWithState = {
   session: SessionSchema | undefined;
   isAdministrator: boolean;
   isInstructor: boolean;
-  isTopicEditable(topic: Pick<TopicSchema, "creator">): boolean;
-  isBookEditable(book: Pick<BookSchema, "author">): boolean;
+  isContentEditable: (
+    content: Pick<BookSchema, "creator"> | Pick<TopicSchema, "creator">
+  ) => boolean;
   error: boolean;
 };
 
@@ -23,8 +23,7 @@ const sessionAtom = atom<SessionWithState>({
   session: undefined,
   isAdministrator: false,
   isInstructor: false,
-  isTopicEditable: () => false,
-  isBookEditable: () => false,
+  isContentEditable: () => false,
   error: false,
 });
 
@@ -38,11 +37,10 @@ const updateSessionAtom = atom<
     session,
     isAdministrator,
     isInstructor,
-    isTopicEditable(topic: Pick<TopicSchema, "creator">) {
-      return isAdministrator || topicCreateBy(topic, session?.user);
-    },
-    isBookEditable(book: Pick<BookSchema, "author">) {
-      return isAdministrator || bookCreateBy(book, session?.user);
+    isContentEditable(
+      content: Pick<BookSchema, "creator"> | Pick<TopicSchema, "creator">
+    ) {
+      return isAdministrator || contentCreateBy(content, session?.user);
     },
     error,
   };

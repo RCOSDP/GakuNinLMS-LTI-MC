@@ -106,7 +106,7 @@ model Keyword {
 model LtiPlatform {
   /// OpenID Connect Issuer ID
   issuer   String        @id
-  /// OpenID Connect Issuer Metadata: authorization_endpoint, jwks_uri, token_endpoint etc.
+  /// OpenID Connect Issuer Metadata: creatorization_endpoint, jwks_uri, token_endpoint etc.
   metadata Json
   /// OpenID Connect Clients
   clients  LtiConsumer[]
@@ -153,8 +153,8 @@ model LtiResourceLink {
   title      String
   book       Book        @relation(fields: [bookId], references: [id])
   bookId     Int         @map("book_id")
-  author     User        @relation(fields: [authorId], references: [id])
-  authorId   Int         @map("author_id")
+  creator     User        @relation(fields: [creatorId], references: [id])
+  creatorId   Int         @map("creator_id")
 
   @@id([consumerId, id])
   @@map("lti_resource_link")
@@ -177,8 +177,8 @@ model Book {
   /// 共有可否 (true: シェアする, それ以外: シェアしない)
   shared           Boolean           @default(true)
   /// 著作者
-  author           User              @relation(fields: [authorId], references: [id])
-  authorId         Int               @map("author_id")
+  creator           User              @relation(fields: [creatorId], references: [id])
+  creatorId         Int               @map("creator_id")
   /// 公開日
   publishedAt      DateTime          @default(now()) @map("published_at")
   /// 作成日
@@ -188,7 +188,7 @@ model Book {
   /// 詳細
   details          Json
 
-  @@index([authorId], name: "author_id")
+  @@index([creatorId], name: "creator_id")
   @@map("books")
 }
 

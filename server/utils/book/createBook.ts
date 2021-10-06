@@ -6,7 +6,7 @@ import findBook from "./findBook";
 import sectionCreateInput from "./sectionCreateInput";
 
 async function createBook(
-  authorId: UserSchema["id"],
+  creatorId: UserSchema["id"],
   book: BookProps
 ): Promise<BookSchema | undefined> {
   const timeRequired = await aggregateTimeRequired(book);
@@ -17,7 +17,7 @@ async function createBook(
       ...book,
       timeRequired,
       details: {},
-      author: { connect: { id: authorId } },
+      creator: { connect: { id: creatorId } },
       sections: { create: sectionsCreateInput },
     },
   });

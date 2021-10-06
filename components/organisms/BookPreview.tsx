@@ -163,7 +163,7 @@ export default function BookPreview({
           value={[
             { key: "作成日", value: getLocaleDateString(book.createdAt, "ja") },
             { key: "更新日", value: getLocaleDateString(book.updatedAt, "ja") },
-            { key: "作成者", value: book.author.name },
+            { key: "作成者", value: book.creator.name },
           ]}
         />
         <p

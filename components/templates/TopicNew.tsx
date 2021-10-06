@@ -45,8 +45,8 @@ type Props = {
 export default function TopicNew(props: Props) {
   const { topic, onSubmit, onSubtitleDelete, onSubtitleSubmit, onCancel } =
     props;
-  const { isTopicEditable } = useSessionAtom();
-  const forkFrom = topic && !isTopicEditable(topic) && topic.creator;
+  const { isContentEditable } = useSessionAtom();
+  const forkFrom = topic && !isContentEditable(topic) && topic.creator;
   const defaultTopic = topic && {
     ...topic,
     ...(forkFrom && { name: [topic.name, "フォーク"].join("_") }),

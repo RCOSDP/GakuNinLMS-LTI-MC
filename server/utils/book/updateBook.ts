@@ -17,7 +17,7 @@ function upsertSections(bookId: Book["id"], sections: SectionProps[]) {
 }
 
 async function updateBook(
-  authorId: User["id"],
+  creatorId: User["id"],
   { id, ...book }: Pick<Book, "id"> & BookProps
 ): Promise<BookSchema | undefined> {
   const timeRequired = await aggregateTimeRequired(book);
@@ -29,7 +29,7 @@ async function updateBook(
     data: {
       ...other,
       timeRequired,
-      author: { connect: { id: authorId } },
+      creator: { connect: { id: creatorId } },
       updatedAt: new Date(),
     },
   });

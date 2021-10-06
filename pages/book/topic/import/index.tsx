@@ -12,14 +12,14 @@ import { pagesPath } from "$utils/$path";
 export type Query = BookEditQuery;
 
 function Import({ bookId, context }: BookEditQuery) {
-  const { isBookEditable, isTopicEditable } = useSessionAtom();
-  const { book, error } = useBook(bookId, isBookEditable, isTopicEditable);
+  const { isContentEditable } = useSessionAtom();
+  const { book, error } = useBook(bookId, isContentEditable);
   const topicsProps = useTopics();
   const router = useRouter();
   const bookEditQuery = { bookId, ...(context && { context }) };
   function back() {
     // TODO: トピックインポート画面で自身以外のブックへの経路を提供しないならば不要なので取り除きましょう
-    const action = book && isBookEditable(book) ? "edit" : "generate";
+    const action = book && isContentEditable(book) ? "edit" : "generate";
     return router.push(
       pagesPath.book[action].$url({
         query: bookEditQuery,
@@ -51,7 +51,7 @@ function Import({ bookId, context }: BookEditQuery) {
     onSubmit: handleSubmit,
     onCancel: handleCancel,
     onTopicEditClick: handleTopicEditClick,
-    isTopicEditable,
+    isContentEditable,
   };
 
   if (error) return <BookNotFoundProblem />;

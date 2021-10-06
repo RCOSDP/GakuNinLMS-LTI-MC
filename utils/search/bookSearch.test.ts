@@ -8,7 +8,7 @@ test("キーワードによる絞り込み", () => {
     language: "en",
     timeRequired: null,
     shared: true,
-    author: {
+    creator: {
       id: 1,
       name: "",
       ltiConsumerId: "",
@@ -39,7 +39,7 @@ test("セクション名による絞り込み", () => {
     language: "en",
     timeRequired: null,
     shared: true,
-    author: {
+    creator: {
       id: 1,
       name: "",
       ltiConsumerId: "",
@@ -105,7 +105,7 @@ test("トピック名による絞り込み", () => {
     language: "en",
     timeRequired: null,
     shared: true,
-    author: {
+    creator: {
       id: 1,
       name: "",
       ltiConsumerId: "",
@@ -171,7 +171,7 @@ test("LTI Resource Link による絞り込み", () => {
     language: "en",
     timeRequired: null,
     shared: true,
-    author: {
+    creator: {
       id: 1,
       name: "",
       ltiConsumerId: "",
@@ -188,7 +188,7 @@ test("LTI Resource Link による絞り込み", () => {
         contextLabel: "C1",
         title: "リンク1",
         bookId: 1,
-        authorId: 1,
+        creatorId: 1,
       },
     ],
     createdAt: new Date(),
@@ -218,7 +218,7 @@ test("ブック名が空でもセクション名・トピック名による絞�
     language: "en",
     timeRequired: null,
     shared: true,
-    author: {
+    creator: {
       id: 1,
       name: "",
       ltiConsumerId: "",

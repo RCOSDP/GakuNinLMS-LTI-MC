@@ -9,33 +9,33 @@ import useSortOrder from "./useSortOrder";
 import useInfiniteProps from "./useInfiniteProps";
 import useFilter from "./useFilter";
 import topicSearch from "./search/topicSearch";
-import topicCreateBy from "./topicCreateBy";
+import contentCreateBy from "./contentCreateBy";
 import { makeUserTopicsKey, fetchUserTopics } from "./userTopics";
 import { makeTopicsKey, fetchTopics } from "./topics";
 
 function sharedOrCreatedBy(
   topic: TopicSchema,
-  isTopicEditable: (topic: Pick<TopicSchema, "creator">) => boolean
+  isContentEditable: (content: Pick<TopicSchema, "creator">) => boolean
 ) {
-  return topic.shared || isTopicEditable(topic);
+  return topic.shared || isContentEditable(topic);
 }
 
 const makeFilter =
   (
     filter: Filter,
     userId: UserSchema["id"],
-    isTopicEditable: (topic: Pick<TopicSchema, "creator">) => boolean
+    isContentEditable: (topic: Pick<TopicSchema, "creator">) => boolean
   ) =>
   (topic: TopicSchema | undefined) => {
     if (topic === undefined) return [];
-    const isMyTopic = topicCreateBy(topic, { id: userId ?? NaN });
+    const isMyTopic = contentCreateBy(topic, { id: userId ?? NaN });
     if (filter === "other" && isMyTopic) return [];
-    if (!sharedOrCreatedBy(topic, isTopicEditable)) return [];
+    if (!sharedOrCreatedBy(topic, isContentEditable)) return [];
     return [topic];
   };
 
 function useTopics() {
-  const { session, isTopicEditable } = useSessionAtom();
+  const { session, isContentEditable } = useSessionAtom();
   const { query } = useSearchAtom();
   const [sort, onSortChange] = useSortOrder();
   const [filter, onFilterChange] = useFilter();
@@ -49,8 +49,8 @@ function useTopics() {
     [isUserTopics, userId, sort]
   );
   const topicFilter = useMemo(
-    () => makeFilter(filter, userId, isTopicEditable),
-    [filter, userId, isTopicEditable]
+    () => makeFilter(filter, userId, isContentEditable),
+    [filter, userId, isContentEditable]
   );
   const res = useSWRInfinite<TopicSchema[]>(key, fetch);
   const topics = topicSearch(

@@ -36,7 +36,7 @@ export async function destroy({
   const found = await bookExists(params.book_id);
 
   if (!found) return { status: 404 };
-  if (!isUserOrAdmin(session, { id: found.authorId })) return { status: 403 };
+  if (!isUserOrAdmin(session, { id: found.creatorId })) return { status: 403 };
 
   await destroyBook(params.book_id);
 

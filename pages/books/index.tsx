@@ -20,7 +20,7 @@ const Books = (
 
 function Index() {
   const router = useRouter();
-  const { session, isBookEditable } = useSessionAtom();
+  const { session, isContentEditable } = useSessionAtom();
   const { linkedBook } = useLinkedBook();
   const {
     data: dialog,
@@ -29,8 +29,8 @@ function Index() {
     dispatch,
   } = useDialogProps<BookSchema>();
   const handleBookPreviewClick = (book: BookSchema) => dispatch(book);
-  const handleBookEditClick = (book: Pick<BookSchema, "id" | "author">) => {
-    const action = isBookEditable(book) ? "edit" : "generate";
+  const handleBookEditClick = (book: Pick<BookSchema, "id" | "creator">) => {
+    const action = isContentEditable(book) ? "edit" : "generate";
     return router.push(
       pagesPath.book[action].$url({
         query: { context: "books", bookId: book.id },

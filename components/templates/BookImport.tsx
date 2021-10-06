@@ -60,8 +60,9 @@ type Props = {
   onTopicEditClick?(topic: TopicSchema): void;
   onSortChange?(sort: SortOrder): void;
   onFilterChange?(filter: Filter): void;
-  isBookEditable?(book: BookSchema): boolean | undefined;
-  isTopicEditable?(topic: TopicSchema): boolean | undefined;
+  isContentEditable?(
+    book: Pick<BookSchema, "creator"> | Pick<TopicSchema, "creator">
+  ): boolean | undefined;
 };
 
 export default function BookImport(props: Props) {
@@ -77,8 +78,7 @@ export default function BookImport(props: Props) {
     onTopicEditClick,
     onSortChange,
     onFilterChange,
-    isBookEditable,
-    isTopicEditable,
+    isContentEditable,
   } = props;
   const classes = useStyles();
   const containerClasses = useContainerStyles();
@@ -171,10 +171,10 @@ export default function BookImport(props: Props) {
               onItemEditClick={handleItem(onTopicEditClick)}
               onBookPreviewClick={onBookPreviewClick}
               onBookEditClick={
-                isBookEditable?.(book) ? onBookEditClick : undefined
+                isContentEditable?.(book) ? onBookEditClick : undefined
               }
               onLtiContextClick={onLtiContextClick}
-              isTopicEditable={isTopicEditable}
+              isContentEditable={isContentEditable}
               onTreeChange={handleTreeChange}
             />
           );

@@ -42,7 +42,7 @@ type Props = {
   onTopicEditClick(topic: TopicSchema): void;
   onSortChange?(sort: SortOrder): void;
   onFilterChange?(filter: Filter): void;
-  isTopicEditable(topic: TopicSchema): boolean | undefined;
+  isContentEditable(topic: Pick<TopicSchema, "creator">): boolean | undefined;
 };
 
 export default function TopicImport(props: Props) {
@@ -56,7 +56,7 @@ export default function TopicImport(props: Props) {
     onTopicEditClick,
     onSortChange,
     onFilterChange,
-    isTopicEditable,
+    isContentEditable,
   } = props;
   const { query, onSearchInput, onSearchInputReset } = useSearchAtom();
   const classes = useStyles();
@@ -78,7 +78,7 @@ export default function TopicImport(props: Props) {
   const handleTopicPreviewClick = (topic: TopicSchema) =>
     setPreviewTopic(topic);
   const handleTopicEditClick = (topic: TopicSchema) =>
-    isTopicEditable(topic) && (() => onTopicEditClick(topic));
+    isContentEditable(topic) && (() => onTopicEditClick(topic));
   const [infiniteRef] = useInfiniteScroll({ loading, hasNextPage, onLoadMore });
   return (
     <Container ref={infiniteRef} classes={containerClasses} maxWidth="lg">

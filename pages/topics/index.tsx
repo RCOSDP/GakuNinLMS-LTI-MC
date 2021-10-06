@@ -14,9 +14,9 @@ const Topics = (
 
 function Index() {
   const router = useRouter();
-  const { isTopicEditable } = useSessionAtom();
+  const { isContentEditable } = useSessionAtom();
   function handleTopicEditClick(topic: Pick<TopicSchema, "id" | "creator">) {
-    const action = isTopicEditable(topic) ? "edit" : "generate";
+    const action = isContentEditable(topic) ? "edit" : "generate";
     return router.push(
       pagesPath.topics[action].$url({ query: { topicId: topic.id } })
     );
