@@ -6,7 +6,7 @@ import type { TopicSchema } from "$server/models/topic";
 import { useSessionAtom } from "$store/session";
 import BookEdit from "$templates/BookEdit";
 import Placeholder from "$templates/Placeholder";
-import BookNotFoundProblem from "$organisms/TopicNotFoundProblem";
+import BookNotFoundProblem from "$templates/TopicNotFoundProblem";
 import { destroyBook, updateBook, useBook } from "$utils/book";
 import { pagesPath } from "$utils/$path";
 import useBookLinkHandler from "$utils/useBookLinkHandler";

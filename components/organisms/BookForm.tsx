@@ -1,13 +1,13 @@
-import Card from "@material-ui/core/Card";
-import Checkbox from "@material-ui/core/Checkbox";
-import Divider from "@material-ui/core/Divider";
-import Button from "@material-ui/core/Button";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import Link from "@material-ui/core/Link";
-import Typography from "@material-ui/core/Typography";
-import { makeStyles } from "@material-ui/core/styles";
-import { useForm, Controller } from "react-hook-form";
+import Card from "@mui/material/Card";
+import Checkbox from "@mui/material/Checkbox";
+import Divider from "@mui/material/Divider";
+import Button from "@mui/material/Button";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import Link from "@mui/material/Link";
+import Typography from "@mui/material/Typography";
+import makeStyles from "@mui/styles/makeStyles";
+import { useForm } from "react-hook-form";
 import clsx from "clsx";
 import TextField from "$atoms/TextField";
 import useCardStyles from "styles/card";
@@ -71,13 +71,10 @@ export default function BookForm({
     sections: book?.sections,
     submitWithLink: false,
   };
-  const {
-    handleSubmit,
-    register,
-    control,
-  } = useForm<BookPropsWithSubmitOptions>({
-    defaultValues,
-  });
+  const { handleSubmit, register, setValue } =
+    useForm<BookPropsWithSubmitOptions>({
+      defaultValues,
+    });
 
   return (
     <Card
@@ -85,13 +82,10 @@ export default function BookForm({
       className={clsx(classes.margin, className)}
       id={id}
       component="form"
-      onSubmit={handleSubmit((values: BookPropsWithSubmitOptions) => {
-        onSubmit({ ...defaultValues, ...values });
-      })}
+      onSubmit={handleSubmit(onSubmit)}
     >
       <TextField
-        name="name"
-        inputRef={register}
+        inputProps={register("name")}
         label={
           <>
             タイトル
@@ -114,25 +108,23 @@ export default function BookForm({
         <Checkbox
           id="shared"
           name="shared"
-          inputRef={register}
+          onChange={(_, checked) => setValue("shared", checked)}
           defaultChecked={defaultValues.shared}
           color="primary"
         />
       </div>
-      <Controller
-        name="language"
-        control={control}
+      <TextField
+        label="教材の主要な言語"
+        select
         defaultValue={defaultValues.language}
-        render={(props) => (
-          <TextField label="教材の主要な言語" select inputProps={props}>
-            {Object.entries(languages).map(([value, label]) => (
-              <MenuItem key={value} value={value}>
-                {label}
-              </MenuItem>
-            ))}
-          </TextField>
-        )}
-      />
+        inputProps={register("language")}
+      >
+        {Object.entries(languages).map(([value, label]) => (
+          <MenuItem key={value} value={value}>
+            {label}
+          </MenuItem>
+        ))}
+      </TextField>
       <TextField
         label={
           <>
@@ -155,8 +147,7 @@ export default function BookForm({
         }
         fullWidth
         multiline
-        name="description"
-        inputRef={register}
+        inputProps={register("description")}
       />
       <Divider className={classes.divider} />
       {!linked && (
@@ -167,7 +158,7 @@ export default function BookForm({
           <Checkbox
             id="submit-with-link"
             name="submitWithLink"
-            inputRef={register}
+            onChange={(_, checked) => setValue("submitWithLink", checked)}
             defaultChecked={defaultValues.submitWithLink}
             color="primary"
           />

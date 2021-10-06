@@ -1,9 +1,9 @@
-import Typography from "@material-ui/core/Typography";
-import Container from "@material-ui/core/Container";
-import Button from "@material-ui/core/Button";
-import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
-import { makeStyles } from "@material-ui/core/styles";
-import BookEditChildren from "$organisms/BookEditChildren";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import Button from "@mui/material/Button";
+import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
+import makeStyles from "@mui/styles/makeStyles";
+import SectionsEdit from "$organisms/SectionsEdit";
 import BookForm from "$organisms/BookForm";
 import TopicPreviewDialog from "$organisms/TopicPreviewDialog";
 import RequiredDot from "$atoms/RequiredDot";
@@ -100,7 +100,7 @@ export default function BookEdit({
       <Typography className={classes.subtitle} variant="h5">
         トピック
       </Typography>
-      <BookEditChildren
+      <SectionsEdit
         className={classes.content}
         sections={book.sections}
         onTopicPreviewClick={handleTopicPreviewClick}

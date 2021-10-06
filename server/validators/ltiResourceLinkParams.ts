@@ -11,5 +11,5 @@ export class LtiResourceLinkParams {
   lti_resource_link_id!: string;
 }
 
-export const ltiResourceLinkParamsSchema = validationMetadatasToSchemas()
-  .LtiResourceLinkParams;
+export const ltiResourceLinkParamsSchema =
+  validationMetadatasToSchemas().LtiResourceLinkParams;

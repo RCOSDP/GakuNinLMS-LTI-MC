@@ -1,7 +1,7 @@
-import Typography from "@material-ui/core/Typography";
-import Container from "@material-ui/core/Container";
-import Alert from "@material-ui/lab/Alert";
-import { makeStyles } from "@material-ui/core/styles";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import Alert from "@mui/material/Alert";
+import makeStyles from "@mui/styles/makeStyles";
 import TopicForm from "$organisms/TopicForm";
 import RequiredDot from "$atoms/RequiredDot";
 import BackButton from "$atoms/BackButton";
@@ -43,13 +43,8 @@ type Props = {
 };
 
 export default function TopicNew(props: Props) {
-  const {
-    topic,
-    onSubmit,
-    onSubtitleDelete,
-    onSubtitleSubmit,
-    onCancel,
-  } = props;
+  const { topic, onSubmit, onSubtitleDelete, onSubtitleSubmit, onCancel } =
+    props;
   const { isContentEditable } = useSessionAtom();
   const forkFrom = topic && !isContentEditable(topic) && topic.creator;
   const defaultTopic = topic && {

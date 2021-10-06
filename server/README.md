@@ -4,11 +4,11 @@
 
 ### 前提条件
 
-2021-02-15 現在、以下の環境で動作確認済み
+2021-09-03 現在、以下の環境で動作確認済み
 
 - Docker v20
-- Docker Compose v1.28
-- Node v14
+- Docker Compose v1.29
+- Node.js v16
 - Yarn v1.22
 
 ### 手順

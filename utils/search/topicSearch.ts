@@ -2,7 +2,9 @@ import { TopicSchema } from "$server/models/topic";
 import { Query } from "./query";
 
 function getTextContent(topic: TopicSchema): string {
-  return topic.name.normalize("NFKD").toLowerCase();
+  let str = topic.name;
+  if (topic.creator.name) str += ` ${topic.creator.name}`;
+  return str.normalize("NFKD").toLowerCase();
 }
 
 /**

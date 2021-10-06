@@ -1,4 +1,4 @@
-import RemoveIcon from "@material-ui/icons/Remove";
+import RemoveIcon from "@mui/icons-material/Remove";
 import IconButton from "$atoms/IconButton";
 
 type Props = Omit<Parameters<typeof IconButton>[0], "tooltipProps"> & {

@@ -1,12 +1,10 @@
-import TreeItem from "@material-ui/lab/TreeItem";
-// TODO: ブック単位での再利用の実装
-// import Checkbox from "@material-ui/core/Checkbox";
-import { makeStyles } from "@material-ui/core/styles";
+import TreeItem from "@mui/lab/TreeItem";
+import makeStyles from "@mui/styles/makeStyles";
 import PreviewButton from "$atoms/PreviewButton";
 import EditButton from "$atoms/EditButton";
 import CourseChip from "$atoms/CourseChip";
 import SharedIndicator from "$atoms/SharedIndicator";
-import BookChildrenTree from "$molecules/BookChildrenTree";
+import SectionsTree from "$molecules/SectionsTree";
 import useTreeItemStyle from "$styles/treeItem";
 import { BookSchema } from "$server/models/book";
 import { TopicSchema } from "$server/models/topic";
@@ -51,12 +49,12 @@ export default function BookTree(props: Props) {
   const classes = useStyles();
   const treeItemClasses = useTreeItemStyle();
   const nodeId = `${book.id}`;
-  const handle = (handler?: (book: BookSchema) => void) => (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
-    event.stopPropagation();
-    handler?.(book);
-  };
+  const handle =
+    (handler?: (book: BookSchema) => void) =>
+    (event: React.MouseEvent<HTMLButtonElement>) => {
+      event.stopPropagation();
+      handler?.(book);
+    };
   /* TODO: ブック単位での再利用の実装
   const handleChange = (handler?: (nodeId: string) => void) => () => {
     handler?.(nodeId);
@@ -96,7 +94,7 @@ export default function BookTree(props: Props) {
         </>
       }
     >
-      <BookChildrenTree
+      <SectionsTree
         bookId={book.id}
         sections={book.sections}
         onItemClick={onItemClick}

@@ -15,9 +15,12 @@ import {
   registerDecorator,
   ValidatorConstraintInterface,
 } from "class-validator";
-import { validationMetadatasToSchemas } from "class-validator-jsonschema";
+import {
+  validationMetadatasToSchemas,
+  JSONSchema,
+} from "class-validator-jsonschema";
 import parse from "spdx-expression-parse";
-import { BookSchema } from "$server/models/book";
+import { BookSchema, bookSchema } from "$server/models/book";
 
 export class BooksImportParams {
   @IsOptional()
@@ -35,12 +38,17 @@ export class BooksImportParams {
   wowzaBaseUrl = "";
 }
 
-export const booksImportParamsSchema = validationMetadatasToSchemas()
-  .BooksImportParams;
+export const booksImportParamsSchema =
+  validationMetadatasToSchemas().BooksImportParams;
 
 export class BooksImportResult {
   @IsOptional()
-  @ValidateNested({ each: true })
+  @ValidateNested()
+  @JSONSchema({
+    type: "array",
+    // @ts-expect-error NOTE: json-schema.json由来で型チェックが効かない
+    items: bookSchema,
+  })
   books?: BookSchema[];
 
   @IsOptional()
@@ -48,8 +56,8 @@ export class BooksImportResult {
   errors?: string[];
 }
 
-export const booksImportResultSchema = validationMetadatasToSchemas()
-  .BooksImportResult;
+export const booksImportResultSchema =
+  validationMetadatasToSchemas().BooksImportResult;
 
 class IsLicenseConstraint implements ValidatorConstraintInterface {
   message = "";
@@ -61,7 +69,7 @@ class IsLicenseConstraint implements ValidatorConstraintInterface {
       parse(value);
       return true;
     } catch (e) {
-      this.message = e.toString();
+      this.message = String(e);
       return false;
     }
   }
@@ -148,8 +156,8 @@ export class ImportResource {
   }
 }
 
-export const importResourceSchema = validationMetadatasToSchemas()
-  .ImportResource;
+export const importResourceSchema =
+  validationMetadatasToSchemas().ImportResource;
 
 export class ImportTopic {
   @IsString({ message: "文字列ではないか未設定です。" })

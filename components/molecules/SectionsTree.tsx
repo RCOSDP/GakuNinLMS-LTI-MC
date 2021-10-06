@@ -1,7 +1,7 @@
 import { ReactNode, MouseEvent } from "react";
-import TreeItem from "@material-ui/lab/TreeItem";
-import Checkbox from "@material-ui/core/Checkbox";
-import { makeStyles } from "@material-ui/core/styles";
+import TreeItem from "@mui/lab/TreeItem";
+import Checkbox from "@mui/material/Checkbox";
+import makeStyles from "@mui/styles/makeStyles";
 import PreviewButton from "$atoms/PreviewButton";
 import EditButton from "$atoms/EditButton";
 import SharedIndicator from "$atoms/SharedIndicator";
@@ -83,7 +83,7 @@ type Props = {
   ): boolean | undefined;
 };
 
-export default function BookChildrenTree(props: Props) {
+export default function SectionsTree(props: Props) {
   const {
     bookId = 0,
     sections,
@@ -108,12 +108,12 @@ export default function BookChildrenTree(props: Props) {
         >
           {section.topics.map((topic, topicIndex) => {
             const nodeId = `${bookId}-${section.id}-${topic.id}:${topicIndex}`;
-            const handle = (handler?: (index: ItemIndex) => void) => (
-              event: MouseEvent<HTMLElement>
-            ) => {
-              event.stopPropagation();
-              handler?.([sectionIndex, topicIndex]);
-            };
+            const handle =
+              (handler?: (index: ItemIndex) => void) =>
+              (event: MouseEvent<HTMLElement>) => {
+                event.stopPropagation();
+                handler?.([sectionIndex, topicIndex]);
+              };
             const handleChange = (handler?: (nodeId: string) => void) => () => {
               handler?.(nodeId);
             };

@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useSWRInfinite } from "swr";
+import useSWRInfinite from "swr/infinite";
 import type { TopicSchema } from "$server/models/topic";
 import type { UserSchema } from "$server/models/user";
 import type { Filter } from "$types/filter";
@@ -20,17 +20,19 @@ function sharedOrCreatedBy(
   return topic.shared || isContentEditable(topic);
 }
 
-const makeFilter = (
-  filter: Filter,
-  userId: UserSchema["id"],
-  isContentEditable: (topic: Pick<TopicSchema, "creator">) => boolean
-) => (topic: TopicSchema | undefined) => {
-  if (topic === undefined) return [];
-  const isMyTopic = contentCreateBy(topic, { id: userId ?? NaN });
-  if (filter === "other" && isMyTopic) return [];
-  if (!sharedOrCreatedBy(topic, isContentEditable)) return [];
-  return [topic];
-};
+const makeFilter =
+  (
+    filter: Filter,
+    userId: UserSchema["id"],
+    isContentEditable: (topic: Pick<TopicSchema, "creator">) => boolean
+  ) =>
+  (topic: TopicSchema | undefined) => {
+    if (topic === undefined) return [];
+    const isMyTopic = contentCreateBy(topic, { id: userId ?? NaN });
+    if (filter === "other" && isMyTopic) return [];
+    if (!sharedOrCreatedBy(topic, isContentEditable)) return [];
+    return [topic];
+  };
 
 function useTopics() {
   const { session, isContentEditable } = useSessionAtom();

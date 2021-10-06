@@ -1,23 +1,20 @@
 import clsx from "clsx";
 import { TopicSchema } from "$server/models/topic";
-import formatDuration from "date-fns/formatDuration";
-import intervalToDuration from "date-fns/intervalToDuration";
-import ja from "date-fns/locale/ja";
-import Typography from "@material-ui/core/Typography";
-import Chip from "@material-ui/core/Chip";
-import { useTheme, makeStyles } from "@material-ui/core/styles";
+import Typography from "@mui/material/Typography";
+import Chip from "@mui/material/Chip";
+import { useTheme } from "@mui/material/styles";
+import makeStyles from "@mui/styles/makeStyles";
 import Video from "$organisms/Video";
+import VideoPlayer from "$organisms/Video/VideoPlayer";
 import DescriptionList from "$atoms/DescriptionList";
 import Markdown from "$atoms/Markdown";
 import useSticky from "$utils/useSticky";
 import getLocaleDateString from "$utils/getLocaleDateString";
+import formatInterval from "$utils/formatInterval";
 import { NEXT_PUBLIC_VIDEO_MAX_HEIGHT } from "$utils/env";
+import { isVideoResource } from "$utils/videoResource";
+import { useVideoAtom } from "$store/video";
 import { gray } from "$theme/colors";
-
-function formatInterval(start: Date | number, end: Date | number) {
-  const duration = intervalToDuration({ start, end });
-  return formatDuration(duration, { locale: ja });
-}
 
 const useStyles = makeStyles((theme) => ({
   video: {
@@ -32,6 +29,13 @@ const useStyles = makeStyles((theme) => ({
           ? "unset"
           : `calc(${NEXT_PUBLIC_VIDEO_MAX_HEIGHT} * 16 / 9)`,
       margin: "0 auto",
+    },
+  },
+  hidden: {
+    width: 0,
+    margin: 0,
+    "& *": {
+      visibility: "hidden",
     },
   },
   header: {
@@ -52,19 +56,29 @@ const useStyles = makeStyles((theme) => ({
 type Props = {
   topic: TopicSchema;
   onEnded?: () => void;
-  offset?: number;
+  offset?: string;
 };
 
-export default function TopicViewerContent(props: Props) {
-  const { topic, onEnded, offset } = props;
+export default function TopicViewerContent({ topic, onEnded, offset }: Props) {
   const classes = useStyles();
   const theme = useTheme();
   const sticky = useSticky({
     offset: offset ?? theme.spacing(-2),
   });
+  const { video } = useVideoAtom();
   return (
     <>
-      {"providerUrl" in topic.resource && (
+      {Array.from(video.values()).map((videoInstance) => (
+        <VideoPlayer
+          key={videoInstance.url}
+          className={clsx(classes.video, sticky, {
+            [classes.hidden]: topic.resource.url != videoInstance.url,
+          })}
+          videoInstance={videoInstance}
+          onEnded={onEnded}
+        />
+      ))}
+      {video.size === 0 && isVideoResource(topic.resource) && (
         <Video
           className={clsx(classes.video, sticky)}
           {...topic.resource}
@@ -77,9 +91,7 @@ export default function TopicViewerContent(props: Props) {
           {topic.name}
         </Typography>
         <Chip
-          label={`学習時間 ${
-            formatInterval(0, topic.timeRequired * 1000) || "10秒未満"
-          }`}
+          label={`学習時間 ${formatInterval(0, topic.timeRequired * 1000)}`}
         />
       </header>
       <DescriptionList

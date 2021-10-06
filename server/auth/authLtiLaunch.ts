@@ -9,7 +9,7 @@ import prisma from "$server/utils/prisma";
 async function authLtiLaunch(req: FastifyRequest) {
   const body = req.body as LtiLaunchBody;
 
-  if (!valid((body as unknown) as Record<string, unknown>)) {
+  if (!valid(body as unknown as Record<string, unknown>)) {
     throw new Error("invalid");
   }
 
@@ -19,7 +19,7 @@ async function authLtiLaunch(req: FastifyRequest) {
     secret &&
     (await auth(
       url,
-      (body as unknown) as Record<string, string>,
+      body as unknown as Record<string, string>,
       body.oauth_consumer_key,
       secret,
       lookupNonce

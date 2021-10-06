@@ -1,9 +1,9 @@
 import { useEffect, forwardRef, ComponentProps } from "react";
-import Dialog from "@material-ui/core/Dialog";
-import CloseIcon from "@material-ui/icons/Close";
-import { makeStyles } from "@material-ui/core/styles";
-import Slide from "@material-ui/core/Slide";
-import type { TransitionProps } from "@material-ui/core/transitions";
+import Dialog from "@mui/material/Dialog";
+import CloseIcon from "@mui/icons-material/Close";
+import makeStyles from "@mui/styles/makeStyles";
+import Slide from "@mui/material/Slide";
+import type { TransitionProps } from "@mui/material/transitions";
 import IconButton from "$atoms/IconButton";
 import type Book from "$templates/Book";
 import { useBookAtom } from "$store/book";
@@ -71,6 +71,7 @@ export default function BookPreviewDialog(props: Props) {
         className={classes.closeButton}
         tooltipProps={{ title: "閉じる" }}
         onClick={onClose}
+        size="large"
       >
         <CloseIcon />
       </IconButton>

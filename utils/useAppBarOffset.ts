@@ -1,14 +1,14 @@
-import { useTheme } from "@material-ui/core/styles";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
-import useScrollTrigger from "@material-ui/core/useScrollTrigger";
+import { useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import useScrollTrigger from "@mui/material/useScrollTrigger";
 import { useSessionAtom } from "$store/session";
 
-function useAppBarOffset(): number {
+function useAppBarOffset(): string {
   const { isInstructor } = useSessionAtom();
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up("sm"));
   const trigger = useScrollTrigger();
-  return !isInstructor || trigger ? 0 : matches ? 65 : 55;
+  return !isInstructor || trigger ? "0" : matches ? "65px" : "55px";
 }
 
 export default useAppBarOffset;

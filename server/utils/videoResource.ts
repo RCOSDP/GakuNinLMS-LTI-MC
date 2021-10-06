@@ -9,8 +9,10 @@ const defaultResource = (url: URL): VideoResource => ({
   tracks: [],
 });
 
-const hostMatch = (url: URL) => (matcher: VideoResourceMatcher): boolean =>
-  matcher.host.test(url.host);
+const hostMatch =
+  (url: URL) =>
+  (matcher: VideoResourceMatcher): boolean =>
+    matcher.host.test(url.host);
 
 export function providerMatch(value: string): boolean {
   const url = getValidUrl(value);

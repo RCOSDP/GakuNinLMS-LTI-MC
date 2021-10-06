@@ -1,8 +1,8 @@
 import { ComponentProps } from "react";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import Container from "@material-ui/core/Container";
-import { makeStyles } from "@material-ui/core/styles";
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import Container from "@mui/material/Container";
+import makeStyles from "@mui/styles/makeStyles";
 import { gray } from "theme/colors";
 
 const useAppBarStyles = makeStyles({

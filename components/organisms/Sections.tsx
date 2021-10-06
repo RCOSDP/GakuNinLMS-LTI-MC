@@ -1,16 +1,18 @@
 import { ReactNode, MouseEvent } from "react";
 import clsx from "clsx";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
-import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
-import { makeStyles, createStyles } from "@material-ui/styles";
-import type { Theme } from "@material-ui/core/styles";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
+import ListItemSecondaryAction from "@mui/material/ListItemSecondaryAction";
+import Typography from "@mui/material/Typography";
+import { makeStyles, createStyles } from "@mui/styles";
+import type { Theme } from "@mui/material/styles";
 import EditButton from "$atoms/EditButton";
 import { TopicSchema } from "$server/models/topic";
 import { SectionSchema } from "$server/models/book/section";
 import { primary, gray } from "$theme/colors";
 import { isNamedSection, getOutlineNumber } from "$utils/outline";
+import formatInterval from "$utils/formatInterval";
 
 function SectionItem({
   section,
@@ -58,6 +60,10 @@ const useStyles = makeStyles((theme: Theme) =>
       whiteSpace: "nowrap",
       textOverflow: "ellipsis",
     },
+    columns: {
+      display: "flex",
+      flexDirection: "column",
+    },
     topic: {
       fontSize: "0.875rem",
     },
@@ -81,7 +87,7 @@ type Props = {
   onItemEditClick?(index: ItemIndex): void;
 };
 
-export default function BookChildren({
+export default function Sections({
   className,
   sections,
   index: [sectionIndex, topicIndex],
@@ -91,12 +97,11 @@ export default function BookChildren({
 }: Props) {
   const classes = useStyles();
   const handleItemClick = (index: ItemIndex) => () => onItemClick(index);
-  const handleItemEditClick = (index: ItemIndex) => (
-    event: MouseEvent<HTMLButtonElement>
-  ) => {
-    event.stopPropagation();
-    onItemEditClick?.(index);
-  };
+  const handleItemEditClick =
+    (index: ItemIndex) => (event: MouseEvent<HTMLButtonElement>) => {
+      event.stopPropagation();
+      onItemEditClick?.(index);
+    };
   return (
     <div className={className}>
       {sections.map((section, sectionItemIndex) => (
@@ -119,11 +124,13 @@ export default function BookChildren({
               <span className={clsx(classes.outline, classes.outlineNumber)}>
                 {getOutlineNumber(section, sectionItemIndex, topicItemIndex)}
               </span>
-              <ListItemText
-                className={clsx(classes.topic, classes.ellipsis)}
-                disableTypography
-              >
-                {topic.name}
+              <ListItemText className={classes.columns} disableTypography>
+                <span className={clsx(classes.topic, classes.ellipsis)}>
+                  {topic.name}
+                </span>
+                <Typography component="span" variant="caption">
+                  {formatInterval(0, topic.timeRequired * 1000)}
+                </Typography>
               </ListItemText>
               {isContentEditable(topic) && onItemEditClick && (
                 <ListItemSecondaryAction>

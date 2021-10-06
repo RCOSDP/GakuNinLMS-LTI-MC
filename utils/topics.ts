@@ -5,13 +5,15 @@ import { revalidateTopic } from "./topic";
 
 const key = "/api/v2/topics";
 
-export const makeTopicsKey = (sort: SortOrder, perPage: number) => (
-  page: number,
-  prev: TopicSchema[] | null
-): Parameters<typeof fetchTopics> | null => {
-  if (prev && prev.length === 0) return null;
-  return [key, sort, perPage, page];
-};
+export const makeTopicsKey =
+  (sort: SortOrder, perPage: number) =>
+  (
+    page: number,
+    prev: TopicSchema[] | null
+  ): Parameters<typeof fetchTopics> | null => {
+    if (prev && prev.length === 0) return null;
+    return [key, sort, perPage, page];
+  };
 
 export async function fetchTopics(
   _: typeof key,

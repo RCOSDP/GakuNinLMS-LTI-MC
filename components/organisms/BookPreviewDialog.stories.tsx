@@ -1,6 +1,6 @@
 export default { title: "organisms/BookPreviewDialog" };
 
-import Button from "@material-ui/core/Button";
+import Button from "@mui/material/Button";
 import type { BookSchema } from "$server/models/book";
 import useDialogProps from "$utils/useDialogProps";
 import BookPreviewDialog from "./BookPreviewDialog";

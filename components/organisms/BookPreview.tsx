@@ -1,10 +1,10 @@
 import { useState } from "react";
 import clsx from "clsx";
 import { useInView } from "react-intersection-observer";
-import Card from "@material-ui/core/Card";
-import Chip from "@material-ui/core/Chip";
-import LinkIcon from "@material-ui/icons/Link";
-import { makeStyles } from "@material-ui/core/styles";
+import Card from "@mui/material/Card";
+import Chip from "@mui/material/Chip";
+import LinkIcon from "@mui/icons-material/Link";
+import makeStyles from "@mui/styles/makeStyles";
 import IconButton from "$atoms/IconButton";
 import PreviewButton from "$atoms/PreviewButton";
 import EditButton from "$atoms/EditButton";
@@ -142,6 +142,7 @@ export default function BookPreview({
               color="primary"
               tooltipProps={{ title: "このブックを提供" }}
               onClick={handle(onBookLinkClick)}
+              size="large"
             >
               <LinkIcon />
             </IconButton>
