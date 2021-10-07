@@ -8,6 +8,7 @@ test("キーワードによる絞り込み", () => {
     language: "en",
     timeRequired: null,
     shared: true,
+    authors: [],
     creator: {
       id: 1,
       name: "",
@@ -39,6 +40,7 @@ test("セクション名による絞り込み", () => {
     language: "en",
     timeRequired: null,
     shared: true,
+    authors: [],
     creator: {
       id: 1,
       name: "",
@@ -65,6 +67,7 @@ test("セクション名による絞り込み", () => {
             timeRequired: 10,
             shared: true,
             license: "",
+            authors: [],
             creator: {
               id: 1,
               name: "",
@@ -105,6 +108,7 @@ test("トピック名による絞り込み", () => {
     language: "en",
     timeRequired: null,
     shared: true,
+    authors: [],
     creator: {
       id: 1,
       name: "",
@@ -131,6 +135,7 @@ test("トピック名による絞り込み", () => {
             timeRequired: 10,
             shared: true,
             license: "",
+            authors: [],
             creator: {
               id: 1,
               name: "",
@@ -171,6 +176,7 @@ test("LTI Resource Link による絞り込み", () => {
     language: "en",
     timeRequired: null,
     shared: true,
+    authors: [],
     creator: {
       id: 1,
       name: "",
@@ -218,6 +224,7 @@ test("ブック名が空でもセクション名・トピック名による絞�
     language: "en",
     timeRequired: null,
     shared: true,
+    authors: [],
     creator: {
       id: 1,
       name: "",
@@ -244,6 +251,7 @@ test("ブック名が空でもセクション名・トピック名による絞�
             timeRequired: 10,
             shared: true,
             license: "",
+            authors: [],
             creator: {
               id: 1,
               name: "",

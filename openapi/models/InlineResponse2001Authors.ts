@@ -16,40 +16,46 @@ import { exists, mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface InlineResponse2001Creator
+ * @interface InlineResponse2001Authors
  */
-export interface InlineResponse2001Creator {
+export interface InlineResponse2001Authors {
     /**
      * 
      * @type {number}
-     * @memberof InlineResponse2001Creator
+     * @memberof InlineResponse2001Authors
      */
     id: number;
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse2001Creator
+     * @memberof InlineResponse2001Authors
      */
     ltiConsumerId: string;
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse2001Creator
+     * @memberof InlineResponse2001Authors
      */
     ltiUserId: string;
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse2001Creator
+     * @memberof InlineResponse2001Authors
      */
     name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineResponse2001Authors
+     */
+    roleName: string;
 }
 
-export function InlineResponse2001CreatorFromJSON(json: any): InlineResponse2001Creator {
-    return InlineResponse2001CreatorFromJSONTyped(json, false);
+export function InlineResponse2001AuthorsFromJSON(json: any): InlineResponse2001Authors {
+    return InlineResponse2001AuthorsFromJSONTyped(json, false);
 }
 
-export function InlineResponse2001CreatorFromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse2001Creator {
+export function InlineResponse2001AuthorsFromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse2001Authors {
     if ((json === undefined) || (json === null)) {
         return json;
     }
@@ -59,10 +65,11 @@ export function InlineResponse2001CreatorFromJSONTyped(json: any, ignoreDiscrimi
         'ltiConsumerId': json['ltiConsumerId'],
         'ltiUserId': json['ltiUserId'],
         'name': json['name'],
+        'roleName': json['roleName'],
     };
 }
 
-export function InlineResponse2001CreatorToJSON(value?: InlineResponse2001Creator | null): any {
+export function InlineResponse2001AuthorsToJSON(value?: InlineResponse2001Authors | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -75,6 +82,7 @@ export function InlineResponse2001CreatorToJSON(value?: InlineResponse2001Creato
         'ltiConsumerId': value.ltiConsumerId,
         'ltiUserId': value.ltiUserId,
         'name': value.name,
+        'roleName': value.roleName,
     };
 }
 

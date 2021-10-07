@@ -9,6 +9,7 @@ const book = {
   language: "ja",
   timeRequired: null,
   shared: true,
+  authors: [{ ...user, roleName: "著者" }],
   creator: user,
   ltiResourceLinks: [ltiResourceLink],
   createdAt: new Date(),

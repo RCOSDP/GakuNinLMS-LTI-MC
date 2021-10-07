@@ -2,6 +2,7 @@ import { Prisma, Section, TopicSection } from "@prisma/client";
 import { BookSchema } from "$server/models/book";
 import { SectionSchema } from "$server/models/book/section";
 import { TopicSchema } from "$server/models/topic";
+import { AuthorSchema } from "$server/models/author";
 import {
   topicsWithResourcesArg,
   topicToTopicSchema,
@@ -41,6 +42,8 @@ type BookWithTopics = Prisma.BookGetPayload<typeof bookIncludingTopicsArg>;
 export function bookToBookSchema(book: BookWithTopics): BookSchema {
   return {
     ...book,
+    // TODO: 複数著者に対応してほしい
+    authors: [{ ...book.creator, roleName: AuthorSchema._roleNames.author }],
     ltiResourceLinks: book.ltiResourceLinks.map(ltiResourceLinkToSchema),
     sections: book.sections.map(sectionToSectionSchema),
   };
