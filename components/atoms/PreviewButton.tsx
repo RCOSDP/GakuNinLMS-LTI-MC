@@ -1,4 +1,4 @@
-import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
+import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import IconButton from "$atoms/IconButton";
 
 type Props = Omit<Parameters<typeof IconButton>[0], "tooltipProps"> & {

@@ -5,13 +5,15 @@ import { api } from "./api";
 
 const key = "/api/v2/user/{user_id}/books";
 
-export const makeUserBooksKey = (userId: UserSchema["id"], sort: SortOrder) => (
-  page: number,
-  prev: BookSchema[] | null
-): Parameters<typeof fetchUserBooks> | null => {
-  if (prev && prev.length === 0) return null;
-  return [key, userId, sort, page];
-};
+export const makeUserBooksKey =
+  (userId: UserSchema["id"], sort: SortOrder) =>
+  (
+    page: number,
+    prev: BookSchema[] | null
+  ): Parameters<typeof fetchUserBooks> | null => {
+    if (prev && prev.length === 0) return null;
+    return [key, userId, sort, page];
+  };
 
 export async function fetchUserBooks(
   _: typeof key,

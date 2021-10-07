@@ -1,13 +1,16 @@
-import { createMuiTheme } from "@material-ui/core/styles";
-import { primary } from "./colors";
+import { createTheme } from "@mui/material/styles";
+import { primary, gray } from "./colors";
 
-export default createMuiTheme({
+export default createTheme({
   palette: {
     primary: {
       light: primary[300],
       main: primary[500],
       dark: primary[700],
       contrastText: "#fff",
+    },
+    background: {
+      default: gray[50],
     },
   },
   typography: {

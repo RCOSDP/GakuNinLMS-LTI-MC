@@ -1,9 +1,7 @@
 import fs from "fs";
 import path from "path";
 import unzipper from "unzipper";
-// error  Could not find a declaration file for module 'recursive-readdir-synchronous'.
-// './node_modules/recursive-readdir-synchronous/index.js' implicitly has an 'any' type.
-// eslint-disable-next-line tsc/config
+// @ts-expect-error Could not find a declaration file for module 'recursive-readdir-synchronous'
 import recursive from "recursive-readdir-synchronous";
 import format from "date-fns/format";
 import utcToZoneTime from "date-fns-tz/utcToZonedTime";
@@ -83,7 +81,7 @@ class ImportBooksUtil {
       }
     } catch (e) {
       console.error(e);
-      this.errors.push(...(Array.isArray(e) ? e : [e.toString()]));
+      this.errors.push(...(Array.isArray(e) ? e : [String(e)]));
     } finally {
       this.cleanUp();
     }
