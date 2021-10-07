@@ -1,5 +1,5 @@
 import type { Story } from "@storybook/react";
-import { makeStyles } from "@material-ui/core/styles";
+import makeStyles from "@mui/styles/makeStyles";
 import BookPreview from "./BookPreview";
 import { book } from "$samples";
 

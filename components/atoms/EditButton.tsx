@@ -1,4 +1,4 @@
-import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import IconButton from "$atoms/IconButton";
 
 type Props = Omit<Parameters<typeof IconButton>[0], "tooltipProps"> & {

@@ -13,6 +13,13 @@
  */
 
 import { exists, mapValues } from '../runtime';
+import {
+    InlineResponse2001Books,
+    InlineResponse2001BooksFromJSON,
+    InlineResponse2001BooksFromJSONTyped,
+    InlineResponse2001BooksToJSON,
+} from './';
+
 /**
  * 
  * @export
@@ -21,10 +28,10 @@ import { exists, mapValues } from '../runtime';
 export interface InlineResponse201 {
     /**
      * 
-     * @type {Array<object>}
+     * @type {Array<InlineResponse2001Books>}
      * @memberof InlineResponse201
      */
-    books?: Array<object>;
+    books?: Array<InlineResponse2001Books>;
     /**
      * 
      * @type {Array<string>}
@@ -43,7 +50,7 @@ export function InlineResponse201FromJSONTyped(json: any, ignoreDiscriminator: b
     }
     return {
         
-        'books': !exists(json, 'books') ? undefined : json['books'],
+        'books': !exists(json, 'books') ? undefined : ((json['books'] as Array<any>).map(InlineResponse2001BooksFromJSON)),
         'errors': !exists(json, 'errors') ? undefined : json['errors'],
     };
 }
@@ -57,7 +64,7 @@ export function InlineResponse201ToJSON(value?: InlineResponse201 | null): any {
     }
     return {
         
-        'books': value.books,
+        'books': value.books === undefined ? undefined : ((value.books as Array<any>).map(InlineResponse2001BooksToJSON)),
         'errors': value.errors,
     };
 }

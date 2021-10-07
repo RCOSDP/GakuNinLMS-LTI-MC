@@ -1,7 +1,8 @@
 import clsx from "clsx";
-import { makeStyles, createStyles } from "@material-ui/core/styles";
-import type { Theme } from "@material-ui/core/styles";
-import grey from "@material-ui/core/colors/grey";
+import makeStyles from "@mui/styles/makeStyles";
+import createStyles from "@mui/styles/createStyles";
+import type { Theme } from "@mui/material/styles";
+import { grey } from "@mui/material/colors";
 
 type StyleProps = {
   color: string;

@@ -1,20 +1,20 @@
 import clsx from "clsx";
-import Button from "@material-ui/core/Button";
-import Card from "@material-ui/core/Card";
-import Divider from "@material-ui/core/Divider";
-import TreeView from "@material-ui/lab/TreeView";
-import Alert from "@material-ui/lab/Alert";
-import Switch from "@material-ui/core/Switch";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Typography from "@material-ui/core/Typography";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import AddIcon from "@material-ui/icons/Add";
-import GetAppIcon from "@material-ui/icons/GetApp";
-import DragIndicatorIcon from "@material-ui/icons/DragIndicator";
-import { makeStyles } from "@material-ui/core/styles";
-import BookChildrenTree from "$molecules/BookChildrenTree";
-import DraggableBookChildren from "$molecules/DraggableBookChildren";
+import Button from "@mui/material/Button";
+import Card from "@mui/material/Card";
+import Divider from "@mui/material/Divider";
+import TreeView from "@mui/lab/TreeView";
+import Alert from "@mui/material/Alert";
+import Switch from "@mui/material/Switch";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Typography from "@mui/material/Typography";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import AddIcon from "@mui/icons-material/Add";
+import GetAppIcon from "@mui/icons-material/GetApp";
+import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
+import makeStyles from "@mui/styles/makeStyles";
+import SectionsTree from "$molecules/SectionsTree";
+import DraggableSections from "$molecules/DraggableSections";
 import { SectionSchema } from "$server/models/book/section";
 import { TopicSchema } from "$server/models/topic";
 import useCardStyles from "$styles/card";
@@ -79,7 +79,7 @@ type Props = {
   isTopicEditable?(topic: TopicSchema): boolean | undefined;
 };
 
-export default function BookEditChildren(props: Props) {
+export default function SectionsEdit(props: Props) {
   const {
     sections,
     className,
@@ -91,10 +91,10 @@ export default function BookEditChildren(props: Props) {
   const cardClasses = useCardStyles();
   const classes = useStyles();
   const formControlLabelClasses = useFormControlLabelStyles();
-  const handleItem = (handler?: (topic: TopicSchema) => void) => ([
-    sectionIndex,
-    topicIndex,
-  ]: ItemIndex) => handler?.(sections[sectionIndex].topics[topicIndex]);
+  const handleItem =
+    (handler?: (topic: TopicSchema) => void) =>
+    ([sectionIndex, topicIndex]: ItemIndex) =>
+      handler?.(sections[sectionIndex].topics[topicIndex]);
   const {
     sortable,
     sortableSections,
@@ -166,7 +166,7 @@ export default function BookEditChildren(props: Props) {
       )}
       {sortable && (
         <>
-          <DraggableBookChildren
+          <DraggableSections
             sections={sortableSections}
             onSectionsUpdate={handleSectionsUpdate}
             onSectionCreate={handleSectionCreate}
@@ -203,7 +203,7 @@ export default function BookEditChildren(props: Props) {
           defaultExpandIcon={<ChevronRightIcon />}
           disableSelection
         >
-          <BookChildrenTree
+          <SectionsTree
             sections={sections}
             onItemPreviewClick={handleItem(onTopicPreviewClick)}
             onItemEditClick={handleItem(onTopicEditClick)}

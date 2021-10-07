@@ -1,6 +1,6 @@
 import { ComponentProps } from "react";
-import { OutlinedInputProps } from "@material-ui/core/OutlinedInput";
-import MuiTextField from "@material-ui/core/TextField";
+import { OutlinedInputProps } from "@mui/material/OutlinedInput";
+import MuiTextField from "@mui/material/TextField";
 import RequiredDot from "$atoms/RequiredDot";
 import useTextFieldStyles from "styles/textField";
 import useInputStyles from "styles/input";
@@ -21,7 +21,6 @@ export default function TextField(props: ComponentProps<typeof MuiTextField>) {
         {
           ...InputProps,
           classes: inputClasses,
-          disableUnderline: true,
         } as Exclude<typeof InputProps, Partial<OutlinedInputProps> | undefined>
       }
       InputLabelProps={{

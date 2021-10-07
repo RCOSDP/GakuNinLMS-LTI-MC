@@ -1,10 +1,10 @@
 export default { title: "atoms/Button" };
 
-import Button from "@material-ui/core/Button";
-import { makeStyles } from "@material-ui/core/styles";
-import AddIcon from "@material-ui/icons/Add";
-import LinkIcon from "@material-ui/icons/Link";
-import DragIndicatorIcon from "@material-ui/icons/DragIndicator";
+import Button from "@mui/material/Button";
+import makeStyles from "@mui/styles/makeStyles";
+import AddIcon from "@mui/icons-material/Add";
+import LinkIcon from "@mui/icons-material/Link";
+import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 
 const useStyles = makeStyles((theme) => ({
   margin: {

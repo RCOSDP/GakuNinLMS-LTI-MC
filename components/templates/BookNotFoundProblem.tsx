@@ -1,6 +1,6 @@
-import Link from "@material-ui/core/Link";
+import Link from "@mui/material/Link";
 import { useLmsUrl } from "$store/session";
-import Problem from "./Problem";
+import Problem from "$organisms/Problem";
 
 export default function BookNotFoundProblem() {
   const url = useLmsUrl();

@@ -1,6 +1,6 @@
 export default { title: "organisms/TopicPreviewDialog" };
 
-import Button from "@material-ui/core/Button";
+import Button from "@mui/material/Button";
 import type { TopicSchema } from "$server/models/topic";
 import useDialogProps from "$utils/useDialogProps";
 import TopicPreviewDialog from "./TopicPreviewDialog";
