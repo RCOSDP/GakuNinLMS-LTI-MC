@@ -12,8 +12,6 @@ import {
 export async function scpUpload(uploadroot: string) {
   let client;
   try {
-    // @ts-expect-error This expression is not callable.
-    // Type 'typeof import("./node_modules/node-scp/lib/index")' has no call signatures
     client = await scp({
       host: WOWZA_SCP_HOST,
       port: WOWZA_SCP_PORT,

@@ -61,7 +61,8 @@ export async function setupZoomImportScheduler() {
           user.created_at
         ).importTopics();
       }
-    } catch (e) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (e: any) {
       logger("ERROR", e.toString(), e);
     } finally {
       logger("INFO", "end zoom import...");
@@ -134,7 +135,8 @@ class ZoomImport {
           "DELETE"
         );
       }
-    } catch (e) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (e: any) {
       logger("ERROR", `${e.toString()}: email:${this.email}`, e);
     } finally {
       this.cleanUp();
@@ -204,7 +206,8 @@ class ZoomImport {
       };
 
       return { topic, zoomMeeting };
-    } catch (e) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (e: any) {
       logger(
         "ERROR",
         `${e.toString()}: email:${this.email} meeting.id:${meeting.id}`,
@@ -323,12 +326,12 @@ async function zoomListRequest(
   return list;
 }
 
-function logger(level: string, output: string, error?: Error) {
+function logger(level: string, output: string, error?: Error | unknown) {
   console.log(
     format(utcToZoneTime(new Date(), "Asia/Tokyo"), "yyyy-MM-dd HH:mm:ss"),
     level,
     output,
     "ZoomImportLog"
   );
-  if (error) console.log(error.stack);
+  if (error instanceof Error) console.log(error.stack);
 }
