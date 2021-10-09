@@ -1,9 +1,9 @@
 -- CreateTable
 CREATE TABLE "zoom_meetings" (
-    "id" BIGINT NOT NULL,
+    "uuid" TEXT NOT NULL,
     "resource_id" INTEGER NOT NULL,
 
-    PRIMARY KEY ("id")
+    PRIMARY KEY ("uuid")
 );
 
 -- CreateIndex

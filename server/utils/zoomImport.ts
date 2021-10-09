@@ -121,7 +121,7 @@ class ZoomImport {
           transactions.push(
             prisma.zoomMeeting.create({ data: data.zoomMeeting })
           );
-          if (ZOOM_IMPORT_AUTODELETE) deletemeetings.push(meeting.id);
+          if (ZOOM_IMPORT_AUTODELETE) deletemeetings.push(meeting.uuid);
         }
       }
       if (!transactions.length) return;
@@ -148,7 +148,7 @@ class ZoomImport {
 
     let uploaddir;
     try {
-      const importedResource = await findZoomMeeting(meeting.id);
+      const importedResource = await findZoomMeeting(meeting.uuid);
       if (importedResource) return;
 
       const downloadUrl = this.getDownloadUrl(meeting);
@@ -161,7 +161,7 @@ class ZoomImport {
           "yyyyMMdd-HHmm"
         )}-`
       );
-      const file = `${uploaddir}/${meeting.id}.mp4`;
+      const file = `${uploaddir}/${meeting.uuid}.mp4`;
 
       const responsePromise = got(
         `${downloadUrl}?access_token=${zoomRequestToken()}`
@@ -201,7 +201,7 @@ class ZoomImport {
       };
 
       const zoomMeeting = {
-        id: meeting.id,
+        uuid: meeting.uuid,
         resource,
       };
 
@@ -210,7 +210,7 @@ class ZoomImport {
     } catch (e: any) {
       logger(
         "ERROR",
-        `${e.toString()}: email:${this.email} meeting.id:${meeting.id}`,
+        `${e.toString()}: email:${this.email} meeting.uuid:${meeting.uuid}`,
         e
       );
       if (uploaddir) fs.rmdirSync(uploaddir, { recursive: true });

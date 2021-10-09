@@ -16,7 +16,7 @@ generator jsonSchema {
 
 /// Zoomインポート履歴
 model ZoomMeeting {
-  id         BigInt   @id
+  uuid       String   @id
   resource   Resource @relation(fields: [resourceId], references: [id])
   resourceId Int      @unique @map("resource_id")
 
