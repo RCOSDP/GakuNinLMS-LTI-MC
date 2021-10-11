@@ -1,5 +1,5 @@
 /** 利用者と LTI v1.1 ロールの完全修飾URNとの対応関係	*/
-const roles = {
+const roleUrns = {
   /** 管理者 */
   administrator: [
     "urn:lti:sysrole:ims/lis/Administrator",
@@ -14,4 +14,4 @@ const roles = {
   ],
 } as const;
 
-export default roles;
+export default roleUrns;
