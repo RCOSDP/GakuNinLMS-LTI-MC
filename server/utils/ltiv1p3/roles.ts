@@ -1,38 +1,22 @@
-import roleUrns from "$server/config/roleUrns";
+import roleUrls from "$server/config/roleUrls";
 import { LtiRolesSchema } from "$server/models/ltiRoles";
-
-/** LIS Context Role 名前空間の接頭辞 */
-const lisContextRolePrefix = "urn:lti:role:ims/lis/";
-
-/** LIS Context Role 省略名を含める */
-function makeRole(role: string) {
-  return role.startsWith(lisContextRolePrefix)
-    ? [role, role.slice(lisContextRolePrefix.length)]
-    : [role];
-}
-
-/** LIS Context Role の名前空間のものを含めたロール */
-const roles = {
-  administrator: roleUrns.administrator.flatMap(makeRole),
-  instructor: roleUrns.instructor.flatMap(makeRole),
-} as const;
 
 /**
  * ロールが管理者か否か
- * @param ltiRoles LTI v1.1 Roles
+ * @param ltiRoles LTI v1.3 Roles Claim
  * @return 管理者の場合 true、それ以外の場合 false
  */
 export function isAdministrator(ltiRoles: LtiRolesSchema) {
-  return hasRole(ltiRoles, roles.administrator);
+  return hasRole(ltiRoles, roleUrls.administrator);
 }
 
 /**
  * ロールが教員・管理者か否か
- * @param ltiRoles LTI v1.1 Roles
+ * @param ltiRoles LTI v1.3 Roles Claim
  * @return 教員または管理者の場合 true、それ以外の場合 false
  */
 export function isInstructor(ltiRoles: LtiRolesSchema) {
-  return hasRole(ltiRoles, [...roles.instructor, ...roles.administrator]);
+  return hasRole(ltiRoles, [...roleUrls.instructor, ...roleUrls.administrator]);
 }
 
 /**
