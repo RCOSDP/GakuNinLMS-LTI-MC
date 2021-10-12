@@ -4,7 +4,9 @@ datasource db {
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  // TODO: v3 以降ならば不要
+  previewFeatures = ["orderByRelation"]
 }
 
 generator jsonSchema {

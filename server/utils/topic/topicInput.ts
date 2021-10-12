@@ -1,11 +1,12 @@
 import { User } from "@prisma/client";
 import { TopicProps } from "$server/models/topic";
 
-function topicInput(creatorId: User["id"], topic: TopicProps) {
+function topicInput(userId: User["id"], topic: TopicProps) {
   return {
     ...topic,
     details: {},
-    creator: { connect: { id: creatorId } },
+    authors: { create: { userId, roleId: 1 } },
+    creator: { connect: { id: userId } },
     updatedAt: new Date(),
   };
 }
