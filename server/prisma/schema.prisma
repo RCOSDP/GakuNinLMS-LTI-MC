@@ -4,7 +4,9 @@ datasource db {
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  // TODO: v3 以降ならば不要
+  previewFeatures = ["orderByRelation"]
 }
 
 generator jsonSchema {
@@ -19,7 +21,7 @@ model Resource {
   id      Int     @id @default(autoincrement())
   topics  Topic[]
   video   Video?  @relation(fields: [videoId], references: [id])
-  videoId Int?    @map("video_id")
+  videoId Int?    @unique @map("video_id")
   /// 外部リソースのアドレス
   url     String  @unique
   /// 詳細

@@ -9,9 +9,9 @@ import topicInput from "./topicInput";
 import resourceConnectOrCreateInput from "./resourceConnectOrCreateInput";
 import topicCreateInput from "./topicCreateInput";
 
-function topicUpdateInput(creatorId: User["id"], topic: TopicProps) {
+function topicUpdateInput(topic: TopicProps) {
   const input = {
-    ...topicInput(creatorId, topic),
+    ...topicInput(topic),
     resource: resourceConnectOrCreateInput(topic.resource),
   };
 
@@ -26,7 +26,7 @@ async function upsertTopic(
     ...topicsWithResourcesArg,
     where: { id },
     create: topicCreateInput(creatorId, topic),
-    update: topicUpdateInput(creatorId, topic),
+    update: topicUpdateInput(topic),
   });
 
   if (!created) return;

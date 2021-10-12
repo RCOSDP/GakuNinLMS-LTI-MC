@@ -16,6 +16,9 @@ async function destroyTopic(id: Topic["id"]) {
       prisma.activity.deleteMany({
         where: { topicId: id },
       }),
+      prisma.authorship.deleteMany({
+        where: { topicId: id },
+      }),
       prisma.topic.deleteMany({
         where: { id },
       }),

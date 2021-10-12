@@ -8,7 +8,7 @@ import {
 import { TopicParams, topicParamsSchema } from "$server/validators/topicParams";
 import authUser from "$server/auth/authUser";
 import authInstructor from "$server/auth/authInstructor";
-import { isUserOrAdmin } from "$server/utils/session";
+import { isUsersOrAdmin } from "$server/utils/session";
 import topicExists from "$server/utils/topic/topicExists";
 import upsertTopic from "$server/utils/topic/upsertTopic";
 import isValidVideoResource from "$server/utils/isValidVideoResource";
@@ -19,7 +19,7 @@ export const updateSchema: FastifySchema = {
   description: outdent`
     トピックを更新します。
     教員または管理者でなければなりません。
-    教員は自身の作成したトピックでなければなりません。`,
+    教員は自身の著作のトピックでなければなりません。`,
   params: topicParamsSchema,
   body: topicPropsSchema,
   response: {
@@ -47,14 +47,14 @@ export async function update({
   const found = await topicExists(params.topic_id);
 
   if (!found) return { status: 404 };
-  if (!isUserOrAdmin(session, { id: found.creatorId })) return { status: 403 };
+  if (!isUsersOrAdmin(session, found.authors)) return { status: 403 };
 
   const additionalProviderUrl = WOWZA_BASE_URL && `${protocol}://${hostname}/`;
   if (!isValidVideoResource(body.resource, additionalProviderUrl)) {
     return { status: 400 };
   }
 
-  const created = await upsertTopic(found.creatorId, {
+  const created = await upsertTopic(session.user.id, {
     ...body,
     id: params.topic_id,
   });

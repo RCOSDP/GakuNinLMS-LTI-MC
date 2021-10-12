@@ -23,6 +23,7 @@ export const destroyHooks = {
   auth: [authUser, authInstructor],
 };
 
+// TODO: 複数著者に対応してほしい
 export async function destroy({
   params,
   session,
