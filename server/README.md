@@ -123,12 +123,109 @@ echo 'DATABASE_URL={PostgreSQL 接続 URL}' >> .env
 yarn migrate
 ```
 
-### LTI Tool Consumer の設定
+### LTI v1.3 の設定
 
-マイグレーション後、接続する PostgreSQL に対して、次の SQL を実行し、LTI Tool Consumer の設定を行います。
+マイグレーション後、接続する PostgreSQL に対して、次の SQL を発行し、LTI Platform の設定を行います。
 
 ```sql
-INSERT INTO "lti_consumer" VALUES ('{LMS に登録する OAuth Consumer Key}', '{LMS に登録する OAuth Consumer Secret}');
+INSERT INTO "lti_platform" ("issuer", "metadata") VALUES ('{Platform ID}', '{
+  "jwks_uri": "{Public keyset URL}",
+  "token_endpoint": "{Access token URL}",
+  "authorization_endpoint": "{Authentication request URL}"
+}');
+INSERT INTO "lti_consumer" ("platform_id", "id") VALUES ('{Platform ID}', '{Client ID}');
+```
+
+例: Moodle 3.7+ の場合
+
+Platform ID が `https://example` (Moodle) の場合の例:
+
+ツールの追加は、Moodle ログイン後、[Site administration] > [Plugins] > [Activity modules] > [External tool] > [Manage tools] にアクセスして行います。
+
+ツールの設定の例:
+
+| 項目               | 説明                                                                             |
+| ------------------ | -------------------------------------------------------------------------------- |
+| Tool Name          | ツール名                                                                         |
+| Tool URL           | デプロイ先の URL を指定 (例: `https://chibichilo.example/`)                      |
+| LTI version        | `LTI 1.3`                                                                        |
+| Public key type    | `Keyset URL`                                                                     |
+| Initiate login URL | ログイン初期化エンドポイント (例: `https://chibichilo.example/api/v2/lti/login`) |
+| Redirection URI(s) | リダイレクト URI (例: `https://chibichilo.example/api/v2/lti/callback`)          |
+
+Client ID はツール追加後に払い出されます。ツール追加後、[View configuration details] を参照してください。
+設定値に合わせて SQL を発行します。
+
+SQL:
+
+```sql
+INSERT INTO "lti_platform" ("issuer", "metadata") VALUES ('https://example', '{
+  "jwks_uri": "https://example/mod/lti/certs.php",
+  "token_endpoint": "https://example/mod/lti/token.php",
+  "authorization_endpoint": "https://example/mod/lti/auth.php"
+}');
+INSERT INTO "lti_consumer" ("platform_id", "id") VALUES ('https://example', '***');
+```
+
+ローカル環境で開発用サーバー [docker-compose.yml](../docker-compose.yml) を使うケース:
+
+```sql
+INSERT INTO "lti_platform" ("issuer", "metadata") VALUES ('http://localhost:8081', '{
+  "jwks_uri": "http://moodle:8080/mod/lti/certs.php",
+  "token_endpoint": "http://moodle:8080/mod/lti/token.php",
+  "authorization_endpoint": "http://localhost:8081/mod/lti/auth.php"
+}');
+INSERT INTO "lti_consumer" ("platform_id", "id") VALUES ('http://localhost:8081', '***');
+```
+
+### 既存システムの LTI v1.3 への移行
+
+従来の LTI v1.0/v1.1 で登録されているシステムの LTI v1.3 への移行は下記の手順で作業を行います。
+
+**注意: Moodle の場合を例に説明します。他の LMS をご使用の場合はその LMS に合わせてご対処ください。**
+
+#### 必要に応じて: LMS のアップデート
+
+もし LMS が LTI v1.3 に対応していない場合、対応しているバージョンにアップデートします。
+
+| LMS    | LTI v1.3 サポート状況 |
+| ------ | --------------------- |
+| Moodle | v3.7 以降             |
+
+#### 既存の LTI v1.1 Tool Consumer ID の取得
+
+Moodle の場合、管理者としてログイン後、[Site administration] > [Plugins] > [Activity modules] > [External tool] > [Manage tools] にアクセスして、既存の LTI v1.1 Tool Consumer ID の取得します。
+
+#### LTI バージョンを v1.3 に変更
+
+LMS から対象の LTI v1.1 Tool Consumer ID をメモした後、LTI v1.3 の設定を行います。本文書の[LTI v1.3 の設定]の項を参照してください。
+
+#### 移行の実施
+
+設定値に合わせて SQL を発行します。なお、下記の例では、Client ID として `***` と記載していますが、新しく LMS によって払い出された Client ID に適宜書き換えてください。その他のパラメーターに関しても同様に適宜書き換えてください。
+
+LTI v1.1 Tool Consumer ID が `example`、Platform ID が `https://example` の Moodle の場合の例:
+
+```sql
+INSERT INTO "lti_platform" ("issuer", "metadata") VALUES ('https://example', '{
+  "jwks_uri": "https://example/mod/lti/certs.php",
+  "token_endpoint": "https://example/mod/lti/token.php",
+  "authorization_endpoint": "https://example/mod/lti/auth.php"
+}');
+UPDATE "lti_consumer" SET "platform_id" = 'https://example', "id" = '***', "secret" = '' WHERE "id" = 'example';
+UPDATE "lti_context" SET "consumer_id" = '***' WHERE "consumer_id" = 'example';
+UPDATE "lti_resource_link" SET "consumer_id" = '***' WHERE "consumer_id" = 'example';
+UPDATE "users" SET "lti_consumer_id" = '***' WHERE "lti_consumer_id" = 'example';
+```
+
+既存システムの LTI v1.3 への移行の実施手順としては以上です。
+
+### LTI v1.0/v1.1 の設定 (非推奨)
+
+従来どおり LTI v1.0/v1.1 を使用する場合、マイグレーション後、次の SQL を発行し、LTI Tool Consumer の設定を行います。
+
+```sql
+INSERT INTO "lti_consumer" ("id", "secret") VALUES ('{LMS に登録する OAuth Consumer Key}', '{LMS に登録する OAuth Consumer Secret}');
 ```
 
 #### ヒント: PostgreSQL への接続

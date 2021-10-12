@@ -11,9 +11,10 @@ export type Props = LtiLaunchBody;
 
 export const method = {
   post: {
-    summary: "LTI起動エンドポイント",
+    summary: "LTI v1.1 起動エンドポイント (非推奨)",
+    deprecated: true,
     description: outdent`
-      LTIツールとして起動するためのエンドポイントです。
+      LTI v1.1 ツールとして起動するためのエンドポイントです。
       このエンドポイントをLMSのLTIツールのURLに指定して利用します。
       成功時 ${init.frontendUrl} にリダイレクトします。`,
     consumes: ["application/x-www-form-urlencoded"],

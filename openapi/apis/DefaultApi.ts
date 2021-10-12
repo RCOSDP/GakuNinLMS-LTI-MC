@@ -515,7 +515,7 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * LTIツールとして起動するためのエンドポイントです。 このエンドポイントをLMSのLTIツールのリダイレクトURIに指定して利用します。 成功時 http://localhost:3000/ にリダイレクトします。
+     * LTIツールとして起動するためのエンドポイントです。 このエンドポイントをLMSのLTIツールのリダイレクトURIに指定して利用します。 成功時 / にリダイレクトします。
      * LTI v1.3 リダイレクトURI
      */
     async apiV2LtiCallbackPostRaw(requestParameters: ApiV2LtiCallbackPostRequest): Promise<runtime.ApiResponse<void>> {
@@ -565,7 +565,7 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * LTIツールとして起動するためのエンドポイントです。 このエンドポイントをLMSのLTIツールのリダイレクトURIに指定して利用します。 成功時 http://localhost:3000/ にリダイレクトします。
+     * LTIツールとして起動するためのエンドポイントです。 このエンドポイントをLMSのLTIツールのリダイレクトURIに指定して利用します。 成功時 / にリダイレクトします。
      * LTI v1.3 リダイレクトURI
      */
     async apiV2LtiCallbackPost(requestParameters: ApiV2LtiCallbackPostRequest): Promise<void> {
@@ -573,8 +573,8 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * LTIツールとして起動するためのエンドポイントです。 このエンドポイントをLMSのLTIツールのURLに指定して利用します。 成功時 http://localhost:3000/ にリダイレクトします。
-     * LTI起動エンドポイント
+     * LTI v1.1 ツールとして起動するためのエンドポイントです。 このエンドポイントをLMSのLTIツールのURLに指定して利用します。 成功時 / にリダイレクトします。
+     * LTI v1.1 起動エンドポイント (非推奨)
      */
     async apiV2LtiLaunchPostRaw(requestParameters: ApiV2LtiLaunchPostRequest): Promise<runtime.ApiResponse<void>> {
         if (requestParameters.oauthVersion === null || requestParameters.oauthVersion === undefined) {
@@ -727,8 +727,8 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * LTIツールとして起動するためのエンドポイントです。 このエンドポイントをLMSのLTIツールのURLに指定して利用します。 成功時 http://localhost:3000/ にリダイレクトします。
-     * LTI起動エンドポイント
+     * LTI v1.1 ツールとして起動するためのエンドポイントです。 このエンドポイントをLMSのLTIツールのURLに指定して利用します。 成功時 / にリダイレクトします。
+     * LTI v1.1 起動エンドポイント (非推奨)
      */
     async apiV2LtiLaunchPost(requestParameters: ApiV2LtiLaunchPostRequest): Promise<void> {
         await this.apiV2LtiLaunchPostRaw(requestParameters);

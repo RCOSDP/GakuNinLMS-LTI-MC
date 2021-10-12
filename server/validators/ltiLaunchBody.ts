@@ -3,7 +3,10 @@ import { SessionSchema } from "$server/models/session";
 import { IsNotEmpty, IsOptional, IsString } from "class-validator";
 import { validationMetadatasToSchemas } from "class-validator-jsonschema";
 
-/** LTI v1.1 起動時リクエスト */
+/**
+ * LTI v1.1 起動時リクエスト
+ * @deprecated
+ */
 export class LtiLaunchBody {
   @IsNotEmpty()
   @IsString()
