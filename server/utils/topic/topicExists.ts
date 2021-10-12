@@ -1,18 +1,19 @@
 import { Topic } from "@prisma/client";
 import prisma from "$server/utils/prisma";
-import {
-  authorArg,
-  authorToAuthorSchema,
-} from "$server/utils/author/authorToAuthorSchema";
+import { authorArg } from "$server/utils/author/authorToAuthorSchema";
+import { authorsUpdater } from "$server/utils/author/update";
 
 async function topicExists(topicId: Topic["id"]) {
   const topic = await prisma.topic.findUnique({
     where: { id: topicId },
-    select: { authors: authorArg },
+    select: { id: true, authors: authorArg },
   });
 
   return (
-    topic && { ...topic, authors: topic.authors.map(authorToAuthorSchema) }
+    topic && {
+      ...topic,
+      ...authorsUpdater("topic", topic),
+    }
   );
 }
 

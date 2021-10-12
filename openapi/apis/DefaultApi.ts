@@ -48,6 +48,9 @@ import {
     InlineResponse2001,
     InlineResponse2001FromJSON,
     InlineResponse2001ToJSON,
+    InlineResponse2001Authors,
+    InlineResponse2001AuthorsFromJSON,
+    InlineResponse2001AuthorsToJSON,
     InlineResponse2001Books,
     InlineResponse2001BooksFromJSON,
     InlineResponse2001BooksToJSON,
@@ -76,6 +79,11 @@ import {
     InlineResponse2012FromJSON,
     InlineResponse2012ToJSON,
 } from '../models';
+
+export interface ApiV2BookBookIdAuthorsPutRequest {
+    bookId: number;
+    body?: Array<InlineObject>;
+}
 
 export interface ApiV2BookBookIdDeleteRequest {
     bookId: number;
@@ -198,6 +206,11 @@ export interface ApiV2TopicTopicIdActivityPutRequest {
     body?: InlineObject6;
 }
 
+export interface ApiV2TopicTopicIdAuthorsPutRequest {
+    topicId: number;
+    body?: Array<InlineObject>;
+}
+
 export interface ApiV2TopicTopicIdDeleteRequest {
     topicId: number;
 }
@@ -237,7 +250,42 @@ export interface ApiV2UserUserIdTopicsGetRequest {
 export class DefaultApi extends runtime.BaseAPI {
 
     /**
-     * ブックを削除します。 教員または管理者でなければなりません。 教員の場合は自身の作成したブックでなければなりません。
+     * ブックの著者を更新します。 教員または管理者でなければなりません。 教員は自身の著作のブックでなければなりません。
+     * ブックの著者の更新
+     */
+    async apiV2BookBookIdAuthorsPutRaw(requestParameters: ApiV2BookBookIdAuthorsPutRequest): Promise<runtime.ApiResponse<Array<InlineResponse2001Authors>>> {
+        if (requestParameters.bookId === null || requestParameters.bookId === undefined) {
+            throw new runtime.RequiredError('bookId','Required parameter requestParameters.bookId was null or undefined when calling apiV2BookBookIdAuthorsPut.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/api/v2/book/{book_id}/authors`.replace(`{${"book_id"}}`, encodeURIComponent(String(requestParameters.bookId))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: requestParameters.body.map(InlineObjectToJSON),
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(InlineResponse2001AuthorsFromJSON));
+    }
+
+    /**
+     * ブックの著者を更新します。 教員または管理者でなければなりません。 教員は自身の著作のブックでなければなりません。
+     * ブックの著者の更新
+     */
+    async apiV2BookBookIdAuthorsPut(requestParameters: ApiV2BookBookIdAuthorsPutRequest): Promise<Array<InlineResponse2001Authors>> {
+        const response = await this.apiV2BookBookIdAuthorsPutRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * ブックを削除します。 教員または管理者でなければなりません。 教員は自身の著作のブックでなければなりません。
      * ブックの削除
      */
     async apiV2BookBookIdDeleteRaw(requestParameters: ApiV2BookBookIdDeleteRequest): Promise<runtime.ApiResponse<void>> {
@@ -260,7 +308,7 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * ブックを削除します。 教員または管理者でなければなりません。 教員の場合は自身の作成したブックでなければなりません。
+     * ブックを削除します。 教員または管理者でなければなりません。 教員は自身の著作のブックでなければなりません。
      * ブックの削除
      */
     async apiV2BookBookIdDelete(requestParameters: ApiV2BookBookIdDeleteRequest): Promise<void> {
@@ -300,7 +348,7 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * ブックを更新します。 教員または管理者でなければなりません。 教員は自身の作成したブックでなければなりません。
+     * ブックを更新します。 教員または管理者でなければなりません。 教員は自身の著作のブックでなければなりません。
      * ブックの更新
      */
     async apiV2BookBookIdPutRaw(requestParameters: ApiV2BookBookIdPutRequest): Promise<runtime.ApiResponse<InlineResponse2001Books>> {
@@ -326,7 +374,7 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * ブックを更新します。 教員または管理者でなければなりません。 教員は自身の作成したブックでなければなりません。
+     * ブックを更新します。 教員または管理者でなければなりません。 教員は自身の著作のブックでなければなりません。
      * ブックの更新
      */
     async apiV2BookBookIdPut(requestParameters: ApiV2BookBookIdPutRequest): Promise<InlineResponse2001Books> {
@@ -1187,7 +1235,42 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * トピックを削除します。 ブックから参照されている場合、そのブックから取り除きます。 教員または管理者でなければなりません。 教員の場合は自身の作成したトピックでなければなりません。
+     * トピックの著者を更新します。 教員または管理者でなければなりません。 教員は自身の著作のトピックでなければなりません。
+     * トピックの著者の更新
+     */
+    async apiV2TopicTopicIdAuthorsPutRaw(requestParameters: ApiV2TopicTopicIdAuthorsPutRequest): Promise<runtime.ApiResponse<Array<InlineResponse2001Authors>>> {
+        if (requestParameters.topicId === null || requestParameters.topicId === undefined) {
+            throw new runtime.RequiredError('topicId','Required parameter requestParameters.topicId was null or undefined when calling apiV2TopicTopicIdAuthorsPut.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/api/v2/topic/{topic_id}/authors`.replace(`{${"topic_id"}}`, encodeURIComponent(String(requestParameters.topicId))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: requestParameters.body.map(InlineObjectToJSON),
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(InlineResponse2001AuthorsFromJSON));
+    }
+
+    /**
+     * トピックの著者を更新します。 教員または管理者でなければなりません。 教員は自身の著作のトピックでなければなりません。
+     * トピックの著者の更新
+     */
+    async apiV2TopicTopicIdAuthorsPut(requestParameters: ApiV2TopicTopicIdAuthorsPutRequest): Promise<Array<InlineResponse2001Authors>> {
+        const response = await this.apiV2TopicTopicIdAuthorsPutRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * トピックを削除します。 ブックから参照されている場合、そのブックから取り除きます。 教員または管理者でなければなりません。 教員は自身の著作のトピックでなければなりません。
      * トピックの削除
      */
     async apiV2TopicTopicIdDeleteRaw(requestParameters: ApiV2TopicTopicIdDeleteRequest): Promise<runtime.ApiResponse<void>> {
@@ -1210,7 +1293,7 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * トピックを削除します。 ブックから参照されている場合、そのブックから取り除きます。 教員または管理者でなければなりません。 教員の場合は自身の作成したトピックでなければなりません。
+     * トピックを削除します。 ブックから参照されている場合、そのブックから取り除きます。 教員または管理者でなければなりません。 教員は自身の著作のトピックでなければなりません。
      * トピックの削除
      */
     async apiV2TopicTopicIdDelete(requestParameters: ApiV2TopicTopicIdDeleteRequest): Promise<void> {
@@ -1250,7 +1333,7 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * トピックを更新します。 教員または管理者でなければなりません。 教員は自身の作成したトピックでなければなりません。
+     * トピックを更新します。 教員または管理者でなければなりません。 教員は自身の著作のトピックでなければなりません。
      * トピックの更新
      */
     async apiV2TopicTopicIdPutRaw(requestParameters: ApiV2TopicTopicIdPutRequest): Promise<runtime.ApiResponse<InlineResponse2001Topics>> {
@@ -1276,7 +1359,7 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * トピックを更新します。 教員または管理者でなければなりません。 教員は自身の作成したトピックでなければなりません。
+     * トピックを更新します。 教員または管理者でなければなりません。 教員は自身の著作のトピックでなければなりません。
      * トピックの更新
      */
     async apiV2TopicTopicIdPut(requestParameters: ApiV2TopicTopicIdPutRequest): Promise<InlineResponse2001Topics> {
