@@ -12,7 +12,7 @@ import {
 import { sessionStore } from "$server/utils/prisma";
 import staticHandler from "$server/utils/staticHandler";
 import app, { Options } from "$server/config/app";
-import { setupZoomImportScheduler } from "$server/utils/zoomImport";
+import { setupZoomImportScheduler } from "$server/utils/zoom/importScheduler";
 
 const isDev = process.env.NODE_ENV !== "production";
 const options = { bodyLimit: 1431655766 }; // base64 で 1GiB

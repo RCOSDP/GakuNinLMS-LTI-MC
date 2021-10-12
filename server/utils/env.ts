@@ -31,7 +31,7 @@ const ZOOM_IMPORT_CONSUMER_KEY = process.env.ZOOM_IMPORT_CONSUMER_KEY ?? "";
 const ZOOM_IMPORT_INTERVAL = process.env.ZOOM_IMPORT_INTERVAL ?? "";
 const ZOOM_IMPORT_TO = process.env.ZOOM_IMPORT_TO ?? "";
 const ZOOM_IMPORT_WOWZA_BASE_URL = process.env.ZOOM_IMPORT_WOWZA_BASE_URL ?? "";
-const ZOOM_IMPORT_AUTODELETE = process.env.ZOOM_IMPORT_AUTODELETE ?? "";
+const ZOOM_IMPORT_AUTODELETE = Boolean(process.env.ZOOM_IMPORT_AUTODELETE);
 
 export {
   PORT,

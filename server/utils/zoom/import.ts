@@ -1,8 +1,5 @@
 import fs from "fs";
-import schedule from "node-schedule";
-import jwt from "jsonwebtoken";
 import got from "got";
-import type { Method } from "got";
 import format from "date-fns/format";
 import utcToZoneTime from "date-fns-tz/utcToZonedTime";
 
@@ -10,8 +7,14 @@ import prisma from "$server/utils/prisma";
 import type { User } from "@prisma/client";
 import type { UserSettings } from "$server/validators/userSettings";
 import { findUserByEmailAndLtiConsumerId } from "$server/utils/user";
-import { findZoomMeeting } from "$server/utils/zoomMeeting/findZoomMeeting";
 import { scpUpload } from "$server/utils/wowza/scpUpload";
+import { findZoomMeeting } from "$server/utils/zoom/findZoomMeeting";
+import {
+  ZoomResponse,
+  zoomRequestToken,
+  zoomRequest,
+  zoomListRequest,
+} from "$server/utils/zoom/api";
 
 import {
   API_BASE_PATH,
@@ -24,7 +27,7 @@ import {
   ZOOM_IMPORT_AUTODELETE,
 } from "$server/utils/env";
 
-export async function setupZoomImportScheduler() {
+export function validateSettings() {
   if (
     !ZOOM_API_KEY ||
     !ZOOM_API_SECRET ||
@@ -36,30 +39,20 @@ export async function setupZoomImportScheduler() {
       "INFO",
       `zoom import is not disabled. ZOOM_API_KEY:${ZOOM_API_KEY} ZOOM_API_SECRET:${ZOOM_API_SECRET} ZOOM_IMPORT_CONSUMER_KEY:${ZOOM_IMPORT_CONSUMER_KEY} ZOOM_IMPORT_INTERVAL:${ZOOM_IMPORT_INTERVAL} ZOOM_IMPORT_TO:${ZOOM_IMPORT_TO}`
     );
-    return;
+    return false;
   }
+  return validateWowzaSettings();
+}
+
+function validateWowzaSettings() {
   if (ZOOM_IMPORT_TO == "wowza" && !ZOOM_IMPORT_WOWZA_BASE_URL) {
     logger(
       "INFO",
       `zoom import is not disabled. ZOOM_IMPORT_WOWZA_BASE_URL is not defined.`
     );
-    return;
+    return false;
   }
-
-  const job = schedule.scheduleJob(ZOOM_IMPORT_INTERVAL, async () => {
-    job.cancel();
-    logger("INFO", "begin zoom import...");
-
-    try {
-      await zoomImport();
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (e: any) {
-      logger("ERROR", e.toString(), e);
-    } finally {
-      logger("INFO", "end zoom import...");
-      job.reschedule(ZOOM_IMPORT_INTERVAL);
-    }
-  });
+  return true;
 }
 
 export async function zoomImport() {
@@ -267,61 +260,6 @@ class ZoomImport {
       fs.rmdirSync(this.tmpdir, { recursive: true });
     }
   }
-}
-
-interface ZoomQuery {
-  [key: string]: string | number | boolean;
-}
-
-// zoom apiのレスポンスデータ全般を扱う型
-// apiによって内容は違うが、文字列のキー名と任意の型の値という形式は共通しており
-// これらの形式をtypescriptの警告やエラーを回避しつつ利用できるようにするため
-// any型を許容する。具体的な利用例は以下の通り
-// value = response[keyname];
-// next_page_token = response.next_page_token;
-interface ZoomResponse {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [key: string]: any;
-}
-
-function zoomRequestToken() {
-  return jwt.sign({}, ZOOM_API_SECRET, {
-    issuer: ZOOM_API_KEY,
-    expiresIn: "2s",
-  });
-}
-
-async function zoomRequest(
-  path: string,
-  searchParams: ZoomQuery = {},
-  method: Method = "GET"
-): Promise<ZoomResponse> {
-  return await got("https://api.zoom.us/v2" + path, {
-    searchParams,
-    method,
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${zoomRequestToken()}`,
-    },
-  }).json();
-}
-
-async function zoomListRequest(
-  path: string,
-  listName: string,
-  qs: ZoomQuery = {}
-): Promise<ZoomResponse[]> {
-  let next_page_token = "";
-  const list: ZoomResponse[] = [];
-  do {
-    const response = await zoomRequest(
-      path,
-      next_page_token ? Object.assign(qs, { next_page_token }) : qs
-    );
-    list.push(...response[listName]);
-    next_page_token = response.next_page_token;
-  } while (next_page_token);
-  return list;
 }
 
 export function logger(level: string, output: string, error?: Error | unknown) {

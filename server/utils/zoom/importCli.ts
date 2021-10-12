@@ -1,11 +1,20 @@
 import dotenv from "dotenv";
 
 import prisma from "$server/utils/prisma";
-import { logger, zoomImport } from "$server/utils/zoomImport";
+import {
+  logger,
+  validateSettings,
+  zoomImport,
+} from "$server/utils/zoom/import";
 
 async function main() {
   dotenv.config();
   let exitCode = 1;
+  if (!validateSettings()) {
+    process.exit(exitCode);
+    return;
+  }
+
   try {
     logger("INFO", "begin zoom import...");
     await zoomImport();
