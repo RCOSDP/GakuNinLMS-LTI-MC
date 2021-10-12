@@ -5,7 +5,7 @@ import { BookParams, bookParamsSchema } from "$server/validators/bookParams";
 import { SessionSchema } from "$server/models/session";
 import authUser from "$server/auth/authUser";
 import authInstructor from "$server/auth/authInstructor";
-import { isUserOrAdmin } from "$server/utils/session";
+import { isUsersOrAdmin } from "$server/utils/session";
 import bookExists from "$server/utils/book/bookExists";
 import updateBook from "$server/utils/book/updateBook";
 
@@ -14,7 +14,7 @@ export const updateSchema: FastifySchema = {
   description: outdent`
     ブックを更新します。
     教員または管理者でなければなりません。
-    教員は自身の作成したブックでなければなりません。`,
+    教員は自身の著作のブックでなければなりません。`,
   params: bookParamsSchema,
   body: bookPropsSchema,
   response: {
@@ -41,9 +41,9 @@ export async function update({
   const found = await bookExists(params.book_id);
 
   if (!found) return { status: 404 };
-  if (!isUserOrAdmin(session, { id: found.creatorId })) return { status: 403 };
+  if (!isUsersOrAdmin(session, found.authors)) return { status: 403 };
 
-  const created = await updateBook(found.creatorId, {
+  const created = await updateBook({
     ...body,
     id: params.book_id,
   });

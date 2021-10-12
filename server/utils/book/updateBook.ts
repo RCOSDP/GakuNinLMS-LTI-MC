@@ -1,4 +1,4 @@
-import { User, Book } from "@prisma/client";
+import { Book } from "@prisma/client";
 import { BookProps, BookSchema } from "$server/models/book";
 import { SectionProps } from "$server/models/book/section";
 import prisma from "$server/utils/prisma";
@@ -16,10 +16,10 @@ function upsertSections(bookId: Book["id"], sections: SectionProps[]) {
   });
 }
 
-async function updateBook(
-  creatorId: User["id"],
-  { id, ...book }: Pick<Book, "id"> & BookProps
-): Promise<BookSchema | undefined> {
+async function updateBook({
+  id,
+  ...book
+}: Pick<Book, "id"> & BookProps): Promise<BookSchema | undefined> {
   const timeRequired = await aggregateTimeRequired(book);
   const cleanup = cleanupSections(id);
   const { sections, ...other } = book;
@@ -29,7 +29,6 @@ async function updateBook(
     data: {
       ...other,
       timeRequired,
-      creator: { connect: { id: creatorId } },
       updatedAt: new Date(),
     },
   });

@@ -7,6 +7,7 @@ async function destroyBook(id: Book["id"]) {
     await prisma.$transaction([
       ...cleanupSections(id),
       prisma.ltiResourceLink.deleteMany({ where: { bookId: id } }),
+      prisma.authorship.deleteMany({ where: { bookId: id } }),
       prisma.book.deleteMany({ where: { id } }),
     ]);
   } catch {

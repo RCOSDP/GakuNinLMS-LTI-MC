@@ -1,11 +1,17 @@
 import type { Book } from "@prisma/client";
 import prisma from "$server/utils/prisma";
+import {
+  authorArg,
+  authorToAuthorSchema,
+} from "$server/utils/author/authorToAuthorSchema";
 
-function bookExists(bookId: Book["id"]) {
-  return prisma.book.findUnique({
+async function bookExists(bookId: Book["id"]) {
+  const book = await prisma.book.findUnique({
     where: { id: bookId },
-    select: { creatorId: true },
+    select: { authors: authorArg },
   });
+
+  return book && { ...book, authors: book.authors.map(authorToAuthorSchema) };
 }
 
 export default bookExists;

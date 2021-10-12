@@ -24,11 +24,16 @@ export function isInstructor(session: SessionSchema) {
 /**
  * セッションが管理者か特定の利用者のものであるか
  * @param session セッション
- * @param user 対象の利用者
+ * @param users 対象の利用者
  * @return セッションが利用者自身または管理者のものの場合 true、それ以外の場合 false
  */
-export function isUserOrAdmin(session: SessionSchema, user: Pick<User, "id">) {
-  return verify(session, user) || isAdministrator(session);
+export function isUsersOrAdmin(
+  session: SessionSchema,
+  users: Array<Pick<User, "id">>
+) {
+  return (
+    isAdministrator(session) || users.some((user) => verify(session, user))
+  );
 }
 
 /**
