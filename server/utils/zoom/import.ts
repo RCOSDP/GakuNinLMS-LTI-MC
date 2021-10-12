@@ -86,15 +86,18 @@ class ZoomImport {
       const settings = this.user.settings as UserSettings;
       if (!settings?.zoom_import?.enabled) return;
 
-      this.tmpdir = fs.mkdtempSync("/tmp/zoom-import-");
+      this.tmpdir = await fs.promises.mkdtemp("/tmp/zoom-import-");
       // recursive:true が利かない https://github.com/nodejs/node/issues/27293
-      const uploaddomain = fs.mkdirSync(
+      const uploaddomain = await fs.promises.mkdir(
         `${this.tmpdir}/${this.user.ltiConsumerId}`,
         { recursive: true }
       );
-      this.uploadauthor = fs.mkdirSync(`${uploaddomain}/${this.user.id}`, {
-        recursive: true,
-      });
+      this.uploadauthor = await fs.promises.mkdir(
+        `${uploaddomain}/${this.user.id}`,
+        {
+          recursive: true,
+        }
+      );
 
       const meetings = await zoomListRequest(
         `/users/${this.userId}/recordings`,
@@ -130,7 +133,7 @@ class ZoomImport {
     } catch (e: any) {
       logger("ERROR", `${e.toString()}: email:${this.email}`, e);
     } finally {
-      this.cleanUp();
+      await this.cleanUp();
     }
   }
 
@@ -146,7 +149,7 @@ class ZoomImport {
       if (!downloadUrl) return;
 
       const startTime = new Date(meeting.start_time);
-      uploaddir = fs.mkdtempSync(
+      uploaddir = await fs.promises.mkdtemp(
         `${this.uploadauthor}/${format(
           utcToZoneTime(startTime, meeting.timezone || "Asia/Tokyo"),
           "yyyyMMdd-HHmm"
@@ -157,7 +160,7 @@ class ZoomImport {
       const responsePromise = got(
         `${downloadUrl}?access_token=${zoomRequestToken()}`
       );
-      fs.writeFileSync(file, await responsePromise.buffer());
+      await fs.promises.writeFile(file, await responsePromise.buffer());
 
       const video = {
         create: {
@@ -204,7 +207,7 @@ class ZoomImport {
         `${e.toString()}: email:${this.email} meeting.uuid:${meeting.uuid}`,
         e
       );
-      if (uploaddir) fs.rmdirSync(uploaddir, { recursive: true });
+      if (uploaddir) await fs.promises.rmdir(uploaddir, { recursive: true });
       return;
     }
   }
@@ -255,9 +258,9 @@ class ZoomImport {
     return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
   }
 
-  cleanUp() {
+  async cleanUp() {
     if (this.tmpdir) {
-      fs.rmdirSync(this.tmpdir, { recursive: true });
+      await fs.promises.rmdir(this.tmpdir, { recursive: true });
     }
   }
 }
