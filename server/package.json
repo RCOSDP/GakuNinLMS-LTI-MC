@@ -19,6 +19,7 @@
     "migrate": "prisma migrate deploy",
     "migrate:reset": "prisma migrate reset --skip-seed",
     "seed": "ncc run -t --no-asset-builds prisma/seed.ts",
+    "zoom:import": "ncc run -t --no-asset-builds zoomImportKicker.ts",
     "start": "NODE_ENV=production node dist/index.js"
   },
   "devDependencies": {

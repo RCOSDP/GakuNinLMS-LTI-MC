@@ -51,16 +51,7 @@ export async function setupZoomImportScheduler() {
     logger("INFO", "begin zoom import...");
 
     try {
-      const users = await zoomListRequest("/users", "users", {
-        page_size: 300,
-      });
-      for (const user of users) {
-        await new ZoomImport(
-          user.id,
-          user.email,
-          user.created_at
-        ).importTopics();
-      }
+      await zoomImport();
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       logger("ERROR", e.toString(), e);
@@ -69,6 +60,13 @@ export async function setupZoomImportScheduler() {
       job.reschedule(ZOOM_IMPORT_INTERVAL);
     }
   });
+}
+
+export async function zoomImport() {
+  const users = await zoomListRequest("/users", "users", { page_size: 300 });
+  for (const user of users) {
+    await new ZoomImport(user.id, user.email, user.created_at).importTopics();
+  }
 }
 
 class ZoomImport {
@@ -326,7 +324,7 @@ async function zoomListRequest(
   return list;
 }
 
-function logger(level: string, output: string, error?: Error | unknown) {
+export function logger(level: string, output: string, error?: Error | unknown) {
   console.log(
     format(utcToZoneTime(new Date(), "Asia/Tokyo"), "yyyy-MM-dd HH:mm:ss"),
     level,
