@@ -80,9 +80,6 @@ model Topic {
   authors      Authorship[]
   /// ライセンス (https://spdx.org/licenses/ に準拠するものを入力する)
   license      String         @default("")
-  /// 作成者
-  creator      User           @relation(fields: [creatorId], references: [id])
-  creatorId    Int            @map("creator_id")
   /// 作成日
   createdAt    DateTime       @default(now()) @map("created_at")
   /// 更新日
@@ -182,9 +179,6 @@ model Book {
   shared           Boolean           @default(true)
   /// 著作者
   authors          Authorship[]
-  /// 作成者
-  creator          User              @relation(fields: [creatorId], references: [id])
-  creatorId        Int               @map("creator_id")
   /// 公開日
   publishedAt      DateTime          @default(now()) @map("published_at")
   /// 作成日
@@ -194,7 +188,6 @@ model Book {
   /// 詳細
   details          Json
 
-  @@index([creatorId], name: "creator_id")
   @@map("books")
 }
 
@@ -232,8 +225,6 @@ model TopicSection {
 /// 利用者
 model User {
   id               Int               @id @default(autoincrement())
-  createdTopics    Topic[]
-  createdBooks     Book[]
   editableContents Authorship[]
   ltiResourceLinks LtiResourceLink[]
   ltiConsumer      LtiConsumer       @relation(fields: [ltiConsumerId], references: [id])

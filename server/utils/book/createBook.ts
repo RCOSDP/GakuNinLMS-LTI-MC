@@ -18,7 +18,6 @@ async function createBook(
       timeRequired,
       details: {},
       authors: { create: { userId, roleId: 1 } },
-      creator: { connect: { id: userId } },
       sections: { create: sectionsCreateInput },
     },
   });

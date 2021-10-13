@@ -11,14 +11,6 @@ test("トピック名による絞り込み", () => {
     shared: true,
     license: "",
     authors: [],
-    creator: {
-      id: 1,
-      name: "",
-      ltiConsumerId: "",
-      ltiUserId: "",
-      email: "",
-      settings: {},
-    },
     createdAt: new Date(),
     updatedAt: new Date(),
     resource: {
@@ -58,14 +50,6 @@ test("トピック著者による絞り込み", () => {
         roleName: "",
       },
     ],
-    creator: {
-      id: 4,
-      name: "山田四郎",
-      ltiConsumerId: "",
-      ltiUserId: "",
-      email: "",
-      settings: {},
-    },
     createdAt: new Date(),
     updatedAt: new Date(),
     resource: {

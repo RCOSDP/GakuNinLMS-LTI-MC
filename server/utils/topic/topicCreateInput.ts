@@ -7,13 +7,12 @@ function createInput(userId: User["id"], topic: TopicProps) {
   return {
     ...topicInput(topic),
     authors: { create: { userId, roleId: 1 } },
-    creator: { connect: { id: userId } },
   };
 }
 
-function topicCreateInput(creatorId: User["id"], topic: TopicProps) {
+function topicCreateInput(authorId: User["id"], topic: TopicProps) {
   const input = {
-    ...createInput(creatorId, topic),
+    ...createInput(authorId, topic),
     resource: resourceConnectOrCreateInput(topic.resource),
   };
 

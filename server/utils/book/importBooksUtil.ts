@@ -289,7 +289,6 @@ class ImportBooksUtil {
       timeRequired: this.timeRequired,
       // TODO: 複数著者の作成に対応してほしい
       authors: { create: { userId: this.user.id, roleId: 1 } },
-      creator: { connect: { id: this.user.id } },
       publishedAt: new Date(importBook.publishedAt),
       createdAt: new Date(importBook.createdAt),
       updatedAt: new Date(importBook.updatedAt),
@@ -337,7 +336,6 @@ class ImportBooksUtil {
       ...sectionTopic,
       // TODO: 複数著者の作成に対応してほしい
       authors: { create: { userId: this.user.id, roleId: 1 } },
-      creator: { connect: { id: this.user.id } },
       createdAt: new Date(sectionTopic.createdAt),
       updatedAt: new Date(sectionTopic.updatedAt),
       keywords: this.getKeywords(sectionTopic.keywords),

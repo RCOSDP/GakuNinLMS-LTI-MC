@@ -12,7 +12,6 @@ import {
 export const topicsWithResourcesArg = {
   include: {
     authors: authorArg,
-    creator: true,
     resource: resourceWithVideoArg,
   },
 } as const;

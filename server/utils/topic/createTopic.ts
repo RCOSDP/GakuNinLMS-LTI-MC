@@ -8,11 +8,11 @@ import {
 import topicCreateInput from "./topicCreateInput";
 
 async function createTopic(
-  creatorId: User["id"],
+  authorId: User["id"],
   topic: TopicProps
 ): Promise<TopicSchema | undefined> {
   const created = await prisma.topic.create({
-    data: topicCreateInput(creatorId, topic),
+    data: topicCreateInput(authorId, topic),
   });
 
   if (!created) return;

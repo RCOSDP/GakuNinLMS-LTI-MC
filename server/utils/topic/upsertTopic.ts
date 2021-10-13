@@ -19,13 +19,13 @@ function topicUpdateInput(topic: TopicProps) {
 }
 
 async function upsertTopic(
-  creatorId: User["id"],
+  authorId: User["id"],
   { id, ...topic }: TopicProps & Pick<Topic, "id">
 ): Promise<TopicSchema | undefined> {
   const created = await prisma.topic.upsert({
     ...topicsWithResourcesArg,
     where: { id },
-    create: topicCreateInput(creatorId, topic),
+    create: topicCreateInput(authorId, topic),
     update: topicUpdateInput(topic),
   });
 
