@@ -3445,6 +3445,21 @@
   resolved "https://registry.yarnpkg.com/@types/spdx-expression-parse/-/spdx-expression-parse-3.0.1.tgz#8c21471f2d58b9ca0dd173180b8ae31adc8823b7"
   integrity sha512-VMlqaBmOwUO2euJfo8Pyuvs71shUQ1wV4eFmZIT51tlkHRWnmg7Bp5d+BNkbbQOFEVyye/O60ya3CRd/VQe8bQ==
 
+"@types/ssh2-streams@*":
+  version "0.1.9"
+  resolved "https://registry.yarnpkg.com/@types/ssh2-streams/-/ssh2-streams-0.1.9.tgz#8ca51b26f08750a780f82ee75ff18d7160c07a87"
+  integrity sha512-I2J9jKqfmvXLR5GomDiCoHrEJ58hAOmFrekfFqmCFd+A6gaEStvWnPykoWUwld1PNg4G5ag1LwdA+Lz1doRJqg==
+  dependencies:
+    "@types/node" "*"
+
+"@types/ssh2@^0.5.48":
+  version "0.5.48"
+  resolved "https://registry.yarnpkg.com/@types/ssh2/-/ssh2-0.5.48.tgz#0d9e8654a76eaaf4cfeaeb88d74c4489cfcf7aea"
+  integrity sha512-cmQu0gp/6RtDXe1r2xXGgi0V0TeCdueDSRMEvBX8cTRT/sSREkUpgCYZLyh+iI8Ql+VNV8Az9toQoYa/IdgHbQ==
+  dependencies:
+    "@types/node" "*"
+    "@types/ssh2-streams" "*"
+
 "@types/stack-utils@^2.0.0":
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@types/stack-utils/-/stack-utils-2.0.0.tgz#7036640b4e21cc2f259ae826ce843d277dad8cff"
@@ -11501,11 +11516,16 @@ node-schedule@^2.0.0:
     long-timeout "0.1.1"
     sorted-array-functions "^1.3.0"
 
-node-scp@^0.0.15:
-  version "0.0.15"
-  resolved "https://registry.yarnpkg.com/node-scp/-/node-scp-0.0.15.tgz#e49aa669169f2cc0335dc95d0bef7a7fd6da5822"
-  integrity sha512-iQQpzVqsczdM35tI5JzFkM3DFMJb2VIeHGBVXU9d5EIgSrP4HGE44SScGv83D5aEtYCaY2r5uR1bPhUQwp6hRg==
+node-ssh@^12.0.0:
+  version "12.0.0"
+  resolved "https://registry.yarnpkg.com/node-ssh/-/node-ssh-12.0.0.tgz#5cf00bc2605a9355a674d0ff0ca92afbdf12a088"
+  integrity sha512-kIE4pePn1ZIkce9l4Jdz+nUGkQW08Kp/6cMDr61tnsEipWmTZJxGxpXYFl5uFYRBjswWVkRA+yu8tqvKFqIA/Q==
   dependencies:
+    is-stream "^2.0.0"
+    make-dir "^3.1.0"
+    sb-promise-queue "^2.1.0"
+    sb-scandir "^3.1.0"
+    shell-escape "^0.2.0"
     ssh2 "^1.1.0"
 
 nodemon@^2.0.12:
@@ -13668,6 +13688,18 @@ saxes@^5.0.1:
   dependencies:
     xmlchars "^2.2.0"
 
+sb-promise-queue@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/sb-promise-queue/-/sb-promise-queue-2.1.0.tgz#7e44bebef643f75d809a3db7f605b815d877a04d"
+  integrity sha512-zwq4YuP1FQFkGx2Q7GIkZYZ6PqWpV+bg0nIO1sJhWOyGyhqbj0MsTvK6lCFo5TQwX5pZr6SCQ75e8PCDCuNvkg==
+
+sb-scandir@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/sb-scandir/-/sb-scandir-3.1.0.tgz#31c346abb5184b73c5a25b286858f4299aa8756c"
+  integrity sha512-70BVm2xz9jn94zSQdpvYrEG101/UV9TVGcfWr9T5iob3QhCK4lYXeculfBqPGFv3XTeKgx4dpWyYIDeZUqo4kg==
+  dependencies:
+    sb-promise-queue "^2.1.0"
+
 scheduler@^0.20.2:
   version "0.20.2"
   resolved "https://registry.yarnpkg.com/scheduler/-/scheduler-0.20.2.tgz#4baee39436e34aa93b4874bddcbf0fe8b8b50e91"
@@ -13897,6 +13929,11 @@ shebang-regex@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/shebang-regex/-/shebang-regex-3.0.0.tgz#ae16f1644d873ecad843b0307b143362d4c42172"
   integrity sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A==
+
+shell-escape@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/shell-escape/-/shell-escape-0.2.0.tgz#68fd025eb0490b4f567a027f0bf22480b5f84133"
+  integrity sha1-aP0CXrBJC09WegJ/C/IkgLX4QTM=
 
 shell-quote@1.7.2, shell-quote@^1.6.1:
   version "1.7.2"

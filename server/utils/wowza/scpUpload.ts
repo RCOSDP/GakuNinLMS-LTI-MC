@@ -1,5 +1,4 @@
-import fs from "fs";
-import scp from "node-scp";
+import { NodeSSH } from "node-ssh";
 import {
   WOWZA_SCP_HOST,
   WOWZA_SCP_PORT,
@@ -10,17 +9,23 @@ import {
 } from "$server/utils/env";
 
 export async function scpUpload(uploadroot: string) {
-  let client;
+  const client = new NodeSSH();
   try {
-    client = await scp({
+    await client.connect({
       host: WOWZA_SCP_HOST,
       port: WOWZA_SCP_PORT,
       username: WOWZA_SCP_USERNAME,
-      privateKey: fs.readFileSync(WOWZA_SCP_PRIVATE_KEY),
+      privateKey: WOWZA_SCP_PRIVATE_KEY,
       passphrase: WOWZA_SCP_PASS_PHRASE,
     });
-    await client.uploadDir(uploadroot, WOWZA_SCP_SERVER_PATH);
+    let scpError;
+    await client.putDirectory(uploadroot, WOWZA_SCP_SERVER_PATH, {
+      tick: (localPath, remotePath, error) => {
+        if (error) scpError = error;
+      },
+    });
+    if (scpError) throw scpError;
   } finally {
-    if (client) client.close();
+    if (client.isConnected()) client.dispose();
   }
 }
