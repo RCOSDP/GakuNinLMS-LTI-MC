@@ -3,7 +3,9 @@ import { Query } from "./query";
 
 function getTextContent(topic: TopicSchema): string {
   let str = topic.name;
-  if (topic.creator.name) str += ` ${topic.creator.name}`;
+  for (const author of topic.authors) {
+    if (author.name) str += ` ${author.name}`;
+  }
   return str.normalize("NFKD").toLowerCase();
 }
 

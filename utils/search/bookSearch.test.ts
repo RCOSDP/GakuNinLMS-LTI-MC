@@ -283,3 +283,130 @@ test("ブック名が空でもセクション名・トピック名による絞�
     })
   ).toEqual([book]);
 });
+
+test("ブック著者による絞り込み", () => {
+  const book = {
+    id: 1,
+    name: "foobar",
+    description: "",
+    language: "en",
+    timeRequired: null,
+    shared: true,
+    authors: [
+      {
+        id: 1,
+        name: "山田一郎",
+        ltiConsumerId: "",
+        ltiUserId: "",
+        email: "",
+        roleName: "",
+      },
+    ],
+    creator: {
+      id: 2,
+      name: "山田二郎",
+      ltiConsumerId: "",
+      ltiUserId: "",
+      email: "",
+      settings: {},
+    },
+    ltiResourceLinks: [],
+    createdAt: new Date(),
+    publishedAt: new Date(),
+    updatedAt: new Date(),
+    sections: [],
+    details: {},
+  };
+  expect(
+    bookSearch([book], {
+      keywords: ["山田一郎"],
+      ltiResourceLinks: [],
+    })
+  ).toEqual([book]);
+});
+
+test("トピック著者による絞り込み", () => {
+  const book = {
+    id: 1,
+    name: "foobar",
+    description: "",
+    language: "en",
+    timeRequired: null,
+    shared: true,
+    authors: [
+      {
+        id: 1,
+        name: "山田一郎",
+        ltiConsumerId: "",
+        ltiUserId: "",
+        email: "",
+        roleName: "",
+      },
+    ],
+    creator: {
+      id: 2,
+      name: "山田二郎",
+      ltiConsumerId: "",
+      ltiUserId: "",
+      email: "",
+      settings: {},
+    },
+    ltiResourceLinks: [],
+    createdAt: new Date(),
+    publishedAt: new Date(),
+    updatedAt: new Date(),
+    sections: [
+      {
+        id: 1,
+        name: "Section 1",
+        topics: [
+          {
+            id: 1,
+            resourceId: 1,
+            name: "Topic 1",
+            description: "",
+            language: "en",
+            timeRequired: 10,
+            shared: true,
+            license: "",
+            authors: [
+              {
+                id: 3,
+                name: "山田三郎",
+                ltiConsumerId: "",
+                ltiUserId: "",
+                email: "",
+                roleName: "",
+              },
+            ],
+            creator: {
+              id: 4,
+              name: "山田四郎",
+              ltiConsumerId: "",
+              ltiUserId: "",
+              email: "",
+              settings: {},
+            },
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            resource: {
+              id: 1,
+              videoId: 1,
+              url: "https://example/",
+              providerUrl: "https://example/",
+              details: {},
+            },
+            details: {},
+          },
+        ],
+      },
+    ],
+    details: {},
+  };
+  expect(
+    bookSearch([book], {
+      keywords: ["山田三郎"],
+      ltiResourceLinks: [],
+    })
+  ).toEqual([book]);
+});
