@@ -54,7 +54,7 @@ type Props = {
   onFilterChange?: (value: Filter) => void;
 };
 
-function CreatorFilter(props: Props) {
+function AuthorFilter(props: Props) {
   const { disabled = false, onFilterChange } = props;
   const classes = useStyles();
   const formControlLabelClasses = useFormControlLabelStyles();
@@ -66,7 +66,7 @@ function CreatorFilter(props: Props) {
   );
   return (
     <fieldset className={classes.fieldset}>
-      <legend className={classes.legend}>作成者</legend>
+      <legend className={classes.legend}>著者</legend>
       <RadioGroup
         className={classes.group}
         defaultValue={options[0].value}
@@ -88,4 +88,4 @@ function CreatorFilter(props: Props) {
   );
 }
 
-export default CreatorFilter;
+export default AuthorFilter;

@@ -54,6 +54,9 @@ import {
     InlineResponse2001Books,
     InlineResponse2001BooksFromJSON,
     InlineResponse2001BooksToJSON,
+    InlineResponse2001Creator,
+    InlineResponse2001CreatorFromJSON,
+    InlineResponse2001CreatorToJSON,
     InlineResponse2001Topics,
     InlineResponse2001TopicsFromJSON,
     InlineResponse2001TopicsToJSON,
@@ -242,6 +245,10 @@ export interface ApiV2UserUserIdTopicsGetRequest {
     sort?: string;
     page?: number;
     perPage?: number;
+}
+
+export interface ApiV2UsersEmailGetRequest {
+    email: string;
 }
 
 /**
@@ -515,7 +522,7 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * LTIツールとして起動するためのエンドポイントです。 このエンドポイントをLMSのLTIツールのリダイレクトURIに指定して利用します。 成功時 / にリダイレクトします。
+     * LTIツールとして起動するためのエンドポイントです。 このエンドポイントをLMSのLTIツールのリダイレクトURIに指定して利用します。 成功時 http://localhost:3000/ にリダイレクトします。
      * LTI v1.3 リダイレクトURI
      */
     async apiV2LtiCallbackPostRaw(requestParameters: ApiV2LtiCallbackPostRequest): Promise<runtime.ApiResponse<void>> {
@@ -565,7 +572,7 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * LTIツールとして起動するためのエンドポイントです。 このエンドポイントをLMSのLTIツールのリダイレクトURIに指定して利用します。 成功時 / にリダイレクトします。
+     * LTIツールとして起動するためのエンドポイントです。 このエンドポイントをLMSのLTIツールのリダイレクトURIに指定して利用します。 成功時 http://localhost:3000/ にリダイレクトします。
      * LTI v1.3 リダイレクトURI
      */
     async apiV2LtiCallbackPost(requestParameters: ApiV2LtiCallbackPostRequest): Promise<void> {
@@ -573,7 +580,7 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * LTI v1.1 ツールとして起動するためのエンドポイントです。 このエンドポイントをLMSのLTIツールのURLに指定して利用します。 成功時 / にリダイレクトします。
+     * LTI v1.1 ツールとして起動するためのエンドポイントです。 このエンドポイントをLMSのLTIツールのURLに指定して利用します。 成功時 http://localhost:3000/ にリダイレクトします。
      * LTI v1.1 起動エンドポイント (非推奨)
      */
     async apiV2LtiLaunchPostRaw(requestParameters: ApiV2LtiLaunchPostRequest): Promise<runtime.ApiResponse<void>> {
@@ -727,7 +734,7 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * LTI v1.1 ツールとして起動するためのエンドポイントです。 このエンドポイントをLMSのLTIツールのURLに指定して利用します。 成功時 / にリダイレクトします。
+     * LTI v1.1 ツールとして起動するためのエンドポイントです。 このエンドポイントをLMSのLTIツールのURLに指定して利用します。 成功時 http://localhost:3000/ にリダイレクトします。
      * LTI v1.1 起動エンドポイント (非推奨)
      */
     async apiV2LtiLaunchPost(requestParameters: ApiV2LtiLaunchPostRequest): Promise<void> {
@@ -1408,8 +1415,8 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * 利用者の作成したブックの一覧を取得します。 教員または管理者でなければなりません。
-     * 作成したブックの一覧
+     * 利用者が著者に含まれるブックの一覧を取得します。 教員または管理者でなければなりません。
+     * 自分のブックの一覧
      */
     async apiV2UserUserIdBooksGetRaw(requestParameters: ApiV2UserUserIdBooksGetRequest): Promise<runtime.ApiResponse<InlineResponse2001>> {
         if (requestParameters.userId === null || requestParameters.userId === undefined) {
@@ -1443,8 +1450,8 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * 利用者の作成したブックの一覧を取得します。 教員または管理者でなければなりません。
-     * 作成したブックの一覧
+     * 利用者が著者に含まれるブックの一覧を取得します。 教員または管理者でなければなりません。
+     * 自分のブックの一覧
      */
     async apiV2UserUserIdBooksGet(requestParameters: ApiV2UserUserIdBooksGetRequest): Promise<InlineResponse2001> {
         const response = await this.apiV2UserUserIdBooksGetRaw(requestParameters);
@@ -1452,8 +1459,8 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * 利用者の作成したトピックの一覧を取得します。 教員または管理者でなければなりません。
-     * 作成したトピックの一覧
+     * 利用者が著者に含まれるトピックの一覧を取得します。 教員または管理者でなければなりません。
+     * 自分のトピックの一覧
      */
     async apiV2UserUserIdTopicsGetRaw(requestParameters: ApiV2UserUserIdTopicsGetRequest): Promise<runtime.ApiResponse<InlineResponse2002>> {
         if (requestParameters.userId === null || requestParameters.userId === undefined) {
@@ -1487,11 +1494,43 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * 利用者の作成したトピックの一覧を取得します。 教員または管理者でなければなりません。
-     * 作成したトピックの一覧
+     * 利用者が著者に含まれるトピックの一覧を取得します。 教員または管理者でなければなりません。
+     * 自分のトピックの一覧
      */
     async apiV2UserUserIdTopicsGet(requestParameters: ApiV2UserUserIdTopicsGetRequest): Promise<InlineResponse2002> {
         const response = await this.apiV2UserUserIdTopicsGetRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * 利用者に関する詳細な情報を取得します。 教員または管理者でなければなりません。
+     * 利用者情報
+     */
+    async apiV2UsersEmailGetRaw(requestParameters: ApiV2UsersEmailGetRequest): Promise<runtime.ApiResponse<Array<InlineResponse2001Creator>>> {
+        if (requestParameters.email === null || requestParameters.email === undefined) {
+            throw new runtime.RequiredError('email','Required parameter requestParameters.email was null or undefined when calling apiV2UsersEmailGet.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/api/v2/users/{email}`.replace(`{${"email"}}`, encodeURIComponent(String(requestParameters.email))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(InlineResponse2001CreatorFromJSON));
+    }
+
+    /**
+     * 利用者に関する詳細な情報を取得します。 教員または管理者でなければなりません。
+     * 利用者情報
+     */
+    async apiV2UsersEmailGet(requestParameters: ApiV2UsersEmailGetRequest): Promise<Array<InlineResponse2001Creator>> {
+        const response = await this.apiV2UsersEmailGetRaw(requestParameters);
         return await response.value();
     }
 

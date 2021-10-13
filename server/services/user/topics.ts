@@ -7,7 +7,7 @@ import {
 } from "$server/validators/paginationProps";
 import authUser from "$server/auth/authUser";
 import authInstructor from "$server/auth/authInstructor";
-import { findCreatedTopics } from "$server/utils/user";
+import { findTopicsBy } from "$server/utils/user";
 import { userTopicsSchema } from "$server/models/userTopics";
 
 export type Query = PaginationProps;
@@ -15,9 +15,9 @@ export type Params = UserParams;
 
 export const method: Method = {
   get: {
-    summary: "作成したトピックの一覧",
+    summary: "自分のトピックの一覧",
     description: outdent`
-      利用者の作成したトピックの一覧を取得します。
+      利用者が著者に含まれるトピックの一覧を取得します。
       教員または管理者でなければなりません。`,
     querystring: paginationPropsSchema,
     params: userParamsSchema,
@@ -41,7 +41,7 @@ export async function index({
   const page = query.page ?? 0;
   const perPage = query.per_page ?? 50;
   const { user_id: userId } = params;
-  const topics = await findCreatedTopics(userId, query.sort, page, perPage);
+  const topics = await findTopicsBy(userId, query.sort, page, perPage);
 
   return {
     status: 200,
