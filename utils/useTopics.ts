@@ -3,19 +3,20 @@ import useSWRInfinite from "swr/infinite";
 import type { TopicSchema } from "$server/models/topic";
 import type { UserSchema } from "$server/models/user";
 import type { Filter } from "$types/filter";
+import { IsContentEditable } from "$types/content";
 import { useSessionAtom } from "$store/session";
 import { useSearchAtom } from "$store/search";
 import useSortOrder from "./useSortOrder";
 import useInfiniteProps from "./useInfiniteProps";
 import useFilter from "./useFilter";
 import topicSearch from "./search/topicSearch";
-import contentCreateBy from "./contentCreateBy";
+import contentBy from "./contentBy";
 import { makeUserTopicsKey, fetchUserTopics } from "./userTopics";
 import { makeTopicsKey, fetchTopics } from "./topics";
 
 function sharedOrCreatedBy(
   topic: TopicSchema,
-  isContentEditable: (content: Pick<TopicSchema, "creator">) => boolean
+  isContentEditable: IsContentEditable
 ) {
   return topic.shared || isContentEditable(topic);
 }
@@ -24,11 +25,11 @@ const makeFilter =
   (
     filter: Filter,
     userId: UserSchema["id"],
-    isContentEditable: (topic: Pick<TopicSchema, "creator">) => boolean
+    isContentEditable: IsContentEditable
   ) =>
   (topic: TopicSchema | undefined) => {
     if (topic === undefined) return [];
-    const isMyTopic = contentCreateBy(topic, { id: userId ?? NaN });
+    const isMyTopic = contentBy(topic, { id: userId ?? NaN });
     if (filter === "other" && isMyTopic) return [];
     if (!sharedOrCreatedBy(topic, isContentEditable)) return [];
     return [topic];

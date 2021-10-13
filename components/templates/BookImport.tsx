@@ -20,6 +20,7 @@ import { SectionSchema } from "$server/models/book/section";
 import { TopicSchema } from "$server/models/topic";
 import { SortOrder } from "$server/models/sortOrder";
 import { Filter } from "$types/filter";
+import { IsContentEditable } from "$types/content";
 import useContainerStyles from "$styles/container";
 import { useSearchAtom } from "$store/search";
 import useDialogProps from "$utils/useDialogProps";
@@ -60,9 +61,7 @@ type Props = {
   onTopicEditClick?(topic: TopicSchema): void;
   onSortChange?(sort: SortOrder): void;
   onFilterChange?(filter: Filter): void;
-  isContentEditable?(
-    book: Pick<BookSchema, "creator"> | Pick<TopicSchema, "creator">
-  ): boolean | undefined;
+  isContentEditable?: IsContentEditable;
 };
 
 export default function BookImport(props: Props) {

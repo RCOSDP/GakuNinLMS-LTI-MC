@@ -4,6 +4,7 @@ import TopicsTemplate from "$templates/Topics";
 import { useSessionAtom } from "$store/session";
 import { pagesPath } from "$utils/$path";
 import useTopics from "$utils/useTopics";
+import { ContentAuthors } from "$types/content";
 
 const Topics = (
   props: Omit<
@@ -15,7 +16,9 @@ const Topics = (
 function Index() {
   const router = useRouter();
   const { isContentEditable } = useSessionAtom();
-  function handleTopicEditClick(topic: Pick<TopicSchema, "id" | "creator">) {
+  function handleTopicEditClick(
+    topic: Pick<TopicSchema, "id"> & ContentAuthors
+  ) {
     const action = isContentEditable(topic) ? "edit" : "generate";
     return router.push(
       pagesPath.topics[action].$url({ query: { topicId: topic.id } })

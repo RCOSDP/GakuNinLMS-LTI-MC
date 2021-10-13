@@ -7,7 +7,7 @@ import SharedIndicator from "$atoms/SharedIndicator";
 import SectionsTree from "$molecules/SectionsTree";
 import useTreeItemStyle from "$styles/treeItem";
 import { BookSchema } from "$server/models/book";
-import { TopicSchema } from "$server/models/topic";
+import { IsContentEditable } from "$types/content";
 import { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
 
 const useStyles = makeStyles((theme) => ({
@@ -28,9 +28,7 @@ type Props = {
     ltiResourceLink: Pick<LtiResourceLinkSchema, "consumerId" | "contextId">
   ): void;
   selectedIndexes?: Set<string>;
-  isContentEditable?(
-    content: Pick<TopicSchema, "creator">
-  ): boolean | undefined;
+  isContentEditable?: IsContentEditable;
 };
 
 export default function BookTree(props: Props) {

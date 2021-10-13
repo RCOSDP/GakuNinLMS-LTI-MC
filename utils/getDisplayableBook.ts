@@ -1,13 +1,14 @@
 import { BookSchema } from "$server/models/book";
 import { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
-import { TopicSchema } from "$server/models/topic";
+import { IsContentEditable } from "$types/content";
+import contentBy from "./contentBy";
 
 function isDisplayableBook(
   book: BookSchema,
   ltiResourceLink:
     | Pick<LtiResourceLinkSchema, "bookId" | "creatorId">
     | undefined,
-  isContentEditable: (content: Pick<BookSchema, "creator">) => boolean
+  isContentEditable: IsContentEditable
 ) {
   const linked = book.id === ltiResourceLink?.bookId;
   return book.shared || linked || isContentEditable(book);
@@ -15,9 +16,7 @@ function isDisplayableBook(
 
 function getDisplayableBook(
   book: BookSchema | undefined,
-  isContentEditable: (
-    content: Pick<BookSchema, "creator"> | Pick<TopicSchema, "creator">
-  ) => boolean,
+  isContentEditable: IsContentEditable,
   ltiResourceLink?: Pick<LtiResourceLinkSchema, "bookId" | "creatorId">
 ): BookSchema | undefined {
   if (book === undefined) return;
@@ -27,7 +26,7 @@ function getDisplayableBook(
     const topics = section.topics.filter(
       (topic) =>
         topic.shared ||
-        topic.creator.id === ltiResourceLink?.creatorId ||
+        contentBy(topic, { id: ltiResourceLink?.creatorId }) ||
         isContentEditable(topic)
     );
     return topics.length > 0 ? [{ ...section, topics }] : [];

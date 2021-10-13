@@ -14,6 +14,7 @@ import CreatorFilter from "$atoms/CreatorFilter";
 import SearchTextField from "$atoms/SearchTextField";
 import { TopicSchema } from "$server/models/topic";
 import { SortOrder } from "$server/models/sortOrder";
+import { IsContentEditable } from "$types/content";
 import { Filter } from "$types/filter";
 import useContainerStyles from "$styles/container";
 import useDialogProps from "$utils/useDialogProps";
@@ -42,7 +43,7 @@ type Props = {
   onTopicEditClick(topic: TopicSchema): void;
   onSortChange?(sort: SortOrder): void;
   onFilterChange?(filter: Filter): void;
-  isContentEditable(topic: Pick<TopicSchema, "creator">): boolean | undefined;
+  isContentEditable: IsContentEditable;
 };
 
 export default function TopicImport(props: Props) {
