@@ -1,5 +1,5 @@
-import { User } from "@prisma/client";
-import { TopicProps } from "$server/models/topic";
+import type { User } from "@prisma/client";
+import type { TopicProps } from "$server/models/topic";
 import topicInput from "./topicInput";
 import resourceConnectOrCreateInput from "./resourceConnectOrCreateInput";
 

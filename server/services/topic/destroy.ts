@@ -1,7 +1,8 @@
-import { FastifySchema } from "fastify";
+import type { FastifySchema } from "fastify";
 import { outdent } from "outdent";
-import { TopicParams, topicParamsSchema } from "$server/validators/topicParams";
-import { SessionSchema } from "$server/models/session";
+import type { TopicParams} from "$server/validators/topicParams";
+import { topicParamsSchema } from "$server/validators/topicParams";
+import type { SessionSchema } from "$server/models/session";
 import authUser from "$server/auth/authUser";
 import authInstructor from "$server/auth/authInstructor";
 import { isUsersOrAdmin } from "$server/utils/session";

@@ -1,6 +1,6 @@
-import { BookSchema } from "$server/models/book";
-import { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
-import { IsContentEditable } from "$types/content";
+import type { BookSchema } from "$server/models/book";
+import type { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
+import type { IsContentEditable } from "$types/content";
 import contentBy from "./contentBy";
 
 function isDisplayableBook(

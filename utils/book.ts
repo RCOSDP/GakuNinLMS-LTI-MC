@@ -3,9 +3,9 @@ import useSWR, { mutate } from "swr";
 import { api } from "./api";
 import type { BookProps, BookSchema } from "$server/models/book";
 import type { TopicSchema } from "$server/models/topic";
-import { IsContentEditable } from "$types/content";
+import type { IsContentEditable } from "$types/content";
 import { revalidateSession } from "./session";
-import { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
+import type { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
 import getDisplayableBook from "./getDisplayableBook";
 
 const key = "/api/v2/book/{book_id}";

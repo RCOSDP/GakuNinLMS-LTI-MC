@@ -1,4 +1,4 @@
-import { ReactNode, MouseEvent } from "react";
+import type { ReactNode, MouseEvent } from "react";
 import clsx from "clsx";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -8,8 +8,8 @@ import Typography from "@mui/material/Typography";
 import { makeStyles, createStyles } from "@mui/styles";
 import type { Theme } from "@mui/material/styles";
 import EditButton from "$atoms/EditButton";
-import { ContentAuthors } from "$types/content";
-import { SectionSchema } from "$server/models/book/section";
+import type { ContentAuthors } from "$types/content";
+import type { SectionSchema } from "$server/models/book/section";
 import { primary, gray } from "$theme/colors";
 import { isNamedSection, getOutlineNumber } from "$utils/outline";
 import formatInterval from "$utils/formatInterval";

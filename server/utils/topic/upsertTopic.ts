@@ -1,5 +1,5 @@
-import { User, Topic } from "@prisma/client";
-import { TopicProps, TopicSchema } from "$server/models/topic";
+import type { User, Topic } from "@prisma/client";
+import type { TopicProps, TopicSchema } from "$server/models/topic";
 import prisma from "$server/utils/prisma";
 import {
   topicsWithResourcesArg,

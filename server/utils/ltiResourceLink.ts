@@ -1,5 +1,5 @@
-import { Prisma } from "@prisma/client";
-import { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
+import type { Prisma } from "@prisma/client";
+import type { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
 import prisma from "./prisma";
 import bookExists from "./book/bookExists";
 

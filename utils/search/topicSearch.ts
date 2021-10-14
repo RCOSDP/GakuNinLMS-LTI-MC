@@ -1,5 +1,5 @@
-import { TopicSchema } from "$server/models/topic";
-import { Query } from "./query";
+import type { TopicSchema } from "$server/models/topic";
+import type { Query } from "./query";
 
 function getTextContent(topic: TopicSchema): string {
   let str = topic.name;

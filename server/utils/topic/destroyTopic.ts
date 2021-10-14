@@ -1,4 +1,4 @@
-import { Topic } from "@prisma/client";
+import type { Topic } from "@prisma/client";
 import prisma from "$server/utils/prisma";
 
 async function destroyTopic(id: Topic["id"]) {

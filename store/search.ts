@@ -2,10 +2,10 @@ import { useCallback, useEffect } from "react";
 import { atom, useAtom } from "jotai";
 import { RESET, atomWithReset, useUpdateAtom } from "jotai/utils";
 import clsx from "clsx";
-import { Query } from "$utils/search/query";
+import type { Query } from "$utils/search/query";
 import parse from "$utils/search/parse";
 import stringify from "$utils/search/stringify";
-import { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
+import type { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
 
 const queryAtom = atomWithReset<{ input: string } & Query>({
   input: "",

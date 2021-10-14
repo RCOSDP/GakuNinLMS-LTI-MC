@@ -4,7 +4,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
 import makeStyles from "@mui/styles/makeStyles";
 import { gray } from "$theme/colors";
-import { Filter } from "$types/filter";
+import type { Filter } from "$types/filter";
 
 const useStyles = makeStyles((theme) => ({
   fieldset: {

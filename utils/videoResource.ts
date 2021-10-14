@@ -1,5 +1,5 @@
-import { ResourceSchema } from "$server/models/resource";
-import { VideoResource } from "$server/models/videoResource";
+import type { ResourceSchema } from "$server/models/resource";
+import type { VideoResource } from "$server/models/videoResource";
 import { parse } from "$server/utils/videoResource";
 import isValidVideoResource from "$server/utils/isValidVideoResource";
 import { NEXT_PUBLIC_API_BASE_PATH } from "./env";

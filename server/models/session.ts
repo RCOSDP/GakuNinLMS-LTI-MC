@@ -1,5 +1,6 @@
+import type {
+  LtiResourceLinkSchema} from "./ltiResourceLink";
 import {
-  LtiResourceLinkSchema,
   ltiResourceLinkSchema,
 } from "./ltiResourceLink";
 import { UserSchema } from "$server/models/user";

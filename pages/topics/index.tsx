@@ -4,7 +4,7 @@ import TopicsTemplate from "$templates/Topics";
 import { useSessionAtom } from "$store/session";
 import { pagesPath } from "$utils/$path";
 import useTopics from "$utils/useTopics";
-import { ContentAuthors } from "$types/content";
+import type { ContentAuthors } from "$types/content";
 
 const Topics = (
   props: Omit<

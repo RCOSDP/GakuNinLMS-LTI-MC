@@ -1,5 +1,5 @@
 import type { UserSchema } from "$server/models/user";
-import { ContentAuthors } from "$types/content";
+import type { ContentAuthors } from "$types/content";
 
 /**
  * コンテンツの著者の判定

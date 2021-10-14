@@ -1,7 +1,8 @@
-import { FastifyRequest, FastifySchema } from "fastify";
+import type { FastifyRequest, FastifySchema } from "fastify";
 import { outdent } from "outdent";
+import type {
+  TopicProps} from "$server/models/topic";
 import {
-  TopicProps,
   topicPropsSchema,
   topicSchema,
 } from "$server/models/topic";

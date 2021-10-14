@@ -3,7 +3,7 @@ import useSWRInfinite from "swr/infinite";
 import type { BookSchema } from "$server/models/book";
 import type { UserSchema } from "$server/models/user";
 import type { Filter } from "$types/filter";
-import { IsContentEditable } from "$types/content";
+import type { IsContentEditable } from "$types/content";
 import { useSessionAtom } from "$store/session";
 import { useSearchAtom } from "$store/search";
 import getDisplayableBook from "./getDisplayableBook";

@@ -1,5 +1,5 @@
-import { Resource } from "@prisma/client";
-import { VideoTrackProps, VideoTrackSchema } from "$server/models/videoTrack";
+import type { Resource } from "@prisma/client";
+import type { VideoTrackProps, VideoTrackSchema } from "$server/models/videoTrack";
 import prisma from "$server/utils/prisma";
 
 async function createVideoTrack(

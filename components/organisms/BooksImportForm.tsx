@@ -8,7 +8,7 @@ import clsx from "clsx";
 import TextField from "$atoms/TextField";
 import useCardStyles from "styles/card";
 import gray from "theme/colors/gray";
-import { BooksImportParams } from "$server/validators/booksImportParams";
+import type { BooksImportParams } from "$server/validators/booksImportParams";
 import { NEXT_PUBLIC_API_BASE_PATH } from "$utils/env";
 
 const useStyles = makeStyles((theme) => ({

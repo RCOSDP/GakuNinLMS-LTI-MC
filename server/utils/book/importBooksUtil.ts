@@ -7,15 +7,17 @@ import dateFormat from "dateformat";
 import { Buffer } from "buffer";
 import scp from "node-scp";
 
-import { validate, ValidationError } from "class-validator";
-import { UserSchema } from "$server/models/user";
-import { BookSchema } from "$server/models/book";
-import {
+import type { ValidationError } from "class-validator";
+import { validate } from "class-validator";
+import type { UserSchema } from "$server/models/user";
+import type { BookSchema } from "$server/models/book";
+import type {
   BooksImportParams,
   BooksImportResult,
   ImportTopic,
   ImportSection,
-  ImportBook,
+  ImportBook} from "$server/validators/booksImportParams";
+import {
   ImportBooks,
 } from "$server/validators/booksImportParams";
 import prisma from "$server/utils/prisma";

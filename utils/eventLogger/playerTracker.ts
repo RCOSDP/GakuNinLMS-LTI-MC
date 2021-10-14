@@ -1,6 +1,6 @@
 import type { StrictEventEmitter } from "strict-event-emitter-types";
 import { EventEmitter } from "events";
-import { VideoJsPlayer } from "video.js";
+import type { VideoJsPlayer } from "video.js";
 import VimeoPlayer from "@vimeo/player";
 import type { VideoResourceSchema } from "$server/models/videoResource";
 import youtubePlayedShims from "$utils/youtubePlayedShims";

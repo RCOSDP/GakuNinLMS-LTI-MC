@@ -1,6 +1,7 @@
-import { Section, Topic } from "@prisma/client";
+import type { Section, Topic } from "@prisma/client";
 import jsonSchema from "$server/prisma/json-schema.json";
-import { TopicSchema, topicSchema } from "$server/models/topic";
+import type { TopicSchema} from "$server/models/topic";
+import { topicSchema } from "$server/models/topic";
 
 export type SectionProps = {
   name?: Section["name"];

@@ -1,4 +1,4 @@
-import { TopicProps } from "$server/models/topic";
+import type { TopicProps } from "$server/models/topic";
 
 function topicInput(topic: TopicProps) {
   return {

@@ -1,6 +1,7 @@
-import { Resource, Video } from "@prisma/client";
+import type { Resource, Video } from "@prisma/client";
 import jsonSchema from "$server/prisma/json-schema.json";
-import { VideoTrackSchema, videoTrackSchema } from "./videoTrack";
+import type { VideoTrackSchema} from "./videoTrack";
+import { videoTrackSchema } from "./videoTrack";
 
 export type VideoResource = {
   url: Resource["url"];

@@ -1,4 +1,4 @@
-import { ComponentProps } from "react";
+import type { ComponentProps } from "react";
 import clsx from "clsx";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";

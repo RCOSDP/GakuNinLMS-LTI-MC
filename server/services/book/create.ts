@@ -1,7 +1,8 @@
-import { FastifySchema } from "fastify";
+import type { FastifySchema } from "fastify";
 import { outdent } from "outdent";
-import { BookProps, bookPropsSchema, bookSchema } from "$server/models/book";
-import { SessionSchema } from "$server/models/session";
+import type { BookProps} from "$server/models/book";
+import { bookPropsSchema, bookSchema } from "$server/models/book";
+import type { SessionSchema } from "$server/models/session";
 import authUser from "$server/auth/authUser";
 import authInstructor from "$server/auth/authInstructor";
 import createBook from "$server/utils/book/createBook";

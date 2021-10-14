@@ -1,4 +1,5 @@
-import { SetStateAction, useState } from "react";
+import type { SetStateAction} from "react";
+import { useState } from "react";
 
 function useDialogProps<T>() {
   const [open, setOpen] = useState(true);

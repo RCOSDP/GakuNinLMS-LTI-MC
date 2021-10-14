@@ -1,5 +1,5 @@
-import { AuthorsProps } from "$server/validators/authorsProps";
-import { TopicParams } from "$server/validators/topicParams";
+import type { AuthorsProps } from "$server/validators/authorsProps";
+import type { TopicParams } from "$server/validators/topicParams";
 import { updateSchema, updateHooks, update } from "./update";
 
 export type Params = TopicParams;

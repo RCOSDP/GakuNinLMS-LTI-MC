@@ -1,7 +1,7 @@
 import { atom } from "jotai";
 import { useAtomValue, useUpdateAtom } from "jotai/utils";
 import type { SessionSchema } from "$server/models/session";
-import { ContentAuthors, IsContentEditable } from "$types/content";
+import type { ContentAuthors, IsContentEditable } from "$types/content";
 import {
   isAdministrator as isAdministratorSession,
   isInstructor as isInstructorSession,

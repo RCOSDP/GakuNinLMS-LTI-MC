@@ -1,4 +1,4 @@
-import { FastifySchema } from "fastify";
+import type { FastifySchema } from "fastify";
 import { outdent } from "outdent";
 import { bookParamsSchema } from "$server/validators/bookParams";
 import authUser from "$server/auth/authUser";

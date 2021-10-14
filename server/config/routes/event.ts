@@ -1,5 +1,5 @@
-import { FastifyInstance } from "fastify";
-import { Event } from "$server/models/event";
+import type { FastifyInstance } from "fastify";
+import type { Event } from "$server/models/event";
 import makeHooks from "$server/utils/makeHooks";
 import handler from "$server/utils/handler";
 import * as service from "$server/services/event";

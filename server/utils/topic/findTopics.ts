@@ -1,4 +1,4 @@
-import { TopicSchema } from "$server/models/topic";
+import type { TopicSchema } from "$server/models/topic";
 import prisma from "$server/utils/prisma";
 import makeSortOrderQuery from "$server/utils/makeSortOrderQuery";
 import {

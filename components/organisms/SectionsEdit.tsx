@@ -15,9 +15,9 @@ import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import makeStyles from "@mui/styles/makeStyles";
 import SectionsTree from "$molecules/SectionsTree";
 import DraggableSections from "$molecules/DraggableSections";
-import { SectionSchema } from "$server/models/book/section";
-import { TopicSchema } from "$server/models/topic";
-import { IsContentEditable } from "$types/content";
+import type { SectionSchema } from "$server/models/book/section";
+import type { TopicSchema } from "$server/models/topic";
+import type { IsContentEditable } from "$types/content";
 import useCardStyles from "$styles/card";
 import useSortableSectionsProps from "$utils/useSortableSectionsProps";
 

@@ -1,5 +1,5 @@
-import { FastifyRequest } from "fastify";
-import Method from "$server/types/method";
+import type { FastifyRequest } from "fastify";
+import type Method from "$server/types/method";
 import { sessionSchema } from "$server/models/session";
 import authUser from "$server/auth/authUser";
 

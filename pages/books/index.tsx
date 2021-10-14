@@ -10,7 +10,7 @@ import { pagesPath } from "$utils/$path";
 import { updateLtiResourceLink } from "$utils/ltiResourceLink";
 import getLtiResourceLink from "$utils/getLtiResourceLink";
 import useDialogProps from "$utils/useDialogProps";
-import { ContentAuthors } from "$types/content";
+import type { ContentAuthors } from "$types/content";
 
 const Books = (
   props: Omit<

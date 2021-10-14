@@ -1,8 +1,9 @@
-import { Topic, Prisma } from "@prisma/client";
+import type { Topic, Prisma } from "@prisma/client";
 import jsonSchema from "$server/prisma/json-schema.json";
-import {
+import type {
   ResourceProps,
-  ResourceSchema,
+  ResourceSchema} from "./resource";
+import {
   resourcePropsSchema,
   resourceSchema,
 } from "./resource";

@@ -1,15 +1,16 @@
-import { Prisma, Section, TopicSection } from "@prisma/client";
-import { BookSchema } from "$server/models/book";
-import { SectionSchema } from "$server/models/book/section";
-import { TopicSchema } from "$server/models/topic";
+import type { Prisma, Section, TopicSection } from "@prisma/client";
+import type { BookSchema } from "$server/models/book";
+import type { SectionSchema } from "$server/models/book/section";
+import type { TopicSchema } from "$server/models/topic";
 import {
   authorArg,
   authorToAuthorSchema,
 } from "$server/utils/author/authorToAuthorSchema";
+import type {
+  TopicWithResource} from "$server/utils/topic/topicToTopicSchema";
 import {
   topicsWithResourcesArg,
-  topicToTopicSchema,
-  TopicWithResource,
+  topicToTopicSchema
 } from "$server/utils/topic/topicToTopicSchema";
 import {
   ltiResourceLinkIncludingContextArg,

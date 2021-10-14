@@ -1,6 +1,6 @@
 import type { SortOrder } from "$server/models/sortOrder";
 import type { BookSchema } from "$server/models/book";
-import {
+import type {
   BooksImportParams,
   BooksImportResult,
 } from "$server/validators/booksImportParams";

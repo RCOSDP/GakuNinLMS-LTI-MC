@@ -1,5 +1,5 @@
-import { BookSchema } from "$server/models/book";
-import { Query } from "./query";
+import type { BookSchema } from "$server/models/book";
+import type { Query } from "./query";
 
 function getTextContent(book: BookSchema): string {
   let str = book.name;

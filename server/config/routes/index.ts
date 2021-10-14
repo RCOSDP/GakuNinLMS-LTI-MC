@@ -1,4 +1,4 @@
-import { FastifyInstance } from "fastify";
+import type { FastifyInstance } from "fastify";
 import * as lti from "./lti";
 import * as user from "./user";
 import * as users from "./users";

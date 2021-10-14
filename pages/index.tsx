@@ -1,4 +1,4 @@
-import { UrlObject } from "url";
+import type { UrlObject } from "url";
 import { useRouter } from "next/router";
 import { useSessionAtom } from "$store/session";
 import UnlinkedProblem from "$templates/UnlinkedProblem";

@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from "react";
 import { useRouter } from "next/router";
-import { BookSchema } from "$server/models/book";
+import type { BookSchema } from "$server/models/book";
 import {
   usePlayerTrackerAtom,
   usePlayerTrackingAtom,
@@ -12,8 +12,8 @@ import { useSessionAtom } from "$store/session";
 import { useBook } from "$utils/book";
 import { useBookAtom } from "$store/book";
 import { useVideoAtom } from "$store/video";
-import { TopicSchema } from "$server/models/topic";
-import { ContentAuthors } from "$types/content";
+import type { TopicSchema } from "$server/models/topic";
+import type { ContentAuthors } from "$types/content";
 import { pagesPath } from "$utils/$path";
 import { useActivityTracking } from "$utils/activity";
 import logger from "$utils/eventLogger/logger";

@@ -1,5 +1,5 @@
-import { AuthorsProps } from "$server/validators/authorsProps";
-import { BookParams } from "$server/validators/bookParams";
+import type { AuthorsProps } from "$server/validators/authorsProps";
+import type { BookParams } from "$server/validators/bookParams";
 import { updateSchema, updateHooks, update } from "./update";
 
 export type Params = BookParams;

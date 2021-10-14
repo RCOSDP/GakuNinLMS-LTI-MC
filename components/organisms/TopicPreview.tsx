@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 import clsx from "clsx";
 import { useInView } from "react-intersection-observer";
 import Markdown from "react-markdown";
@@ -12,7 +12,7 @@ import EditButton from "$atoms/EditButton";
 import DescriptionList from "$atoms/DescriptionList";
 import SharedIndicator from "$atoms/SharedIndicator";
 import Video from "$organisms/Video";
-import { TopicSchema } from "$server/models/topic";
+import type { TopicSchema } from "$server/models/topic";
 import { primary, gray } from "$theme/colors";
 import useLineClampStyles from "$styles/lineClamp";
 import getLocaleDateString from "$utils/getLocaleDateString";

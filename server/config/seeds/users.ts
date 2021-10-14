@@ -1,4 +1,4 @@
-import { UserProps } from "$server/models/user";
+import type { UserProps } from "$server/models/user";
 
 const users: readonly Omit<UserProps, "ltiConsumerId">[] = [
   {

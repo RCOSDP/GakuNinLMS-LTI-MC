@@ -1,6 +1,7 @@
 import { Children } from "react";
+import type {
+  DocumentContext} from "next/document";
 import Document, {
-  DocumentContext,
   Html,
   Head,
   Main,
