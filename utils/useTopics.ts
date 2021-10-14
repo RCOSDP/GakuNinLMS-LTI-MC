@@ -14,7 +14,7 @@ import contentBy from "./contentBy";
 import { makeUserTopicsKey, fetchUserTopics } from "./userTopics";
 import { makeTopicsKey, fetchTopics } from "./topics";
 
-function sharedOrCreatedBy(
+function isDisplayable(
   topic: TopicSchema,
   isContentEditable: IsContentEditable
 ) {
@@ -31,7 +31,7 @@ const makeFilter =
     if (topic === undefined) return [];
     const isMyTopic = contentBy(topic, { id: userId ?? NaN });
     if (filter === "other" && isMyTopic) return [];
-    if (!sharedOrCreatedBy(topic, isContentEditable)) return [];
+    if (!isDisplayable(topic, isContentEditable)) return [];
     return [topic];
   };
 
