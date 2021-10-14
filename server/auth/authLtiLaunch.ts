@@ -1,9 +1,6 @@
 import type { FastifyRequest } from "fastify";
-import type {
-  LtiLaunchBody} from "$server/validators/ltiLaunchBody";
-import {
-  toSessionSchema,
-} from "$server/validators/ltiLaunchBody";
+import type { LtiLaunchBody } from "$server/validators/ltiLaunchBody";
+import { toSessionSchema } from "$server/validators/ltiLaunchBody";
 import { auth, valid } from "$server/utils/ltiv1p1/oauth";
 import prisma from "$server/utils/prisma";
 

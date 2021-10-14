@@ -1,18 +1,10 @@
 import type { Book } from "@prisma/client";
 import jsonSchema from "$server/prisma/json-schema.json";
 import { AuthorSchema } from "./author";
-import type {
-  SectionProps,
-  SectionSchema} from "./book/section";
-import {
-  sectionPropsSchema,
-  sectionSchema,
-} from "./book/section";
-import type {
-  LtiResourceLinkSchema} from "./ltiResourceLink";
-import {
-  ltiResourceLinkSchema,
-} from "./ltiResourceLink";
+import type { SectionProps, SectionSchema } from "./book/section";
+import { sectionPropsSchema, sectionSchema } from "./book/section";
+import type { LtiResourceLinkSchema } from "./ltiResourceLink";
+import { ltiResourceLinkSchema } from "./ltiResourceLink";
 
 export type BookProps = {
   name: string;

@@ -1,6 +1,6 @@
 import type { FastifySchema } from "fastify";
 import { outdent } from "outdent";
-import type { BookProps} from "$server/models/book";
+import type { BookProps } from "$server/models/book";
 import { bookPropsSchema, bookSchema } from "$server/models/book";
 import type { SessionSchema } from "$server/models/session";
 import authUser from "$server/auth/authUser";

@@ -6,11 +6,10 @@ import {
   authorArg,
   authorToAuthorSchema,
 } from "$server/utils/author/authorToAuthorSchema";
-import type {
-  TopicWithResource} from "$server/utils/topic/topicToTopicSchema";
+import type { TopicWithResource } from "$server/utils/topic/topicToTopicSchema";
 import {
   topicsWithResourcesArg,
-  topicToTopicSchema
+  topicToTopicSchema,
 } from "$server/utils/topic/topicToTopicSchema";
 import {
   ltiResourceLinkIncludingContextArg,

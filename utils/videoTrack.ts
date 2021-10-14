@@ -1,5 +1,8 @@
 import type { Resource, Track } from "@prisma/client";
-import type { VideoTrackProps, VideoTrackSchema } from "$server/models/videoTrack";
+import type {
+  VideoTrackProps,
+  VideoTrackSchema,
+} from "$server/models/videoTrack";
 import { api } from "./api";
 
 export async function uploadVideoTrack(

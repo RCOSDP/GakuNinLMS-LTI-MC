@@ -1,4 +1,4 @@
-import type { FormEvent} from "react";
+import type { FormEvent } from "react";
 import { useState } from "react";
 import useInfiniteScroll from "react-infinite-scroll-hook";
 import Skeleton from "@mui/material/Skeleton";

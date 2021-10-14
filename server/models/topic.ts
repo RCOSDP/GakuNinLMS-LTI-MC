@@ -1,12 +1,7 @@
 import type { Topic, Prisma } from "@prisma/client";
 import jsonSchema from "$server/prisma/json-schema.json";
-import type {
-  ResourceProps,
-  ResourceSchema} from "./resource";
-import {
-  resourcePropsSchema,
-  resourceSchema,
-} from "./resource";
+import type { ResourceProps, ResourceSchema } from "./resource";
+import { resourcePropsSchema, resourceSchema } from "./resource";
 import { AuthorSchema } from "./author";
 
 export type TopicProps = Pick<

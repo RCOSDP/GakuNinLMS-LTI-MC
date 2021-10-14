@@ -1,4 +1,4 @@
-import type { SetStateAction} from "react";
+import type { SetStateAction } from "react";
 import { useState } from "react";
 
 function useDialogProps<T>() {

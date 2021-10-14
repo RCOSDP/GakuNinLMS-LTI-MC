@@ -1,4 +1,4 @@
-import type { Interval} from "node-interval-tree";
+import type { Interval } from "node-interval-tree";
 import { IntervalTree as NodeIntervalTree } from "node-interval-tree";
 
 const { min, max } = Math;

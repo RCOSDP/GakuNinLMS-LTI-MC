@@ -1,4 +1,4 @@
-import type { MouseEvent} from "react";
+import type { MouseEvent } from "react";
 import { useCallback, useState } from "react";
 import Chip from "@mui/material/Chip";
 import Popover from "@mui/material/Popover";

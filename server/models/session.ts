@@ -1,8 +1,5 @@
-import type {
-  LtiResourceLinkSchema} from "./ltiResourceLink";
-import {
-  ltiResourceLinkSchema,
-} from "./ltiResourceLink";
+import type { LtiResourceLinkSchema } from "./ltiResourceLink";
+import { ltiResourceLinkSchema } from "./ltiResourceLink";
 import { UserSchema } from "$server/models/user";
 import { OauthClientSchema } from "./oauthClient";
 import { LtiVersionSchema } from "./ltiVersion";

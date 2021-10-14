@@ -1,12 +1,9 @@
 import { outdent } from "outdent";
 import type Method from "$server/types/method";
-import type { UserParams} from "$server/validators/userParams";
+import type { UserParams } from "$server/validators/userParams";
 import { userParamsSchema } from "$server/validators/userParams";
-import type {
-  PaginationProps} from "$server/validators/paginationProps";
-import {
-  paginationPropsSchema,
-} from "$server/validators/paginationProps";
+import type { PaginationProps } from "$server/validators/paginationProps";
+import { paginationPropsSchema } from "$server/validators/paginationProps";
 import authUser from "$server/auth/authUser";
 import authInstructor from "$server/auth/authInstructor";
 import { findBooksBy } from "$server/utils/user";

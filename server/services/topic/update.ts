@@ -1,12 +1,8 @@
 import type { FastifyRequest, FastifySchema } from "fastify";
 import { outdent } from "outdent";
-import type {
-  TopicProps} from "$server/models/topic";
-import {
-  topicPropsSchema,
-  topicSchema,
-} from "$server/models/topic";
-import type { TopicParams} from "$server/validators/topicParams";
+import type { TopicProps } from "$server/models/topic";
+import { topicPropsSchema, topicSchema } from "$server/models/topic";
+import type { TopicParams } from "$server/validators/topicParams";
 import { topicParamsSchema } from "$server/validators/topicParams";
 import authUser from "$server/auth/authUser";
 import authInstructor from "$server/auth/authInstructor";

@@ -1,7 +1,7 @@
 import type { FastifySchema } from "fastify";
-import type { ActivityProps} from "$server/models/activity";
+import type { ActivityProps } from "$server/models/activity";
 import { activityPropsSchema } from "$server/models/activity";
-import type { TopicParams} from "$server/validators/topicParams";
+import type { TopicParams } from "$server/validators/topicParams";
 import { topicParamsSchema } from "$server/validators/topicParams";
 import type { SessionSchema } from "$server/models/session";
 import authUser from "$server/auth/authUser";

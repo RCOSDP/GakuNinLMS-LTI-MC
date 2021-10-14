@@ -1,8 +1,5 @@
-import type {
-  ActivityTimeRangeProps} from "./activityTimeRange";
-import {
-  activityTimeRangePropsSchema,
-} from "./activityTimeRange";
+import type { ActivityTimeRangeProps } from "./activityTimeRange";
+import { activityTimeRangePropsSchema } from "./activityTimeRange";
 
 export type ActivityProps = {
   timeRanges: ActivityTimeRangeProps[];

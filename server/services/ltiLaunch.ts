@@ -1,11 +1,8 @@
 import type { FastifyRequest } from "fastify";
 import { outdent } from "outdent";
 import authLtiLaunch from "$server/auth/authLtiLaunch";
-import type {
-  LtiLaunchBody} from "$server/validators/ltiLaunchBody";
-import {
-  ltiLaunchBodySchema,
-} from "$server/validators/ltiLaunchBody";
+import type { LtiLaunchBody } from "$server/validators/ltiLaunchBody";
+import { ltiLaunchBodySchema } from "$server/validators/ltiLaunchBody";
 import init from "./init";
 
 export type Props = LtiLaunchBody;

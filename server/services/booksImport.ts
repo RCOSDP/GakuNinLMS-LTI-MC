@@ -1,7 +1,6 @@
 import type { FastifySchema } from "fastify";
 import { outdent } from "outdent";
-import type {
-  BooksImportParams} from "$server/validators/booksImportParams";
+import type { BooksImportParams } from "$server/validators/booksImportParams";
 import {
   booksImportParamsSchema,
   booksImportResultSchema,
