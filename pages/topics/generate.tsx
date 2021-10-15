@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { TopicSchema } from "$server/models/topic";
+import type { TopicSchema } from "$server/models/topic";
 import TopicNew from "$templates/TopicNew";
 import Placeholder from "$templates/Placeholder";
 import TopicNotFoundProblem from "$templates/TopicNotFoundProblem";

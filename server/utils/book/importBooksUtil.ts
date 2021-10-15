@@ -7,17 +7,18 @@ import dateFormat from "dateformat";
 import { Buffer } from "buffer";
 import scp from "node-scp";
 
-import { validate, ValidationError } from "class-validator";
-import { UserSchema } from "$server/models/user";
-import { BookSchema } from "$server/models/book";
-import {
+import type { ValidationError } from "class-validator";
+import { validate } from "class-validator";
+import type { UserSchema } from "$server/models/user";
+import type { BookSchema } from "$server/models/book";
+import type {
   BooksImportParams,
   BooksImportResult,
   ImportTopic,
   ImportSection,
   ImportBook,
-  ImportBooks,
 } from "$server/validators/booksImportParams";
+import { ImportBooks } from "$server/validators/booksImportParams";
 import prisma from "$server/utils/prisma";
 import findBook from "./findBook";
 import { parse as parseProviderUrl } from "$server/utils/videoResource";
@@ -287,7 +288,8 @@ class ImportBooksUtil {
     return {
       ...importBook,
       timeRequired: this.timeRequired,
-      creator: { connect: { id: this.user.id } },
+      // TODO: 複数著者の作成に対応してほしい
+      authors: { create: { userId: this.user.id, roleId: 1 } },
       publishedAt: new Date(importBook.publishedAt),
       createdAt: new Date(importBook.createdAt),
       updatedAt: new Date(importBook.updatedAt),
@@ -333,7 +335,8 @@ class ImportBooksUtil {
 
     const topic = {
       ...sectionTopic,
-      creator: { connect: { id: this.user.id } },
+      // TODO: 複数著者の作成に対応してほしい
+      authors: { create: { userId: this.user.id, roleId: 1 } },
       createdAt: new Date(sectionTopic.createdAt),
       updatedAt: new Date(sectionTopic.updatedAt),
       keywords: this.getKeywords(sectionTopic.keywords),

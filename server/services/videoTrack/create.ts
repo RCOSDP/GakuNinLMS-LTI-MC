@@ -1,14 +1,12 @@
 import type { FastifyRequest, FastifySchema } from "fastify";
 import { outdent } from "outdent";
+import type { VideoTrackProps } from "$server/models/videoTrack";
 import {
-  VideoTrackProps,
   videoTrackPropsSchema,
   videoTrackSchema,
 } from "$server/models/videoTrack";
-import {
-  ResourceParams,
-  resourceParamsSchema,
-} from "$server/validators/resourceParams";
+import type { ResourceParams } from "$server/validators/resourceParams";
+import { resourceParamsSchema } from "$server/validators/resourceParams";
 import authUser from "$server/auth/authUser";
 import authInstructor from "$server/auth/authInstructor";
 import createVideoTrack from "$server/utils/videoTrack/createVideoTrack";

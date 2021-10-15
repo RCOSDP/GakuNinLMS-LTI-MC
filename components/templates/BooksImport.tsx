@@ -5,7 +5,7 @@ import BooksImportForm from "$organisms/BooksImportForm";
 import BookPreview from "$organisms/BookPreview";
 import BackButton from "$atoms/BackButton";
 import useContainerStyles from "styles/container";
-import {
+import type {
   BooksImportParams,
   BooksImportResult,
 } from "$server/validators/booksImportParams";

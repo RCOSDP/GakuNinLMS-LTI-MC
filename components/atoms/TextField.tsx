@@ -1,5 +1,5 @@
-import { ComponentProps } from "react";
-import { OutlinedInputProps } from "@mui/material/OutlinedInput";
+import type { ComponentProps } from "react";
+import type { OutlinedInputProps } from "@mui/material/OutlinedInput";
 import MuiTextField from "@mui/material/TextField";
 import RequiredDot from "$atoms/RequiredDot";
 import useTextFieldStyles from "styles/textField";

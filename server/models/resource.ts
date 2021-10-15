@@ -1,11 +1,10 @@
-import { Resource } from "@prisma/client";
+import type { Resource } from "@prisma/client";
 import jsonSchema from "$server/prisma/json-schema.json";
-import {
+import type {
   VideoResourcePropsSchema,
   VideoResourceSchema,
-  videoResourcePropsSchema,
-  videoResourceSchema,
 } from "./videoResource";
+import { videoResourcePropsSchema, videoResourceSchema } from "./videoResource";
 
 export type ResourceProps = VideoResourcePropsSchema;
 

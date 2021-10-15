@@ -1,4 +1,5 @@
-import { BookSchema, bookSchema } from "$server/models/book";
+import type { BookSchema } from "$server/models/book";
+import { bookSchema } from "$server/models/book";
 import { paginationPropsSchema } from "$server/validators/paginationProps";
 
 export type UserBooksSchema = {

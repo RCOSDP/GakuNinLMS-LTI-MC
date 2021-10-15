@@ -7,8 +7,8 @@ import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import makeStyles from "@mui/styles/makeStyles";
 import RemoveButton from "$atoms/RemoveButton";
 import SectionTextField from "$atoms/SectionTextField";
-import { SectionSchema } from "$server/models/book/section";
-import { TopicSchema } from "$server/models/topic";
+import type { SectionSchema } from "$server/models/book/section";
+import type { TopicSchema } from "$server/models/topic";
 import { gray, primary } from "$theme/colors";
 import reorder, { insert, update, remove } from "$utils/reorder";
 

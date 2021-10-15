@@ -1,4 +1,4 @@
-import { BookProps } from "$server/models/book";
+import type { BookProps } from "$server/models/book";
 import prisma from "$server/utils/prisma";
 
 /**

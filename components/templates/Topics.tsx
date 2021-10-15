@@ -8,11 +8,11 @@ import ActionHeader from "$organisms/ActionHeader";
 import TopicPreview from "$organisms/TopicPreview";
 import TopicPreviewDialog from "$organisms/TopicPreviewDialog";
 import SortSelect from "$atoms/SortSelect";
-import CreatorFilter from "$atoms/CreatorFilter";
+import AuthorFilter from "$atoms/AuthorFilter";
 import SearchTextField from "$atoms/SearchTextField";
-import { TopicSchema } from "$server/models/topic";
-import { SortOrder } from "$server/models/sortOrder";
-import { Filter } from "$types/filter";
+import type { TopicSchema } from "$server/models/topic";
+import type { SortOrder } from "$server/models/sortOrder";
+import type { Filter } from "$types/filter";
 import useContainerStyles from "$styles/container";
 import useDialogProps from "$utils/useDialogProps";
 import { useSearchAtom } from "$store/search";
@@ -76,7 +76,7 @@ export default function Topics(props: Props) {
         action={
           <>
             <SortSelect onSortChange={onSortChange} />
-            <CreatorFilter onFilterChange={onFilterChange} />
+            <AuthorFilter onFilterChange={onFilterChange} />
             <SearchTextField
               label="トピック検索"
               value={query.input}

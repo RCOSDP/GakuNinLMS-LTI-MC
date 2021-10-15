@@ -1,4 +1,5 @@
-import { ChangeEvent, useCallback, useState } from "react";
+import type { ChangeEvent } from "react";
+import { useCallback, useState } from "react";
 import Card from "@mui/material/Card";
 import Checkbox from "@mui/material/Checkbox";
 import Divider from "@mui/material/Divider";

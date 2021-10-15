@@ -1,11 +1,11 @@
-import { FastifySchema } from "fastify";
+import type { FastifySchema } from "fastify";
 import { outdent } from "outdent";
+import type { BooksImportParams } from "$server/validators/booksImportParams";
 import {
-  BooksImportParams,
   booksImportParamsSchema,
   booksImportResultSchema,
 } from "$server/validators/booksImportParams";
-import { SessionSchema } from "$server/models/session";
+import type { SessionSchema } from "$server/models/session";
 import authUser from "$server/auth/authUser";
 import authInstructor from "$server/auth/authInstructor";
 import importBooksUtil from "$server/utils/book/importBooksUtil";

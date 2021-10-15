@@ -11,8 +11,9 @@ import BackButton from "$atoms/BackButton";
 import useContainerStyles from "styles/container";
 import type { BookSchema } from "$server/models/book";
 import type { BookPropsWithSubmitOptions } from "$types/bookPropsWithSubmitOptions";
-import { SectionProps } from "$server/models/book/section";
-import { TopicSchema } from "$server/models/topic";
+import type { SectionProps } from "$server/models/book/section";
+import type { TopicSchema } from "$server/models/topic";
+import type { IsContentEditable } from "$types/content";
 import { useConfirm } from "material-ui-confirm";
 import useDialogProps from "$utils/useDialogProps";
 
@@ -51,7 +52,7 @@ type Props = {
   onTopicNewClick(): void;
   onTopicEditClick?(topic: TopicSchema): void;
   onBookImportClick(): void;
-  isContentEditable?(topic: Pick<TopicSchema, "creator">): boolean | undefined;
+  isContentEditable?: IsContentEditable;
   linked?: boolean;
 };
 

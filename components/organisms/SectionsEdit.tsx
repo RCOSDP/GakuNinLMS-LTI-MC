@@ -15,8 +15,9 @@ import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import makeStyles from "@mui/styles/makeStyles";
 import SectionsTree from "$molecules/SectionsTree";
 import DraggableSections from "$molecules/DraggableSections";
-import { SectionSchema } from "$server/models/book/section";
-import { TopicSchema } from "$server/models/topic";
+import type { SectionSchema } from "$server/models/book/section";
+import type { TopicSchema } from "$server/models/topic";
+import type { IsContentEditable } from "$types/content";
 import useCardStyles from "$styles/card";
 import useSortableSectionsProps from "$utils/useSortableSectionsProps";
 
@@ -76,7 +77,7 @@ type Props = {
   onSectionsUpdate(sections: SectionSchema[]): void;
   onTopicPreviewClick(topic: TopicSchema): void;
   onTopicEditClick?(topic: TopicSchema): void;
-  isContentEditable?(topic: Pick<TopicSchema, "creator">): boolean | undefined;
+  isContentEditable?: IsContentEditable;
 };
 
 export default function SectionsEdit(props: Props) {

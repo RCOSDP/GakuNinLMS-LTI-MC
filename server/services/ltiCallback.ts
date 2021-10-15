@@ -1,8 +1,8 @@
-import { FastifyRequest } from "fastify";
+import type { FastifyRequest } from "fastify";
 import { outdent } from "outdent";
 import { validateOrReject } from "class-validator";
-import { SessionSchema } from "$server/models/session";
-import { LtiLaunchPresentationSchema } from "$server/models/ltiLaunchPresentation";
+import type { SessionSchema } from "$server/models/session";
+import type { LtiLaunchPresentationSchema } from "$server/models/ltiLaunchPresentation";
 import findClient from "$server/utils/ltiv1p3/findClient";
 import init from "./init";
 import { LtiCallbackBody } from "$server/validators/ltiCallbackBody";

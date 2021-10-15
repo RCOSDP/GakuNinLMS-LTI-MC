@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from "react";
 import { useRouter } from "next/router";
-import { BookSchema } from "$server/models/book";
+import type { BookSchema } from "$server/models/book";
 import {
   usePlayerTrackerAtom,
   usePlayerTrackingAtom,
@@ -12,7 +12,8 @@ import { useSessionAtom } from "$store/session";
 import { useBook } from "$utils/book";
 import { useBookAtom } from "$store/book";
 import { useVideoAtom } from "$store/video";
-import { TopicSchema } from "$server/models/topic";
+import type { TopicSchema } from "$server/models/topic";
+import type { ContentAuthors } from "$types/content";
 import { pagesPath } from "$utils/$path";
 import { useActivityTracking } from "$utils/activity";
 import logger from "$utils/eventLogger/logger";
@@ -65,7 +66,9 @@ function Show(query: Query) {
   const handleOtherBookLinkClick = () => {
     return router.push(pagesPath.books.$url());
   };
-  const handleTopicEditClick = (topic: Pick<TopicSchema, "id" | "creator">) => {
+  const handleTopicEditClick = (
+    topic: Pick<TopicSchema, "id"> & ContentAuthors
+  ) => {
     const action = isContentEditable(topic) ? "edit" : "generate";
     const url = pagesPath.book.topic[action].$url({
       query: { ...query, topicId: topic.id },

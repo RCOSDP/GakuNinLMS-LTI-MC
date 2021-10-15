@@ -1,4 +1,4 @@
-import {
+import type {
   FastifyRequest,
   FastifyReply,
   RawRequestDefaultExpression,
@@ -6,8 +6,8 @@ import {
   RawServerDefault,
   RawReplyDefaultExpression,
 } from "fastify";
-import { RouteGenericInterface } from "fastify/types/route";
-import Controller from "$server/types/controller";
+import type { RouteGenericInterface } from "fastify/types/route";
+import type Controller from "$server/types/controller";
 
 const handler =
   <

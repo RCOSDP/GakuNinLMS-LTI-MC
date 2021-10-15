@@ -1,6 +1,6 @@
 import type { EventType } from "$server/models/event";
 import { api } from "$utils/api";
-import { PlayerEvent, PlayerEvents, PlayerTracker } from "./playerTracker";
+import type { PlayerEvent, PlayerEvents, PlayerTracker } from "./playerTracker";
 import { load } from "./loggerSessionPersister";
 import getFilePath from "./getFilePath";
 

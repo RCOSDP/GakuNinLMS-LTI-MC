@@ -1,4 +1,4 @@
-import { ComponentProps } from "react";
+import type { ComponentProps } from "react";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Container from "@mui/material/Container";

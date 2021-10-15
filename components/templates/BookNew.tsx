@@ -40,7 +40,8 @@ type Props = {
 export default function BookNew(props: Props) {
   const { book, onSubmit, onCancel } = props;
   const { isContentEditable } = useSessionAtom();
-  const forkFrom = book && !isContentEditable(book) && book.creator;
+  const forkFrom =
+    book && !isContentEditable(book) && book.authors.length > 0 && book.authors;
   const defaultBook = book && {
     ...book,
     ...(forkFrom && { name: [book.name, "フォーク"].join("_") }),
@@ -64,7 +65,8 @@ export default function BookNew(props: Props) {
       </Typography>
       {forkFrom && (
         <Alert className={classes.alert} severity="info">
-          {forkFrom.name} さんが作成したブックをフォークしようとしています
+          {forkFrom.map(({ name }) => `${name} さん`).join("、")}
+          のブックをフォークしようとしています
         </Alert>
       )}
       <BookForm book={defaultBook} variant="create" onSubmit={onSubmit} />

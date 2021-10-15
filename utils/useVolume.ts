@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from "react";
 import useSWRImmutable from "swr/immutable";
 import { useDebouncedCallback } from "use-debounce";
-import { VideoJsPlayer } from "video.js";
+import type { VideoJsPlayer } from "video.js";
 import VimeoPlayer from "@vimeo/player";
 
 type Player = VideoJsPlayer | VimeoPlayer;

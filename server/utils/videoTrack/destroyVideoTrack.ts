@@ -1,4 +1,4 @@
-import { Track } from "@prisma/client";
+import type { Track } from "@prisma/client";
 import prisma from "$server/utils/prisma";
 
 async function destroyVideoTrack(id: Track["id"]) {

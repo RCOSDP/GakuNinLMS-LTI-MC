@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Filter } from "$types/filter";
+import type { Filter } from "$types/filter";
 
 const useFilter = () => useState<Filter>("self");
 

@@ -9,12 +9,12 @@ import AddIcon from "@mui/icons-material/Add";
 import ActionHeader from "$organisms/ActionHeader";
 import BookPreview from "$organisms/BookPreview";
 import SortSelect from "$atoms/SortSelect";
-import CreatorFilter from "$atoms/CreatorFilter";
+import AuthorFilter from "$atoms/AuthorFilter";
 import SearchTextField from "$atoms/SearchTextField";
 import type { BookSchema } from "$server/models/book";
 import type { LinkedBook } from "$types/linkedBook";
-import { SortOrder } from "$server/models/sortOrder";
-import { Filter } from "$types/filter";
+import type { SortOrder } from "$server/models/sortOrder";
+import type { Filter } from "$types/filter";
 import useContainerStyles from "styles/container";
 import useCardStyles from "$styles/card";
 import { useSearchAtom } from "$store/search";
@@ -137,7 +137,7 @@ export default function Books(props: Props) {
         action={
           <>
             <SortSelect onSortChange={onSortChange} />
-            <CreatorFilter onFilterChange={onFilterChange} />
+            <AuthorFilter onFilterChange={onFilterChange} />
             <SearchTextField
               label="ブック・トピック検索"
               value={query.input}

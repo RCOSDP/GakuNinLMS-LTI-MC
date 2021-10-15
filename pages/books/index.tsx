@@ -10,6 +10,7 @@ import { pagesPath } from "$utils/$path";
 import { updateLtiResourceLink } from "$utils/ltiResourceLink";
 import getLtiResourceLink from "$utils/getLtiResourceLink";
 import useDialogProps from "$utils/useDialogProps";
+import type { ContentAuthors } from "$types/content";
 
 const Books = (
   props: Omit<
@@ -29,7 +30,9 @@ function Index() {
     dispatch,
   } = useDialogProps<BookSchema>();
   const handleBookPreviewClick = (book: BookSchema) => dispatch(book);
-  const handleBookEditClick = (book: Pick<BookSchema, "id" | "creator">) => {
+  const handleBookEditClick = (
+    book: Pick<BookSchema, "id"> & ContentAuthors
+  ) => {
     const action = isContentEditable(book) ? "edit" : "generate";
     return router.push(
       pagesPath.book[action].$url({

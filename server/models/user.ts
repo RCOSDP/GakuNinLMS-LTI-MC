@@ -1,5 +1,5 @@
-import { User } from "@prisma/client";
-import { FromSchema } from "json-schema-to-ts";
+import type { User } from "@prisma/client";
+import type { FromSchema } from "json-schema-to-ts";
 
 export type UserProps = Omit<User, "id" | "settings">;
 

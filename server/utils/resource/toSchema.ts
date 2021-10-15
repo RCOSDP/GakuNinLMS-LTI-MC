@@ -1,5 +1,5 @@
-import { Prisma } from "@prisma/client";
-import { ResourceSchema } from "$server/models/resource";
+import type { Prisma } from "@prisma/client";
+import type { ResourceSchema } from "$server/models/resource";
 import { API_BASE_PATH } from "$server/utils/env";
 
 export const resourceWithVideoArg = {

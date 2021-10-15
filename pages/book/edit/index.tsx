@@ -3,6 +3,7 @@ import type { BookSchema } from "$server/models/book";
 import type { BookPropsWithSubmitOptions } from "$types/bookPropsWithSubmitOptions";
 import type { SectionProps } from "$server/models/book/section";
 import type { TopicSchema } from "$server/models/topic";
+import type { ContentAuthors } from "$types/content";
 import { useSessionAtom } from "$store/session";
 import BookEdit from "$templates/BookEdit";
 import Placeholder from "$templates/Placeholder";
@@ -58,7 +59,9 @@ function Edit({ bookId, context }: Query) {
       sections: sections.filter((section) => section.topics.length > 0),
     });
   }
-  function handleTopicEditClick(topic: Pick<TopicSchema, "id" | "creator">) {
+  function handleTopicEditClick(
+    topic: Pick<TopicSchema, "id"> & ContentAuthors
+  ) {
     const action = isContentEditable(topic) ? "edit" : "generate";
     const url = pagesPath.book.edit.topic[action].$url({
       query: { ...query, topicId: topic.id },

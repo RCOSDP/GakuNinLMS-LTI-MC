@@ -13,6 +13,7 @@ import type { TopicSchema } from "$server/models/topic";
 import type { Query as BookEditQuery } from "../edit";
 import { pagesPath } from "$utils/$path";
 import useDialogProps from "$utils/useDialogProps";
+import type { ContentAuthors } from "$types/content";
 
 export type Query = BookEditQuery;
 
@@ -54,7 +55,7 @@ function Import({ bookId, context }: Query) {
   function handleBookPreviewClick(book: BookSchema) {
     dispatch(book);
   }
-  function handleBookEditClick(book: Pick<BookSchema, "id" | "creator">) {
+  function handleBookEditClick(book: Pick<BookSchema, "id"> & ContentAuthors) {
     // TODO: ブックインポート画面で自身以外のブックへの経路を提供しないならば不要なので取り除きましょう
     const action = isContentEditable(book) ? "edit" : "generate";
     return router.push(

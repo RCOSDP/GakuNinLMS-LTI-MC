@@ -1,4 +1,4 @@
-import { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
+import type { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
 
 const ltiResourceLinks: readonly Omit<
   LtiResourceLinkSchema,

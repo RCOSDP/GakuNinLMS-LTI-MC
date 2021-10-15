@@ -46,7 +46,11 @@ export default function TopicNew(props: Props) {
   const { topic, onSubmit, onSubtitleDelete, onSubtitleSubmit, onCancel } =
     props;
   const { isContentEditable } = useSessionAtom();
-  const forkFrom = topic && !isContentEditable(topic) && topic.creator;
+  const forkFrom =
+    topic &&
+    !isContentEditable(topic) &&
+    topic.authors.length > 0 &&
+    topic.authors;
   const defaultTopic = topic && {
     ...topic,
     ...(forkFrom && { name: [topic.name, "フォーク"].join("_") }),
@@ -70,7 +74,8 @@ export default function TopicNew(props: Props) {
       </Typography>
       {forkFrom && (
         <Alert className={classes.alert} severity="info">
-          {forkFrom.name} さんが作成したトピックをフォークしようとしています
+          {forkFrom.map(({ name }) => `${name} さん`).join("、")}
+          のトピックをフォークしようとしています
         </Alert>
       )}
       <TopicForm

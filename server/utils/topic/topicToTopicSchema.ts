@@ -1,5 +1,5 @@
-import { Prisma } from "@prisma/client";
-import { TopicSchema } from "$server/models/topic";
+import type { Prisma } from "@prisma/client";
+import type { TopicSchema } from "$server/models/topic";
 import {
   authorArg,
   authorToAuthorSchema,
@@ -12,7 +12,6 @@ import {
 export const topicsWithResourcesArg = {
   include: {
     authors: authorArg,
-    creator: true,
     resource: resourceWithVideoArg,
   },
 } as const;

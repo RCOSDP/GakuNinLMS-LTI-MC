@@ -1,21 +1,18 @@
 import { atom } from "jotai";
 import { useAtomValue, useUpdateAtom } from "jotai/utils";
-import type { TopicSchema } from "$server/models/topic";
-import type { BookSchema } from "$server/models/book";
 import type { SessionSchema } from "$server/models/session";
+import type { ContentAuthors, IsContentEditable } from "$types/content";
 import {
   isAdministrator as isAdministratorSession,
   isInstructor as isInstructorSession,
 } from "$utils/session";
-import contentCreateBy from "$utils/contentCreateBy";
+import contentBy from "$utils/contentBy";
 
 type SessionWithState = {
   session: SessionSchema | undefined;
   isAdministrator: boolean;
   isInstructor: boolean;
-  isContentEditable: (
-    content: Pick<BookSchema, "creator"> | Pick<TopicSchema, "creator">
-  ) => boolean;
+  isContentEditable: IsContentEditable;
   error: boolean;
 };
 
@@ -37,10 +34,8 @@ const updateSessionAtom = atom<
     session,
     isAdministrator,
     isInstructor,
-    isContentEditable(
-      content: Pick<BookSchema, "creator"> | Pick<TopicSchema, "creator">
-    ) {
-      return isAdministrator || contentCreateBy(content, session?.user);
+    isContentEditable(content: ContentAuthors) {
+      return isAdministrator || contentBy(content, session?.user);
     },
     error,
   };

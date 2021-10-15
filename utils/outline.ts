@@ -1,5 +1,5 @@
-import { SectionSchema } from "$server/models/book/section";
-import { TopicSchema } from "$server/models/topic";
+import type { SectionSchema } from "$server/models/book/section";
+import type { TopicSchema } from "$server/models/topic";
 
 export function isNamedSection(
   section: Pick<SectionSchema, "name" | "topics">

@@ -1,5 +1,5 @@
-import { UserSchema } from "$server/models/user";
-import { BookProps, BookSchema } from "$server/models/book";
+import type { UserSchema } from "$server/models/user";
+import type { BookProps, BookSchema } from "$server/models/book";
 import prisma from "$server/utils/prisma";
 import aggregateTimeRequired from "./aggregateTimeRequired";
 import findBook from "./findBook";
@@ -18,7 +18,6 @@ async function createBook(
       timeRequired,
       details: {},
       authors: { create: { userId, roleId: 1 } },
-      creator: { connect: { id: userId } },
       sections: { create: sectionsCreateInput },
     },
   });

@@ -1,5 +1,5 @@
-import { LtiResourceLinkProps } from "$server/models/ltiResourceLink";
-import { LtiResourceLinkParams } from "$server/validators/ltiResourceLinkParams";
+import type { LtiResourceLinkProps } from "$server/models/ltiResourceLink";
+import type { LtiResourceLinkParams } from "$server/validators/ltiResourceLinkParams";
 import { showSchema, showHooks, show } from "./show";
 import { updateSchema, updateHooks, update } from "./update";
 import { destroySchema, destroyHooks, destroy } from "./destroy";

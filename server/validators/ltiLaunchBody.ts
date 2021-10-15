@@ -1,5 +1,5 @@
-import { LtiLaunchPresentationSchema } from "$server/models/ltiLaunchPresentation";
-import { SessionSchema } from "$server/models/session";
+import type { LtiLaunchPresentationSchema } from "$server/models/ltiLaunchPresentation";
+import type { SessionSchema } from "$server/models/session";
 import { IsNotEmpty, IsOptional, IsString } from "class-validator";
 import { validationMetadatasToSchemas } from "class-validator-jsonschema";
 

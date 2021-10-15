@@ -4,7 +4,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import makeStyles from "@mui/styles/makeStyles";
 import DescriptionList from "$atoms/DescriptionList";
-import { SessionSchema } from "$server/models/session";
+import type { SessionSchema } from "$server/models/session";
 import useCardStyles from "$styles/card";
 
 const useStyles = makeStyles((theme) => ({

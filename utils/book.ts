@@ -3,8 +3,9 @@ import useSWR, { mutate } from "swr";
 import { api } from "./api";
 import type { BookProps, BookSchema } from "$server/models/book";
 import type { TopicSchema } from "$server/models/topic";
+import type { IsContentEditable } from "$types/content";
 import { revalidateSession } from "./session";
-import { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
+import type { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
 import getDisplayableBook from "./getDisplayableBook";
 
 const key = "/api/v2/book/{book_id}";
@@ -16,9 +17,7 @@ async function fetchBook(_: typeof key, id: BookSchema["id"]) {
 
 export function useBook(
   id: BookSchema["id"] | undefined,
-  isContentEditable: (
-    content: Pick<BookSchema, "creator"> | Pick<TopicSchema, "creator">
-  ) => boolean,
+  isContentEditable: IsContentEditable,
   ltiResourceLink?: Pick<LtiResourceLinkSchema, "bookId" | "creatorId"> | null
 ) {
   const { data, error } = useSWR<BookSchema>(

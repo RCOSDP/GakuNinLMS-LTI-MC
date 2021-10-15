@@ -1,6 +1,6 @@
-import { Book } from "@prisma/client";
-import { BookProps, BookSchema } from "$server/models/book";
-import { SectionProps } from "$server/models/book/section";
+import type { Book } from "@prisma/client";
+import type { BookProps, BookSchema } from "$server/models/book";
+import type { SectionProps } from "$server/models/book/section";
 import prisma from "$server/utils/prisma";
 import aggregateTimeRequired from "./aggregateTimeRequired";
 import findBook from "./findBook";

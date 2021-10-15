@@ -1,5 +1,6 @@
 export default { title: "atoms/TextField" };
-import { useState, ChangeEvent } from "react";
+import type { ChangeEvent } from "react";
+import { useState } from "react";
 import TextField from "./TextField";
 import MuiTextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";

@@ -1,4 +1,5 @@
-import { useState, forwardRef, ComponentProps, Ref } from "react";
+import type { ComponentProps, Ref } from "react";
+import { useState, forwardRef } from "react";
 import MuiAppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Button from "@mui/material/Button";
@@ -11,7 +12,7 @@ import clsx from "clsx";
 import AppBarNavButton from "$atoms/AppBarNavButton";
 import LtiItemDialog from "$organisms/LtiItemDialog";
 import useAppBarStyles from "$styles/appBar";
-import { SessionSchema } from "$server/models/session";
+import type { SessionSchema } from "$server/models/session";
 import { gray } from "$theme/colors";
 import { isAdministrator, isInstructor } from "$utils/session";
 import { NEXT_PUBLIC_BASE_PATH } from "$utils/env";

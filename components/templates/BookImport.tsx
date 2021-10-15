@@ -1,4 +1,5 @@
-import { FormEvent, useState } from "react";
+import type { FormEvent } from "react";
+import { useState } from "react";
 import useInfiniteScroll from "react-infinite-scroll-hook";
 import Skeleton from "@mui/material/Skeleton";
 import makeStyles from "@mui/styles/makeStyles";
@@ -13,13 +14,14 @@ import ActionHeader from "$organisms/ActionHeader";
 import ActionFooter from "$organisms/ActionFooter";
 import BookTree from "$organisms/BookTree";
 import SortSelect from "$atoms/SortSelect";
-import CreatorFilter from "$atoms/CreatorFilter";
+import AuthorFilter from "$atoms/AuthorFilter";
 import SearchTextField from "$atoms/SearchTextField";
-import { BookSchema } from "$server/models/book";
-import { SectionSchema } from "$server/models/book/section";
-import { TopicSchema } from "$server/models/topic";
-import { SortOrder } from "$server/models/sortOrder";
-import { Filter } from "$types/filter";
+import type { BookSchema } from "$server/models/book";
+import type { SectionSchema } from "$server/models/book/section";
+import type { TopicSchema } from "$server/models/topic";
+import type { SortOrder } from "$server/models/sortOrder";
+import type { Filter } from "$types/filter";
+import type { IsContentEditable } from "$types/content";
 import useContainerStyles from "$styles/container";
 import { useSearchAtom } from "$store/search";
 import useDialogProps from "$utils/useDialogProps";
@@ -60,9 +62,7 @@ type Props = {
   onTopicEditClick?(topic: TopicSchema): void;
   onSortChange?(sort: SortOrder): void;
   onFilterChange?(filter: Filter): void;
-  isContentEditable?(
-    book: Pick<BookSchema, "creator"> | Pick<TopicSchema, "creator">
-  ): boolean | undefined;
+  isContentEditable?: IsContentEditable;
 };
 
 export default function BookImport(props: Props) {
@@ -144,7 +144,7 @@ export default function BookImport(props: Props) {
         action={
           <>
             <SortSelect onSortChange={onSortChange} />
-            <CreatorFilter onFilterChange={onFilterChange} />
+            <AuthorFilter onFilterChange={onFilterChange} />
             <SearchTextField
               label="ブック・トピック検索"
               value={query.input}

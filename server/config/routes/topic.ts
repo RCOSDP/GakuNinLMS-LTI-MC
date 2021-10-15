@@ -1,4 +1,4 @@
-import { FastifyInstance } from "fastify";
+import type { FastifyInstance } from "fastify";
 import makeHooks from "$server/utils/makeHooks";
 import handler from "$server/utils/handler";
 import * as service from "$server/services/topic";

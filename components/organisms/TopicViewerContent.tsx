@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { TopicSchema } from "$server/models/topic";
+import type { TopicSchema } from "$server/models/topic";
 import Typography from "@mui/material/Typography";
 import Chip from "@mui/material/Chip";
 import { useTheme } from "@mui/material/styles";
@@ -106,8 +106,9 @@ export default function TopicViewerContent({ topic, onEnded, offset }: Props) {
             value: getLocaleDateString(topic.updatedAt, "ja"),
           },
           {
-            key: "トピック作成者",
-            value: topic.creator.name,
+            key: "著者",
+            // TODO: 複数著者の表示に対応してほしい
+            value: topic.authors[0]?.name ?? "-",
           },
         ]}
       />

@@ -1,12 +1,9 @@
 import { AuthorSchema } from "$server/models/author";
-import { AuthorsProps } from "$server/validators/authorsProps";
-import { Topic, Book } from "@prisma/client";
+import type { AuthorsProps } from "$server/validators/authorsProps";
+import type { Topic, Book } from "@prisma/client";
 import prisma from "$server/utils/prisma";
-import {
-  Authorship,
-  authorArg,
-  authorToAuthorSchema,
-} from "./authorToAuthorSchema";
+import type { Authorship } from "./authorToAuthorSchema";
+import { authorArg, authorToAuthorSchema } from "./authorToAuthorSchema";
 
 export function authorsUpdater(
   contentType: "topic" | "book",

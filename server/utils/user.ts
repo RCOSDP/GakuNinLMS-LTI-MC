@@ -33,36 +33,48 @@ export async function findUsersByEmail(email: User["email"]) {
   return await prisma.user.findMany({ where: { email } });
 }
 
-export async function findCreatedBooks(
-  userId: User["id"],
+export async function findBooksBy(
+  by: User["id"],
   sort = "updated",
   page: number,
   perPage: number
 ): Promise<BookSchema[]> {
-  const user = prisma.user.findUnique({ where: { id: userId } });
-  const books = await user.createdBooks({
-    ...bookIncludingTopicsArg,
-    orderBy: makeSortOrderQuery(sort),
+  const authorship = await prisma.authorship.findMany({
+    where: { userId: by },
+    include: {
+      book: bookIncludingTopicsArg,
+    },
+    orderBy: {
+      book: makeSortOrderQuery(sort),
+    },
     skip: page * perPage,
     take: perPage,
   });
 
-  return books.map(bookToBookSchema);
+  return authorship.flatMap(({ book }) =>
+    book == null ? [] : [bookToBookSchema(book)]
+  );
 }
 
-export async function findCreatedTopics(
-  userId: User["id"],
+export async function findTopicsBy(
+  by: User["id"],
   sort = "updated",
   page: number,
   perPage: number
 ): Promise<TopicSchema[]> {
-  const user = prisma.user.findUnique({ where: { id: userId } });
-  const topics = await user.createdTopics({
-    ...topicsWithResourcesArg,
-    orderBy: makeSortOrderQuery(sort),
+  const authorship = await prisma.authorship.findMany({
+    where: { userId: by },
+    include: {
+      topic: topicsWithResourcesArg,
+    },
+    orderBy: {
+      topic: makeSortOrderQuery(sort),
+    },
     skip: page * perPage,
     take: perPage,
   });
 
-  return topics.map(topicToTopicSchema);
+  return authorship.flatMap(({ topic }) =>
+    topic == null ? [] : [topicToTopicSchema(topic)]
+  );
 }

@@ -1,4 +1,4 @@
-import { Book } from "@prisma/client";
+import type { Book } from "@prisma/client";
 import prisma from "$server/utils/prisma";
 import cleanupSections from "./cleanupSections";
 
