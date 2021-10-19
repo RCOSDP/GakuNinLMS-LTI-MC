@@ -12,6 +12,7 @@
     "server"
   ],
   "devDependencies": {
+    "@emotion/css": "^11.5.0",
     "@emotion/react": "^11.4.1",
     "@emotion/styled": "^11.3.0",
     "@meikidd/videojs-hlsjs-plugin": "^1.0.18",
