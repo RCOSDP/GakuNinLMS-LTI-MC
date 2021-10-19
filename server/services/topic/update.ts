@@ -11,6 +11,7 @@ import topicExists from "$server/utils/topic/topicExists";
 import upsertTopic from "$server/utils/topic/upsertTopic";
 import isValidVideoResource from "$server/utils/isValidVideoResource";
 import { WOWZA_BASE_URL } from "$server/utils/env";
+import updateBookTimeRequired from "$server/utils/topic/updateBookTimeRequired";
 
 export const updateSchema: FastifySchema = {
   summary: "トピックの更新",
@@ -57,8 +58,12 @@ export async function update({
     id: params.topic_id,
   });
 
+  if (created == null) return { status: 400 };
+
+  await updateBookTimeRequired(created.id);
+
   return {
-    status: created == null ? 400 : 201,
+    status: 201,
     body: created,
   };
 }
