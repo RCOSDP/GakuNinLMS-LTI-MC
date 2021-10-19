@@ -1,6 +1,8 @@
 import makeStyles from "@mui/styles/makeStyles";
 import gray from "theme/colors/gray";
 
+// TODO: makeStylesからstyledに移行したい
+
 const input = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.common.white,
