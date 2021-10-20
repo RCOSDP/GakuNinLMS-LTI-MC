@@ -9,7 +9,11 @@ type Props = {
   zIndex?: number;
 };
 
-function useSticky({ backgroundColor, offset, zIndex }: Props) {
+function useSticky({
+  backgroundColor = "transparent",
+  offset = "0",
+  zIndex = 1,
+}: Props) {
   const theme = useTheme();
   const classes = {
     sticky: css({
