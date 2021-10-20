@@ -1,32 +1,34 @@
-import makeStyles from "@mui/styles/makeStyles";
+import type { Theme } from "@mui/material";
+import { inputLabelClasses } from "@mui/material/InputLabel";
 import gray from "theme/colors/gray";
 
-// TODO: makeStylesからstyledに移行したい
-
-const inputLabel = makeStyles((theme) => ({
-  root: {
+const inputLabel = (theme: Theme) => ({
+  [`.${inputLabelClasses.root}`]: {
     color: gray[700],
     fontSize: 16,
-    "& .RequiredDot": {
-      display: "none",
+    [`&.${inputLabelClasses.focused}`]: {
+      color: theme.palette.primary.main,
     },
-    "&$required .RequiredDot": {
+  },
+  [`.${inputLabelClasses.formControl}`]: {
+    position: "static",
+  },
+  [`.${inputLabelClasses.shrink}`]: {
+    transform: "none",
+  },
+  [`.${inputLabelClasses.required}`]: {
+    ".RequiredDot": {
       display: "inline",
       marginLeft: theme.spacing(0.5),
       marginBottom: theme.spacing(0.75),
     },
-    "&$required $asterisk": {
+    [`.${inputLabelClasses.asterisk}`]: {
       display: "none",
     },
   },
-  formControl: {
-    position: "static",
+  ".RequiredDot": {
+    display: "none",
   },
-  shrink: {
-    transform: "none",
-  },
-  required: {},
-  asterisk: {},
-}));
+});
 
 export default inputLabel;

@@ -4,7 +4,6 @@ import Card from "@mui/material/Card";
 import Checkbox from "@mui/material/Checkbox";
 import Divider from "@mui/material/Divider";
 import Button from "@mui/material/Button";
-import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
@@ -13,12 +12,12 @@ import Autocomplete from "$atoms/Autocomplete";
 import { useForm } from "react-hook-form";
 import { useDebouncedCallback } from "use-debounce";
 import clsx from "clsx";
+import InputLabel from "$atoms/InputLabel";
 import TextField from "$atoms/TextField";
 import SubtitleChip from "$atoms/SubtitleChip";
 import SubtitleUploadDialog from "$organisms/SubtitleUploadDialog";
 import Video from "$organisms/Video";
 import useCardStyles from "styles/card";
-import useInputLabelStyles from "styles/inputLabel";
 import gray from "theme/colors/gray";
 import type { TopicProps, TopicSchema } from "$server/models/topic";
 import type {
@@ -77,7 +76,6 @@ export default function TopicForm(props: Props) {
     onSubtitleDelete,
   } = props;
   const cardClasses = useCardStyles();
-  const inputLabelClasses = useInputLabelStyles();
   const classes = useStyles();
   const { videoResource, setUrl } = useVideoResourceProps(topic?.resource);
   const handleResourceUrlChange = useDebouncedCallback(
@@ -152,9 +150,7 @@ export default function TopicForm(props: Props) {
           fullWidth
         />
         <div>
-          <InputLabel classes={inputLabelClasses} htmlFor="shared">
-            他の教員にシェア
-          </InputLabel>
+          <InputLabel htmlFor="shared">他の教員にシェア</InputLabel>
           <Checkbox
             id="shared"
             name="shared"
@@ -220,7 +216,7 @@ export default function TopicForm(props: Props) {
           }}
         />
         <div>
-          <InputLabel classes={inputLabelClasses}>字幕</InputLabel>
+          <InputLabel>字幕</InputLabel>
           <div className={classes.subtitles}>
             {videoTracks.map((track) => (
               <SubtitleChip

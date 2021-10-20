@@ -1,45 +1,28 @@
-export default { title: "atoms/TextField" };
-import type { ChangeEvent } from "react";
-import { useState } from "react";
+import type { Story } from "@storybook/react";
 import TextField from "./TextField";
-import MuiTextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 
-export const Default = () => (
-  <TextField defaultValue="customized text field" label="customized label" />
-);
+export default { title: "atoms/TextField", component: TextField };
 
-export const Required = () => (
-  <TextField
-    defaultValue="customized text field"
-    label="customized label"
-    required
-  />
-);
-
-export const Select = () => {
+const Template: Story<Parameters<typeof TextField>[0]> = (args) => {
   const options = [{ value: "a" }, { value: "b" }, { value: "c" }] as const;
-  const [value, setValue] = useState("a");
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setValue(event.target.value);
-  };
-
   return (
-    <TextField
-      select
-      value={value}
-      onChange={handleChange}
-      label="customized label"
-    >
-      {options.map((option) => (
-        <MenuItem key={option.value} value={option.value}>
-          {option.value}
-        </MenuItem>
-      ))}
+    <TextField {...args} defaultValue={args.select ? "a" : args.defaultValue}>
+      {args.select &&
+        options.map((option) => (
+          <MenuItem key={option.value} value={option.value}>
+            {option.value}
+          </MenuItem>
+        ))}
     </TextField>
   );
 };
 
-export const MaterialUi = () => (
-  <MuiTextField defaultValue="original text field" label="original label" />
-);
+export const Default = Template.bind({});
+Default.args = {
+  defaultValue: "customized text field",
+  label: "customized label",
+  multiline: false,
+  required: false,
+  select: false,
+};
