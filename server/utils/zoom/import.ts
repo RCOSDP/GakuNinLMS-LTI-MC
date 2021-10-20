@@ -5,7 +5,7 @@ import utcToZoneTime from "date-fns-tz/utcToZonedTime";
 
 import prisma from "$server/utils/prisma";
 import type { User } from "@prisma/client";
-import type { UserSettings } from "$server/validators/userSettings";
+import type { UserSettingsProp } from "$server/validators/userSettings";
 import { findUserByEmailAndLtiConsumerId } from "$server/utils/user";
 import { scpUpload } from "$server/utils/wowza/scpUpload";
 import { findZoomMeeting } from "$server/utils/zoom/findZoomMeeting";
@@ -27,7 +27,7 @@ import {
   ZOOM_IMPORT_AUTODELETE,
 } from "$server/utils/env";
 
-export function validateSettings() {
+export function validateSettings(logging = true) {
   if (
     !ZOOM_API_KEY ||
     !ZOOM_API_SECRET ||
@@ -35,21 +35,23 @@ export function validateSettings() {
     !ZOOM_IMPORT_INTERVAL ||
     !ZOOM_IMPORT_TO
   ) {
-    logger(
-      "INFO",
-      `zoom import is not disabled. ZOOM_API_KEY:${ZOOM_API_KEY} ZOOM_API_SECRET:${ZOOM_API_SECRET} ZOOM_IMPORT_CONSUMER_KEY:${ZOOM_IMPORT_CONSUMER_KEY} ZOOM_IMPORT_INTERVAL:${ZOOM_IMPORT_INTERVAL} ZOOM_IMPORT_TO:${ZOOM_IMPORT_TO}`
-    );
+    if (logging)
+      logger(
+        "INFO",
+        `zoom import is disabled. ZOOM_API_KEY:${ZOOM_API_KEY} ZOOM_API_SECRET:${ZOOM_API_SECRET} ZOOM_IMPORT_CONSUMER_KEY:${ZOOM_IMPORT_CONSUMER_KEY} ZOOM_IMPORT_INTERVAL:${ZOOM_IMPORT_INTERVAL} ZOOM_IMPORT_TO:${ZOOM_IMPORT_TO}`
+      );
     return false;
   }
-  return validateWowzaSettings();
+  return validateWowzaSettings(logging);
 }
 
-function validateWowzaSettings() {
+function validateWowzaSettings(logging = true) {
   if (ZOOM_IMPORT_TO == "wowza" && !ZOOM_IMPORT_WOWZA_BASE_URL) {
-    logger(
-      "INFO",
-      `zoom import is not disabled. ZOOM_IMPORT_WOWZA_BASE_URL is not defined.`
-    );
+    if (logging)
+      logger(
+        "INFO",
+        `zoom import is disabled. ZOOM_IMPORT_WOWZA_BASE_URL is not defined.`
+      );
     return false;
   }
   return true;
@@ -83,8 +85,8 @@ class ZoomImport {
         ZOOM_IMPORT_CONSUMER_KEY
       );
       if (!this.user) return;
-      const settings = this.user.settings as UserSettings;
-      if (!settings?.zoom_import?.enabled) return;
+      const settings = this.user.settings as UserSettingsProp;
+      if (!settings?.zoomImportEnabled) return;
 
       this.tmpdir = await fs.promises.mkdtemp("/tmp/zoom-import-");
       // recursive:true が利かない https://github.com/nodejs/node/issues/27293

@@ -42,6 +42,9 @@ import {
     InlineObject8,
     InlineObject8FromJSON,
     InlineObject8ToJSON,
+    InlineObject9,
+    InlineObject9FromJSON,
+    InlineObject9ToJSON,
     InlineResponse200,
     InlineResponse200FromJSON,
     InlineResponse200ToJSON,
@@ -87,11 +90,11 @@ export interface ApiV2BookBookIdGetRequest {
 
 export interface ApiV2BookBookIdPutRequest {
     bookId: number;
-    body?: InlineObject1;
+    body?: InlineObject2;
 }
 
 export interface ApiV2BookPostRequest {
-    body?: InlineObject2;
+    body?: InlineObject3;
 }
 
 export interface ApiV2BooksGetRequest {
@@ -101,11 +104,11 @@ export interface ApiV2BooksGetRequest {
 }
 
 export interface ApiV2BooksImportPostRequest {
-    body?: InlineObject3;
+    body?: InlineObject4;
 }
 
 export interface ApiV2EventPostRequest {
-    body?: InlineObject8;
+    body?: InlineObject9;
 }
 
 export interface ApiV2LtiCallbackPostRequest {
@@ -170,7 +173,7 @@ export interface ApiV2LtiLtiConsumerIdResourceLinkLtiResourceLinkIdPutRequest {
 
 export interface ApiV2ResourceResourceIdVideoTrackPostRequest {
     resourceId: number;
-    body?: InlineObject7;
+    body?: InlineObject8;
 }
 
 export interface ApiV2ResourceResourceIdVideoTrackVideoTrackIdDeleteRequest {
@@ -190,12 +193,12 @@ export interface ApiV2ResourcesGetRequest {
 }
 
 export interface ApiV2TopicPostRequest {
-    body?: InlineObject5;
+    body?: InlineObject6;
 }
 
 export interface ApiV2TopicTopicIdActivityPutRequest {
     topicId: number;
-    body?: InlineObject6;
+    body?: InlineObject7;
 }
 
 export interface ApiV2TopicTopicIdDeleteRequest {
@@ -208,13 +211,17 @@ export interface ApiV2TopicTopicIdGetRequest {
 
 export interface ApiV2TopicTopicIdPutRequest {
     topicId: number;
-    body?: InlineObject4;
+    body?: InlineObject5;
 }
 
 export interface ApiV2TopicsGetRequest {
     sort?: string;
     page?: number;
     perPage?: number;
+}
+
+export interface ApiV2UserSettingsPutRequest {
+    body?: InlineObject1;
 }
 
 export interface ApiV2UserUserIdBooksGetRequest {
@@ -319,7 +326,7 @@ export class DefaultApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: InlineObject1ToJSON(requestParameters.body),
+            body: InlineObject2ToJSON(requestParameters.body),
         });
 
         return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2001BooksFromJSON(jsonValue));
@@ -350,7 +357,7 @@ export class DefaultApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: InlineObject2ToJSON(requestParameters.body),
+            body: InlineObject3ToJSON(requestParameters.body),
         });
 
         return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2001BooksFromJSON(jsonValue));
@@ -421,7 +428,7 @@ export class DefaultApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: InlineObject3ToJSON(requestParameters.body),
+            body: InlineObject4ToJSON(requestParameters.body),
         });
 
         return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse201FromJSON(jsonValue));
@@ -452,7 +459,7 @@ export class DefaultApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: InlineObject8ToJSON(requestParameters.body),
+            body: InlineObject9ToJSON(requestParameters.body),
         });
 
         return new runtime.VoidApiResponse(response);
@@ -966,7 +973,7 @@ export class DefaultApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: InlineObject7ToJSON(requestParameters.body),
+            body: InlineObject8ToJSON(requestParameters.body),
         });
 
         return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2012FromJSON(jsonValue));
@@ -1136,7 +1143,7 @@ export class DefaultApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: InlineObject5ToJSON(requestParameters.body),
+            body: InlineObject6ToJSON(requestParameters.body),
         });
 
         return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2001TopicsFromJSON(jsonValue));
@@ -1171,7 +1178,7 @@ export class DefaultApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: InlineObject6ToJSON(requestParameters.body),
+            body: InlineObject7ToJSON(requestParameters.body),
         });
 
         return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2011FromJSON(jsonValue));
@@ -1269,7 +1276,7 @@ export class DefaultApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: InlineObject4ToJSON(requestParameters.body),
+            body: InlineObject5ToJSON(requestParameters.body),
         });
 
         return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2001TopicsFromJSON(jsonValue));
@@ -1321,6 +1328,37 @@ export class DefaultApi extends runtime.BaseAPI {
      */
     async apiV2TopicsGet(requestParameters: ApiV2TopicsGetRequest): Promise<InlineResponse2004> {
         const response = await this.apiV2TopicsGetRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * ユーザーの設定内容を更新し、セッションとdbに保存します。
+     * ユーザー設定値の更新
+     */
+    async apiV2UserSettingsPutRaw(requestParameters: ApiV2UserSettingsPutRequest): Promise<runtime.ApiResponse<object>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/api/v2/userSettings`,
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: InlineObject1ToJSON(requestParameters.body),
+        });
+
+        return new runtime.JSONApiResponse<any>(response);
+    }
+
+    /**
+     * ユーザーの設定内容を更新し、セッションとdbに保存します。
+     * ユーザー設定値の更新
+     */
+    async apiV2UserSettingsPut(requestParameters: ApiV2UserSettingsPutRequest): Promise<object> {
+        const response = await this.apiV2UserSettingsPutRaw(requestParameters);
         return await response.value();
     }
 

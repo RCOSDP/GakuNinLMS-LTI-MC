@@ -36,6 +36,13 @@ export async function findUserByEmailAndLtiConsumerId(
   return await prisma.user.findFirst({ where: { email, ltiConsumerId } });
 }
 
+export async function updateUserSettings(
+  id: User["id"],
+  settings: User["settings"]
+) {
+  return await prisma.user.update({ where: { id }, data: { settings } });
+}
+
 export async function findWrittenBooks(
   userId: User["id"],
   sort = "updated",

@@ -7,6 +7,7 @@ import findClient from "$server/utils/ltiv1p3/findClient";
 import init from "./init";
 import { LtiCallbackBody } from "$server/validators/ltiCallbackBody";
 import { LtiClaims } from "$server/validators/ltiClaims";
+import { getSystemSettings } from "$server/utils/systemSettings";
 
 export type Props = LtiCallbackBody;
 
@@ -58,6 +59,7 @@ export async function post(req: FastifyRequest<{ Body: Props }>) {
       ltiContext:
         ltiClaims["https://purl.imsglobal.org/spec/lti/claim/context"],
       ltiResourceLink: null,
+      systemSettings: getSystemSettings(),
     } as const;
     let ltiLaunchPresentation: undefined | LtiLaunchPresentationSchema;
     if (

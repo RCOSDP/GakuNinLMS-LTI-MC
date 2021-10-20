@@ -13,13 +13,6 @@
  */
 
 import { exists, mapValues } from '../runtime';
-import {
-    ApiV2TopicTopicIdResource,
-    ApiV2TopicTopicIdResourceFromJSON,
-    ApiV2TopicTopicIdResourceFromJSONTyped,
-    ApiV2TopicTopicIdResourceToJSON,
-} from './';
-
 /**
  * 
  * @export
@@ -31,37 +24,25 @@ export interface InlineObject4 {
      * @type {string}
      * @memberof InlineObject4
      */
-    name?: string;
+    json?: string;
     /**
      * 
      * @type {string}
      * @memberof InlineObject4
      */
-    language?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof InlineObject4
-     */
-    timeRequired?: number;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof InlineObject4
-     */
-    shared?: boolean;
+    file?: string;
     /**
      * 
      * @type {string}
      * @memberof InlineObject4
      */
-    description?: string;
+    provider: string;
     /**
      * 
-     * @type {ApiV2TopicTopicIdResource}
+     * @type {string}
      * @memberof InlineObject4
      */
-    resource?: ApiV2TopicTopicIdResource;
+    wowzaBaseUrl: string;
 }
 
 export function InlineObject4FromJSON(json: any): InlineObject4 {
@@ -74,12 +55,10 @@ export function InlineObject4FromJSONTyped(json: any, ignoreDiscriminator: boole
     }
     return {
         
-        'name': !exists(json, 'name') ? undefined : json['name'],
-        'language': !exists(json, 'language') ? undefined : json['language'],
-        'timeRequired': !exists(json, 'timeRequired') ? undefined : json['timeRequired'],
-        'shared': !exists(json, 'shared') ? undefined : json['shared'],
-        'description': !exists(json, 'description') ? undefined : json['description'],
-        'resource': !exists(json, 'resource') ? undefined : ApiV2TopicTopicIdResourceFromJSON(json['resource']),
+        'json': !exists(json, 'json') ? undefined : json['json'],
+        'file': !exists(json, 'file') ? undefined : json['file'],
+        'provider': json['provider'],
+        'wowzaBaseUrl': json['wowzaBaseUrl'],
     };
 }
 
@@ -92,12 +71,10 @@ export function InlineObject4ToJSON(value?: InlineObject4 | null): any {
     }
     return {
         
-        'name': value.name,
-        'language': value.language,
-        'timeRequired': value.timeRequired,
-        'shared': value.shared,
-        'description': value.description,
-        'resource': ApiV2TopicTopicIdResourceToJSON(value.resource),
+        'json': value.json,
+        'file': value.file,
+        'provider': value.provider,
+        'wowzaBaseUrl': value.wowzaBaseUrl,
     };
 }
 

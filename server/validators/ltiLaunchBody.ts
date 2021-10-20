@@ -1,5 +1,6 @@
 import { LtiLaunchPresentationSchema } from "$server/models/ltiLaunchPresentation";
 import { SessionSchema } from "$server/models/session";
+import { getSystemSettings } from "$server/utils/systemSettings";
 import { IsNotEmpty, IsOptional, IsString } from "class-validator";
 import { validationMetadatasToSchemas } from "class-validator-jsonschema";
 
@@ -109,5 +110,6 @@ export function toSessionSchema(
       title: body.context_title,
     },
     ...(ltiLaunchPresentation && { ltiLaunchPresentation }),
+    systemSettings: getSystemSettings(),
   };
 }

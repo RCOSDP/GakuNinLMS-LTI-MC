@@ -15,6 +15,7 @@ const session: SessionSchema = {
   },
   ltiResourceLink,
   user,
+  systemSettings: { zoomImportEnabled: false },
 };
 
 export default session;
