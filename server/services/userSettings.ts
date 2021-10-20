@@ -31,11 +31,7 @@ export async function update({
   session,
   body,
 }: FastifyRequest<{ Body: UserSettingsProp }>) {
-  const settings = session.user.settings as UserSettingsProp;
-  if (body.zoomImportEnabled != undefined)
-    settings.zoomImportEnabled = body.zoomImportEnabled;
-  if (body.zoomImportAutodelete != undefined)
-    settings.zoomImportAutodelete = body.zoomImportAutodelete;
+  Object.assign(session.user.settings, body);
   await updateUserSettings(session.user.id, session.user.settings);
 
   return {

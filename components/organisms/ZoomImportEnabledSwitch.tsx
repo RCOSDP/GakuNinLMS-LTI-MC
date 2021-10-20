@@ -7,7 +7,6 @@ import makeStyles from "@mui/styles/makeStyles";
 import clsx from "clsx";
 import useCardStyles from "styles/card";
 import gray from "theme/colors/gray";
-import { updateUserSettings } from "$utils/userSettings";
 import { UserSettingsProp } from "$server/validators/userSettings";
 
 const useStyles = makeStyles((theme) => ({
@@ -25,10 +24,11 @@ const useStyles = makeStyles((theme) => ({
 type Props = {
   className?: string;
   userSettings: UserSettingsProp;
+  onChange: (userSettings: UserSettingsProp) => void;
 };
 
 export default function ZoomImportEnabledSwitch(props: Props) {
-  const { className, userSettings } = props;
+  const { className, userSettings, onChange } = props;
   const cardClasses = useCardStyles();
   const classes = useStyles();
   const [zoomImportEnabled, setZoomImportEnabled] = useState(
@@ -48,7 +48,7 @@ export default function ZoomImportEnabledSwitch(props: Props) {
               size="small"
               defaultChecked={zoomImportEnabled}
               onChange={async (e, bool) => {
-                await updateUserSettings({ zoomImportEnabled: bool });
+                await onChange({ zoomImportEnabled: bool });
                 setZoomImportEnabled(bool);
               }}
             />
