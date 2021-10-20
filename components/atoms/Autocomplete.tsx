@@ -1,8 +1,10 @@
-import Autocomplete, { autocompleteClasses } from "@mui/material/Autocomplete";
+import MuiAutocomplete, {
+  autocompleteClasses,
+} from "@mui/material/Autocomplete";
 import { outlinedInputClasses } from "@mui/material/OutlinedInput";
 import { styled } from "@mui/material/styles";
 
-export default styled(Autocomplete)(({ theme }) => ({
+const Autocomplete = styled(MuiAutocomplete)(({ theme }) => ({
   [`.${outlinedInputClasses.root}`]: {
     padding: 0,
     [`.${autocompleteClasses.input}`]: {
@@ -10,3 +12,5 @@ export default styled(Autocomplete)(({ theme }) => ({
     },
   },
 }));
+
+export default Autocomplete;
