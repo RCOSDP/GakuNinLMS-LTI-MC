@@ -3,7 +3,7 @@ const user = {
   ltiConsumerId: "test",
   ltiUserId: "1",
   name: "山田太郎",
-  email: "",
+  email: "user@example.com",
   settings: {},
 };
 
