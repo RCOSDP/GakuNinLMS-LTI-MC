@@ -5,7 +5,7 @@ import gray from "theme/colors/gray";
 const inputLabel = (theme: Theme) => ({
   [`.${inputLabelClasses.root}`]: {
     color: gray[700],
-    fontSize: 16,
+    fontSize: theme.typography.body1.fontSize,
     [`&.${inputLabelClasses.focused}`]: {
       color: theme.palette.primary.main,
     },
