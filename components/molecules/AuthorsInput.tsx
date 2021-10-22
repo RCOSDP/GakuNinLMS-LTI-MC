@@ -99,7 +99,7 @@ export default function AuthorsInput({
         </AuthorItem>
       ))}
       <Input
-        id="email"
+        id={id}
         type="email"
         {...register("email", { required: true })}
         placeholder="user@example.com"
