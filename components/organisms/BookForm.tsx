@@ -10,10 +10,13 @@ import { useForm } from "react-hook-form";
 import clsx from "clsx";
 import InputLabel from "$atoms/InputLabel";
 import TextField from "$atoms/TextField";
+import AuthorsInput from "$molecules/AuthorsInput";
 import useCardStyles from "styles/card";
 import gray from "theme/colors/gray";
 import type { BookSchema } from "$server/models/book";
 import type { BookPropsWithSubmitOptions } from "$types/bookPropsWithSubmitOptions";
+import type { AuthorSchema, AuthorProps } from "$server/models/author";
+import { useAuthorsAtom } from "store/authors";
 import languages from "$utils/languages";
 
 const useStyles = makeStyles((theme) => ({
@@ -49,6 +52,8 @@ type Props = {
   className?: string;
   variant?: "create" | "update";
   onSubmit?: (book: BookPropsWithSubmitOptions) => void;
+  onAuthorsUpdate?(authors: AuthorSchema[]): void;
+  onAuthorSubmit?(author: AuthorProps): void;
 };
 
 export default function BookForm({
@@ -58,9 +63,12 @@ export default function BookForm({
   linked = false,
   variant = "create",
   onSubmit = () => undefined,
+  onAuthorsUpdate,
+  onAuthorSubmit,
 }: Props) {
   const cardClasses = useCardStyles();
   const classes = useStyles();
+  const { authors } = useAuthorsAtom();
   const defaultValues: BookPropsWithSubmitOptions = {
     name: book?.name ?? "",
     description: book?.description ?? "",
@@ -98,6 +106,11 @@ export default function BookForm({
         }
         required
         fullWidth
+      />
+      <AuthorsInput
+        authors={authors}
+        onAuthorsUpdate={onAuthorsUpdate}
+        onAuthorSubmit={onAuthorSubmit}
       />
       <div>
         <InputLabel htmlFor="shared">他の教員にシェア</InputLabel>

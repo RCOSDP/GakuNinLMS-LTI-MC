@@ -14,6 +14,7 @@ import { useDebouncedCallback } from "use-debounce";
 import clsx from "clsx";
 import InputLabel from "$atoms/InputLabel";
 import TextField from "$atoms/TextField";
+import AuthorsInput from "$molecules/AuthorsInput";
 import SubtitleChip from "$atoms/SubtitleChip";
 import SubtitleUploadDialog from "$organisms/SubtitleUploadDialog";
 import Video from "$organisms/Video";
@@ -27,6 +28,8 @@ import type {
 import languages from "$utils/languages";
 import providers from "$utils/providers";
 import useVideoResourceProps from "$utils/useVideoResourceProps";
+import type { AuthorSchema, AuthorProps } from "$server/models/author";
+import { useAuthorsAtom } from "store/authors";
 import { useVideoTrackAtom } from "$store/videoTrack";
 
 const useStyles = makeStyles((theme) => ({
@@ -64,6 +67,8 @@ type Props = {
   onSubmit?(topic: TopicProps): void;
   onSubtitleSubmit(videoTrack: VideoTrackProps): void;
   onSubtitleDelete(videoTrack: VideoTrackSchema): void;
+  onAuthorsUpdate?(authors: AuthorSchema[]): void;
+  onAuthorSubmit?(author: AuthorProps): void;
 };
 
 export default function TopicForm(props: Props) {
@@ -74,6 +79,8 @@ export default function TopicForm(props: Props) {
     onSubmit = () => undefined,
     onSubtitleSubmit,
     onSubtitleDelete,
+    onAuthorsUpdate,
+    onAuthorSubmit,
   } = props;
   const cardClasses = useCardStyles();
   const classes = useStyles();
@@ -97,6 +104,7 @@ export default function TopicForm(props: Props) {
   const handleSubtitleDelete = (videoTrack: VideoTrackSchema) => {
     onSubtitleDelete(videoTrack);
   };
+  const { authors } = useAuthorsAtom();
   const defaultValues = {
     name: topic?.name,
     description: topic?.description ?? "",
@@ -148,6 +156,11 @@ export default function TopicForm(props: Props) {
           }
           required
           fullWidth
+        />
+        <AuthorsInput
+          authors={authors}
+          onAuthorsUpdate={onAuthorsUpdate}
+          onAuthorSubmit={onAuthorSubmit}
         />
         <div>
           <InputLabel htmlFor="shared">他の教員にシェア</InputLabel>

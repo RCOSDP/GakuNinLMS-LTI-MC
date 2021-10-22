@@ -11,6 +11,7 @@ import BookNotFoundProblem from "$templates/TopicNotFoundProblem";
 import { destroyBook, updateBook, useBook } from "$utils/book";
 import { pagesPath } from "$utils/$path";
 import useBookLinkHandler from "$utils/useBookLinkHandler";
+import useAuthorsHandler from "$utils/useAuthorsHandler";
 
 export type Query = { bookId: BookSchema["id"]; context?: "books" };
 
@@ -20,6 +21,7 @@ function Edit({ bookId, context }: Query) {
   const { book, error } = useBook(bookId, isContentEditable);
   const router = useRouter();
   const handleBookLink = useBookLinkHandler();
+  const { handleAuthorsUpdate, handleAuthorSubmit } = useAuthorsHandler(book);
   const back = () => {
     switch (context) {
       case "books":
@@ -87,6 +89,8 @@ function Edit({ bookId, context }: Query) {
     onTopicImportClick: handleTopicImportClick,
     onTopicNewClick: handleTopicNewClick,
     onTopicEditClick: handleTopicEditClick,
+    onAuthorsUpdate: handleAuthorsUpdate,
+    onAuthorSubmit: handleAuthorSubmit,
     isContentEditable: () => true,
   };
 

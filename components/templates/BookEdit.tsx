@@ -13,6 +13,7 @@ import type { BookSchema } from "$server/models/book";
 import type { BookPropsWithSubmitOptions } from "$types/bookPropsWithSubmitOptions";
 import type { SectionProps } from "$server/models/book/section";
 import type { TopicSchema } from "$server/models/topic";
+import type { AuthorSchema, AuthorProps } from "$server/models/author";
 import type { IsContentEditable } from "$types/content";
 import { useConfirm } from "material-ui-confirm";
 import useDialogProps from "$utils/useDialogProps";
@@ -52,6 +53,8 @@ type Props = {
   onTopicNewClick(): void;
   onTopicEditClick?(topic: TopicSchema): void;
   onBookImportClick(): void;
+  onAuthorsUpdate?(authors: AuthorSchema[]): void;
+  onAuthorSubmit?(author: AuthorProps): void;
   isContentEditable?: IsContentEditable;
   linked?: boolean;
 };
@@ -66,6 +69,8 @@ export default function BookEdit({
   onTopicNewClick,
   onTopicEditClick,
   onBookImportClick,
+  onAuthorsUpdate,
+  onAuthorSubmit,
   isContentEditable,
   linked = false,
 }: Props) {
@@ -125,6 +130,8 @@ export default function BookEdit({
         linked={linked}
         variant="update"
         onSubmit={onSubmit}
+        onAuthorsUpdate={onAuthorsUpdate}
+        onAuthorSubmit={onAuthorSubmit}
       />
       <Button size="small" color="primary" onClick={handleDeleteButtonClick}>
         <DeleteOutlinedIcon />

@@ -5,6 +5,7 @@ import type { BookPropsWithSubmitOptions } from "$types/bookPropsWithSubmitOptio
 import { pagesPath } from "./$path";
 import { createBook } from "./book";
 import useBookLinkHandler from "./useBookLinkHandler";
+import useAuthorsHandler from "$utils/useAuthorsHandler";
 
 function useBookNewHandlers(
   context: "books" | undefined,
@@ -12,6 +13,7 @@ function useBookNewHandlers(
 ) {
   const router = useRouter();
   const handleBookLink = useBookLinkHandler();
+  const { handleAuthorsUpdate, handleAuthorSubmit } = useAuthorsHandler();
   const handleSubmit = useCallback(
     async ({ submitWithLink, ...book }: BookPropsWithSubmitOptions) => {
       const { id } = await createBook(book);
@@ -42,6 +44,8 @@ function useBookNewHandlers(
   const handlers = {
     onSubmit: handleSubmit,
     onCancel: handleCancel,
+    onAuthorsUpdate: handleAuthorsUpdate,
+    onAuthorSubmit: handleAuthorSubmit,
   };
 
   return handlers;
