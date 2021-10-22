@@ -13,7 +13,7 @@ export function authorsUpdater(
   updateAuthors(authors: AuthorsProps): Promise<Array<AuthorSchema>>;
 } {
   const authors = content.authors.map(authorToAuthorSchema);
-  async function updateAuthors(authors: AuthorsProps) {
+  async function updateAuthors({ authors }: AuthorsProps) {
     const roles = (await prisma.contentRole.findMany({})).map((role) => ({
       ...role,
       roleName:

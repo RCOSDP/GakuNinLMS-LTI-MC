@@ -13,6 +13,13 @@
  */
 
 import { exists, mapValues } from '../runtime';
+import {
+    ApiV2BookBookIdAuthorsAuthors,
+    ApiV2BookBookIdAuthorsAuthorsFromJSON,
+    ApiV2BookBookIdAuthorsAuthorsFromJSONTyped,
+    ApiV2BookBookIdAuthorsAuthorsToJSON,
+} from './';
+
 /**
  * 
  * @export
@@ -21,28 +28,10 @@ import { exists, mapValues } from '../runtime';
 export interface InlineObject3 {
     /**
      * 
-     * @type {string}
+     * @type {Array<ApiV2BookBookIdAuthorsAuthors>}
      * @memberof InlineObject3
      */
-    json?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineObject3
-     */
-    file?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineObject3
-     */
-    provider: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineObject3
-     */
-    wowzaBaseUrl: string;
+    authors: Array<ApiV2BookBookIdAuthorsAuthors>;
 }
 
 export function InlineObject3FromJSON(json: any): InlineObject3 {
@@ -55,10 +44,7 @@ export function InlineObject3FromJSONTyped(json: any, ignoreDiscriminator: boole
     }
     return {
         
-        'json': !exists(json, 'json') ? undefined : json['json'],
-        'file': !exists(json, 'file') ? undefined : json['file'],
-        'provider': json['provider'],
-        'wowzaBaseUrl': json['wowzaBaseUrl'],
+        'authors': ((json['authors'] as Array<any>).map(ApiV2BookBookIdAuthorsAuthorsFromJSON)),
     };
 }
 
@@ -71,10 +57,7 @@ export function InlineObject3ToJSON(value?: InlineObject3 | null): any {
     }
     return {
         
-        'json': value.json,
-        'file': value.file,
-        'provider': value.provider,
-        'wowzaBaseUrl': value.wowzaBaseUrl,
+        'authors': ((value.authors as Array<any>).map(ApiV2BookBookIdAuthorsAuthorsToJSON)),
     };
 }
 
