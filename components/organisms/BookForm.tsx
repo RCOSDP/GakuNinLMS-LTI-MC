@@ -10,7 +10,7 @@ import { useForm } from "react-hook-form";
 import clsx from "clsx";
 import InputLabel from "$atoms/InputLabel";
 import TextField from "$atoms/TextField";
-import AuthorsInput from "$molecules/AuthorsInput";
+import AuthorsInput from "$organisms/AuthorsInput";
 import useCardStyles from "styles/card";
 import gray from "theme/colors/gray";
 import type { BookSchema } from "$server/models/book";

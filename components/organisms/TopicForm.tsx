@@ -14,7 +14,7 @@ import { useDebouncedCallback } from "use-debounce";
 import clsx from "clsx";
 import InputLabel from "$atoms/InputLabel";
 import TextField from "$atoms/TextField";
-import AuthorsInput from "$molecules/AuthorsInput";
+import AuthorsInput from "$organisms/AuthorsInput";
 import SubtitleChip from "$atoms/SubtitleChip";
 import SubtitleUploadDialog from "$organisms/SubtitleUploadDialog";
 import Video from "$organisms/Video";
