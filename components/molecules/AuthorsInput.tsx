@@ -35,6 +35,10 @@ const AuthorName = styled("div")(({ theme }) => ({
     color: grey[700],
     fontSize: theme.typography.caption.fontSize,
   },
+  ".lti-consumer-id": {
+    color: grey[700],
+    fontSize: theme.typography.caption.fontSize,
+  },
 }));
 
 type Props = {
@@ -82,6 +86,9 @@ export default function AuthorsInput({
           <AuthorName>
             <span className="name">{author.name}</span>
             <span className="email">{author.email}</span>
+            <span className="lti-consumer-id">
+              {author.ltiConsumerId} に存在するユーザー
+            </span>
           </AuthorName>
           <Select onChange={handleAuthorUpdate(author)} value={author.roleName}>
             {Object.values(AuthorSchema._roleNames).map((roleName) => (
