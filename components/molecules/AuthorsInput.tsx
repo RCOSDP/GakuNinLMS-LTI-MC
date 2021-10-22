@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { useState } from "react";
 import MenuItem from "@mui/material/MenuItem";
 import type { SelectChangeEvent } from "@mui/material/Select";
 import { styled } from "@mui/material/styles";
@@ -50,6 +50,7 @@ export default function AuthorsInput({
   onAuthorsUpdate,
   onAuthorSubmit = () => undefined,
 }: Props) {
+  const [email, setEmail] = useState("");
   const { session } = useSessionAtom();
   const handleAuthorUpdate =
     (author: AuthorSchema) => (event: SelectChangeEvent<unknown>) => {
@@ -66,9 +67,10 @@ export default function AuthorsInput({
     const index = authors.findIndex(({ id }) => id === author.id);
     onAuthorsUpdate?.(remove(authors, index));
   };
-  const { handleSubmit, register, reset } = useForm<AuthorProps>();
-  const handleClear = () => reset({ email: "" });
-  const handleAuthorSubmit = () => handleSubmit(onAuthorSubmit)();
+  const handleClear = () => setEmail("");
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) =>
+    setEmail(event.target.value);
+  const handleAuthorSubmit = () => onAuthorSubmit({ email });
 
   return (
     <div>
@@ -101,8 +103,9 @@ export default function AuthorsInput({
       <Input
         id={id}
         type="email"
-        {...register("email", { required: true })}
         placeholder="user@example.com"
+        value={email}
+        onChange={handleChange}
         startAdornment={<EmailOutlinedIcon />}
         endAdornment={
           <>
