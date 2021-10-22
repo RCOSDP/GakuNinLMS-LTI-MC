@@ -10,52 +10,19 @@ import { findUserByEmailAndLtiConsumerId } from "$server/utils/user";
 import { scpUpload } from "$server/utils/wowza/scpUpload";
 import { findZoomMeeting } from "$server/utils/zoom/findZoomMeeting";
 import {
+  API_BASE_PATH,
+  ZOOM_IMPORT_CONSUMER_KEY,
+  ZOOM_IMPORT_WOWZA_BASE_URL,
+  ZOOM_IMPORT_AUTODELETE,
+} from "$server/utils/env";
+
+import {
   ZoomResponse,
   zoomRequestToken,
   zoomRequest,
   zoomListRequest,
 } from "$server/utils/zoom/api";
-
-import {
-  API_BASE_PATH,
-  ZOOM_API_KEY,
-  ZOOM_API_SECRET,
-  ZOOM_IMPORT_CONSUMER_KEY,
-  ZOOM_IMPORT_INTERVAL,
-  ZOOM_IMPORT_TO,
-  ZOOM_IMPORT_WOWZA_BASE_URL,
-  ZOOM_IMPORT_AUTODELETE,
-} from "$server/utils/env";
-
-export function validateSettings(logging = true) {
-  if (
-    !ZOOM_API_KEY ||
-    !ZOOM_API_SECRET ||
-    !ZOOM_IMPORT_CONSUMER_KEY ||
-    !ZOOM_IMPORT_INTERVAL ||
-    !ZOOM_IMPORT_TO
-  ) {
-    if (logging)
-      logger(
-        "INFO",
-        `zoom import is disabled. ZOOM_API_KEY:${ZOOM_API_KEY} ZOOM_API_SECRET:${ZOOM_API_SECRET} ZOOM_IMPORT_CONSUMER_KEY:${ZOOM_IMPORT_CONSUMER_KEY} ZOOM_IMPORT_INTERVAL:${ZOOM_IMPORT_INTERVAL} ZOOM_IMPORT_TO:${ZOOM_IMPORT_TO}`
-      );
-    return false;
-  }
-  return validateWowzaSettings(logging);
-}
-
-function validateWowzaSettings(logging = true) {
-  if (ZOOM_IMPORT_TO == "wowza" && !ZOOM_IMPORT_WOWZA_BASE_URL) {
-    if (logging)
-      logger(
-        "INFO",
-        `zoom import is disabled. ZOOM_IMPORT_WOWZA_BASE_URL is not defined.`
-      );
-    return false;
-  }
-  return true;
-}
+import { logger } from "$server/utils/zoom/env";
 
 export async function zoomImport() {
   const users = await zoomListRequest("/users", "users", { page_size: 300 });
@@ -265,14 +232,4 @@ class ZoomImport {
       await fs.promises.rmdir(this.tmpdir, { recursive: true });
     }
   }
-}
-
-export function logger(level: string, output: string, error?: Error | unknown) {
-  console.log(
-    format(utcToZoneTime(new Date(), "Asia/Tokyo"), "yyyy-MM-dd HH:mm:ss"),
-    level,
-    output,
-    "ZoomImportLog"
-  );
-  if (error instanceof Error) console.log(error.stack);
 }

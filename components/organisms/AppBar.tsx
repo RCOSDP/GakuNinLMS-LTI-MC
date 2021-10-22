@@ -95,6 +95,7 @@ function AppBar(props: Props, ref: Ref<HTMLDivElement>) {
     setOpen(false);
   };
   const handleOpenUserSettings = () => {
+    setShowZoomImportNotice(false);
     return router.push(pagesPath.userSettings.$url());
   };
   const handleDisableZoomImport = async () => {

@@ -1,11 +1,8 @@
 import dotenv from "dotenv";
 
 import prisma from "$server/utils/prisma";
-import {
-  logger,
-  validateSettings,
-  zoomImport,
-} from "$server/utils/zoom/import";
+import { validateSettings, logger } from "$server/utils/zoom/env";
+import { zoomImport } from "$server/utils/zoom/import";
 
 async function main() {
   dotenv.config();

@@ -1,11 +1,8 @@
 import schedule from "node-schedule";
 
-import {
-  logger,
-  validateSettings,
-  zoomImport,
-} from "$server/utils/zoom/import";
 import { ZOOM_IMPORT_INTERVAL } from "$server/utils/env";
+import { validateSettings, logger } from "$server/utils/zoom/env";
+import { zoomImport } from "$server/utils/zoom/import";
 
 export async function setupZoomImportScheduler() {
   if (!validateSettings()) return;
