@@ -60,11 +60,13 @@ export default function UserSettingsContainer() {
       <Typography className={classes.title} variant="h4">
         設定
       </Typography>
-      <ZoomImportEnabledSwitch
-        className={classes.form}
-        userSettings={userSettings}
-        onChange={onChange}
-      />
+      {session?.systemSettings?.zoomImportEnabled && (
+        <ZoomImportEnabledSwitch
+          className={classes.form}
+          userSettings={userSettings}
+          onChange={onChange}
+        />
+      )}
     </Container>
   );
 }

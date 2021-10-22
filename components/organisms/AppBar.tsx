@@ -142,12 +142,14 @@ function AppBar(props: Props, ref: Ref<HTMLDivElement>) {
                 !Number.isFinite(session?.ltiResourceLink?.bookId)
               }
             />
-            <AppBarNavButton
-              color="inherit"
-              icon={<SettingsIcon />}
-              label="設定"
-              onClick={handleOpenUserSettings}
-            />
+            {session?.systemSettings?.zoomImportEnabled && ( // TODO: zoomインポート以外の設定値が実装されたら常時表示する
+              <AppBarNavButton
+                color="inherit"
+                icon={<SettingsIcon />}
+                label="設定"
+                onClick={handleOpenUserSettings}
+              />
+            )}
             {onDashboardClick && (
               <AppBarNavButton
                 color="inherit"
