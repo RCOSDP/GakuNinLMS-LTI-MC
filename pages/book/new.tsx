@@ -2,19 +2,19 @@ import { useRouter } from "next/router";
 import BookNew from "$templates/BookNew";
 import useBookNewHandlers from "$utils/useBookNewHandlers";
 
-export type Query = { context?: "books" };
+export type Query = { context?: "books" | "topics"; topics?: number[] };
 
-function New({ context }: Query) {
+function New({ context, topics }: Query) {
   const handlers = useBookNewHandlers(context);
 
-  return <BookNew {...handlers} />;
+  return <BookNew {...handlers} topics={topics} />;
 }
 
 function Router() {
   const router = useRouter();
-  const { context }: Pick<Query, "context"> = router.query;
+  const { context, topics }: Pick<Query, "context" | "topics"> = router.query;
 
-  return <New context={context} />;
+  return <New context={context} topics={topics} />;
 }
 
 export default Router;

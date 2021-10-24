@@ -45,6 +45,7 @@ const label = {
 
 type Props = {
   book?: BookSchema;
+  topics?: number[];
   id?: string;
   linked?: boolean;
   className?: string;
@@ -54,6 +55,7 @@ type Props = {
 
 export default function BookForm({
   book,
+  topics,
   className,
   id,
   linked = false,
@@ -75,6 +77,7 @@ export default function BookForm({
     useForm<BookPropsWithSubmitOptions>({
       defaultValues,
     });
+  setValue("topics", topics);
 
   return (
     <Card

@@ -7,13 +7,15 @@ import { createBook } from "./book";
 import useBookLinkHandler from "./useBookLinkHandler";
 
 function useBookNewHandlers(
-  context: "books" | undefined,
+  context: "books" | "topics" | undefined,
   bookId?: BookSchema["id"]
 ) {
   const router = useRouter();
   const handleBookLink = useBookLinkHandler();
   const handleSubmit = useCallback(
-    async ({ submitWithLink, ...book }: BookPropsWithSubmitOptions) => {
+    async ({ submitWithLink, topics, ...book }: BookPropsWithSubmitOptions) => {
+      if (topics && topics.length)
+        book.sections = getSectionsWithTopics(topics);
       const { id } = await createBook(book);
       if (submitWithLink) await handleBookLink({ id });
       await router.replace(
@@ -30,6 +32,7 @@ function useBookNewHandlers(
   const handleCancel = useCallback(() => {
     switch (context) {
       case "books":
+      case "topics":
         return router.push(pagesPath[context].$url());
       default:
         return router.push(
@@ -45,6 +48,14 @@ function useBookNewHandlers(
   };
 
   return handlers;
+}
+
+function getSectionsWithTopics(topics: number[]) {
+  const sections = [];
+  for (const id of topics) {
+    sections.push({ topics: [{ id }] });
+  }
+  return sections;
 }
 
 export default useBookNewHandlers;
