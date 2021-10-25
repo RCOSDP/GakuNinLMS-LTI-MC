@@ -12,6 +12,7 @@ export const UserSchema = {
     ltiConsumerId: { type: "string" },
     ltiUserId: { type: "string" },
     name: { type: "string" },
+    email: { type: "string" },
   },
   additionalProperties: false,
 } as const;

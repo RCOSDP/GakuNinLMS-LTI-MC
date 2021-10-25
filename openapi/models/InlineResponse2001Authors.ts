@@ -48,6 +48,12 @@ export interface InlineResponse2001Authors {
      * @type {string}
      * @memberof InlineResponse2001Authors
      */
+    email?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineResponse2001Authors
+     */
     roleName: string;
 }
 
@@ -65,6 +71,7 @@ export function InlineResponse2001AuthorsFromJSONTyped(json: any, ignoreDiscrimi
         'ltiConsumerId': json['ltiConsumerId'],
         'ltiUserId': json['ltiUserId'],
         'name': json['name'],
+        'email': !exists(json, 'email') ? undefined : json['email'],
         'roleName': json['roleName'],
     };
 }
@@ -82,6 +89,7 @@ export function InlineResponse2001AuthorsToJSON(value?: InlineResponse2001Author
         'ltiConsumerId': value.ltiConsumerId,
         'ltiUserId': value.ltiUserId,
         'name': value.name,
+        'email': value.email,
         'roleName': value.roleName,
     };
 }

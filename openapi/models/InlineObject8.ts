@@ -13,6 +13,13 @@
  */
 
 import { exists, mapValues } from '../runtime';
+import {
+    ApiV2BookBookIdAuthorsAuthors,
+    ApiV2BookBookIdAuthorsAuthorsFromJSON,
+    ApiV2BookBookIdAuthorsAuthorsFromJSONTyped,
+    ApiV2BookBookIdAuthorsAuthorsToJSON,
+} from './';
+
 /**
  * 
  * @export
@@ -21,58 +28,10 @@ import { exists, mapValues } from '../runtime';
 export interface InlineObject8 {
     /**
      * 
-     * @type {string}
+     * @type {Array<ApiV2BookBookIdAuthorsAuthors>}
      * @memberof InlineObject8
      */
-    event?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineObject8
-     */
-    detail?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineObject8
-     */
-    file?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineObject8
-     */
-    query?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineObject8
-     */
-    current?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineObject8
-     */
-    rid?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineObject8
-     */
-    uid?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineObject8
-     */
-    cid?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineObject8
-     */
-    nonce?: string;
+    authors: Array<ApiV2BookBookIdAuthorsAuthors>;
 }
 
 export function InlineObject8FromJSON(json: any): InlineObject8 {
@@ -85,15 +44,7 @@ export function InlineObject8FromJSONTyped(json: any, ignoreDiscriminator: boole
     }
     return {
         
-        'event': !exists(json, 'event') ? undefined : json['event'],
-        'detail': !exists(json, 'detail') ? undefined : json['detail'],
-        'file': !exists(json, 'file') ? undefined : json['file'],
-        'query': !exists(json, 'query') ? undefined : json['query'],
-        'current': !exists(json, 'current') ? undefined : json['current'],
-        'rid': !exists(json, 'rid') ? undefined : json['rid'],
-        'uid': !exists(json, 'uid') ? undefined : json['uid'],
-        'cid': !exists(json, 'cid') ? undefined : json['cid'],
-        'nonce': !exists(json, 'nonce') ? undefined : json['nonce'],
+        'authors': ((json['authors'] as Array<any>).map(ApiV2BookBookIdAuthorsAuthorsFromJSON)),
     };
 }
 
@@ -106,15 +57,7 @@ export function InlineObject8ToJSON(value?: InlineObject8 | null): any {
     }
     return {
         
-        'event': value.event,
-        'detail': value.detail,
-        'file': value.file,
-        'query': value.query,
-        'current': value.current,
-        'rid': value.rid,
-        'uid': value.uid,
-        'cid': value.cid,
-        'nonce': value.nonce,
+        'authors': ((value.authors as Array<any>).map(ApiV2BookBookIdAuthorsAuthorsToJSON)),
     };
 }
 

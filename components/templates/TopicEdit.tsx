@@ -12,6 +12,7 @@ import type {
   VideoTrackProps,
   VideoTrackSchema,
 } from "$server/models/videoTrack";
+import type { AuthorSchema } from "$server/models/author";
 import { useConfirm } from "material-ui-confirm";
 
 const useStyles = makeStyles((theme) => ({
@@ -41,6 +42,8 @@ type Props = {
   onCancel(): void;
   onSubtitleDelete(videoTrack: VideoTrackSchema): void;
   onSubtitleSubmit(videoTrack: VideoTrackProps): void;
+  onAuthorsUpdate(authors: AuthorSchema[]): void;
+  onAuthorSubmit(author: Pick<AuthorSchema, "email">): void;
 };
 
 export default function TopicEdit(props: Props) {
@@ -51,6 +54,8 @@ export default function TopicEdit(props: Props) {
     onCancel,
     onSubtitleDelete,
     onSubtitleSubmit,
+    onAuthorsUpdate,
+    onAuthorSubmit,
   } = props;
   const classes = useStyles();
   const containerClasses = useContainerStyles();
@@ -85,6 +90,8 @@ export default function TopicEdit(props: Props) {
         onSubmit={onSubmit}
         onSubtitleDelete={onSubtitleDelete}
         onSubtitleSubmit={onSubtitleSubmit}
+        onAuthorsUpdate={onAuthorsUpdate}
+        onAuthorSubmit={onAuthorSubmit}
       />
       <Button size="small" color="primary" onClick={handleDeleteButtonClick}>
         <DeleteOutlinedIcon />

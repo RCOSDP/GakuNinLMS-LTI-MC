@@ -21,6 +21,9 @@ import {
     InlineObject1,
     InlineObject1FromJSON,
     InlineObject1ToJSON,
+    InlineObject10,
+    InlineObject10FromJSON,
+    InlineObject10ToJSON,
     InlineObject2,
     InlineObject2FromJSON,
     InlineObject2ToJSON,
@@ -42,6 +45,9 @@ import {
     InlineObject8,
     InlineObject8FromJSON,
     InlineObject8ToJSON,
+    InlineObject9,
+    InlineObject9FromJSON,
+    InlineObject9ToJSON,
     InlineResponse200,
     InlineResponse200FromJSON,
     InlineResponse200ToJSON,
@@ -85,7 +91,7 @@ import {
 
 export interface ApiV2BookBookIdAuthorsPutRequest {
     bookId: number;
-    body?: Array<InlineObject>;
+    body?: InlineObject3;
 }
 
 export interface ApiV2BookBookIdDeleteRequest {
@@ -112,11 +118,11 @@ export interface ApiV2BooksGetRequest {
 }
 
 export interface ApiV2BooksImportPostRequest {
-    body?: InlineObject3;
+    body?: InlineObject4;
 }
 
 export interface ApiV2EventPostRequest {
-    body?: InlineObject8;
+    body?: InlineObject10;
 }
 
 export interface ApiV2LtiCallbackPostRequest {
@@ -181,7 +187,7 @@ export interface ApiV2LtiLtiConsumerIdResourceLinkLtiResourceLinkIdPutRequest {
 
 export interface ApiV2ResourceResourceIdVideoTrackPostRequest {
     resourceId: number;
-    body?: InlineObject7;
+    body?: InlineObject9;
 }
 
 export interface ApiV2ResourceResourceIdVideoTrackVideoTrackIdDeleteRequest {
@@ -201,17 +207,17 @@ export interface ApiV2ResourcesGetRequest {
 }
 
 export interface ApiV2TopicPostRequest {
-    body?: InlineObject5;
+    body?: InlineObject6;
 }
 
 export interface ApiV2TopicTopicIdActivityPutRequest {
     topicId: number;
-    body?: InlineObject6;
+    body?: InlineObject7;
 }
 
 export interface ApiV2TopicTopicIdAuthorsPutRequest {
     topicId: number;
-    body?: Array<InlineObject>;
+    body?: InlineObject8;
 }
 
 export interface ApiV2TopicTopicIdDeleteRequest {
@@ -224,7 +230,7 @@ export interface ApiV2TopicTopicIdGetRequest {
 
 export interface ApiV2TopicTopicIdPutRequest {
     topicId: number;
-    body?: InlineObject4;
+    body?: InlineObject5;
 }
 
 export interface ApiV2TopicsGetRequest {
@@ -276,7 +282,7 @@ export class DefaultApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: requestParameters.body.map(InlineObjectToJSON),
+            body: InlineObject3ToJSON(requestParameters.body),
         });
 
         return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(InlineResponse2001AuthorsFromJSON));
@@ -476,7 +482,7 @@ export class DefaultApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: InlineObject3ToJSON(requestParameters.body),
+            body: InlineObject4ToJSON(requestParameters.body),
         });
 
         return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse201FromJSON(jsonValue));
@@ -507,7 +513,7 @@ export class DefaultApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: InlineObject8ToJSON(requestParameters.body),
+            body: InlineObject10ToJSON(requestParameters.body),
         });
 
         return new runtime.VoidApiResponse(response);
@@ -1021,7 +1027,7 @@ export class DefaultApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: InlineObject7ToJSON(requestParameters.body),
+            body: InlineObject9ToJSON(requestParameters.body),
         });
 
         return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2012FromJSON(jsonValue));
@@ -1191,7 +1197,7 @@ export class DefaultApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: InlineObject5ToJSON(requestParameters.body),
+            body: InlineObject6ToJSON(requestParameters.body),
         });
 
         return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2001TopicsFromJSON(jsonValue));
@@ -1226,7 +1232,7 @@ export class DefaultApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: InlineObject6ToJSON(requestParameters.body),
+            body: InlineObject7ToJSON(requestParameters.body),
         });
 
         return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2011FromJSON(jsonValue));
@@ -1261,7 +1267,7 @@ export class DefaultApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: requestParameters.body.map(InlineObjectToJSON),
+            body: InlineObject8ToJSON(requestParameters.body),
         });
 
         return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(InlineResponse2001AuthorsFromJSON));
@@ -1359,7 +1365,7 @@ export class DefaultApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: InlineObject4ToJSON(requestParameters.body),
+            body: InlineObject5ToJSON(requestParameters.body),
         });
 
         return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2001TopicsFromJSON(jsonValue));

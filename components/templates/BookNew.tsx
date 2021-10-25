@@ -8,6 +8,7 @@ import BackButton from "$atoms/BackButton";
 import useContainerStyles from "styles/container";
 import type { BookSchema } from "$server/models/book";
 import type { BookPropsWithSubmitOptions } from "$types/bookPropsWithSubmitOptions";
+import type { AuthorSchema } from "$server/models/author";
 import { useSessionAtom } from "$store/session";
 
 const useStyles = makeStyles((theme) => ({
@@ -35,10 +36,17 @@ type Props = {
   book?: BookSchema;
   onSubmit: (book: BookPropsWithSubmitOptions) => void;
   onCancel(): void;
+  onAuthorsUpdate(authors: AuthorSchema[]): void;
+  onAuthorSubmit(author: Pick<AuthorSchema, "email">): void;
 };
 
-export default function BookNew(props: Props) {
-  const { book, onSubmit, onCancel } = props;
+export default function BookNew({
+  book,
+  onSubmit,
+  onCancel,
+  onAuthorsUpdate,
+  onAuthorSubmit,
+}: Props) {
   const { isContentEditable } = useSessionAtom();
   const forkFrom =
     book && !isContentEditable(book) && book.authors.length > 0 && book.authors;
@@ -69,7 +77,13 @@ export default function BookNew(props: Props) {
           のブックをフォークしようとしています
         </Alert>
       )}
-      <BookForm book={defaultBook} variant="create" onSubmit={onSubmit} />
+      <BookForm
+        book={defaultBook}
+        variant="create"
+        onSubmit={onSubmit}
+        onAuthorsUpdate={onAuthorsUpdate}
+        onAuthorSubmit={onAuthorSubmit}
+      />
     </Container>
   );
 }

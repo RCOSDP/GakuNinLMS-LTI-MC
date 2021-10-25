@@ -43,6 +43,12 @@ export interface InlineResponse2003 {
      * @memberof InlineResponse2003
      */
     name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineResponse2003
+     */
+    email?: string;
 }
 
 export function InlineResponse2003FromJSON(json: any): InlineResponse2003 {
@@ -59,6 +65,7 @@ export function InlineResponse2003FromJSONTyped(json: any, ignoreDiscriminator: 
         'ltiConsumerId': json['ltiConsumerId'],
         'ltiUserId': json['ltiUserId'],
         'name': json['name'],
+        'email': !exists(json, 'email') ? undefined : json['email'],
     };
 }
 
@@ -75,6 +82,7 @@ export function InlineResponse2003ToJSON(value?: InlineResponse2003 | null): any
         'ltiConsumerId': value.ltiConsumerId,
         'ltiUserId': value.ltiUserId,
         'name': value.name,
+        'email': value.email,
     };
 }
 
