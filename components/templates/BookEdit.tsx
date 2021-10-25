@@ -53,8 +53,8 @@ type Props = {
   onTopicNewClick(): void;
   onTopicEditClick?(topic: TopicSchema): void;
   onBookImportClick(): void;
-  onAuthorsUpdate?(authors: AuthorSchema[]): void;
-  onAuthorSubmit?(author: AuthorProps): void;
+  onAuthorsUpdate(authors: AuthorSchema[]): void;
+  onAuthorSubmit(author: AuthorProps): void;
   isContentEditable?: IsContentEditable;
   linked?: boolean;
 };

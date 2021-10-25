@@ -36,8 +36,8 @@ type Props = {
   book?: BookSchema;
   onSubmit: (book: BookPropsWithSubmitOptions) => void;
   onCancel(): void;
-  onAuthorsUpdate?(authors: AuthorSchema[]): void;
-  onAuthorSubmit?(author: AuthorProps): void;
+  onAuthorsUpdate(authors: AuthorSchema[]): void;
+  onAuthorSubmit(author: AuthorProps): void;
 };
 
 export default function BookNew({

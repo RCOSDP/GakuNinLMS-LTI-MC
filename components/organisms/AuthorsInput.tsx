@@ -44,8 +44,8 @@ const AuthorName = styled("div")(({ theme }) => ({
 type Props = {
   id?: string;
   authors: AuthorSchema[];
-  onAuthorsUpdate?(authors: AuthorSchema[]): void;
-  onAuthorSubmit?(author: AuthorProps): void;
+  onAuthorsUpdate(authors: AuthorSchema[]): void;
+  onAuthorSubmit(author: AuthorProps): void;
 };
 
 export default function AuthorsInput({

@@ -52,8 +52,8 @@ type Props = {
   className?: string;
   variant?: "create" | "update";
   onSubmit?: (book: BookPropsWithSubmitOptions) => void;
-  onAuthorsUpdate?(authors: AuthorSchema[]): void;
-  onAuthorSubmit?(author: AuthorProps): void;
+  onAuthorsUpdate(authors: AuthorSchema[]): void;
+  onAuthorSubmit(author: AuthorProps): void;
 };
 
 export default function BookForm({

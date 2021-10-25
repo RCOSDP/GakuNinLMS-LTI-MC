@@ -42,8 +42,8 @@ type Props = {
   onCancel(): void;
   onSubtitleDelete(videoTrack: VideoTrackSchema): void;
   onSubtitleSubmit(videoTrack: VideoTrackProps): void;
-  onAuthorsUpdate?(authors: AuthorSchema[]): void;
-  onAuthorSubmit?(author: AuthorProps): void;
+  onAuthorsUpdate(authors: AuthorSchema[]): void;
+  onAuthorSubmit(author: AuthorProps): void;
 };
 
 export default function TopicEdit(props: Props) {
