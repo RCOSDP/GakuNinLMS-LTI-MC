@@ -15,7 +15,7 @@ import useCardStyles from "styles/card";
 import gray from "theme/colors/gray";
 import type { BookSchema } from "$server/models/book";
 import type { BookPropsWithSubmitOptions } from "$types/bookPropsWithSubmitOptions";
-import type { AuthorSchema, AuthorProps } from "$server/models/author";
+import type { AuthorSchema } from "$server/models/author";
 import { useAuthorsAtom } from "store/authors";
 import languages from "$utils/languages";
 
@@ -53,7 +53,7 @@ type Props = {
   variant?: "create" | "update";
   onSubmit?: (book: BookPropsWithSubmitOptions) => void;
   onAuthorsUpdate(authors: AuthorSchema[]): void;
-  onAuthorSubmit(author: AuthorProps): void;
+  onAuthorSubmit(author: Pick<AuthorSchema, "email">): void;
 };
 
 export default function BookForm({

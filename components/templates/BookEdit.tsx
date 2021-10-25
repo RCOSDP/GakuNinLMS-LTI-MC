@@ -13,7 +13,7 @@ import type { BookSchema } from "$server/models/book";
 import type { BookPropsWithSubmitOptions } from "$types/bookPropsWithSubmitOptions";
 import type { SectionProps } from "$server/models/book/section";
 import type { TopicSchema } from "$server/models/topic";
-import type { AuthorSchema, AuthorProps } from "$server/models/author";
+import type { AuthorSchema } from "$server/models/author";
 import type { IsContentEditable } from "$types/content";
 import { useConfirm } from "material-ui-confirm";
 import useDialogProps from "$utils/useDialogProps";
@@ -54,7 +54,7 @@ type Props = {
   onTopicEditClick?(topic: TopicSchema): void;
   onBookImportClick(): void;
   onAuthorsUpdate(authors: AuthorSchema[]): void;
-  onAuthorSubmit(author: AuthorProps): void;
+  onAuthorSubmit(author: Pick<AuthorSchema, "email">): void;
   isContentEditable?: IsContentEditable;
   linked?: boolean;
 };

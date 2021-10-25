@@ -12,7 +12,7 @@ import type {
   VideoTrackProps,
   VideoTrackSchema,
 } from "$server/models/videoTrack";
-import type { AuthorSchema, AuthorProps } from "$server/models/author";
+import type { AuthorSchema } from "$server/models/author";
 import { useConfirm } from "material-ui-confirm";
 
 const useStyles = makeStyles((theme) => ({
@@ -43,7 +43,7 @@ type Props = {
   onSubtitleDelete(videoTrack: VideoTrackSchema): void;
   onSubtitleSubmit(videoTrack: VideoTrackProps): void;
   onAuthorsUpdate(authors: AuthorSchema[]): void;
-  onAuthorSubmit(author: AuthorProps): void;
+  onAuthorSubmit(author: Pick<AuthorSchema, "email">): void;
 };
 
 export default function TopicEdit(props: Props) {

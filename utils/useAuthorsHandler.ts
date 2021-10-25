@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import type { Content } from "$types/content";
 import type { BookSchema } from "$server/models/book";
 import { AuthorSchema } from "$server/models/author";
-import type { AuthorProps } from "$server/models/author";
 import { useAuthorsAtom } from "$store/authors";
 import { fetchUsers } from "$utils/users";
 import { updateBookAuthors } from "$utils/bookAuthors";
@@ -25,7 +24,7 @@ function useAuthorsHandler(content?: Content) {
     content && updateContentAuthors(content, authors);
     updateAuthors(authors);
   }
-  async function handleAuthorSubmit({ email }: AuthorProps) {
+  async function handleAuthorSubmit({ email }: Pick<AuthorSchema, "email">) {
     if (!email) return;
     const users = await fetchUsers(email);
     const authors = [

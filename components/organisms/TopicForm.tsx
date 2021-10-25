@@ -28,7 +28,7 @@ import type {
 import languages from "$utils/languages";
 import providers from "$utils/providers";
 import useVideoResourceProps from "$utils/useVideoResourceProps";
-import type { AuthorSchema, AuthorProps } from "$server/models/author";
+import type { AuthorSchema } from "$server/models/author";
 import { useAuthorsAtom } from "store/authors";
 import { useVideoTrackAtom } from "$store/videoTrack";
 
@@ -68,7 +68,7 @@ type Props = {
   onSubtitleSubmit(videoTrack: VideoTrackProps): void;
   onSubtitleDelete(videoTrack: VideoTrackSchema): void;
   onAuthorsUpdate(authors: AuthorSchema[]): void;
-  onAuthorSubmit(author: AuthorProps): void;
+  onAuthorSubmit(author: Pick<AuthorSchema, "email">): void;
 };
 
 export default function TopicForm(props: Props) {

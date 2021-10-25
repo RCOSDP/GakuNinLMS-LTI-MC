@@ -12,7 +12,6 @@ import Input from "$atoms/Input";
 import InputLabel from "$atoms/InputLabel";
 import Select from "$atoms/Select";
 import { AuthorSchema } from "$server/models/author";
-import type { AuthorProps } from "$server/models/author";
 import { update, remove } from "$utils/reorder";
 import { useSessionAtom } from "$store/session";
 
@@ -45,7 +44,7 @@ type Props = {
   id?: string;
   authors: AuthorSchema[];
   onAuthorsUpdate(authors: AuthorSchema[]): void;
-  onAuthorSubmit(author: AuthorProps): void;
+  onAuthorSubmit(author: Pick<AuthorSchema, "email">): void;
 };
 
 export default function AuthorsInput({

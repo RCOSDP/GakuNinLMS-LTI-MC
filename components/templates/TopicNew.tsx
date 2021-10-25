@@ -7,7 +7,7 @@ import RequiredDot from "$atoms/RequiredDot";
 import BackButton from "$atoms/BackButton";
 import useContainerStyles from "styles/container";
 import type { TopicProps, TopicSchema } from "$server/models/topic";
-import type { AuthorProps, AuthorSchema } from "$server/models/author";
+import type { AuthorSchema } from "$server/models/author";
 import type {
   VideoTrackProps,
   VideoTrackSchema,
@@ -42,7 +42,7 @@ type Props = {
   onSubtitleSubmit(videoTrack: VideoTrackProps): void;
   onCancel(): void;
   onAuthorsUpdate(authors: AuthorSchema[]): void;
-  onAuthorSubmit(author: AuthorProps): void;
+  onAuthorSubmit(author: Pick<AuthorSchema, "email">): void;
 };
 
 export default function TopicNew({

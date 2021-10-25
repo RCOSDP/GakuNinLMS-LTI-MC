@@ -1,8 +1,6 @@
 import type { FromSchema } from "json-schema-to-ts";
 import { UserSchema } from "./user";
 
-export type AuthorProps = Pick<AuthorSchema, "email">;
-
 /**
  * 表示名のマッピング
  * @todo 多言語対応したい

@@ -8,7 +8,7 @@ import BackButton from "$atoms/BackButton";
 import useContainerStyles from "styles/container";
 import type { BookSchema } from "$server/models/book";
 import type { BookPropsWithSubmitOptions } from "$types/bookPropsWithSubmitOptions";
-import type { AuthorSchema, AuthorProps } from "$server/models/author";
+import type { AuthorSchema } from "$server/models/author";
 import { useSessionAtom } from "$store/session";
 
 const useStyles = makeStyles((theme) => ({
@@ -37,7 +37,7 @@ type Props = {
   onSubmit: (book: BookPropsWithSubmitOptions) => void;
   onCancel(): void;
   onAuthorsUpdate(authors: AuthorSchema[]): void;
-  onAuthorSubmit(author: AuthorProps): void;
+  onAuthorSubmit(author: Pick<AuthorSchema, "email">): void;
 };
 
 export default function BookNew({
