@@ -42,7 +42,7 @@ function useAuthorsHandler(content?: Content) {
     else if (additionalAuthors.length === 0)
       updateState({
         error: false,
-        helperText: "すでに複数著者に含まれています",
+        helperText: "すでに著者に含まれています",
       });
     else onReset();
     const authors = [...authorsState, ...additionalAuthors];
