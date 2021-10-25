@@ -16,28 +16,38 @@ const updateContentAuthors = (content: Content, authors: AuthorSchema[]) =>
     : updateTopicAuthors({ id: content.id, authors });
 
 function useAuthorsHandler(content?: Content) {
-  const { authors: authorsState, updateAuthors } = useAuthorsAtom();
+  const { authors: authorsState, updateState, onReset } = useAuthorsAtom();
   useEffect(() => {
-    updateAuthors(content?.authors ?? []);
-  }, [content, updateAuthors]);
+    updateState({ authors: content?.authors ?? [] });
+  }, [content, updateState]);
   async function handleAuthorsUpdate(authors: AuthorSchema[]) {
     content && updateContentAuthors(content, authors);
-    updateAuthors(authors);
+    updateState({ authors });
   }
   async function handleAuthorSubmit({ email }: Pick<AuthorSchema, "email">) {
     if (!email) return;
     const users = await fetchUsers(email);
-    const authors = [
-      ...authorsState,
-      ...users
-        .filter((user) => !authorsState.some((author) => author.id === user.id))
-        .map((user) => ({
-          ...user,
-          roleName: AuthorSchema._roleNames.author,
-        })),
-    ];
+    const additionalAuthors = users
+      .filter((user) => !authorsState.some((author) => author.id === user.id))
+      .map((user) => ({
+        ...user,
+        roleName: AuthorSchema._roleNames.author,
+      }));
+    if (users.length === 0)
+      updateState({
+        error: true,
+        helperText:
+          "該当するメールアドレスが存在しないか、無効なメールアドレスです",
+      });
+    else if (additionalAuthors.length === 0)
+      updateState({
+        error: false,
+        helperText: "すでに複数著者に含まれています",
+      });
+    else onReset();
+    const authors = [...authorsState, ...additionalAuthors];
     content && updateContentAuthors(content, authors);
-    updateAuthors(authors);
+    updateState({ authors });
   }
 
   return {

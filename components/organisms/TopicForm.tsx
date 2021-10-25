@@ -104,7 +104,7 @@ export default function TopicForm(props: Props) {
   const handleSubtitleDelete = (videoTrack: VideoTrackSchema) => {
     onSubtitleDelete(videoTrack);
   };
-  const { authors } = useAuthorsAtom();
+  const { updateState: _updateState, ...authorsInputProps } = useAuthorsAtom();
   const defaultValues = {
     name: topic?.name,
     description: topic?.description ?? "",
@@ -158,7 +158,7 @@ export default function TopicForm(props: Props) {
           fullWidth
         />
         <AuthorsInput
-          authors={authors}
+          {...authorsInputProps}
           onAuthorsUpdate={onAuthorsUpdate}
           onAuthorSubmit={onAuthorSubmit}
         />

@@ -1,5 +1,6 @@
-import { useState } from "react";
 import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import FormHelperText from "@mui/material/FormHelperText";
 import type { SelectChangeEvent } from "@mui/material/Select";
 import { styled } from "@mui/material/styles";
 import { grey } from "@mui/material/colors";
@@ -43,6 +44,11 @@ const AuthorName = styled("div")(({ theme }) => ({
 type Props = {
   id?: string;
   authors: AuthorSchema[];
+  value: string;
+  error?: boolean;
+  helperText?: React.ReactNode;
+  onInput?(value: string): void;
+  onReset?(): void;
   onAuthorsUpdate(authors: AuthorSchema[]): void;
   onAuthorSubmit(author: Pick<AuthorSchema, "email">): void;
 };
@@ -50,10 +56,14 @@ type Props = {
 export default function AuthorsInput({
   id,
   authors,
+  value,
+  error,
+  helperText,
+  onInput,
+  onReset,
   onAuthorsUpdate,
   onAuthorSubmit = () => undefined,
 }: Props) {
-  const [email, setEmail] = useState("");
   const { session } = useSessionAtom();
   const handleAuthorUpdate =
     (author: AuthorSchema) => (event: SelectChangeEvent<unknown>) => {
@@ -70,14 +80,14 @@ export default function AuthorsInput({
     const index = authors.findIndex(({ id }) => id === author.id);
     onAuthorsUpdate?.(remove(authors, index));
   };
-  const handleClear = () => setEmail("");
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) =>
-    setEmail(event.target.value);
+  const handleReset = () => onReset?.();
+  const handleInput = (event: React.ChangeEvent<HTMLInputElement>) =>
+    onInput?.(event.target.value);
   const handleKeyDown = (event: React.KeyboardEvent) => {
     // NOTE: このコンポーネントをform要素でラップしている場合にsubmitさせない目的
     event.key === "Enter" && event.preventDefault();
   };
-  const handleAuthorSubmit = () => onAuthorSubmit({ email });
+  const handleAuthorSubmit = () => onAuthorSubmit({ email: value });
 
   return (
     <div>
@@ -110,33 +120,36 @@ export default function AuthorsInput({
           </IconButton>
         </AuthorItem>
       ))}
-      <Input
-        id={id}
-        type="email"
-        placeholder="user@example.com"
-        value={email}
-        onChange={handleChange}
-        onKeyDown={handleKeyDown}
-        startAdornment={<EmailOutlinedIcon />}
-        endAdornment={
-          <>
-            <IconButton
-              onClick={handleClear}
-              color="secondary"
-              tooltipProps={{ title: "入力をクリア" }}
-            >
-              <CloseIcon />
-            </IconButton>
-            <IconButton
-              onClick={handleAuthorSubmit}
-              color="primary"
-              tooltipProps={{ title: "このメールアドレスのユーザーを追加" }}
-            >
-              <PersonAddIcon />
-            </IconButton>
-          </>
-        }
-      />
+      <FormControl error={error}>
+        <Input
+          id={id}
+          type="email"
+          placeholder="user@example.com"
+          value={value}
+          onChange={handleInput}
+          onKeyDown={handleKeyDown}
+          startAdornment={<EmailOutlinedIcon />}
+          endAdornment={
+            <>
+              <IconButton
+                onClick={handleReset}
+                color="secondary"
+                tooltipProps={{ title: "入力をリセット" }}
+              >
+                <CloseIcon />
+              </IconButton>
+              <IconButton
+                onClick={handleAuthorSubmit}
+                color="primary"
+                tooltipProps={{ title: "このメールアドレスのユーザーを追加" }}
+              >
+                <PersonAddIcon />
+              </IconButton>
+            </>
+          }
+        />
+        <FormHelperText>{helperText}</FormHelperText>
+      </FormControl>
     </div>
   );
 }

@@ -68,7 +68,7 @@ export default function BookForm({
 }: Props) {
   const cardClasses = useCardStyles();
   const classes = useStyles();
-  const { authors } = useAuthorsAtom();
+  const { updateState: _updateState, ...authorsInputProps } = useAuthorsAtom();
   const defaultValues: BookPropsWithSubmitOptions = {
     name: book?.name ?? "",
     description: book?.description ?? "",
@@ -108,7 +108,7 @@ export default function BookForm({
         fullWidth
       />
       <AuthorsInput
-        authors={authors}
+        {...authorsInputProps}
         onAuthorsUpdate={onAuthorsUpdate}
         onAuthorSubmit={onAuthorSubmit}
       />

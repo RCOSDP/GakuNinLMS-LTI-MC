@@ -1,25 +1,36 @@
 import { useEffect } from "react";
 import { atom, useAtom } from "jotai";
 import { RESET, atomWithReset, useUpdateAtom } from "jotai/utils";
-import type { AuthorSchema } from "$server/models/author";
+import type AuthorsInput from "$organisms/AuthorsInput";
 
-const authorsAtom = atomWithReset<AuthorSchema[]>([]);
+type AuthorsState = Pick<
+  Parameters<typeof AuthorsInput>[0],
+  "authors" | "value" | "error" | "helperText"
+>;
 
-const updateAuthorsAtom = atom<null, AuthorSchema[]>(
+const authorsAtom = atomWithReset<AuthorsState>({
+  value: "",
+  authors: [],
+});
+
+const updateStateAtom = atom<null, Partial<AuthorsState>>(
   null,
-  (_, set, authors) => {
-    set(authorsAtom, authors);
+  (get, set, state) => {
+    set(authorsAtom, { ...get(authorsAtom), ...state });
   }
 );
 
 export function useAuthorsAtom() {
-  const [authors, reset] = useAtom(authorsAtom);
-  const updateAuthors = useUpdateAtom(updateAuthorsAtom);
+  const [state, reset] = useAtom(authorsAtom);
+  const updateState = useUpdateAtom(updateStateAtom);
   useEffect(
     () => () => {
       reset(RESET);
     },
     [reset]
   );
-  return { authors, updateAuthors };
+  const onInput = (value: string) => updateState({ value });
+  const onReset = () =>
+    updateState({ value: "", error: undefined, helperText: undefined });
+  return { ...state, updateState, onInput, onReset };
 }
