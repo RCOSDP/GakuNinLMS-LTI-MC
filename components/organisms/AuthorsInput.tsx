@@ -73,6 +73,10 @@ export default function AuthorsInput({
   const handleClear = () => setEmail("");
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) =>
     setEmail(event.target.value);
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    // NOTE: このコンポーネントをform要素でラップしている場合にsubmitさせない目的
+    event.key === "Enter" && event.preventDefault();
+  };
   const handleAuthorSubmit = () => onAuthorSubmit({ email });
 
   return (
@@ -112,6 +116,7 @@ export default function AuthorsInput({
         placeholder="user@example.com"
         value={email}
         onChange={handleChange}
+        onKeyDown={handleKeyDown}
         startAdornment={<EmailOutlinedIcon />}
         endAdornment={
           <>
