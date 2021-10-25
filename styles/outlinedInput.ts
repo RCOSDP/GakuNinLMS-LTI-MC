@@ -13,6 +13,9 @@ const outlinedInput = (theme: Theme) => ({
     [`&.${outlinedInputClasses.focused}`]: {
       borderColor: theme.palette.primary.main,
     },
+    [`&.${outlinedInputClasses.error}`]: {
+      borderColor: theme.palette.error.main,
+    },
   },
   [`.${outlinedInputClasses.input}`]: {
     height: "100%",
