@@ -100,7 +100,7 @@ export default function AuthorsInput({
             <span className="name">{author.name}</span>
             <span className="email">{author.email}</span>
             <span className="lti-consumer-id">
-              {author.ltiConsumerId} に存在するユーザー
+              {author.ltiConsumerId} に存在する教員
             </span>
           </AuthorName>
           <Select onChange={handleAuthorUpdate(author)} value={author.roleName}>
@@ -113,7 +113,7 @@ export default function AuthorsInput({
           <IconButton
             onClick={handleAuthorRemove(author)}
             color="warning"
-            tooltipProps={{ title: "このユーザーを取り除く" }}
+            tooltipProps={{ title: "この教員を取り除く" }}
             disabled={session?.user?.email === author.email}
           >
             <PersonRemoveIcon />
@@ -141,7 +141,7 @@ export default function AuthorsInput({
               <IconButton
                 onClick={handleAuthorSubmit}
                 color="primary"
-                tooltipProps={{ title: "このメールアドレスのユーザーを追加" }}
+                tooltipProps={{ title: "このメールアドレスの教員を追加" }}
               >
                 <PersonAddIcon />
               </IconButton>
