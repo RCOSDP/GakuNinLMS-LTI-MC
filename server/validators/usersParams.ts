@@ -5,7 +5,8 @@ export const UsersParams = {
   type: "object",
   required: ["email"],
   properties: {
-    email: { type: "string" },
+    // NOTE: ReDoS攻撃に脆弱になりうるのでここでは `format: "email"` を使わない
+    email: { type: "string", minLength: 1 },
   },
   additionalProperties: false,
 } as const;
