@@ -182,9 +182,13 @@ class ZoomImport {
         },
       };
 
+      const datetimeForTitle = format(
+        utcToZoneTime(startTime, meeting.timezone || "Asia/Tokyo"),
+        "yyyy/MM/dd HH:mm"
+      );
       const meetingDetail = await this.getMeetingDetail(meeting);
       const topic = {
-        name: "📽 " + meeting.topic,
+        name: `📽 ${meeting.topic} ${datetimeForTitle}`,
         description: meetingDetail.agenda,
         timeRequired: meeting.duration * 60,
         creator: { connect: { id: this.user.id } },
