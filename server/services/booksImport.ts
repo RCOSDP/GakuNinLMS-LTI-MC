@@ -1,8 +1,7 @@
 import type { FastifySchema } from "fastify";
 import { outdent } from "outdent";
-import type { BooksImportParams } from "$server/validators/booksImportParams";
 import {
-  booksImportParamsSchema,
+  BooksImportParams,
   booksImportResultSchema,
 } from "$server/validators/booksImportParams";
 import type { SessionSchema } from "$server/models/session";
@@ -18,7 +17,7 @@ export const importSchema: FastifySchema = {
     ブックをインポートします。
     教員または管理者でなければなりません。`,
   //consumes: [ "multipart/form-data" ],
-  body: booksImportParamsSchema,
+  body: BooksImportParams,
   response: {
     201: booksImportResultSchema,
     400: booksImportResultSchema,

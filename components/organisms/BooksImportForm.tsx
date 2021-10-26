@@ -8,8 +8,11 @@ import clsx from "clsx";
 import TextField from "$atoms/TextField";
 import useCardStyles from "styles/card";
 import gray from "theme/colors/gray";
+import type { AuthorSchema } from "$server/models/author";
 import type { BooksImportParams } from "$server/validators/booksImportParams";
+import AuthorsInput from "$organisms/AuthorsInput";
 import { NEXT_PUBLIC_API_BASE_PATH } from "$utils/env";
+import { useAuthorsAtom } from "$store/authors";
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -26,16 +29,18 @@ const useStyles = makeStyles((theme) => ({
 type Props = {
   className?: string;
   onSubmit?: (book: BooksImportParams) => void;
+  onAuthorSubmit(author: Pick<AuthorSchema, "email">): void;
 };
 
 export default function BooksImportForm(props: Props) {
   const { className, onSubmit = () => undefined } = props;
   const cardClasses = useCardStyles();
   const classes = useStyles();
-
+  const authorsInputProps = useAuthorsAtom();
   const wowzaUrl = "https://www.wowza.com/";
   const providers: { [key: string]: string } = { wowza: wowzaUrl };
   const defaultValues: BooksImportParams = {
+    authors: [],
     json: "",
     file: "",
     provider: wowzaUrl,
@@ -51,6 +56,8 @@ export default function BooksImportForm(props: Props) {
       className={clsx(classes.margin, className)}
       component="form"
       onSubmit={handleSubmit((values: BooksImportParams) => {
+        values.authors = authorsInputProps.authors;
+
         if (values?.file?.length) {
           const reader = new FileReader();
           reader.addEventListener(
@@ -84,6 +91,13 @@ export default function BooksImportForm(props: Props) {
           </MenuItem>
         ))}
       </TextField>
+      <AuthorsInput
+        {...authorsInputProps}
+        onAuthorsUpdate={(authors) => {
+          authorsInputProps.updateState({ authors });
+        }}
+        onAuthorSubmit={props.onAuthorSubmit}
+      />
       <Button variant="contained" color="primary" type="submit">
         インポート
       </Button>

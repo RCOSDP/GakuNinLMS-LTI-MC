@@ -62,13 +62,13 @@ export default function AuthorsInput({
   onInput,
   onReset,
   onAuthorsUpdate,
-  onAuthorSubmit = () => undefined,
+  onAuthorSubmit,
 }: Props) {
   const { session } = useSessionAtom();
   const handleAuthorUpdate =
     (author: AuthorSchema) => (event: SelectChangeEvent<unknown>) => {
       const index = authors.findIndex(({ id }) => id === author.id);
-      onAuthorsUpdate?.(
+      onAuthorsUpdate(
         update(authors, index, {
           ...author,
           roleName: event.target
@@ -78,7 +78,7 @@ export default function AuthorsInput({
     };
   const handleAuthorRemove = (author: AuthorSchema) => () => {
     const index = authors.findIndex(({ id }) => id === author.id);
-    onAuthorsUpdate?.(remove(authors, index));
+    onAuthorsUpdate(remove(authors, index));
   };
   const handleReset = () => onReset?.();
   const handleInput = (event: React.ChangeEvent<HTMLInputElement>) =>

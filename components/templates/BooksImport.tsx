@@ -10,6 +10,7 @@ import type {
   BooksImportResult,
 } from "$server/validators/booksImportParams";
 import type { BookSchema } from "$server/models/book";
+import type { AuthorSchema } from "$server/models/author";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -50,6 +51,7 @@ type Props = {
   onBookPreviewClick?(book: BookSchema): void;
   onSubmit(book: BooksImportParams): void;
   onCancel(): void;
+  onAuthorSubmit(author: Pick<AuthorSchema, "email">): void;
 };
 
 export default function BooksImport({
@@ -57,6 +59,7 @@ export default function BooksImport({
   onBookPreviewClick,
   onSubmit,
   onCancel,
+  onAuthorSubmit,
 }: Props) {
   const classes = useStyles();
   const containerClasses = useContainerStyles();
@@ -78,7 +81,11 @@ export default function BooksImport({
           <Typography className={classes.title} variant="h4">
             ブックのインポート
           </Typography>
-          <BooksImportForm className={classes.form} onSubmit={onSubmit} />
+          <BooksImportForm
+            className={classes.form}
+            onSubmit={onSubmit}
+            onAuthorSubmit={onAuthorSubmit}
+          />
         </>
       )}
       {showResult && (
