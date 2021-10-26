@@ -8,7 +8,7 @@ import useContainerStyles from "styles/container";
 import type {
   BooksImportParams,
   BooksImportResult,
-} from "$server/validators/booksImportParams";
+} from "$server/models/booksImportParams";
 import type { BookSchema } from "$server/models/book";
 import type { AuthorSchema } from "$server/models/author";
 

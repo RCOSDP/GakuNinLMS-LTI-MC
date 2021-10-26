@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import type {
   BooksImportParams,
   BooksImportResult,
-} from "$server/validators/booksImportParams";
+} from "$server/models/booksImportParams";
 import type { BookSchema } from "$server/models/book";
 import BooksImport from "$templates/BooksImport";
 import Book from "$templates/Book";

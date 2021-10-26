@@ -23,7 +23,7 @@ import {
 import parse from "spdx-expression-parse";
 import type { BookSchema } from "$server/models/book";
 import { bookSchema } from "$server/models/book";
-import { AuthorsProps } from "./authorsProps";
+import { AuthorsProps } from "../validators/authorsProps";
 
 /** ブックのインポートのためのリクエストパラメーター */
 export const BooksImportParams = {

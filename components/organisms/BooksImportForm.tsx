@@ -9,7 +9,7 @@ import TextField from "$atoms/TextField";
 import useCardStyles from "styles/card";
 import gray from "theme/colors/gray";
 import type { AuthorSchema } from "$server/models/author";
-import type { BooksImportParams } from "$server/validators/booksImportParams";
+import type { BooksImportParams } from "$server/models/booksImportParams";
 import AuthorsInput from "$organisms/AuthorsInput";
 import { NEXT_PUBLIC_API_BASE_PATH } from "$utils/env";
 import { useAuthorsAtom } from "$store/authors";

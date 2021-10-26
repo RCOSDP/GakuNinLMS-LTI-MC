@@ -3,7 +3,7 @@ import { outdent } from "outdent";
 import {
   BooksImportParams,
   booksImportResultSchema,
-} from "$server/validators/booksImportParams";
+} from "$server/models/booksImportParams";
 import type { SessionSchema } from "$server/models/session";
 import authUser from "$server/auth/authUser";
 import authInstructor from "$server/auth/authInstructor";
