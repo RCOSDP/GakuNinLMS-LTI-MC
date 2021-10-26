@@ -233,7 +233,7 @@ model User {
   activities       Activity[]
   /// 氏名
   name             String
-  /// メールアドレス
+  /// メールアドレス ("" は無効値)
   email            String            @default("")
   /// 詳細
   settings         Json              @default("{}")
