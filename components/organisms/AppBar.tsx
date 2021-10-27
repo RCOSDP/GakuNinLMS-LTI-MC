@@ -1,7 +1,8 @@
-import { useState, forwardRef, ComponentProps, Ref } from "react";
+import { useState, forwardRef, ComponentProps, Ref, Fragment } from "react";
 import MuiAppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Button from "@mui/material/Button";
+import Snackbar from "@mui/material/Snackbar";
 import MenuBookOutlinedIcon from "@mui/icons-material/MenuBookOutlined";
 import LibraryBooksOutlinedIcon from "@mui/icons-material/LibraryBooksOutlined";
 import AssessmentOutlinedIcon from "@mui/icons-material/AssessmentOutlined";
@@ -107,6 +108,21 @@ function AppBar(props: Props, ref: Ref<HTMLDivElement>) {
     session?.systemSettings?.zoomImportEnabled &&
       userSettings?.zoomImportEnabled == undefined
   );
+  const actionZoomImportNotice = (
+    <Fragment>
+      <Button
+        variant="contained"
+        size="small"
+        color="primary"
+        onClick={handleOpenUserSettings}
+      >
+        設定
+      </Button>
+      <Button size="small" color="primary" onClick={handleDisableZoomImport}>
+        後で
+      </Button>
+    </Fragment>
+  );
 
   return (
     <MuiAppBar classes={appBarClasses} color="default" {...others} ref={ref}>
@@ -159,28 +175,6 @@ function AppBar(props: Props, ref: Ref<HTMLDivElement>) {
               />
             )}
           </div>
-          {showZoomImportNotice && (
-            <div className={clsx(classes.user, classes.margin)}>
-              <p>zoomインポート機能が利用できます</p>
-              <p>
-                <Button
-                  size="small"
-                  color="primary"
-                  onClick={handleOpenUserSettings}
-                >
-                  設定
-                </Button>
-                <Button
-                  variant="contained"
-                  size="small"
-                  color="primary"
-                  onClick={handleDisableZoomImport}
-                >
-                  後で
-                </Button>
-              </p>
-            </div>
-          )}
           <div className={clsx(classes.user, classes.margin)}>
             <p>{session.user.name}</p>
             <p className={classes.roles}>{role(session)}</p>
@@ -199,6 +193,12 @@ function AppBar(props: Props, ref: Ref<HTMLDivElement>) {
           )}
         </div>
       </Toolbar>
+      <Snackbar
+        open={showZoomImportNotice}
+        action={actionZoomImportNotice}
+        message="zoomインポート機能が利用できます"
+        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+      />
     </MuiAppBar>
   );
 }
