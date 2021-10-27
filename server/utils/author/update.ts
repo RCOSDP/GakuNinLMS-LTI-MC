@@ -1,9 +1,11 @@
-import { AuthorSchema } from "$server/models/author";
+import type { AuthorSchema } from "$server/models/author";
 import type { AuthorsProps } from "$server/validators/authorsProps";
 import type { Topic, Book } from "@prisma/client";
 import prisma from "$server/utils/prisma";
 import type { Authorship } from "./authorToAuthorSchema";
 import { authorArg, authorToAuthorSchema } from "./authorToAuthorSchema";
+import findRoles from "./findRoles";
+import insertAuthors from "./insertAuthors";
 
 export function authorsUpdater(
   contentType: "topic" | "book",
@@ -14,26 +16,13 @@ export function authorsUpdater(
 } {
   const authors = content.authors.map(authorToAuthorSchema);
   async function updateAuthors({ authors }: AuthorsProps) {
-    const roles = (await prisma.contentRole.findMany({})).map((role) => ({
-      ...role,
-      roleName:
-        AuthorSchema._roleNames[
-          role.roleName as keyof typeof AuthorSchema._roleNames
-        ] ?? role.roleName,
-    }));
+    const roles = await findRoles();
 
     await prisma.$transaction([
       prisma.authorship.deleteMany({
         where: { [`${contentType}Id`]: content.id },
       }),
-      prisma.authorship.createMany({
-        data: authors.map((author) => ({
-          [`${contentType}Id`]: content.id,
-          userId: author.id,
-          roleId:
-            roles.find((role) => role.roleName === author.roleName)?.id ?? 1,
-        })),
-      }),
+      insertAuthors(roles, contentType, content.id, authors),
     ]);
 
     const created = await prisma.authorship.findMany({

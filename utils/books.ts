@@ -3,7 +3,7 @@ import type { BookSchema } from "$server/models/book";
 import type {
   BooksImportParams,
   BooksImportResult,
-} from "$server/validators/booksImportParams";
+} from "$server/models/booksImportParams";
 import { api } from "./api";
 import { revalidateBook } from "./book";
 

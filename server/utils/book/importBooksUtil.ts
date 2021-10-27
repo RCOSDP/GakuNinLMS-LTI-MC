@@ -17,8 +17,8 @@ import type {
   ImportTopic,
   ImportSection,
   ImportBook,
-} from "$server/validators/booksImportParams";
-import { ImportBooks } from "$server/validators/booksImportParams";
+} from "$server/models/booksImportParams";
+import { ImportBooks } from "$server/models/booksImportParams";
 import prisma from "$server/utils/prisma";
 import findBook from "./findBook";
 import { parse as parseProviderUrl } from "$server/utils/videoResource";
@@ -30,6 +30,8 @@ import {
   WOWZA_SCP_PASS_PHRASE,
   WOWZA_SCP_SERVER_PATH,
 } from "$server/utils/env";
+import findRoles from "$server/utils/author/findRoles";
+import insertAuthors from "../author/insertAuthors";
 
 async function importBooksUtil(
   user: UserSchema,
@@ -87,6 +89,23 @@ class ImportBooksUtil {
         const res = await findBook(book.id);
         if (res) this.books.push(res as BookSchema);
       }
+
+      const roles = await findRoles();
+      const contents = {
+        books: this.books,
+        topics: this.books.flatMap((book) =>
+          book.sections.flatMap((section) => section.topics)
+        ),
+      };
+
+      await prisma.$transaction([
+        ...contents.books.map((book) =>
+          insertAuthors(roles, "book", book.id, this.params.authors)
+        ),
+        ...contents.topics.map((topic) =>
+          insertAuthors(roles, "topic", topic.id, this.params.authors)
+        ),
+      ]);
     } catch (e) {
       console.error(e);
       this.errors.push(...(Array.isArray(e) ? e : [String(e)]));
@@ -288,7 +307,6 @@ class ImportBooksUtil {
     return {
       ...importBook,
       timeRequired: this.timeRequired,
-      // TODO: 複数著者の作成に対応してほしい
       authors: { create: { userId: this.user.id, roleId: 1 } },
       publishedAt: new Date(importBook.publishedAt),
       createdAt: new Date(importBook.createdAt),
@@ -335,7 +353,6 @@ class ImportBooksUtil {
 
     const topic = {
       ...sectionTopic,
-      // TODO: 複数著者の作成に対応してほしい
       authors: { create: { userId: this.user.id, roleId: 1 } },
       createdAt: new Date(sectionTopic.createdAt),
       updatedAt: new Date(sectionTopic.updatedAt),
