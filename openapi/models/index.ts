@@ -21,8 +21,6 @@ export * from './InlineResponse2002';
 export * from './InlineResponse2003';
 export * from './InlineResponse2004';
 export * from './InlineResponse2005';
-export * from './InlineResponse2006';
-export * from './InlineResponse2006LtiLaunchBody';
 export * from './InlineResponse201';
 export * from './InlineResponse2011';
 export * from './InlineResponse2012';

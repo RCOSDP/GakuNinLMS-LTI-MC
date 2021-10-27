@@ -1,8 +1,8 @@
 export default { title: "atoms/TextField" };
 import { useState, ChangeEvent } from "react";
 import TextField from "./TextField";
-import MuiTextField from "@material-ui/core/TextField";
-import MenuItem from "@material-ui/core/MenuItem";
+import MuiTextField from "@mui/material/TextField";
+import MenuItem from "@mui/material/MenuItem";
 
 export const Default = () => (
   <TextField defaultValue="customized text field" label="customized label" />

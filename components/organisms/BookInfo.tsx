@@ -1,18 +1,11 @@
-import formatDuration from "date-fns/formatDuration";
-import intervalToDuration from "date-fns/intervalToDuration";
-import ja from "date-fns/locale/ja";
-import Card from "@material-ui/core/Card";
-import { grey } from "@material-ui/core/colors";
+import Card from "@mui/material/Card";
+import { grey } from "@mui/material/colors";
 import DescriptionList from "$atoms/DescriptionList";
 import Markdown from "$atoms/Markdown";
 import useCardStyle from "$styles/card";
 import languages from "$utils/languages";
+import formatInterval from "$utils/formatInterval";
 import type { BookSchema } from "$server/models/book";
-
-function formatInterval(start: Date | number, end: Date | number) {
-  const duration = intervalToDuration({ start, end });
-  return formatDuration(duration, { locale: ja });
-}
 
 type Props = {
   className?: string;
@@ -30,8 +23,7 @@ export default function BookInfo({ className, id, book }: Props) {
         value={[
           {
             key: "学習時間",
-            value:
-              formatInterval(0, (book.timeRequired ?? 0) * 1000) || "10秒未満",
+            value: formatInterval(0, (book.timeRequired ?? 0) * 1000),
           },
           {
             key: "教材の主要な言語",

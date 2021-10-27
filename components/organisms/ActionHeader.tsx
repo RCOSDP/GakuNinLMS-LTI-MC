@@ -1,11 +1,13 @@
 import { ComponentProps } from "react";
 import clsx from "clsx";
-import Container from "@material-ui/core/Container";
-import Typography from "@material-ui/core/Typography";
-import { useTheme, makeStyles } from "@material-ui/core/styles";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
+import { useTheme } from "@mui/material/styles";
+import makeStyles from "@mui/styles/makeStyles";
 import { gray } from "$theme/colors";
 import useSticky from "$utils/useSticky";
 import useAppBarOffset from "$utils/useAppBarOffset";
+import sumPixels from "$utils/sumPixels";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -55,7 +57,7 @@ export default function ActionHeader(props: Props) {
   const sticky = useSticky({
     backgroundColor: gray[50],
     offset: considerAppBar
-      ? appBarOffset + theme.spacing(-2)
+      ? sumPixels(appBarOffset, theme.spacing(-2))
       : theme.spacing(-1),
     zIndex: 2,
   });

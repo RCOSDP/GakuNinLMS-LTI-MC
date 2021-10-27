@@ -1,17 +1,18 @@
 import { useState } from "react";
 import clsx from "clsx";
-import { useTheme, makeStyles } from "@material-ui/core/styles";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
-import Button from "@material-ui/core/Button";
-import Link from "@material-ui/core/Link";
-import Typography from "@material-ui/core/Typography";
-import Container from "@material-ui/core/Container";
-import LinkIcon from "@material-ui/icons/Link";
-import useScrollTrigger from "@material-ui/core/useScrollTrigger";
+import { useTheme } from "@mui/material/styles";
+import makeStyles from "@mui/styles/makeStyles";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import Button from "@mui/material/Button";
+import Link from "@mui/material/Link";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import LinkIcon from "@mui/icons-material/Link";
+import useScrollTrigger from "@mui/material/useScrollTrigger";
 import EditButton from "$atoms/EditButton";
 import SharedIndicator from "$atoms/SharedIndicator";
 import DescriptionList from "$atoms/DescriptionList";
-import BookChildren from "$organisms/BookChildren";
+import Sections from "$organisms/Sections";
 import TopicViewer from "$organisms/TopicViewer";
 import ActionHeader from "$organisms/ActionHeader";
 import BookInfo from "$organisms/BookInfo";
@@ -22,6 +23,8 @@ import { useSessionAtom } from "$store/session";
 import useSticky from "$utils/useSticky";
 import useAppBarOffset from "$utils/useAppBarOffset";
 import getLocaleDateString from "$utils/getLocaleDateString";
+import extractNumberFromPx from "$utils/extractNumberFromPx";
+import sumPixels from "$utils/sumPixels";
 
 const useStyles = makeStyles((theme) => ({
   header: {
@@ -41,6 +44,8 @@ const useStyles = makeStyles((theme) => ({
     overflow: "hidden",
     whiteSpace: "nowrap",
     textOverflow: "ellipsis",
+    // NOTE: IconButtonの有無で高さが変わることへの対処
+    minHeight: 40,
   },
   icon: {
     marginRight: theme.spacing(0.5),
@@ -58,7 +63,7 @@ const useStyles = makeStyles((theme) => ({
   },
   inner: {
     display: "grid",
-    gap: `${theme.spacing(2)}px`,
+    gap: theme.spacing(2),
     "&$desktop": {
       gridTemplateAreas: `
         "side main"
@@ -88,9 +93,9 @@ const useStyles = makeStyles((theme) => ({
       marginBottom: theme.spacing(2),
     },
   },
-  scroll: ({ offset }: { offset: number }) => ({
+  scroll: ({ offset }: { offset: string }) => ({
     overflowY: "auto",
-    height: `calc(100vh - ${offset}px)`,
+    height: `calc(100vh - ${offset})`,
   }),
   desktop: {},
   mobile: {},
@@ -126,15 +131,21 @@ export default function Book(props: Props) {
   const handleLinkClick = () => setExpanded(!expanded);
   const theme = useTheme();
   const trigger = useScrollTrigger({
-    threshold: theme.spacing(4),
+    threshold: extractNumberFromPx(theme.spacing(4)),
     disableHysteresis: true,
   });
-  const sideOffset = theme.spacing(2) + (trigger ? 0 : theme.spacing(4));
-  const actionHeaderOffset = 64;
+  const sideOffset = sumPixels(
+    theme.spacing(2),
+    trigger ? "0px" : theme.spacing(4)
+  );
+  const actionHeaderOffset = sumPixels("40px", theme.spacing(2));
   const appBarOffset = useAppBarOffset();
-  const offset = (considerAppBar ? appBarOffset : 0) + actionHeaderOffset;
+  const offset = sumPixels(
+    actionHeaderOffset,
+    considerAppBar ? appBarOffset : "0px"
+  );
   const classes = useStyles({
-    offset: offset + sideOffset,
+    offset: sumPixels(offset, sideOffset),
   });
   const sticky = useSticky({ offset });
   const matches = useMediaQuery(theme.breakpoints.up("md"));
@@ -237,7 +248,7 @@ export default function Book(props: Props) {
             sticky
           )}
         >
-          <BookChildren
+          <Sections
             index={[sectionIndex, topicIndex]}
             sections={book?.sections ?? []}
             onItemClick={handleItemClick}

@@ -40,7 +40,11 @@ REST API の仕様と権限の宣言、主要なリクエストの処理と制�
 
 サーバー起動時の全般的な構成。Fastify インスタンスへのハンドラーの注入。
 
-### server/config/roles.ts ([code](https://github.com/npocccties/chibichilo/blob/master/server/config/roles.ts))
+### server/config/roleUrns.ts ([code](https://github.com/npocccties/chibichilo/blob/master/server/config/roleUrns.ts))
+
+利用者と [LTI v1.3 Roles Claim](https://www.imsglobal.org/spec/lti/v1p3/#roles-claim) との対応関係。権限の制御に利用。
+
+### server/config/roleUrns.ts ([code](https://github.com/npocccties/chibichilo/blob/master/server/config/roleUrns.ts))
 
 利用者と LTI v1.1 ロールの完全修飾 URN との対応関係。権限の制御に利用。
 

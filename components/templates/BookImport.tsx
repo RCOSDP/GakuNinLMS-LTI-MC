@@ -1,17 +1,17 @@
 import { FormEvent, useState } from "react";
 import useInfiniteScroll from "react-infinite-scroll-hook";
-import Skeleton from "@material-ui/lab/Skeleton";
-import { makeStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
-import Typography from "@material-ui/core/Typography";
-import Container from "@material-ui/core/Container";
-import TreeView from "@material-ui/lab/TreeView";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import Skeleton from "@mui/material/Skeleton";
+import makeStyles from "@mui/styles/makeStyles";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import TreeView from "@mui/lab/TreeView";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import TopicPreviewDialog from "$organisms/TopicPreviewDialog";
 import ActionHeader from "$organisms/ActionHeader";
 import ActionFooter from "$organisms/ActionFooter";
-import BookTree from "$molecules/BookTree";
+import BookTree from "$organisms/BookTree";
 import SortSelect from "$atoms/SortSelect";
 import CreatorFilter from "$atoms/CreatorFilter";
 import SearchTextField from "$atoms/SearchTextField";
@@ -82,7 +82,8 @@ export default function BookImport(props: Props) {
   } = props;
   const classes = useStyles();
   const containerClasses = useContainerStyles();
-  const { query, onSearchInput, onLtiContextClick } = useSearchAtom();
+  const { query, onSearchInput, onLtiContextClick, onSearchInputReset } =
+    useSearchAtom();
   const [selectedNodeIds, select] = useState<Set<string>>(new Set());
   const handleTreeChange = (nodeId: string) => {
     select((nodeIds) =>
@@ -95,7 +96,7 @@ export default function BookImport(props: Props) {
     const selectedSections: SectionSchema[] = [];
     const selectedTopics: TopicSchema[] = [];
     selectedNodeIds.forEach((nodeId) => {
-      // TODO: BookTree と BookChildrenTree にある nodeId の構造に合わせて変更
+      // TODO: BookTree と SectionsTree にある nodeId の構造に合わせて変更
       const [bookId, sectionId, topicId] = nodeId
         .replace(/:[^:]*$/, "")
         .split("-")
@@ -128,11 +129,7 @@ export default function BookImport(props: Props) {
   } = useDialogProps<TopicSchema>();
   const handleTopicPreviewClick = (topic: TopicSchema) =>
     setPreviewTopic(topic);
-  const infiniteRef = useInfiniteScroll<HTMLDivElement>({
-    loading,
-    hasNextPage,
-    onLoadMore,
-  });
+  const [infiniteRef] = useInfiniteScroll({ loading, hasNextPage, onLoadMore });
   return (
     <Container ref={infiniteRef} classes={containerClasses} maxWidth="md">
       <ActionHeader
@@ -149,9 +146,10 @@ export default function BookImport(props: Props) {
             <SortSelect onSortChange={onSortChange} />
             <CreatorFilter onFilterChange={onFilterChange} />
             <SearchTextField
-              placeholder="ブック・トピック検索"
+              label="ブック・トピック検索"
               value={query.input}
               onSearchInput={onSearchInput}
+              onSearchInputReset={onSearchInputReset}
             />
           </>
         }
@@ -161,11 +159,10 @@ export default function BookImport(props: Props) {
         defaultExpandIcon={<ChevronRightIcon />}
       >
         {books.map((book) => {
-          const handleItem = (handler?: (topic: TopicSchema) => void) => ([
-            sectionIndex,
-            topicIndex,
-          ]: ItemIndex) =>
-            handler?.(book.sections[sectionIndex].topics[topicIndex]);
+          const handleItem =
+            (handler?: (topic: TopicSchema) => void) =>
+            ([sectionIndex, topicIndex]: ItemIndex) =>
+              handler?.(book.sections[sectionIndex].topics[topicIndex]);
           return (
             <BookTree
               key={book.id}

@@ -1,13 +1,17 @@
 import { useCallback, useEffect } from "react";
 import { useRouter } from "next/router";
 import { BookSchema } from "$server/models/book";
-import { usePlayerTrackerAtom } from "$store/playerTracker";
+import {
+  usePlayerTrackerAtom,
+  usePlayerTrackingAtom,
+} from "$store/playerTracker";
 import Book from "$templates/Book";
 import Placeholder from "$templates/Placeholder";
-import BookNotFoundProblem from "$organisms/BookNotFoundProblem";
+import BookNotFoundProblem from "$templates/BookNotFoundProblem";
 import { useSessionAtom } from "$store/session";
 import { useBook } from "$utils/book";
 import { useBookAtom } from "$store/book";
+import { useVideoAtom } from "$store/video";
 import { TopicSchema } from "$server/models/topic";
 import { pagesPath } from "$utils/$path";
 import { useActivityTracking } from "$utils/activity";
@@ -23,17 +27,25 @@ function Show(query: Query) {
     isTopicEditable,
     session?.ltiResourceLink
   );
-  const {
-    updateBook,
-    itemIndex,
-    nextItemIndex,
-    itemExists,
-    updateItemIndex,
-  } = useBookAtom();
+  const { updateBook, itemIndex, nextItemIndex, itemExists, updateItemIndex } =
+    useBookAtom();
   useEffect(() => {
     if (book) updateBook(book);
   }, [book, updateBook]);
   useActivityTracking();
+  const { video } = useVideoAtom();
+  const tracking = usePlayerTrackingAtom();
+  useEffect(() => {
+    const videoInstance = video.get(itemExists(itemIndex)?.resource.url ?? "");
+    if (!videoInstance) return;
+    if (videoInstance.type === "vimeo") {
+      tracking({ player: videoInstance.player, url: videoInstance.url });
+    } else {
+      videoInstance.player.ready(() => {
+        tracking({ player: videoInstance.player });
+      });
+    }
+  }, [video, itemExists, itemIndex, tracking]);
   const playerTracker = usePlayerTrackerAtom();
   useEffect(() => {
     if (playerTracker) logger(playerTracker);

@@ -7,5 +7,5 @@ export class VideoTrackParams extends ResourceParams {
   video_track_id!: number;
 }
 
-export const videoTrackParamsSchema = validationMetadatasToSchemas()
-  .VideoTrackParams;
+export const videoTrackParamsSchema =
+  validationMetadatasToSchemas().VideoTrackParams;

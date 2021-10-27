@@ -1,5 +1,5 @@
 import type { Story } from "@storybook/react";
-import MenuBookOutlinedIcon from "@material-ui/icons/MenuBookOutlined";
+import MenuBookOutlinedIcon from "@mui/icons-material/MenuBookOutlined";
 import AppBarNavButton from "./AppBarNavButton";
 
 export default {

@@ -6,7 +6,7 @@ import Document, {
   Main,
   NextScript,
 } from "next/document";
-import { ServerStyleSheets } from "@material-ui/styles";
+import { ServerStyleSheets } from "@mui/styles";
 
 async function getInitialProps(ctx: DocumentContext) {
   const sheets = new ServerStyleSheets();
@@ -31,7 +31,9 @@ async function getInitialProps(ctx: DocumentContext) {
 const template = (
   // TODO: i18n 対応したい
   <Html lang="ja" dir="ltr">
-    <Head />
+    <Head>
+      <link rel="icon" href="/favicon.ico" />
+    </Head>
     <body>
       <Main />
       <NextScript />

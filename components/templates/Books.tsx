@@ -1,11 +1,11 @@
 import useInfiniteScroll from "react-infinite-scroll-hook";
-import Skeleton from "@material-ui/lab/Skeleton";
-import { makeStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
-import Card from "@material-ui/core/Card";
-import Container from "@material-ui/core/Container";
-import Typography from "@material-ui/core/Typography";
-import AddIcon from "@material-ui/icons/Add";
+import Skeleton from "@mui/material/Skeleton";
+import makeStyles from "@mui/styles/makeStyles";
+import Button from "@mui/material/Button";
+import Card from "@mui/material/Card";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
+import AddIcon from "@mui/icons-material/Add";
 import ActionHeader from "$organisms/ActionHeader";
 import BookPreview from "$organisms/BookPreview";
 import SortSelect from "$atoms/SortSelect";
@@ -74,17 +74,14 @@ export default function Books(props: Props) {
     onSortChange,
     onFilterChange,
   } = props;
-  const { query, onSearchInput, onLtiContextClick } = useSearchAtom();
+  const { query, onSearchInput, onLtiContextClick, onSearchInputReset } =
+    useSearchAtom();
   const handleBookNewClick = () => onBookNewClick();
   const handleBooksImportClick = () => onBooksImportClick();
   const classes = useStyles();
   const containerClasses = useContainerStyles();
   const cardClasses = useCardStyles();
-  const infiniteRef = useInfiniteScroll<HTMLDivElement>({
-    loading,
-    hasNextPage,
-    onLoadMore,
-  });
+  const [infiniteRef] = useInfiniteScroll({ loading, hasNextPage, onLoadMore });
   return (
     <div ref={infiniteRef}>
       <ActionHeader
@@ -142,9 +139,10 @@ export default function Books(props: Props) {
             <SortSelect onSortChange={onSortChange} />
             <CreatorFilter onFilterChange={onFilterChange} />
             <SearchTextField
-              placeholder="ブック・トピック検索"
+              label="ブック・トピック検索"
               value={query.input}
               onSearchInput={onSearchInput}
+              onSearchInputReset={onSearchInputReset}
             />
           </>
         }

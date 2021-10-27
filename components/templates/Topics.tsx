@@ -1,9 +1,9 @@
 import useInfiniteScroll from "react-infinite-scroll-hook";
-import Skeleton from "@material-ui/lab/Skeleton";
-import { makeStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
-import Container from "@material-ui/core/Container";
-import AddIcon from "@material-ui/icons/Add";
+import Skeleton from "@mui/material/Skeleton";
+import makeStyles from "@mui/styles/makeStyles";
+import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
+import AddIcon from "@mui/icons-material/Add";
 import ActionHeader from "$organisms/ActionHeader";
 import TopicPreview from "$organisms/TopicPreview";
 import TopicPreviewDialog from "$organisms/TopicPreviewDialog";
@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
   topics: {
     display: "grid",
     gridTemplateColumns: "repeat(auto-fill, 296px)",
-    gap: `${theme.spacing(2)}px`,
+    gap: theme.spacing(2),
   },
 }));
 
@@ -50,6 +50,7 @@ export default function Topics(props: Props) {
     onSortChange,
     onFilterChange,
   } = props;
+  const { query, onSearchInput, onSearchInputReset } = useSearchAtom();
   const classes = useStyles();
   const containerClasses = useContainerStyles();
   const {
@@ -57,14 +58,9 @@ export default function Topics(props: Props) {
     dispatch: setPreviewTopic,
     ...dialogProps
   } = useDialogProps<TopicSchema>();
-  const { onSearchInput } = useSearchAtom();
   const handleTopicPreviewClick = (topic: TopicSchema) =>
     setPreviewTopic(topic);
-  const infiniteRef = useInfiniteScroll<HTMLDivElement>({
-    loading,
-    hasNextPage,
-    onLoadMore,
-  });
+  const [infiniteRef] = useInfiniteScroll({ loading, hasNextPage, onLoadMore });
   return (
     <Container ref={infiniteRef} classes={containerClasses} maxWidth="lg">
       <ActionHeader
@@ -82,8 +78,10 @@ export default function Topics(props: Props) {
             <SortSelect onSortChange={onSortChange} />
             <CreatorFilter onFilterChange={onFilterChange} />
             <SearchTextField
-              placeholder="トピック検索"
+              label="トピック検索"
+              value={query.input}
               onSearchInput={onSearchInput}
+              onSearchInputReset={onSearchInputReset}
             />
           </>
         }

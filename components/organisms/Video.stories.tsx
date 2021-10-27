@@ -1,9 +1,10 @@
-export default { title: "organisms/Video" };
-
 import { outdent } from "outdent";
 import Video from "./Video";
+import type { Story } from "@storybook/react";
 
-const defaultProps = {
+export default { title: "organisms/Video", component: Video };
+
+const defaultArgs = {
   tracks: [
     {
       id: 1,
@@ -23,26 +24,27 @@ const defaultProps = {
   autoplay: true,
 };
 
-export const YouTube = () => (
-  <Video
-    providerUrl="https://www.youtube.com/"
-    url="https://www.youtube.com/watch?v=3yfen-t49eI"
-    {...defaultProps}
-  />
-);
+const Template: Story<Parameters<typeof Video>[0]> = (args) => {
+  return <Video {...args} />;
+};
 
-export const Vimeo = () => (
-  <Video
-    providerUrl="https://vimeo.com/"
-    url="https://vimeo.com/1084537"
-    {...defaultProps}
-  />
-);
+export const YouTube = Template.bind({});
+YouTube.args = {
+  ...defaultArgs,
+  providerUrl: "https://www.youtube.com/",
+  url: "https://www.youtube.com/watch?v=3yfen-t49eI",
+};
 
-export const Wowza = () => (
-  <Video
-    providerUrl="https://wowzaec2demo.streamlock.net/"
-    url="https://wowzaec2demo.streamlock.net/vod/mp4/playlist.m3u8"
-    {...defaultProps}
-  />
-);
+export const Vimeo = Template.bind({});
+Vimeo.args = {
+  ...defaultArgs,
+  providerUrl: "https://vimeo.com/",
+  url: "https://vimeo.com/1084537",
+};
+
+export const Wowza = Template.bind({});
+Wowza.args = {
+  ...defaultArgs,
+  providerUrl: "https://wowzaec2demo.streamlock.net/",
+  url: "https://wowzaec2demo.streamlock.net/vod/mp4/playlist.m3u8",
+};
