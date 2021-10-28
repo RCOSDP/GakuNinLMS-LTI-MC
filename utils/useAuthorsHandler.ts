@@ -50,12 +50,7 @@ function useAuthorsHandler(content?: Content) {
       });
     else onReset();
     const authors = [...authorsState, ...additionalAuthors];
-    if (content) {
-      const res = await updateContentAuthors(content, authors);
-      updateState({ authors: res });
-    } else {
-      updateState({ authors });
-    }
+    handleAuthorsUpdate(authors);
   }
 
   return {
