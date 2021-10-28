@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, ChangeEvent } from "react";
 import { useConfirm } from "material-ui-confirm";
 import useInfiniteScroll from "react-infinite-scroll-hook";
 import Skeleton from "@mui/material/Skeleton";
 import makeStyles from "@mui/styles/makeStyles";
 import Button from "@mui/material/Button";
+import Checkbox from "@mui/material/Checkbox";
 import Container from "@mui/material/Container";
 import AddIcon from "@mui/icons-material/Add";
 import ActionHeader from "$organisms/ActionHeader";
@@ -15,6 +16,7 @@ import CreatorFilter from "$atoms/CreatorFilter";
 import SearchTextField from "$atoms/SearchTextField";
 import { TopicSchema } from "$server/models/topic";
 import { SortOrder } from "$server/models/sortOrder";
+import { gray } from "$theme/colors";
 import { Filter } from "$types/filter";
 import useContainerStyles from "$styles/container";
 import useDialogProps from "$utils/useDialogProps";
@@ -29,6 +31,15 @@ const useStyles = makeStyles((theme) => ({
     gridTemplateColumns: "repeat(auto-fill, 296px)",
     gap: theme.spacing(2),
   },
+  fieldset: {
+    display: "inline-flex",
+    padding: theme.spacing(0),
+    backgroundColor: "white",
+    border: "1px solid",
+    borderColor: gray[500],
+    borderRadius: 8,
+  },
+  checkbox: {},
   footerButton: {
     marginRight: theme.spacing(1),
   },
@@ -72,6 +83,30 @@ export default function Topics(props: Props) {
     select((indexes) =>
       indexes.delete(index) ? new Set(indexes) : new Set(indexes.add(index))
     );
+  const handleCheckAll = (event: ChangeEvent<HTMLInputElement>) => {
+    select(() =>
+      event.target.checked
+        ? new Set(topics.map((_, index) => index))
+        : new Set()
+    );
+  };
+  const handleSortChange = (sort: SortOrder) => {
+    select(() => new Set());
+    if (onSortChange) onSortChange(sort);
+  };
+  const handleFilterChange = (filter: Filter) => {
+    select(() => new Set());
+    if (onFilterChange) onFilterChange(filter);
+  };
+  const handleSearchInput = (input: string) => {
+    select(() => new Set());
+    if (onSearchInput) onSearchInput(input);
+  };
+  const handleSearchInputReset = () => {
+    select(() => new Set());
+    if (onSearchInputReset) onSearchInputReset();
+  };
+
   const handleBookNewClick = () => {
     onBookNewClick([...selectedIndexes].map((i) => topics[i]));
   };
@@ -98,6 +133,7 @@ export default function Topics(props: Props) {
     });
     onTopicsDeleteClick(ids);
   };
+
   const {
     data: previewTopic,
     dispatch: setPreviewTopic,
@@ -120,13 +156,25 @@ export default function Topics(props: Props) {
         }
         action={
           <>
-            <SortSelect onSortChange={onSortChange} />
-            <CreatorFilter onFilterChange={onFilterChange} />
+            <fieldset className={classes.fieldset}>
+              <Checkbox
+                className={classes.checkbox}
+                size="small"
+                color="primary"
+                checked={
+                  selectedIndexes.size == topics.length &&
+                  selectedIndexes.size > 0
+                }
+                onChange={handleCheckAll}
+              />
+            </fieldset>
+            <SortSelect onSortChange={handleSortChange} />
+            <CreatorFilter onFilterChange={handleFilterChange} />
             <SearchTextField
               label="トピック検索"
               value={query.input}
-              onSearchInput={onSearchInput}
-              onSearchInputReset={onSearchInputReset}
+              onSearchInput={handleSearchInput}
+              onSearchInputReset={handleSearchInputReset}
             />
           </>
         }
