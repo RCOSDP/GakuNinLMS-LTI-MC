@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, Fragment } from "react";
 import clsx from "clsx";
 import { useTheme } from "@mui/material/styles";
 import makeStyles from "@mui/styles/makeStyles";
@@ -212,8 +212,16 @@ export default function Book(props: Props) {
                 },
                 {
                   key: "著者",
-                  // TODO: 複数著者の表示に対応してほしい
-                  value: book.authors[0]?.name ?? "-",
+                  value: (
+                    <>
+                      {book.authors.map((author, index) => (
+                        <Fragment key={index}>
+                          <span>{author.name}</span>
+                          {index < book.authors.length - 1 && ", "}
+                        </Fragment>
+                      ))}
+                    </>
+                  ),
                 },
               ]}
             />

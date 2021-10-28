@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import clsx from "clsx";
 import type { TopicSchema } from "$server/models/topic";
 import Typography from "@mui/material/Typography";
@@ -107,8 +108,16 @@ export default function TopicViewerContent({ topic, onEnded, offset }: Props) {
           },
           {
             key: "著者",
-            // TODO: 複数著者の表示に対応してほしい
-            value: topic.authors[0]?.name ?? "-",
+            value: (
+              <>
+                {topic.authors.map((author, index) => (
+                  <Fragment key={index}>
+                    <span>{author.name}</span>
+                    {index < topic.authors.length - 1 && ", "}
+                  </Fragment>
+                ))}
+              </>
+            ),
           },
         ]}
       />

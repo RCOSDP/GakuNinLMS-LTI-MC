@@ -43,7 +43,7 @@ type Props = {
   fontSize?: string;
   inline?: boolean;
   nowrap?: boolean;
-  value: Array<{ key: string; value: string }>;
+  value: Array<{ key: string; value: React.ReactNode }>;
 };
 
 export default function DescriptionList({
