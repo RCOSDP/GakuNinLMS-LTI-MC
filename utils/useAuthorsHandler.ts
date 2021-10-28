@@ -21,8 +21,12 @@ function useAuthorsHandler(content?: Content) {
     updateState({ authors: content?.authors ?? [] });
   }, [content, updateState]);
   async function handleAuthorsUpdate(authors: AuthorSchema[]) {
-    content && updateContentAuthors(content, authors);
-    updateState({ authors });
+    if (content) {
+      const res = await updateContentAuthors(content, authors);
+      updateState({ authors: res });
+    } else {
+      updateState({ authors });
+    }
   }
   async function handleAuthorSubmit({ email }: Pick<AuthorSchema, "email">) {
     if (!email) return;
@@ -46,8 +50,7 @@ function useAuthorsHandler(content?: Content) {
       });
     else onReset();
     const authors = [...authorsState, ...additionalAuthors];
-    content && updateContentAuthors(content, authors);
-    updateState({ authors });
+    await handleAuthorsUpdate(authors);
   }
 
   return {
