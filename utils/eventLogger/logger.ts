@@ -52,13 +52,13 @@ function logger(tracker: PlayerTracker) {
     }
   });
   tracker.on("seeked", function (event) {
-    send("seeked", event, seekStart?.toString());
+    void send("seeked", event, seekStart?.toString());
     seekStart = null;
   });
 
   /* Record subtitle information */
   tracker.on("texttrackchange", function (event) {
-    send("trackchange", event, event.language ?? "off");
+    void send("trackchange", event, event.language ?? "off");
   });
 
   for (const event of [
@@ -73,11 +73,11 @@ function logger(tracker: PlayerTracker) {
   }
 
   tracker.on("playbackratechange", function (event) {
-    send("ratechange", event, event.playbackRate.toString());
+    void send("ratechange", event, event.playbackRate.toString());
   });
 
   tracker.on("nextvideo", function (event) {
-    send("changepage", event, event.video.toString());
+    void send("changepage", event, event.video.toString());
   });
 
   // @ts-expect-error TODO: Window オブジェクトを介さない排他制御にしたい
@@ -96,7 +96,7 @@ function logger(tracker: PlayerTracker) {
   );
   handlers.visibilitychange = function () {
     if (document.visibilityState === "hidden") {
-      send("hidden-ended", tracker.stats);
+      void send("hidden-ended", tracker.stats);
     }
   };
   document.addEventListener("visibilitychange", handlers.visibilitychange);

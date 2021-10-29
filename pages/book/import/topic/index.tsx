@@ -10,7 +10,7 @@ function Router() {
     const bookId = Number(router.query.bookId);
     const { context }: Pick<BookEditQuery, "context"> = router.query;
     const query = { bookId, ...(context && { context }) };
-    router.replace(pagesPath.book.import.$url({ query }));
+    void router.replace(pagesPath.book.import.$url({ query }));
   }, [router]);
   return <Placeholder />;
 }

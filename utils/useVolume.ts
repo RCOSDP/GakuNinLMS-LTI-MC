@@ -44,8 +44,8 @@ function load(): Volume {
 /** 動画プレイヤーへの音量の設定処理 */
 function setVolume(player: Player, data: Volume): void {
   if (player instanceof VimeoPlayer) {
-    player.setVolume(data.volume);
-    player.setMuted(data.muted);
+    void player.setVolume(data.volume);
+    void player.setMuted(data.muted);
   } else {
     player.volume(data.volume);
     player.muted(data.muted);

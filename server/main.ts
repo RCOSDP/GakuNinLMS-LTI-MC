@@ -21,7 +21,7 @@ if (HTTPS_CERT && HTTPS_KEY) {
   Object.assign(options, { https: { cert: HTTPS_CERT, key: HTTPS_KEY } });
 }
 
-fastify({ logger: isDev, trustProxy: true, ...options })
+void fastify({ logger: isDev, trustProxy: true, ...options })
   .get(
     path.join(FRONTEND_PATH, "*"),
     staticHandler({ public: path.join(__dirname, "public") })
