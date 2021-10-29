@@ -54,3 +54,8 @@ overrides:
   - files: [types/defaultTheme.d.ts]
     rules:
       "@typescript-eslint/no-empty-interface": "off"
+  - files: "*.config.js"
+    parserOptions:
+      project: null
+    rules:
+      "@typescript-eslint/no-floating-promises": "off"
