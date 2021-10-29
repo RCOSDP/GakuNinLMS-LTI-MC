@@ -1,4 +1,5 @@
 import clsx from "clsx";
+import groupBy from "lodash.groupby";
 import type { TopicSchema } from "$server/models/topic";
 import Typography from "@mui/material/Typography";
 import Chip from "@mui/material/Chip";
@@ -106,13 +107,15 @@ export default function TopicViewerContent({ topic, onEnded, offset }: Props) {
             key: "更新日",
             value: getLocaleDateString(topic.updatedAt, "ja"),
           },
-          {
-            key: "著者",
+          ...Object.entries(
+            groupBy(topic.authors, (author) => author.roleName)
+          ).map(([key, value]) => ({
+            key,
             value: getLocaleListString(
-              topic.authors.map(({ name }) => name),
+              value.map((author) => author.name),
               "ja"
             ),
-          },
+          })),
         ]}
       />
       <article className={classes.description}>
