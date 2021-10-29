@@ -24,8 +24,8 @@ const handler =
     reply: FastifyReply<RawServer, RawRequest, RawReply>
   ) => {
     const { status, headers, body } = await method(request);
-    if (headers != null) reply.headers(headers);
-    reply.code(status).send(body);
+    if (headers != null) void reply.headers(headers);
+    void reply.code(status).send(body);
   };
 
 export default handler;

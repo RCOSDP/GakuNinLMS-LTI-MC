@@ -8,7 +8,7 @@ import { useLoggerInit } from "$utils/eventLogger/loggerSessionPersister";
 
 function Replace(props: { href: string | UrlObject }) {
   const router = useRouter();
-  router.replace(props.href);
+  void router.replace(props.href);
   return <Placeholder />;
 }
 

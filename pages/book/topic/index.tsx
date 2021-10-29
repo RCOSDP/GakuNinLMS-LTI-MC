@@ -6,7 +6,7 @@ import { pagesPath } from "$utils/$path";
 function Router() {
   const router = useRouter();
   useEffect(() => {
-    router.replace(
+    void router.replace(
       pagesPath.book.$url({ query: { bookId: Number(router.query.bookId) } })
     );
   }, [router]);

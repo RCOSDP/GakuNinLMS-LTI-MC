@@ -161,7 +161,7 @@ export class PlayerTracker extends (EventEmitter as {
         });
       }
     );
-    player
+    void player
       .getDuration()
       .then((duration) =>
         this.emit("durationchange", { ...this.stats, duration })
