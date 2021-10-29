@@ -35,13 +35,6 @@ rules:
   tsc/config: [error, { configFile: "tsconfig.json" }]
 overrides:
   - files:
-      - jest.config.js
-      - next.config.js
-    env:
-      node: true
-    rules:
-      "@typescript-eslint/no-var-requires": "off"
-  - files:
       - samples/**
     rules:
       no-irregular-whitespace: "off"
@@ -54,8 +47,3 @@ overrides:
   - files: [types/defaultTheme.d.ts]
     rules:
       "@typescript-eslint/no-empty-interface": "off"
-  - files: "*.config.js"
-    parserOptions:
-      project: null
-    rules:
-      "@typescript-eslint/no-floating-promises": "off"
