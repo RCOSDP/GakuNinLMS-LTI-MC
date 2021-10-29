@@ -145,8 +145,8 @@ class ZoomImport {
       const importedResource = await findZoomMeeting(meeting.uuid);
       if (importedResource) return;
 
-      const downloadUrl = this.getDownloadUrl(meeting);
-      if (!downloadUrl) return;
+      const { downloadUrl, fileId } = this.getDownloadUrl(meeting);
+      if (!downloadUrl || !fileId) return;
 
       const startTime = new Date(meeting.start_time);
       uploaddir = await fs.promises.mkdtemp(
@@ -155,7 +155,7 @@ class ZoomImport {
           "yyyyMMdd-HHmm"
         )}-`
       );
-      const file = `${uploaddir}/${meeting.uuid}.mp4`;
+      const file = `${uploaddir}/${fileId}.mp4`;
 
       const responsePromise = got(
         `${downloadUrl}?access_token=${zoomRequestToken()}`
@@ -218,7 +218,7 @@ class ZoomImport {
 
   getDownloadUrl(meeting: ZoomResponse) {
     const recordingFiles: ZoomResponse[] = meeting.recording_files;
-    return (
+    const file =
       recordingFiles.find(
         (file) =>
           file.file_type == "MP4" &&
@@ -245,8 +245,8 @@ class ZoomImport {
       recordingFiles.find(
         (file) =>
           file.file_type == "MP4" && file.recording_type == "shared_screen"
-      )
-    )?.download_url;
+      );
+    return { downloadUrl: file?.download_url, fileId: file?.id };
   }
 
   async getMeetingDetail(meeting: ZoomResponse) {
