@@ -1,11 +1,14 @@
-export default { title: "atoms/DescriptionList" };
+import type { Story } from "@storybook/react";
 
 import DescriptionList from "./DescriptionList";
 
-const value = [...Array(10)].fill({ key: "key", value: "value" });
+export default { title: "atoms/DescriptionList", component: DescriptionList };
 
-export const Default = () => <DescriptionList value={value} />;
+const Template: Story<Parameters<typeof DescriptionList>[0]> = (args) => (
+  <DescriptionList {...args} />
+);
 
-export const Inline = () => <DescriptionList inline value={value} />;
-
-export const Nowrap = () => <DescriptionList nowrap value={value} />;
+export const Default = Template.bind({});
+Default.args = {
+  value: [...Array(10)].fill({ key: "key", value: "value" }),
+};

@@ -1,4 +1,5 @@
 import clsx from "clsx";
+import groupBy from "lodash.groupby";
 import type { TopicSchema } from "$server/models/topic";
 import Typography from "@mui/material/Typography";
 import Chip from "@mui/material/Chip";
@@ -10,6 +11,7 @@ import DescriptionList from "$atoms/DescriptionList";
 import Markdown from "$atoms/Markdown";
 import useSticky from "$utils/useSticky";
 import getLocaleDateString from "$utils/getLocaleDateString";
+import getLocaleListString from "$utils/getLocaleListString";
 import formatInterval from "$utils/formatInterval";
 import { NEXT_PUBLIC_VIDEO_MAX_HEIGHT } from "$utils/env";
 import { isVideoResource } from "$utils/videoResource";
@@ -105,11 +107,15 @@ export default function TopicViewerContent({ topic, onEnded, offset }: Props) {
             key: "更新日",
             value: getLocaleDateString(topic.updatedAt, "ja"),
           },
-          {
-            key: "著者",
-            // TODO: 複数著者の表示に対応してほしい
-            value: topic.authors[0]?.name ?? "-",
-          },
+          ...Object.entries(
+            groupBy(topic.authors, (author) => author.roleName)
+          ).map(([key, value]) => ({
+            key,
+            value: getLocaleListString(
+              value.map((author) => author.name),
+              "ja"
+            ),
+          })),
         ]}
       />
       <article className={classes.description}>

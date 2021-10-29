@@ -23,6 +23,7 @@ import { useSessionAtom } from "$store/session";
 import useSticky from "$utils/useSticky";
 import useAppBarOffset from "$utils/useAppBarOffset";
 import getLocaleDateString from "$utils/getLocaleDateString";
+import getLocaleListString from "$utils/getLocaleListString";
 import extractNumberFromPx from "$utils/extractNumberFromPx";
 import sumPixels from "$utils/sumPixels";
 
@@ -212,8 +213,10 @@ export default function Book(props: Props) {
                 },
                 {
                   key: "著者",
-                  // TODO: 複数著者の表示に対応してほしい
-                  value: book.authors[0]?.name ?? "-",
+                  value: getLocaleListString(
+                    book.authors.map(({ name }) => name),
+                    "ja"
+                  ),
                 },
               ]}
             />
