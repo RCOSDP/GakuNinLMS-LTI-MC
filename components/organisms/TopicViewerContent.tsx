@@ -1,4 +1,3 @@
-import { Fragment } from "react";
 import clsx from "clsx";
 import type { TopicSchema } from "$server/models/topic";
 import Typography from "@mui/material/Typography";
@@ -11,6 +10,7 @@ import DescriptionList from "$atoms/DescriptionList";
 import Markdown from "$atoms/Markdown";
 import useSticky from "$utils/useSticky";
 import getLocaleDateString from "$utils/getLocaleDateString";
+import getLocaleListString from "$utils/getLocaleListString";
 import formatInterval from "$utils/formatInterval";
 import { NEXT_PUBLIC_VIDEO_MAX_HEIGHT } from "$utils/env";
 import { isVideoResource } from "$utils/videoResource";
@@ -108,15 +108,9 @@ export default function TopicViewerContent({ topic, onEnded, offset }: Props) {
           },
           {
             key: "著者",
-            value: (
-              <>
-                {topic.authors.map((author, index) => (
-                  <Fragment key={index}>
-                    <span>{author.name}</span>
-                    {index < topic.authors.length - 1 && ", "}
-                  </Fragment>
-                ))}
-              </>
+            value: getLocaleListString(
+              topic.authors.map(({ name }) => name),
+              "ja"
             ),
           },
         ]}

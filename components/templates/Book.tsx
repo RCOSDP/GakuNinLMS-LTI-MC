@@ -1,4 +1,4 @@
-import { useState, Fragment } from "react";
+import { useState } from "react";
 import clsx from "clsx";
 import { useTheme } from "@mui/material/styles";
 import makeStyles from "@mui/styles/makeStyles";
@@ -23,6 +23,7 @@ import { useSessionAtom } from "$store/session";
 import useSticky from "$utils/useSticky";
 import useAppBarOffset from "$utils/useAppBarOffset";
 import getLocaleDateString from "$utils/getLocaleDateString";
+import getLocaleListString from "$utils/getLocaleListString";
 import extractNumberFromPx from "$utils/extractNumberFromPx";
 import sumPixels from "$utils/sumPixels";
 
@@ -212,15 +213,9 @@ export default function Book(props: Props) {
                 },
                 {
                   key: "著者",
-                  value: (
-                    <>
-                      {book.authors.map((author, index) => (
-                        <Fragment key={index}>
-                          <span>{author.name}</span>
-                          {index < book.authors.length - 1 && ", "}
-                        </Fragment>
-                      ))}
-                    </>
+                  value: getLocaleListString(
+                    book.authors.map(({ name }) => name),
+                    "ja"
                   ),
                 },
               ]}
