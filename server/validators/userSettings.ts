@@ -5,10 +5,6 @@ export class UserSettingsProp {
   @IsOptional()
   @IsBoolean()
   zoomImportEnabled?: boolean;
-
-  @IsOptional()
-  @IsBoolean()
-  zoomImportAutodelete?: boolean;
 }
 
 export const userSettingsPropSchema =
