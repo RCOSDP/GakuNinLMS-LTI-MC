@@ -5,7 +5,7 @@ import utcToZoneTime from "date-fns-tz/utcToZonedTime";
 
 import prisma from "$server/utils/prisma";
 import type { User } from "@prisma/client";
-import type { UserSettingsProp } from "$server/validators/userSettings";
+import type { UserSettingsProps } from "$server/models/userSettings";
 import { findUserByEmailAndLtiConsumerId } from "$server/utils/user";
 import { scpUpload } from "$server/utils/wowza/scpUpload";
 import { findZoomMeeting } from "$server/utils/zoom/findZoomMeeting";
@@ -16,8 +16,8 @@ import {
   ZOOM_IMPORT_AUTODELETE,
 } from "$server/utils/env";
 
+import type { ZoomResponse } from "$server/utils/zoom/api";
 import {
-  ZoomResponse,
   zoomRequestToken,
   zoomRequest,
   zoomListRequest,
@@ -52,7 +52,7 @@ class ZoomImport {
         ZOOM_IMPORT_CONSUMER_KEY
       );
       if (!this.user) return;
-      const settings = this.user.settings as UserSettingsProp;
+      const settings = this.user.settings as UserSettingsProps;
       if (!settings?.zoomImportEnabled) return;
 
       this.tmpdir = await fs.promises.mkdtemp("/tmp/zoom-import-");

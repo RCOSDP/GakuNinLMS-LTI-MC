@@ -13,6 +13,13 @@
  */
 
 import { exists, mapValues } from '../runtime';
+import {
+    InlineResponse2001Settings,
+    InlineResponse2001SettingsFromJSON,
+    InlineResponse2001SettingsFromJSONTyped,
+    InlineResponse2001SettingsToJSON,
+} from './';
+
 /**
  * 
  * @export
@@ -51,6 +58,12 @@ export interface InlineResponse2001Authors {
     email?: string;
     /**
      * 
+     * @type {InlineResponse2001Settings}
+     * @memberof InlineResponse2001Authors
+     */
+    settings?: InlineResponse2001Settings;
+    /**
+     * 
      * @type {string}
      * @memberof InlineResponse2001Authors
      */
@@ -72,6 +85,7 @@ export function InlineResponse2001AuthorsFromJSONTyped(json: any, ignoreDiscrimi
         'ltiUserId': json['ltiUserId'],
         'name': json['name'],
         'email': !exists(json, 'email') ? undefined : json['email'],
+        'settings': !exists(json, 'settings') ? undefined : InlineResponse2001SettingsFromJSON(json['settings']),
         'roleName': json['roleName'],
     };
 }
@@ -90,6 +104,7 @@ export function InlineResponse2001AuthorsToJSON(value?: InlineResponse2001Author
         'ltiUserId': value.ltiUserId,
         'name': value.name,
         'email': value.email,
+        'settings': InlineResponse2001SettingsToJSON(value.settings),
         'roleName': value.roleName,
     };
 }

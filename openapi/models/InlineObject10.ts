@@ -24,55 +24,13 @@ export interface InlineObject10 {
      * @type {string}
      * @memberof InlineObject10
      */
-    event?: string;
+    language?: string;
     /**
      * 
      * @type {string}
      * @memberof InlineObject10
      */
-    detail?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineObject10
-     */
-    file?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineObject10
-     */
-    query?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineObject10
-     */
-    current?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineObject10
-     */
-    rid?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineObject10
-     */
-    uid?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineObject10
-     */
-    cid?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineObject10
-     */
-    nonce?: string;
+    content?: string;
 }
 
 export function InlineObject10FromJSON(json: any): InlineObject10 {
@@ -85,15 +43,8 @@ export function InlineObject10FromJSONTyped(json: any, ignoreDiscriminator: bool
     }
     return {
         
-        'event': !exists(json, 'event') ? undefined : json['event'],
-        'detail': !exists(json, 'detail') ? undefined : json['detail'],
-        'file': !exists(json, 'file') ? undefined : json['file'],
-        'query': !exists(json, 'query') ? undefined : json['query'],
-        'current': !exists(json, 'current') ? undefined : json['current'],
-        'rid': !exists(json, 'rid') ? undefined : json['rid'],
-        'uid': !exists(json, 'uid') ? undefined : json['uid'],
-        'cid': !exists(json, 'cid') ? undefined : json['cid'],
-        'nonce': !exists(json, 'nonce') ? undefined : json['nonce'],
+        'language': !exists(json, 'language') ? undefined : json['language'],
+        'content': !exists(json, 'content') ? undefined : json['content'],
     };
 }
 
@@ -106,15 +57,8 @@ export function InlineObject10ToJSON(value?: InlineObject10 | null): any {
     }
     return {
         
-        'event': value.event,
-        'detail': value.detail,
-        'file': value.file,
-        'query': value.query,
-        'current': value.current,
-        'rid': value.rid,
-        'uid': value.uid,
-        'cid': value.cid,
-        'nonce': value.nonce,
+        'language': value.language,
+        'content': value.content,
     };
 }
 

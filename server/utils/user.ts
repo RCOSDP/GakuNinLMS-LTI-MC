@@ -29,10 +29,9 @@ export async function upsertUser({ ltiConsumerId, ...user }: UserProps) {
   });
 }
 
-<<<<<<< HEAD
 export async function findUserByEmailAndLtiConsumerId(
-  email: string,
-  ltiConsumerId: string
+  email: User["email"],
+  ltiConsumerId: User["ltiConsumerId"]
 ) {
   return await prisma.user.findFirst({ where: { email, ltiConsumerId } });
 }
@@ -44,16 +43,12 @@ export async function updateUserSettings(
   return await prisma.user.update({ where: { id }, data: { settings } });
 }
 
-export async function findWrittenBooks(
-  userId: User["id"],
-=======
 export async function findUsersByEmail(email: User["email"]) {
   return await prisma.user.findMany({ where: { email } });
 }
 
 export async function findBooksBy(
   by: User["id"],
->>>>>>> main
   sort = "updated",
   page: number,
   perPage: number

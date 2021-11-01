@@ -49,12 +49,8 @@ export const sessionSchema = {
       ...ltiResourceLinkSchema,
       nullable: true,
     },
-<<<<<<< HEAD
-    user: userSchema,
-    systemSettings: SystemSettingsSchema,
-=======
     user: UserSchema,
->>>>>>> main
+    systemSettings: SystemSettingsSchema,
   },
   additionalProperties: false,
 } as const;

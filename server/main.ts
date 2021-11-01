@@ -11,13 +11,9 @@ import {
 } from "$server/utils/env";
 import { sessionStore } from "$server/utils/prisma";
 import staticHandler from "$server/utils/staticHandler";
-<<<<<<< HEAD
-import app, { Options } from "$server/config/app";
-import { setupZoomImportScheduler } from "$server/utils/zoom/importScheduler";
-=======
 import type { Options } from "$server/config/app";
 import app from "$server/config/app";
->>>>>>> main
+import { setupZoomImportScheduler } from "$server/utils/zoom/importScheduler";
 
 const isDev = process.env.NODE_ENV !== "production";
 const options = { bodyLimit: 1431655766 }; // base64 で 1GiB
@@ -39,4 +35,4 @@ void fastify({ logger: isDev, trustProxy: true, ...options })
   })
   .listen(PORT, "::"); // TODO: UNIXドメインソケット(引数にファイルパスを指定)未対応
 
-setupZoomImportScheduler();
+void setupZoomImportScheduler();

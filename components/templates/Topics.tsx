@@ -1,4 +1,5 @@
-import { useState, ChangeEvent } from "react";
+import type { ChangeEvent } from "react";
+import { useState } from "react";
 import { useConfirm } from "material-ui-confirm";
 import useInfiniteScroll from "react-infinite-scroll-hook";
 import Skeleton from "@mui/material/Skeleton";
@@ -14,16 +15,10 @@ import TopicPreviewDialog from "$organisms/TopicPreviewDialog";
 import SortSelect from "$atoms/SortSelect";
 import AuthorFilter from "$atoms/AuthorFilter";
 import SearchTextField from "$atoms/SearchTextField";
-<<<<<<< HEAD
-import { TopicSchema } from "$server/models/topic";
-import { SortOrder } from "$server/models/sortOrder";
-import { gray } from "$theme/colors";
-import { Filter } from "$types/filter";
-=======
 import type { TopicSchema } from "$server/models/topic";
 import type { SortOrder } from "$server/models/sortOrder";
 import type { Filter } from "$types/filter";
->>>>>>> main
+import { gray } from "$theme/colors";
 import useContainerStyles from "$styles/container";
 import useDialogProps from "$utils/useDialogProps";
 import { useSearchAtom } from "$store/search";
@@ -162,7 +157,6 @@ export default function Topics(props: Props) {
         }
         action={
           <>
-<<<<<<< HEAD
             <fieldset className={classes.fieldset}>
               <Checkbox
                 className={classes.checkbox}
@@ -176,11 +170,7 @@ export default function Topics(props: Props) {
               />
             </fieldset>
             <SortSelect onSortChange={handleSortChange} />
-            <CreatorFilter onFilterChange={handleFilterChange} />
-=======
-            <SortSelect onSortChange={onSortChange} />
-            <AuthorFilter onFilterChange={onFilterChange} />
->>>>>>> main
+            <AuthorFilter onFilterChange={handleFilterChange} />
             <SearchTextField
               label="トピック検索"
               value={query.input}

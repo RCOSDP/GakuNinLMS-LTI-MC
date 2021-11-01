@@ -13,6 +13,13 @@
  */
 
 import { exists, mapValues } from '../runtime';
+import {
+    InlineResponse2001Settings,
+    InlineResponse2001SettingsFromJSON,
+    InlineResponse2001SettingsFromJSONTyped,
+    InlineResponse2001SettingsToJSON,
+} from './';
+
 /**
  * 
  * @export
@@ -49,6 +56,12 @@ export interface InlineResponse2003 {
      * @memberof InlineResponse2003
      */
     email?: string;
+    /**
+     * 
+     * @type {InlineResponse2001Settings}
+     * @memberof InlineResponse2003
+     */
+    settings?: InlineResponse2001Settings;
 }
 
 export function InlineResponse2003FromJSON(json: any): InlineResponse2003 {
@@ -66,6 +79,7 @@ export function InlineResponse2003FromJSONTyped(json: any, ignoreDiscriminator: 
         'ltiUserId': json['ltiUserId'],
         'name': json['name'],
         'email': !exists(json, 'email') ? undefined : json['email'],
+        'settings': !exists(json, 'settings') ? undefined : InlineResponse2001SettingsFromJSON(json['settings']),
     };
 }
 
@@ -83,6 +97,7 @@ export function InlineResponse2003ToJSON(value?: InlineResponse2003 | null): any
         'ltiUserId': value.ltiUserId,
         'name': value.name,
         'email': value.email,
+        'settings': InlineResponse2001SettingsToJSON(value.settings),
     };
 }
 

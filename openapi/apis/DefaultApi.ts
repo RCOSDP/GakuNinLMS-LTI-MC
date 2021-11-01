@@ -24,6 +24,9 @@ import {
     InlineObject10,
     InlineObject10FromJSON,
     InlineObject10ToJSON,
+    InlineObject11,
+    InlineObject11FromJSON,
+    InlineObject11ToJSON,
     InlineObject2,
     InlineObject2FromJSON,
     InlineObject2ToJSON,
@@ -91,7 +94,7 @@ import {
 
 export interface ApiV2BookBookIdAuthorsPutRequest {
     bookId: number;
-    body?: InlineObject3;
+    body?: InlineObject4;
 }
 
 export interface ApiV2BookBookIdDeleteRequest {
@@ -118,15 +121,11 @@ export interface ApiV2BooksGetRequest {
 }
 
 export interface ApiV2BooksImportPostRequest {
-    body?: InlineObject4;
+    body?: InlineObject5;
 }
 
 export interface ApiV2EventPostRequest {
-<<<<<<< HEAD
-    body?: InlineObject9;
-=======
-    body?: InlineObject10;
->>>>>>> main
+    body?: InlineObject11;
 }
 
 export interface ApiV2LtiCallbackPostRequest {
@@ -191,11 +190,7 @@ export interface ApiV2LtiLtiConsumerIdResourceLinkLtiResourceLinkIdPutRequest {
 
 export interface ApiV2ResourceResourceIdVideoTrackPostRequest {
     resourceId: number;
-<<<<<<< HEAD
-    body?: InlineObject8;
-=======
-    body?: InlineObject9;
->>>>>>> main
+    body?: InlineObject10;
 }
 
 export interface ApiV2ResourceResourceIdVideoTrackVideoTrackIdDeleteRequest {
@@ -215,20 +210,17 @@ export interface ApiV2ResourcesGetRequest {
 }
 
 export interface ApiV2TopicPostRequest {
-    body?: InlineObject6;
+    body?: InlineObject7;
 }
 
 export interface ApiV2TopicTopicIdActivityPutRequest {
     topicId: number;
-    body?: InlineObject7;
-<<<<<<< HEAD
-=======
+    body?: InlineObject8;
 }
 
 export interface ApiV2TopicTopicIdAuthorsPutRequest {
     topicId: number;
-    body?: InlineObject8;
->>>>>>> main
+    body?: InlineObject9;
 }
 
 export interface ApiV2TopicTopicIdDeleteRequest {
@@ -241,7 +233,7 @@ export interface ApiV2TopicTopicIdGetRequest {
 
 export interface ApiV2TopicTopicIdPutRequest {
     topicId: number;
-    body?: InlineObject5;
+    body?: InlineObject6;
 }
 
 export interface ApiV2TopicsGetRequest {
@@ -297,7 +289,7 @@ export class DefaultApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: InlineObject3ToJSON(requestParameters.body),
+            body: InlineObject4ToJSON(requestParameters.body),
         });
 
         return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(InlineResponse2001AuthorsFromJSON));
@@ -497,7 +489,7 @@ export class DefaultApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: InlineObject4ToJSON(requestParameters.body),
+            body: InlineObject5ToJSON(requestParameters.body),
         });
 
         return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse201FromJSON(jsonValue));
@@ -528,11 +520,7 @@ export class DefaultApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-<<<<<<< HEAD
-            body: InlineObject9ToJSON(requestParameters.body),
-=======
-            body: InlineObject10ToJSON(requestParameters.body),
->>>>>>> main
+            body: InlineObject11ToJSON(requestParameters.body),
         });
 
         return new runtime.VoidApiResponse(response);
@@ -1046,11 +1034,7 @@ export class DefaultApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-<<<<<<< HEAD
-            body: InlineObject8ToJSON(requestParameters.body),
-=======
-            body: InlineObject9ToJSON(requestParameters.body),
->>>>>>> main
+            body: InlineObject10ToJSON(requestParameters.body),
         });
 
         return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2012FromJSON(jsonValue));
@@ -1220,7 +1204,7 @@ export class DefaultApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: InlineObject6ToJSON(requestParameters.body),
+            body: InlineObject7ToJSON(requestParameters.body),
         });
 
         return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2001TopicsFromJSON(jsonValue));
@@ -1255,7 +1239,7 @@ export class DefaultApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: InlineObject7ToJSON(requestParameters.body),
+            body: InlineObject8ToJSON(requestParameters.body),
         });
 
         return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2011FromJSON(jsonValue));
@@ -1290,7 +1274,7 @@ export class DefaultApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: InlineObject8ToJSON(requestParameters.body),
+            body: InlineObject9ToJSON(requestParameters.body),
         });
 
         return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(InlineResponse2001AuthorsFromJSON));
@@ -1388,7 +1372,7 @@ export class DefaultApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: InlineObject5ToJSON(requestParameters.body),
+            body: InlineObject6ToJSON(requestParameters.body),
         });
 
         return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2001TopicsFromJSON(jsonValue));
@@ -1444,7 +1428,6 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-<<<<<<< HEAD
      * ユーザーの設定内容を更新し、セッションとdbに保存します。
      * ユーザー設定値の更新
      */
@@ -1476,12 +1459,8 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * 利用者の作成したブックの一覧を取得します。 教員または管理者でなければなりません。
-     * 作成したブックの一覧
-=======
      * 利用者が著者に含まれるブックの一覧を取得します。 教員または管理者でなければなりません。
      * 自分のブックの一覧
->>>>>>> main
      */
     async apiV2UserUserIdBooksGetRaw(requestParameters: ApiV2UserUserIdBooksGetRequest): Promise<runtime.ApiResponse<InlineResponse2001>> {
         if (requestParameters.userId === null || requestParameters.userId === undefined) {

@@ -9,6 +9,7 @@ export const authorArg = {
 export type Authorship = Prisma.AuthorshipGetPayload<typeof authorArg>;
 
 export function authorToAuthorSchema(author: Authorship): AuthorSchema {
+  const { settings: _, ...user } = author.user;
   // NOTE: 役割の表示名への変換
   const roleName =
     AuthorSchema._roleNames[
@@ -16,7 +17,7 @@ export function authorToAuthorSchema(author: Authorship): AuthorSchema {
     ] ?? author.role.roleName;
 
   return {
-    ...author.user,
+    ...user,
     roleName,
   };
 }

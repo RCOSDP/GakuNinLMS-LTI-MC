@@ -6,6 +6,7 @@ export * from './ApiV2TopicTopicIdResource';
 export * from './InlineObject';
 export * from './InlineObject1';
 export * from './InlineObject10';
+export * from './InlineObject11';
 export * from './InlineObject2';
 export * from './InlineObject3';
 export * from './InlineObject4';
@@ -16,14 +17,10 @@ export * from './InlineObject8';
 export * from './InlineObject9';
 export * from './InlineResponse200';
 export * from './InlineResponse2001';
-<<<<<<< HEAD
-export * from './InlineResponse2001Author';
-export * from './InlineResponse2001AuthorSettings';
-=======
 export * from './InlineResponse2001Authors';
->>>>>>> main
 export * from './InlineResponse2001Books';
 export * from './InlineResponse2001Sections';
+export * from './InlineResponse2001Settings';
 export * from './InlineResponse2001Topics';
 export * from './InlineResponse2002';
 export * from './InlineResponse2003';

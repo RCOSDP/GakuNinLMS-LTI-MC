@@ -7,7 +7,7 @@ import makeStyles from "@mui/styles/makeStyles";
 import clsx from "clsx";
 import useCardStyles from "styles/card";
 import gray from "theme/colors/gray";
-import { UserSettingsProp } from "$server/validators/userSettings";
+import type { UserSettingsProps } from "$server/models/userSettings";
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -23,8 +23,8 @@ const useStyles = makeStyles((theme) => ({
 
 type Props = {
   className?: string;
-  userSettings: UserSettingsProp;
-  onChange: (userSettings: UserSettingsProp) => void;
+  userSettings: UserSettingsProps;
+  onChange: (userSettings: UserSettingsProps) => void;
 };
 
 export default function ZoomImportEnabledSwitch(props: Props) {

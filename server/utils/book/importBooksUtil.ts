@@ -22,20 +22,9 @@ import { ImportBooks } from "$server/models/booksImportParams";
 import prisma from "$server/utils/prisma";
 import findBook from "./findBook";
 import { parse as parseProviderUrl } from "$server/utils/videoResource";
-<<<<<<< HEAD
 import { scpUpload } from "$server/utils/wowza/scpUpload";
-=======
-import {
-  WOWZA_SCP_HOST,
-  WOWZA_SCP_PORT,
-  WOWZA_SCP_USERNAME,
-  WOWZA_SCP_PRIVATE_KEY,
-  WOWZA_SCP_PASS_PHRASE,
-  WOWZA_SCP_SERVER_PATH,
-} from "$server/utils/env";
 import findRoles from "$server/utils/author/findRoles";
-import insertAuthors from "../author/insertAuthors";
->>>>>>> main
+import insertAuthors from "$server/utils/author/insertAuthors";
 
 async function importBooksUtil(
   user: UserSchema,
@@ -231,18 +220,14 @@ class ImportBooksUtil {
         recursive: true,
       }
     );
-    const uploadcreator = fs.mkdirSync(`${uploaddomain}/${this.user.id}`, {
+    const uploadauthor = fs.mkdirSync(`${uploaddomain}/${this.user.id}`, {
       recursive: true,
     });
     const uploaddir = fs.mkdtempSync(
-<<<<<<< HEAD
       `${uploadauthor}/${format(
         utcToZoneTime(new Date(), "Asia/Tokyo"),
         "yyyyMMdd-HHmm"
       )}-`
-=======
-      `${uploadcreator}/${dateFormat(new Date(), "yyyymmdd-HHMM")}-`
->>>>>>> main
     );
     const uploadsubdir = uploaddir.substring(uploadroot.length);
 

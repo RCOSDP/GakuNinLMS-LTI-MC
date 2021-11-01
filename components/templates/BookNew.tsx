@@ -7,6 +7,7 @@ import RequiredDot from "$atoms/RequiredDot";
 import BackButton from "$atoms/BackButton";
 import useContainerStyles from "styles/container";
 import type { BookSchema } from "$server/models/book";
+import type { TopicSchema } from "$server/models/topic";
 import type { BookPropsWithSubmitOptions } from "$types/bookPropsWithSubmitOptions";
 import type { AuthorSchema } from "$server/models/author";
 import { useSessionAtom } from "$store/session";
@@ -35,21 +36,16 @@ const useStyles = makeStyles((theme) => ({
 
 type Props = {
   book?: BookSchema;
-  topics?: number[];
+  topics?: Array<TopicSchema["id"]>;
   onSubmit: (book: BookPropsWithSubmitOptions) => void;
   onCancel(): void;
   onAuthorsUpdate(authors: AuthorSchema[]): void;
   onAuthorSubmit(author: Pick<AuthorSchema, "email">): void;
 };
 
-<<<<<<< HEAD
-export default function BookNew(props: Props) {
-  const { book, topics, onSubmit, onCancel } = props;
-  const { isBookEditable } = useSessionAtom();
-  const forkFrom = book && !isBookEditable(book) && book.author;
-=======
 export default function BookNew({
   book,
+  topics,
   onSubmit,
   onCancel,
   onAuthorsUpdate,
@@ -58,7 +54,6 @@ export default function BookNew({
   const { isContentEditable } = useSessionAtom();
   const forkFrom =
     book && !isContentEditable(book) && book.authors.length > 0 && book.authors;
->>>>>>> main
   const defaultBook = book && {
     ...book,
     ...(forkFrom && { name: [book.name, "フォーク"].join("_") }),
@@ -69,6 +64,7 @@ export default function BookNew({
   const availableTopics = [];
   if (topics && topics.length) {
     for (const id of topics) {
+      // TODO: ループ内で React Hook API を呼び出すのは非推奨なので修正してほしい
       // eslint-disable-next-line react-hooks/rules-of-hooks
       const topic = useTopic(id);
       if (topic) availableTopics.push(topic);
@@ -95,7 +91,6 @@ export default function BookNew({
           のブックをフォークしようとしています
         </Alert>
       )}
-<<<<<<< HEAD
       {topics && (
         <Alert className={classes.alert} severity="info">
           以下のトピックを追加します
@@ -111,14 +106,8 @@ export default function BookNew({
         topics={availableTopics.map((topic) => topic.id)}
         variant="create"
         onSubmit={onSubmit}
-=======
-      <BookForm
-        book={defaultBook}
-        variant="create"
-        onSubmit={onSubmit}
         onAuthorsUpdate={onAuthorsUpdate}
         onAuthorSubmit={onAuthorSubmit}
->>>>>>> main
       />
     </Container>
   );
