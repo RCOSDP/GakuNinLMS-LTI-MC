@@ -1,5 +1,5 @@
-import { User, Topic } from "@prisma/client";
-import { TopicProps, TopicSchema } from "$server/models/topic";
+import type { User, Topic } from "@prisma/client";
+import type { TopicProps, TopicSchema } from "$server/models/topic";
 import prisma from "$server/utils/prisma";
 import {
   topicsWithResourcesArg,
@@ -9,9 +9,9 @@ import topicInput from "./topicInput";
 import resourceConnectOrCreateInput from "./resourceConnectOrCreateInput";
 import topicCreateInput from "./topicCreateInput";
 
-function topicUpdateInput(creatorId: User["id"], topic: TopicProps) {
+function topicUpdateInput(topic: TopicProps) {
   const input = {
-    ...topicInput(creatorId, topic),
+    ...topicInput(topic),
     resource: resourceConnectOrCreateInput(topic.resource),
   };
 
@@ -19,14 +19,14 @@ function topicUpdateInput(creatorId: User["id"], topic: TopicProps) {
 }
 
 async function upsertTopic(
-  creatorId: User["id"],
+  authorId: User["id"],
   { id, ...topic }: TopicProps & Pick<Topic, "id">
 ): Promise<TopicSchema | undefined> {
   const created = await prisma.topic.upsert({
     ...topicsWithResourcesArg,
     where: { id },
-    create: topicCreateInput(creatorId, topic),
-    update: topicUpdateInput(creatorId, topic),
+    create: topicCreateInput(authorId, topic),
+    update: topicUpdateInput(topic),
   });
 
   if (!created) return;

@@ -1,5 +1,5 @@
 import roleUrls from "$server/config/roleUrls";
-import { LtiRolesSchema } from "$server/models/ltiRoles";
+import type { LtiRolesSchema } from "$server/models/ltiRoles";
 
 /**
  * ロールが管理者か否か

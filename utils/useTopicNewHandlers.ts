@@ -7,6 +7,7 @@ import { useVideoTrackAtom } from "$store/videoTrack";
 import { createTopic } from "./topic";
 import { uploadVideoTrack } from "./videoTrack";
 import { addTopicToBook, replaceTopicInBook } from "./book";
+import useAuthorsHandler from "$utils/useAuthorsHandler";
 
 /** TopicNew コンポーネントのためのハンドラー生成 (要 TopicNew, ./index.tsx, ./edit.tsx) */
 function useTopicNewHandlers(
@@ -15,6 +16,7 @@ function useTopicNewHandlers(
   targetTopic?: TopicSchema
 ) {
   const router = useRouter();
+  const { handleAuthorsUpdate, handleAuthorSubmit } = useAuthorsHandler();
   const bookEditQuery = useMemo(
     () => ({
       ...(book && { bookId: book.id }),
@@ -59,6 +61,8 @@ function useTopicNewHandlers(
     onSubtitleDelete: handleSubtitleDelete,
     onSubmit: handleSubmit,
     onCancel: back,
+    onAuthorsUpdate: handleAuthorsUpdate,
+    onAuthorSubmit: handleAuthorSubmit,
   };
 
   return handlers;

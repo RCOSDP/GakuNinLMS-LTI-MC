@@ -1,9 +1,9 @@
 import { useMemo } from "react";
 import useSWRInfinite from "swr/infinite";
 import type { BookSchema } from "$server/models/book";
-import type { TopicSchema } from "$server/models/topic";
 import type { UserSchema } from "$server/models/user";
 import type { Filter } from "$types/filter";
+import type { IsContentEditable } from "$types/content";
 import { useSessionAtom } from "$store/session";
 import { useSearchAtom } from "$store/search";
 import getDisplayableBook from "./getDisplayableBook";
@@ -11,7 +11,7 @@ import useSortOrder from "./useSortOrder";
 import useInfiniteProps from "./useInfiniteProps";
 import useFilter from "./useFilter";
 import bookSearch from "./search/bookSearch";
-import bookCreateBy from "./bookCreateBy";
+import contentBy from "./contentBy";
 import { makeUserBooksKey, fetchUserBooks } from "./userBooks";
 import { makeBooksKey, fetchBooks } from "./books";
 
@@ -19,23 +19,18 @@ const makeFilter =
   (
     filter: Filter,
     userId: UserSchema["id"],
-    isBookEditable: (book: Pick<BookSchema, "author">) => boolean,
-    isTopicEditable: (topic: Pick<TopicSchema, "creator">) => boolean
+    isContentEditable: IsContentEditable
   ) =>
   (book: BookSchema | undefined) => {
     if (book === undefined) return [];
-    const isMyBook = bookCreateBy(book, { id: userId });
+    const isMyBook = contentBy(book, { id: userId });
     if (filter === "other" && isMyBook) return [];
-    const displayable = getDisplayableBook(
-      book,
-      isBookEditable,
-      isTopicEditable
-    );
+    const displayable = getDisplayableBook(book, isContentEditable);
     return displayable == null ? [] : [displayable];
   };
 
 function useBooks() {
-  const { session, isBookEditable, isTopicEditable } = useSessionAtom();
+  const { session, isContentEditable } = useSessionAtom();
   const { query } = useSearchAtom();
   const [sort, onSortChange] = useSortOrder();
   const [filter, onFilterChange] = useFilter();
@@ -49,8 +44,8 @@ function useBooks() {
     [isUserBooks, userId, sort]
   );
   const bookFilter = useMemo(
-    () => makeFilter(filter, userId, isBookEditable, isTopicEditable),
-    [filter, userId, isBookEditable, isTopicEditable]
+    () => makeFilter(filter, userId, isContentEditable),
+    [filter, userId, isContentEditable]
   );
   const res = useSWRInfinite<BookSchema[]>(key, fetch);
   const books = bookSearch(res.data?.flat().flatMap(bookFilter) ?? [], query);

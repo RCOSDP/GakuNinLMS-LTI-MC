@@ -2,19 +2,21 @@ import Card from "@mui/material/Card";
 import Checkbox from "@mui/material/Checkbox";
 import Divider from "@mui/material/Divider";
 import Button from "@mui/material/Button";
-import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import makeStyles from "@mui/styles/makeStyles";
 import { useForm } from "react-hook-form";
 import clsx from "clsx";
+import InputLabel from "$atoms/InputLabel";
 import TextField from "$atoms/TextField";
+import AuthorsInput from "$organisms/AuthorsInput";
 import useCardStyles from "styles/card";
-import useInputLabelStyles from "styles/inputLabel";
 import gray from "theme/colors/gray";
 import type { BookSchema } from "$server/models/book";
 import type { BookPropsWithSubmitOptions } from "$types/bookPropsWithSubmitOptions";
+import type { AuthorSchema } from "$server/models/author";
+import { useAuthorsAtom } from "store/authors";
 import languages from "$utils/languages";
 
 const useStyles = makeStyles((theme) => ({
@@ -51,6 +53,8 @@ type Props = {
   className?: string;
   variant?: "create" | "update";
   onSubmit?: (book: BookPropsWithSubmitOptions) => void;
+  onAuthorsUpdate(authors: AuthorSchema[]): void;
+  onAuthorSubmit(author: Pick<AuthorSchema, "email">): void;
 };
 
 export default function BookForm({
@@ -61,10 +65,12 @@ export default function BookForm({
   linked = false,
   variant = "create",
   onSubmit = () => undefined,
+  onAuthorsUpdate,
+  onAuthorSubmit,
 }: Props) {
   const cardClasses = useCardStyles();
-  const inputLabelClasses = useInputLabelStyles();
   const classes = useStyles();
+  const { updateState: _updateState, ...authorsInputProps } = useAuthorsAtom();
   const defaultValues: BookPropsWithSubmitOptions = {
     name: book?.name ?? "",
     description: book?.description ?? "",
@@ -104,10 +110,13 @@ export default function BookForm({
         required
         fullWidth
       />
+      <AuthorsInput
+        {...authorsInputProps}
+        onAuthorsUpdate={onAuthorsUpdate}
+        onAuthorSubmit={onAuthorSubmit}
+      />
       <div>
-        <InputLabel classes={inputLabelClasses} htmlFor="shared">
-          他の教員にシェア
-        </InputLabel>
+        <InputLabel htmlFor="shared">他の教員にシェア</InputLabel>
         <Checkbox
           id="shared"
           name="shared"
@@ -155,7 +164,7 @@ export default function BookForm({
       <Divider className={classes.divider} />
       {!linked && (
         <div>
-          <InputLabel classes={inputLabelClasses} htmlFor="submit-with-link">
+          <InputLabel htmlFor="submit-with-link">
             {label[variant].submitWithLink}
           </InputLabel>
           <Checkbox

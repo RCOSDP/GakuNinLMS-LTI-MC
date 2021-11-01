@@ -25,7 +25,7 @@ const topic = {
   createdAt: new Date(),
   updatedAt: new Date(),
   details: {},
-  creator: user,
+  authors: [{ ...user, roleName: "著者" }],
   shared: true,
   language: "ja",
   license: "",

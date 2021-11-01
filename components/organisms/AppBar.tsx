@@ -1,4 +1,9 @@
+<<<<<<< HEAD
 import { useState, forwardRef, ComponentProps, Ref, Fragment } from "react";
+=======
+import type { ComponentProps, Ref } from "react";
+import { useState, forwardRef } from "react";
+>>>>>>> main
 import MuiAppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Button from "@mui/material/Button";
@@ -13,8 +18,12 @@ import clsx from "clsx";
 import AppBarNavButton from "$atoms/AppBarNavButton";
 import LtiItemDialog from "$organisms/LtiItemDialog";
 import useAppBarStyles from "$styles/appBar";
+<<<<<<< HEAD
 import { SessionSchema } from "$server/models/session";
 import type { UserSettingsProp } from "$server/validators/userSettings";
+=======
+import type { SessionSchema } from "$server/models/session";
+>>>>>>> main
 import { gray } from "$theme/colors";
 import { isAdministrator, isInstructor } from "$utils/session";
 import { updateUserSettings } from "$utils/userSettings";

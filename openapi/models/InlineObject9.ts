@@ -24,12 +24,17 @@ export interface InlineObject9 {
      * @type {string}
      * @memberof InlineObject9
      */
+<<<<<<< HEAD
     event?: string;
+=======
+    language?: string;
+>>>>>>> main
     /**
      * 
      * @type {string}
      * @memberof InlineObject9
      */
+<<<<<<< HEAD
     detail?: string;
     /**
      * 
@@ -73,6 +78,9 @@ export interface InlineObject9 {
      * @memberof InlineObject9
      */
     nonce?: string;
+=======
+    content?: string;
+>>>>>>> main
 }
 
 export function InlineObject9FromJSON(json: any): InlineObject9 {
@@ -85,6 +93,7 @@ export function InlineObject9FromJSONTyped(json: any, ignoreDiscriminator: boole
     }
     return {
         
+<<<<<<< HEAD
         'event': !exists(json, 'event') ? undefined : json['event'],
         'detail': !exists(json, 'detail') ? undefined : json['detail'],
         'file': !exists(json, 'file') ? undefined : json['file'],
@@ -94,6 +103,10 @@ export function InlineObject9FromJSONTyped(json: any, ignoreDiscriminator: boole
         'uid': !exists(json, 'uid') ? undefined : json['uid'],
         'cid': !exists(json, 'cid') ? undefined : json['cid'],
         'nonce': !exists(json, 'nonce') ? undefined : json['nonce'],
+=======
+        'language': !exists(json, 'language') ? undefined : json['language'],
+        'content': !exists(json, 'content') ? undefined : json['content'],
+>>>>>>> main
     };
 }
 
@@ -106,6 +119,7 @@ export function InlineObject9ToJSON(value?: InlineObject9 | null): any {
     }
     return {
         
+<<<<<<< HEAD
         'event': value.event,
         'detail': value.detail,
         'file': value.file,
@@ -115,6 +129,10 @@ export function InlineObject9ToJSON(value?: InlineObject9 | null): any {
         'uid': value.uid,
         'cid': value.cid,
         'nonce': value.nonce,
+=======
+        'language': value.language,
+        'content': value.content,
+>>>>>>> main
     };
 }
 

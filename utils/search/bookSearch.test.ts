@@ -8,14 +8,7 @@ test("キーワードによる絞り込み", () => {
     language: "en",
     timeRequired: null,
     shared: true,
-    author: {
-      id: 1,
-      name: "",
-      ltiConsumerId: "",
-      ltiUserId: "",
-      email: "",
-      settings: {},
-    },
+    authors: [],
     ltiResourceLinks: [],
     createdAt: new Date(),
     publishedAt: new Date(),
@@ -39,14 +32,7 @@ test("セクション名による絞り込み", () => {
     language: "en",
     timeRequired: null,
     shared: true,
-    author: {
-      id: 1,
-      name: "",
-      ltiConsumerId: "",
-      ltiUserId: "",
-      email: "",
-      settings: {},
-    },
+    authors: [],
     ltiResourceLinks: [],
     createdAt: new Date(),
     publishedAt: new Date(),
@@ -65,14 +51,7 @@ test("セクション名による絞り込み", () => {
             timeRequired: 10,
             shared: true,
             license: "",
-            creator: {
-              id: 1,
-              name: "",
-              ltiConsumerId: "",
-              ltiUserId: "",
-              email: "",
-              settings: {},
-            },
+            authors: [],
             createdAt: new Date(),
             updatedAt: new Date(),
             resource: {
@@ -105,14 +84,7 @@ test("トピック名による絞り込み", () => {
     language: "en",
     timeRequired: null,
     shared: true,
-    author: {
-      id: 1,
-      name: "",
-      ltiConsumerId: "",
-      ltiUserId: "",
-      email: "",
-      settings: {},
-    },
+    authors: [],
     ltiResourceLinks: [],
     createdAt: new Date(),
     publishedAt: new Date(),
@@ -131,14 +103,7 @@ test("トピック名による絞り込み", () => {
             timeRequired: 10,
             shared: true,
             license: "",
-            creator: {
-              id: 1,
-              name: "",
-              ltiConsumerId: "",
-              ltiUserId: "",
-              email: "",
-              settings: {},
-            },
+            authors: [],
             createdAt: new Date(),
             updatedAt: new Date(),
             resource: {
@@ -171,14 +136,7 @@ test("LTI Resource Link による絞り込み", () => {
     language: "en",
     timeRequired: null,
     shared: true,
-    author: {
-      id: 1,
-      name: "",
-      ltiConsumerId: "",
-      ltiUserId: "",
-      email: "",
-      settings: {},
-    },
+    authors: [],
     ltiResourceLinks: [
       {
         consumerId: "test",
@@ -188,7 +146,7 @@ test("LTI Resource Link による絞り込み", () => {
         contextLabel: "C1",
         title: "リンク1",
         bookId: 1,
-        authorId: 1,
+        creatorId: 1,
       },
     ],
     createdAt: new Date(),
@@ -218,14 +176,8 @@ test("ブック名が空でもセクション名・トピック名による絞�
     language: "en",
     timeRequired: null,
     shared: true,
-    author: {
-      id: 1,
-      name: "",
-      ltiConsumerId: "",
-      ltiUserId: "",
-      email: "",
-      settings: {},
-    },
+    authors: [],
+
     ltiResourceLinks: [],
     createdAt: new Date(),
     publishedAt: new Date(),
@@ -244,14 +196,7 @@ test("ブック名が空でもセクション名・トピック名による絞�
             timeRequired: 10,
             shared: true,
             license: "",
-            creator: {
-              id: 1,
-              name: "",
-              ltiConsumerId: "",
-              ltiUserId: "",
-              email: "",
-              settings: {},
-            },
+            authors: [],
             createdAt: new Date(),
             updatedAt: new Date(),
             resource: {
@@ -271,6 +216,109 @@ test("ブック名が空でもセクション名・トピック名による絞�
   expect(
     bookSearch([book], {
       keywords: ["sec", "top"],
+      ltiResourceLinks: [],
+    })
+  ).toEqual([book]);
+});
+
+test("ブック著者による絞り込み", () => {
+  const book = {
+    id: 1,
+    name: "foobar",
+    description: "",
+    language: "en",
+    timeRequired: null,
+    shared: true,
+    authors: [
+      {
+        id: 1,
+        name: "山田一郎",
+        ltiConsumerId: "",
+        ltiUserId: "",
+        email: "",
+        roleName: "",
+      },
+    ],
+    ltiResourceLinks: [],
+    createdAt: new Date(),
+    publishedAt: new Date(),
+    updatedAt: new Date(),
+    sections: [],
+    details: {},
+  };
+  expect(
+    bookSearch([book], {
+      keywords: ["山田一郎"],
+      ltiResourceLinks: [],
+    })
+  ).toEqual([book]);
+});
+
+test("トピック著者による絞り込み", () => {
+  const book = {
+    id: 1,
+    name: "foobar",
+    description: "",
+    language: "en",
+    timeRequired: null,
+    shared: true,
+    authors: [
+      {
+        id: 1,
+        name: "山田一郎",
+        ltiConsumerId: "",
+        ltiUserId: "",
+        email: "",
+        roleName: "",
+      },
+    ],
+    ltiResourceLinks: [],
+    createdAt: new Date(),
+    publishedAt: new Date(),
+    updatedAt: new Date(),
+    sections: [
+      {
+        id: 1,
+        name: "Section 1",
+        topics: [
+          {
+            id: 1,
+            resourceId: 1,
+            name: "Topic 1",
+            description: "",
+            language: "en",
+            timeRequired: 10,
+            shared: true,
+            license: "",
+            authors: [
+              {
+                id: 3,
+                name: "山田三郎",
+                ltiConsumerId: "",
+                ltiUserId: "",
+                email: "",
+                roleName: "",
+              },
+            ],
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            resource: {
+              id: 1,
+              videoId: 1,
+              url: "https://example/",
+              providerUrl: "https://example/",
+              details: {},
+            },
+            details: {},
+          },
+        ],
+      },
+    ],
+    details: {},
+  };
+  expect(
+    bookSearch([book], {
+      keywords: ["山田三郎"],
       ltiResourceLinks: [],
     })
   ).toEqual([book]);

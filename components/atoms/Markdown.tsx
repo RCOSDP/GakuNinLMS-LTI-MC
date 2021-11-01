@@ -1,5 +1,5 @@
 import ReactMarkdown from "react-markdown";
-import { NormalComponents } from "react-markdown/lib/complex-types";
+import type { NormalComponents } from "react-markdown/lib/complex-types";
 import gfm from "remark-gfm";
 import breaks from "remark-breaks";
 import Link from "@mui/material/Link";

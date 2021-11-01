@@ -1,12 +1,12 @@
-import { UserSchema } from "$server/models/user";
-import { BookProps, BookSchema } from "$server/models/book";
+import type { UserSchema } from "$server/models/user";
+import type { BookProps, BookSchema } from "$server/models/book";
 import prisma from "$server/utils/prisma";
 import aggregateTimeRequired from "./aggregateTimeRequired";
 import findBook from "./findBook";
 import sectionCreateInput from "./sectionCreateInput";
 
 async function createBook(
-  authorId: UserSchema["id"],
+  userId: UserSchema["id"],
   book: BookProps
 ): Promise<BookSchema | undefined> {
   const timeRequired = await aggregateTimeRequired(book);
@@ -17,7 +17,7 @@ async function createBook(
       ...book,
       timeRequired,
       details: {},
-      author: { connect: { id: authorId } },
+      authors: { create: { userId, roleId: 1 } },
       sections: { create: sectionsCreateInput },
     },
   });

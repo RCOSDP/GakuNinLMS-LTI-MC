@@ -1,10 +1,8 @@
-import Method from "$server/types/method";
+import type Method from "$server/types/method";
 import { outdent } from "outdent";
 import { bookSchema } from "$server/models/book";
-import {
-  PaginationProps,
-  paginationPropsSchema,
-} from "$server/validators/paginationProps";
+import type { PaginationProps } from "$server/validators/paginationProps";
+import { paginationPropsSchema } from "$server/validators/paginationProps";
 import authUser from "$server/auth/authUser";
 import authInstructor from "$server/auth/authInstructor";
 import findBooks from "$server/utils/book/findBooks";

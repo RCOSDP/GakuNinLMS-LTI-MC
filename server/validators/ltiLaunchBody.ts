@@ -1,6 +1,11 @@
+<<<<<<< HEAD
 import { LtiLaunchPresentationSchema } from "$server/models/ltiLaunchPresentation";
 import { SessionSchema } from "$server/models/session";
 import { getSystemSettings } from "$server/utils/systemSettings";
+=======
+import type { LtiLaunchPresentationSchema } from "$server/models/ltiLaunchPresentation";
+import type { SessionSchema } from "$server/models/session";
+>>>>>>> main
 import { IsNotEmpty, IsOptional, IsString } from "class-validator";
 import { validationMetadatasToSchemas } from "class-validator-jsonschema";
 

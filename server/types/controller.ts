@@ -1,11 +1,11 @@
-import {
+import type {
   FastifyRequest,
   HTTPMethods,
   RawRequestDefaultExpression,
   RawServerBase,
   RawServerDefault,
 } from "fastify";
-import { RouteGenericInterface } from "fastify/types/route";
+import type { RouteGenericInterface } from "fastify/types/route";
 
 type Controller<
   RouteGeneric extends RouteGenericInterface = RouteGenericInterface,

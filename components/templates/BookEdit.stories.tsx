@@ -9,7 +9,7 @@ export default {
 };
 
 const Template: Story<Parameters<typeof BookEdit>[0]> = (args) => {
-  return <BookEdit {...args} isTopicEditable={() => true} />;
+  return <BookEdit {...args} isContentEditable={() => true} />;
 };
 
 export const Default = Template.bind({});

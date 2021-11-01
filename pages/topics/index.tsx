@@ -4,7 +4,11 @@ import TopicsTemplate from "$templates/Topics";
 import { useSessionAtom } from "$store/session";
 import { pagesPath } from "$utils/$path";
 import useTopics from "$utils/useTopics";
+<<<<<<< HEAD
 import { destroyTopic, updateTopic } from "$utils/topic";
+=======
+import type { ContentAuthors } from "$types/content";
+>>>>>>> main
 
 const Topics = (
   props: Omit<
@@ -15,6 +19,7 @@ const Topics = (
 
 function Index() {
   const router = useRouter();
+<<<<<<< HEAD
   const { isTopicEditable } = useSessionAtom();
   function refresh() {
     return router.push(pagesPath.topics.$url());
@@ -49,6 +54,13 @@ function Index() {
   }
   function handleTopicEditClick(topic: Pick<TopicSchema, "id" | "creator">) {
     const action = isTopicEditable(topic) ? "edit" : "generate";
+=======
+  const { isContentEditable } = useSessionAtom();
+  function handleTopicEditClick(
+    topic: Pick<TopicSchema, "id"> & ContentAuthors
+  ) {
+    const action = isContentEditable(topic) ? "edit" : "generate";
+>>>>>>> main
     return router.push(
       pagesPath.topics[action].$url({ query: { topicId: topic.id } })
     );

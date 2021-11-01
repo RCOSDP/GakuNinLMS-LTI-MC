@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { SWRInfiniteResponse } from "swr/infinite";
+import type { SWRInfiniteResponse } from "swr/infinite";
 
 function useInfiniteProps<Data>({
   data,

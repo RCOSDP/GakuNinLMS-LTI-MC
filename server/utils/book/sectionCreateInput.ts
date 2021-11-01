@@ -1,5 +1,5 @@
-import { Topic, Section, TopicSection } from "@prisma/client";
-import { SectionProps } from "$server/models/book/section";
+import type { Topic, Section, TopicSection } from "@prisma/client";
+import type { SectionProps } from "$server/models/book/section";
 
 const topicSectionCreateInput = (
   topic: Pick<Topic, "id">,

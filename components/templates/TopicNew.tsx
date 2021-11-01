@@ -7,6 +7,7 @@ import RequiredDot from "$atoms/RequiredDot";
 import BackButton from "$atoms/BackButton";
 import useContainerStyles from "styles/container";
 import type { TopicProps, TopicSchema } from "$server/models/topic";
+import type { AuthorSchema } from "$server/models/author";
 import type {
   VideoTrackProps,
   VideoTrackSchema,
@@ -40,13 +41,25 @@ type Props = {
   onSubtitleDelete(videoTrack: VideoTrackSchema): void;
   onSubtitleSubmit(videoTrack: VideoTrackProps): void;
   onCancel(): void;
+  onAuthorsUpdate(authors: AuthorSchema[]): void;
+  onAuthorSubmit(author: Pick<AuthorSchema, "email">): void;
 };
 
-export default function TopicNew(props: Props) {
-  const { topic, onSubmit, onSubtitleDelete, onSubtitleSubmit, onCancel } =
-    props;
-  const { isTopicEditable } = useSessionAtom();
-  const forkFrom = topic && !isTopicEditable(topic) && topic.creator;
+export default function TopicNew({
+  topic,
+  onSubmit,
+  onSubtitleDelete,
+  onSubtitleSubmit,
+  onCancel,
+  onAuthorsUpdate,
+  onAuthorSubmit,
+}: Props) {
+  const { isContentEditable } = useSessionAtom();
+  const forkFrom =
+    topic &&
+    !isContentEditable(topic) &&
+    topic.authors.length > 0 &&
+    topic.authors;
   const defaultTopic = topic && {
     ...topic,
     ...(forkFrom && { name: [topic.name, "フォーク"].join("_") }),
@@ -70,7 +83,8 @@ export default function TopicNew(props: Props) {
       </Typography>
       {forkFrom && (
         <Alert className={classes.alert} severity="info">
-          {forkFrom.name} さんが作成したトピックをフォークしようとしています
+          {forkFrom.map(({ name }) => `${name} さん`).join("、")}
+          のトピックをフォークしようとしています
         </Alert>
       )}
       <TopicForm
@@ -79,6 +93,8 @@ export default function TopicNew(props: Props) {
         onSubmit={onSubmit}
         onSubtitleDelete={onSubtitleDelete}
         onSubtitleSubmit={onSubtitleSubmit}
+        onAuthorsUpdate={onAuthorsUpdate}
+        onAuthorSubmit={onAuthorSubmit}
       />
     </Container>
   );

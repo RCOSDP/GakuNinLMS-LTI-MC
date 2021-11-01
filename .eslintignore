@@ -8,3 +8,5 @@ node_modules/
 /public/storybook/
 /public/LICENSE
 /utils/$path.ts
+jest.config.js
+next.config.js

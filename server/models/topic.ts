@@ -1,22 +1,18 @@
-import { Topic, Prisma } from "@prisma/client";
+import type { Topic, Prisma } from "@prisma/client";
 import jsonSchema from "$server/prisma/json-schema.json";
-import {
-  ResourceProps,
-  ResourceSchema,
-  resourcePropsSchema,
-  resourceSchema,
-} from "./resource";
-import { UserSchema, userSchema } from "./user";
+import type { ResourceProps, ResourceSchema } from "./resource";
+import { resourcePropsSchema, resourceSchema } from "./resource";
+import { AuthorSchema } from "./author";
 
 export type TopicProps = Pick<
-  Prisma.TopicCreateWithoutCreatorInput,
+  Prisma.TopicCreateInput,
   "name" | "language" | "timeRequired" | "shared" | "description"
 > & {
   resource: ResourceProps;
 };
 
-export type TopicSchema = Omit<Topic, "creatorId"> & {
-  creator: UserSchema;
+export type TopicSchema = Topic & {
+  authors: AuthorSchema[];
   resource: ResourceSchema;
 };
 
@@ -56,7 +52,7 @@ export const topicSchema = {
     createdAt,
     updatedAt,
     details,
-    creator: userSchema,
+    authors: { type: "array", items: AuthorSchema },
     resource: resourceSchema,
   },
 };

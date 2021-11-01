@@ -21,7 +21,7 @@ const handlers = {
   onSubmit: console.log,
   onCancel: () => console.log("Cancel"),
   onTopicEditClick: console.log,
-  isTopicEditable: () => true,
+  isContentEditable: () => true,
 };
 
 function SlideAppBar() {
@@ -50,6 +50,10 @@ export const Empty = () => (
 export const Others = () => (
   <>
     <SlideAppBar />
-    <TopicImport topics={topics} {...handlers} isTopicEditable={() => false} />
+    <TopicImport
+      topics={topics}
+      {...handlers}
+      isContentEditable={() => false}
+    />
   </>
 );

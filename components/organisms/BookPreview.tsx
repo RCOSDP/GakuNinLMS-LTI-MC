@@ -13,9 +13,9 @@ import SharedIndicator from "$atoms/SharedIndicator";
 import DescriptionList from "$atoms/DescriptionList";
 import Video from "$organisms/Video";
 import useCardStyle from "styles/card";
-import { BookSchema } from "$server/models/book";
-import { TopicSchema } from "$server/models/topic";
-import { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
+import type { BookSchema } from "$server/models/book";
+import type { TopicSchema } from "$server/models/topic";
+import type { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
 import { getSectionsOutline } from "$utils/outline";
 import { gray } from "$theme/colors";
 import useLineClampStyles from "$styles/lineClamp";
@@ -163,7 +163,8 @@ export default function BookPreview({
           value={[
             { key: "作成日", value: getLocaleDateString(book.createdAt, "ja") },
             { key: "更新日", value: getLocaleDateString(book.updatedAt, "ja") },
-            { key: "作成者", value: book.author.name },
+            // TODO: 複数著者の表示に対応してほしい
+            { key: "著者", value: book.authors[0]?.name ?? "-" },
           ]}
         />
         <p

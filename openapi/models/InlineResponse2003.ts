@@ -13,37 +13,42 @@
  */
 
 import { exists, mapValues } from '../runtime';
-import {
-    InlineResponse2001Books,
-    InlineResponse2001BooksFromJSON,
-    InlineResponse2001BooksFromJSONTyped,
-    InlineResponse2001BooksToJSON,
-} from './';
-
 /**
- * 成功時
+ * 
  * @export
  * @interface InlineResponse2003
  */
 export interface InlineResponse2003 {
     /**
      * 
-     * @type {Array<InlineResponse2001Books>}
-     * @memberof InlineResponse2003
-     */
-    books?: Array<InlineResponse2001Books>;
-    /**
-     * 
      * @type {number}
      * @memberof InlineResponse2003
      */
-    page?: number;
+    id: number;
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof InlineResponse2003
      */
-    perPage?: number;
+    ltiConsumerId: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineResponse2003
+     */
+    ltiUserId: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineResponse2003
+     */
+    name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineResponse2003
+     */
+    email?: string;
 }
 
 export function InlineResponse2003FromJSON(json: any): InlineResponse2003 {
@@ -56,9 +61,11 @@ export function InlineResponse2003FromJSONTyped(json: any, ignoreDiscriminator: 
     }
     return {
         
-        'books': !exists(json, 'books') ? undefined : ((json['books'] as Array<any>).map(InlineResponse2001BooksFromJSON)),
-        'page': !exists(json, 'page') ? undefined : json['page'],
-        'perPage': !exists(json, 'perPage') ? undefined : json['perPage'],
+        'id': json['id'],
+        'ltiConsumerId': json['ltiConsumerId'],
+        'ltiUserId': json['ltiUserId'],
+        'name': json['name'],
+        'email': !exists(json, 'email') ? undefined : json['email'],
     };
 }
 
@@ -71,9 +78,11 @@ export function InlineResponse2003ToJSON(value?: InlineResponse2003 | null): any
     }
     return {
         
-        'books': value.books === undefined ? undefined : ((value.books as Array<any>).map(InlineResponse2001BooksToJSON)),
-        'page': value.page,
-        'perPage': value.perPage,
+        'id': value.id,
+        'ltiConsumerId': value.ltiConsumerId,
+        'ltiUserId': value.ltiUserId,
+        'name': value.name,
+        'email': value.email,
     };
 }
 

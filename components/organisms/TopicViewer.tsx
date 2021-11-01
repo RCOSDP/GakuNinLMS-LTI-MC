@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import usePrevious from "@rooks/use-previous";
 import clsx from "clsx";
-import { TopicSchema } from "$server/models/topic";
+import type { TopicSchema } from "$server/models/topic";
 import Card from "@mui/material/Card";
 import makeStyles from "@mui/styles/makeStyles";
 import TopicViewerContent from "$organisms/TopicViewerContent";
@@ -44,12 +44,12 @@ export default function TopicViewer({
     const videoInstance = video.get(itemExists(itemIndex)?.resource.url ?? "");
     if (!videoInstance) return;
     if (videoInstance.type == "vimeo") {
-      videoInstance.player.setCurrentTime(0);
-      videoInstance.player.play();
+      void videoInstance.player.setCurrentTime(0);
+      void videoInstance.player.play();
     } else {
       videoInstance.player.ready(() => {
         videoInstance.player.currentTime(0);
-        videoInstance.player.play();
+        void videoInstance.player.play();
       });
     }
   }, [video, itemExists, prevItemIndex, itemIndex]);

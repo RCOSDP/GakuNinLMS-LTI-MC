@@ -1,8 +1,6 @@
-import {
-  LtiResourceLinkSchema,
-  ltiResourceLinkSchema,
-} from "./ltiResourceLink";
-import { UserSchema, userSchema } from "$server/models/user";
+import type { LtiResourceLinkSchema } from "./ltiResourceLink";
+import { ltiResourceLinkSchema } from "./ltiResourceLink";
+import { UserSchema } from "$server/models/user";
 import { OauthClientSchema } from "./oauthClient";
 import { LtiVersionSchema } from "./ltiVersion";
 import { LtiUserSchema } from "./ltiUser";
@@ -51,8 +49,12 @@ export const sessionSchema = {
       ...ltiResourceLinkSchema,
       nullable: true,
     },
+<<<<<<< HEAD
     user: userSchema,
     systemSettings: SystemSettingsSchema,
+=======
+    user: UserSchema,
+>>>>>>> main
   },
   additionalProperties: false,
 } as const;

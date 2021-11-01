@@ -11,8 +11,13 @@ import {
 } from "$server/utils/env";
 import { sessionStore } from "$server/utils/prisma";
 import staticHandler from "$server/utils/staticHandler";
+<<<<<<< HEAD
 import app, { Options } from "$server/config/app";
 import { setupZoomImportScheduler } from "$server/utils/zoom/importScheduler";
+=======
+import type { Options } from "$server/config/app";
+import app from "$server/config/app";
+>>>>>>> main
 
 const isDev = process.env.NODE_ENV !== "production";
 const options = { bodyLimit: 1431655766 }; // base64 で 1GiB
@@ -21,7 +26,7 @@ if (HTTPS_CERT && HTTPS_KEY) {
   Object.assign(options, { https: { cert: HTTPS_CERT, key: HTTPS_KEY } });
 }
 
-fastify({ logger: isDev, trustProxy: true, ...options })
+void fastify({ logger: isDev, trustProxy: true, ...options })
   .get(
     path.join(FRONTEND_PATH, "*"),
     staticHandler({ public: path.join(__dirname, "public") })

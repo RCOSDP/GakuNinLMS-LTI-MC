@@ -1,4 +1,5 @@
-import { FormEvent, useState } from "react";
+import type { FormEvent } from "react";
+import { useState } from "react";
 import useInfiniteScroll from "react-infinite-scroll-hook";
 import Skeleton from "@mui/material/Skeleton";
 import makeStyles from "@mui/styles/makeStyles";
@@ -10,11 +11,12 @@ import ActionFooter from "$organisms/ActionFooter";
 import TopicPreview from "$organisms/TopicPreview";
 import TopicPreviewDialog from "$organisms/TopicPreviewDialog";
 import SortSelect from "$atoms/SortSelect";
-import CreatorFilter from "$atoms/CreatorFilter";
+import AuthorFilter from "$atoms/AuthorFilter";
 import SearchTextField from "$atoms/SearchTextField";
-import { TopicSchema } from "$server/models/topic";
-import { SortOrder } from "$server/models/sortOrder";
-import { Filter } from "$types/filter";
+import type { TopicSchema } from "$server/models/topic";
+import type { SortOrder } from "$server/models/sortOrder";
+import type { IsContentEditable } from "$types/content";
+import type { Filter } from "$types/filter";
 import useContainerStyles from "$styles/container";
 import useDialogProps from "$utils/useDialogProps";
 import { useSearchAtom } from "$store/search";
@@ -42,7 +44,7 @@ type Props = {
   onTopicEditClick(topic: TopicSchema): void;
   onSortChange?(sort: SortOrder): void;
   onFilterChange?(filter: Filter): void;
-  isTopicEditable(topic: TopicSchema): boolean | undefined;
+  isContentEditable: IsContentEditable;
 };
 
 export default function TopicImport(props: Props) {
@@ -56,7 +58,7 @@ export default function TopicImport(props: Props) {
     onTopicEditClick,
     onSortChange,
     onFilterChange,
-    isTopicEditable,
+    isContentEditable,
   } = props;
   const { query, onSearchInput, onSearchInputReset } = useSearchAtom();
   const classes = useStyles();
@@ -78,7 +80,7 @@ export default function TopicImport(props: Props) {
   const handleTopicPreviewClick = (topic: TopicSchema) =>
     setPreviewTopic(topic);
   const handleTopicEditClick = (topic: TopicSchema) =>
-    isTopicEditable(topic) && (() => onTopicEditClick(topic));
+    isContentEditable(topic) && (() => onTopicEditClick(topic));
   const [infiniteRef] = useInfiniteScroll({ loading, hasNextPage, onLoadMore });
   return (
     <Container ref={infiniteRef} classes={containerClasses} maxWidth="lg">
@@ -94,7 +96,7 @@ export default function TopicImport(props: Props) {
         action={
           <>
             <SortSelect onSortChange={onSortChange} />
-            <CreatorFilter onFilterChange={onFilterChange} />
+            <AuthorFilter onFilterChange={onFilterChange} />
             <SearchTextField
               label="トピック検索"
               value={query.input}

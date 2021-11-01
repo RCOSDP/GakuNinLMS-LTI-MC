@@ -23,6 +23,7 @@ import { useSessionAtom } from "$store/session";
 import useSticky from "$utils/useSticky";
 import useAppBarOffset from "$utils/useAppBarOffset";
 import getLocaleDateString from "$utils/getLocaleDateString";
+import getLocaleListString from "$utils/getLocaleListString";
 import extractNumberFromPx from "$utils/extractNumberFromPx";
 import sumPixels from "$utils/sumPixels";
 
@@ -126,7 +127,7 @@ export default function Book(props: Props) {
     considerAppBar = true,
   } = props;
   const topic = book?.sections[sectionIndex]?.topics[topicIndex];
-  const { isInstructor, isBookEditable, isTopicEditable } = useSessionAtom();
+  const { isInstructor, isContentEditable } = useSessionAtom();
   const [expanded, setExpanded] = useState(false);
   const handleLinkClick = () => setExpanded(!expanded);
   const theme = useTheme();
@@ -176,7 +177,7 @@ export default function Book(props: Props) {
             {isInstructor &&
               book &&
               onBookEditClick &&
-              (isBookEditable(book) || book.shared) && (
+              (isContentEditable(book) || book.shared) && (
                 <EditButton
                   variant="book"
                   size="medium"
@@ -211,8 +212,11 @@ export default function Book(props: Props) {
                   value: getLocaleDateString(book.updatedAt, "ja"),
                 },
                 {
-                  key: "ブック作成者",
-                  value: book.author.name,
+                  key: "著者",
+                  value: getLocaleListString(
+                    book.authors.map(({ name }) => name),
+                    "ja"
+                  ),
                 },
               ]}
             />
@@ -253,7 +257,7 @@ export default function Book(props: Props) {
             sections={book?.sections ?? []}
             onItemClick={handleItemClick}
             onItemEditClick={handleItemEditClick}
-            isTopicEditable={isTopicEditable}
+            isContentEditable={isContentEditable}
           />
         </div>
       </div>

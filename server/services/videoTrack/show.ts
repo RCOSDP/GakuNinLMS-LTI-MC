@@ -1,8 +1,6 @@
-import { FastifySchema } from "fastify";
-import {
-  VideoTrackParams,
-  videoTrackParamsSchema,
-} from "$server/validators/videoTrackParams";
+import type { FastifySchema } from "fastify";
+import type { VideoTrackParams } from "$server/validators/videoTrackParams";
+import { videoTrackParamsSchema } from "$server/validators/videoTrackParams";
 import authUser from "$server/auth/authUser";
 import findVideoTrack from "$server/utils/videoTrack/findVideoTrack";
 

@@ -1,9 +1,7 @@
-import { FastifySchema } from "fastify";
+import type { FastifySchema } from "fastify";
 import { outdent } from "outdent";
-import {
-  VideoTrackParams,
-  videoTrackParamsSchema,
-} from "$server/validators/videoTrackParams";
+import type { VideoTrackParams } from "$server/validators/videoTrackParams";
+import { videoTrackParamsSchema } from "$server/validators/videoTrackParams";
 import authUser from "$server/auth/authUser";
 import authInstructor from "$server/auth/authInstructor";
 import destroyVideoTrack from "$server/utils/videoTrack/destroyVideoTrack";

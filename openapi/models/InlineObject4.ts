@@ -13,6 +13,16 @@
  */
 
 import { exists, mapValues } from '../runtime';
+<<<<<<< HEAD
+=======
+import {
+    ApiV2BookBookIdAuthorsAuthors,
+    ApiV2BookBookIdAuthorsAuthorsFromJSON,
+    ApiV2BookBookIdAuthorsAuthorsFromJSONTyped,
+    ApiV2BookBookIdAuthorsAuthorsToJSON,
+} from './';
+
+>>>>>>> main
 /**
  * 
  * @export
@@ -21,21 +31,22 @@ import { exists, mapValues } from '../runtime';
 export interface InlineObject4 {
     /**
      * 
-     * @type {string}
+     * @type {Array<ApiV2BookBookIdAuthorsAuthors>}
      * @memberof InlineObject4
      */
+<<<<<<< HEAD
     json?: string;
+=======
+    authors: Array<ApiV2BookBookIdAuthorsAuthors>;
+>>>>>>> main
     /**
      * 
      * @type {string}
      * @memberof InlineObject4
      */
+<<<<<<< HEAD
     file?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineObject4
-     */
+=======
     provider: string;
     /**
      * 
@@ -43,6 +54,27 @@ export interface InlineObject4 {
      * @memberof InlineObject4
      */
     wowzaBaseUrl: string;
+>>>>>>> main
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineObject4
+     */
+<<<<<<< HEAD
+    provider: string;
+=======
+    json?: string;
+>>>>>>> main
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineObject4
+     */
+<<<<<<< HEAD
+    wowzaBaseUrl: string;
+=======
+    file?: string;
+>>>>>>> main
 }
 
 export function InlineObject4FromJSON(json: any): InlineObject4 {
@@ -55,10 +87,18 @@ export function InlineObject4FromJSONTyped(json: any, ignoreDiscriminator: boole
     }
     return {
         
+<<<<<<< HEAD
         'json': !exists(json, 'json') ? undefined : json['json'],
         'file': !exists(json, 'file') ? undefined : json['file'],
         'provider': json['provider'],
         'wowzaBaseUrl': json['wowzaBaseUrl'],
+=======
+        'authors': ((json['authors'] as Array<any>).map(ApiV2BookBookIdAuthorsAuthorsFromJSON)),
+        'provider': json['provider'],
+        'wowzaBaseUrl': json['wowzaBaseUrl'],
+        'json': !exists(json, 'json') ? undefined : json['json'],
+        'file': !exists(json, 'file') ? undefined : json['file'],
+>>>>>>> main
     };
 }
 
@@ -71,10 +111,18 @@ export function InlineObject4ToJSON(value?: InlineObject4 | null): any {
     }
     return {
         
+<<<<<<< HEAD
         'json': value.json,
         'file': value.file,
         'provider': value.provider,
         'wowzaBaseUrl': value.wowzaBaseUrl,
+=======
+        'authors': ((value.authors as Array<any>).map(ApiV2BookBookIdAuthorsAuthorsToJSON)),
+        'provider': value.provider,
+        'wowzaBaseUrl': value.wowzaBaseUrl,
+        'json': value.json,
+        'file': value.file,
+>>>>>>> main
     };
 }
 

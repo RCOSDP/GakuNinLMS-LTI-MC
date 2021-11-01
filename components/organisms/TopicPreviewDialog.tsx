@@ -1,6 +1,6 @@
 import Dialog from "@mui/material/Dialog";
 import TopicViewerContent from "$organisms/TopicViewerContent";
-import { TopicSchema } from "$server/models/topic";
+import type { TopicSchema } from "$server/models/topic";
 import useCardStyles from "$styles/card";
 
 type Props = {

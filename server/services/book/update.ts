@@ -1,11 +1,13 @@
-import { FastifySchema } from "fastify";
+import type { FastifySchema } from "fastify";
 import { outdent } from "outdent";
-import { BookProps, bookPropsSchema, bookSchema } from "$server/models/book";
-import { BookParams, bookParamsSchema } from "$server/validators/bookParams";
-import { SessionSchema } from "$server/models/session";
+import type { BookProps } from "$server/models/book";
+import { bookPropsSchema, bookSchema } from "$server/models/book";
+import type { BookParams } from "$server/validators/bookParams";
+import { bookParamsSchema } from "$server/validators/bookParams";
+import type { SessionSchema } from "$server/models/session";
 import authUser from "$server/auth/authUser";
 import authInstructor from "$server/auth/authInstructor";
-import { isUserOrAdmin } from "$server/utils/session";
+import { isUsersOrAdmin } from "$server/utils/session";
 import bookExists from "$server/utils/book/bookExists";
 import updateBook from "$server/utils/book/updateBook";
 
@@ -14,7 +16,7 @@ export const updateSchema: FastifySchema = {
   description: outdent`
     ブックを更新します。
     教員または管理者でなければなりません。
-    教員は自身の作成したブックでなければなりません。`,
+    教員は自身の著作のブックでなければなりません。`,
   params: bookParamsSchema,
   body: bookPropsSchema,
   response: {
@@ -41,9 +43,9 @@ export async function update({
   const found = await bookExists(params.book_id);
 
   if (!found) return { status: 404 };
-  if (!isUserOrAdmin(session, { id: found.authorId })) return { status: 403 };
+  if (!isUsersOrAdmin(session, found.authors)) return { status: 403 };
 
-  const created = await updateBook(found.authorId, {
+  const created = await updateBook({
     ...body,
     id: params.book_id,
   });

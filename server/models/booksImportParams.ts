@@ -1,3 +1,5 @@
+import type { FromSchema } from "json-schema-to-ts";
+import type { ValidatorConstraintInterface } from "class-validator";
 import {
   IsOptional,
   IsString,
@@ -13,33 +15,32 @@ import {
   ValidateNested,
   ValidateIf,
   registerDecorator,
-  ValidatorConstraintInterface,
 } from "class-validator";
 import {
   validationMetadatasToSchemas,
   JSONSchema,
 } from "class-validator-jsonschema";
 import parse from "spdx-expression-parse";
-import { BookSchema, bookSchema } from "$server/models/book";
+import type { BookSchema } from "$server/models/book";
+import { bookSchema } from "$server/models/book";
+import { AuthorsProps } from "../validators/authorsProps";
 
-export class BooksImportParams {
-  @IsOptional()
-  @IsString()
-  json?: string;
+/** ブックのインポートのためのリクエストパラメーター */
+export const BooksImportParams = {
+  type: "object",
+  required: ["authors", "provider", "wowzaBaseUrl"],
+  properties: {
+    authors: AuthorsProps.properties.authors,
+    provider: { type: "string" },
+    wowzaBaseUrl: { type: "string" },
+    json: { type: "string" },
+    file: { type: "string" },
+  },
+  additionalProperties: false,
+} as const;
 
-  @IsOptional()
-  @IsString()
-  file?: string;
-
-  @IsString()
-  provider = "";
-
-  @IsString()
-  wowzaBaseUrl = "";
-}
-
-export const booksImportParamsSchema =
-  validationMetadatasToSchemas().BooksImportParams;
+/** ブックのインポートのためのリクエストパラメーター */
+export type BooksImportParams = FromSchema<typeof BooksImportParams>;
 
 export class BooksImportResult {
   @IsOptional()

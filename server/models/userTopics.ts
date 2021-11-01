@@ -1,4 +1,5 @@
-import { topicSchema, TopicSchema } from "./topic";
+import type { TopicSchema } from "./topic";
+import { topicSchema } from "./topic";
 import { paginationPropsSchema } from "$server/validators/paginationProps";
 
 export type UserTopicsSchema = {

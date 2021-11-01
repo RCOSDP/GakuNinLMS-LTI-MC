@@ -1,4 +1,4 @@
-import { FastifyRequest } from "fastify";
+import type { FastifyRequest } from "fastify";
 import { FRONTEND_ORIGIN, FRONTEND_PATH } from "$server/utils/env";
 import { upsertUser } from "$server/utils/user";
 import {

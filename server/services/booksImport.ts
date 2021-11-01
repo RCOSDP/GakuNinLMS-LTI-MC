@@ -1,11 +1,10 @@
-import { FastifySchema } from "fastify";
+import type { FastifySchema } from "fastify";
 import { outdent } from "outdent";
 import {
   BooksImportParams,
-  booksImportParamsSchema,
   booksImportResultSchema,
-} from "$server/validators/booksImportParams";
-import { SessionSchema } from "$server/models/session";
+} from "$server/models/booksImportParams";
+import type { SessionSchema } from "$server/models/session";
 import authUser from "$server/auth/authUser";
 import authInstructor from "$server/auth/authInstructor";
 import importBooksUtil from "$server/utils/book/importBooksUtil";
@@ -18,7 +17,7 @@ export const importSchema: FastifySchema = {
     ブックをインポートします。
     教員または管理者でなければなりません。`,
   //consumes: [ "multipart/form-data" ],
-  body: booksImportParamsSchema,
+  body: BooksImportParams,
   response: {
     201: booksImportResultSchema,
     400: booksImportResultSchema,

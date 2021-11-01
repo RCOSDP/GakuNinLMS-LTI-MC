@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { TopicSchema } from "$server/models/topic";
+import type { TopicSchema } from "$server/models/topic";
 import TopicNew from "$templates/TopicNew";
 import Placeholder from "$templates/Placeholder";
 import TopicNotFoundProblem from "$templates/TopicNotFoundProblem";
@@ -23,8 +23,8 @@ function Generate({ topicId }: Pick<Query, "topicId">) {
 
 function GenerateWithBook({ topicId, bookId, context }: Query & BookEditQuery) {
   const topic = useTopic(topicId);
-  const { isBookEditable, isTopicEditable } = useSessionAtom();
-  const { book, error } = useBook(bookId, isBookEditable, isTopicEditable);
+  const { isContentEditable } = useSessionAtom();
+  const { book, error } = useBook(bookId, isContentEditable);
   const handlers = useTopicNewHandlers(context, book, topic);
 
   if (error) return <BookNotFoundProblem />;

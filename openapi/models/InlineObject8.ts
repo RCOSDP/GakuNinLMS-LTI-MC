@@ -13,6 +13,13 @@
  */
 
 import { exists, mapValues } from '../runtime';
+import {
+    ApiV2BookBookIdAuthorsAuthors,
+    ApiV2BookBookIdAuthorsAuthorsFromJSON,
+    ApiV2BookBookIdAuthorsAuthorsFromJSONTyped,
+    ApiV2BookBookIdAuthorsAuthorsToJSON,
+} from './';
+
 /**
  * 
  * @export
@@ -21,6 +28,7 @@ import { exists, mapValues } from '../runtime';
 export interface InlineObject8 {
     /**
      * 
+<<<<<<< HEAD
      * @type {string}
      * @memberof InlineObject8
      */
@@ -31,6 +39,12 @@ export interface InlineObject8 {
      * @memberof InlineObject8
      */
     content?: string;
+=======
+     * @type {Array<ApiV2BookBookIdAuthorsAuthors>}
+     * @memberof InlineObject8
+     */
+    authors: Array<ApiV2BookBookIdAuthorsAuthors>;
+>>>>>>> main
 }
 
 export function InlineObject8FromJSON(json: any): InlineObject8 {
@@ -43,8 +57,12 @@ export function InlineObject8FromJSONTyped(json: any, ignoreDiscriminator: boole
     }
     return {
         
+<<<<<<< HEAD
         'language': !exists(json, 'language') ? undefined : json['language'],
         'content': !exists(json, 'content') ? undefined : json['content'],
+=======
+        'authors': ((json['authors'] as Array<any>).map(ApiV2BookBookIdAuthorsAuthorsFromJSON)),
+>>>>>>> main
     };
 }
 
@@ -57,8 +75,12 @@ export function InlineObject8ToJSON(value?: InlineObject8 | null): any {
     }
     return {
         
+<<<<<<< HEAD
         'language': value.language,
         'content': value.content,
+=======
+        'authors': ((value.authors as Array<any>).map(ApiV2BookBookIdAuthorsAuthorsToJSON)),
+>>>>>>> main
     };
 }
 
