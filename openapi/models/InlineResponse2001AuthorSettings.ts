@@ -16,28 +16,28 @@ import { exists, mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface InlineObject1
+ * @interface InlineResponse2001AuthorSettings
  */
-export interface InlineObject1 {
+export interface InlineResponse2001AuthorSettings {
     /**
      * 
      * @type {boolean}
-     * @memberof InlineObject1
+     * @memberof InlineResponse2001AuthorSettings
      */
     zoomImportEnabled?: boolean;
     /**
      * 
      * @type {boolean}
-     * @memberof InlineObject1
+     * @memberof InlineResponse2001AuthorSettings
      */
     zoomImportAutodelete?: boolean;
 }
 
-export function InlineObject1FromJSON(json: any): InlineObject1 {
-    return InlineObject1FromJSONTyped(json, false);
+export function InlineResponse2001AuthorSettingsFromJSON(json: any): InlineResponse2001AuthorSettings {
+    return InlineResponse2001AuthorSettingsFromJSONTyped(json, false);
 }
 
-export function InlineObject1FromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineObject1 {
+export function InlineResponse2001AuthorSettingsFromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse2001AuthorSettings {
     if ((json === undefined) || (json === null)) {
         return json;
     }
@@ -48,7 +48,7 @@ export function InlineObject1FromJSONTyped(json: any, ignoreDiscriminator: boole
     };
 }
 
-export function InlineObject1ToJSON(value?: InlineObject1 | null): any {
+export function InlineResponse2001AuthorSettingsToJSON(value?: InlineResponse2001AuthorSettings | null): any {
     if (value === undefined) {
         return undefined;
     }

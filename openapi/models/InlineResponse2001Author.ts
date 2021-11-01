@@ -13,6 +13,13 @@
  */
 
 import { exists, mapValues } from '../runtime';
+import {
+    InlineResponse2001AuthorSettings,
+    InlineResponse2001AuthorSettingsFromJSON,
+    InlineResponse2001AuthorSettingsFromJSONTyped,
+    InlineResponse2001AuthorSettingsToJSON,
+} from './';
+
 /**
  * 
  * @export
@@ -43,6 +50,18 @@ export interface InlineResponse2001Author {
      * @memberof InlineResponse2001Author
      */
     name?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineResponse2001Author
+     */
+    email?: string;
+    /**
+     * 
+     * @type {InlineResponse2001AuthorSettings}
+     * @memberof InlineResponse2001Author
+     */
+    settings?: InlineResponse2001AuthorSettings;
 }
 
 export function InlineResponse2001AuthorFromJSON(json: any): InlineResponse2001Author {
@@ -59,6 +78,8 @@ export function InlineResponse2001AuthorFromJSONTyped(json: any, ignoreDiscrimin
         'ltiConsumerId': !exists(json, 'ltiConsumerId') ? undefined : json['ltiConsumerId'],
         'ltiUserId': !exists(json, 'ltiUserId') ? undefined : json['ltiUserId'],
         'name': !exists(json, 'name') ? undefined : json['name'],
+        'email': !exists(json, 'email') ? undefined : json['email'],
+        'settings': !exists(json, 'settings') ? undefined : InlineResponse2001AuthorSettingsFromJSON(json['settings']),
     };
 }
 
@@ -75,6 +96,8 @@ export function InlineResponse2001AuthorToJSON(value?: InlineResponse2001Author 
         'ltiConsumerId': value.ltiConsumerId,
         'ltiUserId': value.ltiUserId,
         'name': value.name,
+        'email': value.email,
+        'settings': InlineResponse2001AuthorSettingsToJSON(value.settings),
     };
 }
 

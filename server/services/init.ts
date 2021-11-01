@@ -5,6 +5,7 @@ import {
   findLtiResourceLink,
   upsertLtiResourceLink,
 } from "$server/utils/ltiResourceLink";
+import { isInstructor } from "$utils/session";
 
 const frontendUrl = `${FRONTEND_ORIGIN}${FRONTEND_PATH}`;
 
@@ -28,6 +29,10 @@ async function init({ session }: FastifyRequest) {
     ltiConsumerId: session.oauthClient.id,
     ltiUserId: session.ltiUser.id,
     name: session.ltiUser.name ?? "",
+    email:
+      session.ltiUser.email && isInstructor(session)
+        ? session.ltiUser.email
+        : "",
   });
 
   Object.assign(session, { ltiResourceLink, user });

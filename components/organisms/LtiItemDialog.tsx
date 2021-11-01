@@ -34,6 +34,7 @@ function useLtiLaunchBody(session: SessionSchema) {
       context_title: session.ltiContext.title,
       context_label: session.ltiContext.label,
       lis_person_name_full: session.ltiUser.name,
+      lis_person_contact_email_primary: session.ltiUser.email,
       launch_presentation_return_url: session.ltiLaunchPresentation?.returnUrl,
     }),
     [session]

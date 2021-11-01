@@ -3,9 +3,9 @@ import path from "path";
 import unzipper from "unzipper";
 // @ts-expect-error Could not find a declaration file for module 'recursive-readdir-synchronous'
 import recursive from "recursive-readdir-synchronous";
-import dateFormat from "dateformat";
+import format from "date-fns/format";
+import utcToZoneTime from "date-fns-tz/utcToZonedTime";
 import { Buffer } from "buffer";
-import scp from "node-scp";
 
 import { validate, ValidationError } from "class-validator";
 import { UserSchema } from "$server/models/user";
@@ -21,14 +21,7 @@ import {
 import prisma from "$server/utils/prisma";
 import findBook from "./findBook";
 import { parse as parseProviderUrl } from "$server/utils/videoResource";
-import {
-  WOWZA_SCP_HOST,
-  WOWZA_SCP_PORT,
-  WOWZA_SCP_USERNAME,
-  WOWZA_SCP_PRIVATE_KEY,
-  WOWZA_SCP_PASS_PHRASE,
-  WOWZA_SCP_SERVER_PATH,
-} from "$server/utils/env";
+import { scpUpload } from "$server/utils/wowza/scpUpload";
 
 async function importBooksUtil(
   user: UserSchema,
@@ -211,7 +204,10 @@ class ImportBooksUtil {
       recursive: true,
     });
     const uploaddir = fs.mkdtempSync(
-      `${uploadauthor}/${dateFormat(new Date(), "yyyymmdd-HHMM")}-`
+      `${uploadauthor}/${format(
+        utcToZoneTime(new Date(), "Asia/Tokyo"),
+        "yyyyMMdd-HHmm"
+      )}-`
     );
     const uploadsubdir = uploaddir.substring(uploadroot.length);
 
@@ -260,19 +256,7 @@ class ImportBooksUtil {
     if (!filenames.length) return;
 
     try {
-      // error  This expression is not callable.
-      // Type 'typeof import("./node_modules/node-scp/lib/index")' has no call signatures
-      // eslint-disable-next-line tsc/config
-      const client = await scp({
-        host: WOWZA_SCP_HOST,
-        port: WOWZA_SCP_PORT,
-        username: WOWZA_SCP_USERNAME,
-        // password: WOWZA_SCP_PASSWORD,
-        privateKey: fs.readFileSync(WOWZA_SCP_PRIVATE_KEY),
-        passphrase: WOWZA_SCP_PASS_PHRASE,
-      });
-      await client.uploadDir(uploadroot, WOWZA_SCP_SERVER_PATH);
-      client.close();
+      await scpUpload(uploadroot);
     } catch (e) {
       this.errors.push(`サーバーにアップロードできませんでした。\n${e}`);
     }

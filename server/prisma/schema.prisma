@@ -14,10 +14,20 @@ generator jsonSchema {
 
 // Resource Objects
 
+/// Zoomインポート履歴
+model ZoomMeeting {
+  uuid       String   @id
+  resource   Resource @relation(fields: [resourceId], references: [id])
+  resourceId Int      @unique @map("resource_id")
+
+  @@map("zoom_meetings")
+}
+
 /// 教育用外部リソース
 model Resource {
   id      Int     @id @default(autoincrement())
   topics  Topic[]
+  zoomMeeting ZoomMeeting?
   video   Video?  @relation(fields: [videoId], references: [id])
   videoId Int?    @map("video_id")
   /// 外部リソースのアドレス
@@ -235,9 +245,14 @@ model User {
   activities       Activity[]
   /// 氏名
   name             String
+  /// メールアドレス
+  email            String            @default("")
+  /// 詳細
+  settings         Json              @default("{}")
 
   @@unique([ltiConsumerId, ltiUserId])
   @@map("users")
+  @@index([email])
 }
 
 /// 学習活動
