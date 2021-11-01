@@ -25,12 +25,6 @@ export interface InlineObject1 {
      * @memberof InlineObject1
      */
     zoomImportEnabled?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof InlineObject1
-     */
-    zoomImportAutodelete?: boolean;
 }
 
 export function InlineObject1FromJSON(json: any): InlineObject1 {
@@ -44,7 +38,6 @@ export function InlineObject1FromJSONTyped(json: any, ignoreDiscriminator: boole
     return {
         
         'zoomImportEnabled': !exists(json, 'zoomImportEnabled') ? undefined : json['zoomImportEnabled'],
-        'zoomImportAutodelete': !exists(json, 'zoomImportAutodelete') ? undefined : json['zoomImportAutodelete'],
     };
 }
 
@@ -58,7 +51,6 @@ export function InlineObject1ToJSON(value?: InlineObject1 | null): any {
     return {
         
         'zoomImportEnabled': value.zoomImportEnabled,
-        'zoomImportAutodelete': value.zoomImportAutodelete,
     };
 }
 

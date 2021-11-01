@@ -25,12 +25,6 @@ export interface InlineResponse2001AuthorSettings {
      * @memberof InlineResponse2001AuthorSettings
      */
     zoomImportEnabled?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof InlineResponse2001AuthorSettings
-     */
-    zoomImportAutodelete?: boolean;
 }
 
 export function InlineResponse2001AuthorSettingsFromJSON(json: any): InlineResponse2001AuthorSettings {
@@ -44,7 +38,6 @@ export function InlineResponse2001AuthorSettingsFromJSONTyped(json: any, ignoreD
     return {
         
         'zoomImportEnabled': !exists(json, 'zoomImportEnabled') ? undefined : json['zoomImportEnabled'],
-        'zoomImportAutodelete': !exists(json, 'zoomImportAutodelete') ? undefined : json['zoomImportAutodelete'],
     };
 }
 
@@ -58,7 +51,6 @@ export function InlineResponse2001AuthorSettingsToJSON(value?: InlineResponse200
     return {
         
         'zoomImportEnabled': value.zoomImportEnabled,
-        'zoomImportAutodelete': value.zoomImportAutodelete,
     };
 }
 
