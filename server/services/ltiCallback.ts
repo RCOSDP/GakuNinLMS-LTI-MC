@@ -44,7 +44,7 @@ export async function post(req: FastifyRequest<{ Body: Props }>) {
     const claims = token.claims();
     const ltiClaims = new LtiClaims(claims as Partial<LtiClaims>);
     await validateOrReject(ltiClaims);
-    const session: Omit<SessionSchema, "user"> = {
+    const session: Omit<SessionSchema, "user" | "systemSettings"> = {
       oauthClient: req.session.oauthClient,
       ltiVersion: "1.3.0",
       ltiUser: {

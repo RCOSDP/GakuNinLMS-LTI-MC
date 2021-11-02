@@ -5,11 +5,14 @@ import {
   findLtiResourceLink,
   upsertLtiResourceLink,
 } from "$server/utils/ltiResourceLink";
+import { isInstructor } from "$server/utils/session";
+import { getSystemSettings } from "$server/utils/systemSettings";
 
 const frontendUrl = `${FRONTEND_ORIGIN}${FRONTEND_PATH}`;
 
 /** 起動時の初期化プロセス */
 async function init({ session }: FastifyRequest) {
+  const systemSettings = getSystemSettings();
   const ltiResourceLink = await findLtiResourceLink({
     consumerId: session.oauthClient.id,
     id: session.ltiResourceLinkRequest.id,
@@ -29,34 +32,17 @@ async function init({ session }: FastifyRequest) {
     ltiUserId: session.ltiUser.id,
     name: session.ltiUser.name ?? "",
     email:
-      session.ltiUser.email && isTeacher(session.ltiRoles)
+      session.ltiUser.email && isInstructor(session)
         ? session.ltiUser.email
         : "",
   });
 
-  Object.assign(session, { ltiResourceLink, user });
+  Object.assign(session, { ltiResourceLink, user, systemSettings });
 
   return {
     status: 302,
     headers: { location: frontendUrl },
   } as const;
-}
-
-function isTeacher(ltiRoles: string[]) {
-  // http://www.imsglobal.org/specs/ltiv1p0/implementation-guide#toc-9
-  for (const ltiRole of ltiRoles) {
-    if (
-      [
-        "Instructor",
-        "Administrator",
-        "TeachingAssistant",
-        "ContentDeveloper",
-        "Mentor",
-      ].includes(ltiRole)
-    )
-      return true;
-  }
-  return false;
 }
 
 /** OpenAPI Responses Object */

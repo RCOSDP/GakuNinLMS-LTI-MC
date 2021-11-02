@@ -18,6 +18,10 @@ const appBarHandlers = {
 const topics = [...Array(10)].map(() => topic);
 
 const handlers = {
+  onBookNewClick: console.log,
+  onTopicsShareClick: console.log,
+  onTopicsUnshareClick: console.log,
+  onTopicsDeleteClick: console.log,
   onTopicEditClick: console.log,
   onTopicNewClick: console.log,
 };

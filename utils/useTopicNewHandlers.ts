@@ -11,7 +11,7 @@ import useAuthorsHandler from "$utils/useAuthorsHandler";
 
 /** TopicNew コンポーネントのためのハンドラー生成 (要 TopicNew, ./index.tsx, ./edit.tsx) */
 function useTopicNewHandlers(
-  context: "books" | undefined,
+  context: "books" | "topics" | undefined,
   book?: BookSchema,
   targetTopic?: TopicSchema
 ) {

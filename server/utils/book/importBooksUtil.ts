@@ -3,9 +3,9 @@ import path from "path";
 import unzipper from "unzipper";
 // @ts-expect-error Could not find a declaration file for module 'recursive-readdir-synchronous'
 import recursive from "recursive-readdir-synchronous";
-import dateFormat from "dateformat";
+import format from "date-fns/format";
+import utcToZoneTime from "date-fns-tz/utcToZonedTime";
 import { Buffer } from "buffer";
-import scp from "node-scp";
 
 import type { ValidationError } from "class-validator";
 import { validate } from "class-validator";
@@ -22,16 +22,9 @@ import { ImportBooks } from "$server/models/booksImportParams";
 import prisma from "$server/utils/prisma";
 import findBook from "./findBook";
 import { parse as parseProviderUrl } from "$server/utils/videoResource";
-import {
-  WOWZA_SCP_HOST,
-  WOWZA_SCP_PORT,
-  WOWZA_SCP_USERNAME,
-  WOWZA_SCP_PRIVATE_KEY,
-  WOWZA_SCP_PASS_PHRASE,
-  WOWZA_SCP_SERVER_PATH,
-} from "$server/utils/env";
+import { scpUpload } from "$server/utils/wowza/scpUpload";
 import findRoles from "$server/utils/author/findRoles";
-import insertAuthors from "../author/insertAuthors";
+import insertAuthors from "$server/utils/author/insertAuthors";
 
 async function importBooksUtil(
   user: UserSchema,
@@ -227,11 +220,14 @@ class ImportBooksUtil {
         recursive: true,
       }
     );
-    const uploadcreator = fs.mkdirSync(`${uploaddomain}/${this.user.id}`, {
+    const uploadauthor = fs.mkdirSync(`${uploaddomain}/${this.user.id}`, {
       recursive: true,
     });
     const uploaddir = fs.mkdtempSync(
-      `${uploadcreator}/${dateFormat(new Date(), "yyyymmdd-HHMM")}-`
+      `${uploadauthor}/${format(
+        utcToZoneTime(new Date(), "Asia/Tokyo"),
+        "yyyyMMdd-HHmm"
+      )}-`
     );
     const uploadsubdir = uploaddir.substring(uploadroot.length);
 
@@ -280,19 +276,7 @@ class ImportBooksUtil {
     if (!filenames.length) return;
 
     try {
-      // error  This expression is not callable.
-      // Type 'typeof import("./node_modules/node-scp/lib/index")' has no call signatures
-      // eslint-disable-next-line tsc/config
-      const client = await scp({
-        host: WOWZA_SCP_HOST,
-        port: WOWZA_SCP_PORT,
-        username: WOWZA_SCP_USERNAME,
-        // password: WOWZA_SCP_PASSWORD,
-        privateKey: fs.readFileSync(WOWZA_SCP_PRIVATE_KEY),
-        passphrase: WOWZA_SCP_PASS_PHRASE,
-      });
-      await client.uploadDir(uploadroot, WOWZA_SCP_SERVER_PATH);
-      client.close();
+      await scpUpload(uploadroot);
     } catch (e) {
       this.errors.push(`サーバーにアップロードできませんでした。\n${e}`);
     }

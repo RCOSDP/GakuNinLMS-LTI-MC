@@ -85,7 +85,7 @@ export const ltiLaunchBodySchema = validationMetadatasToSchemas().LtiLaunchBody;
 
 export function toSessionSchema(
   body: LtiLaunchBody
-): Omit<SessionSchema, "ltiResourceLink" | "user"> {
+): Omit<SessionSchema, "ltiResourceLink" | "user" | "systemSettings"> {
   let ltiLaunchPresentation: undefined | LtiLaunchPresentationSchema;
   if ("launch_presentation_return_url" in body) {
     ltiLaunchPresentation = {

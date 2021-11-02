@@ -3,19 +3,25 @@ import { useState, forwardRef } from "react";
 import MuiAppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Button from "@mui/material/Button";
+import Snackbar from "@mui/material/Snackbar";
 import MenuBookOutlinedIcon from "@mui/icons-material/MenuBookOutlined";
 import LibraryBooksOutlinedIcon from "@mui/icons-material/LibraryBooksOutlined";
 import AssessmentOutlinedIcon from "@mui/icons-material/AssessmentOutlined";
 import LinkIcon from "@mui/icons-material/Link";
+import SettingsIcon from "@mui/icons-material/Settings";
 import makeStyles from "@mui/styles/makeStyles";
 import clsx from "clsx";
 import AppBarNavButton from "$atoms/AppBarNavButton";
 import LtiItemDialog from "$organisms/LtiItemDialog";
 import useAppBarStyles from "$styles/appBar";
 import type { SessionSchema } from "$server/models/session";
+import type { UserSettingsProps } from "$server/models/userSettings";
 import { gray } from "$theme/colors";
 import { isAdministrator, isInstructor } from "$utils/session";
+import { updateUserSettings } from "$utils/userSettings";
 import { NEXT_PUBLIC_BASE_PATH } from "$utils/env";
+import { useRouter } from "next/router";
+import { pagesPath } from "$utils/$path";
 
 const useStyles = makeStyles((theme) => ({
   inner: {
@@ -82,12 +88,43 @@ function AppBar(props: Props, ref: Ref<HTMLDivElement>) {
   const appBarClasses = useAppBarStyles();
   const classes = useStyles();
   const [open, setOpen] = useState(false);
+  const router = useRouter();
+
   const handleClick = () => {
     setOpen(true);
   };
   const handleClose = () => {
     setOpen(false);
   };
+  const handleOpenUserSettings = () => {
+    setShowZoomImportNotice(false);
+    return router.push(pagesPath.userSettings.$url());
+  };
+  const handleDisableZoomImport = async () => {
+    await updateUserSettings({ zoomImportEnabled: false });
+    setShowZoomImportNotice(false);
+  };
+  const userSettings = session?.user?.settings as UserSettingsProps;
+  const [showZoomImportNotice, setShowZoomImportNotice] = useState(
+    session?.systemSettings?.zoomImportEnabled &&
+      userSettings?.zoomImportEnabled == undefined
+  );
+  const actionZoomImportNotice = (
+    <>
+      <Button
+        variant="contained"
+        size="small"
+        color="primary"
+        onClick={handleOpenUserSettings}
+      >
+        設定
+      </Button>
+      <Button size="small" color="primary" onClick={handleDisableZoomImport}>
+        後で
+      </Button>
+    </>
+  );
+
   return (
     <MuiAppBar classes={appBarClasses} color="default" {...others} ref={ref}>
       <Toolbar color="inherit" disableGutters>
@@ -122,6 +159,14 @@ function AppBar(props: Props, ref: Ref<HTMLDivElement>) {
                 !Number.isFinite(session?.ltiResourceLink?.bookId)
               }
             />
+            {session?.systemSettings?.zoomImportEnabled && ( // TODO: zoomインポート以外の設定値が実装されたら常時表示する
+              <AppBarNavButton
+                color="inherit"
+                icon={<SettingsIcon />}
+                label="設定"
+                onClick={handleOpenUserSettings}
+              />
+            )}
             {onDashboardClick && (
               <AppBarNavButton
                 color="inherit"
@@ -149,6 +194,12 @@ function AppBar(props: Props, ref: Ref<HTMLDivElement>) {
           )}
         </div>
       </Toolbar>
+      <Snackbar
+        open={showZoomImportNotice}
+        action={actionZoomImportNotice}
+        message="zoomインポート機能が利用できます"
+        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+      />
     </MuiAppBar>
   );
 }

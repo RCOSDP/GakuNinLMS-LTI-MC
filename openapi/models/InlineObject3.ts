@@ -14,10 +14,10 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    ApiV2BookBookIdAuthorsAuthors,
-    ApiV2BookBookIdAuthorsAuthorsFromJSON,
-    ApiV2BookBookIdAuthorsAuthorsFromJSONTyped,
-    ApiV2BookBookIdAuthorsAuthorsToJSON,
+    ApiV2BookBookIdSections,
+    ApiV2BookBookIdSectionsFromJSON,
+    ApiV2BookBookIdSectionsFromJSONTyped,
+    ApiV2BookBookIdSectionsToJSON,
 } from './';
 
 /**
@@ -28,10 +28,34 @@ import {
 export interface InlineObject3 {
     /**
      * 
-     * @type {Array<ApiV2BookBookIdAuthorsAuthors>}
+     * @type {string}
      * @memberof InlineObject3
      */
-    authors: Array<ApiV2BookBookIdAuthorsAuthors>;
+    name?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineObject3
+     */
+    description?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineObject3
+     */
+    language?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof InlineObject3
+     */
+    shared?: boolean;
+    /**
+     * 
+     * @type {Array<ApiV2BookBookIdSections>}
+     * @memberof InlineObject3
+     */
+    sections?: Array<ApiV2BookBookIdSections>;
 }
 
 export function InlineObject3FromJSON(json: any): InlineObject3 {
@@ -44,7 +68,11 @@ export function InlineObject3FromJSONTyped(json: any, ignoreDiscriminator: boole
     }
     return {
         
-        'authors': ((json['authors'] as Array<any>).map(ApiV2BookBookIdAuthorsAuthorsFromJSON)),
+        'name': !exists(json, 'name') ? undefined : json['name'],
+        'description': !exists(json, 'description') ? undefined : json['description'],
+        'language': !exists(json, 'language') ? undefined : json['language'],
+        'shared': !exists(json, 'shared') ? undefined : json['shared'],
+        'sections': !exists(json, 'sections') ? undefined : ((json['sections'] as Array<any>).map(ApiV2BookBookIdSectionsFromJSON)),
     };
 }
 
@@ -57,7 +85,11 @@ export function InlineObject3ToJSON(value?: InlineObject3 | null): any {
     }
     return {
         
-        'authors': ((value.authors as Array<any>).map(ApiV2BookBookIdAuthorsAuthorsToJSON)),
+        'name': value.name,
+        'description': value.description,
+        'language': value.language,
+        'shared': value.shared,
+        'sections': value.sections === undefined ? undefined : ((value.sections as Array<any>).map(ApiV2BookBookIdSectionsToJSON)),
     };
 }
 

@@ -7,9 +7,11 @@ import RequiredDot from "$atoms/RequiredDot";
 import BackButton from "$atoms/BackButton";
 import useContainerStyles from "styles/container";
 import type { BookSchema } from "$server/models/book";
+import type { TopicSchema } from "$server/models/topic";
 import type { BookPropsWithSubmitOptions } from "$types/bookPropsWithSubmitOptions";
 import type { AuthorSchema } from "$server/models/author";
 import { useSessionAtom } from "$store/session";
+import { useTopic } from "$utils/topic";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -34,6 +36,7 @@ const useStyles = makeStyles((theme) => ({
 
 type Props = {
   book?: BookSchema;
+  topics?: Array<TopicSchema["id"]>;
   onSubmit: (book: BookPropsWithSubmitOptions) => void;
   onCancel(): void;
   onAuthorsUpdate(authors: AuthorSchema[]): void;
@@ -42,6 +45,7 @@ type Props = {
 
 export default function BookNew({
   book,
+  topics,
   onSubmit,
   onCancel,
   onAuthorsUpdate,
@@ -56,6 +60,16 @@ export default function BookNew({
   };
   const classes = useStyles();
   const containerClasses = useContainerStyles();
+
+  const availableTopics = [];
+  if (topics && topics.length) {
+    for (const id of topics) {
+      // TODO: ループ内で React Hook API を呼び出すのは非推奨なので修正してほしい
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      const topic = useTopic(id);
+      if (topic) availableTopics.push(topic);
+    }
+  }
 
   return (
     <Container
@@ -77,8 +91,19 @@ export default function BookNew({
           のブックをフォークしようとしています
         </Alert>
       )}
+      {topics && (
+        <Alert className={classes.alert} severity="info">
+          以下のトピックを追加します
+          <ul>
+            {availableTopics.map((topic) => (
+              <li key={topic.id}>{topic.name}</li>
+            ))}
+          </ul>
+        </Alert>
+      )}
       <BookForm
         book={defaultBook}
+        topics={availableTopics.map((topic) => topic.id)}
         variant="create"
         onSubmit={onSubmit}
         onAuthorsUpdate={onAuthorsUpdate}

@@ -28,6 +28,9 @@ async function destroyTopic(id: Topic["id"]) {
       prisma.video.deleteMany({
         where: { resource: { topics: { every: { id } } } },
       }),
+      prisma.zoomMeeting.deleteMany({
+        where: { resource: { topics: { every: { id } } } },
+      }),
       prisma.resource.deleteMany({
         where: { topics: { every: { id } } },
       }),
