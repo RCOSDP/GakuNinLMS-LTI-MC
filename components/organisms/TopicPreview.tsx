@@ -5,16 +5,18 @@ import gfm from "remark-gfm";
 import strip from "strip-markdown";
 import Card from "@mui/material/Card";
 import CardActionArea from "@mui/material/CardActionArea";
+import CardMedia from "@mui/material/CardMedia";
 import Checkbox from "@mui/material/Checkbox";
 import { styled } from "@mui/material/styles";
 import EditButton from "$atoms/EditButton";
 import DescriptionList from "$atoms/DescriptionList";
 import SharedIndicator from "$atoms/SharedIndicator";
-import Video from "$organisms/Video";
 import type { TopicSchema } from "$server/models/topic";
 import { primary, gray } from "$theme/colors";
 import useLineClampStyles from "$styles/lineClamp";
 import getLocaleDateString from "$utils/getLocaleDateString";
+import useOEmbed from "$utils/useOEmbed";
+import { NEXT_PUBLIC_BASE_PATH } from "$utils/env";
 
 type HeaderProps = Parameters<typeof Checkbox>[0] & {
   checkable: boolean;
@@ -123,6 +125,7 @@ export default function TopicPreview(props: Props) {
   const handle = (handler: (topic: TopicSchema) => void) => () => {
     handler(topic);
   };
+  const oembed = useOEmbed(topic.resource);
   return (
     <Preview className={clsx({ selected: checked })}>
       <Header
@@ -144,9 +147,16 @@ export default function TopicPreview(props: Props) {
       </Header>
       <CardActionArea onClick={handle(onTopicPreviewClick)}>
         <div ref={ref}>
-          {"providerUrl" in topic.resource && inView && (
-            <Video className={classes.video} {...topic.resource} />
-          )}
+          <CardMedia
+            component="img"
+            height={180}
+            image={
+              inView && oembed
+                ? oembed.thumbnail_url
+                : `${NEXT_PUBLIC_BASE_PATH}/video-thumbnail-placeholder.png`
+            }
+            alt="サムネイル"
+          />
         </div>
         <DescriptionList
           inline
