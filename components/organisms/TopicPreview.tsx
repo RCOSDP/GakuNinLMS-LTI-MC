@@ -1,13 +1,12 @@
-import type { ReactNode } from "react";
 import clsx from "clsx";
 import { useInView } from "react-intersection-observer";
 import Markdown from "react-markdown";
 import gfm from "remark-gfm";
 import strip from "strip-markdown";
 import Card from "@mui/material/Card";
+import CardActionArea from "@mui/material/CardActionArea";
 import Checkbox from "@mui/material/Checkbox";
-import makeStyles from "@mui/styles/makeStyles";
-import PreviewButton from "$atoms/PreviewButton";
+import { styled } from "@mui/material/styles";
 import EditButton from "$atoms/EditButton";
 import DescriptionList from "$atoms/DescriptionList";
 import SharedIndicator from "$atoms/SharedIndicator";
@@ -17,92 +16,85 @@ import { primary, gray } from "$theme/colors";
 import useLineClampStyles from "$styles/lineClamp";
 import getLocaleDateString from "$utils/getLocaleDateString";
 
-const useCardStyles = makeStyles((theme) => ({
-  root: {
-    border: `1px solid ${gray[400]}`,
-    borderRadius: 12,
-    boxShadow: "none",
-    padding: theme.spacing(1, 2),
-  },
-}));
+type HeaderProps = Parameters<typeof Checkbox>[0] & {
+  checkable: boolean;
+  children: React.ReactNode;
+  className?: string;
+  title: string;
+};
 
-const useCheckableHeaderStyles = makeStyles((theme) => ({
-  root: {
-    display: "flex",
-    alignItems: "center",
-  },
-  title: {
+const Header = styled(
+  ({
+    checkable,
+    children,
+    className,
+    title,
+    ...checkboxProps
+  }: HeaderProps) => {
+    const lineClamp = useLineClampStyles({
+      fontSize: "0.875rem",
+      lineClamp: 2,
+      lineHeight: 1.375,
+    });
+
+    if (!checkable)
+      return (
+        <header className={clsx(className, lineClamp.placeholder)}>
+          <h6 className={clsx("title", lineClamp.clamp)}>{title}</h6>
+          {children}
+        </header>
+      );
+
+    return (
+      <div className={clsx(className, lineClamp.placeholder)}>
+        <Checkbox
+          className="checkbox"
+          size="small"
+          color="primary"
+          {...checkboxProps}
+        />
+        <label
+          className={clsx("title", lineClamp.clamp)}
+          htmlFor={checkboxProps.id}
+        >
+          {title}
+        </label>
+        {children}
+      </div>
+    );
+  }
+)(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  ".title": {
     flex: 1,
     fontWeight: 500,
   },
-  checkbox: {
+  ".checkbox": {
     marginLeft: theme.spacing(-1.5),
   },
 }));
 
-function CheckableHeader(
-  props: Parameters<typeof Checkbox>[0] & {
-    checkable: boolean;
-    children: ReactNode;
-    title: string;
-  }
-) {
-  const { checkable, children, title, ...checkboxProps } = props;
-  const classes = useCheckableHeaderStyles();
-  const lineClamp = useLineClampStyles({
-    fontSize: "0.875rem",
-    lineClamp: 2,
-    lineHeight: 1.375,
-  });
+const Description = styled("p")({
+  color: gray[700],
+  margin: 0,
+});
 
-  if (!checkable)
-    return (
-      <div className={clsx(classes.root, lineClamp.placeholder)}>
-        <h6 className={clsx(classes.title, lineClamp.clamp)}>{title}</h6>
-        {children}
-      </div>
-    );
-
-  return (
-    <div className={clsx(classes.root, lineClamp.placeholder)}>
-      <Checkbox
-        className={classes.checkbox}
-        size="small"
-        color="primary"
-        {...checkboxProps}
-      />
-      <label
-        className={clsx(classes.title, lineClamp.clamp)}
-        htmlFor={checkboxProps.id}
-      >
-        {title}
-      </label>
-      {children}
-    </div>
-  );
-}
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    "& > :not(:last-child)": {
-      marginBottom: theme.spacing(0.5),
-    },
-  },
-  shared: {
+const Preview = styled(Card)(({ theme }) => ({
+  border: `1px solid ${gray[400]}`,
+  borderRadius: 12,
+  boxShadow: "none",
+  ".shared": {
     verticalAlign: "middle",
     margin: theme.spacing(0, 0.5),
   },
-  editButton: {
+  ".edit-button": {
     marginRight: theme.spacing(-1.5),
   },
-  video: {
+  ".video": {
     margin: theme.spacing(0, -2),
   },
-  description: {
-    color: gray[700],
-    margin: 0,
-  },
-  selected: {
+  "&.selected": {
     backgroundColor: primary[50],
   },
 }));
@@ -114,8 +106,6 @@ type Props = Parameters<typeof Checkbox>[0] & {
 };
 
 export default function TopicPreview(props: Props) {
-  const cardClasses = useCardStyles();
-  const classes = useStyles();
   const lineClamp = useLineClampStyles({
     fontSize: "0.75rem",
     lineClamp: 2,
@@ -134,61 +124,62 @@ export default function TopicPreview(props: Props) {
     handler(topic);
   };
   return (
-    <Card
-      classes={cardClasses}
-      className={clsx(classes.root, { [classes.selected]: checked })}
-    >
-      <CheckableHeader
+    <Preview className={clsx({ selected: checked })}>
+      <Header
         checkable={checkable}
         id={`TopicPreview-topic:${topic.id}`}
         checked={checked}
         {...checkboxProps}
         title={topic.name}
+        sx={{ mx: 2, my: 1 }}
       >
-        {topic.shared && <SharedIndicator className={classes.shared} />}
-        <PreviewButton variant="topic" onClick={handle(onTopicPreviewClick)} />
+        {topic.shared && <SharedIndicator className="shared" />}
         {onTopicEditClick && (
           <EditButton
-            className={classes.editButton}
+            className="edit-button"
             variant="topic"
             onClick={handle(onTopicEditClick)}
           />
         )}
-      </CheckableHeader>
-      <div ref={ref}>
-        {"providerUrl" in topic.resource && inView && (
-          <Video className={classes.video} {...topic.resource} />
-        )}
-      </div>
-      <DescriptionList
-        nowrap
-        value={[
-          {
-            key: "更新日",
-            value: getLocaleDateString(topic.updatedAt, "ja"),
-          },
-          {
-            key: "著者",
-            // TODO: 複数著者の表示に対応してほしい
-            value: topic.authors[0]?.name ?? "-",
-          },
-        ]}
-      />
-      <p
-        className={clsx(
-          classes.description,
-          lineClamp.clamp,
-          lineClamp.placeholder
-        )}
-      >
-        <Markdown
-          remarkPlugins={[gfm, [strip, { keep: ["delete"] }]]}
-          allowedElements={["del"]}
-          unwrapDisallowed
+      </Header>
+      <CardActionArea onClick={handle(onTopicPreviewClick)}>
+        <div ref={ref}>
+          {"providerUrl" in topic.resource && inView && (
+            <Video className={classes.video} {...topic.resource} />
+          )}
+        </div>
+        <DescriptionList
+          inline
+          sx={{ mx: 2, my: 1 }}
+          value={[
+            {
+              key: "更新日",
+              value: getLocaleDateString(topic.updatedAt, "ja"),
+            },
+            {
+              key: "著者",
+              // TODO: 複数著者の表示に対応してほしい
+              value: topic.authors[0]?.name ?? "-",
+            },
+          ]}
+        />
+        <Description
+          className={clsx(
+            "description",
+            lineClamp.clamp,
+            lineClamp.placeholder
+          )}
+          sx={{ mx: 2, my: 1 }}
         >
-          {topic.description}
-        </Markdown>
-      </p>
-    </Card>
+          <Markdown
+            remarkPlugins={[gfm, [strip, { keep: ["delete"] }]]}
+            allowedElements={["del"]}
+            unwrapDisallowed
+          >
+            {topic.description}
+          </Markdown>
+        </Description>
+      </CardActionArea>
+    </Preview>
   );
 }
