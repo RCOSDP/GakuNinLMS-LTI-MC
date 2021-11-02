@@ -15,6 +15,7 @@ import type { TopicSchema } from "$server/models/topic";
 import { primary, gray } from "$theme/colors";
 import useLineClampStyles from "$styles/lineClamp";
 import getLocaleDateString from "$utils/getLocaleDateString";
+import getLocaleListString from "$utils/getLocaleListString";
 import useOEmbed from "$utils/useOEmbed";
 import { NEXT_PUBLIC_BASE_PATH } from "$utils/env";
 
@@ -159,17 +160,25 @@ export default function TopicPreview(props: Props) {
           />
         </div>
         <DescriptionList
-          inline
-          sx={{ mx: 2, my: 1 }}
+          nowrap
+          sx={{ mx: 2, mt: 1, mb: 0.25 }}
           value={[
             {
               key: "更新日",
               value: getLocaleDateString(topic.updatedAt, "ja"),
             },
+          ]}
+        />
+        <DescriptionList
+          nowrap
+          sx={{ mx: 2, mb: 1 }}
+          value={[
             {
               key: "著者",
-              // TODO: 複数著者の表示に対応してほしい
-              value: topic.authors[0]?.name ?? "-",
+              value: getLocaleListString(
+                topic.authors.map(({ name }) => name),
+                "ja"
+              ),
             },
           ]}
         />
