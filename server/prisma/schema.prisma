@@ -9,11 +9,6 @@ generator client {
   previewFeatures = ["orderByRelation"]
 }
 
-generator jsonSchema {
-  provider = "prisma-json-schema-generator"
-  output   = "."
-}
-
 // Resource Objects
 
 /// Zoomインポート履歴

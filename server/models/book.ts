@@ -1,5 +1,4 @@
 import type { Book } from "@prisma/client";
-import jsonSchema from "$server/prisma/json-schema.json";
 import { AuthorSchema } from "./author";
 import type { SectionProps, SectionSchema } from "./book/section";
 import { sectionPropsSchema, sectionSchema } from "./book/section";
@@ -20,45 +19,33 @@ export type BookSchema = Book & {
   ltiResourceLinks: LtiResourceLinkSchema[];
 };
 
-const {
-  id,
-  name,
-  description,
-  language,
-  shared,
-  publishedAt,
-  createdAt,
-  updatedAt,
-  details,
-} = jsonSchema.definitions.Book.properties;
-
 export const bookPropsSchema = {
   type: "object",
   properties: {
-    name,
-    description,
-    language: { ...language, nullable: true },
-    shared: { ...shared, nullable: true },
+    name: { type: "string" },
+    description: { type: "string" },
+    language: { type: "string", nullable: true },
+    shared: { type: "boolean", nullable: true },
     sections: {
       type: "array",
       items: sectionPropsSchema,
     },
   },
-};
+} as const;
 
 export const bookSchema = {
   type: "object",
   properties: {
-    id,
-    name,
-    description,
-    language,
+    id: { type: "integer" },
+    name: { type: "string" },
+    description: { type: "string" },
+    language: { type: "string" },
     timeRequired: { type: "integer", nullable: true },
-    shared,
-    publishedAt,
-    createdAt,
-    updatedAt,
-    details,
+    shared: { type: "boolean" },
+    publishedAt: { type: "string", format: "date-time" },
+    createdAt: { type: "string", format: "date-time" },
+    updatedAt: { type: "string", format: "date-time" },
+    details: { type: "object" },
     authors: { type: "array", items: AuthorSchema },
     sections: {
       type: "array",
@@ -69,4 +56,4 @@ export const bookSchema = {
       items: ltiResourceLinkSchema,
     },
   },
-};
+} as const;

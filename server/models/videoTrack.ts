@@ -1,5 +1,4 @@
 import type { Track, Prisma } from "@prisma/client";
-import jsonSchema from "$server/prisma/json-schema.json";
 
 export type VideoTrackProps = Pick<
   Prisma.TrackCreateWithoutVideoInput,
@@ -12,14 +11,20 @@ export type VideoTrackSchema = Pick<Track, "id" | "kind" | "language"> & {
   url: string;
 };
 
-const { id, kind, language, content } = jsonSchema.definitions.Track.properties;
-
 export const videoTrackPropsSchema = {
   type: "object",
-  properties: { language, content },
-};
+  properties: {
+    language: { type: "string" },
+    content: { type: "string" },
+  },
+} as const;
 
 export const videoTrackSchema = {
   type: "object",
-  properties: { id, kind, language, url: { type: "string" } },
-};
+  properties: {
+    id: { type: "integer" },
+    kind: { type: "string" },
+    language: { type: "string" },
+    url: { type: "string" },
+  },
+} as const;

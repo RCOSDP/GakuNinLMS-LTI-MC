@@ -1,5 +1,4 @@
 import type { Resource } from "@prisma/client";
-import jsonSchema from "$server/prisma/json-schema.json";
 import type {
   VideoResourcePropsSchema,
   VideoResourceSchema,
@@ -10,8 +9,6 @@ export type ResourceProps = VideoResourcePropsSchema;
 
 export type ResourceSchema = VideoResourceSchema | Resource;
 
-const { id, url, details } = jsonSchema.definitions.Resource.properties;
-
 export const resourcePropsSchema = videoResourcePropsSchema;
 
 export const resourceSchema = {
@@ -20,10 +17,10 @@ export const resourceSchema = {
     {
       type: "object",
       properties: {
-        id,
-        url,
-        details,
+        id: { type: "integer" },
+        url: { type: "string" },
+        details: { type: "object" },
       },
     },
   ],
-};
+} as const;
