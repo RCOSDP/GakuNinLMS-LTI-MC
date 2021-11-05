@@ -126,7 +126,7 @@ export default function TopicPreview(props: Props) {
   const handle = (handler: (topic: TopicSchema) => void) => () => {
     handler(topic);
   };
-  const oembed = useOEmbed(topic.resource);
+  const oembed = useOEmbed<{ thumbnail_url: string }>(topic.resource);
   return (
     <Preview className={clsx({ selected: checked })}>
       <Header

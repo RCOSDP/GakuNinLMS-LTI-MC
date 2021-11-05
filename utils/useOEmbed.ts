@@ -7,19 +7,19 @@ const oembed: { [key: string]: string } = {
   vimeo: "https://vimeo.com/oembed.json?url=",
 } as const;
 
-async function fetcher(url: string): Promise<boolean | null> {
+async function fetcher<T>(url: string): Promise<T> {
   const response = await fetch(url);
   return response.json();
 }
 
-export default function useOEmbed(resource: ResourceSchema) {
+export default function useOEmbed<T>(resource: ResourceSchema) {
   const [provider = ""] =
     Object.entries(providers).find(([, { baseUrl }]) =>
       resource.url.startsWith(baseUrl)
     ) ?? [];
-  const { data } = useSWR(
+  const { data } = useSWR<T>(
     provider ? oembed[provider] + resource.url : null,
     fetcher
   );
-  return data as { thumbnail_url: string } | undefined;
+  return data;
 }
