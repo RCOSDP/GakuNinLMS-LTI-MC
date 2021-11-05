@@ -1,11 +1,6 @@
 import useSWR from "swr";
 import type { ResourceSchema } from "$server/models/resource";
-import providers from "$utils/providers";
-
-const oembed: { [key: string]: string } = {
-  youtube: "https://www.youtube.com/oembed?url=",
-  vimeo: "https://vimeo.com/oembed.json?url=",
-} as const;
+import resourceToOEmbedProvider from "$utils/resourceToOEmbedProvider";
 
 async function fetcher<T>(url: string): Promise<T> {
   const response = await fetch(url);
@@ -13,12 +8,11 @@ async function fetcher<T>(url: string): Promise<T> {
 }
 
 export default function useOEmbed<T>(resource: ResourceSchema) {
-  const [provider = ""] =
-    Object.entries(providers).find(([, { baseUrl }]) =>
-      resource.url.startsWith(baseUrl)
-    ) ?? [];
+  const provider = resourceToOEmbedProvider(resource);
+  const params = new URLSearchParams();
+  params.append("url", resource.url);
   const { data } = useSWR<T>(
-    provider ? oembed[provider] + resource.url : null,
+    provider ? provider + "?" + params.toString() : null,
     fetcher
   );
   return data;
