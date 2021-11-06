@@ -11,7 +11,7 @@ const oEmbedProviderMatchers = [
   },
   {
     host: /^vimeo\.com$/,
-    providerUrl: "https://vimeo.com/oembed.json",
+    providerUrl: "https://vimeo.com/api/oembed.json",
   },
 ] as const;
 
