@@ -16,7 +16,7 @@ import { primary, gray } from "$theme/colors";
 import useLineClampStyles from "$styles/lineClamp";
 import getLocaleDateString from "$utils/getLocaleDateString";
 import getLocaleListString from "$utils/getLocaleListString";
-import useOEmbed from "$utils/useOEmbed";
+import useOembed from "$utils/useOembed";
 import { NEXT_PUBLIC_BASE_PATH } from "$utils/env";
 
 type HeaderProps = Parameters<typeof Checkbox>[0] & {
@@ -126,7 +126,7 @@ export default function TopicPreview(props: Props) {
   const handle = (handler: (topic: TopicSchema) => void) => () => {
     handler(topic);
   };
-  const oembed = useOEmbed<{ thumbnail_url: string }>(topic.resource);
+  const oembed = useOembed(topic.resource.id);
   return (
     <Preview className={clsx({ selected: checked })}>
       <Header
