@@ -1,13 +1,12 @@
 import type { FastifySchema } from "fastify";
-import type { VideoTrackParams } from "$server/validators/videoTrackParams";
-import { videoTrackParamsSchema } from "$server/validators/videoTrackParams";
+import { VideoTrackParams } from "$server/validators/videoTrackParams";
 import authUser from "$server/auth/authUser";
 import findVideoTrack from "$server/utils/videoTrack/findVideoTrack";
 
 export const showSchema: FastifySchema = {
   summary: "字幕の取得",
   description: "字幕を取得します。",
-  params: videoTrackParamsSchema,
+  params: VideoTrackParams,
   // @ts-expect-error NOTE: fastify-swagger用。型が用意されていない。
   produces: ["text/vtt"],
   response: {

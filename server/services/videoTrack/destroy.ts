@@ -1,7 +1,6 @@
 import type { FastifySchema } from "fastify";
 import { outdent } from "outdent";
-import type { VideoTrackParams } from "$server/validators/videoTrackParams";
-import { videoTrackParamsSchema } from "$server/validators/videoTrackParams";
+import { VideoTrackParams } from "$server/validators/videoTrackParams";
 import authUser from "$server/auth/authUser";
 import authInstructor from "$server/auth/authInstructor";
 import destroyVideoTrack from "$server/utils/videoTrack/destroyVideoTrack";
@@ -11,7 +10,7 @@ export const destroySchema: FastifySchema = {
   description: outdent`
     字幕を削除します。
     教員または管理者でなければなりません。`,
-  params: videoTrackParamsSchema,
+  params: VideoTrackParams,
   response: {
     204: { type: "null", description: "成功" },
   },
