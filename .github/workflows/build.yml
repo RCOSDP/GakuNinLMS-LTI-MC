@@ -7,19 +7,18 @@ jobs:
       - uses: actions/checkout@v2
         with:
           ref: ${{ github.head_ref }}
-      - id: yarn_cache
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-      - uses: actions/cache@v2
+      - uses: actions/setup-node@v2
         with:
-          path: ${{ steps.yarn_cache.outputs.dir }}
-          key: yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: yarn-
+          node-version: "lts/*"
+          cache: yarn
       - name: install
         run: yarn
+      - uses: actions/cache@v2
+        with:
+          path: .eslintcache
+          key: "${{ runner.os }}-eslint"
       - name: lint
-        run: yarn lint:report
-        continue-on-error: true
-      - run: yarn lint:fix
+        run: yarn lint:fix:report
         continue-on-error: true
       - id: lint_git_status
         run: echo "::set-output name=mod::$(git status --porcelain)"

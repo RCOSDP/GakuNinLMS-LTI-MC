@@ -39,6 +39,9 @@ export async function index({
   const params = new URLSearchParams();
   params.append("url", resource.url);
   const response = await fetch(provider + "?" + params.toString());
+  if (response.status !== 200) {
+    return { status: 404 };
+  }
   const oembed = await response.json();
 
   return {

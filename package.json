@@ -106,9 +106,9 @@
     "vercel-build": "run-s compile build:static build:server && rm -rf public/api/v2/swagger && mkdir -p public/api/v2/swagger && cp -a server/dist/static public/api/v2/swagger/static",
     "format": "prettier --write .",
     "lint": "run-s compile 'lint:eslint {@}' --",
-    "lint:eslint": "eslint --ext .js,.jsx,.ts,.tsx .",
+    "lint:eslint": "eslint --cache --ext .js,.jsx,.ts,.tsx .",
     "lint:fix": "yarn lint --fix",
-    "lint:report": "yarn lint --output-file eslint_report.json --format json",
+    "lint:fix:report": "yarn lint:fix --output-file eslint_report.json --format json",
     "storybook": "start-storybook -s ./public"
   },
   "engines": {
