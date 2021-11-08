@@ -11,6 +11,7 @@ const List = styled("dl")<Pick<Props, "color" | "fontSize">>(
     fontSize,
     "& > .item": {
       display: "flex",
+      alignItems: "center",
       "&:not(:last-child)": {
         marginBottom: theme.spacing(0.5),
       },
