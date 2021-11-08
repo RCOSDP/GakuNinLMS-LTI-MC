@@ -10,7 +10,7 @@ import Container from "@mui/material/Container";
 import AddIcon from "@mui/icons-material/Add";
 import ActionHeader from "$organisms/ActionHeader";
 import ActionFooter from "$organisms/ActionFooter";
-import TopicPreview from "$organisms/TopicPreview";
+import ContentPreview from "$organisms/ContentPreview";
 import TopicPreviewDialog from "$organisms/TopicPreviewDialog";
 import SortSelect from "$atoms/SortSelect";
 import AuthorFilter from "$atoms/AuthorFilter";
@@ -182,13 +182,13 @@ export default function Topics(props: Props) {
       />
       <div className={classes.topics}>
         {topics.map((topic, index) => (
-          <TopicPreview
+          <ContentPreview
             key={index}
-            topic={topic}
+            content={topic}
             checked={selectedIndexes.has(index)}
             onChange={handleChecked(index)}
-            onTopicPreviewClick={handleTopicPreviewClick}
-            onTopicEditClick={onTopicEditClick}
+            onContentPreviewClick={handleTopicPreviewClick}
+            onContentEditClick={onTopicEditClick}
           />
         ))}
         {loading &&

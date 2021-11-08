@@ -11,7 +11,7 @@ import { styled } from "@mui/material/styles";
 import EditButton from "$atoms/EditButton";
 import DescriptionList from "$atoms/DescriptionList";
 import SharedIndicator from "$atoms/SharedIndicator";
-import type { TopicSchema } from "$server/models/topic";
+import type { Content } from "$types/content";
 import { primary, gray } from "$theme/colors";
 import useLineClampStyles from "$styles/lineClamp";
 import getLocaleDateString from "$utils/getLocaleDateString";
@@ -103,50 +103,54 @@ const Preview = styled(Card)(({ theme }) => ({
 }));
 
 type Props = Parameters<typeof Checkbox>[0] & {
-  topic: TopicSchema;
-  onTopicPreviewClick(topic: TopicSchema): void;
-  onTopicEditClick: ((topic: TopicSchema) => void) | false | undefined;
+  content: Content;
+  onContentPreviewClick(content: Content): void;
+  onContentEditClick(content: Content): void;
 };
 
-export default function TopicPreview(props: Props) {
+export default function ContentPreview(props: Props) {
   const lineClamp = useLineClampStyles({
     fontSize: "0.75rem",
     lineClamp: 2,
     lineHeight: 1.5,
   });
   const {
-    topic,
-    onTopicPreviewClick,
-    onTopicEditClick,
+    content,
+    onContentPreviewClick,
+    onContentEditClick,
     checked,
     ...checkboxProps
   } = props;
   const { ref, inView } = useInView({ rootMargin: "100px", triggerOnce: true });
   const checkable = "onChange" in checkboxProps;
-  const handle = (handler: (topic: TopicSchema) => void) => () => {
-    handler(topic);
+  const handle = (handler: (content: Content) => void) => () => {
+    handler(content);
   };
-  const oembed = useOembed(topic.resource.id);
+  const oembed = useOembed(
+    "resource" in content
+      ? content.resource.id
+      : content.sections[0].topics[0].resource.id
+  );
   return (
     <Preview className={clsx({ selected: checked })}>
       <Header
         checkable={checkable}
-        id={`TopicPreview-topic:${topic.id}`}
+        id={`ContentPreview-${"sections" in content ? "book" : "topic"}:${
+          content.id
+        }`}
         checked={checked}
         {...checkboxProps}
-        title={topic.name}
+        title={content.name}
         sx={{ mx: 2, my: 1 }}
       >
-        {topic.shared && <SharedIndicator className="shared" />}
-        {onTopicEditClick && (
-          <EditButton
-            className="edit-button"
-            variant="topic"
-            onClick={handle(onTopicEditClick)}
-          />
-        )}
+        {content.shared && <SharedIndicator className="shared" />}
+        <EditButton
+          className="edit-button"
+          variant={"sections" in content ? "book" : "topic"}
+          onClick={handle(onContentEditClick)}
+        />
       </Header>
-      <CardActionArea onClick={handle(onTopicPreviewClick)}>
+      <CardActionArea onClick={handle(onContentPreviewClick)}>
         <div ref={ref}>
           <CardMedia
             component="img"
@@ -165,12 +169,12 @@ export default function TopicPreview(props: Props) {
           value={[
             {
               key: "更新日",
-              value: getLocaleDateString(topic.updatedAt, "ja"),
+              value: getLocaleDateString(content.updatedAt, "ja"),
             },
             {
               key: "著者",
               value: getLocaleListString(
-                topic.authors.map(({ name }) => name),
+                content.authors.map(({ name }) => name),
                 "ja"
               ),
             },
@@ -189,7 +193,7 @@ export default function TopicPreview(props: Props) {
             allowedElements={["del"]}
             unwrapDisallowed
           >
-            {topic.description}
+            {content.description}
           </Markdown>
         </Description>
       </CardActionArea>

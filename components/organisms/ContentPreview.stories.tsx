@@ -1,9 +1,9 @@
 import type { Story } from "@storybook/react";
 import { styled } from "@mui/material/styles";
-import TopicPreview from "./TopicPreview";
+import ContentPreview from "./ContentPreview";
 import { topic } from "samples";
 
-export default { title: "organisms/TopicPreview", component: TopicPreview };
+export default { title: "organisms/ContentPreview", component: ContentPreview };
 
 const Wrapper = styled("div")(({ theme }) => ({
   display: "grid",
@@ -11,10 +11,10 @@ const Wrapper = styled("div")(({ theme }) => ({
   gap: theme.spacing(2),
 }));
 
-const Template: Story<Parameters<typeof TopicPreview>[0]> = (args) => (
+const Template: Story<Parameters<typeof ContentPreview>[0]> = (args) => (
   <Wrapper>
     {[...Array(10)].map((_value, index) => (
-      <TopicPreview key={index} {...args} />
+      <ContentPreview key={index} {...args} />
     ))}
   </Wrapper>
 );
