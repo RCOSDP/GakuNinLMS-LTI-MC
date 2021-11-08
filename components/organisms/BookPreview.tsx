@@ -159,6 +159,7 @@ export default function BookPreview({
         </div>
         <DescriptionList
           className={classes.items}
+          inline
           nowrap
           value={[
             { key: "作成日", value: getLocaleDateString(book.createdAt, "ja") },

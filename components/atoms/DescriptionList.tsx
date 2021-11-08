@@ -22,7 +22,7 @@ const List = styled("dl")<Pick<Props, "color" | "fontSize">>(
         margin: 0,
       },
     },
-    "&.inline, &.nowrap": {
+    "&.inline": {
       "& > .item": {
         display: "inline-flex",
         "&:not(:last-child)": {
@@ -31,9 +31,11 @@ const List = styled("dl")<Pick<Props, "color" | "fontSize">>(
       },
     },
     "&.nowrap": {
-      overflow: "hidden",
-      textOverflow: "ellipsis",
       whiteSpace: "nowrap",
+      "&.inline, &:not(.inline) > .item > dd": {
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+      },
     },
   })
 );

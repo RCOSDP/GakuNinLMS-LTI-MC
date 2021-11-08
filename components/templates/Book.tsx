@@ -201,6 +201,7 @@ export default function Book(props: Props) {
         <>
           <div className={classes.description}>
             <DescriptionList
+              inline
               nowrap
               value={[
                 {

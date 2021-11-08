@@ -167,12 +167,6 @@ export default function TopicPreview(props: Props) {
               key: "更新日",
               value: getLocaleDateString(topic.updatedAt, "ja"),
             },
-          ]}
-        />
-        <DescriptionList
-          nowrap
-          sx={{ mx: 2, mb: 1 }}
-          value={[
             {
               key: "著者",
               value: getLocaleListString(
