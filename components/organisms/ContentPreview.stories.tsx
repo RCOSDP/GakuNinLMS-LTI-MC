@@ -1,7 +1,7 @@
 import type { Story } from "@storybook/react";
 import { styled } from "@mui/material/styles";
 import ContentPreview from "./ContentPreview";
-import { topic } from "samples";
+import { topic, book } from "$samples";
 
 export default { title: "organisms/ContentPreview", component: ContentPreview };
 
@@ -28,4 +28,9 @@ export const Checkable = Template.bind({});
 Checkable.args = {
   ...Default.args,
   onChange: () => true,
+};
+
+export const Book = Template.bind({});
+Book.args = {
+  content: book,
 };

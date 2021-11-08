@@ -1,5 +1,5 @@
+import { Fragment } from "react";
 import clsx from "clsx";
-import { useInView } from "react-intersection-observer";
 import Markdown from "react-markdown";
 import gfm from "remark-gfm";
 import strip from "strip-markdown";
@@ -11,9 +11,13 @@ import { styled } from "@mui/material/styles";
 import EditButton from "$atoms/EditButton";
 import DescriptionList from "$atoms/DescriptionList";
 import SharedIndicator from "$atoms/SharedIndicator";
+import CourseChip from "$atoms/CourseChip";
+import LinkSwitch from "$atoms/LinkSwitch";
 import type { Content } from "$types/content";
+import type { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
 import { primary, gray } from "$theme/colors";
 import useLineClampStyles from "$styles/lineClamp";
+import { getSectionsOutline } from "$utils/outline";
 import getLocaleDateString from "$utils/getLocaleDateString";
 import getLocaleListString from "$utils/getLocaleListString";
 import useOembed from "$utils/useOembed";
@@ -78,6 +82,10 @@ const Header = styled(
   },
 }));
 
+const LinkArea = styled("div")({
+  position: "relative",
+});
+
 const Description = styled("p")({
   color: gray[700],
   margin: 0,
@@ -105,23 +113,29 @@ const Preview = styled(Card)(({ theme }) => ({
 type Props = Parameters<typeof Checkbox>[0] & {
   content: Content;
   onContentPreviewClick(content: Content): void;
-  onContentEditClick(content: Content): void;
+  onContentEditClick?(content: Content): void;
+  onContentLinkClick?(content: Content): void;
+  onLtiContextClick?(
+    ltiResourceLink: Pick<LtiResourceLinkSchema, "consumerId" | "contextId">
+  ): void;
+  linked?: boolean;
 };
 
-export default function ContentPreview(props: Props) {
+export default function ContentPreview({
+  content,
+  onContentPreviewClick,
+  onContentEditClick,
+  onContentLinkClick,
+  onLtiContextClick,
+  linked = "ltiResourceLinks" in content ? false : undefined,
+  checked,
+  ...checkboxProps
+}: Props) {
   const lineClamp = useLineClampStyles({
     fontSize: "0.75rem",
     lineClamp: 2,
     lineHeight: 1.5,
   });
-  const {
-    content,
-    onContentPreviewClick,
-    onContentEditClick,
-    checked,
-    ...checkboxProps
-  } = props;
-  const { ref, inView } = useInView({ rootMargin: "100px", triggerOnce: true });
   const checkable = "onChange" in checkboxProps;
   const handle = (handler: (content: Content) => void) => () => {
     handler(content);
@@ -129,8 +143,9 @@ export default function ContentPreview(props: Props) {
   const oembed = useOembed(
     "resource" in content
       ? content.resource.id
-      : content.sections[0].topics[0].resource.id
+      : content.sections[0]?.topics[0]?.resource.id
   );
+  const handleContentLinkClick = () => onContentLinkClick?.(content);
   return (
     <Preview className={clsx({ selected: checked })}>
       <Header
@@ -144,59 +159,92 @@ export default function ContentPreview(props: Props) {
         sx={{ mx: 2, my: 1 }}
       >
         {content.shared && <SharedIndicator className="shared" />}
-        <EditButton
-          className="edit-button"
-          variant={"sections" in content ? "book" : "topic"}
-          onClick={handle(onContentEditClick)}
-        />
+        {onContentEditClick && (
+          <EditButton
+            className="edit-button"
+            variant={"sections" in content ? "book" : "topic"}
+            onClick={handle(onContentEditClick)}
+          />
+        )}
       </Header>
       <CardActionArea onClick={handle(onContentPreviewClick)}>
-        <div ref={ref}>
-          <CardMedia
-            component="img"
-            height={180}
-            image={
-              inView && oembed
-                ? oembed.thumbnail_url
-                : `${NEXT_PUBLIC_BASE_PATH}/video-thumbnail-placeholder.png`
-            }
-            alt="サムネイル"
-          />
-        </div>
-        <DescriptionList
-          nowrap
-          sx={{ mx: 2, mt: 1, mb: 0.25 }}
-          value={[
-            {
-              key: "更新日",
-              value: getLocaleDateString(content.updatedAt, "ja"),
-            },
-            {
-              key: "著者",
-              value: getLocaleListString(
-                content.authors.map(({ name }) => name),
-                "ja"
-              ),
-            },
-          ]}
+        <CardMedia
+          component="img"
+          height={180}
+          image={
+            oembed
+              ? oembed.thumbnail_url
+              : `${NEXT_PUBLIC_BASE_PATH}/video-thumbnail-placeholder.png`
+          }
+          alt="サムネイル"
         />
-        <Description
-          className={clsx(
-            "description",
-            lineClamp.clamp,
-            lineClamp.placeholder
-          )}
-          sx={{ mx: 2, my: 1 }}
-        >
-          <Markdown
-            remarkPlugins={[gfm, [strip, { keep: ["delete"] }]]}
-            allowedElements={["del"]}
-            unwrapDisallowed
-          >
-            {content.description}
-          </Markdown>
-        </Description>
       </CardActionArea>
+      {linked !== undefined && onLtiContextClick && (
+        <LinkArea>
+          <LinkSwitch
+            sx={{
+              position: "absolute",
+              bottom: 0,
+              right: 0,
+              transform: "translateY(50%)",
+            }}
+            checked={linked}
+            onChange={handleContentLinkClick}
+          />
+        </LinkArea>
+      )}
+      <DescriptionList
+        nowrap
+        sx={{ mx: 2, my: 1 }}
+        value={[
+          {
+            key: "更新日",
+            value: getLocaleDateString(content.updatedAt, "ja"),
+          },
+          {
+            key: "著者",
+            value: getLocaleListString(
+              content.authors.map(({ name }) => name),
+              "ja"
+            ),
+          },
+          ...("ltiResourceLinks" in content &&
+          content.ltiResourceLinks.length > 0
+            ? [
+                {
+                  key: "リンク",
+                  value: (
+                    <Fragment>
+                      {content.ltiResourceLinks.map(
+                        (ltiResourceLink, index) => (
+                          <CourseChip
+                            key={index}
+                            ltiResourceLink={ltiResourceLink}
+                            onLtiResourceLinkClick={onLtiContextClick}
+                          />
+                        )
+                      )}
+                    </Fragment>
+                  ),
+                },
+              ]
+            : []),
+        ]}
+      />
+      <Description
+        className={clsx("description", lineClamp.clamp, lineClamp.placeholder)}
+        sx={{ mx: 2, my: 1 }}
+      >
+        <Markdown
+          remarkPlugins={[gfm, [strip, { keep: ["delete"] }]]}
+          allowedElements={["del"]}
+          unwrapDisallowed
+        >
+          {"sections" in content
+            ? getSectionsOutline(content.sections)
+            : content.description}
+        </Markdown>
+      </Description>
     </Preview>
   );
 }

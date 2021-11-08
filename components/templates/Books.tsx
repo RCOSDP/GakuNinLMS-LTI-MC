@@ -8,6 +8,7 @@ import Typography from "@mui/material/Typography";
 import AddIcon from "@mui/icons-material/Add";
 import ActionHeader from "$organisms/ActionHeader";
 import BookPreview from "$organisms/BookPreview";
+import ContentPreview from "$organisms/ContentPreview";
 import SortSelect from "$atoms/SortSelect";
 import AuthorFilter from "$atoms/AuthorFilter";
 import SearchTextField from "$atoms/SearchTextField";
@@ -35,10 +36,9 @@ const useStyles = makeStyles((theme) => ({
     borderStyle: "dashed",
   },
   books: {
-    marginTop: theme.spacing(1),
-    "& > *": {
-      marginBottom: theme.spacing(2),
-    },
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fill, 296px)",
+    gap: theme.spacing(2),
   },
 }));
 
@@ -48,9 +48,9 @@ export type Props = {
   loading?: boolean;
   hasNextPage?: boolean;
   onLoadMore?(): void;
-  onBookPreviewClick?(book: BookSchema): void;
-  onBookEditClick?(book: BookSchema): void;
-  onBookLinkClick?(book: BookSchema): void;
+  onBookPreviewClick(book: BookSchema): void;
+  onBookEditClick(book: BookSchema): void;
+  onBookLinkClick(book: BookSchema): void;
   onLinkedBookClick?(book: BookSchema): void;
   onBookNewClick(): void;
   onBooksImportClick(): void;
@@ -85,7 +85,7 @@ export default function Books(props: Props) {
   return (
     <div ref={infiniteRef}>
       <ActionHeader
-        maxWidth="md"
+        maxWidth="lg"
         title={
           <>
             ブック
@@ -147,17 +147,16 @@ export default function Books(props: Props) {
           </>
         }
       />
-      <Container classes={containerClasses} maxWidth="md">
+      <Container classes={containerClasses} maxWidth="lg">
         <div className={classes.books}>
           {books.map((book) => (
-            <BookPreview
+            <ContentPreview
               key={book.id}
-              book={book}
+              content={book}
               linked={book.id === linkedBook?.id}
-              onBookPreviewClick={onBookPreviewClick}
-              onBookEditClick={onBookEditClick}
-              onBookLinkClick={onBookLinkClick}
-              onLinkedBookClick={onLinkedBookClick}
+              onContentPreviewClick={onBookPreviewClick}
+              onContentEditClick={onBookEditClick}
+              onContentLinkClick={onBookLinkClick}
               onLtiContextClick={onLtiContextClick}
             />
           ))}
