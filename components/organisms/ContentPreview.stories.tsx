@@ -21,7 +21,7 @@ const Template: Story<Parameters<typeof ContentPreview>[0]> = (args) => (
 
 export const Default = Template.bind({});
 Default.args = {
-  topic,
+  content: topic,
 };
 
 export const Checkable = Template.bind({});
