@@ -13405,6 +13405,11 @@ schema-utils@^3.0.0, schema-utils@^3.1.0:
     ajv "^6.12.5"
     ajv-keywords "^3.5.2"
 
+search-query-parser@^1.6.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/search-query-parser/-/search-query-parser-1.6.0.tgz#d69ade33f3685cae25613a70189b7b18970b46f1"
+  integrity sha512-bhf+phLlKF38nuniwLcVHWPArHGdzenlPhPi955CR3vm1QQifXIuPHwAffhjapojdVVzmv4hgIJ6NOX1d/w+Uw==
+
 secure-json-parse@^2.0.0:
   version "2.3.2"
   resolved "https://registry.yarnpkg.com/secure-json-parse/-/secure-json-parse-2.3.2.tgz#0284c9525c6f24d38774f13727addff80634c2e9"

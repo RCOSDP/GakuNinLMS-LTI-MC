@@ -60,15 +60,15 @@ import {
     InlineResponse2001Authors,
     InlineResponse2001AuthorsFromJSON,
     InlineResponse2001AuthorsToJSON,
-    InlineResponse2001Books,
-    InlineResponse2001BooksFromJSON,
-    InlineResponse2001BooksToJSON,
     InlineResponse2001Topics,
     InlineResponse2001TopicsFromJSON,
     InlineResponse2001TopicsToJSON,
     InlineResponse2002,
     InlineResponse2002FromJSON,
     InlineResponse2002ToJSON,
+    InlineResponse2002Books,
+    InlineResponse2002BooksFromJSON,
+    InlineResponse2002BooksToJSON,
     InlineResponse2003,
     InlineResponse2003FromJSON,
     InlineResponse2003ToJSON,
@@ -81,6 +81,9 @@ import {
     InlineResponse2006,
     InlineResponse2006FromJSON,
     InlineResponse2006ToJSON,
+    InlineResponse2007,
+    InlineResponse2007FromJSON,
+    InlineResponse2007ToJSON,
     InlineResponse201,
     InlineResponse201FromJSON,
     InlineResponse201ToJSON,
@@ -209,6 +212,15 @@ export interface ApiV2ResourceResourceIdVideoTrackVideoTrackIdVttGetRequest {
 
 export interface ApiV2ResourcesGetRequest {
     sort?: string;
+    page?: number;
+    perPage?: number;
+}
+
+export interface ApiV2SearchGetRequest {
+    type: ApiV2SearchGetTypeEnum;
+    q: string;
+    filter?: ApiV2SearchGetFilterEnum;
+    sort?: ApiV2SearchGetSortEnum;
     page?: number;
     perPage?: number;
 }
@@ -343,7 +355,7 @@ export class DefaultApi extends runtime.BaseAPI {
      * ブックの詳細を取得します。 教員または管理者いずれでもない場合、LTIリソースとしてリンクされているブックでなければなりません。
      * ブックの取得
      */
-    async apiV2BookBookIdGetRaw(requestParameters: ApiV2BookBookIdGetRequest): Promise<runtime.ApiResponse<InlineResponse2001Books>> {
+    async apiV2BookBookIdGetRaw(requestParameters: ApiV2BookBookIdGetRequest): Promise<runtime.ApiResponse<InlineResponse2002Books>> {
         if (requestParameters.bookId === null || requestParameters.bookId === undefined) {
             throw new runtime.RequiredError('bookId','Required parameter requestParameters.bookId was null or undefined when calling apiV2BookBookIdGet.');
         }
@@ -359,14 +371,14 @@ export class DefaultApi extends runtime.BaseAPI {
             query: queryParameters,
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2001BooksFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2002BooksFromJSON(jsonValue));
     }
 
     /**
      * ブックの詳細を取得します。 教員または管理者いずれでもない場合、LTIリソースとしてリンクされているブックでなければなりません。
      * ブックの取得
      */
-    async apiV2BookBookIdGet(requestParameters: ApiV2BookBookIdGetRequest): Promise<InlineResponse2001Books> {
+    async apiV2BookBookIdGet(requestParameters: ApiV2BookBookIdGetRequest): Promise<InlineResponse2002Books> {
         const response = await this.apiV2BookBookIdGetRaw(requestParameters);
         return await response.value();
     }
@@ -375,7 +387,7 @@ export class DefaultApi extends runtime.BaseAPI {
      * ブックを更新します。 教員または管理者でなければなりません。 教員は自身の著作のブックでなければなりません。
      * ブックの更新
      */
-    async apiV2BookBookIdPutRaw(requestParameters: ApiV2BookBookIdPutRequest): Promise<runtime.ApiResponse<InlineResponse2001Books>> {
+    async apiV2BookBookIdPutRaw(requestParameters: ApiV2BookBookIdPutRequest): Promise<runtime.ApiResponse<InlineResponse2002Books>> {
         if (requestParameters.bookId === null || requestParameters.bookId === undefined) {
             throw new runtime.RequiredError('bookId','Required parameter requestParameters.bookId was null or undefined when calling apiV2BookBookIdPut.');
         }
@@ -394,14 +406,14 @@ export class DefaultApi extends runtime.BaseAPI {
             body: InlineObject2ToJSON(requestParameters.body),
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2001BooksFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2002BooksFromJSON(jsonValue));
     }
 
     /**
      * ブックを更新します。 教員または管理者でなければなりません。 教員は自身の著作のブックでなければなりません。
      * ブックの更新
      */
-    async apiV2BookBookIdPut(requestParameters: ApiV2BookBookIdPutRequest): Promise<InlineResponse2001Books> {
+    async apiV2BookBookIdPut(requestParameters: ApiV2BookBookIdPutRequest): Promise<InlineResponse2002Books> {
         const response = await this.apiV2BookBookIdPutRaw(requestParameters);
         return await response.value();
     }
@@ -410,7 +422,7 @@ export class DefaultApi extends runtime.BaseAPI {
      * ブックを作成します。 教員または管理者でなければなりません。
      * ブックの作成
      */
-    async apiV2BookPostRaw(requestParameters: ApiV2BookPostRequest): Promise<runtime.ApiResponse<InlineResponse2001Books>> {
+    async apiV2BookPostRaw(requestParameters: ApiV2BookPostRequest): Promise<runtime.ApiResponse<InlineResponse2002Books>> {
         const queryParameters: runtime.HTTPQuery = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -425,14 +437,14 @@ export class DefaultApi extends runtime.BaseAPI {
             body: InlineObject3ToJSON(requestParameters.body),
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2001BooksFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2002BooksFromJSON(jsonValue));
     }
 
     /**
      * ブックを作成します。 教員または管理者でなければなりません。
      * ブックの作成
      */
-    async apiV2BookPost(requestParameters: ApiV2BookPostRequest): Promise<InlineResponse2001Books> {
+    async apiV2BookPost(requestParameters: ApiV2BookPostRequest): Promise<InlineResponse2002Books> {
         const response = await this.apiV2BookPostRaw(requestParameters);
         return await response.value();
     }
@@ -441,7 +453,7 @@ export class DefaultApi extends runtime.BaseAPI {
      * ブックの一覧を取得します。 教員または管理者でなければなりません。
      * ブック一覧
      */
-    async apiV2BooksGetRaw(requestParameters: ApiV2BooksGetRequest): Promise<runtime.ApiResponse<InlineResponse2004>> {
+    async apiV2BooksGetRaw(requestParameters: ApiV2BooksGetRequest): Promise<runtime.ApiResponse<InlineResponse2005>> {
         const queryParameters: runtime.HTTPQuery = {};
 
         if (requestParameters.sort !== undefined) {
@@ -465,14 +477,14 @@ export class DefaultApi extends runtime.BaseAPI {
             query: queryParameters,
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2004FromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2005FromJSON(jsonValue));
     }
 
     /**
      * ブックの一覧を取得します。 教員または管理者でなければなりません。
      * ブック一覧
      */
-    async apiV2BooksGet(requestParameters: ApiV2BooksGetRequest): Promise<InlineResponse2004> {
+    async apiV2BooksGet(requestParameters: ApiV2BooksGetRequest): Promise<InlineResponse2005> {
         const response = await this.apiV2BooksGetRaw(requestParameters);
         return await response.value();
     }
@@ -1160,7 +1172,7 @@ export class DefaultApi extends runtime.BaseAPI {
      * リソースの一覧を取得します。 教員または管理者でなければなりません。
      * リソース一覧
      */
-    async apiV2ResourcesGetRaw(requestParameters: ApiV2ResourcesGetRequest): Promise<runtime.ApiResponse<InlineResponse2006>> {
+    async apiV2ResourcesGetRaw(requestParameters: ApiV2ResourcesGetRequest): Promise<runtime.ApiResponse<InlineResponse2007>> {
         const queryParameters: runtime.HTTPQuery = {};
 
         if (requestParameters.sort !== undefined) {
@@ -1184,15 +1196,75 @@ export class DefaultApi extends runtime.BaseAPI {
             query: queryParameters,
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2006FromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2007FromJSON(jsonValue));
     }
 
     /**
      * リソースの一覧を取得します。 教員または管理者でなければなりません。
      * リソース一覧
      */
-    async apiV2ResourcesGet(requestParameters: ApiV2ResourcesGetRequest): Promise<InlineResponse2006> {
+    async apiV2ResourcesGet(requestParameters: ApiV2ResourcesGetRequest): Promise<InlineResponse2007> {
         const response = await this.apiV2ResourcesGetRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * コンテンツを検索します。 教員または管理者でなければなりません。
+     * コンテンツ検索
+     */
+    async apiV2SearchGetRaw(requestParameters: ApiV2SearchGetRequest): Promise<runtime.ApiResponse<InlineResponse2001>> {
+        if (requestParameters.type === null || requestParameters.type === undefined) {
+            throw new runtime.RequiredError('type','Required parameter requestParameters.type was null or undefined when calling apiV2SearchGet.');
+        }
+
+        if (requestParameters.q === null || requestParameters.q === undefined) {
+            throw new runtime.RequiredError('q','Required parameter requestParameters.q was null or undefined when calling apiV2SearchGet.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        if (requestParameters.type !== undefined) {
+            queryParameters['type'] = requestParameters.type;
+        }
+
+        if (requestParameters.q !== undefined) {
+            queryParameters['q'] = requestParameters.q;
+        }
+
+        if (requestParameters.filter !== undefined) {
+            queryParameters['filter'] = requestParameters.filter;
+        }
+
+        if (requestParameters.sort !== undefined) {
+            queryParameters['sort'] = requestParameters.sort;
+        }
+
+        if (requestParameters.page !== undefined) {
+            queryParameters['page'] = requestParameters.page;
+        }
+
+        if (requestParameters.perPage !== undefined) {
+            queryParameters['per_page'] = requestParameters.perPage;
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/api/v2/search`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2001FromJSON(jsonValue));
+    }
+
+    /**
+     * コンテンツを検索します。 教員または管理者でなければなりません。
+     * コンテンツ検索
+     */
+    async apiV2SearchGet(requestParameters: ApiV2SearchGetRequest): Promise<InlineResponse2001> {
+        const response = await this.apiV2SearchGetRaw(requestParameters);
         return await response.value();
     }
 
@@ -1427,7 +1499,7 @@ export class DefaultApi extends runtime.BaseAPI {
      * トピックの一覧を取得します。 教員または管理者でなければなりません。
      * トピック一覧
      */
-    async apiV2TopicsGetRaw(requestParameters: ApiV2TopicsGetRequest): Promise<runtime.ApiResponse<InlineResponse2005>> {
+    async apiV2TopicsGetRaw(requestParameters: ApiV2TopicsGetRequest): Promise<runtime.ApiResponse<InlineResponse2006>> {
         const queryParameters: runtime.HTTPQuery = {};
 
         if (requestParameters.sort !== undefined) {
@@ -1451,14 +1523,14 @@ export class DefaultApi extends runtime.BaseAPI {
             query: queryParameters,
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2005FromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2006FromJSON(jsonValue));
     }
 
     /**
      * トピックの一覧を取得します。 教員または管理者でなければなりません。
      * トピック一覧
      */
-    async apiV2TopicsGet(requestParameters: ApiV2TopicsGetRequest): Promise<InlineResponse2005> {
+    async apiV2TopicsGet(requestParameters: ApiV2TopicsGetRequest): Promise<InlineResponse2006> {
         const response = await this.apiV2TopicsGetRaw(requestParameters);
         return await response.value();
     }
@@ -1498,7 +1570,7 @@ export class DefaultApi extends runtime.BaseAPI {
      * 利用者が著者に含まれるブックの一覧を取得します。 教員または管理者でなければなりません。
      * 自分のブックの一覧
      */
-    async apiV2UserUserIdBooksGetRaw(requestParameters: ApiV2UserUserIdBooksGetRequest): Promise<runtime.ApiResponse<InlineResponse2001>> {
+    async apiV2UserUserIdBooksGetRaw(requestParameters: ApiV2UserUserIdBooksGetRequest): Promise<runtime.ApiResponse<InlineResponse2002>> {
         if (requestParameters.userId === null || requestParameters.userId === undefined) {
             throw new runtime.RequiredError('userId','Required parameter requestParameters.userId was null or undefined when calling apiV2UserUserIdBooksGet.');
         }
@@ -1526,14 +1598,14 @@ export class DefaultApi extends runtime.BaseAPI {
             query: queryParameters,
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2001FromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2002FromJSON(jsonValue));
     }
 
     /**
      * 利用者が著者に含まれるブックの一覧を取得します。 教員または管理者でなければなりません。
      * 自分のブックの一覧
      */
-    async apiV2UserUserIdBooksGet(requestParameters: ApiV2UserUserIdBooksGetRequest): Promise<InlineResponse2001> {
+    async apiV2UserUserIdBooksGet(requestParameters: ApiV2UserUserIdBooksGetRequest): Promise<InlineResponse2002> {
         const response = await this.apiV2UserUserIdBooksGetRaw(requestParameters);
         return await response.value();
     }
@@ -1542,7 +1614,7 @@ export class DefaultApi extends runtime.BaseAPI {
      * 利用者が著者に含まれるトピックの一覧を取得します。 教員または管理者でなければなりません。
      * 自分のトピックの一覧
      */
-    async apiV2UserUserIdTopicsGetRaw(requestParameters: ApiV2UserUserIdTopicsGetRequest): Promise<runtime.ApiResponse<InlineResponse2002>> {
+    async apiV2UserUserIdTopicsGetRaw(requestParameters: ApiV2UserUserIdTopicsGetRequest): Promise<runtime.ApiResponse<InlineResponse2003>> {
         if (requestParameters.userId === null || requestParameters.userId === undefined) {
             throw new runtime.RequiredError('userId','Required parameter requestParameters.userId was null or undefined when calling apiV2UserUserIdTopicsGet.');
         }
@@ -1570,14 +1642,14 @@ export class DefaultApi extends runtime.BaseAPI {
             query: queryParameters,
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2002FromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2003FromJSON(jsonValue));
     }
 
     /**
      * 利用者が著者に含まれるトピックの一覧を取得します。 教員または管理者でなければなりません。
      * 自分のトピックの一覧
      */
-    async apiV2UserUserIdTopicsGet(requestParameters: ApiV2UserUserIdTopicsGetRequest): Promise<InlineResponse2002> {
+    async apiV2UserUserIdTopicsGet(requestParameters: ApiV2UserUserIdTopicsGetRequest): Promise<InlineResponse2003> {
         const response = await this.apiV2UserUserIdTopicsGetRaw(requestParameters);
         return await response.value();
     }
@@ -1586,7 +1658,7 @@ export class DefaultApi extends runtime.BaseAPI {
      * 利用者に関する詳細な情報を取得します。 教員または管理者でなければなりません。
      * 利用者情報
      */
-    async apiV2UsersEmailGetRaw(requestParameters: ApiV2UsersEmailGetRequest): Promise<runtime.ApiResponse<Array<InlineResponse2003>>> {
+    async apiV2UsersEmailGetRaw(requestParameters: ApiV2UsersEmailGetRequest): Promise<runtime.ApiResponse<Array<InlineResponse2004>>> {
         if (requestParameters.email === null || requestParameters.email === undefined) {
             throw new runtime.RequiredError('email','Required parameter requestParameters.email was null or undefined when calling apiV2UsersEmailGet.');
         }
@@ -1602,14 +1674,14 @@ export class DefaultApi extends runtime.BaseAPI {
             query: queryParameters,
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(InlineResponse2003FromJSON));
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(InlineResponse2004FromJSON));
     }
 
     /**
      * 利用者に関する詳細な情報を取得します。 教員または管理者でなければなりません。
      * 利用者情報
      */
-    async apiV2UsersEmailGet(requestParameters: ApiV2UsersEmailGetRequest): Promise<Array<InlineResponse2003>> {
+    async apiV2UsersEmailGet(requestParameters: ApiV2UsersEmailGetRequest): Promise<Array<InlineResponse2004>> {
         const response = await this.apiV2UsersEmailGetRaw(requestParameters);
         return await response.value();
     }
@@ -1641,4 +1713,34 @@ export class DefaultApi extends runtime.BaseAPI {
         await this.apiV2WowzaGetRaw();
     }
 
+}
+
+/**
+    * @export
+    * @enum {string}
+    */
+export enum ApiV2SearchGetTypeEnum {
+    Topic = 'topic',
+    Book = 'book'
+}
+/**
+    * @export
+    * @enum {string}
+    */
+export enum ApiV2SearchGetFilterEnum {
+    All = 'all',
+    Self = 'self',
+    Other = 'other'
+}
+/**
+    * @export
+    * @enum {string}
+    */
+export enum ApiV2SearchGetSortEnum {
+    Updated = 'updated',
+    ReverseUpdated = 'reverse-updated',
+    Created = 'created',
+    ReverseCreated = 'reverse-created',
+    Name = 'name',
+    ReverseName = 'reverse-name'
 }

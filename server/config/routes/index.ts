@@ -1,5 +1,6 @@
 import type { FastifyInstance } from "fastify";
 import * as lti from "./lti";
+import * as search from "./search";
 import * as user from "./user";
 import * as userSettings from "./userSettings";
 import * as users from "./users";
@@ -15,6 +16,7 @@ import session from "./session";
 
 const routers = [
   lti,
+  search,
   user,
   userSettings,
   users,

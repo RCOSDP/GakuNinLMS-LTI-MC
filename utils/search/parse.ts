@@ -4,6 +4,7 @@ const linkQuery = /link:(?<consumerId>[^:]+):(?<contextId>[^\s]+)/gu;
 
 /**
  * 検索クエリーへのパース
+ * @deprecated
  * @param input 検索クエリー文字列
  * @return 検索クエリー
  */

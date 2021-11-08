@@ -14,54 +14,36 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    InlineResponse2001Settings,
-    InlineResponse2001SettingsFromJSON,
-    InlineResponse2001SettingsFromJSONTyped,
-    InlineResponse2001SettingsToJSON,
+    InlineResponse2001Topics,
+    InlineResponse2001TopicsFromJSON,
+    InlineResponse2001TopicsFromJSONTyped,
+    InlineResponse2001TopicsToJSON,
 } from './';
 
 /**
- * 
+ * 作成したトピックの一覧
  * @export
  * @interface InlineResponse2003
  */
 export interface InlineResponse2003 {
     /**
      * 
+     * @type {Array<InlineResponse2001Topics>}
+     * @memberof InlineResponse2003
+     */
+    topics?: Array<InlineResponse2001Topics>;
+    /**
+     * 
      * @type {number}
      * @memberof InlineResponse2003
      */
-    id: number;
+    page?: number;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof InlineResponse2003
      */
-    ltiConsumerId: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineResponse2003
-     */
-    ltiUserId: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineResponse2003
-     */
-    name: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineResponse2003
-     */
-    email?: string;
-    /**
-     * 
-     * @type {InlineResponse2001Settings}
-     * @memberof InlineResponse2003
-     */
-    settings?: InlineResponse2001Settings;
+    perPage?: number;
 }
 
 export function InlineResponse2003FromJSON(json: any): InlineResponse2003 {
@@ -74,12 +56,9 @@ export function InlineResponse2003FromJSONTyped(json: any, ignoreDiscriminator: 
     }
     return {
         
-        'id': json['id'],
-        'ltiConsumerId': json['ltiConsumerId'],
-        'ltiUserId': json['ltiUserId'],
-        'name': json['name'],
-        'email': !exists(json, 'email') ? undefined : json['email'],
-        'settings': !exists(json, 'settings') ? undefined : InlineResponse2001SettingsFromJSON(json['settings']),
+        'topics': !exists(json, 'topics') ? undefined : ((json['topics'] as Array<any>).map(InlineResponse2001TopicsFromJSON)),
+        'page': !exists(json, 'page') ? undefined : json['page'],
+        'perPage': !exists(json, 'perPage') ? undefined : json['perPage'],
     };
 }
 
@@ -92,12 +71,9 @@ export function InlineResponse2003ToJSON(value?: InlineResponse2003 | null): any
     }
     return {
         
-        'id': value.id,
-        'ltiConsumerId': value.ltiConsumerId,
-        'ltiUserId': value.ltiUserId,
-        'name': value.name,
-        'email': value.email,
-        'settings': InlineResponse2001SettingsToJSON(value.settings),
+        'topics': value.topics === undefined ? undefined : ((value.topics as Array<any>).map(InlineResponse2001TopicsToJSON)),
+        'page': value.page,
+        'perPage': value.perPage,
     };
 }
 
