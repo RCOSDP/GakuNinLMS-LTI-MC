@@ -60,6 +60,9 @@ import {
     InlineResponse2001Authors,
     InlineResponse2001AuthorsFromJSON,
     InlineResponse2001AuthorsToJSON,
+    InlineResponse2001ResourceTracks,
+    InlineResponse2001ResourceTracksFromJSON,
+    InlineResponse2001ResourceTracksToJSON,
     InlineResponse2001Topics,
     InlineResponse2001TopicsFromJSON,
     InlineResponse2001TopicsToJSON,
@@ -84,15 +87,15 @@ import {
     InlineResponse2007,
     InlineResponse2007FromJSON,
     InlineResponse2007ToJSON,
+    InlineResponse2008,
+    InlineResponse2008FromJSON,
+    InlineResponse2008ToJSON,
     InlineResponse201,
     InlineResponse201FromJSON,
     InlineResponse201ToJSON,
     InlineResponse2011,
     InlineResponse2011FromJSON,
     InlineResponse2011ToJSON,
-    InlineResponse2012,
-    InlineResponse2012FromJSON,
-    InlineResponse2012ToJSON,
 } from '../models';
 
 export interface ApiV2BookBookIdAuthorsPutRequest {
@@ -1034,7 +1037,7 @@ export class DefaultApi extends runtime.BaseAPI {
      * リソースの埋め込み情報を取得します。 教員または管理者でなければなりません。
      * リソースの埋め込み情報の取得
      */
-    async apiV2ResourceResourceIdOembedGetRaw(requestParameters: ApiV2ResourceResourceIdOembedGetRequest): Promise<runtime.ApiResponse<{ [key: string]: object; }>> {
+    async apiV2ResourceResourceIdOembedGetRaw(requestParameters: ApiV2ResourceResourceIdOembedGetRequest): Promise<runtime.ApiResponse<InlineResponse2008>> {
         if (requestParameters.resourceId === null || requestParameters.resourceId === undefined) {
             throw new runtime.RequiredError('resourceId','Required parameter requestParameters.resourceId was null or undefined when calling apiV2ResourceResourceIdOembedGet.');
         }
@@ -1050,14 +1053,14 @@ export class DefaultApi extends runtime.BaseAPI {
             query: queryParameters,
         });
 
-        return new runtime.JSONApiResponse<any>(response);
+        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2008FromJSON(jsonValue));
     }
 
     /**
      * リソースの埋め込み情報を取得します。 教員または管理者でなければなりません。
      * リソースの埋め込み情報の取得
      */
-    async apiV2ResourceResourceIdOembedGet(requestParameters: ApiV2ResourceResourceIdOembedGetRequest): Promise<{ [key: string]: object; }> {
+    async apiV2ResourceResourceIdOembedGet(requestParameters: ApiV2ResourceResourceIdOembedGetRequest): Promise<InlineResponse2008> {
         const response = await this.apiV2ResourceResourceIdOembedGetRaw(requestParameters);
         return await response.value();
     }
@@ -1066,7 +1069,7 @@ export class DefaultApi extends runtime.BaseAPI {
      * 字幕をアップロードします。 教員または管理者でなければなりません。
      * 字幕のアップロード
      */
-    async apiV2ResourceResourceIdVideoTrackPostRaw(requestParameters: ApiV2ResourceResourceIdVideoTrackPostRequest): Promise<runtime.ApiResponse<InlineResponse2012>> {
+    async apiV2ResourceResourceIdVideoTrackPostRaw(requestParameters: ApiV2ResourceResourceIdVideoTrackPostRequest): Promise<runtime.ApiResponse<InlineResponse2001ResourceTracks>> {
         if (requestParameters.resourceId === null || requestParameters.resourceId === undefined) {
             throw new runtime.RequiredError('resourceId','Required parameter requestParameters.resourceId was null or undefined when calling apiV2ResourceResourceIdVideoTrackPost.');
         }
@@ -1085,14 +1088,14 @@ export class DefaultApi extends runtime.BaseAPI {
             body: InlineObject10ToJSON(requestParameters.body),
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2012FromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2001ResourceTracksFromJSON(jsonValue));
     }
 
     /**
      * 字幕をアップロードします。 教員または管理者でなければなりません。
      * 字幕のアップロード
      */
-    async apiV2ResourceResourceIdVideoTrackPost(requestParameters: ApiV2ResourceResourceIdVideoTrackPostRequest): Promise<InlineResponse2012> {
+    async apiV2ResourceResourceIdVideoTrackPost(requestParameters: ApiV2ResourceResourceIdVideoTrackPostRequest): Promise<InlineResponse2001ResourceTracks> {
         const response = await this.apiV2ResourceResourceIdVideoTrackPostRaw(requestParameters);
         return await response.value();
     }

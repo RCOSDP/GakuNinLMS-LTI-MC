@@ -18,6 +18,10 @@ import {
     InlineResponse2001AuthorsFromJSON,
     InlineResponse2001AuthorsFromJSONTyped,
     InlineResponse2001AuthorsToJSON,
+    InlineResponse2001Resource,
+    InlineResponse2001ResourceFromJSON,
+    InlineResponse2001ResourceFromJSONTyped,
+    InlineResponse2001ResourceToJSON,
 } from './';
 
 /**
@@ -88,10 +92,10 @@ export interface InlineResponse2001Topics {
     authors?: Array<InlineResponse2001Authors>;
     /**
      * 
-     * @type {object}
+     * @type {InlineResponse2001Resource}
      * @memberof InlineResponse2001Topics
      */
-    resource?: object;
+    resource?: InlineResponse2001Resource;
 }
 
 export function InlineResponse2001TopicsFromJSON(json: any): InlineResponse2001Topics {
@@ -114,7 +118,7 @@ export function InlineResponse2001TopicsFromJSONTyped(json: any, ignoreDiscrimin
         'updatedAt': !exists(json, 'updatedAt') ? undefined : (new Date(json['updatedAt'])),
         'details': !exists(json, 'details') ? undefined : json['details'],
         'authors': !exists(json, 'authors') ? undefined : ((json['authors'] as Array<any>).map(InlineResponse2001AuthorsFromJSON)),
-        'resource': !exists(json, 'resource') ? undefined : json['resource'],
+        'resource': !exists(json, 'resource') ? undefined : InlineResponse2001ResourceFromJSON(json['resource']),
     };
 }
 
@@ -137,7 +141,7 @@ export function InlineResponse2001TopicsToJSON(value?: InlineResponse2001Topics 
         'updatedAt': value.updatedAt === undefined ? undefined : (value.updatedAt.toISOString()),
         'details': value.details,
         'authors': value.authors === undefined ? undefined : ((value.authors as Array<any>).map(InlineResponse2001AuthorsToJSON)),
-        'resource': value.resource,
+        'resource': InlineResponse2001ResourceToJSON(value.resource),
     };
 }
 

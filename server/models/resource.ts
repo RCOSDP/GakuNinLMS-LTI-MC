@@ -11,16 +11,6 @@ export type ResourceSchema = VideoResourceSchema | Resource;
 
 export const resourcePropsSchema = videoResourcePropsSchema;
 
-export const resourceSchema = {
-  anyOf: [
-    videoResourceSchema,
-    {
-      type: "object",
-      properties: {
-        id: { type: "integer" },
-        url: { type: "string" },
-        details: { type: "object" },
-      },
-    },
-  ],
-} as const;
+// TODO: oneOf/anyOf がオブジェクトでも機能するようになれば使いたい
+//       https://github.com/fastify/fast-json-stringify/issues/290
+export const resourceSchema = videoResourceSchema;
