@@ -1,6 +1,6 @@
 import { mutate } from "swr";
 import type { TopicSchema } from "$server/models/topic";
-import type { AuthorsProps } from "$server/validators/authorsProps";
+import type { AuthorsProps } from "$server/models/authorsProps";
 import type { AuthorSchema } from "$server/models/author";
 import { api } from "./api";
 

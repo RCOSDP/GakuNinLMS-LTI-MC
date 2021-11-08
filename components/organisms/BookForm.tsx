@@ -77,6 +77,7 @@ export default function BookForm({
     shared: Boolean(book?.shared),
     language: book?.language ?? Object.getOwnPropertyNames(languages)[0],
     sections: book?.sections,
+    authors: book?.authors ?? [],
     submitWithLink: false,
   };
   const { handleSubmit, register, setValue } =
@@ -91,7 +92,10 @@ export default function BookForm({
       className={clsx(classes.margin, className)}
       id={id}
       component="form"
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={handleSubmit((values) => {
+        values.authors = authorsInputProps.authors;
+        onSubmit(values);
+      })}
     >
       <TextField
         inputProps={register("name")}

@@ -6,6 +6,7 @@ import { pagesPath } from "./$path";
 import { createBook } from "./book";
 import useBookLinkHandler from "./useBookLinkHandler";
 import useAuthorsHandler from "$utils/useAuthorsHandler";
+import { updateBookAuthors } from "./bookAuthors";
 
 function useBookNewHandlers(
   context: "books" | "topics" | undefined,
@@ -15,15 +16,27 @@ function useBookNewHandlers(
   const handleBookLink = useBookLinkHandler();
   const { handleAuthorsUpdate, handleAuthorSubmit } = useAuthorsHandler();
   const handleSubmit = useCallback(
-    async ({ submitWithLink, topics, ...book }: BookPropsWithSubmitOptions) => {
+    async ({
+      authors,
+      submitWithLink,
+      topics,
+      ...props
+    }: BookPropsWithSubmitOptions) => {
       if (topics && topics.length)
-        book.sections = getSectionsWithTopics(topics);
-      const { id } = await createBook(book);
-      if (submitWithLink) await handleBookLink({ id });
+        props.sections = getSectionsWithTopics(topics);
+      const book = await createBook(props);
+      await updateBookAuthors({
+        id: book.id,
+        authors: [
+          ...book.authors.map(({ id, roleName }) => ({ id, roleName })),
+          ...authors,
+        ],
+      });
+      if (submitWithLink) await handleBookLink({ id: book.id });
       await router.replace(
         pagesPath.book.edit.$url({
           query: {
-            bookId: id,
+            bookId: book.id,
             ...(context && { context }),
           },
         })
