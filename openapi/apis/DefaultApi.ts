@@ -188,6 +188,10 @@ export interface ApiV2LtiLtiConsumerIdResourceLinkLtiResourceLinkIdPutRequest {
     body?: InlineObject;
 }
 
+export interface ApiV2ResourceResourceIdOembedGetRequest {
+    resourceId: number;
+}
+
 export interface ApiV2ResourceResourceIdVideoTrackPostRequest {
     resourceId: number;
     body?: InlineObject10;
@@ -1011,6 +1015,38 @@ export class DefaultApi extends runtime.BaseAPI {
      */
     async apiV2LtiLtiConsumerIdResourceLinkLtiResourceLinkIdPut(requestParameters: ApiV2LtiLtiConsumerIdResourceLinkLtiResourceLinkIdPutRequest): Promise<InlineResponse200> {
         const response = await this.apiV2LtiLtiConsumerIdResourceLinkLtiResourceLinkIdPutRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * リソースの埋め込み情報を取得します。 教員または管理者でなければなりません。
+     * リソースの埋め込み情報の取得
+     */
+    async apiV2ResourceResourceIdOembedGetRaw(requestParameters: ApiV2ResourceResourceIdOembedGetRequest): Promise<runtime.ApiResponse<{ [key: string]: object; }>> {
+        if (requestParameters.resourceId === null || requestParameters.resourceId === undefined) {
+            throw new runtime.RequiredError('resourceId','Required parameter requestParameters.resourceId was null or undefined when calling apiV2ResourceResourceIdOembedGet.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/api/v2/resource/{resource_id}/oembed`.replace(`{${"resource_id"}}`, encodeURIComponent(String(requestParameters.resourceId))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse<any>(response);
+    }
+
+    /**
+     * リソースの埋め込み情報を取得します。 教員または管理者でなければなりません。
+     * リソースの埋め込み情報の取得
+     */
+    async apiV2ResourceResourceIdOembedGet(requestParameters: ApiV2ResourceResourceIdOembedGetRequest): Promise<{ [key: string]: object; }> {
+        const response = await this.apiV2ResourceResourceIdOembedGetRaw(requestParameters);
         return await response.value();
     }
 

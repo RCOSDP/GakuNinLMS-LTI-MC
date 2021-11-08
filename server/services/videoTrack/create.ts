@@ -5,8 +5,7 @@ import {
   videoTrackPropsSchema,
   videoTrackSchema,
 } from "$server/models/videoTrack";
-import type { ResourceParams } from "$server/validators/resourceParams";
-import { resourceParamsSchema } from "$server/validators/resourceParams";
+import { ResourceParams } from "$server/validators/resourceParams";
 import authUser from "$server/auth/authUser";
 import authInstructor from "$server/auth/authInstructor";
 import createVideoTrack from "$server/utils/videoTrack/createVideoTrack";
@@ -18,7 +17,7 @@ export const createSchema: FastifySchema = {
   description: outdent`
     字幕をアップロードします。
     教員または管理者でなければなりません。`,
-  params: resourceParamsSchema,
+  params: ResourceParams,
   body: videoTrackPropsSchema,
   response: {
     201: videoTrackSchema,
