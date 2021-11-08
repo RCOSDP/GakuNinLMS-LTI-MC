@@ -16,10 +16,12 @@ jobs:
           restore-keys: yarn-
       - name: install
         run: yarn
+      - uses: actions/cache@v2
+        with:
+          path: .eslintcache
+          key: "${{ runner.os }}-eslint"
       - name: lint
-        run: yarn lint:report
-        continue-on-error: true
-      - run: yarn lint:fix
+        run: yarn lint:fix:report
         continue-on-error: true
       - id: lint_git_status
         run: echo "::set-output name=mod::$(git status --porcelain)"

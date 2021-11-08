@@ -1,5 +1,6 @@
 /.next/
 /.vercel/
+/.eslintcache
 /eslint_report.json
 /public/api/v2/swagger/
 /public/storybook/
