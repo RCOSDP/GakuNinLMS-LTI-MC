@@ -3,15 +3,15 @@ import type { ResourceSchema } from "$server/models/resource";
 const oEmbedProviderMatchers = [
   {
     host: /(^|\.)youtube\.com$/,
-    providerUrl: "https://www.youtube.com/oembed",
+    endpointUrl: "https://www.youtube.com/oembed",
   },
   {
     host: /^youtu\.be$/,
-    providerUrl: "https://www.youtube.com/oembed",
+    endpointUrl: "https://www.youtube.com/oembed",
   },
   {
     host: /^vimeo\.com$/,
-    providerUrl: "https://vimeo.com/api/oembed.json",
+    endpointUrl: "https://vimeo.com/api/oembed.json",
   },
 ] as const;
 
@@ -24,7 +24,7 @@ const hostMatch =
 function resourceToOEmbedProvider(resource: ResourceSchema) {
   const url = new URL(resource.url);
   const matcher = oEmbedProviderMatchers.find(hostMatch(url));
-  return matcher?.providerUrl;
+  return matcher?.endpointUrl;
 }
 
 export default resourceToOEmbedProvider;
