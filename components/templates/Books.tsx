@@ -1,6 +1,6 @@
 import useInfiniteScroll from "react-infinite-scroll-hook";
 import Skeleton from "@mui/material/Skeleton";
-import makeStyles from "@mui/styles/makeStyles";
+import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import AddIcon from "@mui/icons-material/Add";
@@ -17,15 +17,10 @@ import type { Filter } from "$types/filter";
 import useContainerStyles from "styles/container";
 import { useSearchAtom } from "$store/search";
 
-const useStyles = makeStyles((theme) => ({
-  icon: {
-    marginRight: theme.spacing(0.5),
-  },
-  books: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fill, 296px)",
-    gap: theme.spacing(2),
-  },
+const ContentPreviews = styled("div")(({ theme }) => ({
+  display: "grid",
+  gridTemplateColumns: "repeat(auto-fill, 296px)",
+  gap: theme.spacing(2),
 }));
 
 export type Props = {
@@ -64,7 +59,6 @@ export default function Books(props: Props) {
     useSearchAtom();
   const handleBookNewClick = () => onBookNewClick();
   const handleBooksImportClick = () => onBooksImportClick();
-  const classes = useStyles();
   const containerClasses = useContainerStyles();
   const [infiniteRef] = useInfiniteScroll({ loading, hasNextPage, onLoadMore });
   return (
@@ -75,7 +69,7 @@ export default function Books(props: Props) {
           <>
             ブック
             <Button size="small" color="primary" onClick={handleBookNewClick}>
-              <AddIcon className={classes.icon} />
+              <AddIcon sx={{ mr: 0.5 }} />
               ブックの作成
             </Button>
             <Button
@@ -83,7 +77,7 @@ export default function Books(props: Props) {
               color="primary"
               onClick={handleBooksImportClick}
             >
-              <AddIcon className={classes.icon} />
+              <AddIcon sx={{ mr: 0.5 }} />
               一括登録
             </Button>
           </>
@@ -105,7 +99,7 @@ export default function Books(props: Props) {
         }
       />
       <Container classes={containerClasses} maxWidth="lg">
-        <div className={classes.books}>
+        <ContentPreviews>
           {books.map((book) => (
             <ContentPreview
               key={book.id}
@@ -119,7 +113,7 @@ export default function Books(props: Props) {
           ))}
           {loading &&
             [...Array(5)].map((_, i) => <Skeleton key={i} height={64} />)}
-        </div>
+        </ContentPreviews>
       </Container>
     </div>
   );
