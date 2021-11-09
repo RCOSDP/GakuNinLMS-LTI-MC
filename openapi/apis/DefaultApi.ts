@@ -1723,27 +1723,27 @@ export class DefaultApi extends runtime.BaseAPI {
     * @enum {string}
     */
 export enum ApiV2SearchGetTypeEnum {
-    Topic = 'topic',
-    Book = 'book'
+    topic = 'topic',
+    book = 'book'
 }
 /**
     * @export
     * @enum {string}
     */
 export enum ApiV2SearchGetFilterEnum {
-    All = 'all',
-    Self = 'self',
-    Other = 'other'
+    all = 'all',
+    self = 'self',
+    other = 'other'
 }
 /**
     * @export
     * @enum {string}
     */
 export enum ApiV2SearchGetSortEnum {
-    Updated = 'updated',
-    ReverseUpdated = 'reverse-updated',
-    Created = 'created',
-    ReverseCreated = 'reverse-created',
-    Name = 'name',
-    ReverseName = 'reverse-name'
+    updated = 'updated',
+    reverse_updated = 'reverse-updated',
+    created = 'created',
+    reverse_created = 'reverse-created',
+    name = 'name',
+    reverse_name = 'reverse-name'
 }
