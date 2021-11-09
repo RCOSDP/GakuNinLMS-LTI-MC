@@ -179,7 +179,7 @@ export default function ContentPreview({
           alt="サムネイル"
         />
       </CardActionArea>
-      {linked !== undefined && onLtiContextClick && (
+      {linked !== undefined && onContentLinkClick && (
         <LinkArea>
           <LinkSwitch
             sx={{
