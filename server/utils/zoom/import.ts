@@ -163,6 +163,7 @@ class ZoomImport {
         creator: { connect: { id: this.user.id } },
         createdAt: startTime,
         updatedAt: new Date(),
+        shared: false,
         resource,
         details: {},
       };
