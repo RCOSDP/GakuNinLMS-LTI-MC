@@ -19,7 +19,7 @@ import { primary, gray } from "$theme/colors";
 import useLineClampStyles from "$styles/lineClamp";
 import { getSectionsOutline } from "$utils/outline";
 import getLocaleDateString from "$utils/getLocaleDateString";
-import getLocaleListString from "$utils/getLocaleListString";
+import { authors } from "$utils/descriptionList";
 import useOembed from "$utils/useOembed";
 import { NEXT_PUBLIC_BASE_PATH } from "$utils/env";
 
@@ -201,13 +201,7 @@ export default function ContentPreview({
             key: "更新日",
             value: getLocaleDateString(content.updatedAt, "ja"),
           },
-          {
-            key: "著者",
-            value: getLocaleListString(
-              content.authors.map(({ name }) => name),
-              "ja"
-            ),
-          },
+          ...authors(content),
           ...("ltiResourceLinks" in content &&
           content.ltiResourceLinks.length > 0
             ? [
