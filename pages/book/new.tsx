@@ -2,7 +2,10 @@ import { useRouter } from "next/router";
 import BookNew from "$templates/BookNew";
 import useBookNewHandlers from "$utils/useBookNewHandlers";
 
-export type Query = { context?: "books" | "topics"; topics?: number[] };
+export type Query = {
+  context?: "books" | "topics";
+  topics?: number | number[];
+};
 
 function New({ context, topics }: Query) {
   const handlers = useBookNewHandlers(context);
@@ -17,7 +20,8 @@ function Router() {
   return <New context={context} topics={topics} />;
 }
 
-function getTopicsIdArray(topics: unknown) {
+function getTopicsIdArray(topics: Query["topics"]): undefined | number[] {
+  if (topics == null) return undefined;
   if (Array.isArray(topics)) return topics;
   return [Number(topics)];
 }
