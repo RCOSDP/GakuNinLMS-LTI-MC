@@ -8,6 +8,7 @@ test("キーワードによる絞り込み", () => {
     language: "en",
     timeRequired: null,
     shared: true,
+    license: "",
     authors: [],
     ltiResourceLinks: [],
     createdAt: new Date(),
@@ -32,6 +33,7 @@ test("セクション名による絞り込み", () => {
     language: "en",
     timeRequired: null,
     shared: true,
+    license: "",
     authors: [],
     ltiResourceLinks: [],
     createdAt: new Date(),
@@ -84,6 +86,7 @@ test("トピック名による絞り込み", () => {
     language: "en",
     timeRequired: null,
     shared: true,
+    license: "",
     authors: [],
     ltiResourceLinks: [],
     createdAt: new Date(),
@@ -136,6 +139,7 @@ test("LTI Resource Link による絞り込み", () => {
     language: "en",
     timeRequired: null,
     shared: true,
+    license: "",
     authors: [],
     ltiResourceLinks: [
       {
@@ -176,8 +180,8 @@ test("ブック名が空でもセクション名・トピック名による絞�
     language: "en",
     timeRequired: null,
     shared: true,
+    license: "",
     authors: [],
-
     ltiResourceLinks: [],
     createdAt: new Date(),
     publishedAt: new Date(),
@@ -229,6 +233,7 @@ test("ブック著者による絞り込み", () => {
     language: "en",
     timeRequired: null,
     shared: true,
+    license: "",
     authors: [
       {
         id: 1,
@@ -262,6 +267,7 @@ test("トピック著者による絞り込み", () => {
     language: "en",
     timeRequired: null,
     shared: true,
+    license: "",
     authors: [
       {
         id: 1,

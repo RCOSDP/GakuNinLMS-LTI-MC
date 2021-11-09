@@ -11,6 +11,7 @@ function getTextContent(topic: TopicSchema): string {
 
 /**
  * 検索クエリーによるトピックの絞り込み
+ * @deprecated
  * @param topics トピックの配列
  * @param query 検索クエリー
  * @return 絞り込まれたトピック

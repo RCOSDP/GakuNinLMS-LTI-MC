@@ -22,6 +22,7 @@ function getTextContent(book: BookSchema): string {
 
 /**
  * 検索クエリーによるブックの絞り込み
+ * @deprecated
  * @param books ブックの配列
  * @param query 検索クエリー
  * @return 絞り込まれたブック

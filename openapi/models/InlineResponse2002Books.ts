@@ -14,95 +14,111 @@
 
 import { exists, mapValues } from '../runtime';
 import {
+    InlineResponse200,
+    InlineResponse200FromJSON,
+    InlineResponse200FromJSONTyped,
+    InlineResponse200ToJSON,
     InlineResponse2001Authors,
     InlineResponse2001AuthorsFromJSON,
     InlineResponse2001AuthorsFromJSONTyped,
     InlineResponse2001AuthorsToJSON,
-    InlineResponse2001Resource,
-    InlineResponse2001ResourceFromJSON,
-    InlineResponse2001ResourceFromJSONTyped,
-    InlineResponse2001ResourceToJSON,
+    InlineResponse2001Sections,
+    InlineResponse2001SectionsFromJSON,
+    InlineResponse2001SectionsFromJSONTyped,
+    InlineResponse2001SectionsToJSON,
 } from './';
 
 /**
  * 
  * @export
- * @interface InlineResponse2001Topics
+ * @interface InlineResponse2002Books
  */
-export interface InlineResponse2001Topics {
+export interface InlineResponse2002Books {
     /**
      * 
      * @type {number}
-     * @memberof InlineResponse2001Topics
+     * @memberof InlineResponse2002Books
      */
     id?: number;
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse2001Topics
+     * @memberof InlineResponse2002Books
      */
     name?: string;
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse2001Topics
+     * @memberof InlineResponse2002Books
+     */
+    description?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineResponse2002Books
      */
     language?: string;
     /**
      * 
      * @type {number}
-     * @memberof InlineResponse2001Topics
+     * @memberof InlineResponse2002Books
      */
     timeRequired?: number;
     /**
      * 
      * @type {boolean}
-     * @memberof InlineResponse2001Topics
+     * @memberof InlineResponse2002Books
      */
     shared?: boolean;
     /**
      * 
-     * @type {string}
-     * @memberof InlineResponse2001Topics
+     * @type {Date}
+     * @memberof InlineResponse2002Books
      */
-    description?: string;
+    publishedAt?: Date;
     /**
      * 
      * @type {Date}
-     * @memberof InlineResponse2001Topics
+     * @memberof InlineResponse2002Books
      */
     createdAt?: Date;
     /**
      * 
      * @type {Date}
-     * @memberof InlineResponse2001Topics
+     * @memberof InlineResponse2002Books
      */
     updatedAt?: Date;
     /**
      * 
      * @type {object}
-     * @memberof InlineResponse2001Topics
+     * @memberof InlineResponse2002Books
      */
     details?: object;
     /**
      * 
      * @type {Array<InlineResponse2001Authors>}
-     * @memberof InlineResponse2001Topics
+     * @memberof InlineResponse2002Books
      */
     authors?: Array<InlineResponse2001Authors>;
     /**
      * 
-     * @type {InlineResponse2001Resource}
-     * @memberof InlineResponse2001Topics
+     * @type {Array<InlineResponse2001Sections>}
+     * @memberof InlineResponse2002Books
      */
-    resource?: InlineResponse2001Resource;
+    sections?: Array<InlineResponse2001Sections>;
+    /**
+     * 
+     * @type {Array<InlineResponse200>}
+     * @memberof InlineResponse2002Books
+     */
+    ltiResourceLinks?: Array<InlineResponse200>;
 }
 
-export function InlineResponse2001TopicsFromJSON(json: any): InlineResponse2001Topics {
-    return InlineResponse2001TopicsFromJSONTyped(json, false);
+export function InlineResponse2002BooksFromJSON(json: any): InlineResponse2002Books {
+    return InlineResponse2002BooksFromJSONTyped(json, false);
 }
 
-export function InlineResponse2001TopicsFromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse2001Topics {
+export function InlineResponse2002BooksFromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse2002Books {
     if ((json === undefined) || (json === null)) {
         return json;
     }
@@ -110,19 +126,21 @@ export function InlineResponse2001TopicsFromJSONTyped(json: any, ignoreDiscrimin
         
         'id': !exists(json, 'id') ? undefined : json['id'],
         'name': !exists(json, 'name') ? undefined : json['name'],
+        'description': !exists(json, 'description') ? undefined : json['description'],
         'language': !exists(json, 'language') ? undefined : json['language'],
         'timeRequired': !exists(json, 'timeRequired') ? undefined : json['timeRequired'],
         'shared': !exists(json, 'shared') ? undefined : json['shared'],
-        'description': !exists(json, 'description') ? undefined : json['description'],
+        'publishedAt': !exists(json, 'publishedAt') ? undefined : (new Date(json['publishedAt'])),
         'createdAt': !exists(json, 'createdAt') ? undefined : (new Date(json['createdAt'])),
         'updatedAt': !exists(json, 'updatedAt') ? undefined : (new Date(json['updatedAt'])),
         'details': !exists(json, 'details') ? undefined : json['details'],
         'authors': !exists(json, 'authors') ? undefined : ((json['authors'] as Array<any>).map(InlineResponse2001AuthorsFromJSON)),
-        'resource': !exists(json, 'resource') ? undefined : InlineResponse2001ResourceFromJSON(json['resource']),
+        'sections': !exists(json, 'sections') ? undefined : ((json['sections'] as Array<any>).map(InlineResponse2001SectionsFromJSON)),
+        'ltiResourceLinks': !exists(json, 'ltiResourceLinks') ? undefined : ((json['ltiResourceLinks'] as Array<any>).map(InlineResponse200FromJSON)),
     };
 }
 
-export function InlineResponse2001TopicsToJSON(value?: InlineResponse2001Topics | null): any {
+export function InlineResponse2002BooksToJSON(value?: InlineResponse2002Books | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -133,15 +151,17 @@ export function InlineResponse2001TopicsToJSON(value?: InlineResponse2001Topics 
         
         'id': value.id,
         'name': value.name,
+        'description': value.description,
         'language': value.language,
         'timeRequired': value.timeRequired,
         'shared': value.shared,
-        'description': value.description,
+        'publishedAt': value.publishedAt === undefined ? undefined : (value.publishedAt.toISOString()),
         'createdAt': value.createdAt === undefined ? undefined : (value.createdAt.toISOString()),
         'updatedAt': value.updatedAt === undefined ? undefined : (value.updatedAt.toISOString()),
         'details': value.details,
         'authors': value.authors === undefined ? undefined : ((value.authors as Array<any>).map(InlineResponse2001AuthorsToJSON)),
-        'resource': InlineResponse2001ResourceToJSON(value.resource),
+        'sections': value.sections === undefined ? undefined : ((value.sections as Array<any>).map(InlineResponse2001SectionsToJSON)),
+        'ltiResourceLinks': value.ltiResourceLinks === undefined ? undefined : ((value.ltiResourceLinks as Array<any>).map(InlineResponse200ToJSON)),
     };
 }
 

@@ -9,11 +9,6 @@ generator client {
   previewFeatures = ["orderByRelation"]
 }
 
-generator jsonSchema {
-  provider = "prisma-json-schema-generator"
-  output   = "."
-}
-
 // Resource Objects
 
 /// Zoomインポート履歴
@@ -27,15 +22,15 @@ model ZoomMeeting {
 
 /// 教育用外部リソース
 model Resource {
-  id      Int     @id @default(autoincrement())
-  topics  Topic[]
+  id          Int          @id @default(autoincrement())
+  topics      Topic[]
   zoomMeeting ZoomMeeting?
-  video   Video?  @relation(fields: [videoId], references: [id])
-  videoId Int?    @unique @map("video_id")
+  video       Video?       @relation(fields: [videoId], references: [id])
+  videoId     Int?         @unique @map("video_id")
   /// 外部リソースのアドレス
-  url     String  @unique
+  url         String       @unique
   /// 詳細
-  details Json
+  details     Json
 
   @@map("resources")
 }
@@ -189,6 +184,8 @@ model Book {
   shared           Boolean           @default(true)
   /// 著作者
   authors          Authorship[]
+  /// ライセンス (https://spdx.org/licenses/ に準拠するものを入力する)
+  license          String            @default("")
   /// 公開日
   publishedAt      DateTime          @default(now()) @map("published_at")
   /// 作成日

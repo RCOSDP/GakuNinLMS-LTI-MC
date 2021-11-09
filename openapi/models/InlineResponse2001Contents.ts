@@ -14,6 +14,10 @@
 
 import { exists, mapValues } from '../runtime';
 import {
+    InlineResponse200,
+    InlineResponse200FromJSON,
+    InlineResponse200FromJSONTyped,
+    InlineResponse200ToJSON,
     InlineResponse2001Authors,
     InlineResponse2001AuthorsFromJSON,
     InlineResponse2001AuthorsFromJSONTyped,
@@ -22,92 +26,121 @@ import {
     InlineResponse2001ResourceFromJSON,
     InlineResponse2001ResourceFromJSONTyped,
     InlineResponse2001ResourceToJSON,
+    InlineResponse2001Sections,
+    InlineResponse2001SectionsFromJSON,
+    InlineResponse2001SectionsFromJSONTyped,
+    InlineResponse2001SectionsToJSON,
 } from './';
 
 /**
  * 
  * @export
- * @interface InlineResponse2001Topics
+ * @interface InlineResponse2001Contents
  */
-export interface InlineResponse2001Topics {
+export interface InlineResponse2001Contents {
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineResponse2001Contents
+     */
+    type: string;
     /**
      * 
      * @type {number}
-     * @memberof InlineResponse2001Topics
+     * @memberof InlineResponse2001Contents
      */
     id?: number;
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse2001Topics
+     * @memberof InlineResponse2001Contents
      */
     name?: string;
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse2001Topics
+     * @memberof InlineResponse2001Contents
      */
     language?: string;
     /**
      * 
      * @type {number}
-     * @memberof InlineResponse2001Topics
+     * @memberof InlineResponse2001Contents
      */
     timeRequired?: number;
     /**
      * 
      * @type {boolean}
-     * @memberof InlineResponse2001Topics
+     * @memberof InlineResponse2001Contents
      */
     shared?: boolean;
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse2001Topics
+     * @memberof InlineResponse2001Contents
      */
     description?: string;
     /**
      * 
      * @type {Date}
-     * @memberof InlineResponse2001Topics
+     * @memberof InlineResponse2001Contents
      */
     createdAt?: Date;
     /**
      * 
      * @type {Date}
-     * @memberof InlineResponse2001Topics
+     * @memberof InlineResponse2001Contents
      */
     updatedAt?: Date;
     /**
      * 
      * @type {object}
-     * @memberof InlineResponse2001Topics
+     * @memberof InlineResponse2001Contents
      */
     details?: object;
     /**
      * 
      * @type {Array<InlineResponse2001Authors>}
-     * @memberof InlineResponse2001Topics
+     * @memberof InlineResponse2001Contents
      */
     authors?: Array<InlineResponse2001Authors>;
     /**
      * 
      * @type {InlineResponse2001Resource}
-     * @memberof InlineResponse2001Topics
+     * @memberof InlineResponse2001Contents
      */
     resource?: InlineResponse2001Resource;
+    /**
+     * 
+     * @type {Date}
+     * @memberof InlineResponse2001Contents
+     */
+    publishedAt?: Date;
+    /**
+     * 
+     * @type {Array<InlineResponse2001Sections>}
+     * @memberof InlineResponse2001Contents
+     */
+    sections?: Array<InlineResponse2001Sections>;
+    /**
+     * 
+     * @type {Array<InlineResponse200>}
+     * @memberof InlineResponse2001Contents
+     */
+    ltiResourceLinks?: Array<InlineResponse200>;
 }
 
-export function InlineResponse2001TopicsFromJSON(json: any): InlineResponse2001Topics {
-    return InlineResponse2001TopicsFromJSONTyped(json, false);
+export function InlineResponse2001ContentsFromJSON(json: any): InlineResponse2001Contents {
+    return InlineResponse2001ContentsFromJSONTyped(json, false);
 }
 
-export function InlineResponse2001TopicsFromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse2001Topics {
+export function InlineResponse2001ContentsFromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse2001Contents {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
+        'type': json['type'],
         'id': !exists(json, 'id') ? undefined : json['id'],
         'name': !exists(json, 'name') ? undefined : json['name'],
         'language': !exists(json, 'language') ? undefined : json['language'],
@@ -119,10 +152,13 @@ export function InlineResponse2001TopicsFromJSONTyped(json: any, ignoreDiscrimin
         'details': !exists(json, 'details') ? undefined : json['details'],
         'authors': !exists(json, 'authors') ? undefined : ((json['authors'] as Array<any>).map(InlineResponse2001AuthorsFromJSON)),
         'resource': !exists(json, 'resource') ? undefined : InlineResponse2001ResourceFromJSON(json['resource']),
+        'publishedAt': !exists(json, 'publishedAt') ? undefined : (new Date(json['publishedAt'])),
+        'sections': !exists(json, 'sections') ? undefined : ((json['sections'] as Array<any>).map(InlineResponse2001SectionsFromJSON)),
+        'ltiResourceLinks': !exists(json, 'ltiResourceLinks') ? undefined : ((json['ltiResourceLinks'] as Array<any>).map(InlineResponse200FromJSON)),
     };
 }
 
-export function InlineResponse2001TopicsToJSON(value?: InlineResponse2001Topics | null): any {
+export function InlineResponse2001ContentsToJSON(value?: InlineResponse2001Contents | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -131,6 +167,7 @@ export function InlineResponse2001TopicsToJSON(value?: InlineResponse2001Topics 
     }
     return {
         
+        'type': value.type,
         'id': value.id,
         'name': value.name,
         'language': value.language,
@@ -142,6 +179,9 @@ export function InlineResponse2001TopicsToJSON(value?: InlineResponse2001Topics 
         'details': value.details,
         'authors': value.authors === undefined ? undefined : ((value.authors as Array<any>).map(InlineResponse2001AuthorsToJSON)),
         'resource': InlineResponse2001ResourceToJSON(value.resource),
+        'publishedAt': value.publishedAt === undefined ? undefined : (value.publishedAt.toISOString()),
+        'sections': value.sections === undefined ? undefined : ((value.sections as Array<any>).map(InlineResponse2001SectionsToJSON)),
+        'ltiResourceLinks': value.ltiResourceLinks === undefined ? undefined : ((value.ltiResourceLinks as Array<any>).map(InlineResponse200ToJSON)),
     };
 }
 

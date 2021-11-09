@@ -1,5 +1,4 @@
 import type { Resource } from "@prisma/client";
-import jsonSchema from "$server/prisma/json-schema.json";
 import type {
   VideoResourcePropsSchema,
   VideoResourceSchema,
@@ -10,20 +9,8 @@ export type ResourceProps = VideoResourcePropsSchema;
 
 export type ResourceSchema = VideoResourceSchema | Resource;
 
-const { id, url, details } = jsonSchema.definitions.Resource.properties;
-
 export const resourcePropsSchema = videoResourcePropsSchema;
 
-export const resourceSchema = {
-  anyOf: [
-    videoResourceSchema,
-    {
-      type: "object",
-      properties: {
-        id,
-        url,
-        details,
-      },
-    },
-  ],
-};
+// TODO: oneOf/anyOf がオブジェクトでも機能するようになれば使いたい
+//       https://github.com/fastify/fast-json-stringify/issues/290
+export const resourceSchema = videoResourceSchema;

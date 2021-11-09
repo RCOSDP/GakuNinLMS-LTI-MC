@@ -1,12 +1,16 @@
 import type { FromSchema } from "json-schema-to-ts";
 
-/** 埋め込み情報 */
+/**
+ * 埋め込み情報
+ * @todo oneOf/anyOf がオブジェクトでも機能するようになれば使いたい
+ *       https://github.com/fastify/fast-json-stringify/issues/290
+ */
 export const OembedSchema = {
   type: "object",
   required: ["type", "version"],
   properties: {
     type: { type: "string" },
-    version: { enum: ["1.0"] },
+    version: { type: "string", enum: ["1.0"] },
     title: { type: "string" },
     author_name: { type: "string" },
     author_url: { type: "string" },
@@ -20,32 +24,6 @@ export const OembedSchema = {
     width: { type: "number" },
     height: { type: "number" },
   },
-  oneOf: [
-    {
-      required: ["url", "width", "height"],
-      properties: {
-        type: { enum: ["photo"] },
-        url: { type: "string" },
-        width: { type: "number" },
-        height: { type: "number" },
-      },
-    },
-    {
-      required: ["html", "width", "height"],
-      properties: {
-        type: { enum: ["video", "rich"] },
-        html: { type: "string" },
-        width: { type: "number" },
-        height: { type: "number" },
-      },
-    },
-    {
-      properties: {
-        type: { enum: ["link"] },
-      },
-    },
-  ],
-  additionalProperties: false,
 } as const;
 
 /** 埋め込み情報 */

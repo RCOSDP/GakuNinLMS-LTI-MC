@@ -1,5 +1,4 @@
 import type { Topic, Prisma } from "@prisma/client";
-import jsonSchema from "$server/prisma/json-schema.json";
 import type { ResourceProps, ResourceSchema } from "./resource";
 import { resourcePropsSchema, resourceSchema } from "./resource";
 import { AuthorSchema } from "./author";
@@ -16,43 +15,31 @@ export type TopicSchema = Topic & {
   resource: ResourceSchema;
 };
 
-const {
-  id,
-  name,
-  language,
-  timeRequired,
-  shared,
-  description,
-  createdAt,
-  updatedAt,
-  details,
-} = jsonSchema.definitions.Topic.properties;
-
 export const topicPropsSchema = {
   type: "object",
   properties: {
-    name,
-    language: { ...language, nullable: true },
-    timeRequired,
-    shared: { ...shared, nullable: true },
-    description,
+    name: { type: "string" },
+    language: { type: "string", nullable: true },
+    timeRequired: { type: "integer" },
+    shared: { type: "boolean", nullable: true },
+    description: { type: "string" },
     resource: resourcePropsSchema,
   },
-};
+} as const;
 
 export const topicSchema = {
   type: "object",
   properties: {
-    id,
-    name,
-    language,
-    timeRequired,
-    shared,
-    description,
-    createdAt,
-    updatedAt,
-    details,
+    id: { type: "integer" },
+    name: { type: "string" },
+    language: { type: "string" },
+    timeRequired: { type: "integer" },
+    shared: { type: "boolean" },
+    description: { type: "string" },
+    createdAt: { type: "string", format: "date-time" },
+    updatedAt: { type: "string", format: "date-time" },
+    details: { type: "object" },
     authors: { type: "array", items: AuthorSchema },
     resource: resourceSchema,
   },
-};
+} as const;

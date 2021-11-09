@@ -21,6 +21,7 @@ import {
   JSONSchema,
 } from "class-validator-jsonschema";
 import parse from "spdx-expression-parse";
+import type { Mutable } from "$server/types/mutable";
 import type { BookSchema } from "$server/models/book";
 import { bookSchema } from "$server/models/book";
 import { AuthorsProps } from "$server/models/authorsProps";
@@ -47,8 +48,8 @@ export class BooksImportResult {
   @ValidateNested()
   @JSONSchema({
     type: "array",
-    // @ts-expect-error NOTE: json-schema.json由来で型チェックが効かない
-    items: bookSchema,
+    // NOTE: SchemaObject は mutable な型なので変換
+    items: bookSchema as Mutable<typeof bookSchema>,
   })
   books?: BookSchema[];
 
