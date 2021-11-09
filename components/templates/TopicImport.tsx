@@ -8,14 +8,13 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import ActionHeader from "$organisms/ActionHeader";
 import ActionFooter from "$organisms/ActionFooter";
-import TopicPreview from "$organisms/TopicPreview";
+import ContentPreview from "$organisms/ContentPreview";
 import TopicPreviewDialog from "$organisms/TopicPreviewDialog";
 import SortSelect from "$atoms/SortSelect";
 import AuthorFilter from "$atoms/AuthorFilter";
 import SearchTextField from "$atoms/SearchTextField";
 import type { TopicSchema } from "$server/models/topic";
 import type { SortOrder } from "$server/models/sortOrder";
-import type { IsContentEditable } from "$types/content";
 import type { Filter } from "$types/filter";
 import useContainerStyles from "$styles/container";
 import useDialogProps from "$utils/useDialogProps";
@@ -44,7 +43,6 @@ type Props = {
   onTopicEditClick(topic: TopicSchema): void;
   onSortChange?(sort: SortOrder): void;
   onFilterChange?(filter: Filter): void;
-  isContentEditable: IsContentEditable;
 };
 
 export default function TopicImport(props: Props) {
@@ -58,7 +56,6 @@ export default function TopicImport(props: Props) {
     onTopicEditClick,
     onSortChange,
     onFilterChange,
-    isContentEditable,
   } = props;
   const { query, onSearchInput, onSearchInputReset } = useSearchAtom();
   const classes = useStyles();
@@ -79,8 +76,6 @@ export default function TopicImport(props: Props) {
   } = useDialogProps<TopicSchema>();
   const handleTopicPreviewClick = (topic: TopicSchema) =>
     setPreviewTopic(topic);
-  const handleTopicEditClick = (topic: TopicSchema) =>
-    isContentEditable(topic) && (() => onTopicEditClick(topic));
   const [infiniteRef] = useInfiniteScroll({ loading, hasNextPage, onLoadMore });
   return (
     <Container ref={infiniteRef} classes={containerClasses} maxWidth="lg">
@@ -108,13 +103,13 @@ export default function TopicImport(props: Props) {
       />
       <div className={classes.topics}>
         {topics.map((topic, index) => (
-          <TopicPreview
+          <ContentPreview
             key={index}
-            topic={topic}
+            content={topic}
             checked={selectedIndexes.has(index)}
             onChange={handleChecked(index)}
-            onTopicPreviewClick={handleTopicPreviewClick}
-            onTopicEditClick={handleTopicEditClick(topic)}
+            onContentPreviewClick={handleTopicPreviewClick}
+            onContentEditClick={onTopicEditClick}
           />
         ))}
         {loading &&

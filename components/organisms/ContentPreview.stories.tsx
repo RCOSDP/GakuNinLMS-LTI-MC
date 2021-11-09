@@ -1,9 +1,9 @@
 import type { Story } from "@storybook/react";
 import { styled } from "@mui/material/styles";
-import TopicPreview from "./TopicPreview";
-import { topic } from "samples";
+import ContentPreview from "./ContentPreview";
+import { topic, book } from "$samples";
 
-export default { title: "organisms/TopicPreview", component: TopicPreview };
+export default { title: "organisms/ContentPreview", component: ContentPreview };
 
 const Wrapper = styled("div")(({ theme }) => ({
   display: "grid",
@@ -11,21 +11,26 @@ const Wrapper = styled("div")(({ theme }) => ({
   gap: theme.spacing(2),
 }));
 
-const Template: Story<Parameters<typeof TopicPreview>[0]> = (args) => (
+const Template: Story<Parameters<typeof ContentPreview>[0]> = (args) => (
   <Wrapper>
     {[...Array(10)].map((_value, index) => (
-      <TopicPreview key={index} {...args} />
+      <ContentPreview key={index} {...args} />
     ))}
   </Wrapper>
 );
 
 export const Default = Template.bind({});
 Default.args = {
-  topic,
+  content: topic,
 };
 
 export const Checkable = Template.bind({});
 Checkable.args = {
   ...Default.args,
   onChange: () => true,
+};
+
+export const Book = Template.bind({});
+Book.args = {
+  content: book,
 };
