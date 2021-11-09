@@ -1,5 +1,5 @@
 import type { Topic, Book, ContentRole } from "@prisma/client";
-import type { AuthorsProps } from "$server/validators/authorsProps";
+import type { AuthorsProps } from "$server/models/authorsProps";
 import prisma from "$server/utils/prisma";
 
 /**

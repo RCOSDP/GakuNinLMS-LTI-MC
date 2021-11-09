@@ -1,6 +1,6 @@
 import type { FastifyRequest } from "fastify";
 import { AuthorSchema } from "$server/models/author";
-import { AuthorsProps } from "$server/validators/authorsProps";
+import { AuthorsProps } from "$server/models/authorsProps";
 import type { TopicParams } from "$server/validators/topicParams";
 import type { BookParams } from "$server/validators/bookParams";
 import topicExists from "$server/utils/topic/topicExists";

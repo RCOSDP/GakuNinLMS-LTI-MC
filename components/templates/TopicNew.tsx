@@ -6,8 +6,9 @@ import TopicForm from "$organisms/TopicForm";
 import RequiredDot from "$atoms/RequiredDot";
 import BackButton from "$atoms/BackButton";
 import useContainerStyles from "styles/container";
-import type { TopicProps, TopicSchema } from "$server/models/topic";
+import type { TopicSchema } from "$server/models/topic";
 import type { AuthorSchema } from "$server/models/author";
+import type { TopicPropsWithAuthors } from "$types/topicPropsWithAuthors";
 import type {
   VideoTrackProps,
   VideoTrackSchema,
@@ -37,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
 
 type Props = {
   topic?: TopicSchema;
-  onSubmit(topic: TopicProps): void;
+  onSubmit(topic: TopicPropsWithAuthors): void;
   onSubtitleDelete(videoTrack: VideoTrackSchema): void;
   onSubtitleSubmit(videoTrack: VideoTrackProps): void;
   onCancel(): void;
