@@ -9,7 +9,7 @@ import type {
   BooksImportParams,
   BooksImportResult,
 } from "$server/models/booksImportParams";
-import type { BookSchema } from "$server/models/book";
+import type { ContentSchema } from "$server/models/content";
 import type { AuthorSchema } from "$server/models/author";
 
 const useStyles = makeStyles((theme) => ({
@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
 
 type Props = {
   importResult?: BooksImportResult;
-  onBookPreviewClick(book: BookSchema): void;
+  onContentPreviewClick(content: ContentSchema): void;
   onSubmit(book: BooksImportParams): void;
   onCancel(): void;
   onAuthorSubmit(author: Pick<AuthorSchema, "email">): void;
@@ -55,7 +55,7 @@ type Props = {
 
 export default function BooksImport({
   importResult,
-  onBookPreviewClick,
+  onContentPreviewClick,
   onSubmit,
   onCancel,
   onAuthorSubmit,
@@ -97,8 +97,8 @@ export default function BooksImport({
               {importResult?.books?.map((book) => (
                 <ContentPreview
                   key={book.id}
-                  content={book}
-                  onContentPreviewClick={onBookPreviewClick}
+                  content={{ type: "book", ...book }}
+                  onContentPreviewClick={onContentPreviewClick}
                 />
               ))}
             </div>

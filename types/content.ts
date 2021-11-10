@@ -1,9 +1,5 @@
-import type { TopicSchema } from "$server/models/topic";
-import type { BookSchema } from "$server/models/book";
+import type { ContentSchema } from "$server/models/content";
 
-// TODO: ContentSchema に移行したい
-export type Content = TopicSchema | BookSchema;
-
-export type ContentAuthors = Pick<Content, "authors">;
+export type ContentAuthors = Pick<ContentSchema, "authors">;
 
 export type IsContentEditable = (content: ContentAuthors) => boolean;

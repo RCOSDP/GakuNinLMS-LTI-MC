@@ -1,5 +1,4 @@
 import { outdent } from "outdent";
-import type Method from "$server/types/method";
 import type { UserParams } from "$server/validators/userParams";
 import { userParamsSchema } from "$server/validators/userParams";
 import type { PaginationProps } from "$server/validators/paginationProps";
@@ -12,9 +11,10 @@ import { userTopicsSchema } from "$server/models/userTopics";
 export type Query = PaginationProps;
 export type Params = UserParams;
 
-export const method: Method = {
+export const method = {
   get: {
-    summary: "自分のトピックの一覧",
+    summary: "自分のトピックの一覧 (非推奨)",
+    deprecated: true,
     description: outdent`
       利用者が著者に含まれるトピックの一覧を取得します。
       教員または管理者でなければなりません。`,
@@ -24,7 +24,7 @@ export const method: Method = {
       200: userTopicsSchema,
     },
   },
-};
+} as const;
 
 export const hooks = {
   get: { auth: [authUser, authInstructor] },

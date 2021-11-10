@@ -1,47 +1,60 @@
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 import { atom, useAtom } from "jotai";
-import { RESET, atomWithReset, useUpdateAtom } from "jotai/utils";
 import clsx from "clsx";
-import type { Query } from "$utils/search/query";
-import parse from "$utils/search/parse";
 import stringify from "$utils/search/stringify";
 import type { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
+import type { SortOrder } from "$server/models/sortOrder";
+import type { Filter } from "$types/filter";
 
-const queryAtom = atomWithReset<{ input: string } & Query>({
-  input: "",
-  keywords: [],
-  ltiResourceLinks: [],
-});
-
-const updateQueryAtom = atom<null, string>(null, (_, set, input) => {
-  set(queryAtom, { input, ...parse(input) });
-});
-
-const addLtiContextQueryAtom = atom<
-  null,
-  Pick<LtiResourceLinkSchema, "consumerId" | "contextId">
->(null, (get, set, link) => {
-  const { input, keywords, ltiResourceLinks } = get(queryAtom);
-  set(queryAtom, {
-    input: clsx(input, stringify(link)),
-    ltiResourceLinks: [...ltiResourceLinks, link],
-    keywords,
-  });
+const queryAtom = atom<{
+  type: "none" | "book" | "topic";
+  q: string;
+  filter: Filter;
+  sort: SortOrder;
+  perPage: number;
+  page: number;
+}>({
+  type: "none",
+  q: "",
+  filter: "self",
+  sort: "updated",
+  perPage: 30,
+  page: 0,
 });
 
 export function useSearchAtom() {
-  const [query, reset] = useAtom(queryAtom);
-  const onSearchInput = useUpdateAtom(updateQueryAtom);
-  const onLtiContextClick = useUpdateAtom(addLtiContextQueryAtom);
-  const onSearchInputReset = useCallback(() => {
-    reset(RESET);
-  }, [reset]);
-
-  useEffect(
-    () => () => {
-      reset(RESET);
-    },
-    [reset]
+  const [query, updateQuery] = useAtom(queryAtom);
+  const onSearchInput: (q: string) => void = useCallback(
+    (q) => updateQuery((query) => ({ ...query, q })),
+    [updateQuery]
   );
-  return { query, onSearchInput, onLtiContextClick, onSearchInputReset };
+  const onSearchInputReset: () => void = useCallback(
+    () => updateQuery((query) => ({ ...query, q: "" })),
+    [updateQuery]
+  );
+  const onFilterChange: (filter: Filter) => void = useCallback(
+    (filter) => updateQuery((query) => ({ ...query, filter })),
+    [updateQuery]
+  );
+  const onSortChange: (sort: SortOrder) => void = useCallback(
+    (sort) => updateQuery((query) => ({ ...query, sort })),
+    [updateQuery]
+  );
+  const onLtiContextClick: (
+    link: Pick<LtiResourceLinkSchema, "consumerId" | "contextId">
+  ) => void = useCallback(
+    (link) =>
+      updateQuery((query) => ({ ...query, q: clsx(query.q, stringify(link)) })),
+    [updateQuery]
+  );
+
+  return {
+    query,
+    updateQuery,
+    onSearchInput,
+    onSearchInputReset,
+    onFilterChange,
+    onSortChange,
+    onLtiContextClick,
+  };
 }

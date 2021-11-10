@@ -1,4 +1,3 @@
-import type Method from "$server/types/method";
 import { outdent } from "outdent";
 import { bookSchema } from "$server/models/book";
 import type { PaginationProps } from "$server/validators/paginationProps";
@@ -9,9 +8,10 @@ import findBooks from "$server/utils/book/findBooks";
 
 export type Query = PaginationProps;
 
-export const method: Method = {
+export const method = {
   get: {
-    summary: "ブック一覧",
+    summary: "ブック一覧 (非推奨)",
+    deprecated: true,
     description: outdent`
       ブックの一覧を取得します。
       教員または管理者でなければなりません。`,
@@ -31,7 +31,7 @@ export const method: Method = {
       },
     },
   },
-};
+} as const;
 
 export const hooks = {
   get: { auth: [authUser, authInstructor] },

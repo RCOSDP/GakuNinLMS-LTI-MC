@@ -5,7 +5,6 @@ import { useSessionAtom } from "$store/session";
 import { pagesPath } from "$utils/$path";
 import useTopics from "$utils/useTopics";
 import { destroyTopic, updateTopic } from "$utils/topic";
-import type { ContentAuthors } from "$types/content";
 
 const Topics = (
   props: Omit<
@@ -46,11 +45,10 @@ function Index() {
         await destroyTopic(topic.id);
       }
     }
-    return refresh();
+    // TODO: 反映させるために revalidate で済ませればよいが後回し
+    router.reload();
   }
-  function handleTopicEditClick(
-    topic: Pick<TopicSchema, "id"> & ContentAuthors
-  ) {
+  function onContentEditClick(topic: Pick<TopicSchema, "id" | "authors">) {
     const action = isContentEditable(topic) ? "edit" : "generate";
     return router.push(
       pagesPath.topics[action].$url({ query: { topicId: topic.id } })
@@ -63,7 +61,7 @@ function Index() {
     onBookNewClick: handleBookNewClick,
     onTopicsShareClick: handleTopicsShareClick,
     onTopicsDeleteClick: handleTopicsDeleteClick,
-    onTopicEditClick: handleTopicEditClick,
+    onContentEditClick,
     onTopicNewClick: handleTopicNewClick,
   };
 

@@ -21,7 +21,9 @@ function Edit({ bookId, context }: Query) {
   const { book, error } = useBook(bookId, isContentEditable);
   const router = useRouter();
   const handleBookLink = useBookLinkHandler();
-  const { handleAuthorsUpdate, handleAuthorSubmit } = useAuthorsHandler(book);
+  const { handleAuthorsUpdate, handleAuthorSubmit } = useAuthorsHandler(
+    book && { type: "book", ...book }
+  );
   const back = () => {
     switch (context) {
       case "books":

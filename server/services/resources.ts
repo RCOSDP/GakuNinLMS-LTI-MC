@@ -1,4 +1,3 @@
-import type Method from "$server/types/method";
 import { outdent } from "outdent";
 import { resourceSchema } from "$server/models/resource";
 import type { PaginationProps } from "$server/validators/paginationProps";
@@ -9,9 +8,10 @@ import findResources from "$server/utils/resource/findResources";
 
 export type Query = PaginationProps;
 
-export const method: Method = {
+export const method = {
   get: {
-    summary: "リソース一覧",
+    summary: "リソース一覧 (非推奨)",
+    deprecated: true,
     description: outdent`
       リソースの一覧を取得します。
       教員または管理者でなければなりません。`,
