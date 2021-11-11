@@ -18,7 +18,7 @@ function useAuthorsHandler(content?: ContentSchema) {
   const { authors: authorsState, updateState, onReset } = useAuthorsAtom();
   useEffect(() => {
     updateState({ authors: content?.authors ?? [] });
-  }, [content, updateState]);
+  }, [content?.authors, updateState]);
   async function handleAuthorsUpdate(authors: AuthorSchema[]) {
     if (content) {
       const res = await updateContentAuthors(content, authors);
