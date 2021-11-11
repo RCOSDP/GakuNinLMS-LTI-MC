@@ -20,6 +20,7 @@ export const bookIncludingTopicsArg = {
   include: {
     authors: authorArg,
     ltiResourceLinks: ltiResourceLinkIncludingContextArg,
+    keywords: true,
     sections: {
       orderBy: { order: "asc" },
       include: {

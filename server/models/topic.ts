@@ -2,6 +2,7 @@ import type { Topic, Prisma } from "@prisma/client";
 import type { ResourceProps, ResourceSchema } from "./resource";
 import { resourcePropsSchema, resourceSchema } from "./resource";
 import { AuthorSchema } from "./author";
+import { KeywordSchema } from "./keyword";
 
 export type TopicProps = Pick<
   Prisma.TopicCreateInput,
@@ -12,6 +13,7 @@ export type TopicProps = Pick<
 
 export type TopicSchema = Topic & {
   authors: AuthorSchema[];
+  keywords: KeywordSchema[];
   resource: ResourceSchema;
 };
 
@@ -40,6 +42,7 @@ export const topicSchema = {
     updatedAt: { type: "string", format: "date-time" },
     details: { type: "object" },
     authors: { type: "array", items: AuthorSchema },
+    keywords: { type: "array", items: KeywordSchema },
     resource: resourceSchema,
   },
 } as const;

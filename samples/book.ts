@@ -11,6 +11,7 @@ const book = {
   shared: true,
   license: "",
   authors: [{ ...user, roleName: "著者" }],
+  keywords: [],
   ltiResourceLinks: [ltiResourceLink],
   createdAt: new Date(),
   publishedAt: new Date(),

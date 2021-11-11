@@ -13,6 +13,7 @@ export const topicsWithResourcesArg = {
   include: {
     authors: authorArg,
     resource: resourceWithVideoArg,
+    keywords: true,
   },
 } as const;
 

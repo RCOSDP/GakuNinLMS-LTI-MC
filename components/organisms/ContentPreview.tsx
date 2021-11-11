@@ -3,10 +3,12 @@ import clsx from "clsx";
 import Markdown from "react-markdown";
 import gfm from "remark-gfm";
 import strip from "strip-markdown";
+import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardActionArea from "@mui/material/CardActionArea";
 import CardMedia from "@mui/material/CardMedia";
 import Checkbox from "@mui/material/Checkbox";
+import Chip from "@mui/material/Chip";
 import { styled } from "@mui/material/styles";
 import EditButton from "$atoms/EditButton";
 import DescriptionList from "$atoms/DescriptionList";
@@ -222,6 +224,18 @@ export default function ContentPreview({
             : []),
         ]}
       />
+      <Box sx={{ mx: 2, my: 1 }}>
+        {content.keywords.map((keyword) => (
+          <Chip
+            key={keyword.id}
+            variant="outlined"
+            color="primary"
+            label={keyword.name}
+            size="small"
+            sx={{ mr: 0.5, borderRadius: 1 }}
+          />
+        ))}
+      </Box>
       <Description
         className={clsx("description", lineClamp.clamp, lineClamp.placeholder)}
         sx={{ mx: 2, my: 1 }}

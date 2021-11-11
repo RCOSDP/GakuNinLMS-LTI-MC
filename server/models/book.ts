@@ -4,6 +4,7 @@ import type { SectionProps, SectionSchema } from "./book/section";
 import { sectionPropsSchema, sectionSchema } from "./book/section";
 import type { LtiResourceLinkSchema } from "./ltiResourceLink";
 import { ltiResourceLinkSchema } from "./ltiResourceLink";
+import { KeywordSchema } from "./keyword";
 
 export type BookProps = {
   name: string;
@@ -17,6 +18,7 @@ export type BookSchema = Book & {
   authors: AuthorSchema[];
   sections: SectionSchema[];
   ltiResourceLinks: LtiResourceLinkSchema[];
+  keywords: KeywordSchema[];
 };
 
 export const bookPropsSchema = {
@@ -47,6 +49,7 @@ export const bookSchema = {
     updatedAt: { type: "string", format: "date-time" },
     details: { type: "object" },
     authors: { type: "array", items: AuthorSchema },
+    keywords: { type: "array", items: KeywordSchema },
     sections: {
       type: "array",
       items: sectionSchema,
