@@ -26,6 +26,7 @@ const topic = {
   updatedAt: new Date(),
   details: {},
   authors: [{ ...user, roleName: "著者" }],
+  keywords: [],
   shared: true,
   language: "ja",
   license: "",
