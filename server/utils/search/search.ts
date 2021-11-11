@@ -1,7 +1,7 @@
 import type { ContentSchema } from "$server/models/content";
+import type { AuthorFilter } from "$server/models/authorFilter";
 import topicSearch from "$server/utils/search/topicSearch";
 import bookSearch from "$server/utils/search/bookSearch";
-import type { AuthorFilter } from "$server/utils/search/authorFilter";
 import { parse } from "$server/utils/search/parser";
 
 async function search(

@@ -4,12 +4,12 @@ import clsx from "clsx";
 import stringify from "$utils/search/stringify";
 import type { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
 import type { SortOrder } from "$server/models/sortOrder";
-import type { Filter } from "$types/filter";
+import type { AuthorFilterType } from "$server/models/authorFilter";
 
 const queryAtom = atom<{
   type: "none" | "book" | "topic";
   q: string;
-  filter: Filter;
+  filter: AuthorFilterType;
   sort: SortOrder;
   perPage: number;
   page: number;
@@ -32,7 +32,7 @@ export function useSearchAtom() {
     () => updateQuery((query) => ({ ...query, q: "" })),
     [updateQuery]
   );
-  const onFilterChange: (filter: Filter) => void = useCallback(
+  const onFilterChange: (filter: AuthorFilterType) => void = useCallback(
     (filter) => updateQuery((query) => ({ ...query, filter })),
     [updateQuery]
   );

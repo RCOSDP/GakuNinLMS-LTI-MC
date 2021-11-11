@@ -7,7 +7,7 @@ import type {
 } from "$openapi";
 import type { ContentSchema } from "$server/models/content";
 import type { SortOrder } from "$server/models/sortOrder";
-import type { Filter } from "$types/filter";
+import type { AuthorFilterType } from "$server/models/authorFilter";
 import { api } from "./api";
 import { revalidateBook } from "./book";
 import { revalidateTopic } from "./topic";
@@ -21,7 +21,7 @@ async function fetchContents(
   _: typeof key,
   type: "book" | "topic",
   q: string,
-  filter: Filter,
+  filter: AuthorFilterType,
   sort: SortOrder,
   perPage: number,
   page: number
@@ -58,7 +58,7 @@ function useContents({
 }: {
   type: "none" | "book" | "topic";
   q: string;
-  filter: Filter;
+  filter: AuthorFilterType;
   sort: SortOrder;
   perPage: number;
   page: number;

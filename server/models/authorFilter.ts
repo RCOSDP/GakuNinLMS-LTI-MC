@@ -24,3 +24,5 @@ export type AuthorFilter =
       /** 利用者が管理者であるか否か (管理者: true、それ以外: false) */
       admin: boolean;
     };
+
+export type AuthorFilterType = AuthorFilter["type"];

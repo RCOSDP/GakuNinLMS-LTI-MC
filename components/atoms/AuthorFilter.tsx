@@ -4,7 +4,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
 import makeStyles from "@mui/styles/makeStyles";
 import { gray } from "$theme/colors";
-import type { Filter } from "$types/filter";
+import type { AuthorFilterType } from "$server/models/authorFilter";
 
 const useStyles = makeStyles((theme) => ({
   fieldset: {
@@ -41,7 +41,7 @@ const useFormControlLabelStyles = makeStyles((theme) => ({
 }));
 
 const options: ReadonlyArray<{
-  value: Filter;
+  value: AuthorFilterType;
   label: string;
 }> = [
   { value: "self", label: "自分" },
@@ -51,7 +51,7 @@ const options: ReadonlyArray<{
 
 type Props = {
   disabled?: boolean;
-  onFilterChange?: (value: Filter) => void;
+  onFilterChange?: (value: AuthorFilterType) => void;
 };
 
 function AuthorFilter(props: Props) {
@@ -60,7 +60,7 @@ function AuthorFilter(props: Props) {
   const formControlLabelClasses = useFormControlLabelStyles();
   const handleChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      onFilterChange?.(event.target.value as Filter);
+      onFilterChange?.(event.target.value as AuthorFilterType);
     },
     [onFilterChange]
   );

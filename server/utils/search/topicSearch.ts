@@ -1,11 +1,11 @@
 import type { TopicSchema } from "$server/models/topic";
+import type { AuthorFilter } from "$server/models/authorFilter";
 import makeSortOrderQuery from "$server/utils/makeSortOrderQuery";
 import prisma from "$server/utils/prisma";
 import {
   topicsWithResourcesArg,
   topicToTopicSchema,
 } from "$server/utils/topic/topicToTopicSchema";
-import type { AuthorFilter } from "./authorFilter";
 import type { TopicSearchQuery } from "./query";
 
 /**
