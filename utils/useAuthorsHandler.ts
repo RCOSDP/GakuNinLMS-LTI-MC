@@ -1,25 +1,24 @@
 import { useEffect } from "react";
-import type { Content } from "$types/content";
-import type { BookSchema } from "$server/models/book";
+import type { ContentSchema } from "$server/models/content";
 import { AuthorSchema } from "$server/models/author";
 import { useAuthorsAtom } from "$store/authors";
 import { fetchUsers } from "$utils/users";
 import { updateBookAuthors } from "$utils/bookAuthors";
 import { updateTopicAuthors } from "$utils/topicAuthors";
 
-const isBookSchema = (content: Content): content is BookSchema =>
-  "sections" in content;
-
-const updateContentAuthors = (content: Content, authors: AuthorSchema[]) =>
-  isBookSchema(content)
+const updateContentAuthors = (
+  content: ContentSchema,
+  authors: AuthorSchema[]
+) =>
+  content.type === "book"
     ? updateBookAuthors({ id: content.id, authors })
     : updateTopicAuthors({ id: content.id, authors });
 
-function useAuthorsHandler(content?: Content) {
+function useAuthorsHandler(content?: ContentSchema) {
   const { authors: authorsState, updateState, onReset } = useAuthorsAtom();
   useEffect(() => {
     updateState({ authors: content?.authors ?? [] });
-  }, [content, updateState]);
+  }, [content?.authors, updateState]);
   async function handleAuthorsUpdate(authors: AuthorSchema[]) {
     if (content) {
       const res = await updateContentAuthors(content, authors);

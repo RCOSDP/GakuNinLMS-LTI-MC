@@ -1,69 +1,16 @@
-import { useMemo } from "react";
-import useSWRInfinite from "swr/infinite";
-import type { TopicSchema } from "$server/models/topic";
-import type { UserSchema } from "$server/models/user";
-import type { Filter } from "$types/filter";
-import type { IsContentEditable } from "$types/content";
-import { useSessionAtom } from "$store/session";
+import { useEffect } from "react";
 import { useSearchAtom } from "$store/search";
-import useSortOrder from "./useSortOrder";
-import useInfiniteProps from "./useInfiniteProps";
-import useFilter from "./useFilter";
-import topicSearch from "./search/topicSearch";
-import contentBy from "./contentBy";
-import { makeUserTopicsKey, fetchUserTopics } from "./userTopics";
-import { makeTopicsKey, fetchTopics } from "./topics";
-
-function isDisplayable(
-  topic: TopicSchema,
-  isContentEditable: IsContentEditable
-) {
-  return topic.shared || isContentEditable(topic);
-}
-
-const makeFilter =
-  (
-    filter: Filter,
-    userId: UserSchema["id"],
-    isContentEditable: IsContentEditable
-  ) =>
-  (topic: TopicSchema | undefined) => {
-    if (topic === undefined) return [];
-    const isMyTopic = contentBy(topic, { id: userId ?? NaN });
-    if (filter === "other" && isMyTopic) return [];
-    if (!isDisplayable(topic, isContentEditable)) return [];
-    return [topic];
-  };
+import useContents from "./useContents";
 
 function useTopics() {
-  const { session, isContentEditable } = useSessionAtom();
-  const { query } = useSearchAtom();
-  const [sort, onSortChange] = useSortOrder();
-  const [filter, onFilterChange] = useFilter();
-  const userId = session?.user.id ?? NaN;
-  const isUserTopics = filter === "self";
-  const { key, fetch } = useMemo(
-    () =>
-      isUserTopics
-        ? { key: makeUserTopicsKey(userId, sort, 20), fetch: fetchUserTopics }
-        : { key: makeTopicsKey(sort, 20), fetch: fetchTopics },
-    [isUserTopics, userId, sort]
-  );
-  const topicFilter = useMemo(
-    () => makeFilter(filter, userId, isContentEditable),
-    [filter, userId, isContentEditable]
-  );
-  const res = useSWRInfinite<TopicSchema[]>(key, fetch);
-  const topics = topicSearch(
-    res.data?.flat().flatMap(topicFilter) ?? [],
-    query
-  );
-  return {
-    topics,
-    onSortChange,
-    onFilterChange,
-    ...useInfiniteProps(res),
-  };
+  const { query, updateQuery } = useSearchAtom();
+  const props = useContents(query);
+
+  useEffect(() => {
+    updateQuery((query) => ({ ...query, type: "topic" }));
+  }, [updateQuery]);
+
+  return props;
 }
 
 export default useTopics;

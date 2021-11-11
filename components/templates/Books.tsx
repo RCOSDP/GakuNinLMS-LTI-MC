@@ -1,4 +1,4 @@
-import useInfiniteScroll from "react-infinite-scroll-hook";
+import { css } from "@emotion/css";
 import Skeleton from "@mui/material/Skeleton";
 import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
@@ -7,15 +7,16 @@ import AddIcon from "@mui/icons-material/Add";
 import ActionHeader from "$organisms/ActionHeader";
 import ContentPreview from "$organisms/ContentPreview";
 import LinkInfo from "$organisms/LinkInfo";
+import SearchPagination from "$organisms/SearchPagination";
 import SortSelect from "$atoms/SortSelect";
 import AuthorFilter from "$atoms/AuthorFilter";
 import SearchTextField from "$atoms/SearchTextField";
+import type { ContentSchema } from "$server/models/content";
 import type { BookSchema } from "$server/models/book";
 import type { LinkedBook } from "$types/linkedBook";
-import type { SortOrder } from "$server/models/sortOrder";
-import type { Filter } from "$types/filter";
 import useContainerStyles from "styles/container";
 import { useSearchAtom } from "$store/search";
+import theme from "$theme";
 
 const ContentPreviews = styled("div")(({ theme }) => ({
   display: "grid",
@@ -23,46 +24,45 @@ const ContentPreviews = styled("div")(({ theme }) => ({
   gap: theme.spacing(2),
 }));
 
+const classes = {
+  pagination: css({
+    marginTop: theme.spacing(4),
+  }),
+};
+
 export type Props = {
-  books: BookSchema[];
+  contents: ContentSchema[];
   linkedBook?: LinkedBook;
   loading?: boolean;
-  hasNextPage?: boolean;
-  onLoadMore?(): void;
-  onBookPreviewClick(book: BookSchema): void;
-  onBookEditClick(book: BookSchema): void;
-  onBookLinkClick(book: BookSchema): void;
+  hasNextPage: boolean;
+  onContentPreviewClick(content: ContentSchema): void;
+  onContentEditClick(content: ContentSchema): void;
+  onContentLinkClick(content: ContentSchema): void;
   onLinkedBookClick?(book: BookSchema): void;
   onBookNewClick(): void;
   onBooksImportClick(): void;
-  onSortChange?(sort: SortOrder): void;
-  onFilterChange?(filter: Filter): void;
 };
 
 export default function Books(props: Props) {
   const {
-    books,
+    contents,
     linkedBook,
     loading = false,
-    hasNextPage = false,
-    onLoadMore = () => undefined,
-    onBookPreviewClick,
-    onBookEditClick,
-    onBookLinkClick,
+    hasNextPage,
+    onContentPreviewClick,
+    onContentEditClick,
+    onContentLinkClick,
     onLinkedBookClick,
     onBookNewClick,
     onBooksImportClick,
-    onSortChange,
-    onFilterChange,
   } = props;
-  const { query, onSearchInput, onLtiContextClick, onSearchInputReset } =
-    useSearchAtom();
+  const searchProps = useSearchAtom();
   const handleBookNewClick = () => onBookNewClick();
   const handleBooksImportClick = () => onBooksImportClick();
   const containerClasses = useContainerStyles();
-  const [infiniteRef] = useInfiniteScroll({ loading, hasNextPage, onLoadMore });
+
   return (
-    <div ref={infiniteRef}>
+    <>
       <ActionHeader
         maxWidth="lg"
         title={
@@ -87,34 +87,40 @@ export default function Books(props: Props) {
         }
         action={
           <>
-            <SortSelect onSortChange={onSortChange} />
-            <AuthorFilter onFilterChange={onFilterChange} />
+            <SortSelect onSortChange={searchProps.onSortChange} />
+            <AuthorFilter onFilterChange={searchProps.onFilterChange} />
             <SearchTextField
               label="ブック・トピック検索"
-              value={query.input}
-              onSearchInput={onSearchInput}
-              onSearchInputReset={onSearchInputReset}
+              value={searchProps.query.q}
+              onSearchInput={searchProps.onSearchInput}
+              onSearchInputReset={searchProps.onSearchInputReset}
             />
           </>
         }
       />
       <Container classes={containerClasses} maxWidth="lg">
         <ContentPreviews>
-          {books.map((book) => (
+          {contents.map((content) => (
             <ContentPreview
-              key={book.id}
-              content={book}
-              linked={book.id === linkedBook?.id}
-              onContentPreviewClick={onBookPreviewClick}
-              onContentEditClick={onBookEditClick}
-              onContentLinkClick={onBookLinkClick}
-              onLtiContextClick={onLtiContextClick}
+              key={content.id}
+              content={content}
+              linked={content.id === linkedBook?.id}
+              onContentPreviewClick={onContentPreviewClick}
+              onContentEditClick={onContentEditClick}
+              onContentLinkClick={onContentLinkClick}
+              onLtiContextClick={searchProps.onLtiContextClick}
             />
           ))}
           {loading &&
-            [...Array(5)].map((_, i) => <Skeleton key={i} height={64} />)}
+            [...Array(6)].map((_, i) => (
+              <Skeleton key={i} height={324} /* TODO: 妥当な値にしてほしい */ />
+            ))}
         </ContentPreviews>
+        <SearchPagination
+          className={classes.pagination}
+          hasNextPage={hasNextPage}
+        />
       </Container>
-    </div>
+    </>
   );
 }

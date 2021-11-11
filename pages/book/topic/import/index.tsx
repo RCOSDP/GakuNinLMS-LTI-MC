@@ -8,7 +8,6 @@ import useTopics from "$utils/useTopics";
 import type { TopicSchema } from "$server/models/topic";
 import type { Query as BookEditQuery } from "$pages/book/edit";
 import { pagesPath } from "$utils/$path";
-import type { ContentAuthors } from "$types/content";
 
 export type Query = BookEditQuery;
 
@@ -41,9 +40,7 @@ function Import({ bookId, context }: BookEditQuery) {
   function handleCancel() {
     return back();
   }
-  function handleTopicEditClick(
-    topic: Pick<TopicSchema, "id"> & ContentAuthors
-  ) {
+  function onContentEditClick(topic: Pick<TopicSchema, "id" | "authors">) {
     const action = isContentEditable(topic) ? "edit" : "generate";
     return router.push(
       pagesPath.book.topic.import[action].$url({
@@ -54,7 +51,7 @@ function Import({ bookId, context }: BookEditQuery) {
   const handlers = {
     onSubmit: handleSubmit,
     onCancel: handleCancel,
-    onTopicEditClick: handleTopicEditClick,
+    onContentEditClick,
     isContentEditable,
   };
 

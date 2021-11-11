@@ -26,7 +26,9 @@ type EditProps = {
 function Edit({ topicId, back }: EditProps) {
   const topic = useTopic(topicId);
   const { addVideoTrack, deleteVideoTrack } = useVideoTrackAtom();
-  const { handleAuthorsUpdate, handleAuthorSubmit } = useAuthorsHandler(topic);
+  const { handleAuthorsUpdate, handleAuthorSubmit } = useAuthorsHandler(
+    topic && { type: "topic", ...topic }
+  );
   async function handleSubmit(props: TopicProps) {
     await updateTopic({ id: topicId, ...props });
     return back();

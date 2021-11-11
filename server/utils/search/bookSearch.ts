@@ -1,11 +1,11 @@
 import type { BookSchema } from "$server/models/book";
+import type { AuthorFilter } from "$server/models/authorFilter";
 import {
   bookIncludingTopicsArg,
   bookToBookSchema,
 } from "$server/utils/book/bookToBookSchema";
 import makeSortOrderQuery from "$server/utils/makeSortOrderQuery";
 import prisma from "$server/utils/prisma";
-import type { AuthorFilter } from "./authorFilter";
 import type { BookSearchQuery } from "./query";
 
 /**

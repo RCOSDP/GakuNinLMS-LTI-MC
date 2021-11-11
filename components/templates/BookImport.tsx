@@ -1,6 +1,5 @@
 import type { FormEvent } from "react";
 import { useState } from "react";
-import useInfiniteScroll from "react-infinite-scroll-hook";
 import Skeleton from "@mui/material/Skeleton";
 import makeStyles from "@mui/styles/makeStyles";
 import Button from "@mui/material/Button";
@@ -13,14 +12,14 @@ import TopicPreviewDialog from "$organisms/TopicPreviewDialog";
 import ActionHeader from "$organisms/ActionHeader";
 import ActionFooter from "$organisms/ActionFooter";
 import BookTree from "$organisms/BookTree";
+import SearchPagination from "$organisms/SearchPagination";
 import SortSelect from "$atoms/SortSelect";
 import AuthorFilter from "$atoms/AuthorFilter";
 import SearchTextField from "$atoms/SearchTextField";
+import type { ContentSchema } from "$server/models/content";
 import type { BookSchema } from "$server/models/book";
 import type { SectionSchema } from "$server/models/book/section";
 import type { TopicSchema } from "$server/models/topic";
-import type { SortOrder } from "$server/models/sortOrder";
-import type { Filter } from "$types/filter";
 import type { IsContentEditable } from "$types/content";
 import useContainerStyles from "$styles/container";
 import { useSearchAtom } from "$store/search";
@@ -40,13 +39,15 @@ const useStyles = makeStyles((theme) => ({
       marginRight: theme.spacing(1),
     },
   },
+  pagination: {
+    marginTop: theme.spacing(4),
+  },
 }));
 
 type Props = {
-  books: BookSchema[];
+  contents: ContentSchema[];
   loading?: boolean;
-  hasNextPage?: boolean;
-  onLoadMore?(): void;
+  hasNextPage: boolean;
   onSubmit({
     books,
     sections,
@@ -60,30 +61,24 @@ type Props = {
   onBookPreviewClick?(book: BookSchema): void;
   onBookEditClick?(book: BookSchema): void;
   onTopicEditClick?(topic: TopicSchema): void;
-  onSortChange?(sort: SortOrder): void;
-  onFilterChange?(filter: Filter): void;
   isContentEditable?: IsContentEditable;
 };
 
 export default function BookImport(props: Props) {
   const {
-    books,
+    contents,
     loading = false,
-    hasNextPage = false,
-    onLoadMore = () => undefined,
+    hasNextPage,
     onSubmit,
     onCancel,
     onBookPreviewClick,
     onBookEditClick,
     onTopicEditClick,
-    onSortChange,
-    onFilterChange,
     isContentEditable,
   } = props;
   const classes = useStyles();
   const containerClasses = useContainerStyles();
-  const { query, onSearchInput, onLtiContextClick, onSearchInputReset } =
-    useSearchAtom();
+  const searchProps = useSearchAtom();
   const [selectedNodeIds, select] = useState<Set<string>>(new Set());
   const handleTreeChange = (nodeId: string) => {
     select((nodeIds) =>
@@ -101,8 +96,10 @@ export default function BookImport(props: Props) {
         .replace(/:[^:]*$/, "")
         .split("-")
         .map((id) => Number(id));
-      const book = books.find((book) => book.id === bookId);
-      if (!book) return;
+      const book = contents.find(
+        (content) => content.type === "book" && content.id === bookId
+      );
+      if (book?.type !== "book") return;
       const section = book.sections.find((section) => section.id === sectionId);
       if (!section) {
         selectedBooks.push(book);
@@ -129,9 +126,8 @@ export default function BookImport(props: Props) {
   } = useDialogProps<TopicSchema>();
   const handleTopicPreviewClick = (topic: TopicSchema) =>
     setPreviewTopic(topic);
-  const [infiniteRef] = useInfiniteScroll({ loading, hasNextPage, onLoadMore });
   return (
-    <Container ref={infiniteRef} classes={containerClasses} maxWidth="md">
+    <Container classes={containerClasses} maxWidth="md">
       <ActionHeader
         title={
           <>
@@ -143,13 +139,13 @@ export default function BookImport(props: Props) {
         }
         action={
           <>
-            <SortSelect onSortChange={onSortChange} />
-            <AuthorFilter onFilterChange={onFilterChange} />
+            <SortSelect onSortChange={searchProps.onSortChange} />
+            <AuthorFilter onFilterChange={searchProps.onFilterChange} />
             <SearchTextField
               label="ブック・トピック検索"
-              value={query.input}
-              onSearchInput={onSearchInput}
-              onSearchInputReset={onSearchInputReset}
+              value={searchProps.query.q}
+              onSearchInput={searchProps.onSearchInput}
+              onSearchInputReset={searchProps.onSearchInputReset}
             />
           </>
         }
@@ -158,22 +154,23 @@ export default function BookImport(props: Props) {
         defaultCollapseIcon={<ExpandMoreIcon />}
         defaultExpandIcon={<ChevronRightIcon />}
       >
-        {books.map((book) => {
+        {contents.map((content) => {
+          if (content.type !== "book") return null;
           const handleItem =
             (handler?: (topic: TopicSchema) => void) =>
             ([sectionIndex, topicIndex]: ItemIndex) =>
-              handler?.(book.sections[sectionIndex].topics[topicIndex]);
+              handler?.(content.sections[sectionIndex].topics[topicIndex]);
           return (
             <BookTree
-              key={book.id}
-              book={book}
+              key={content.id}
+              book={content}
               onItemPreviewClick={handleItem(handleTopicPreviewClick)}
               onItemEditClick={handleItem(onTopicEditClick)}
               onBookPreviewClick={onBookPreviewClick}
               onBookEditClick={
-                isContentEditable?.(book) ? onBookEditClick : undefined
+                isContentEditable?.(content) ? onBookEditClick : undefined
               }
-              onLtiContextClick={onLtiContextClick}
+              onLtiContextClick={searchProps.onLtiContextClick}
               isContentEditable={isContentEditable}
               onTreeChange={handleTreeChange}
             />
@@ -201,6 +198,10 @@ export default function BookImport(props: Props) {
           </Button>
         </form>
       </ActionFooter>
+      <SearchPagination
+        className={classes.pagination}
+        hasNextPage={hasNextPage}
+      />
       {previewTopic && (
         <TopicPreviewDialog {...topicPreviewDialogProps} topic={previewTopic} />
       )}

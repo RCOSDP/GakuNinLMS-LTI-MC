@@ -13,7 +13,7 @@ import DescriptionList from "$atoms/DescriptionList";
 import SharedIndicator from "$atoms/SharedIndicator";
 import CourseChip from "$atoms/CourseChip";
 import LinkSwitch from "$atoms/LinkSwitch";
-import type { Content } from "$types/content";
+import type { ContentSchema } from "$server/models/content";
 import type { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
 import { primary, gray } from "$theme/colors";
 import useLineClampStyles from "$styles/lineClamp";
@@ -111,10 +111,10 @@ const Preview = styled(Card)(({ theme }) => ({
 }));
 
 type Props = Parameters<typeof Checkbox>[0] & {
-  content: Content;
-  onContentPreviewClick(content: Content): void;
-  onContentEditClick?(content: Content): void;
-  onContentLinkClick?(content: Content): void;
+  content: ContentSchema;
+  onContentPreviewClick(content: ContentSchema): void;
+  onContentEditClick?(content: ContentSchema): void;
+  onContentLinkClick?(content: ContentSchema): void;
   onLtiContextClick?(
     ltiResourceLink: Pick<LtiResourceLinkSchema, "consumerId" | "contextId">
   ): void;
@@ -127,7 +127,7 @@ export default function ContentPreview({
   onContentEditClick,
   onContentLinkClick,
   onLtiContextClick,
-  linked = "ltiResourceLinks" in content ? false : undefined,
+  linked = content.type === "book" ? false : undefined,
   checked,
   ...checkboxProps
 }: Props) {
@@ -137,11 +137,11 @@ export default function ContentPreview({
     lineHeight: 1.5,
   });
   const checkable = "onChange" in checkboxProps;
-  const handle = (handler: (content: Content) => void) => () => {
+  const handle = (handler: (content: ContentSchema) => void) => () => {
     handler(content);
   };
   const oembed = useOembed(
-    "resource" in content
+    content.type === "topic"
       ? content.resource.id
       : content.sections[0]?.topics[0]?.resource.id
   );
@@ -150,9 +150,7 @@ export default function ContentPreview({
     <Preview className={clsx({ selected: checked })}>
       <Header
         checkable={checkable}
-        id={`ContentPreview-${"sections" in content ? "book" : "topic"}:${
-          content.id
-        }`}
+        id={`ContentPreview-${content.type}:${content.id}`}
         checked={checked}
         {...checkboxProps}
         title={content.name}
@@ -162,7 +160,7 @@ export default function ContentPreview({
         {onContentEditClick && (
           <EditButton
             className="edit-button"
-            variant={"sections" in content ? "book" : "topic"}
+            variant={content.type}
             onClick={handle(onContentEditClick)}
           />
         )}
@@ -202,8 +200,7 @@ export default function ContentPreview({
             value: getLocaleDateString(content.updatedAt, "ja"),
           },
           ...authors(content),
-          ...("ltiResourceLinks" in content &&
-          content.ltiResourceLinks.length > 0
+          ...(content.type === "book" && content.ltiResourceLinks.length > 0
             ? [
                 {
                   key: "リンク",
@@ -234,7 +231,7 @@ export default function ContentPreview({
           allowedElements={["del"]}
           unwrapDisallowed
         >
-          {"sections" in content
+          {content.type === "book"
             ? getSectionsOutline(content.sections)
             : content.description}
         </Markdown>

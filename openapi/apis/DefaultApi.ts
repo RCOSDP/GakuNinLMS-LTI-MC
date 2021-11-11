@@ -454,7 +454,7 @@ export class DefaultApi extends runtime.BaseAPI {
 
     /**
      * ブックの一覧を取得します。 教員または管理者でなければなりません。
-     * ブック一覧
+     * ブック一覧 (非推奨)
      */
     async apiV2BooksGetRaw(requestParameters: ApiV2BooksGetRequest): Promise<runtime.ApiResponse<InlineResponse2005>> {
         const queryParameters: runtime.HTTPQuery = {};
@@ -485,7 +485,7 @@ export class DefaultApi extends runtime.BaseAPI {
 
     /**
      * ブックの一覧を取得します。 教員または管理者でなければなりません。
-     * ブック一覧
+     * ブック一覧 (非推奨)
      */
     async apiV2BooksGet(requestParameters: ApiV2BooksGetRequest): Promise<InlineResponse2005> {
         const response = await this.apiV2BooksGetRaw(requestParameters);
@@ -1173,7 +1173,7 @@ export class DefaultApi extends runtime.BaseAPI {
 
     /**
      * リソースの一覧を取得します。 教員または管理者でなければなりません。
-     * リソース一覧
+     * リソース一覧 (非推奨)
      */
     async apiV2ResourcesGetRaw(requestParameters: ApiV2ResourcesGetRequest): Promise<runtime.ApiResponse<InlineResponse2007>> {
         const queryParameters: runtime.HTTPQuery = {};
@@ -1204,7 +1204,7 @@ export class DefaultApi extends runtime.BaseAPI {
 
     /**
      * リソースの一覧を取得します。 教員または管理者でなければなりません。
-     * リソース一覧
+     * リソース一覧 (非推奨)
      */
     async apiV2ResourcesGet(requestParameters: ApiV2ResourcesGetRequest): Promise<InlineResponse2007> {
         const response = await this.apiV2ResourcesGetRaw(requestParameters);
@@ -1500,7 +1500,7 @@ export class DefaultApi extends runtime.BaseAPI {
 
     /**
      * トピックの一覧を取得します。 教員または管理者でなければなりません。
-     * トピック一覧
+     * トピック一覧 (非推奨)
      */
     async apiV2TopicsGetRaw(requestParameters: ApiV2TopicsGetRequest): Promise<runtime.ApiResponse<InlineResponse2006>> {
         const queryParameters: runtime.HTTPQuery = {};
@@ -1531,7 +1531,7 @@ export class DefaultApi extends runtime.BaseAPI {
 
     /**
      * トピックの一覧を取得します。 教員または管理者でなければなりません。
-     * トピック一覧
+     * トピック一覧 (非推奨)
      */
     async apiV2TopicsGet(requestParameters: ApiV2TopicsGetRequest): Promise<InlineResponse2006> {
         const response = await this.apiV2TopicsGetRaw(requestParameters);
@@ -1571,7 +1571,7 @@ export class DefaultApi extends runtime.BaseAPI {
 
     /**
      * 利用者が著者に含まれるブックの一覧を取得します。 教員または管理者でなければなりません。
-     * 自分のブックの一覧
+     * 自分のブックの一覧 (非推奨)
      */
     async apiV2UserUserIdBooksGetRaw(requestParameters: ApiV2UserUserIdBooksGetRequest): Promise<runtime.ApiResponse<InlineResponse2002>> {
         if (requestParameters.userId === null || requestParameters.userId === undefined) {
@@ -1606,7 +1606,7 @@ export class DefaultApi extends runtime.BaseAPI {
 
     /**
      * 利用者が著者に含まれるブックの一覧を取得します。 教員または管理者でなければなりません。
-     * 自分のブックの一覧
+     * 自分のブックの一覧 (非推奨)
      */
     async apiV2UserUserIdBooksGet(requestParameters: ApiV2UserUserIdBooksGetRequest): Promise<InlineResponse2002> {
         const response = await this.apiV2UserUserIdBooksGetRaw(requestParameters);
@@ -1615,7 +1615,7 @@ export class DefaultApi extends runtime.BaseAPI {
 
     /**
      * 利用者が著者に含まれるトピックの一覧を取得します。 教員または管理者でなければなりません。
-     * 自分のトピックの一覧
+     * 自分のトピックの一覧 (非推奨)
      */
     async apiV2UserUserIdTopicsGetRaw(requestParameters: ApiV2UserUserIdTopicsGetRequest): Promise<runtime.ApiResponse<InlineResponse2003>> {
         if (requestParameters.userId === null || requestParameters.userId === undefined) {
@@ -1650,7 +1650,7 @@ export class DefaultApi extends runtime.BaseAPI {
 
     /**
      * 利用者が著者に含まれるトピックの一覧を取得します。 教員または管理者でなければなりません。
-     * 自分のトピックの一覧
+     * 自分のトピックの一覧 (非推奨)
      */
     async apiV2UserUserIdTopicsGet(requestParameters: ApiV2UserUserIdTopicsGetRequest): Promise<InlineResponse2003> {
         const response = await this.apiV2UserUserIdTopicsGetRaw(requestParameters);

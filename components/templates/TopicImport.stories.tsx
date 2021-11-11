@@ -29,10 +29,10 @@ const Template: Story<Parameters<typeof TopicImport>[0]> = (args) => (
 
 export const Default = Template.bind({});
 Default.args = {
-  topics: [...Array(10)].map(() => topic),
+  contents: [...Array(10)].map(() => ({ type: "topic", ...topic })),
 };
 
 export const Empty = Template.bind({});
 Empty.args = {
-  topics: [],
+  contents: [],
 };
