@@ -6,10 +6,13 @@ type Props = Parameters<typeof MuiIconButton>[0] & {
 };
 
 export default function IconButton(props: Props) {
-  const { tooltipProps, ...others } = props;
-  return (
-    <Tooltip {...tooltipProps}>
-      <MuiIconButton {...others} />
-    </Tooltip>
-  );
+  const { tooltipProps, disabled, ...others } = props;
+  // NOTE: MUI: You are providing a disabled `button` child to the Tooltip component. への対処
+  if (disabled) return <MuiIconButton disabled {...others} />;
+  else
+    return (
+      <Tooltip {...tooltipProps}>
+        <MuiIconButton {...others} />
+      </Tooltip>
+    );
 }
