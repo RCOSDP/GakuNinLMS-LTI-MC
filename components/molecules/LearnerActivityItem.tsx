@@ -1,6 +1,6 @@
 import { Fragment } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import { common } from "@material-ui/core/colors";
+import makeStyles from "@mui/styles/makeStyles";
+import { common } from "@mui/material/colors";
 import LearnerActivityDot from "$atoms/LearnerActivityDot";
 import { gray } from "$theme/colors";
 import type { BookActivitySchema } from "$server/models/bookActivity";

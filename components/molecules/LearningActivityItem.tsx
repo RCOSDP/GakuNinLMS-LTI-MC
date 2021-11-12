@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { makeStyles } from "@material-ui/core/styles";
+import makeStyles from "@mui/styles/makeStyles";
 import LearningStatusLabels from "$molecules/LearningStatusLabels";
 import { learningStatus, gray } from "$theme/colors";
 import useLineClampStyles from "$styles/lineClamp";

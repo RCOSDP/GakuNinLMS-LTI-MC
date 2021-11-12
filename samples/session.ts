@@ -1,27 +1,21 @@
+import { SessionSchema } from "$server/models/session";
 import ltiResourceLink from "./ltiResourceLink";
 import user from "./user";
 
-const session = {
-  ltiLaunchBody: {
-    oauth_version: "1.0",
-    oauth_nonce: "1234567890",
-    oauth_timestamp: "1234567890",
-    oauth_consumer_key: "key",
-    oauth_signature_method: "HMAC-SHA1",
-    oauth_signature: "1234567890abcdeABCDE",
-    lti_message_type: "basic-lti-launch-request",
-    lti_version: "LTI-1p0",
-    user_id: "1234567890abcdefg",
-    roles: "urn:lti:role:ims/lis/Instructor",
-    resource_link_id: ltiResourceLink.id,
-    resource_link_title: ltiResourceLink.title,
-    context_id: ltiResourceLink.contextId,
-    context_title: ltiResourceLink.contextTitle,
-    context_label: ltiResourceLink.contextLabel,
-    lis_person_name_full: "山田 太郎",
+const session: SessionSchema = {
+  oauthClient: { id: "key", nonce: "1234567890" },
+  ltiVersion: "1.0.0",
+  ltiUser: { id: "1234567890abcdefg", name: "山田 太郎" },
+  ltiRoles: ["urn:lti:role:ims/lis/Instructor"],
+  ltiResourceLinkRequest: { id: "_1234_1", title: "テスト教材" },
+  ltiContext: {
+    id: "1234567890abcdefg",
+    title: "テストコース",
+    label: "テストコース",
   },
   ltiResourceLink,
   user,
+  systemSettings: { zoomImportEnabled: false },
 };
 
 export default session;

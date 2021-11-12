@@ -1,5 +1,6 @@
 /.next/
 /.vercel/
+/.eslintcache
 /eslint_report.json
 /public/api/v2/swagger/
 /public/storybook/
@@ -7,3 +8,4 @@
 /utils/$path.ts
 node_modules/
 .env*
+.*.swp

@@ -1,4 +1,4 @@
-import { LtiLaunchBody } from "$server/validators/ltiLaunchBody";
+import type { SessionSchema } from "$server/models/session";
 import { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
 import { UserSchema } from "$server/models/user";
 import { LearnerSchema } from "$server/models/learner";
@@ -70,19 +70,14 @@ async function findLtiMembers(
 }
 
 /** LTI Context に紐づくブックに含まれる表示可能なトピックの学習活動の取得 */
-async function findAllActivity({
-  user,
-  ltiLaunchBody,
-}: {
-  user: Pick<UserSchema, "id">;
-  ltiLaunchBody: Pick<LtiLaunchBody, "oauth_consumer_key" | "context_id">;
-}): Promise<{
+async function findAllActivity(session: SessionSchema): Promise<{
   learners: Array<LearnerSchema>;
   courseBooks: Array<CourseBookSchema>;
   bookActivities: Array<BookActivitySchema>;
 }> {
-  const consumerId = ltiLaunchBody.oauth_consumer_key;
-  const contextId = ltiLaunchBody.context_id;
+  const user = session.user;
+  const consumerId = session.oauthClient.id
+  const contextId = session.ltiContext.id;
   const ltiMembers = await findLtiMembers(user, { consumerId, contextId });
   const ltiResourceLinks = await prisma.ltiResourceLink.findMany({
     where: { consumerId, contextId },

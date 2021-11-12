@@ -1,12 +1,11 @@
 export default { title: "atoms/TreeItem" };
 
 import TreeItem from "./TreeItem";
-import TreeView from "@material-ui/lab/TreeView";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import IconButton from "@material-ui/core/IconButton";
-import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
-import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
+import TreeView from "@mui/lab/TreeView";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import IconButton from "@mui/material/IconButton";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 
 export const Default = () => (
   <TreeView
@@ -18,9 +17,6 @@ export const Default = () => (
       label={
         <>
           コンピュータ・サイエンス
-          <IconButton size="small">
-            <InfoOutlinedIcon />
-          </IconButton>
           <IconButton size="small" color="primary">
             <EditOutlinedIcon />
           </IconButton>

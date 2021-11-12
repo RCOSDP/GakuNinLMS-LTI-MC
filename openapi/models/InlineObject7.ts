@@ -13,6 +13,13 @@
  */
 
 import { exists, mapValues } from '../runtime';
+import {
+    ApiV2TopicTopicIdActivityTimeRanges,
+    ApiV2TopicTopicIdActivityTimeRangesFromJSON,
+    ApiV2TopicTopicIdActivityTimeRangesFromJSONTyped,
+    ApiV2TopicTopicIdActivityTimeRangesToJSON,
+} from './';
+
 /**
  * 
  * @export
@@ -21,58 +28,10 @@ import { exists, mapValues } from '../runtime';
 export interface InlineObject7 {
     /**
      * 
-     * @type {string}
+     * @type {Array<ApiV2TopicTopicIdActivityTimeRanges>}
      * @memberof InlineObject7
      */
-    event?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineObject7
-     */
-    detail?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineObject7
-     */
-    file?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineObject7
-     */
-    query?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineObject7
-     */
-    current?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineObject7
-     */
-    rid?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineObject7
-     */
-    uid?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineObject7
-     */
-    cid?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineObject7
-     */
-    nonce?: string;
+    timeRanges?: Array<ApiV2TopicTopicIdActivityTimeRanges>;
 }
 
 export function InlineObject7FromJSON(json: any): InlineObject7 {
@@ -85,15 +44,7 @@ export function InlineObject7FromJSONTyped(json: any, ignoreDiscriminator: boole
     }
     return {
         
-        'event': !exists(json, 'event') ? undefined : json['event'],
-        'detail': !exists(json, 'detail') ? undefined : json['detail'],
-        'file': !exists(json, 'file') ? undefined : json['file'],
-        'query': !exists(json, 'query') ? undefined : json['query'],
-        'current': !exists(json, 'current') ? undefined : json['current'],
-        'rid': !exists(json, 'rid') ? undefined : json['rid'],
-        'uid': !exists(json, 'uid') ? undefined : json['uid'],
-        'cid': !exists(json, 'cid') ? undefined : json['cid'],
-        'nonce': !exists(json, 'nonce') ? undefined : json['nonce'],
+        'timeRanges': !exists(json, 'timeRanges') ? undefined : ((json['timeRanges'] as Array<any>).map(ApiV2TopicTopicIdActivityTimeRangesFromJSON)),
     };
 }
 
@@ -106,15 +57,7 @@ export function InlineObject7ToJSON(value?: InlineObject7 | null): any {
     }
     return {
         
-        'event': value.event,
-        'detail': value.detail,
-        'file': value.file,
-        'query': value.query,
-        'current': value.current,
-        'rid': value.rid,
-        'uid': value.uid,
-        'cid': value.cid,
-        'nonce': value.nonce,
+        'timeRanges': value.timeRanges === undefined ? undefined : ((value.timeRanges as Array<any>).map(ApiV2TopicTopicIdActivityTimeRangesToJSON)),
     };
 }
 

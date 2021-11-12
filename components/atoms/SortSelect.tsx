@@ -1,8 +1,8 @@
 import { useCallback } from "react";
-import MenuItem from "@material-ui/core/MenuItem";
-import MuiSelect from "@material-ui/core/Select";
+import MenuItem from "@mui/material/MenuItem";
+import MuiSelect from "@mui/material/Select";
+import type { SelectChangeEvent } from "@mui/material/Select";
 import useSelectStyles from "styles/select";
-import useInputStyles from "styles/input";
 import type { SortOrder } from "$server/models/sortOrder";
 
 const options: ReadonlyArray<{
@@ -42,17 +42,15 @@ type Props = Parameters<typeof MuiSelect>[0] & {
 export default function SortSelect(props: Props) {
   const { onSortChange, ...other } = props;
   const selectClasses = useSelectStyles();
-  const inputClasses = useInputStyles();
   const handleChange = useCallback(
-    (event: React.ChangeEvent<{ value: unknown }>) => {
+    (event: SelectChangeEvent<unknown>) => {
       onSortChange?.(event.target.value as SortOrder);
     },
     [onSortChange]
   );
   return (
     <MuiSelect
-      classes={{ ...selectClasses, root: inputClasses.input }}
-      disableUnderline
+      classes={selectClasses}
       defaultValue={options[0].value}
       disabled={!onSortChange}
       onChange={handleChange}

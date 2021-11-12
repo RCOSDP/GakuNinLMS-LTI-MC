@@ -1,10 +1,10 @@
 import { FormEvent, useState } from "react";
 import useInfiniteScroll from "react-infinite-scroll-hook";
-import Skeleton from "@material-ui/lab/Skeleton";
-import { makeStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
-import Typography from "@material-ui/core/Typography";
-import Container from "@material-ui/core/Container";
+import Skeleton from "@mui/material/Skeleton";
+import makeStyles from "@mui/styles/makeStyles";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
 import ActionHeader from "$organisms/ActionHeader";
 import ActionFooter from "$organisms/ActionFooter";
 import TopicPreview from "$organisms/TopicPreview";
@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
   topics: {
     display: "grid",
     gridTemplateColumns: "repeat(auto-fill, 296px)",
-    gap: `${theme.spacing(2)}px`,
+    gap: theme.spacing(2),
   },
   form: {
     "& > *": {
@@ -58,10 +58,10 @@ export default function TopicImport(props: Props) {
     onFilterChange,
     isTopicEditable,
   } = props;
+  const { query, onSearchInput, onSearchInputReset } = useSearchAtom();
   const classes = useStyles();
   const containerClasses = useContainerStyles();
   const [selectedIndexes, select] = useState<Set<number>>(new Set());
-  const { onSearchInput } = useSearchAtom();
   const handleChecked = (index: number) => () =>
     select((indexes) =>
       indexes.delete(index) ? new Set(indexes) : new Set(indexes.add(index))
@@ -75,14 +75,11 @@ export default function TopicImport(props: Props) {
     dispatch: setPreviewTopic,
     ...dialogProps
   } = useDialogProps<TopicSchema>();
-  const handleTopicDetailClick = (topic: TopicSchema) => setPreviewTopic(topic);
+  const handleTopicPreviewClick = (topic: TopicSchema) =>
+    setPreviewTopic(topic);
   const handleTopicEditClick = (topic: TopicSchema) =>
     isTopicEditable(topic) && (() => onTopicEditClick(topic));
-  const infiniteRef = useInfiniteScroll<HTMLDivElement>({
-    loading,
-    hasNextPage,
-    onLoadMore,
-  });
+  const [infiniteRef] = useInfiniteScroll({ loading, hasNextPage, onLoadMore });
   return (
     <Container ref={infiniteRef} classes={containerClasses} maxWidth="lg">
       <ActionHeader
@@ -99,8 +96,10 @@ export default function TopicImport(props: Props) {
             <SortSelect onSortChange={onSortChange} />
             <CreatorFilter onFilterChange={onFilterChange} />
             <SearchTextField
-              placeholder="トピック検索"
+              label="トピック検索"
+              value={query.input}
               onSearchInput={onSearchInput}
+              onSearchInputReset={onSearchInputReset}
             />
           </>
         }
@@ -112,7 +111,7 @@ export default function TopicImport(props: Props) {
             topic={topic}
             checked={selectedIndexes.has(index)}
             onChange={handleChecked(index)}
-            onTopicDetailClick={handleTopicDetailClick}
+            onTopicPreviewClick={handleTopicPreviewClick}
             onTopicEditClick={handleTopicEditClick(topic)}
           />
         ))}

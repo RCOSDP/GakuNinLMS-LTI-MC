@@ -1,5 +1,5 @@
-import { makeStyles } from "@material-ui/core/styles";
-import Tooltip from "@material-ui/core/Tooltip";
+import makeStyles from "@mui/styles/makeStyles";
+import Tooltip from "@mui/material/Tooltip";
 import LearningStatusDot from "$atoms/LearningStatusDot";
 import getLocaleEntries from "$utils/bookLearningActivity/getLocaleEntries";
 import type { BookActivitySchema } from "$server/models/bookActivity";

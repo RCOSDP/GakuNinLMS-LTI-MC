@@ -1,7 +1,7 @@
 import { UrlObject } from "url";
 import { useRouter } from "next/router";
 import { useSessionAtom } from "$store/session";
-import UnlinkedProblem from "$organisms/UnlinkedProblem";
+import UnlinkedProblem from "$templates/UnlinkedProblem";
 import Placeholder from "$templates/Placeholder";
 import { pagesPath } from "$utils/$path";
 import { useLoggerInit } from "$utils/eventLogger/loggerSessionPersister";
@@ -21,7 +21,7 @@ function Router() {
   const ltiResourceLink = session?.ltiResourceLink;
 
   if (!ltiResourceLink && isInstructor)
-    return <Replace href={pagesPath.link.$url()} />;
+    return <Replace href={pagesPath.books.$url()} />;
 
   if (!ltiResourceLink) return <UnlinkedProblem />;
 

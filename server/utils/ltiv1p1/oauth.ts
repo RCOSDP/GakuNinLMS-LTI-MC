@@ -77,6 +77,7 @@ export async function auth(
   lookupNonce: (nonce: string, timestamp: number) => Promise<boolean>
 ) {
   if (oauthConsumerKey.length === 0) return false;
+  if (oauthConsumerSecret.length === 0) return false;
   const { oauth_signature, ...params } = reqBody;
   const noncePresence = await lookupNonce(
     params.oauth_nonce,

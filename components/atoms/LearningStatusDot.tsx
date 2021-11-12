@@ -1,9 +1,9 @@
 import clsx from "clsx";
-import { makeStyles } from "@material-ui/core/styles";
+import makeStyles from "@mui/styles/makeStyles";
 import { learningStatus } from "$theme/colors";
 import label from "$utils/learningStatusLabel";
 import type { LearningStatus } from "$server/models/learningStatus";
-import { grey } from "@material-ui/core/colors";
+import { grey } from "@mui/material/colors";
 
 const useStyles = makeStyles({
   root: {

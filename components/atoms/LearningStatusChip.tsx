@@ -1,7 +1,7 @@
-import Chip from "@material-ui/core/Chip";
-import type { ChipProps } from "@material-ui/core/Chip";
+import Chip from "@mui/material/Chip";
+import type { ChipProps } from "@mui/material/Chip";
 import { learningStatus } from "$theme/colors";
-import { makeStyles } from "@material-ui/core/styles";
+import makeStyles from "@mui/styles/makeStyles";
 import label from "$utils/learningStatusLabel";
 import type { LearningStatus } from "$server/models/learningStatus";
 

@@ -6,9 +6,9 @@ import getFilePath from "./getFilePath";
 
 /** v1のときのトラッキング用コードの移植 */
 function send(eventType: EventType, event: PlayerEvent, detail?: string) {
-  const ltiLaunchBody = load();
-  if (!ltiLaunchBody) return;
-  const { oauth_consumer_key: idPrefix } = ltiLaunchBody;
+  const session = load();
+  if (!session) return;
+  const idPrefix = session.oauthClient.id;
   const id = (id: string) => [idPrefix, id].join(":");
   const body = {
     event: eventType,
@@ -16,17 +16,18 @@ function send(eventType: EventType, event: PlayerEvent, detail?: string) {
     file: getFilePath(event),
     query: event.url.split("?")[1],
     current: event.currentTime.toString(),
-    rid: id(ltiLaunchBody.resource_link_id),
-    uid: id(ltiLaunchBody.user_id),
-    cid: id(ltiLaunchBody.context_id),
-    nonce: ltiLaunchBody.oauth_nonce,
+    rid: id(session.ltiResourceLinkRequest.id),
+    uid: id(session.ltiUser.id),
+    cid: id(session.ltiContext.id),
+    nonce: session.oauthClient.nonce,
   };
   return api.apiV2EventPost({ body });
 }
 
-const buildHandler = <T extends EventType & keyof PlayerEvents>(
-  eventType: T
-) => (event: PlayerEvents[T]) => send(eventType, event);
+const buildHandler =
+  <T extends EventType & keyof PlayerEvents>(eventType: T) =>
+  (event: PlayerEvents[T]) =>
+    send(eventType, event);
 
 const buildSender = (event: EventType, tracker: PlayerTracker) => () =>
   send(event, tracker.stats);

@@ -1,31 +1,37 @@
-import { useState, forwardRef, ComponentProps, Ref } from "react";
-import MuiAppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import Button from "@material-ui/core/Button";
-import MenuBookOutlinedIcon from "@material-ui/icons/MenuBookOutlined";
-import LibraryBooksOutlinedIcon from "@material-ui/icons/LibraryBooksOutlined";
-import AssessmentOutlinedIcon from "@material-ui/icons/AssessmentOutlined";
-import LinkIcon from "@material-ui/icons/Link";
-import { makeStyles } from "@material-ui/core/styles";
+import { useState, forwardRef, ComponentProps, Ref, Fragment } from "react";
+import MuiAppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import Button from "@mui/material/Button";
+import Snackbar from "@mui/material/Snackbar";
+import MenuBookOutlinedIcon from "@mui/icons-material/MenuBookOutlined";
+import LibraryBooksOutlinedIcon from "@mui/icons-material/LibraryBooksOutlined";
+import AssessmentOutlinedIcon from "@mui/icons-material/AssessmentOutlined";
+import LinkIcon from "@mui/icons-material/Link";
+import SettingsIcon from "@mui/icons-material/Settings";
+import makeStyles from "@mui/styles/makeStyles";
 import clsx from "clsx";
 import AppBarNavButton from "$atoms/AppBarNavButton";
 import LtiItemDialog from "$organisms/LtiItemDialog";
 import useAppBarStyles from "$styles/appBar";
 import { SessionSchema } from "$server/models/session";
+import type { UserSettingsProp } from "$server/validators/userSettings";
 import { gray } from "$theme/colors";
 import { isAdministrator, isInstructor } from "$utils/session";
+import { updateUserSettings } from "$utils/userSettings";
 import { NEXT_PUBLIC_BASE_PATH } from "$utils/env";
+import { useRouter } from "next/router";
+import { pagesPath } from "$utils/$path";
 
 const useStyles = makeStyles((theme) => ({
   inner: {
     display: "flex",
     alignItems: "center",
-    maxWidth: theme.breakpoints.width("lg"),
+    maxWidth: theme.breakpoints.values.lg,
     width: "100%",
     margin: "0 auto",
-    padding: `0 ${theme.spacing(3)}px`,
-    [theme.breakpoints.down("xs")]: {
-      padding: `0 ${theme.spacing(2)}px`,
+    padding: theme.spacing(0, 3),
+    [theme.breakpoints.down("sm")]: {
+      padding: theme.spacing(0, 2),
     },
   },
   logo: {
@@ -59,7 +65,7 @@ type Props = ComponentProps<typeof MuiAppBar> & {
   session: SessionSchema;
   onBooksClick?(): void;
   onTopicsClick?(): void;
-  onBookLinkClick?(): void;
+  onBookClick?(): void;
   onDashboardClick?(): void;
 };
 
@@ -69,24 +75,55 @@ const role = (session: SessionSchema) => {
   return "学生";
 };
 
-function AppBar(props: Props, ref: Ref<unknown>) {
+function AppBar(props: Props, ref: Ref<HTMLDivElement>) {
   const {
     session,
     onBooksClick,
     onTopicsClick,
-    onBookLinkClick,
+    onBookClick,
     onDashboardClick,
     ...others
   } = props;
   const appBarClasses = useAppBarStyles();
   const classes = useStyles();
   const [open, setOpen] = useState(false);
+  const router = useRouter();
+
   const handleClick = () => {
     setOpen(true);
   };
   const handleClose = () => {
     setOpen(false);
   };
+  const handleOpenUserSettings = () => {
+    setShowZoomImportNotice(false);
+    return router.push(pagesPath.userSettings.$url());
+  };
+  const handleDisableZoomImport = async () => {
+    await updateUserSettings({ zoomImportEnabled: false });
+    setShowZoomImportNotice(false);
+  };
+  const userSettings = session?.user?.settings as UserSettingsProp;
+  const [showZoomImportNotice, setShowZoomImportNotice] = useState(
+    session?.systemSettings?.zoomImportEnabled &&
+      userSettings?.zoomImportEnabled == undefined
+  );
+  const actionZoomImportNotice = (
+    <Fragment>
+      <Button
+        variant="contained"
+        size="small"
+        color="primary"
+        onClick={handleOpenUserSettings}
+      >
+        設定
+      </Button>
+      <Button size="small" color="primary" onClick={handleDisableZoomImport}>
+        後で
+      </Button>
+    </Fragment>
+  );
+
   return (
     <MuiAppBar classes={appBarClasses} color="default" {...others} ref={ref}>
       <Toolbar color="inherit" disableGutters>
@@ -114,17 +151,29 @@ function AppBar(props: Props, ref: Ref<unknown>) {
             <AppBarNavButton
               color="inherit"
               icon={<LinkIcon />}
-              label="ブックの提供"
-              onClick={onBookLinkClick}
-              disabled={!onBookLinkClick}
+              label="提供中のブック"
+              onClick={onBookClick}
+              disabled={
+                !onBookClick ||
+                !Number.isFinite(session?.ltiResourceLink?.bookId)
+              }
             />
-            <AppBarNavButton
-              color="inherit"
-              icon={<AssessmentOutlinedIcon />}
-              label="学習分析"
-              onClick={onDashboardClick}
-              disabled={!onDashboardClick}
-            />
+            {session?.systemSettings?.zoomImportEnabled && ( // TODO: zoomインポート以外の設定値が実装されたら常時表示する
+              <AppBarNavButton
+                color="inherit"
+                icon={<SettingsIcon />}
+                label="設定"
+                onClick={handleOpenUserSettings}
+              />
+            )}
+            {onDashboardClick && (
+              <AppBarNavButton
+                color="inherit"
+                icon={<AssessmentOutlinedIcon />}
+                label="学習分析"
+                onClick={onDashboardClick}
+              />
+            )}
           </div>
           <div className={clsx(classes.user, classes.margin)}>
             <p>{session.user.name}</p>
@@ -144,6 +193,12 @@ function AppBar(props: Props, ref: Ref<unknown>) {
           )}
         </div>
       </Toolbar>
+      <Snackbar
+        open={showZoomImportNotice}
+        action={actionZoomImportNotice}
+        message="zoomインポート機能が利用できます"
+        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+      />
     </MuiAppBar>
   );
 }

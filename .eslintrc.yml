@@ -12,9 +12,8 @@ extends:
   - eslint:recommended
   - plugin:@typescript-eslint/eslint-recommended
   - plugin:@typescript-eslint/recommended
-  - plugin:jsx-a11y/recommended
-  - plugin:react-hooks/recommended
-  - plugin:react/recommended
+  - next
+  - next/core-web-vitals
   - prettier
 rules:
   "@typescript-eslint/explicit-module-boundary-types": "off"
@@ -22,6 +21,10 @@ rules:
     - "error"
     - varsIgnorePattern: "^_"
       ignoreRestSiblings: true
+      argsIgnorePattern: "^_"
+  "@next/next/no-img-element": "off"
+  import/no-anonymous-default-export: "off"
+  react/display-name: "off"
   react/react-in-jsx-scope: "off"
   filenames/match-exported: error
   tsc/config: [error, { configFile: "tsconfig.json" }]
@@ -43,3 +46,6 @@ overrides:
   - files: [types/**, server/types/**]
     rules:
       filenames/match-exported: [error, camel]
+  - files: [types/defaultTheme.d.ts]
+    rules:
+      "@typescript-eslint/no-empty-interface": "off"

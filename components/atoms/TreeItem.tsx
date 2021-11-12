@@ -1,5 +1,5 @@
 import { ComponentProps } from "react";
-import MuiTreeItem from "@material-ui/lab/TreeItem";
+import MuiTreeItem from "@mui/lab/TreeItem";
 
 type Props = ComponentProps<typeof MuiTreeItem>;
 

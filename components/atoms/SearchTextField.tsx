@@ -1,17 +1,18 @@
 import { ComponentProps, FormEvent, useCallback } from "react";
-import TextField from "@material-ui/core/TextField";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import { makeStyles } from "@material-ui/core/styles";
-import SearchIcon from "@material-ui/icons/Search";
+import clsx from "clsx";
+import TextField from "@mui/material/TextField";
+import InputAdornment from "@mui/material/InputAdornment";
+import makeStyles from "@mui/styles/makeStyles";
+import SearchIcon from "@mui/icons-material/Search";
+import SearchClearButton from "./SearchClearButton";
+import Divider from "@mui/material/Divider";
 import gray from "$theme/colors/gray";
-
-// NOTE: https://github.com/mui-org/material-ui/blob/master/packages/material-ui/src/OutlinedInput/OutlinedInput.js
 
 const useOutlinedInputStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: "#fff",
     borderRadius: "1.25rem",
-    paddingRight: `${theme.spacing(2)}px`,
+    paddingRight: theme.spacing(2),
     "&:hover $notchedOutline": {
       borderColor: gray[500],
       borderWidth: "1px",
@@ -28,7 +29,7 @@ const useOutlinedInputStyles = makeStyles((theme) => ({
   },
   input: {
     height: "1.25rem",
-    padding: `${theme.spacing(1)}px ${theme.spacing(2)}px`,
+    padding: theme.spacing(1, 2),
     paddingRight: 0,
   },
   focused: {},
@@ -40,18 +41,34 @@ const useOutlinedInputStyles = makeStyles((theme) => ({
 
 const useInputLabelStyles = makeStyles((theme) => ({
   outlined: {
-    transform: `translate(${theme.spacing(2)}px, 10px)`,
+    transform: `translate(${theme.spacing(2)}, 6px)`,
+    "&$shrink": {
+      transform: "translate(14px, -9px) scale(0.75)",
+    },
   },
+  shrink: {},
 }));
+
+const useStyles = makeStyles(() => ({
+  hide: {
+    visibility: "hidden",
+  },
+  divider: { height: 28, margin: 4 },
+}));
+type Props = {
+  value: string;
+  onSearchInput: (input: string) => void;
+  onSearchInputReset: () => void;
+} & Omit<ComponentProps<typeof TextField>, "value">;
 
 export default function SearchTextField({
   onSearchInput,
+  onSearchInputReset,
   ...props
-}: {
-  onSearchInput?: (input: string) => void;
-} & ComponentProps<typeof TextField>) {
+}: Props) {
   const outlinedInputClasses = useOutlinedInputStyles();
   const inputLabelClasses = useInputLabelStyles();
+  const classes = useStyles();
   const handleInput = useCallback(
     (event: FormEvent<HTMLInputElement>) => {
       onSearchInput?.(event.currentTarget.value);
@@ -70,6 +87,13 @@ export default function SearchTextField({
           classes: outlinedInputClasses,
           endAdornment: (
             <InputAdornment position="end">
+              <SearchClearButton
+                onClick={onSearchInputReset}
+                className={clsx({
+                  [classes.hide]: !props.value,
+                })}
+              />
+              <Divider orientation="vertical" className={classes.divider} />
               <SearchIcon style={{ color: gray[700] }} />
             </InputAdornment>
           ),

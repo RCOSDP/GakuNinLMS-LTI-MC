@@ -9,7 +9,15 @@ test("トピック名による絞り込み", () => {
     language: "en",
     timeRequired: 10,
     shared: true,
-    creator: { id: 1, name: "", ltiConsumerId: "", ltiUserId: "" },
+    license: "",
+    creator: {
+      id: 1,
+      name: "",
+      ltiConsumerId: "",
+      ltiUserId: "",
+      email: "",
+      settings: {},
+    },
     createdAt: new Date(),
     updatedAt: new Date(),
     resource: {

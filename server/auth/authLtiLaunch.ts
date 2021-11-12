@@ -1,12 +1,15 @@
 import type { FastifyRequest } from "fastify";
-import { LtiLaunchBody } from "$server/validators/ltiLaunchBody";
+import {
+  LtiLaunchBody,
+  toSessionSchema,
+} from "$server/validators/ltiLaunchBody";
 import { auth, valid } from "$server/utils/ltiv1p1/oauth";
 import prisma from "$server/utils/prisma";
 
 async function authLtiLaunch(req: FastifyRequest) {
   const body = req.body as LtiLaunchBody;
 
-  if (!valid((body as unknown) as Record<string, unknown>)) {
+  if (!valid(body as unknown as Record<string, unknown>)) {
     throw new Error("invalid");
   }
 
@@ -16,7 +19,7 @@ async function authLtiLaunch(req: FastifyRequest) {
     secret &&
     (await auth(
       url,
-      (body as unknown) as Record<string, string>,
+      body as unknown as Record<string, string>,
       body.oauth_consumer_key,
       secret,
       lookupNonce
@@ -24,7 +27,7 @@ async function authLtiLaunch(req: FastifyRequest) {
 
   if (!authorized) throw new Error("unauthorized");
 
-  req.session.ltiLaunchBody = body;
+  Object.assign(req.session, toSessionSchema(body));
 }
 
 export default authLtiLaunch;
@@ -32,8 +35,11 @@ export default authLtiLaunch;
 async function lookupSecret(oauthConsumerKey: string) {
   const found = await prisma.ltiConsumer.findUnique({
     where: { id: oauthConsumerKey },
-    select: { secret: true },
+    select: { secret: true, platformId: true },
   });
+
+  // NOTE: LTI v1.3 なので無効
+  if (found?.platformId != null) return;
 
   return found?.secret;
 }

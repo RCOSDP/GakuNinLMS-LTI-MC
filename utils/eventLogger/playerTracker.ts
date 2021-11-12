@@ -130,16 +130,6 @@ export class PlayerTracker extends (EventEmitter as {
     const { seekForward, seekBack } = player.controlBar;
     seekForward.on("click", () => this.emit("forward", this.stats));
     seekBack.on("click", () => this.emit("back", this.stats));
-
-    // NOTE: YouTubeの場合、playイベント発火より前だと`player.duration()`に失敗
-    const handlePlay = () => {
-      this.emit("durationchange", {
-        ...this.stats,
-        duration: player.duration(),
-      });
-      player.off("play", handlePlay);
-    };
-    player.on("play", handlePlay);
   }
 
   private intoVimeo(player: VimeoPlayer) {

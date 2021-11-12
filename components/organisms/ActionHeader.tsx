@@ -1,10 +1,13 @@
 import { ComponentProps } from "react";
 import clsx from "clsx";
-import Container from "@material-ui/core/Container";
-import Typography from "@material-ui/core/Typography";
-import { useTheme, makeStyles } from "@material-ui/core/styles";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
+import { useTheme } from "@mui/material/styles";
+import makeStyles from "@mui/styles/makeStyles";
 import { gray } from "$theme/colors";
-import useStickyProps from "$utils/useStickyProps";
+import useSticky from "$utils/useSticky";
+import useAppBarOffset from "$utils/useAppBarOffset";
+import sumPixels from "$utils/sumPixels";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -17,6 +20,9 @@ const useStyles = makeStyles((theme) => ({
     "& > p": {
       paddingTop: theme.spacing(1),
     },
+  },
+  body: {
+    paddingTop: theme.spacing(2),
   },
   action: {
     display: "flex",
@@ -38,46 +44,46 @@ const useStyles = makeStyles((theme) => ({
 
 type Props = Pick<ComponentProps<typeof Container>, "maxWidth"> & {
   title?: React.ReactNode;
+  body?: React.ReactNode;
   action: React.ReactNode;
+  considerAppBar?: boolean;
 };
 
 export default function ActionHeader(props: Props) {
-  const { maxWidth, title, action } = props;
+  const { maxWidth, title, body, action, considerAppBar = true } = props;
   const classes = useStyles();
   const theme = useTheme();
-  const { classes: stickyClasses, scroll, desktop, mobile } = useStickyProps({
+  const appBarOffset = useAppBarOffset();
+  const sticky = useSticky({
     backgroundColor: gray[50],
-    top: theme.spacing(-2),
+    offset: considerAppBar
+      ? sumPixels(appBarOffset, theme.spacing(-2))
+      : theme.spacing(-1),
     zIndex: 2,
   });
   return (
     <>
-      {title && (
+      {(title || body) && (
         <div className={classes.root}>
           <Container
             className={clsx({ [classes.container]: !maxWidth })}
             maxWidth={maxWidth}
           >
-            <Typography className={classes.title} variant="h4">
-              {title}
-            </Typography>
+            {title && (
+              <Typography className={classes.title} variant="h4">
+                {title}
+              </Typography>
+            )}
+            {body && <div className={classes.body}>{body}</div>}
           </Container>
         </div>
       )}
-      {action && (
-        <Container
-          className={clsx(
-            { [classes.container]: !maxWidth },
-            { [stickyClasses.scroll]: scroll },
-            { [stickyClasses.desktop]: desktop },
-            { [stickyClasses.mobile]: mobile },
-            stickyClasses.sticky
-          )}
-          maxWidth={maxWidth}
-        >
-          <div className={classes.action}>{action}</div>
-        </Container>
-      )}
+      <Container
+        className={clsx({ [classes.container]: !maxWidth }, sticky)}
+        maxWidth={maxWidth}
+      >
+        <div className={classes.action}>{action}</div>
+      </Container>
     </>
   );
 }
