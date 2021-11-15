@@ -45,7 +45,10 @@ export function useSearchAtom() {
     link: Pick<LtiResourceLinkSchema, "consumerId" | "contextId">
   ) => void = useCallback(
     (link) =>
-      updateQuery((query) => ({ ...query, q: clsx(query.q, stringify(link)) })),
+      updateQuery((query) => ({
+        ...query,
+        q: clsx(query.q, stringify({ link: [link] })),
+      })),
     [updateQuery]
   );
   const onKeywordClick: (keyword: KeywordSchema) => void = useCallback(
