@@ -5,6 +5,7 @@ import LearnerActivityDot from "$atoms/LearnerActivityDot";
 import { gray } from "$theme/colors";
 import type { BookActivitySchema } from "$server/models/bookActivity";
 import type { LearnerSchema } from "$server/models/learner";
+import type { SessionSchema } from "$server/models/session";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -45,10 +46,11 @@ type Props = {
   learner: LearnerSchema;
   activities: Array<BookActivitySchema>;
   onActivityClick?(activity: BookActivitySchema): void;
+  session: SessionSchema;
 };
 
 export default function LearnerActivityItem(props: Props) {
-  const { learner, activities, onActivityClick } = props;
+  const { learner, activities, onActivityClick, session} = props;
   const classes = useStyles();
 
   return (
@@ -60,6 +62,7 @@ export default function LearnerActivityItem(props: Props) {
             <LearnerActivityDot
               activity={activity}
               onActivityClick={onActivityClick}
+              session={session}
             />
             {activities[index + 1] &&
               activities[index + 1].book.id !== activity.book.id && (

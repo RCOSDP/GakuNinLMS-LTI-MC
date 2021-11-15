@@ -213,6 +213,7 @@ export default function Dashboard(props: Props) {
               learner={learner}
               activities={activities}
               onActivityClick={handleActivityClick(learner, activities)}
+              session={session}
             />
           ))}
         </TabPanel>

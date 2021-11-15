@@ -1,8 +1,8 @@
 export default { title: "atoms/LearnerActivityDot" };
 
 import LearnerActivityDot from "./LearnerActivityDot";
-import { bookActivity } from "$samples";
+import { bookActivity, session } from "$samples";
 
 export const Default = () => (
-  <LearnerActivityDot activity={bookActivity} onActivityClick={console.log} />
+  <LearnerActivityDot activity={bookActivity} onActivityClick={console.log} session={session} />
 );

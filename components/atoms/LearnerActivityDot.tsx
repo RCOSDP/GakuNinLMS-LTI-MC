@@ -3,6 +3,7 @@ import Tooltip from "@mui/material/Tooltip";
 import LearningStatusDot from "$atoms/LearningStatusDot";
 import getLocaleEntries from "$utils/bookLearningActivity/getLocaleEntries";
 import type { BookActivitySchema } from "$server/models/bookActivity";
+import type { SessionSchema } from "$server/models/session";
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -30,13 +31,14 @@ const useStyles = makeStyles((theme) => ({
 type Props = {
   activity: BookActivitySchema;
   onActivityClick?(activity: BookActivitySchema): void;
+  session: SessionSchema;
 };
 
 export default function LearnerActivityDot(props: Props) {
-  const { activity, onActivityClick } = props;
+  const { activity, onActivityClick, session} = props;
   const classes = useStyles();
   const handleActivityClick = () => onActivityClick?.(activity);
-  const items = getLocaleEntries(activity);
+  const items = getLocaleEntries(activity,session);
   return (
     <Tooltip
       title={
