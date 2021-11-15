@@ -3,6 +3,7 @@ import { atom, useAtom } from "jotai";
 import clsx from "clsx";
 import stringify from "$utils/search/stringify";
 import type { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
+import type { KeywordSchema } from "$server/models/keyword";
 import type { SortOrder } from "$server/models/sortOrder";
 import type { AuthorFilterType } from "$server/models/authorFilter";
 
@@ -47,6 +48,14 @@ export function useSearchAtom() {
       updateQuery((query) => ({ ...query, q: clsx(query.q, stringify(link)) })),
     [updateQuery]
   );
+  const onKeywordClick: (keyword: KeywordSchema) => void = useCallback(
+    (keyword) =>
+      updateQuery((query) => ({
+        ...query,
+        q: clsx(query.q, `keyword:${keyword.name}`),
+      })),
+    [updateQuery]
+  );
 
   return {
     query,
@@ -56,5 +65,6 @@ export function useSearchAtom() {
     onFilterChange,
     onSortChange,
     onLtiContextClick,
+    onKeywordClick,
   };
 }

@@ -109,6 +109,7 @@ export default function Books(props: Props) {
               onContentEditClick={onContentEditClick}
               onContentLinkClick={onContentLinkClick}
               onLtiContextClick={searchProps.onLtiContextClick}
+              onKeywordClick={searchProps.onKeywordClick}
             />
           ))}
           {loading &&
