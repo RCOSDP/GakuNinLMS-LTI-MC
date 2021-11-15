@@ -55,7 +55,7 @@ export function useSearchAtom() {
     (keyword) =>
       updateQuery((query) => ({
         ...query,
-        q: clsx(query.q, `keyword:${keyword.name}`),
+        q: clsx(query.q, stringify({ keyword: [keyword.name] })),
       })),
     [updateQuery]
   );
