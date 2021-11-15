@@ -17,6 +17,7 @@ import CourseChip from "$atoms/CourseChip";
 import LinkSwitch from "$atoms/LinkSwitch";
 import type { ContentSchema } from "$server/models/content";
 import type { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
+import type { KeywordSchema } from "$server/models/keyword";
 import { primary, gray } from "$theme/colors";
 import useLineClampStyles from "$styles/lineClamp";
 import { getSectionsOutline } from "$utils/outline";
@@ -120,6 +121,7 @@ type Props = Parameters<typeof Checkbox>[0] & {
   onLtiContextClick?(
     ltiResourceLink: Pick<LtiResourceLinkSchema, "consumerId" | "contextId">
   ): void;
+  onKeywordClick?(keyword: Pick<KeywordSchema, "name">): void;
   linked?: boolean;
 };
 
@@ -129,6 +131,7 @@ export default function ContentPreview({
   onContentEditClick,
   onContentLinkClick,
   onLtiContextClick,
+  onKeywordClick,
   linked = content.type === "book" ? false : undefined,
   checked,
   ...checkboxProps
@@ -148,6 +151,8 @@ export default function ContentPreview({
       : content.sections[0]?.topics[0]?.resource.id
   );
   const handleContentLinkClick = () => onContentLinkClick?.(content);
+  const handleKeywordClick = (keyword: Pick<KeywordSchema, "name">) => () =>
+    onKeywordClick?.(keyword);
   return (
     <Preview className={clsx({ selected: checked })}>
       <Header
@@ -228,6 +233,8 @@ export default function ContentPreview({
         {content.keywords.map((keyword) => (
           <Chip
             key={keyword.id}
+            onClick={handleKeywordClick(keyword)}
+            clickable
             variant="outlined"
             color="primary"
             label={keyword.name}
