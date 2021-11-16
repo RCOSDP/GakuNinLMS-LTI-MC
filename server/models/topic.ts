@@ -9,7 +9,7 @@ export type TopicProps = Pick<
   "name" | "language" | "timeRequired" | "shared" | "description"
 > & {
   resource: ResourceProps;
-  keywords: KeywordPropSchema[];
+  keywords?: KeywordPropSchema[];
 };
 
 export type TopicSchema = Topic & {

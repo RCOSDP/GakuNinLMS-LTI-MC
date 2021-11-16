@@ -30,7 +30,7 @@ async function updateBook({
     data: {
       ...other,
       timeRequired,
-      keywords: keywordsConnectOrCreateInput(book.keywords),
+      keywords: keywordsConnectOrCreateInput(book.keywords ?? []),
       updatedAt: new Date(),
     },
   });

@@ -12,7 +12,7 @@ export type BookProps = {
   language?: string;
   shared?: boolean;
   sections?: SectionProps[];
-  keywords: KeywordPropSchema[];
+  keywords?: KeywordPropSchema[];
 };
 
 export type BookSchema = Book & {

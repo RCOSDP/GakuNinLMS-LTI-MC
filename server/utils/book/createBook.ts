@@ -20,7 +20,7 @@ async function createBook(
       details: {},
       authors: { create: { userId, roleId: 1 } },
       sections: { create: sectionsCreateInput },
-      keywords: keywordsConnectOrCreateInput(book.keywords),
+      keywords: keywordsConnectOrCreateInput(book.keywords ?? []),
     },
   });
 

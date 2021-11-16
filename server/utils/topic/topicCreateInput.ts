@@ -15,7 +15,7 @@ function topicCreateInput(authorId: User["id"], topic: TopicProps) {
   const input = {
     ...createInput(authorId, topic),
     resource: resourceConnectOrCreateInput(topic.resource),
-    keywords: keywordsConnectOrCreateInput(topic.keywords),
+    keywords: keywordsConnectOrCreateInput(topic.keywords ?? []),
   };
 
   return input;

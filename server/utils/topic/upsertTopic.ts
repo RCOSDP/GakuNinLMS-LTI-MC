@@ -14,7 +14,7 @@ function topicUpdateInput(topic: TopicProps) {
   const input = {
     ...topicInput(topic),
     resource: resourceConnectOrCreateInput(topic.resource),
-    keywords: keywordsConnectOrCreateInput(topic.keywords),
+    keywords: keywordsConnectOrCreateInput(topic.keywords ?? []),
   };
 
   return input;
