@@ -4,7 +4,7 @@ import type { SectionProps, SectionSchema } from "./book/section";
 import { sectionPropsSchema, sectionSchema } from "./book/section";
 import type { LtiResourceLinkSchema } from "./ltiResourceLink";
 import { ltiResourceLinkSchema } from "./ltiResourceLink";
-import { KeywordSchema } from "./keyword";
+import { KeywordPropSchema, KeywordSchema } from "./keyword";
 
 export type BookProps = {
   name: string;
@@ -12,6 +12,7 @@ export type BookProps = {
   language?: string;
   shared?: boolean;
   sections?: SectionProps[];
+  keywords: KeywordPropSchema[];
 };
 
 export type BookSchema = Book & {
@@ -31,6 +32,10 @@ export const bookPropsSchema = {
     sections: {
       type: "array",
       items: sectionPropsSchema,
+    },
+    keywords: {
+      type: "array",
+      items: KeywordPropSchema,
     },
   },
 } as const;

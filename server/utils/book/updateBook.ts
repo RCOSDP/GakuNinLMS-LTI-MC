@@ -6,6 +6,7 @@ import aggregateTimeRequired from "./aggregateTimeRequired";
 import findBook from "./findBook";
 import sectionCreateInput from "./sectionCreateInput";
 import cleanupSections from "./cleanupSections";
+import keywordsConnectOrCreateInput from "$server/utils/keyword/keywordsConnectOrCreateInput";
 
 function upsertSections(bookId: Book["id"], sections: SectionProps[]) {
   const sectionsCreateInput = sections.map(sectionCreateInput);
@@ -29,6 +30,7 @@ async function updateBook({
     data: {
       ...other,
       timeRequired,
+      keywords: keywordsConnectOrCreateInput(book.keywords),
       updatedAt: new Date(),
     },
   });

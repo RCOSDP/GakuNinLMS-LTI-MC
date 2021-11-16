@@ -34,6 +34,9 @@ async function destroyTopic(id: Topic["id"]) {
       prisma.resource.deleteMany({
         where: { topics: { every: { id } } },
       }),
+      prisma.keyword.deleteMany({
+        where: { topics: { every: { id } } },
+      }),
     ]);
   } catch {
     return;

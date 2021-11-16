@@ -8,11 +8,13 @@ import {
 import topicInput from "./topicInput";
 import resourceConnectOrCreateInput from "./resourceConnectOrCreateInput";
 import topicCreateInput from "./topicCreateInput";
+import keywordsConnectOrCreateInput from "$server/utils/keyword/keywordsConnectOrCreateInput";
 
 function topicUpdateInput(topic: TopicProps) {
   const input = {
     ...topicInput(topic),
     resource: resourceConnectOrCreateInput(topic.resource),
+    keywords: keywordsConnectOrCreateInput(topic.keywords),
   };
 
   return input;

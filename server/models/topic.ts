@@ -2,13 +2,14 @@ import type { Topic, Prisma } from "@prisma/client";
 import type { ResourceProps, ResourceSchema } from "./resource";
 import { resourcePropsSchema, resourceSchema } from "./resource";
 import { AuthorSchema } from "./author";
-import { KeywordSchema } from "./keyword";
+import { KeywordPropSchema, KeywordSchema } from "./keyword";
 
 export type TopicProps = Pick<
   Prisma.TopicCreateInput,
   "name" | "language" | "timeRequired" | "shared" | "description"
 > & {
   resource: ResourceProps;
+  keywords: KeywordPropSchema[];
 };
 
 export type TopicSchema = Topic & {
@@ -26,6 +27,10 @@ export const topicPropsSchema = {
     shared: { type: "boolean", nullable: true },
     description: { type: "string" },
     resource: resourcePropsSchema,
+    keywords: {
+      type: "array",
+      items: KeywordPropSchema,
+    },
   },
 } as const;
 
