@@ -7,7 +7,14 @@ function useBooks() {
   const props = useContents(query);
 
   useEffect(() => {
-    updateQuery((query) => ({ ...query, type: "book" }));
+    updateQuery({
+      type: "book",
+      q: "",
+      filter: "self",
+      sort: "updated",
+      perPage: 30,
+      page: 0,
+    });
   }, [updateQuery]);
 
   return props;
