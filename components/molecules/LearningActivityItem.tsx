@@ -15,12 +15,8 @@ type LearningBargraphProps = {
 };
 
 function LearningBargraph(props: LearningBargraphProps) {
-  const {
-    className,
-    totalLearnerCount,
-    completedCount,
-    incompletedCount,
-  } = props;
+  const { className, totalLearnerCount, completedCount, incompletedCount } =
+    props;
   const unopenedCount = totalLearnerCount - completedCount - incompletedCount;
   const getPercentage = (value: number): string =>
     `${(value / totalLearnerCount) * 100}%`;

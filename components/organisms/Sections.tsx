@@ -104,8 +104,8 @@ export default function Sections({
       event.stopPropagation();
       onItemEditClick?.(index);
     };
-    const { isCompleted } = useActivityAtom();
-    return (
+  const { isCompleted } = useActivityAtom();
+  return (
     <div className={className}>
       {sections.map((section, sectionItemIndex) => (
         <SectionItem

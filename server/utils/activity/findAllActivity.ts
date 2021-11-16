@@ -76,7 +76,7 @@ async function findAllActivity(session: SessionSchema): Promise<{
   bookActivities: Array<BookActivitySchema>;
 }> {
   const user = session.user;
-  const consumerId = session.oauthClient.id
+  const consumerId = session.oauthClient.id;
   const contextId = session.ltiContext.id;
   const ltiMembers = await findLtiMembers(user, { consumerId, contextId });
   const ltiResourceLinks = await prisma.ltiResourceLink.findMany({

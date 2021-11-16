@@ -53,14 +53,8 @@ type Props = {
 };
 
 export default function LearnerActivityDialog(props: Props) {
-  const {
-    courseTitle,
-    courseBooks,
-    learner,
-    bookActivities,
-    open,
-    onClose,
-  } = props;
+  const { courseTitle, courseBooks, learner, bookActivities, open, onClose } =
+    props;
   const classes = useStyles();
   const activitiesEachCourseBooks = useMemo(
     () =>

@@ -50,7 +50,7 @@ type Props = {
 };
 
 export default function LearnerActivityItem(props: Props) {
-  const { learner, activities, onActivityClick, session} = props;
+  const { learner, activities, onActivityClick, session } = props;
   const classes = useStyles();
 
   return (

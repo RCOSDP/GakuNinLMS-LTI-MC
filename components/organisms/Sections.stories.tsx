@@ -16,10 +16,10 @@ const activityBySections = sections
     updatedAt: new Date(),
   }));
 
-  const Template: Story<Parameters<typeof Sections>[0]> = (args) => {
-      useActivityAtom(activityBySections);
-      return <Sections {...args} />
-    };
+const Template: Story<Parameters<typeof Sections>[0]> = (args) => {
+  useActivityAtom(activityBySections);
+  return <Sections {...args} />;
+};
 
 export const Default = Template.bind({});
 Default.args = {

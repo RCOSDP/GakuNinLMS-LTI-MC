@@ -152,9 +152,7 @@ export default function Dashboard(props: Props) {
         title="学習分析"
         action={
           <>
-            <Typography variant="h6">
-              {session.ltiContext.title}
-            </Typography>
+            <Typography variant="h6">{session.ltiContext.title}</Typography>
             <span className={classes.contextLabel}>
               {session.ltiContext.label}
             </span>
