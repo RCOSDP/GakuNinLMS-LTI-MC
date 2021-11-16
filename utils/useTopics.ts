@@ -7,7 +7,14 @@ function useTopics() {
   const props = useContents(query);
 
   useEffect(() => {
-    updateQuery((query) => ({ ...query, type: "topic" }));
+    updateQuery({
+      type: "topic",
+      q: "",
+      filter: "self",
+      sort: "updated",
+      perPage: 30,
+      page: 0,
+    });
   }, [updateQuery]);
 
   return props;
