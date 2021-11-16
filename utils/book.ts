@@ -1,6 +1,5 @@
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import useSWR, { mutate } from "swr";
-import { useBookAtom } from "$store/book";
 import { api } from "./api";
 import type { BookProps, BookSchema } from "$server/models/book";
 import type { TopicSchema } from "$server/models/topic";
@@ -16,13 +15,15 @@ async function fetchBook(_: typeof key, id: BookSchema["id"]) {
 }
 
 export function useBook(
-  id: BookSchema["id"],
+  id: BookSchema["id"] | undefined,
   isBookEditable: (book: Pick<BookSchema, "author">) => boolean,
   isTopicEditable: (topic: Pick<TopicSchema, "creator">) => boolean,
   ltiResourceLink?: Pick<LtiResourceLinkSchema, "bookId" | "authorId"> | null
 ) {
-  const { data, error } = useSWR<BookSchema>([key, id], fetchBook);
-  const { updateBook, ...state } = useBookAtom();
+  const { data, error } = useSWR<BookSchema>(
+    Number.isFinite(id) ? [key, id] : null,
+    fetchBook
+  );
   const displayable = useMemo(
     () =>
       getDisplayableBook(
@@ -34,12 +35,8 @@ export function useBook(
     [data, isBookEditable, isTopicEditable, ltiResourceLink]
   );
 
-  useEffect(() => {
-    if (displayable) updateBook(displayable);
-  }, [data, updateBook, displayable]);
-
   return {
-    ...state,
+    book: displayable,
     error: (data !== undefined && displayable === undefined) || error,
   };
 }

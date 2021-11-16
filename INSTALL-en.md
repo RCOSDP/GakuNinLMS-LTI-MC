@@ -21,10 +21,10 @@ When changing the information of the connection destination of API, .env must be
 
 ### Prerequisites
 
-As of 2020-06-10, confirm the build in the following environment.
+As of 2021-09-03, confirm the build in the following environment.
 
-- Node.js v14.3.0
-- Yarn 1.22.4
+- Node.js v16.8.0
+- Yarn 1.22.11
 
 ### Build
 
@@ -49,6 +49,16 @@ yarn storybook
 Customize the logo image which layout in AppBar be able by overwrite the `./public/logo.png` .
 
 Consider the logo image will be resized in a range of width 100px / height 48px with keeping aspect ratio.
+
+### Favicon
+
+Customize the favicon image which layout in tab be able by overwrite the `./public/favicon.ico` .
+
+The sizes are as follows.
+
+- 16px × 16px
+- 32px × 32px
+- 48px × 48px
 
 ### Video player
 

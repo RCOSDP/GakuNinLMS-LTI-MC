@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { makeStyles } from "@material-ui/core/styles";
+import makeStyles from "@mui/styles/makeStyles";
 import LearningStatusLabels from "$molecules/LearningStatusLabels";
 import { learningStatus, gray } from "$theme/colors";
 import useLineClampStyles from "$styles/lineClamp";
@@ -15,12 +15,8 @@ type LearningBargraphProps = {
 };
 
 function LearningBargraph(props: LearningBargraphProps) {
-  const {
-    className,
-    totalLearnerCount,
-    completedCount,
-    incompletedCount,
-  } = props;
+  const { className, totalLearnerCount, completedCount, incompletedCount } =
+    props;
   const unopenedCount = totalLearnerCount - completedCount - incompletedCount;
   const getPercentage = (value: number): string =>
     `${(value / totalLearnerCount) * 100}%`;

@@ -12,9 +12,10 @@ import {
 import { sessionStore } from "$server/utils/prisma";
 import staticHandler from "$server/utils/staticHandler";
 import app, { Options } from "$server/config/app";
+import { setupZoomImportScheduler } from "$server/utils/zoom/importScheduler";
 
 const isDev = process.env.NODE_ENV !== "production";
-const options = {};
+const options = { bodyLimit: 1431655766 }; // base64 で 1GiB
 
 if (HTTPS_CERT && HTTPS_KEY) {
   Object.assign(options, { https: { cert: HTTPS_CERT, key: HTTPS_KEY } });
@@ -32,3 +33,5 @@ fastify({ logger: isDev, trustProxy: true, ...options })
     sessionStore: sessionStore as Options["sessionStore"],
   })
   .listen(PORT, "::"); // TODO: UNIXドメインソケット(引数にファイルパスを指定)未対応
+
+setupZoomImportScheduler();

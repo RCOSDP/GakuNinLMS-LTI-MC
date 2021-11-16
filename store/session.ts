@@ -59,5 +59,5 @@ export function useUpdateSessionAtom() {
 
 export function useLmsUrl() {
   const { session } = useSessionAtom();
-  return session?.ltiLaunchBody.launch_presentation_return_url;
+  return session?.ltiLaunchPresentation?.returnUrl;
 }

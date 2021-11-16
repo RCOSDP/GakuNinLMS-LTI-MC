@@ -1,7 +1,7 @@
 export default { title: "atoms/Item" };
 
 import Item from "./Item";
-import { makeStyles } from "@material-ui/core/styles";
+import makeStyles from "@mui/styles/makeStyles";
 
 const useStyles = makeStyles((theme) => ({
   margin: {

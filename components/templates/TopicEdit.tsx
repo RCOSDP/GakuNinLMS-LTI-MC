@@ -1,8 +1,8 @@
-import Typography from "@material-ui/core/Typography";
-import Container from "@material-ui/core/Container";
-import Button from "@material-ui/core/Button";
-import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
-import { makeStyles } from "@material-ui/core/styles";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import Button from "@mui/material/Button";
+import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
+import makeStyles from "@mui/styles/makeStyles";
 import TopicForm from "$organisms/TopicForm";
 import RequiredDot from "$atoms/RequiredDot";
 import BackButton from "$atoms/BackButton";
@@ -81,6 +81,7 @@ export default function TopicEdit(props: Props) {
       <TopicForm
         className={classes.form}
         topic={topic}
+        variant="update"
         onSubmit={onSubmit}
         onSubtitleDelete={onSubtitleDelete}
         onSubtitleSubmit={onSubtitleSubmit}

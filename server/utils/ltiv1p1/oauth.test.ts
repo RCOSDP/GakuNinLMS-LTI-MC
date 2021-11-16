@@ -182,7 +182,7 @@ describe("auth()", function () {
   });
 
   test("oauth_signature が異なる", async function () {
-    const oauthConsumerKey = "another-key";
+    const oauthConsumerKey = "key";
     const oauthConsumerSecret = "secret";
     const lookupNonce = async () => false;
     const url = "http://localhost:8080/api/v2/lti/lauch";
@@ -229,5 +229,27 @@ describe("auth()", function () {
     expect(
       await auth(url, params, empty, oauthConsumerSecret, lookupNonce)
     ).toBe(false);
+  });
+
+  test("OAuth Consumer Secret が空", async function () {
+    const oauthConsumerKey = "key";
+    const empty = "";
+    const lookupNonce = async () => false;
+    const url = "http://localhost:8080/api/v2/lti/lauch";
+    const params = {
+      oauth_version: "1.0",
+      oauth_nonce: "0878c39c4c274c2072d3af6604a75c64",
+      oauth_timestamp: "1605829208",
+      oauth_consumer_key: "key",
+      oauth_signature_method: "HMAC-SHA1",
+      oauth_signature: "IeMP6CeHaVU47hNucWgW5y1TGQI=",
+      lti_message_type: "basic-lti-launch-request",
+      lti_version: "LTI-1p0",
+      resource_link_id: "1",
+    } as const;
+
+    expect(await auth(url, params, oauthConsumerKey, empty, lookupNonce)).toBe(
+      false
+    );
   });
 });

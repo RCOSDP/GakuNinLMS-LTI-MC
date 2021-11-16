@@ -1,15 +1,15 @@
 import { useCallback, useMemo } from "react";
 import clsx from "clsx";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
-import Button from "@material-ui/core/Button";
-import { makeStyles } from "@material-ui/core/styles";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import Button from "@mui/material/Button";
+import makeStyles from "@mui/styles/makeStyles";
 import { LearnerSchema } from "$server/models/learner";
 import { LearningStatus } from "$server/models/learningStatus";
 import LearningStatusDot from "$atoms/LearningStatusDot";
 import label from "$utils/learningStatusLabel";
 import useSelectorProps from "$utils/useSelectorProps";
-import { grey, common } from "@material-ui/core/colors";
+import { grey, common } from "@mui/material/colors";
 
 const useButtonStyles = makeStyles((theme) => ({
   root: {

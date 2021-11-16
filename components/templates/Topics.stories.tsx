@@ -4,8 +4,8 @@ export default {
 };
 
 import Topics from "./Topics";
-import Slide from "@material-ui/core/Slide";
-import useScrollTrigger from "@material-ui/core/useScrollTrigger";
+import Slide from "@mui/material/Slide";
+import useScrollTrigger from "@mui/material/useScrollTrigger";
 import AppBar from "$organisms/AppBar";
 import { topic, session } from "$samples";
 
@@ -18,6 +18,10 @@ const appBarHandlers = {
 const topics = [...Array(10)].map(() => topic);
 
 const handlers = {
+  onBookNewClick: console.log,
+  onTopicsShareClick: console.log,
+  onTopicsUnshareClick: console.log,
+  onTopicsDeleteClick: console.log,
   onTopicEditClick: console.log,
   onTopicNewClick: console.log,
 };

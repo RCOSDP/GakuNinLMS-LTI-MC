@@ -1,5 +1,5 @@
-import Tooltip from "@material-ui/core/Tooltip";
-import PeopleIcon from "@material-ui/icons/People";
+import Tooltip from "@mui/material/Tooltip";
+import PeopleIcon from "@mui/icons-material/People";
 import { gray } from "$theme/colors";
 
 type Props = {

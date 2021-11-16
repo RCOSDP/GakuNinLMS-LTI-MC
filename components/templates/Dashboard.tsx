@@ -1,12 +1,12 @@
 import { useState, useMemo, useCallback } from "react";
-import Typography from "@material-ui/core/Typography";
-import Container from "@material-ui/core/Container";
-import Card from "@material-ui/core/Card";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
-import Button from "@material-ui/core/Button";
-import GetAppOutlinedIcon from "@material-ui/icons/GetAppOutlined";
-import { makeStyles } from "@material-ui/core/styles";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import Card from "@mui/material/Card";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import Button from "@mui/material/Button";
+import GetAppOutlinedIcon from "@mui/icons-material/GetAppOutlined";
+import makeStyles from "@mui/styles/makeStyles";
 import ActionHeader from "$organisms/ActionHeader";
 import LearningStatusDot from "$atoms/LearningStatusDot";
 import LearningActivityItem from "$molecules/LearningActivityItem";
@@ -108,8 +108,8 @@ export default function Dashboard(props: Props) {
     setTabIndex(value);
   };
   const handleDownloadClick = useCallback(() => {
-    download(bookActivities, "分析データ.csv", session.ltiLaunchBody);
-  }, [bookActivities, session.ltiLaunchBody]);
+    download(bookActivities, "分析データ.csv", session);
+  }, [bookActivities, session]);
   const learnerActivities = useMemo(
     () =>
       getLearnerActivities({
@@ -152,11 +152,9 @@ export default function Dashboard(props: Props) {
         title="学習分析"
         action={
           <>
-            <Typography variant="h6">
-              {session.ltiLaunchBody.context_title}
-            </Typography>
+            <Typography variant="h6">{session.ltiContext.title}</Typography>
             <span className={classes.contextLabel}>
-              {session.ltiLaunchBody.context_label}
+              {session.ltiContext.label}
             </span>
             <Button
               onClick={handleDownloadClick}
@@ -213,13 +211,14 @@ export default function Dashboard(props: Props) {
               learner={learner}
               activities={activities}
               onActivityClick={handleActivityClick(learner, activities)}
+              session={session}
             />
           ))}
         </TabPanel>
       </Card>
       {data && (
         <LearnerActivityDialog
-          courseTitle={session.ltiLaunchBody.context_title}
+          courseTitle={session.ltiContext.title}
           courseBooks={courseBooks}
           learner={data.learner}
           bookActivities={data.bookActivities}

@@ -1,8 +1,12 @@
-export default { title: "organisms/BookPreview" };
-
-import { makeStyles } from "@material-ui/core/styles";
+import type { Story } from "@storybook/react";
+import makeStyles from "@mui/styles/makeStyles";
 import BookPreview from "./BookPreview";
-import { book } from "samples";
+import { book } from "$samples";
+
+export default {
+  title: "organisms/BookPreview",
+  component: BookPreview,
+};
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -12,39 +16,24 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const defaultProps = { book, onEditClick: console.log };
-
-export const Default = () => {
+const Template: Story<Parameters<typeof BookPreview>[0]> = (args) => {
   const classes = useStyles();
   return (
     <div className={classes.margin}>
       {[...Array(10)].map((_value, index) => (
-        <BookPreview key={index} {...defaultProps} />
+        <BookPreview key={index} {...args} />
       ))}
     </div>
   );
 };
 
-export const Checked = () => {
-  const classes = useStyles();
-  return (
-    <div className={classes.margin}>
-      {[...Array(10)].map((_value, index) => (
-        <BookPreview key={index} checked={index === 1} {...defaultProps} />
-      ))}
-    </div>
-  );
+export const Default = Template.bind({});
+Default.args = {
+  book,
 };
 
-export const EmptySection = () => {
-  return (
-    <BookPreview
-      {...defaultProps}
-      book={{ ...defaultProps.book, sections: [] }}
-    />
-  );
-};
-
-export const NoEditable = () => {
-  return <BookPreview book={book} />;
+export const EmptySection = Template.bind({});
+EmptySection.args = {
+  ...Default.args,
+  book: { ...book, sections: [] },
 };

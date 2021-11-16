@@ -1,29 +1,18 @@
-export default {
-  title: "templates/BookEdit",
-  parameters: { layout: "fullscreen" },
-};
-
+import type { Story } from "@storybook/react";
 import BookEdit from "./BookEdit";
 import { book } from "samples";
 
-const handleSubmit = console.log;
-const handleDelete = console.log;
-const handleCancel = () => console.log("back");
-const handleSectionsUpdate = console.log;
-const handleTopicImportClick = () => console.log("onTopicImportClick");
-const handleTopicNewClick = () => console.log("onTopicNewClick");
-const handleBookImportClick = () => console.log("onBookImportClick");
-const handleTopicEditClick = console.log;
-const handlers = {
-  onSubmit: handleSubmit,
-  onDelete: handleDelete,
-  onCancel: handleCancel,
-  onSectionsUpdate: handleSectionsUpdate,
-  onTopicImportClick: handleTopicImportClick,
-  onTopicNewClick: handleTopicNewClick,
-  onTopicEditClick: handleTopicEditClick,
-  onBookImportClick: handleBookImportClick,
-  isTopicEditable: () => true,
+export default {
+  title: "templates/BookEdit",
+  component: BookEdit,
+  parameters: { layout: "fullscreen" },
 };
 
-export const Default = () => <BookEdit book={book} {...handlers} />;
+const Template: Story<Parameters<typeof BookEdit>[0]> = (args) => {
+  return <BookEdit {...args} isTopicEditable={() => true} />;
+};
+
+export const Default = Template.bind({});
+Default.args = {
+  book,
+};

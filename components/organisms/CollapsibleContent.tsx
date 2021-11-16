@@ -1,9 +1,8 @@
-import { useState } from "react";
 import clsx from "clsx";
-import Button from "@material-ui/core/Button";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import Collapse from "@material-ui/core/Collapse";
-import { makeStyles } from "@material-ui/core/styles";
+import Button from "@mui/material/Button";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import Collapse from "@mui/material/Collapse";
+import makeStyles from "@mui/styles/makeStyles";
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -16,23 +15,35 @@ const useStyles = makeStyles((theme) => ({
 
 type Props = {
   expanded: boolean;
-  label: React.ReactNode;
+  label?: React.ReactNode;
+  "aria-controls"?: string;
   children: React.ReactNode;
+  onCollapsibleContentClick?: Parameters<typeof Button>[0]["onClick"];
 };
 
-export default function CollapsibleContent(props: Props) {
+export default function CollapsibleContent({
+  expanded,
+  label,
+  children,
+  "aria-controls": ariaControls,
+  onCollapsibleContentClick,
+}: Props) {
   const classes = useStyles();
-  const { expanded: initialExpanded, label, children } = props;
-  const [expanded, setExpanded] = useState(initialExpanded);
-  const handleClick = () => setExpanded(!expanded);
   return (
     <>
-      <Button variant="text" aria-expanded={expanded} onClick={handleClick}>
-        <ChevronRightIcon
-          className={clsx(classes.icon, { [classes.expanded]: expanded })}
-        />
-        {label}
-      </Button>
+      {label && (
+        <Button
+          variant="text"
+          aria-expanded={expanded}
+          aria-controls={ariaControls}
+          onClick={onCollapsibleContentClick}
+        >
+          <ChevronRightIcon
+            className={clsx(classes.icon, { [classes.expanded]: expanded })}
+          />
+          {label}
+        </Button>
+      )}
       <Collapse in={expanded}>{children}</Collapse>
     </>
   );

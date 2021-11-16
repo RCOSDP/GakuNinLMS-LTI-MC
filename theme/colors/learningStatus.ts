@@ -1,4 +1,4 @@
-import { green, grey } from "@material-ui/core/colors";
+import { green, grey } from "@mui/material/colors";
 
 // NOTE: a11yの観点で明度のみによる識別ができるよう上から明度が昇順になっている
 const learningStatus = {

@@ -1,69 +1,87 @@
 import useInfiniteScroll from "react-infinite-scroll-hook";
-import Skeleton from "@material-ui/lab/Skeleton";
-import { makeStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
-import Container from "@material-ui/core/Container";
-import AddIcon from "@material-ui/icons/Add";
+import Skeleton from "@mui/material/Skeleton";
+import makeStyles from "@mui/styles/makeStyles";
+import Button from "@mui/material/Button";
+import Card from "@mui/material/Card";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
+import AddIcon from "@mui/icons-material/Add";
 import ActionHeader from "$organisms/ActionHeader";
-import BookAccordion from "$organisms/BookAccordion";
+import BookPreview from "$organisms/BookPreview";
 import SortSelect from "$atoms/SortSelect";
 import CreatorFilter from "$atoms/CreatorFilter";
 import SearchTextField from "$atoms/SearchTextField";
 import type { BookSchema } from "$server/models/book";
-import type { TopicSchema } from "$server/models/topic";
+import type { LinkedBook } from "$types/linkedBook";
 import { SortOrder } from "$server/models/sortOrder";
 import { Filter } from "$types/filter";
 import useContainerStyles from "styles/container";
+import useCardStyles from "$styles/card";
 import { useSearchAtom } from "$store/search";
 
 const useStyles = makeStyles((theme) => ({
   icon: {
     marginRight: theme.spacing(0.5),
   },
+  title: {
+    marginBottom: theme.spacing(2),
+  },
+  linkedBookPlaceholder: {
+    // NOTE: BookPreviewに依存する&事前に高さを確定できないので決め打ち
+    height: 180,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    borderStyle: "dashed",
+  },
   books: {
     marginTop: theme.spacing(1),
+    "& > *": {
+      marginBottom: theme.spacing(2),
+    },
   },
 }));
 
 export type Props = {
   books: BookSchema[];
+  linkedBook?: LinkedBook;
   loading?: boolean;
   hasNextPage?: boolean;
   onLoadMore?(): void;
-  onBookClick(book: BookSchema): void;
-  onBookEditClick(book: BookSchema): void;
+  onBookPreviewClick?(book: BookSchema): void;
+  onBookEditClick?(book: BookSchema): void;
+  onBookLinkClick?(book: BookSchema): void;
+  onLinkedBookClick?(book: BookSchema): void;
   onBookNewClick(): void;
-  onTopicEditClick?(topic: TopicSchema): void;
+  onBooksImportClick(): void;
   onSortChange?(sort: SortOrder): void;
   onFilterChange?(filter: Filter): void;
-  isTopicEditable?(topic: TopicSchema): boolean | undefined;
 };
 
 export default function Books(props: Props) {
   const {
     books,
+    linkedBook,
     loading = false,
     hasNextPage = false,
     onLoadMore = () => undefined,
-    onBookClick,
+    onBookPreviewClick,
     onBookEditClick,
+    onBookLinkClick,
+    onLinkedBookClick,
     onBookNewClick,
-    onTopicEditClick,
+    onBooksImportClick,
     onSortChange,
     onFilterChange,
-    isTopicEditable,
   } = props;
-  const { query, onSearchInput, onLtiContextClick } = useSearchAtom();
-  const handleBookEditClick = (book: BookSchema) => () => onBookEditClick(book);
-  const handleTopicClick = (book: BookSchema) => () => onBookClick(book);
+  const { query, onSearchInput, onLtiContextClick, onSearchInputReset } =
+    useSearchAtom();
   const handleBookNewClick = () => onBookNewClick();
+  const handleBooksImportClick = () => onBooksImportClick();
   const classes = useStyles();
   const containerClasses = useContainerStyles();
-  const infiniteRef = useInfiniteScroll<HTMLDivElement>({
-    loading,
-    hasNextPage,
-    onLoadMore,
-  });
+  const cardClasses = useCardStyles();
+  const [infiniteRef] = useInfiniteScroll({ loading, hasNextPage, onLoadMore });
   return (
     <div ref={infiniteRef}>
       <ActionHeader
@@ -75,6 +93,45 @@ export default function Books(props: Props) {
               <AddIcon className={classes.icon} />
               ブックの作成
             </Button>
+            <Button
+              size="small"
+              color="primary"
+              onClick={handleBooksImportClick}
+            >
+              <AddIcon className={classes.icon} />
+              一括登録
+            </Button>
+          </>
+        }
+        body={
+          <>
+            <Typography className={classes.title} variant="h5">
+              提供中のブック
+            </Typography>
+            {linkedBook && (
+              <BookPreview
+                book={{ ...linkedBook, ltiResourceLinks: [] }}
+                linked
+                onBookPreviewClick={onBookPreviewClick}
+                onBookEditClick={
+                  linkedBook.editable ? onBookEditClick : undefined
+                }
+                onLinkedBookClick={onLinkedBookClick}
+                onLtiContextClick={onLtiContextClick}
+              />
+            )}
+            {!linkedBook && (
+              <Card
+                classes={cardClasses}
+                className={classes.linkedBookPlaceholder}
+              >
+                <Typography variant="body2">
+                  提供中のブックがありません。
+                  <br />
+                  ブックを提供するには、提供したいブックの「このブックを提供」ボタンをクリックしてください。
+                </Typography>
+              </Card>
+            )}
           </>
         }
         action={
@@ -82,9 +139,10 @@ export default function Books(props: Props) {
             <SortSelect onSortChange={onSortChange} />
             <CreatorFilter onFilterChange={onFilterChange} />
             <SearchTextField
-              placeholder="ブック・トピック検索"
+              label="ブック・トピック検索"
               value={query.input}
               onSearchInput={onSearchInput}
+              onSearchInputReset={onSearchInputReset}
             />
           </>
         }
@@ -92,14 +150,15 @@ export default function Books(props: Props) {
       <Container classes={containerClasses} maxWidth="md">
         <div className={classes.books}>
           {books.map((book) => (
-            <BookAccordion
+            <BookPreview
               key={book.id}
               book={book}
-              onEditClick={handleBookEditClick(book)}
-              onTopicClick={handleTopicClick(book)}
-              onTopicEditClick={onTopicEditClick}
+              linked={book.id === linkedBook?.id}
+              onBookPreviewClick={onBookPreviewClick}
+              onBookEditClick={onBookEditClick}
+              onBookLinkClick={onBookLinkClick}
+              onLinkedBookClick={onLinkedBookClick}
               onLtiContextClick={onLtiContextClick}
-              isTopicEditable={isTopicEditable}
             />
           ))}
           {loading &&

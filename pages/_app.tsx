@@ -3,16 +3,19 @@ import { Provider } from "jotai";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import MuiThemeProvider from "@material-ui/styles/ThemeProvider";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import Slide from "@material-ui/core/Slide";
-import useScrollTrigger from "@material-ui/core/useScrollTrigger";
+import {
+  ThemeProvider as MuiThemeProvider,
+  StyledEngineProvider,
+} from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import Slide from "@mui/material/Slide";
+import useScrollTrigger from "@mui/material/useScrollTrigger";
 import { ConfirmProvider } from "material-ui-confirm";
 import theme from "$theme";
 import Placeholder from "$templates/Placeholder";
 import AppBar from "$organisms/AppBar";
 import Problem from "$organisms/Problem";
-import EmbedProblem from "$organisms/EmbedProblem";
+import EmbedProblem from "$templates/EmbedProblem";
 import { NEXT_PUBLIC_NO_EMBED } from "$utils/env";
 import inIframe from "$utils/inIframe";
 import { useSessionInit } from "$utils/session";
@@ -38,8 +41,8 @@ function Content({ children }: { children: ReactNode }) {
 
   const handleBooksClick = () => router.push(pagesPath.books.$url());
   const handleTopicsClick = () => router.push(pagesPath.topics.$url());
-  const handleBookLinkClick = () => router.push(pagesPath.$url());
   const handleDashboardClick = () => router.push(pagesPath.dashboard.$url());
+  const handleBookClick = () => router.push(pagesPath.$url());
 
   return (
     <>
@@ -50,8 +53,8 @@ function Content({ children }: { children: ReactNode }) {
             session={session}
             onBooksClick={handleBooksClick}
             onTopicsClick={handleTopicsClick}
-            onBookLinkClick={handleBookLinkClick}
             onDashboardClick={handleDashboardClick}
+            onBookClick={handleBookClick}
           />
         </Slide>
       )}
@@ -68,10 +71,12 @@ function ThemeProvider({ children }: { children: ReactNode }) {
         <meta name="viewport" content="width=device-width" />
         <meta name="theme-color" content={theme.palette.primary.main} />
       </Head>
-      <MuiThemeProvider theme={theme}>
-        <CssBaseline />
-        <Content>{children}</Content>
-      </MuiThemeProvider>
+      <StyledEngineProvider injectFirst>
+        <MuiThemeProvider theme={theme}>
+          <CssBaseline />
+          <Content>{children}</Content>
+        </MuiThemeProvider>
+      </StyledEngineProvider>
     </>
   );
 }

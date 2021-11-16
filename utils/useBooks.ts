@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useSWRInfinite } from "swr";
+import useSWRInfinite from "swr/infinite";
 import type { BookSchema } from "$server/models/book";
 import type { TopicSchema } from "$server/models/topic";
 import type { UserSchema } from "$server/models/user";
@@ -15,18 +15,24 @@ import bookCreateBy from "./bookCreateBy";
 import { makeUserBooksKey, fetchUserBooks } from "./userBooks";
 import { makeBooksKey, fetchBooks } from "./books";
 
-const makeFilter = (
-  filter: Filter,
-  userId: UserSchema["id"],
-  isBookEditable: (book: Pick<BookSchema, "author">) => boolean,
-  isTopicEditable: (topic: Pick<TopicSchema, "creator">) => boolean
-) => (book: BookSchema | undefined) => {
-  if (book === undefined) return [];
-  const isMyBook = bookCreateBy(book, { id: userId });
-  if (filter === "other" && isMyBook) return [];
-  const displayable = getDisplayableBook(book, isBookEditable, isTopicEditable);
-  return displayable == null ? [] : [displayable];
-};
+const makeFilter =
+  (
+    filter: Filter,
+    userId: UserSchema["id"],
+    isBookEditable: (book: Pick<BookSchema, "author">) => boolean,
+    isTopicEditable: (topic: Pick<TopicSchema, "creator">) => boolean
+  ) =>
+  (book: BookSchema | undefined) => {
+    if (book === undefined) return [];
+    const isMyBook = bookCreateBy(book, { id: userId });
+    if (filter === "other" && isMyBook) return [];
+    const displayable = getDisplayableBook(
+      book,
+      isBookEditable,
+      isTopicEditable
+    );
+    return displayable == null ? [] : [displayable];
+  };
 
 function useBooks() {
   const { session, isBookEditable, isTopicEditable } = useSessionAtom();

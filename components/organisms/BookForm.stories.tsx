@@ -1,8 +1,14 @@
+import type { Story } from "@storybook/react";
 import BookForm from "./BookForm";
 import { book } from "samples";
 
-export default { title: "organisms/BookForm" };
+export default { title: "organisms/BookForm", component: BookForm };
 
-const defaultProps = { book, onSubmit: console.log };
+const Template: Story<Parameters<typeof BookForm>[0]> = (args) => {
+  return <BookForm {...args} />;
+};
 
-export const Default = () => <BookForm {...defaultProps} />;
+export const Default = Template.bind({});
+Default.args = {
+  book,
+};

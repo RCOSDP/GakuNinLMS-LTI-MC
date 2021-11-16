@@ -1,6 +1,6 @@
 export default { title: "organisms/LearnerActivityDialog" };
 
-import Button from "@material-ui/core/Button";
+import Button from "@mui/material/Button";
 import LearnerActivityDialog from "./LearnerActivityDialog";
 import useDialogProps from "$utils/useDialogProps";
 import { user as learner, bookActivity, book } from "$samples";

@@ -7,8 +7,8 @@ import type { SessionSchema } from "$server/models/session";
 export const keyOrder = [
   "learner.id",
   "learner.name",
-  "ltiLaunchBody.context_label",
-  "ltiLaunchBody.context_title",
+  "ltiContext.label",
+  "ltiContext.title",
   "book.id",
   "book.name",
   "topic.id",
@@ -24,8 +24,8 @@ export const keyOrder = [
 export const label: Readonly<{ [key in typeof keyOrder[number]]: string }> = {
   "learner.id": "ユーザID",
   "learner.name": "ユーザ名",
-  "ltiLaunchBody.context_label": "コースID",
-  "ltiLaunchBody.context_title": "コース名",
+  "ltiContext.label": "コースID",
+  "ltiContext.title": "コース名",
   "book.id": "ブックID",
   "book.name": "ブック名",
   "topic.id": "トピックID",
@@ -41,18 +41,18 @@ export const label: Readonly<{ [key in typeof keyOrder[number]]: string }> = {
 /**
  * 単一の学習分析データをローカライズしたキーバリューに変換
  * @param activity 単一の学習分析データ
- * @param ltiLaunchBody 教員のセッション
+ * @param session 教員のセッション
  */
 export function getLocaleEntries(
   activity: BookActivitySchema,
-  ltiLaunchBody?: SessionSchema["ltiLaunchBody"]
+  session: SessionSchema
 ) {
   const flattenActivity: Record<
     typeof keyOrder[number],
     string | number | Date | undefined
   > = flatten({
     ...activity,
-    ltiLaunchBody,
+    session,
   });
   const a = {
     ...flattenActivity,
