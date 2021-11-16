@@ -4,6 +4,7 @@ import prisma from "$server/utils/prisma";
 import aggregateTimeRequired from "./aggregateTimeRequired";
 import findBook from "./findBook";
 import sectionCreateInput from "./sectionCreateInput";
+import keywordsConnectOrCreateInput from "$server/utils/keyword/keywordsConnectOrCreateInput";
 
 async function createBook(
   userId: UserSchema["id"],
@@ -19,6 +20,7 @@ async function createBook(
       details: {},
       authors: { create: { userId, roleId: 1 } },
       sections: { create: sectionsCreateInput },
+      keywords: keywordsConnectOrCreateInput(book.keywords ?? []),
     },
   });
 

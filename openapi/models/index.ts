@@ -1,4 +1,5 @@
 export * from './ApiV2BookBookIdAuthorsAuthors';
+export * from './ApiV2BookBookIdKeywords';
 export * from './ApiV2BookBookIdSections';
 export * from './ApiV2BookBookIdTopics';
 export * from './ApiV2TopicTopicIdActivityTimeRanges';

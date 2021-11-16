@@ -6,6 +6,8 @@ import aggregateTimeRequired from "./aggregateTimeRequired";
 import findBook from "./findBook";
 import sectionCreateInput from "./sectionCreateInput";
 import cleanupSections from "./cleanupSections";
+import keywordsConnectOrCreateInput from "$server/utils/keyword/keywordsConnectOrCreateInput";
+import keywordsDisconnectInput from "$server/utils/keyword/keywordsDisconnectInput";
 
 function upsertSections(bookId: Book["id"], sections: SectionProps[]) {
   const sectionsCreateInput = sections.map(sectionCreateInput);
@@ -24,11 +26,18 @@ async function updateBook({
   const cleanup = cleanupSections(id);
   const { sections, ...other } = book;
   const upsert = upsertSections(id, sections ?? []);
+  const keywords = await prisma.keyword.findMany({
+    where: { books: { every: { id } } },
+  });
   const update = prisma.book.update({
     where: { id },
     data: {
       ...other,
       timeRequired,
+      keywords: {
+        ...keywordsConnectOrCreateInput(book.keywords ?? []),
+        ...keywordsDisconnectInput(keywords, book.keywords ?? []),
+      },
       updatedAt: new Date(),
     },
   });

@@ -14,6 +14,10 @@
 
 import { exists, mapValues } from '../runtime';
 import {
+    ApiV2BookBookIdKeywords,
+    ApiV2BookBookIdKeywordsFromJSON,
+    ApiV2BookBookIdKeywordsFromJSONTyped,
+    ApiV2BookBookIdKeywordsToJSON,
     ApiV2TopicTopicIdResource,
     ApiV2TopicTopicIdResourceFromJSON,
     ApiV2TopicTopicIdResourceFromJSONTyped,
@@ -62,6 +66,12 @@ export interface InlineObject7 {
      * @memberof InlineObject7
      */
     resource?: ApiV2TopicTopicIdResource;
+    /**
+     * 
+     * @type {Array<ApiV2BookBookIdKeywords>}
+     * @memberof InlineObject7
+     */
+    keywords?: Array<ApiV2BookBookIdKeywords>;
 }
 
 export function InlineObject7FromJSON(json: any): InlineObject7 {
@@ -80,6 +90,7 @@ export function InlineObject7FromJSONTyped(json: any, ignoreDiscriminator: boole
         'shared': !exists(json, 'shared') ? undefined : json['shared'],
         'description': !exists(json, 'description') ? undefined : json['description'],
         'resource': !exists(json, 'resource') ? undefined : ApiV2TopicTopicIdResourceFromJSON(json['resource']),
+        'keywords': !exists(json, 'keywords') ? undefined : ((json['keywords'] as Array<any>).map(ApiV2BookBookIdKeywordsFromJSON)),
     };
 }
 
@@ -98,6 +109,7 @@ export function InlineObject7ToJSON(value?: InlineObject7 | null): any {
         'shared': value.shared,
         'description': value.description,
         'resource': ApiV2TopicTopicIdResourceToJSON(value.resource),
+        'keywords': value.keywords === undefined ? undefined : ((value.keywords as Array<any>).map(ApiV2BookBookIdKeywordsToJSON)),
     };
 }
 
