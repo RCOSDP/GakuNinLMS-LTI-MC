@@ -119,6 +119,7 @@ export default function Topics(props: Props) {
       confirmationText: "OK",
     });
     onTopicsDeleteClick(topics);
+    select(() => new Map([]));
   };
 
   const {
