@@ -11,6 +11,8 @@ import { pagesPath } from "$utils/$path";
 import { updateLtiResourceLink } from "$utils/ltiResourceLink";
 import getLtiResourceLink from "$utils/getLtiResourceLink";
 import useDialogProps from "$utils/useDialogProps";
+import { useSearchAtom } from "$store/search";
+import { revalidateContents } from "utils/useContents";
 
 const Books = (
   props: Omit<
@@ -28,6 +30,7 @@ function Index() {
     dispatch: onContentPreviewClick,
     ...dialogProps
   } = useDialogProps<ContentSchema>();
+  const { query } = useSearchAtom();
   const onContentEditClick = (book: Pick<ContentSchema, "id" | "authors">) => {
     const action = isContentEditable(book) ? "edit" : "generate";
     return router.push(
@@ -51,6 +54,7 @@ function Index() {
     if (ltiResourceLink == null) return;
     const bookId = book.id;
     await updateLtiResourceLink({ ...ltiResourceLink, bookId });
+    await revalidateContents(query);
   };
   const handleLinkedBookClick = (book: Pick<BookSchema, "id">) =>
     router.push(pagesPath.book.$url({ query: { bookId: book.id } }));

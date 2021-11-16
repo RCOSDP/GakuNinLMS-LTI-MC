@@ -1,4 +1,4 @@
-import useSWR from "swr";
+import useSWR, { mutate } from "swr";
 import { useDebounce } from "use-debounce";
 import type {
   ApiV2SearchGetFilterEnum,
@@ -77,3 +77,21 @@ function useContents({
 }
 
 export default useContents;
+
+export function revalidateContents({
+  type,
+  q,
+  filter,
+  sort,
+  perPage,
+  page,
+}: {
+  type: "none" | "book" | "topic";
+  q: string;
+  filter: AuthorFilterType;
+  sort: SortOrder;
+  perPage: number;
+  page: number;
+}): Promise<ContentSchema[]> {
+  return mutate([key, type, q, filter, sort, perPage, page]);
+}

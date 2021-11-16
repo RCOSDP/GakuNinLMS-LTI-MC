@@ -5,6 +5,8 @@ import { useSessionAtom } from "$store/session";
 import { pagesPath } from "$utils/$path";
 import useTopics from "$utils/useTopics";
 import { destroyTopic, updateTopic } from "$utils/topic";
+import { useSearchAtom } from "$store/search";
+import { revalidateContents } from "$utils/useContents";
 
 const Topics = (
   props: Omit<
@@ -16,9 +18,7 @@ const Topics = (
 function Index() {
   const router = useRouter();
   const { isContentEditable } = useSessionAtom();
-  function refresh() {
-    return router.push(pagesPath.topics.$url());
-  }
+  const { query } = useSearchAtom();
   async function handleBookNewClick(topics: TopicSchema[]) {
     const ids = topics.map(({ id }) => id);
     if (!ids || !ids.length) return;
@@ -37,7 +37,7 @@ function Index() {
         await updateTopic({ ...topic });
       }
     }
-    return refresh();
+    await revalidateContents(query);
   }
   async function handleTopicsDeleteClick(topics: TopicSchema[]) {
     for (const topic of topics) {
@@ -45,8 +45,7 @@ function Index() {
         await destroyTopic(topic.id);
       }
     }
-    // TODO: 反映させるために revalidate で済ませればよいが後回し
-    router.reload();
+    await revalidateContents(query);
   }
   function onContentEditClick(topic: Pick<TopicSchema, "id" | "authors">) {
     const action = isContentEditable(topic) ? "edit" : "generate";
