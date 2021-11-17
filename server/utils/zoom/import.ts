@@ -4,7 +4,7 @@ import format from "date-fns/format";
 import utcToZoneTime from "date-fns-tz/utcToZonedTime";
 
 import prisma from "$server/utils/prisma";
-import type { User } from "@prisma/client";
+import type { Prisma, User } from "@prisma/client";
 import type { UserSettingsProps } from "$server/models/userSettings";
 import { findUserByEmailAndLtiConsumerId } from "$server/utils/user";
 import { scpUpload } from "$server/utils/wowza/scpUpload";
@@ -156,11 +156,11 @@ class ZoomImport {
         "yyyy/MM/dd HH:mm"
       );
       const meetingDetail = await this.getMeetingDetail(meeting);
-      const topic = {
+      const topic: Prisma.TopicCreateInput = {
         name: `📽 ${meeting.topic} ${datetimeForTitle}`,
         description: meetingDetail.agenda,
         timeRequired: meeting.duration * 60,
-        creator: { connect: { id: this.user.id } },
+        authors: { create: { userId: this.user.id, roleId: 1 } },
         createdAt: startTime,
         updatedAt: new Date(),
         resource,
