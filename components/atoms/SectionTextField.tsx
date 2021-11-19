@@ -1,4 +1,4 @@
-import { ComponentProps } from "react";
+import type { ComponentProps } from "react";
 import TextField from "@mui/material/TextField";
 import makeStyles from "@mui/styles/makeStyles";
 import gray from "$theme/colors/gray";

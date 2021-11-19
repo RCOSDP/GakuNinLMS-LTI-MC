@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { TopicSchema } from "$server/models/topic";
+import type { TopicSchema } from "$server/models/topic";
 import Typography from "@mui/material/Typography";
 import Chip from "@mui/material/Chip";
 import { useTheme } from "@mui/material/styles";
@@ -10,6 +10,7 @@ import DescriptionList from "$atoms/DescriptionList";
 import Markdown from "$atoms/Markdown";
 import useSticky from "$utils/useSticky";
 import getLocaleDateString from "$utils/getLocaleDateString";
+import { authors } from "$utils/descriptionList";
 import formatInterval from "$utils/formatInterval";
 import { NEXT_PUBLIC_VIDEO_MAX_HEIGHT } from "$utils/env";
 import { isVideoResource } from "$utils/videoResource";
@@ -105,10 +106,7 @@ export default function TopicViewerContent({ topic, onEnded, offset }: Props) {
             key: "更新日",
             value: getLocaleDateString(topic.updatedAt, "ja"),
           },
-          {
-            key: "トピック作成者",
-            value: topic.creator.name,
-          },
+          ...authors(topic),
         ]}
       />
       <article className={classes.description}>

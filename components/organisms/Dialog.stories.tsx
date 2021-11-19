@@ -1,12 +1,13 @@
 export default { title: "organisms/Dialog" };
 
-import { forwardRef, useState, ReactElement, Ref } from "react";
+import type { ReactElement, Ref } from "react";
+import { forwardRef, useState } from "react";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import Slide from "@mui/material/Slide";
-import { TransitionProps } from "@mui/material/transitions";
+import type { TransitionProps } from "@mui/material/transitions";
 import CloseIcon from "@mui/icons-material/Close";
 
 const Transition = forwardRef(function Transition(

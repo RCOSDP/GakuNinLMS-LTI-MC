@@ -1,4 +1,4 @@
-import VideoResourceMatcher from "$server/types/videoResourceMatcher";
+import type VideoResourceMatcher from "$server/types/videoResourceMatcher";
 
 const youtubeBaseUrl = "https://www.youtube.com/watch?v=";
 const vimeoBaseUrl = "https://vimeo.com/";

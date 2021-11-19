@@ -9,7 +9,10 @@
         "output": "openapi",
         "inputSpec": "http://localhost:8080/api/v2/swagger/json",
         "additionalProperties": {
-          "typescriptThreePlus": true
+          "typescriptThreePlus": true,
+          "enumPropertyNaming": "original",
+          "modelPropertyNaming": "original",
+          "paramNaming": "original"
         }
       }
     }

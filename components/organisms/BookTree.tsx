@@ -6,9 +6,9 @@ import CourseChip from "$atoms/CourseChip";
 import SharedIndicator from "$atoms/SharedIndicator";
 import SectionsTree from "$molecules/SectionsTree";
 import useTreeItemStyle from "$styles/treeItem";
-import { BookSchema } from "$server/models/book";
-import { TopicSchema } from "$server/models/topic";
-import { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
+import type { BookSchema } from "$server/models/book";
+import type { IsContentEditable } from "$types/content";
+import type { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
 
 const useStyles = makeStyles((theme) => ({
   shared: {
@@ -28,7 +28,7 @@ type Props = {
     ltiResourceLink: Pick<LtiResourceLinkSchema, "consumerId" | "contextId">
   ): void;
   selectedIndexes?: Set<string>;
-  isTopicEditable?(topic: TopicSchema): boolean | undefined;
+  isContentEditable?: IsContentEditable;
 };
 
 export default function BookTree(props: Props) {
@@ -42,7 +42,7 @@ export default function BookTree(props: Props) {
     onBookEditClick,
     onLtiContextClick,
     selectedIndexes,
-    isTopicEditable,
+    isContentEditable,
   } = props;
   const classes = useStyles();
   const treeItemClasses = useTreeItemStyle();
@@ -100,7 +100,7 @@ export default function BookTree(props: Props) {
         onItemEditClick={onItemEditClick}
         onTreeChange={onTreeChange}
         selectedIndexes={selectedIndexes}
-        isTopicEditable={isTopicEditable}
+        isContentEditable={isContentEditable}
       />
     </TreeItem>
   );

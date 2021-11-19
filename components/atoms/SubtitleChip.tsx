@@ -1,7 +1,7 @@
 import Chip from "@mui/material/Chip";
 import CloseIcon from "@mui/icons-material/Close";
 import makeStyles from "@mui/styles/makeStyles";
-import { VideoTrackSchema } from "$server/models/videoTrack";
+import type { VideoTrackSchema } from "$server/models/videoTrack";
 import languages from "$utils/languages";
 import { gray } from "$theme/colors";
 

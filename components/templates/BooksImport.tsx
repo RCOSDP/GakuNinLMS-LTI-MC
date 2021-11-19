@@ -2,14 +2,15 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import makeStyles from "@mui/styles/makeStyles";
 import BooksImportForm from "$organisms/BooksImportForm";
-import BookPreview from "$organisms/BookPreview";
+import ContentPreview from "$organisms/ContentPreview";
 import BackButton from "$atoms/BackButton";
 import useContainerStyles from "styles/container";
-import {
+import type {
   BooksImportParams,
   BooksImportResult,
-} from "$server/validators/booksImportParams";
-import type { BookSchema } from "$server/models/book";
+} from "$server/models/booksImportParams";
+import type { ContentSchema } from "$server/models/content";
+import type { AuthorSchema } from "$server/models/author";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -38,25 +39,26 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(0.5),
   },
   books: {
-    marginTop: theme.spacing(1),
-    "& > *": {
-      marginBottom: theme.spacing(2),
-    },
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fill, 296px)",
+    gap: theme.spacing(2),
   },
 }));
 
 type Props = {
   importResult?: BooksImportResult;
-  onBookPreviewClick?(book: BookSchema): void;
+  onContentPreviewClick(content: ContentSchema): void;
   onSubmit(book: BooksImportParams): void;
   onCancel(): void;
+  onAuthorSubmit(author: Pick<AuthorSchema, "email">): void;
 };
 
 export default function BooksImport({
   importResult,
-  onBookPreviewClick,
+  onContentPreviewClick,
   onSubmit,
   onCancel,
+  onAuthorSubmit,
 }: Props) {
   const classes = useStyles();
   const containerClasses = useContainerStyles();
@@ -70,7 +72,7 @@ export default function BooksImport({
     <Container
       classes={containerClasses}
       className={classes.container}
-      maxWidth="md"
+      maxWidth="lg"
     >
       <BackButton onClick={onCancel}>戻る</BackButton>
       {showForm && (
@@ -78,7 +80,11 @@ export default function BooksImport({
           <Typography className={classes.title} variant="h4">
             ブックのインポート
           </Typography>
-          <BooksImportForm className={classes.form} onSubmit={onSubmit} />
+          <BooksImportForm
+            className={classes.form}
+            onSubmit={onSubmit}
+            onAuthorSubmit={onAuthorSubmit}
+          />
         </>
       )}
       {showResult && (
@@ -89,10 +95,10 @@ export default function BooksImport({
           {showSuccess && (
             <div className={classes.books}>
               {importResult?.books?.map((book) => (
-                <BookPreview
+                <ContentPreview
                   key={book.id}
-                  book={book}
-                  onBookPreviewClick={onBookPreviewClick}
+                  content={{ type: "book", ...book }}
+                  onContentPreviewClick={onContentPreviewClick}
                 />
               ))}
             </div>

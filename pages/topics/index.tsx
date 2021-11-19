@@ -5,6 +5,8 @@ import { useSessionAtom } from "$store/session";
 import { pagesPath } from "$utils/$path";
 import useTopics from "$utils/useTopics";
 import { destroyTopic, updateTopic } from "$utils/topic";
+import { useSearchAtom } from "$store/search";
+import { revalidateContents } from "$utils/useContents";
 
 const Topics = (
   props: Omit<
@@ -15,10 +17,8 @@ const Topics = (
 
 function Index() {
   const router = useRouter();
-  const { isTopicEditable } = useSessionAtom();
-  function refresh() {
-    return router.push(pagesPath.topics.$url());
-  }
+  const { isContentEditable } = useSessionAtom();
+  const { query } = useSearchAtom();
   async function handleBookNewClick(topics: TopicSchema[]) {
     const ids = topics.map(({ id }) => id);
     if (!ids || !ids.length) return;
@@ -32,23 +32,23 @@ function Index() {
     shared: boolean
   ) {
     for (const topic of topics) {
-      if (isTopicEditable(topic) && topic.shared != shared) {
+      if (isContentEditable(topic) && topic.shared != shared) {
         topic.shared = shared;
         await updateTopic({ ...topic });
       }
     }
-    return refresh();
+    await revalidateContents(query);
   }
   async function handleTopicsDeleteClick(topics: TopicSchema[]) {
     for (const topic of topics) {
-      if (isTopicEditable(topic)) {
+      if (isContentEditable(topic)) {
         await destroyTopic(topic.id);
       }
     }
-    return refresh();
+    await revalidateContents(query);
   }
-  function handleTopicEditClick(topic: Pick<TopicSchema, "id" | "creator">) {
-    const action = isTopicEditable(topic) ? "edit" : "generate";
+  function onContentEditClick(topic: Pick<TopicSchema, "id" | "authors">) {
+    const action = isContentEditable(topic) ? "edit" : "generate";
     return router.push(
       pagesPath.topics[action].$url({ query: { topicId: topic.id } })
     );
@@ -60,7 +60,7 @@ function Index() {
     onBookNewClick: handleBookNewClick,
     onTopicsShareClick: handleTopicsShareClick,
     onTopicsDeleteClick: handleTopicsDeleteClick,
-    onTopicEditClick: handleTopicEditClick,
+    onContentEditClick,
     onTopicNewClick: handleTopicNewClick,
   };
 

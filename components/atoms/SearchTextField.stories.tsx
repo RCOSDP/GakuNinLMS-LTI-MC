@@ -12,7 +12,7 @@ const Template: Story<Parameters<typeof SearchTextField>[0]> = (args) => {
   return (
     <SearchTextField
       {...args}
-      value={query.input}
+      value={query.q}
       onSearchInput={onSearchInput}
       onSearchInputReset={onSearchInputReset}
     />

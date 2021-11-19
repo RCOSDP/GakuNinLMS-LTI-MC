@@ -1,5 +1,5 @@
 import ISO6391 from "iso-639-1";
-import { VideoTrackSchema } from "$server/models/videoTrack";
+import type { VideoTrackSchema } from "$server/models/videoTrack";
 import { NEXT_PUBLIC_API_BASE_PATH } from "$utils/env";
 
 function buildTrack({ url, language }: VideoTrackSchema): {

@@ -12,14 +12,14 @@ import { pagesPath } from "$utils/$path";
 export type Query = BookEditQuery;
 
 function Import({ bookId, context }: BookEditQuery) {
-  const { isBookEditable, isTopicEditable } = useSessionAtom();
-  const { book, error } = useBook(bookId, isBookEditable, isTopicEditable);
+  const { isContentEditable } = useSessionAtom();
+  const { book, error } = useBook(bookId, isContentEditable);
   const topicsProps = useTopics();
   const router = useRouter();
   const bookEditQuery = { bookId, ...(context && { context }) };
   function back() {
     // TODO: トピックインポート画面で自身以外のブックへの経路を提供しないならば不要なので取り除きましょう
-    const action = book && isBookEditable(book) ? "edit" : "generate";
+    const action = book && isContentEditable(book) ? "edit" : "generate";
     return router.push(
       pagesPath.book[action].$url({
         query: bookEditQuery,
@@ -40,9 +40,10 @@ function Import({ bookId, context }: BookEditQuery) {
   function handleCancel() {
     return back();
   }
-  function handleTopicEditClick(topic: Pick<TopicSchema, "id">) {
+  function onContentEditClick(topic: Pick<TopicSchema, "id" | "authors">) {
+    const action = isContentEditable(topic) ? "edit" : "generate";
     return router.push(
-      pagesPath.book.topic.import.edit.$url({
+      pagesPath.book.topic.import[action].$url({
         query: { ...bookEditQuery, topicId: topic.id },
       })
     );
@@ -50,8 +51,8 @@ function Import({ bookId, context }: BookEditQuery) {
   const handlers = {
     onSubmit: handleSubmit,
     onCancel: handleCancel,
-    onTopicEditClick: handleTopicEditClick,
-    isTopicEditable,
+    onContentEditClick,
+    isContentEditable,
   };
 
   if (error) return <BookNotFoundProblem />;

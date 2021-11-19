@@ -14,10 +14,18 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    InlineResponse2001Author,
-    InlineResponse2001AuthorFromJSON,
-    InlineResponse2001AuthorFromJSONTyped,
-    InlineResponse2001AuthorToJSON,
+    InlineResponse2001Authors,
+    InlineResponse2001AuthorsFromJSON,
+    InlineResponse2001AuthorsFromJSONTyped,
+    InlineResponse2001AuthorsToJSON,
+    InlineResponse2001Keywords,
+    InlineResponse2001KeywordsFromJSON,
+    InlineResponse2001KeywordsFromJSONTyped,
+    InlineResponse2001KeywordsToJSON,
+    InlineResponse2001Resource,
+    InlineResponse2001ResourceFromJSON,
+    InlineResponse2001ResourceFromJSONTyped,
+    InlineResponse2001ResourceToJSON,
 } from './';
 
 /**
@@ -82,16 +90,22 @@ export interface InlineResponse2001Topics {
     details?: object;
     /**
      * 
-     * @type {InlineResponse2001Author}
+     * @type {Array<InlineResponse2001Authors>}
      * @memberof InlineResponse2001Topics
      */
-    creator?: InlineResponse2001Author;
+    authors?: Array<InlineResponse2001Authors>;
     /**
      * 
-     * @type {object}
+     * @type {Array<InlineResponse2001Keywords>}
      * @memberof InlineResponse2001Topics
      */
-    resource?: object;
+    keywords?: Array<InlineResponse2001Keywords>;
+    /**
+     * 
+     * @type {InlineResponse2001Resource}
+     * @memberof InlineResponse2001Topics
+     */
+    resource?: InlineResponse2001Resource;
 }
 
 export function InlineResponse2001TopicsFromJSON(json: any): InlineResponse2001Topics {
@@ -113,8 +127,9 @@ export function InlineResponse2001TopicsFromJSONTyped(json: any, ignoreDiscrimin
         'createdAt': !exists(json, 'createdAt') ? undefined : (new Date(json['createdAt'])),
         'updatedAt': !exists(json, 'updatedAt') ? undefined : (new Date(json['updatedAt'])),
         'details': !exists(json, 'details') ? undefined : json['details'],
-        'creator': !exists(json, 'creator') ? undefined : InlineResponse2001AuthorFromJSON(json['creator']),
-        'resource': !exists(json, 'resource') ? undefined : json['resource'],
+        'authors': !exists(json, 'authors') ? undefined : ((json['authors'] as Array<any>).map(InlineResponse2001AuthorsFromJSON)),
+        'keywords': !exists(json, 'keywords') ? undefined : ((json['keywords'] as Array<any>).map(InlineResponse2001KeywordsFromJSON)),
+        'resource': !exists(json, 'resource') ? undefined : InlineResponse2001ResourceFromJSON(json['resource']),
     };
 }
 
@@ -136,8 +151,9 @@ export function InlineResponse2001TopicsToJSON(value?: InlineResponse2001Topics 
         'createdAt': value.createdAt === undefined ? undefined : (value.createdAt.toISOString()),
         'updatedAt': value.updatedAt === undefined ? undefined : (value.updatedAt.toISOString()),
         'details': value.details,
-        'creator': InlineResponse2001AuthorToJSON(value.creator),
-        'resource': value.resource,
+        'authors': value.authors === undefined ? undefined : ((value.authors as Array<any>).map(InlineResponse2001AuthorsToJSON)),
+        'keywords': value.keywords === undefined ? undefined : ((value.keywords as Array<any>).map(InlineResponse2001KeywordsToJSON)),
+        'resource': InlineResponse2001ResourceToJSON(value.resource),
     };
 }
 

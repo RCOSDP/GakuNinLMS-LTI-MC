@@ -1,11 +1,15 @@
-import { Prisma, Section, TopicSection } from "@prisma/client";
-import { BookSchema } from "$server/models/book";
-import { SectionSchema } from "$server/models/book/section";
-import { TopicSchema } from "$server/models/topic";
+import type { Prisma, Section, TopicSection } from "@prisma/client";
+import type { BookSchema } from "$server/models/book";
+import type { SectionSchema } from "$server/models/book/section";
+import type { TopicSchema } from "$server/models/topic";
+import {
+  authorArg,
+  authorToAuthorSchema,
+} from "$server/utils/author/authorToAuthorSchema";
+import type { TopicWithResource } from "$server/utils/topic/topicToTopicSchema";
 import {
   topicsWithResourcesArg,
   topicToTopicSchema,
-  TopicWithResource,
 } from "$server/utils/topic/topicToTopicSchema";
 import {
   ltiResourceLinkIncludingContextArg,
@@ -14,8 +18,9 @@ import {
 
 export const bookIncludingTopicsArg = {
   include: {
-    author: true,
+    authors: authorArg,
     ltiResourceLinks: ltiResourceLinkIncludingContextArg,
+    keywords: true,
     sections: {
       orderBy: { order: "asc" },
       include: {
@@ -41,6 +46,7 @@ type BookWithTopics = Prisma.BookGetPayload<typeof bookIncludingTopicsArg>;
 export function bookToBookSchema(book: BookWithTopics): BookSchema {
   return {
     ...book,
+    authors: book.authors.map(authorToAuthorSchema),
     ltiResourceLinks: book.ltiResourceLinks.map(ltiResourceLinkToSchema),
     sections: book.sections.map(sectionToSectionSchema),
   };

@@ -23,6 +23,7 @@ import { useSessionAtom } from "$store/session";
 import useSticky from "$utils/useSticky";
 import useAppBarOffset from "$utils/useAppBarOffset";
 import getLocaleDateString from "$utils/getLocaleDateString";
+import { authors } from "$utils/descriptionList";
 import extractNumberFromPx from "$utils/extractNumberFromPx";
 import sumPixels from "$utils/sumPixels";
 
@@ -126,7 +127,7 @@ export default function Book(props: Props) {
     considerAppBar = true,
   } = props;
   const topic = book?.sections[sectionIndex]?.topics[topicIndex];
-  const { isInstructor, isBookEditable, isTopicEditable } = useSessionAtom();
+  const { isInstructor, isContentEditable } = useSessionAtom();
   const [expanded, setExpanded] = useState(false);
   const handleLinkClick = () => setExpanded(!expanded);
   const theme = useTheme();
@@ -176,7 +177,7 @@ export default function Book(props: Props) {
             {isInstructor &&
               book &&
               onBookEditClick &&
-              (isBookEditable(book) || book.shared) && (
+              (isContentEditable(book) || book.shared) && (
                 <EditButton
                   variant="book"
                   size="medium"
@@ -200,6 +201,7 @@ export default function Book(props: Props) {
         <>
           <div className={classes.description}>
             <DescriptionList
+              inline
               nowrap
               value={[
                 {
@@ -210,10 +212,7 @@ export default function Book(props: Props) {
                   key: "更新日",
                   value: getLocaleDateString(book.updatedAt, "ja"),
                 },
-                {
-                  key: "ブック作成者",
-                  value: book.author.name,
-                },
+                ...authors(book),
               ]}
             />
             <Link
@@ -253,7 +252,7 @@ export default function Book(props: Props) {
             sections={book?.sections ?? []}
             onItemClick={handleItemClick}
             onItemEditClick={handleItemEditClick}
-            isTopicEditable={isTopicEditable}
+            isContentEditable={isContentEditable}
           />
         </div>
       </div>

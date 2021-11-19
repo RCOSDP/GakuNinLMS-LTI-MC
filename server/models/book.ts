@@ -1,16 +1,10 @@
-import { Book } from "@prisma/client";
-import jsonSchema from "$server/prisma/json-schema.json";
-import { UserSchema, userSchema } from "./user";
-import {
-  SectionProps,
-  sectionPropsSchema,
-  SectionSchema,
-  sectionSchema,
-} from "./book/section";
-import {
-  LtiResourceLinkSchema,
-  ltiResourceLinkSchema,
-} from "./ltiResourceLink";
+import type { Book } from "@prisma/client";
+import { AuthorSchema } from "./author";
+import type { SectionProps, SectionSchema } from "./book/section";
+import { sectionPropsSchema, sectionSchema } from "./book/section";
+import type { LtiResourceLinkSchema } from "./ltiResourceLink";
+import { ltiResourceLinkSchema } from "./ltiResourceLink";
+import { KeywordPropSchema, KeywordSchema } from "./keyword";
 
 export type BookProps = {
   name: string;
@@ -18,54 +12,49 @@ export type BookProps = {
   language?: string;
   shared?: boolean;
   sections?: SectionProps[];
+  keywords?: KeywordPropSchema[];
 };
 
-export type BookSchema = Omit<Book, "authorId"> & {
-  author: UserSchema;
+export type BookSchema = Book & {
+  authors: AuthorSchema[];
   sections: SectionSchema[];
   ltiResourceLinks: LtiResourceLinkSchema[];
+  keywords: KeywordSchema[];
 };
-
-const {
-  id,
-  name,
-  description,
-  language,
-  shared,
-  publishedAt,
-  createdAt,
-  updatedAt,
-  details,
-} = jsonSchema.definitions.Book.properties;
 
 export const bookPropsSchema = {
   type: "object",
   properties: {
-    name,
-    description,
-    language: { ...language, nullable: true },
-    shared: { ...shared, nullable: true },
+    name: { type: "string" },
+    description: { type: "string" },
+    language: { type: "string", nullable: true },
+    shared: { type: "boolean", nullable: true },
     sections: {
       type: "array",
       items: sectionPropsSchema,
     },
+    keywords: {
+      type: "array",
+      items: KeywordPropSchema,
+    },
   },
-};
+} as const;
 
 export const bookSchema = {
   type: "object",
   properties: {
-    id,
-    name,
-    description,
-    language,
+    id: { type: "integer" },
+    name: { type: "string" },
+    description: { type: "string" },
+    language: { type: "string" },
     timeRequired: { type: "integer", nullable: true },
-    shared,
-    publishedAt,
-    createdAt,
-    updatedAt,
-    details,
-    author: userSchema,
+    shared: { type: "boolean" },
+    publishedAt: { type: "string", format: "date-time" },
+    createdAt: { type: "string", format: "date-time" },
+    updatedAt: { type: "string", format: "date-time" },
+    details: { type: "object" },
+    authors: { type: "array", items: AuthorSchema },
+    keywords: { type: "array", items: KeywordSchema },
     sections: {
       type: "array",
       items: sectionSchema,
@@ -75,4 +64,4 @@ export const bookSchema = {
       items: ltiResourceLinkSchema,
     },
   },
-};
+} as const;

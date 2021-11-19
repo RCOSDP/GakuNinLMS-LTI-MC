@@ -12,5 +12,5 @@ export const Default = Template.bind({});
 Default.args = {
   sections,
   index: [0, 0],
-  isTopicEditable: () => false,
+  isContentEditable: () => false,
 };

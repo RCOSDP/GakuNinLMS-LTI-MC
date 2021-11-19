@@ -14,24 +14,24 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    InlineResponse2001Books,
-    InlineResponse2001BooksFromJSON,
-    InlineResponse2001BooksFromJSONTyped,
-    InlineResponse2001BooksToJSON,
+    InlineResponse2001Contents,
+    InlineResponse2001ContentsFromJSON,
+    InlineResponse2001ContentsFromJSONTyped,
+    InlineResponse2001ContentsToJSON,
 } from './';
 
 /**
- * 作成したブックの一覧
+ * 成功時
  * @export
  * @interface InlineResponse2001
  */
 export interface InlineResponse2001 {
     /**
      * 
-     * @type {Array<InlineResponse2001Books>}
+     * @type {Array<InlineResponse2001Contents>}
      * @memberof InlineResponse2001
      */
-    books?: Array<InlineResponse2001Books>;
+    contents?: Array<InlineResponse2001Contents>;
     /**
      * 
      * @type {number}
@@ -56,7 +56,7 @@ export function InlineResponse2001FromJSONTyped(json: any, ignoreDiscriminator: 
     }
     return {
         
-        'books': !exists(json, 'books') ? undefined : ((json['books'] as Array<any>).map(InlineResponse2001BooksFromJSON)),
+        'contents': !exists(json, 'contents') ? undefined : ((json['contents'] as Array<any>).map(InlineResponse2001ContentsFromJSON)),
         'page': !exists(json, 'page') ? undefined : json['page'],
         'perPage': !exists(json, 'perPage') ? undefined : json['perPage'],
     };
@@ -71,7 +71,7 @@ export function InlineResponse2001ToJSON(value?: InlineResponse2001 | null): any
     }
     return {
         
-        'books': value.books === undefined ? undefined : ((value.books as Array<any>).map(InlineResponse2001BooksToJSON)),
+        'contents': value.contents === undefined ? undefined : ((value.contents as Array<any>).map(InlineResponse2001ContentsToJSON)),
         'page': value.page,
         'perPage': value.perPage,
     };

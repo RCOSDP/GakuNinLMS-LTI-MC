@@ -1,55 +1,38 @@
-export default {
-  title: "templates/TopicImport",
-  parameters: { layout: "fullscreen" },
-};
-
+import type { Story } from "@storybook/react";
 import TopicImport from "./TopicImport";
 import Slide from "@mui/material/Slide";
 import useScrollTrigger from "@mui/material/useScrollTrigger";
 import AppBar from "$organisms/AppBar";
 import { topic, session } from "samples";
 
-const appBarHandlers = {
-  onBooksClick: console.log,
-  onTopicsClick: console.log,
-  onDashboardClick: console.log,
-};
-
-const topics = [...Array(10)].map(() => topic);
-
-const handlers = {
-  onSubmit: console.log,
-  onCancel: () => console.log("Cancel"),
-  onTopicEditClick: console.log,
-  isTopicEditable: () => true,
+export default {
+  title: "templates/TopicImport",
+  parameters: { layout: "fullscreen" },
+  component: TopicImport,
 };
 
 function SlideAppBar() {
   const trigger = useScrollTrigger();
   return (
     <Slide appear={false} direction="down" in={!trigger}>
-      <AppBar position="sticky" session={session} {...appBarHandlers} />
+      <AppBar position="sticky" session={session} />
     </Slide>
   );
 }
 
-export const Default = () => (
+const Template: Story<Parameters<typeof TopicImport>[0]> = (args) => (
   <>
     <SlideAppBar />
-    <TopicImport topics={topics} {...handlers} />
+    <TopicImport {...args} />
   </>
 );
 
-export const Empty = () => (
-  <>
-    <SlideAppBar />
-    <TopicImport topics={[]} {...handlers} />
-  </>
-);
+export const Default = Template.bind({});
+Default.args = {
+  contents: [...Array(10)].map(() => ({ type: "topic", ...topic })),
+};
 
-export const Others = () => (
-  <>
-    <SlideAppBar />
-    <TopicImport topics={topics} {...handlers} isTopicEditable={() => false} />
-  </>
-);
+export const Empty = Template.bind({});
+Empty.args = {
+  contents: [],
+};

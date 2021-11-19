@@ -11,8 +11,10 @@ import BackButton from "$atoms/BackButton";
 import useContainerStyles from "styles/container";
 import type { BookSchema } from "$server/models/book";
 import type { BookPropsWithSubmitOptions } from "$types/bookPropsWithSubmitOptions";
-import { SectionProps } from "$server/models/book/section";
-import { TopicSchema } from "$server/models/topic";
+import type { SectionProps } from "$server/models/book/section";
+import type { TopicSchema } from "$server/models/topic";
+import type { AuthorSchema } from "$server/models/author";
+import type { IsContentEditable } from "$types/content";
 import { useConfirm } from "material-ui-confirm";
 import useDialogProps from "$utils/useDialogProps";
 
@@ -51,7 +53,9 @@ type Props = {
   onTopicNewClick(): void;
   onTopicEditClick?(topic: TopicSchema): void;
   onBookImportClick(): void;
-  isTopicEditable?(topic: TopicSchema): boolean | undefined;
+  onAuthorsUpdate(authors: AuthorSchema[]): void;
+  onAuthorSubmit(author: Pick<AuthorSchema, "email">): void;
+  isContentEditable?: IsContentEditable;
   linked?: boolean;
 };
 
@@ -65,7 +69,9 @@ export default function BookEdit({
   onTopicNewClick,
   onTopicEditClick,
   onBookImportClick,
-  isTopicEditable,
+  onAuthorsUpdate,
+  onAuthorSubmit,
+  isContentEditable,
   linked = false,
 }: Props) {
   const classes = useStyles();
@@ -109,7 +115,7 @@ export default function BookEdit({
         onTopicNewClick={onTopicNewClick}
         onBookImportClick={onBookImportClick}
         onSectionsUpdate={onSectionsUpdate}
-        isTopicEditable={isTopicEditable}
+        isContentEditable={isContentEditable}
       />
       <Typography className={classes.subtitle} variant="h5">
         基本情報
@@ -124,6 +130,8 @@ export default function BookEdit({
         linked={linked}
         variant="update"
         onSubmit={onSubmit}
+        onAuthorsUpdate={onAuthorsUpdate}
+        onAuthorSubmit={onAuthorSubmit}
       />
       <Button size="small" color="primary" onClick={handleDeleteButtonClick}>
         <DeleteOutlinedIcon />

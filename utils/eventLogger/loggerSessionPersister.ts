@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { SessionSchema } from "$server/models/session";
+import type { SessionSchema } from "$server/models/session";
 import { isInstructor } from "$utils/session";
 
 const key = "loggerSessionPersister";

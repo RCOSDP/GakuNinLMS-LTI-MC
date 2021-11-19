@@ -1,4 +1,4 @@
-import { FastifyInstance } from "fastify";
+import type { FastifyInstance } from "fastify";
 import swagger from "fastify-swagger";
 import helmet from "fastify-helmet";
 import cors from "fastify-cors";

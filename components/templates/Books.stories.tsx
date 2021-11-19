@@ -1,13 +1,15 @@
-export default {
-  title: "templates/Books",
-  parameters: { layout: "fullscreen" },
-};
-
+import type { Story } from "@storybook/react";
 import Books from "./Books";
 import Slide from "@mui/material/Slide";
 import useScrollTrigger from "@mui/material/useScrollTrigger";
 import AppBar from "$organisms/AppBar";
 import { book, books, session } from "samples";
+
+export default {
+  title: "templates/Books",
+  parameters: { layout: "fullscreen" },
+  component: Books,
+};
 
 const linkedBook = { ...book, editable: true };
 
@@ -15,21 +17,6 @@ const appBarHandlers = {
   onBooksClick: console.log,
   onTopicsClick: console.log,
   onDashboardClick: console.log,
-};
-
-const handlers = {
-  onBookPreviewClick: console.log,
-  onBookEditClick: console.log,
-  onBookNewClick() {
-    console.log("onBookNewClick");
-  },
-  onBooksImportClick() {
-    console.log("onBooksImportClick");
-  },
-  onBookLinkClick() {
-    console.log("onBookLinkClick");
-  },
-  onTopicEditClick: console.log,
 };
 
 function SlideAppBar() {
@@ -41,16 +28,22 @@ function SlideAppBar() {
   );
 }
 
-export const Default = () => (
+const Template: Story<Parameters<typeof Books>[0]> = (args) => (
   <>
     <SlideAppBar />
-    <Books linkedBook={linkedBook} books={books} {...handlers} />
+    <Books {...args} />
   </>
 );
 
-export const Empty = () => (
-  <>
-    <SlideAppBar />
-    <Books books={[]} {...handlers} />
-  </>
-);
+export const Default = Template.bind({});
+Default.args = {
+  linkedBook,
+  contents: books.map((book) => ({ type: "book", ...book })),
+  hasNextPage: true,
+};
+
+export const Empty = Template.bind({});
+Empty.args = {
+  contents: [],
+  hasNextPage: true,
+};

@@ -1,6 +1,6 @@
 import useSWR, { mutate } from "swr";
 import { api } from "./api";
-import {
+import type {
   LtiResourceLinkProps,
   LtiResourceLinkSchema,
 } from "$server/models/ltiResourceLink";

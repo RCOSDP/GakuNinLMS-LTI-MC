@@ -1,12 +1,20 @@
-import { Prisma } from "@prisma/client";
-import { TopicSchema } from "$server/models/topic";
+import type { Prisma } from "@prisma/client";
+import type { TopicSchema } from "$server/models/topic";
+import {
+  authorArg,
+  authorToAuthorSchema,
+} from "$server/utils/author/authorToAuthorSchema";
 import {
   resourceWithVideoArg,
   resourceToResourceSchema,
 } from "$server/utils/resource/toSchema";
 
 export const topicsWithResourcesArg = {
-  include: { creator: true, resource: resourceWithVideoArg },
+  include: {
+    authors: authorArg,
+    resource: resourceWithVideoArg,
+    keywords: true,
+  },
 } as const;
 
 export type TopicWithResource = Prisma.TopicGetPayload<
@@ -14,5 +22,9 @@ export type TopicWithResource = Prisma.TopicGetPayload<
 >;
 
 export function topicToTopicSchema(topic: TopicWithResource): TopicSchema {
-  return { ...topic, resource: resourceToResourceSchema(topic.resource) };
+  return {
+    ...topic,
+    authors: topic.authors.map(authorToAuthorSchema),
+    resource: resourceToResourceSchema(topic.resource),
+  };
 }

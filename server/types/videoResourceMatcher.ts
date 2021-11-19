@@ -1,4 +1,4 @@
-import { VideoResource } from "$server/models/videoResource";
+import type { VideoResource } from "$server/models/videoResource";
 
 type VideoResourceMatcher = {
   host: RegExp;

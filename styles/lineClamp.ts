@@ -1,4 +1,4 @@
-import makeStyles from "@mui/styles/makeStyles";
+import { css } from "@emotion/css";
 
 type Props = {
   fontSize: string;
@@ -6,21 +6,19 @@ type Props = {
   lineHeight: number;
 };
 
-const lineClamp = makeStyles({
-  placeholder: {
-    height: (props: Props) =>
-      `calc(${props.fontSize} * ${props.lineClamp} * ${props.lineHeight})`,
-  },
-  clamp: {
-    fontSize: (props) => props.fontSize,
+const lineClamp = ({ fontSize, lineClamp, lineHeight }: Props) => ({
+  placeholder: css({
+    height: `calc(${fontSize} * ${lineClamp} * ${lineHeight})`,
+  }),
+  clamp: css({
+    fontSize,
     display: "-webkit-box",
     WebkitBoxOrient: "vertical",
-    WebkitLineClamp: (props: Props) => props.lineClamp,
-    lineHeight: (props: Props) => props.lineHeight,
-    maxHeight: (props: Props) =>
-      `calc(${props.fontSize} * ${props.lineClamp} * ${props.lineHeight})`,
+    WebkitLineClamp: lineClamp,
+    lineHeight,
+    maxHeight: `calc(${fontSize} * ${lineClamp} * ${lineHeight})`,
     overflow: "hidden",
-  },
+  }),
 });
 
 export default lineClamp;

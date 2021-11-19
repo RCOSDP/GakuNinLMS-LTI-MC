@@ -12,6 +12,7 @@ import BookNotFoundProblem from "$templates/TopicNotFoundProblem";
 import { useVideoTrackAtom } from "$store/videoTrack";
 import { destroyTopic, updateTopic, useTopic } from "$utils/topic";
 import { destroyVideoTrack, uploadVideoTrack } from "$utils/videoTrack";
+import useAuthorsHandler from "$utils/useAuthorsHandler";
 
 export type Query =
   | { topicId: TopicSchema["id"] }
@@ -25,6 +26,9 @@ type EditProps = {
 function Edit({ topicId, back }: EditProps) {
   const topic = useTopic(topicId);
   const { addVideoTrack, deleteVideoTrack } = useVideoTrackAtom();
+  const { handleAuthorsUpdate, handleAuthorSubmit } = useAuthorsHandler(
+    topic && { type: "topic", ...topic }
+  );
   async function handleSubmit(props: TopicProps) {
     await updateTopic({ id: topicId, ...props });
     return back();
@@ -52,6 +56,8 @@ function Edit({ topicId, back }: EditProps) {
     onCancel: handleCancel,
     onSubtitleSubmit: handleSubtitleSubmit,
     onSubtitleDelete: handleSubtitleDelete,
+    onAuthorsUpdate: handleAuthorsUpdate,
+    onAuthorSubmit: handleAuthorSubmit,
   };
 
   if (!topic) return <Placeholder />;

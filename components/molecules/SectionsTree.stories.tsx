@@ -41,5 +41,5 @@ Default.args = {
 export const Editable = Template.bind({});
 Editable.args = {
   ...Default.args,
-  isTopicEditable: () => true,
+  isContentEditable: () => true,
 };
