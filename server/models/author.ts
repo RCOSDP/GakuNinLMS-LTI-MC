@@ -9,8 +9,6 @@ const _roleNames = {
   author: "著者",
   "co-author": "共同著者",
   collaborator: "協力者",
-  editor: "編集者",
-  user: "利用者",
 } as const;
 
 /** 著者 */
