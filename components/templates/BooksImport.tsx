@@ -4,7 +4,8 @@ import makeStyles from "@mui/styles/makeStyles";
 import BooksImportForm from "$organisms/BooksImportForm";
 import ContentPreview from "$organisms/ContentPreview";
 import BackButton from "$atoms/BackButton";
-import useContainerStyles from "styles/container";
+import useContainerStyles from "$styles/container";
+import { useSearchAtom } from "$store/search";
 import type {
   BooksImportParams,
   BooksImportResult,
@@ -62,6 +63,7 @@ export default function BooksImport({
 }: Props) {
   const classes = useStyles();
   const containerClasses = useContainerStyles();
+  const searchProps = useSearchAtom();
 
   const showSuccess = importResult?.books && importResult.books.length > 0;
   const showErrors = importResult?.errors && importResult.errors.length > 0;
@@ -99,6 +101,7 @@ export default function BooksImport({
                   key={book.id}
                   content={{ type: "book", ...book }}
                   onContentPreviewClick={onContentPreviewClick}
+                  onKeywordClick={searchProps.onKeywordClick}
                 />
               ))}
             </div>
