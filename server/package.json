@@ -20,7 +20,8 @@
     "migrate:reset": "prisma migrate reset --skip-seed",
     "seed": "ncc run -t --no-asset-builds prisma/seed.ts",
     "zoom:import": "ncc run -t --no-asset-builds utils/zoom/importCli.ts",
-    "start": "NODE_ENV=production node dist/index.js"
+    "start": "NODE_ENV=production node dist/index.js",
+    "start:migrate": "run-s migrate start"
   },
   "devDependencies": {
     "@prisma/client": "^2.30.2",
