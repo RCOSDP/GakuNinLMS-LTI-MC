@@ -109,6 +109,7 @@ export default function TopicImport(props: Props) {
             onChange={handleChecked(index)}
             onContentPreviewClick={handlePreviewClick}
             onContentEditClick={onContentEditClick}
+            onKeywordClick={searchProps.onKeywordClick}
           />
         ))}
         {loading &&

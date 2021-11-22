@@ -177,6 +177,7 @@ export default function Topics(props: Props) {
             onChange={handleChecked(content)}
             onContentPreviewClick={handlePreviewClick}
             onContentEditClick={onContentEditClick}
+            onKeywordClick={searchProps.onKeywordClick}
           />
         ))}
         {loading &&

@@ -121,7 +121,7 @@ type Props = Parameters<typeof Checkbox>[0] & {
   onLtiContextClick?(
     ltiResourceLink: Pick<LtiResourceLinkSchema, "consumerId" | "contextId">
   ): void;
-  onKeywordClick?(keyword: Pick<KeywordSchema, "name">): void;
+  onKeywordClick(keyword: Pick<KeywordSchema, "name">): void;
   linked?: boolean;
 };
 
@@ -152,7 +152,7 @@ export default function ContentPreview({
   );
   const handleContentLinkClick = () => onContentLinkClick?.(content);
   const handleKeywordClick = (keyword: Pick<KeywordSchema, "name">) => () =>
-    onKeywordClick?.(keyword);
+    onKeywordClick(keyword);
   return (
     <Preview className={clsx({ selected: checked })}>
       <Header
