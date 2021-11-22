@@ -100,7 +100,7 @@
     "build:server": "yarn --cwd server build:app",
     "build:openapi": "openapi-generator-cli generate",
     "zoom:import": "yarn --cwd server zoom:import",
-    "start": "yarn --cwd server start:migrate",
+    "start": "yarn --cwd server start",
     "vercel-build": "run-s compile build:static build:server && rm -rf public/api/v2/swagger && mkdir -p public/api/v2/swagger && cp -a server/dist/static public/api/v2/swagger/static",
     "format": "prettier --write .",
     "lint": "run-s compile 'lint:eslint {@}' --",
