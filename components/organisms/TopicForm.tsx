@@ -15,6 +15,7 @@ import clsx from "clsx";
 import InputLabel from "$atoms/InputLabel";
 import TextField from "$atoms/TextField";
 import AuthorsInput from "$organisms/AuthorsInput";
+import KeywordsInput from "$organisms/KeywordsInput";
 import SubtitleChip from "$atoms/SubtitleChip";
 import SubtitleUploadDialog from "$organisms/SubtitleUploadDialog";
 import Video from "$organisms/Video";
@@ -32,6 +33,7 @@ import type { AuthorSchema } from "$server/models/author";
 import type { TopicPropsWithAuthors } from "$types/topicPropsWithAuthors";
 import { useAuthorsAtom } from "store/authors";
 import { useVideoTrackAtom } from "$store/videoTrack";
+import useKeywordsInput from "$utils/useKeywordsInput";
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -106,6 +108,7 @@ export default function TopicForm(props: Props) {
     onSubtitleDelete(videoTrack);
   };
   const { updateState: _updateState, ...authorsInputProps } = useAuthorsAtom();
+  const keywordsInputProps = useKeywordsInput(topic?.keywords ?? []);
   const defaultValues = {
     name: topic?.name,
     description: topic?.description ?? "",
@@ -139,6 +142,7 @@ export default function TopicForm(props: Props) {
             ...values,
             resource,
             authors: authorsInputProps.authors,
+            keywords: keywordsInputProps.keywords,
           });
         })}
       >
@@ -230,6 +234,7 @@ export default function TopicForm(props: Props) {
             min: 1,
           }}
         />
+        <KeywordsInput {...keywordsInputProps} />
         <div>
           <InputLabel>字幕</InputLabel>
           <div className={classes.subtitles}>
