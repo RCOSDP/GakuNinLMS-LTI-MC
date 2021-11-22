@@ -70,7 +70,6 @@ export default function KeywordsInput({
       <FormControl error={error}>
         <Input
           id={id}
-          placeholder="ちびチロ"
           value={value}
           onChange={handleInput}
           onKeyDown={handleKeyDown}
