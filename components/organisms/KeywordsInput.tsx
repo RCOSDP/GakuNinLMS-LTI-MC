@@ -46,7 +46,10 @@ export default function KeywordsInput({
     onInput?.(event.target.value);
   const handleKeyDown = (event: React.KeyboardEvent) => {
     // NOTE: このコンポーネントをform要素でラップしている場合にsubmitさせない目的
-    event.key === "Enter" && event.preventDefault();
+    if (event.key === "Enter") {
+      event.preventDefault();
+      handleKeywordSubmit();
+    }
   };
   const handleKeywordSubmit = () => onKeywordSubmit({ name: value });
   return (
