@@ -11,6 +11,7 @@ import clsx from "clsx";
 import InputLabel from "$atoms/InputLabel";
 import TextField from "$atoms/TextField";
 import AuthorsInput from "$organisms/AuthorsInput";
+import KeywordsInput from "$organisms/KeywordsInput";
 import useCardStyles from "styles/card";
 import gray from "theme/colors/gray";
 import type { BookSchema } from "$server/models/book";
@@ -18,6 +19,7 @@ import type { BookPropsWithSubmitOptions } from "$types/bookPropsWithSubmitOptio
 import type { AuthorSchema } from "$server/models/author";
 import { useAuthorsAtom } from "store/authors";
 import languages from "$utils/languages";
+import useKeywordsInput from "$utils/useKeywordsInput";
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -71,6 +73,7 @@ export default function BookForm({
   const cardClasses = useCardStyles();
   const classes = useStyles();
   const { updateState: _updateState, ...authorsInputProps } = useAuthorsAtom();
+  const keywordsInputProps = useKeywordsInput(book?.keywords ?? []);
   const defaultValues: BookPropsWithSubmitOptions = {
     name: book?.name ?? "",
     description: book?.description ?? "",
@@ -78,6 +81,7 @@ export default function BookForm({
     language: book?.language ?? Object.getOwnPropertyNames(languages)[0],
     sections: book?.sections,
     authors: book?.authors ?? [],
+    keywords: book?.keywords ?? [],
     submitWithLink: false,
   };
   const { handleSubmit, register, setValue } =
@@ -94,6 +98,7 @@ export default function BookForm({
       component="form"
       onSubmit={handleSubmit((values) => {
         values.authors = authorsInputProps.authors;
+        values.keywords = keywordsInputProps.keywords;
         onSubmit(values);
       })}
     >
@@ -141,6 +146,7 @@ export default function BookForm({
           </MenuItem>
         ))}
       </TextField>
+      <KeywordsInput {...keywordsInputProps} />
       <TextField
         label={
           <>
