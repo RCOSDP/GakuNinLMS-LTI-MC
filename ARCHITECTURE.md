@@ -136,6 +136,10 @@ OpenAPI Generator (`yarn build:openapi` コマンド) によって生成する�
 
 StoryBook におけるストーリのためのサンプルデータ。
 
+### app.json ([code](https://github.com/npocccties/chibichilo/blob/master/app.json))
+
+[Heroku](https://heroku.com/) のためのファイル。[Heroku の公式ドキュメント](https://devcenter.heroku.com/articles/app-json-schema)を参照してください。
+
 ### api/v2.ts ([code](https://github.com/npocccties/chibichilo/blob/master/api/v2.ts))
 
 [vercel.json](https://github.com/npocccties/chibichilo/tree/master/vercel.json)とともに [Vercel](https://vercel.com/) のためのファイル。[Vercel の公式ドキュメント](https://vercel.com/docs/configuration)を参照してください。

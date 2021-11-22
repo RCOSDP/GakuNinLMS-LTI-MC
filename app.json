@@ -1,0 +1,9 @@
+{
+  "addons": [{ "plan": "heroku-postgresql" }],
+  "env": {
+    "SESSION_SECRET": {
+      "description": "Session store private key",
+      "generator": "secret"
+    }
+  }
+}
