@@ -25,20 +25,36 @@ const queryAtom = atom<{
 
 export function useSearchAtom() {
   const [query, updateQuery] = useAtom(queryAtom);
+  const setType: (type: "book" | "topic") => void = useCallback(
+    (type) =>
+      updateQuery({
+        type,
+        q: "",
+        filter: "self",
+        sort: "updated",
+        perPage: 30,
+        page: 0,
+      }),
+    [updateQuery]
+  );
+  const setPage: (page: number) => void = useCallback(
+    (page) => updateQuery((query) => ({ ...query, page })),
+    [updateQuery]
+  );
   const onSearchInput: (q: string) => void = useCallback(
-    (q) => updateQuery((query) => ({ ...query, q })),
+    (q) => updateQuery((query) => ({ ...query, q, page: 0 })),
     [updateQuery]
   );
   const onSearchInputReset: () => void = useCallback(
-    () => updateQuery((query) => ({ ...query, q: "" })),
+    () => updateQuery((query) => ({ ...query, q: "", page: 0 })),
     [updateQuery]
   );
   const onFilterChange: (filter: AuthorFilterType) => void = useCallback(
-    (filter) => updateQuery((query) => ({ ...query, filter })),
+    (filter) => updateQuery((query) => ({ ...query, filter, page: 0 })),
     [updateQuery]
   );
   const onSortChange: (sort: SortOrder) => void = useCallback(
-    (sort) => updateQuery((query) => ({ ...query, sort })),
+    (sort) => updateQuery((query) => ({ ...query, sort, page: 0 })),
     [updateQuery]
   );
   const onLtiContextClick: (
@@ -48,6 +64,7 @@ export function useSearchAtom() {
       updateQuery((query) => ({
         ...query,
         q: clsx(query.q, stringify({ link: [link] })),
+        page: 0,
       })),
     [updateQuery]
   );
@@ -56,13 +73,15 @@ export function useSearchAtom() {
       updateQuery((query) => ({
         ...query,
         q: clsx(query.q, stringify({ keyword: [keyword.name] })),
+        page: 0,
       })),
     [updateQuery]
   );
 
   return {
     query,
-    updateQuery,
+    setType,
+    setPage,
     onSearchInput,
     onSearchInputReset,
     onFilterChange,

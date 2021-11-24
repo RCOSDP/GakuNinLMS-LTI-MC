@@ -3,19 +3,12 @@ import { useSearchAtom } from "$store/search";
 import useContents from "./useContents";
 
 function useBooks() {
-  const { query, updateQuery } = useSearchAtom();
+  const { query, setType } = useSearchAtom();
   const props = useContents(query);
 
   useEffect(() => {
-    updateQuery({
-      type: "book",
-      q: "",
-      filter: "self",
-      sort: "updated",
-      perPage: 30,
-      page: 0,
-    });
-  }, [updateQuery]);
+    setType("book");
+  }, [setType]);
 
   return props;
 }
