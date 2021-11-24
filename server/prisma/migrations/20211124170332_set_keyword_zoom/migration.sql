@@ -1,5 +1,5 @@
 --- Set `name`
-INSERT INTO "keywords" ("id", "name") VALUES (DEFAULT, 'Zoom') ON CONFLICT DO NOTHING;
+INSERT INTO "keywords" ("name") VALUES ('Zoom') ON CONFLICT DO NOTHING;
 
 --- Set `A` `B`
 INSERT INTO "_KeywordToTopic"
