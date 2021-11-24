@@ -83,6 +83,12 @@ export interface InlineResponse2001Contents {
      * @type {string}
      * @memberof InlineResponse2001Contents
      */
+    license?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineResponse2001Contents
+     */
     description?: string;
     /**
      * 
@@ -156,6 +162,7 @@ export function InlineResponse2001ContentsFromJSONTyped(json: any, ignoreDiscrim
         'language': !exists(json, 'language') ? undefined : json['language'],
         'timeRequired': !exists(json, 'timeRequired') ? undefined : json['timeRequired'],
         'shared': !exists(json, 'shared') ? undefined : json['shared'],
+        'license': !exists(json, 'license') ? undefined : json['license'],
         'description': !exists(json, 'description') ? undefined : json['description'],
         'createdAt': !exists(json, 'createdAt') ? undefined : (new Date(json['createdAt'])),
         'updatedAt': !exists(json, 'updatedAt') ? undefined : (new Date(json['updatedAt'])),
@@ -184,6 +191,7 @@ export function InlineResponse2001ContentsToJSON(value?: InlineResponse2001Conte
         'language': value.language,
         'timeRequired': value.timeRequired,
         'shared': value.shared,
+        'license': value.license,
         'description': value.description,
         'createdAt': value.createdAt === undefined ? undefined : (value.createdAt.toISOString()),
         'updatedAt': value.updatedAt === undefined ? undefined : (value.updatedAt.toISOString()),
