@@ -3,19 +3,12 @@ import { useSearchAtom } from "$store/search";
 import useContents from "./useContents";
 
 function useTopics() {
-  const { query, updateQuery } = useSearchAtom();
+  const { query, setType } = useSearchAtom();
   const props = useContents(query);
 
   useEffect(() => {
-    updateQuery({
-      type: "topic",
-      q: "",
-      filter: "self",
-      sort: "updated",
-      perPage: 30,
-      page: 0,
-    });
-  }, [updateQuery]);
+    setType("topic");
+  }, [setType]);
 
   return props;
 }

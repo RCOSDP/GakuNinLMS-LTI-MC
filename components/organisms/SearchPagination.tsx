@@ -7,18 +7,15 @@ function SearchPagination({ className = "", hasNextPage = true }) {
 
   if (!hasNextPage && searchProps.query.page === 0) return null;
 
+  const page = searchProps.query.page + 1;
   return (
     <Grid container component="div" justifyContent="center">
       <Pagination
         className={className}
         color="primary"
-        count={searchProps.query.page + 1 + Number(hasNextPage)}
-        onChange={(_, count) =>
-          searchProps.updateQuery((query) => ({
-            ...query,
-            page: count - 1,
-          }))
-        }
+        page={page}
+        count={page + Number(hasNextPage)}
+        onChange={(_, page) => searchProps.setPage(page - 1)}
       />
     </Grid>
   );
