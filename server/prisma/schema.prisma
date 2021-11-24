@@ -100,7 +100,7 @@ model Keyword {
   id     Int     @id @default(autoincrement())
   topics Topic[] @relation(references: [id])
   books  Book[]  @relation(references: [id])
-  /// 名称 (カンマ "," を含めない)
+  /// 名称
   name   String  @unique
 
   @@map("keywords")
