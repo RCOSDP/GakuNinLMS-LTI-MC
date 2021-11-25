@@ -7,6 +7,7 @@ import prisma from "$server/utils/prisma";
 import type { Prisma, User } from "@prisma/client";
 import type { UserSettingsProps } from "$server/models/userSettings";
 import { findUserByEmailAndLtiConsumerId } from "$server/utils/user";
+import keywordsConnectOrCreateInput from "$server/utils/keyword/keywordsConnectOrCreateInput";
 import { scpUpload } from "$server/utils/wowza/scpUpload";
 import { findZoomMeeting } from "$server/utils/zoom/findZoomMeeting";
 import {
@@ -161,6 +162,7 @@ class ZoomImport {
         description: meetingDetail.agenda,
         timeRequired: meeting.duration * 60,
         authors: { create: { userId: this.user.id, roleId: 1 } },
+        keywords: keywordsConnectOrCreateInput([{ name: "Zoom" }]),
         createdAt: startTime,
         updatedAt: new Date(),
         shared: false,
