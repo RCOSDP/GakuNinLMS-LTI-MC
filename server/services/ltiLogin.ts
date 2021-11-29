@@ -48,8 +48,8 @@ async function baseAction(req: FastifyRequest, props: Props) {
   };
 }
 
-export async function get(req: FastifyRequest<{ Params: Props }>) {
-  return await baseAction(req, req.params);
+export async function get(req: FastifyRequest<{ Querystring: Props }>) {
+  return await baseAction(req, req.query);
 }
 
 export async function post(req: FastifyRequest<{ Body: Props }>) {
