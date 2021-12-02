@@ -242,9 +242,7 @@ export default function TopicForm(props: Props) {
           defaultValue={defaultValues.license}
           inputProps={register("license")}
         >
-          <MenuItem value="">
-            未設定
-          </MenuItem>
+          <MenuItem value="">未設定</MenuItem>
           {Object.entries(licenses).map(([value, { name }]) => (
             <MenuItem key={value} value={value}>
               {name}
