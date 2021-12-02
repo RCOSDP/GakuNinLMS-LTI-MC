@@ -7,6 +7,7 @@ import makeStyles from "@mui/styles/makeStyles";
 import Video from "$organisms/Video";
 import VideoPlayer from "$organisms/Video/VideoPlayer";
 import DescriptionList from "$atoms/DescriptionList";
+import License from "$atoms/License";
 import Markdown from "$atoms/Markdown";
 import useSticky from "$utils/useSticky";
 import getLocaleDateString from "$utils/getLocaleDateString";
@@ -109,6 +110,7 @@ export default function TopicViewerContent({ topic, onEnded, offset }: Props) {
           ...authors(topic),
         ]}
       />
+      {topic.license && <License license={topic.license} />}
       <article className={classes.description}>
         <Markdown>{topic.description}</Markdown>
       </article>
