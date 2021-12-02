@@ -115,7 +115,7 @@ export default function TopicForm(props: Props) {
     description: topic?.description ?? "",
     shared: Boolean(topic?.shared),
     language: topic?.language ?? Object.getOwnPropertyNames(languages)[0],
-    license: topic?.license,
+    license: topic?.license ?? "",
     timeRequired: topic?.timeRequired,
   };
   const { handleSubmit, register, getValues, setValue } = useForm<
