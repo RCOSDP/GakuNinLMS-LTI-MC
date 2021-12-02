@@ -15,7 +15,7 @@ type Props = {
 
 export default function License({ license }: Props) {
   if (!Object.keys(licenses).includes(license))
-    return <Text>この作品は{license} ライセンスの下に提供されています</Text>;
+    return <Text>この作品は {license} ライセンスの下に提供されています</Text>;
   const { button, url, name } = licenses[license];
   return (
     <>
