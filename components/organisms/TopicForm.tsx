@@ -27,6 +27,7 @@ import type {
   VideoTrackSchema,
 } from "$server/models/videoTrack";
 import languages from "$utils/languages";
+import licenses from "$utils/licenses";
 import providers from "$utils/providers";
 import useVideoResourceProps from "$utils/useVideoResourceProps";
 import type { AuthorSchema } from "$server/models/author";
@@ -114,6 +115,7 @@ export default function TopicForm(props: Props) {
     description: topic?.description ?? "",
     shared: Boolean(topic?.shared),
     language: topic?.language ?? Object.getOwnPropertyNames(languages)[0],
+    license: topic?.license,
     timeRequired: topic?.timeRequired,
   };
   const { handleSubmit, register, getValues, setValue } = useForm<
@@ -234,6 +236,19 @@ export default function TopicForm(props: Props) {
             min: 1,
           }}
         />
+        <TextField
+          label="ライセンス"
+          select
+          defaultValue={defaultValues.license}
+          inputProps={{ displayEmpty: true, ...register("license") }}
+        >
+          <MenuItem value="">未設定</MenuItem>
+          {Object.entries(licenses).map(([value, { name }]) => (
+            <MenuItem key={value} value={value}>
+              {name}
+            </MenuItem>
+          ))}
+        </TextField>
         <KeywordsInput {...keywordsInputProps} />
         <div>
           <InputLabel>字幕</InputLabel>
