@@ -1,4 +1,5 @@
 import * as base from "search-query-parser";
+import yn from "yn";
 import type { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
 import type { SearchQueryBase } from "./query";
 
@@ -9,6 +10,7 @@ const options = {
     "author" as const,
     "keyword" as const,
     "license" as const,
+    "shared" as const,
     "link" as const,
   ],
   alwaysArray: true,
@@ -23,6 +25,16 @@ type SearchParserResult = base.SearchParserResult &
     // NOTE: `{ tokenize: true }`
     text?: string[];
   };
+
+/**
+ * 真偽値を表現する検索クエリー文字列のパース
+ * @param input 対象の文字列
+ */
+function parseBoolean(input: string): boolean[] {
+  const output: boolean | undefined = yn(input);
+  if (output == null) return [];
+  return [output];
+}
 
 /**
  * 検索クエリー文字列 `link:` キーワードのパース
@@ -47,6 +59,7 @@ export function parse(query: string): SearchQueryBase {
     author: res.author ?? [],
     keyword: res.keyword ?? [],
     license: res.license ?? [],
+    shared: res.shared?.flatMap(parseBoolean) ?? [],
     link: res.link?.flatMap(parseLink) ?? [],
   };
 }
@@ -66,7 +79,10 @@ function stringifyLink(
 }
 
 export function stringify(query: SearchQueryBase): string {
-  const { link, ...rest } = query;
-  const token = link?.map(stringifyLink).join();
-  return base.stringify({ ...rest, link: token }, options);
+  const { shared, link, ...rest } = query;
+  const token = {
+    shared: shared.map(String).join(),
+    link: link.map(stringifyLink).join(),
+  };
+  return base.stringify({ ...rest, ...token }, options);
 }

@@ -13,6 +13,8 @@ export type SearchQueryBase = {
   keyword: string[];
   /** ライセンス (SPDX License Identifier) */
   license: string[];
+  /** 共有可否 (true: シェアする, それ以外: シェアしない) */
+  shared: boolean[],
   /** トピックの場合: 無効、ブックの場合: 提供されているコース */
   link: Array<Pick<LtiResourceLinkSchema, "consumerId" | "contextId">>;
 };

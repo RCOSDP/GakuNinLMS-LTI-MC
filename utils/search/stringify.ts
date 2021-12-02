@@ -14,6 +14,7 @@ function stringify(query: Partial<SearchQueryBase>): string {
     author: [],
     keyword: [],
     license: [],
+    shared: [],
     link: [],
     ...query,
   });
