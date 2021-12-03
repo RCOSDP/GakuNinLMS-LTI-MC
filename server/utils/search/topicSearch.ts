@@ -18,7 +18,15 @@ import type { TopicSearchQuery } from "./query";
  * @return トピック
  */
 async function topicSearch(
-  { text, name, description, author, keyword, license }: TopicSearchQuery,
+  {
+    text,
+    name,
+    description,
+    author,
+    keyword,
+    license,
+    shared,
+  }: TopicSearchQuery,
   filter: AuthorFilter,
   sort: string,
   page: number,
@@ -55,13 +63,17 @@ async function topicSearch(
         ...author.map((a) => ({
           authors: { some: { user: { name: { contains: a } } } },
         })),
+        // NOTE: keyword - キーワード
+        ...keyword.map((k) => ({
+          keywords: { some: { name: k } },
+        })),
         // NOTE: license - ライセンス
         ...license.map((l) => ({
           license: l,
         })),
-        // NOTE: keyword - キーワード
-        ...keyword.map((k) => ({
-          keywords: { some: { name: k } },
+        // NOTE: shared - 共有可否
+        ...shared.map((s) => ({
+          shared: s,
         })),
       ],
     },

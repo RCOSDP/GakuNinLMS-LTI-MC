@@ -69,6 +69,7 @@
     "strict-uri-encode": "^2.0.0",
     "ts-jest": "^27.0.5",
     "unzipper": "^0.10.11",
-    "webpack": "^5.51.1"
+    "webpack": "^5.51.1",
+    "yn": "^4.0.0"
   }
 }

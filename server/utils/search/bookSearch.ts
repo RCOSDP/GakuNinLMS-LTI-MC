@@ -18,7 +18,16 @@ import type { BookSearchQuery } from "./query";
  * @return ブック
  */
 async function bookSearch(
-  { text, name, description, author, keyword, license, link }: BookSearchQuery,
+  {
+    text,
+    name,
+    description,
+    author,
+    keyword,
+    license,
+    shared,
+    link,
+  }: BookSearchQuery,
   filter: AuthorFilter,
   sort: string,
   page: number,
@@ -100,6 +109,10 @@ async function bookSearch(
         // NOTE: license - ライセンス
         ...license.map((l) => ({
           license: l,
+        })),
+        // NOTE: shared - 共有可否
+        ...shared.map((s) => ({
+          shared: s,
         })),
         // NOTE: link - 提供されているコース
         ...link.map((l) => ({

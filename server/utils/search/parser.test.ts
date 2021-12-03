@@ -4,7 +4,7 @@ describe("parse()", function () {
   test("検索クエリー文字列をパースできる", function () {
     expect(
       parse(
-        `name:a description:"b b" author:c keyword:d,e license:CC-BY-4.0 link:hoge:piyo foo bar baz`
+        `name:a description:"b b" author:c keyword:d,e license:CC-BY-4.0 shared:true link:hoge:piyo foo bar baz`
       )
     ).toEqual({
       text: ["foo", "bar", "baz"],
@@ -13,6 +13,7 @@ describe("parse()", function () {
       author: ["c"],
       keyword: ["d", "e"],
       license: ["CC-BY-4.0"],
+      shared: [true],
       link: [{ consumerId: "hoge", contextId: "piyo" }],
     });
   });
@@ -42,12 +43,13 @@ describe("parse()", function () {
       author: [],
       keyword: [],
       license: [],
+      shared: [],
       link: [],
     });
   });
 });
 
-describe("query()", function () {
+describe("stringify()", function () {
   test("検索クエリー文字列に変換", () => {
     const query = {
       text: ["a", "b"],
@@ -56,6 +58,7 @@ describe("query()", function () {
       author: [],
       keyword: ["foo", "bar"],
       license: [],
+      shared: [],
       link: [],
     };
     expect(stringify(query)).toBe("a b keyword:foo,bar");
@@ -69,6 +72,7 @@ describe("query()", function () {
       author: [],
       keyword: [],
       license: [],
+      shared: [],
       link: [{ consumerId: "foo", contextId: "bar" }],
     };
     expect(stringify(query)).toBe("link:foo:bar");
@@ -82,6 +86,7 @@ describe("query()", function () {
       author: [],
       keyword: [],
       license: [],
+      shared: [],
       link: [
         { consumerId: "foo", contextId: "bar" },
         { consumerId: "hoge", contextId: "piyo" },
@@ -98,8 +103,23 @@ describe("query()", function () {
       author: [],
       keyword: [],
       license: [],
+      shared: [],
       link: [{ consumerId: "te:s,t", contextId: "fo o" }],
     };
     expect(stringify(query)).toBe("link:te%3As%2Ct:fo%20o");
+  });
+
+  test("共有可否を検索クエリー文字列に変換", () => {
+    const query = {
+      text: [],
+      name: [],
+      description: [],
+      author: [],
+      keyword: [],
+      license: [],
+      shared: [true],
+      link: [],
+    };
+    expect(stringify(query)).toBe("shared:true");
   });
 });
