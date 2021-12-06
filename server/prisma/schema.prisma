@@ -83,7 +83,7 @@ model Topic {
   shared       Boolean        @default(true)
   /// 著作者
   authors      Authorship[]
-  /// ライセンス (https://spdx.org/licenses/ に準拠するものを入力する)
+  /// ライセンス (https://spdx.org/licenses/ に準拠するもの, "" は無効)
   license      String         @default("")
   /// 作成日
   createdAt    DateTime       @default(now()) @map("created_at")
@@ -184,7 +184,7 @@ model Book {
   shared           Boolean           @default(true)
   /// 著作者
   authors          Authorship[]
-  /// ライセンス (https://spdx.org/licenses/ に準拠するものを入力する)
+  /// ライセンス (https://spdx.org/licenses/ に準拠するもの, "" は無効)
   license          String            @default("")
   /// 公開日
   publishedAt      DateTime          @default(now()) @map("published_at")
