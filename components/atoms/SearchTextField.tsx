@@ -7,7 +7,7 @@ import makeStyles from "@mui/styles/makeStyles";
 import SearchIcon from "@mui/icons-material/Search";
 import SearchClearButton from "./SearchClearButton";
 import Divider from "@mui/material/Divider";
-import gray from "$theme/colors/gray";
+import { grey } from "@mui/material/colors";
 
 const useOutlinedInputStyles = makeStyles((theme) => ({
   root: {
@@ -15,12 +15,12 @@ const useOutlinedInputStyles = makeStyles((theme) => ({
     borderRadius: "1.25rem",
     paddingRight: theme.spacing(2),
     "&:hover $notchedOutline": {
-      borderColor: gray[500],
+      borderColor: grey[300],
       borderWidth: "1px",
     },
     "@media (hover: none)": {
       "&:hover $notchedOutline": {
-        borderColor: gray[500],
+        borderColor: grey[300],
       },
     },
     "&$focused $notchedOutline": {
@@ -35,7 +35,7 @@ const useOutlinedInputStyles = makeStyles((theme) => ({
   },
   focused: {},
   notchedOutline: {
-    borderColor: gray[500],
+    borderColor: grey[300],
     transition: theme.transitions.create(["border-color"]),
   },
 }));
@@ -95,7 +95,7 @@ export default function SearchTextField({
                 })}
               />
               <Divider orientation="vertical" className={classes.divider} />
-              <SearchIcon style={{ color: gray[700] }} />
+              <SearchIcon style={{ color: grey[700] }} />
             </InputAdornment>
           ),
           ...props.InputProps,

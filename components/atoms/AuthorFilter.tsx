@@ -3,7 +3,7 @@ import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
 import makeStyles from "@mui/styles/makeStyles";
-import { gray } from "$theme/colors";
+import { grey } from "@mui/material/colors";
 import type { AuthorFilterType } from "$server/models/authorFilter";
 
 const useStyles = makeStyles((theme) => ({
@@ -13,13 +13,13 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(0),
     backgroundColor: "white",
     border: "1px solid",
-    borderColor: gray[500],
+    borderColor: grey[300],
     borderRadius: 8,
   },
   legend: {
     marginLeft: theme.spacing(1),
     marginBottom: theme.spacing(-1),
-    color: gray[700],
+    color: grey[700],
     fontSize: "0.75rem",
   },
   group: {
@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
 
 const useFormControlLabelStyles = makeStyles((theme) => ({
   label: {
-    color: gray[800],
+    color: grey[800],
     fontSize: "0.875rem",
     marginLeft: theme.spacing(-0.5),
   },

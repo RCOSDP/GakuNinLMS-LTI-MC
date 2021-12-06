@@ -10,6 +10,7 @@ import Container from "@mui/material/Container";
 import AddIcon from "@mui/icons-material/Add";
 import ActionHeader from "$organisms/ActionHeader";
 import ActionFooter from "$organisms/ActionFooter";
+import ContentTypeIndicator from "$atoms/ContentTypeIndicator";
 import ContentPreview from "$organisms/ContentPreview";
 import TopicPreviewDialog from "$organisms/TopicPreviewDialog";
 import SearchPagination from "$organisms/SearchPagination";
@@ -18,7 +19,7 @@ import AuthorFilter from "$atoms/AuthorFilter";
 import SearchTextField from "$atoms/SearchTextField";
 import type { ContentSchema } from "$server/models/content";
 import type { TopicSchema } from "$server/models/topic";
-import { gray } from "$theme/colors";
+import { grey } from "@mui/material/colors";
 import useContainerStyles from "$styles/container";
 import useDialogProps from "$utils/useDialogProps";
 import { useSearchAtom } from "$store/search";
@@ -37,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(0),
     backgroundColor: "white",
     border: "1px solid",
-    borderColor: gray[500],
+    borderColor: grey[300],
     borderRadius: 8,
   },
   checkbox: {},
@@ -158,6 +159,7 @@ export default function Topics(props: Props) {
               />
             </Badge>
             <SortSelect onSortChange={searchProps.onSortChange} />
+            <ContentTypeIndicator type="topic" />
             <AuthorFilter onFilterChange={searchProps.onFilterChange} />
             <SearchTextField
               label="トピック検索"
