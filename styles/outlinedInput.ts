@@ -1,12 +1,12 @@
 import type { Theme } from "@mui/material/styles";
 import { outlinedInputClasses } from "@mui/material/OutlinedInput";
 import { inputBaseClasses } from "@mui/material/InputBase";
-import gray from "theme/colors/gray";
+import { grey } from "@mui/material/colors";
 
 const outlinedInput = (theme: Theme) => ({
   [`.${outlinedInputClasses.root}`]: {
     backgroundColor: theme.palette.common.white,
-    border: `1px solid ${gray[500]}`,
+    border: `1px solid ${grey[300]}`,
     borderRadius: "6px",
     fontSize: "1rem",
     transition: theme.transitions.create(["border-color"]),

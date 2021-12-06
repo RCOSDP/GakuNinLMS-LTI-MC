@@ -18,7 +18,7 @@ import AuthorFilter from "$atoms/AuthorFilter";
 import SearchTextField from "$atoms/SearchTextField";
 import type { ContentSchema } from "$server/models/content";
 import type { TopicSchema } from "$server/models/topic";
-import { gray } from "$theme/colors";
+import { grey } from "@mui/material/colors";
 import useContainerStyles from "$styles/container";
 import useDialogProps from "$utils/useDialogProps";
 import { useSearchAtom } from "$store/search";
@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(0),
     backgroundColor: "white",
     border: "1px solid",
-    borderColor: gray[500],
+    borderColor: grey[300],
     borderRadius: 8,
   },
   checkbox: {},
