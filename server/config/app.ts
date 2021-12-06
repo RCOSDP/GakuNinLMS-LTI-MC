@@ -7,6 +7,7 @@ import cookie from "fastify-cookie";
 import auth from "fastify-auth";
 import formbody from "fastify-formbody";
 import pkg from "$server/package.json";
+import { buildValidatorCompiler } from "./validations";
 import routes from "./routes";
 
 export type Options = {
@@ -62,6 +63,8 @@ async function app(fastify: FastifyInstance, options: Options) {
     fastify.register(formbody),
   ]);
 
+  const validatorCompiler = buildValidatorCompiler();
+  fastify.setValidatorCompiler(validatorCompiler);
   await fastify.register(routes, { prefix: basePath });
 }
 

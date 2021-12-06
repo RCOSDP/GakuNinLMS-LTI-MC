@@ -25,7 +25,7 @@ export const topicPropsSchema = {
     language: { type: "string", nullable: true },
     timeRequired: { type: "integer" },
     shared: { type: "boolean", nullable: true },
-    license: { type: "string" },
+    license: { type: "string", format: "license" },
     description: { type: "string" },
     resource: resourcePropsSchema,
     keywords: {
