@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import type { SxProps } from "@mui/system";
 import type { VideoInstance } from "$types/videoInstance";
 import Box from "@mui/material/Box";
 import useVolume from "$utils/useVolume";
@@ -6,7 +7,9 @@ import Vimeo from "./Vimeo";
 import VideoJs from "./VideoJs";
 import videoJsDurationChangeShims from "$utils/videoJsDurationChangeShims";
 
-type Props = Parameters<typeof Box>[0] & {
+type Props = {
+  sx?: SxProps;
+  className?: string;
   videoInstance: VideoInstance;
   onEnded?: () => void;
   onDurationChange?: (duration: number) => void;

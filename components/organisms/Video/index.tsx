@@ -1,15 +1,16 @@
 import { useMemo } from "react";
-import type Box from "@mui/material/Box";
+import type { SxProps } from "@mui/system";
 import type { VideoResourceSchema } from "$server/models/videoResource";
 import VideoPlayer from "./VideoPlayer";
 import getVideoInstance from "$utils/video/getVideoInstance";
 
-type Props = Omit<Parameters<typeof Box>[0], "id"> &
-  Pick<VideoResourceSchema, "providerUrl" | "url" | "tracks"> & {
-    onEnded?: () => void;
-    onDurationChange?: (duration: number) => void;
-    autoplay?: boolean;
-  };
+type Props = Pick<VideoResourceSchema, "providerUrl" | "url" | "tracks"> & {
+  sx?: SxProps;
+  className?: string;
+  onEnded?: () => void;
+  onDurationChange?: (duration: number) => void;
+  autoplay?: boolean;
+};
 
 export default function Video({
   providerUrl,
