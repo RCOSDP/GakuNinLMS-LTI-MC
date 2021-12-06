@@ -1,5 +1,5 @@
-import type { TopicSchema } from "$server/models/topic";
 import type { AuthorFilter } from "$server/models/authorFilter";
+import type { SearchResultSchema } from "$server/models/search";
 import makeSortOrderQuery from "$server/utils/makeSortOrderQuery";
 import prisma from "$server/utils/prisma";
 import {
@@ -31,7 +31,7 @@ async function topicSearch(
   sort: string,
   page: number,
   perPage: number
-): Promise<TopicSchema[]> {
+): Promise<SearchResultSchema> {
   const topics = await prisma.topic.findMany({
     where: {
       AND: [
@@ -83,7 +83,11 @@ async function topicSearch(
     take: perPage,
   });
 
-  return topics.map(topicToTopicSchema);
+  const contents = topics
+    .map(topicToTopicSchema)
+    .map((topic) => ({ type: "topic" as const, ...topic }));
+
+  return { contents, page, perPage };
 }
 
 export default topicSearch;

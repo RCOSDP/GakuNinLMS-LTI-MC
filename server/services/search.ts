@@ -2,7 +2,7 @@ import type { FastifyRequest } from "fastify";
 import { outdent } from "outdent";
 import authInstructor from "$server/auth/authInstructor";
 import authUser from "$server/auth/authUser";
-import { ContentSchema } from "$server/models/content";
+import { SearchResultSchema } from "$server/models/search";
 import { SearchProps } from "$server/validators/searchProps";
 import search from "$server/utils/search/search";
 import { isAdministrator } from "$server/utils/session";
@@ -17,18 +17,7 @@ export const method = {
       教員または管理者でなければなりません。`,
     querystring: SearchProps,
     response: {
-      200: {
-        description: "成功時",
-        type: "object",
-        properties: {
-          contents: {
-            type: "array",
-            items: ContentSchema,
-          },
-          page: SearchProps.properties.page,
-          perPage: SearchProps.properties.per_page,
-        },
-      },
+      200: SearchResultSchema,
       400: {},
     },
   },
@@ -54,7 +43,7 @@ export async function index({
   switch (query.type) {
     case "topic":
     case "book": {
-      const contents = await search(
+      const result = await search(
         query.type,
         query.q,
         filter,
@@ -65,7 +54,7 @@ export async function index({
 
       return {
         status: 200,
-        body: { contents, page, perPage },
+        body: result,
       };
     }
     default:

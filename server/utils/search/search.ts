@@ -1,5 +1,6 @@
 import type { ContentSchema } from "$server/models/content";
 import type { AuthorFilter } from "$server/models/authorFilter";
+import type { SearchResultSchema } from "$server/models/search";
 import topicSearch from "$server/utils/search/topicSearch";
 import bookSearch from "$server/utils/search/bookSearch";
 import { parse } from "$server/utils/search/parser";
@@ -11,31 +12,17 @@ async function search(
   sort: string,
   page: number,
   perPage: number
-): Promise<Array<ContentSchema>> {
+): Promise<SearchResultSchema> {
   const query = parse(queryText);
   switch (type) {
     case "topic": {
-      const topics = await topicSearch(
-        { type, ...query },
-        filter,
-        sort,
-        page,
-        perPage
-      );
-      return topics.map((topic) => ({ type, ...topic }));
+      return await topicSearch({ type, ...query }, filter, sort, page, perPage);
     }
     case "book": {
-      const books = await bookSearch(
-        { type, ...query },
-        filter,
-        sort,
-        page,
-        perPage
-      );
-      return books.map((book) => ({ type, ...book }));
+      return await bookSearch({ type, ...query }, filter, sort, page, perPage);
     }
     default:
-      return [];
+      return { contents: [], page, perPage };
   }
 }
 

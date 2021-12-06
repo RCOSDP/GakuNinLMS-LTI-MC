@@ -1,5 +1,5 @@
-import type { BookSchema } from "$server/models/book";
 import type { AuthorFilter } from "$server/models/authorFilter";
+import type { SearchResultSchema } from "$server/models/search";
 import {
   bookIncludingTopicsArg,
   bookToBookSchema,
@@ -32,7 +32,7 @@ async function bookSearch(
   sort: string,
   page: number,
   perPage: number
-): Promise<BookSchema[]> {
+): Promise<SearchResultSchema> {
   const books = await prisma.book.findMany({
     where: {
       AND: [
@@ -126,7 +126,11 @@ async function bookSearch(
     take: perPage,
   });
 
-  return books.map(bookToBookSchema);
+  const contents = books
+    .map(bookToBookSchema)
+    .map((book) => ({ type: "book" as const, ...book }));
+
+  return { contents, page, perPage };
 }
 
 export default bookSearch;
