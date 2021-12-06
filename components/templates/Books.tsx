@@ -88,8 +88,8 @@ export default function Books(props: Props) {
         }
         action={
           <>
-            <SortSelect onSortChange={searchProps.onSortChange} />
             <ContentTypeIndicator type="book" />
+            <SortSelect onSortChange={searchProps.onSortChange} />
             <AuthorFilter onFilterChange={searchProps.onFilterChange} />
             <SearchTextField
               label="ブック・トピック検索"
