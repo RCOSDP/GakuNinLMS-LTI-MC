@@ -34,9 +34,8 @@ export default function ContentTypeIndicator({ type }: Props) {
       <Box
         sx={{
           display: "flex",
-          py: 0.25,
           alignItems: "center",
-          "& > p": { m: 0 },
+          "& > p": { m: 0, fontSize: "1.25rem", fontWeight: "bold" },
         }}
       >
         {icon}
