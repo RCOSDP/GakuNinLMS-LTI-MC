@@ -21,7 +21,6 @@ import { gray } from "$theme/colors";
 const useStyles = makeStyles((theme) => ({
   video: {
     margin: theme.spacing(-2, -3, 2),
-    backgroundColor: gray[800],
     "& > *": {
       /* NOTE: 各動画プレイヤーのレスポンシブ対応により、高さはpaddingTopによってwidthのpercentage分
        * 確保されるため、heightによる制限ではなくwidthによる制限をおこなう必要がある */
@@ -66,6 +65,7 @@ export default function TopicViewerContent({ topic, onEnded, offset }: Props) {
   const theme = useTheme();
   const sticky = useSticky({
     offset: offset ?? theme.spacing(-2),
+    backgroundColor: gray[800],
   });
   const { video } = useVideoAtom();
   return (
