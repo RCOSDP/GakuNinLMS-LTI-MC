@@ -95,6 +95,9 @@ export default function TopicViewerContent({ topic, onEnded, offset }: Props) {
         <Chip
           label={`学習時間 ${formatInterval(0, topic.timeRequired * 1000)}`}
         />
+        {topic.license && (
+          <License sx={{ mr: 1, mb: 0.5 }} license={topic.license} />
+        )}
       </header>
       <DescriptionList
         inline
@@ -110,10 +113,9 @@ export default function TopicViewerContent({ topic, onEnded, offset }: Props) {
           ...authors(topic),
         ]}
       />
-      {topic.license && <License license={topic.license} />}
-      <article className={classes.description}>
+      <Box component="article" sx={{ my: -1.5 }}>
         <Markdown>{topic.description}</Markdown>
-      </article>
+      </Box>
     </>
   );
 }
