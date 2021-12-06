@@ -38,12 +38,12 @@ const Template: Story<Parameters<typeof Books>[0]> = (args) => (
 export const Default = Template.bind({});
 Default.args = {
   linkedBook,
+  totalCount: 123,
   contents: books.map((book) => ({ type: "book", ...book })),
-  hasNextPage: true,
 };
 
 export const Empty = Template.bind({});
 Empty.args = {
+  totalCount: 0,
   contents: [],
-  hasNextPage: true,
 };

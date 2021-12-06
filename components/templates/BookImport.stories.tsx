@@ -36,8 +36,8 @@ export const Default = () => (
   <>
     <SlideAppBar />
     <BookImport
+      totalCount={123}
       contents={books.map((book) => ({ type: "book", ...book }))}
-      hasNextPage
       {...handlers}
     />
   </>
@@ -46,6 +46,6 @@ export const Default = () => (
 export const Empty = () => (
   <>
     <SlideAppBar />
-    <BookImport contents={[]} hasNextPage {...handlers} />
+    <BookImport totalCount={0} contents={[]} {...handlers} />
   </>
 );

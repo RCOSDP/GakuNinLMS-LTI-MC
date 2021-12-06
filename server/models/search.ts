@@ -2,8 +2,9 @@ import { ContentSchema } from "./content";
 
 export const SearchResultSchema = {
   type: "object",
-  required: ["contents", "page", "perPage"],
+  required: ["totalCount", "contents", "page", "perPage"],
   properties: {
+    totalCount: { type: "integer" },
     contents: {
       type: "array",
       items: ContentSchema,
@@ -14,6 +15,7 @@ export const SearchResultSchema = {
 } as const;
 
 export type SearchResultSchema = {
+  totalCount: number;
   contents: Array<ContentSchema>;
   page: number;
   perPage: number;

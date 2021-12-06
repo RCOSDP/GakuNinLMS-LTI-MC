@@ -22,7 +22,7 @@ async function search(
       return await bookSearch({ type, ...query }, filter, sort, page, perPage);
     }
     default:
-      return { contents: [], page, perPage };
+      return { totalCount: 0, contents: [], page, perPage };
   }
 }
 

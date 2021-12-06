@@ -28,6 +28,12 @@ import {
 export interface InlineResponse2001 {
     /**
      * 
+     * @type {number}
+     * @memberof InlineResponse2001
+     */
+    totalCount: number;
+    /**
+     * 
      * @type {Array<InlineResponse2001Contents>}
      * @memberof InlineResponse2001
      */
@@ -56,6 +62,7 @@ export function InlineResponse2001FromJSONTyped(json: any, ignoreDiscriminator: 
     }
     return {
         
+        'totalCount': json['totalCount'],
         'contents': ((json['contents'] as Array<any>).map(InlineResponse2001ContentsFromJSON)),
         'page': json['page'],
         'perPage': json['perPage'],
@@ -71,6 +78,7 @@ export function InlineResponse2001ToJSON(value?: InlineResponse2001 | null): any
     }
     return {
         
+        'totalCount': value.totalCount,
         'contents': ((value.contents as Array<any>).map(InlineResponse2001ContentsToJSON)),
         'page': value.page,
         'perPage': value.perPage,

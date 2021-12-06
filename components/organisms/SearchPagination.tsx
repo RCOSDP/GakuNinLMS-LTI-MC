@@ -2,10 +2,16 @@ import Grid from "@mui/material/Grid";
 import Pagination from "@mui/material/Pagination";
 import { useSearchAtom } from "$store/search";
 
-function SearchPagination({ className = "", hasNextPage = true }) {
-  const searchProps = useSearchAtom();
+type Props = {
+  className?: string;
+  totalCount: number;
+};
 
-  if (!hasNextPage && searchProps.query.page === 0) return null;
+function SearchPagination({ className = "", totalCount }: Props) {
+  const searchProps = useSearchAtom();
+  const count = Math.ceil(totalCount / searchProps.query.perPage);
+
+  if (!(count > 1)) return null;
 
   const page = searchProps.query.page + 1;
   return (
@@ -14,7 +20,7 @@ function SearchPagination({ className = "", hasNextPage = true }) {
         className={className}
         color="primary"
         page={page}
-        count={page + Number(hasNextPage)}
+        count={count}
         onChange={(_, page) => searchProps.setPage(page - 1)}
       />
     </Grid>

@@ -32,52 +32,55 @@ async function topicSearch(
   page: number,
   perPage: number
 ): Promise<SearchResultSchema> {
+  const where = {
+    AND: [
+      // NOTE: 管理者でなければ共有されている範囲のみ
+      ...(filter.type !== "self" && !filter.admin ? [{ shared: true }] : []),
+      ...(filter.type === "self"
+        ? [{ authors: { some: { userId: filter.by } } }]
+        : []),
+      ...(filter.type === "other"
+        ? [{ NOT: { authors: { some: { userId: filter.by } } } }]
+        : []),
+      // NOTE: text - 検索文字列 (名称 OR 説明 OR 著者名)
+      ...text.map((t) => ({
+        OR: [
+          { name: { contains: t } },
+          { description: { contains: t } },
+          { authors: { some: { user: { name: { contains: t } } } } },
+        ],
+      })),
+      // NOTE: name - 名称 (トピック名)
+      ...name.map((n) => ({
+        name: { contains: n },
+      })),
+      // NOTE: description - 説明 (Markdown)
+      ...description.map((d) => ({
+        description: { contains: d },
+      })),
+      // NOTE: author - 著者名
+      ...author.map((a) => ({
+        authors: { some: { user: { name: { contains: a } } } },
+      })),
+      // NOTE: keyword - キーワード
+      ...keyword.map((k) => ({
+        keywords: { some: { name: k } },
+      })),
+      // NOTE: license - ライセンス
+      ...license.map((l) => ({
+        license: l,
+      })),
+      // NOTE: shared - 共有可否
+      ...shared.map((s) => ({
+        shared: s,
+      })),
+    ],
+  };
+
+  const totalCount = await prisma.topic.count({ where });
   const topics = await prisma.topic.findMany({
-    where: {
-      AND: [
-        // NOTE: 管理者でなければ共有されている範囲のみ
-        ...(filter.type !== "self" && !filter.admin ? [{ shared: true }] : []),
-        ...(filter.type === "self"
-          ? [{ authors: { some: { userId: filter.by } } }]
-          : []),
-        ...(filter.type === "other"
-          ? [{ NOT: { authors: { some: { userId: filter.by } } } }]
-          : []),
-        // NOTE: text - 検索文字列 (名称 OR 説明 OR 著者名)
-        ...text.map((t) => ({
-          OR: [
-            { name: { contains: t } },
-            { description: { contains: t } },
-            { authors: { some: { user: { name: { contains: t } } } } },
-          ],
-        })),
-        // NOTE: name - 名称 (トピック名)
-        ...name.map((n) => ({
-          name: { contains: n },
-        })),
-        // NOTE: description - 説明 (Markdown)
-        ...description.map((d) => ({
-          description: { contains: d },
-        })),
-        // NOTE: author - 著者名
-        ...author.map((a) => ({
-          authors: { some: { user: { name: { contains: a } } } },
-        })),
-        // NOTE: keyword - キーワード
-        ...keyword.map((k) => ({
-          keywords: { some: { name: k } },
-        })),
-        // NOTE: license - ライセンス
-        ...license.map((l) => ({
-          license: l,
-        })),
-        // NOTE: shared - 共有可否
-        ...shared.map((s) => ({
-          shared: s,
-        })),
-      ],
-    },
     ...topicsWithResourcesArg,
+    where,
     orderBy: makeSortOrderQuery(sort),
     skip: page * perPage,
     take: perPage,
@@ -87,7 +90,7 @@ async function topicSearch(
     .map(topicToTopicSchema)
     .map((topic) => ({ type: "topic" as const, ...topic }));
 
-  return { contents, page, perPage };
+  return { totalCount, contents, page, perPage };
 }
 
 export default topicSearch;

@@ -40,12 +40,12 @@ const Template: Story<Parameters<typeof Topics>[0]> = (args) => (
 
 export const Default = Template.bind({});
 Default.args = {
+  totalCount: 123,
   contents,
-  hasNextPage: true,
 };
 
 export const Empty = Template.bind({});
 Empty.args = {
+  totalCount: 0,
   contents: [],
-  hasNextPage: true,
 };

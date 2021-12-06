@@ -32,10 +32,10 @@ const classes = {
 };
 
 export type Props = {
+  totalCount: number;
   contents: ContentSchema[];
   linkedBook?: LinkedBook;
   loading?: boolean;
-  hasNextPage: boolean;
   onContentPreviewClick(content: ContentSchema): void;
   onContentEditClick(content: ContentSchema): void;
   onContentLinkClick(content: ContentSchema): void;
@@ -46,10 +46,10 @@ export type Props = {
 
 export default function Books(props: Props) {
   const {
+    totalCount,
     contents,
     linkedBook,
     loading = false,
-    hasNextPage,
     onContentPreviewClick,
     onContentEditClick,
     onContentLinkClick,
@@ -121,7 +121,7 @@ export default function Books(props: Props) {
         </ContentPreviews>
         <SearchPagination
           className={classes.pagination}
-          hasNextPage={hasNextPage}
+          totalCount={totalCount}
         />
       </Container>
     </>

@@ -69,10 +69,10 @@ function useContents({
       : [key, type, debouncedQuery, filter, sort, perPage, page],
     fetchContents
   );
+  const totalCount = data?.totalCount ?? 0;
   const contents = data?.contents ?? [];
   const loading = isValidating && data != null;
-  const hasNextPage = contents.length === perPage;
-  return { ...data, contents, loading, hasNextPage };
+  return { ...data, totalCount, contents, loading };
 }
 
 export default useContents;
