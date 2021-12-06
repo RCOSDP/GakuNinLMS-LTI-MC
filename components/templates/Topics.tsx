@@ -142,6 +142,7 @@ export default function Topics(props: Props) {
         }
         action={
           <>
+            <ContentTypeIndicator type="topic" />
             <Badge
               className={classes.fieldset}
               badgeContent={selected.size}
@@ -159,7 +160,6 @@ export default function Topics(props: Props) {
               />
             </Badge>
             <SortSelect onSortChange={searchProps.onSortChange} />
-            <ContentTypeIndicator type="topic" />
             <AuthorFilter onFilterChange={searchProps.onFilterChange} />
             <SearchTextField
               label="トピック検索"
