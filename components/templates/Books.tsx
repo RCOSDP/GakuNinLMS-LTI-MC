@@ -5,6 +5,7 @@ import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import AddIcon from "@mui/icons-material/Add";
 import ActionHeader from "$organisms/ActionHeader";
+import ContentTypeIndicator from "$atoms/ContentTypeIndicator";
 import ContentPreview from "$organisms/ContentPreview";
 import LinkInfo from "$organisms/LinkInfo";
 import SearchPagination from "$organisms/SearchPagination";
@@ -88,6 +89,7 @@ export default function Books(props: Props) {
         action={
           <>
             <SortSelect onSortChange={searchProps.onSortChange} />
+            <ContentTypeIndicator type="book" />
             <AuthorFilter onFilterChange={searchProps.onFilterChange} />
             <SearchTextField
               label="ブック・トピック検索"

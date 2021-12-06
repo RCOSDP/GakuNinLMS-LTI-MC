@@ -10,6 +10,7 @@ import Container from "@mui/material/Container";
 import AddIcon from "@mui/icons-material/Add";
 import ActionHeader from "$organisms/ActionHeader";
 import ActionFooter from "$organisms/ActionFooter";
+import ContentTypeIndicator from "$atoms/ContentTypeIndicator";
 import ContentPreview from "$organisms/ContentPreview";
 import TopicPreviewDialog from "$organisms/TopicPreviewDialog";
 import SearchPagination from "$organisms/SearchPagination";
@@ -158,6 +159,7 @@ export default function Topics(props: Props) {
               />
             </Badge>
             <SortSelect onSortChange={searchProps.onSortChange} />
+            <ContentTypeIndicator type="topic" />
             <AuthorFilter onFilterChange={searchProps.onFilterChange} />
             <SearchTextField
               label="トピック検索"
