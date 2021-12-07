@@ -5,6 +5,7 @@ import LabelOutlinedIcon from "@mui/icons-material/LabelOutlined";
 import Chip from "@mui/material/Chip";
 import FormControl from "@mui/material/FormControl";
 import FormHelperText from "@mui/material/FormHelperText";
+import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "$atoms/IconButton";
 import Input from "$atoms/Input";
 import InputLabel from "$atoms/InputLabel";
@@ -76,9 +77,13 @@ export default function KeywordsInput({
           value={value}
           onChange={handleInput}
           onKeyDown={handleKeyDown}
-          startAdornment={<LabelOutlinedIcon />}
+          startAdornment={
+            <InputAdornment position="start">
+              <LabelOutlinedIcon />
+            </InputAdornment>
+          }
           endAdornment={
-            <>
+            <InputAdornment position="end">
               <IconButton
                 onClick={handleReset}
                 color="secondary"
@@ -93,7 +98,7 @@ export default function KeywordsInput({
               >
                 <AddIcon />
               </IconButton>
-            </>
+            </InputAdornment>
           }
         />
         <FormHelperText>{helperText}</FormHelperText>

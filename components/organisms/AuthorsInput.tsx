@@ -1,6 +1,7 @@
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import FormHelperText from "@mui/material/FormHelperText";
+import InputAdornment from "@mui/material/InputAdornment";
 import type { SelectChangeEvent } from "@mui/material/Select";
 import { styled } from "@mui/material/styles";
 import { grey } from "@mui/material/colors";
@@ -131,9 +132,13 @@ export default function AuthorsInput({
           value={value}
           onChange={handleInput}
           onKeyDown={handleKeyDown}
-          startAdornment={<EmailOutlinedIcon />}
+          startAdornment={
+            <InputAdornment position="start">
+              <EmailOutlinedIcon />
+            </InputAdornment>
+          }
           endAdornment={
-            <>
+            <InputAdornment position="end">
               <IconButton
                 onClick={handleReset}
                 color="secondary"
@@ -148,7 +153,7 @@ export default function AuthorsInput({
               >
                 <PersonAddIcon />
               </IconButton>
-            </>
+            </InputAdornment>
           }
         />
         <FormHelperText>{helperText}</FormHelperText>
