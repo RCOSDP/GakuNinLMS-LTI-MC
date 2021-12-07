@@ -36,9 +36,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type Props = {
+  totalCount: number;
   contents: ContentSchema[];
   loading?: boolean;
-  hasNextPage: boolean;
   onLoadMore?(): void;
   onSubmit(topics: TopicSchema[]): void;
   onCancel(): void;
@@ -47,9 +47,9 @@ type Props = {
 
 export default function TopicImport(props: Props) {
   const {
+    totalCount,
     contents,
     loading = false,
-    hasNextPage,
     onSubmit,
     onCancel,
     onContentEditClick,
@@ -139,7 +139,7 @@ export default function TopicImport(props: Props) {
       </ActionFooter>
       <SearchPagination
         className={classes.pagination}
-        hasNextPage={hasNextPage}
+        totalCount={totalCount}
       />
       {previewContent?.type === "topic" && (
         <TopicPreviewDialog {...dialogProps} topic={previewContent} />

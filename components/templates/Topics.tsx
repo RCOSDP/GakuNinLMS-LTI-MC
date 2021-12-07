@@ -51,9 +51,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type Props = {
+  totalCount: number;
   contents: ContentSchema[];
   loading?: boolean;
-  hasNextPage: boolean;
   onBookNewClick(topics: TopicSchema[]): void;
   onTopicsShareClick(topics: TopicSchema[], shared: boolean): void;
   onTopicsDeleteClick(topics: TopicSchema[]): void;
@@ -63,9 +63,9 @@ type Props = {
 
 export default function Topics(props: Props) {
   const {
+    totalCount,
     contents,
     loading = false,
-    hasNextPage,
     onBookNewClick,
     onTopicsShareClick,
     onTopicsDeleteClick,
@@ -189,7 +189,7 @@ export default function Topics(props: Props) {
       </div>
       <SearchPagination
         className={classes.pagination}
-        hasNextPage={hasNextPage}
+        totalCount={totalCount}
       />
       {selected.size > 0 && (
         <ActionFooter maxWidth="lg">

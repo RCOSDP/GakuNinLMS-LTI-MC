@@ -45,9 +45,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type Props = {
+  totalCount: number;
   contents: ContentSchema[];
   loading?: boolean;
-  hasNextPage: boolean;
   onSubmit({
     books,
     sections,
@@ -66,9 +66,9 @@ type Props = {
 
 export default function BookImport(props: Props) {
   const {
+    totalCount,
     contents,
     loading = false,
-    hasNextPage,
     onSubmit,
     onCancel,
     onBookPreviewClick,
@@ -200,7 +200,7 @@ export default function BookImport(props: Props) {
       </ActionFooter>
       <SearchPagination
         className={classes.pagination}
-        hasNextPage={hasNextPage}
+        totalCount={totalCount}
       />
       {previewTopic && (
         <TopicPreviewDialog {...topicPreviewDialogProps} topic={previewTopic} />

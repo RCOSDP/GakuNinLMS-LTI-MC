@@ -5,9 +5,9 @@ import type {
   ApiV2SearchGetSortEnum,
   ApiV2SearchGetTypeEnum,
 } from "$openapi";
-import type { ContentSchema } from "$server/models/content";
 import type { SortOrder } from "$server/models/sortOrder";
 import type { AuthorFilterType } from "$server/models/authorFilter";
+import type { SearchResultSchema } from "$server/models/search";
 import { api } from "./api";
 import { revalidateBook } from "./book";
 import { revalidateTopic } from "./topic";
@@ -25,18 +25,17 @@ async function fetchContents(
   sort: SortOrder,
   perPage: number,
   page: number
-): Promise<ContentSchema[]> {
-  const res = await api.apiV2SearchGet({
+): Promise<SearchResultSchema> {
+  const res: SearchResultSchema = (await api.apiV2SearchGet({
     type: type as ApiV2SearchGetTypeEnum,
     q,
     filter: filter as ApiV2SearchGetFilterEnum,
     sort: sort as ApiV2SearchGetSortEnum,
     perPage,
     page,
-  });
-  const contents = (res.contents ?? []) as ContentSchema[];
+  })) as unknown as SearchResultSchema;
   await Promise.all(
-    contents.map(async (c) => {
+    res.contents.map(async (c) => {
       switch (c.type) {
         case "book":
           return await revalidateBook(c.id, c);
@@ -45,7 +44,7 @@ async function fetchContents(
       }
     })
   );
-  return contents;
+  return res;
 }
 
 function useContents({
@@ -70,10 +69,10 @@ function useContents({
       : [key, type, debouncedQuery, filter, sort, perPage, page],
     fetchContents
   );
-  const contents = data ?? [];
+  const totalCount = data?.totalCount ?? 0;
+  const contents = data?.contents ?? [];
   const loading = isValidating && data != null;
-  const hasNextPage = contents.length === perPage;
-  return { contents, loading, hasNextPage };
+  return { ...data, totalCount, contents, loading };
 }
 
 export default useContents;
@@ -92,6 +91,6 @@ export function revalidateContents({
   sort: SortOrder;
   perPage: number;
   page: number;
-}): Promise<ContentSchema[]> {
+}): Promise<SearchResultSchema> {
   return mutate([key, type, q, filter, sort, perPage, page]);
 }
