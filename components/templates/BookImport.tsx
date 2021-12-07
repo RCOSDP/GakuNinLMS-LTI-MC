@@ -143,9 +143,10 @@ export default function BookImport(props: Props) {
             <AuthorFilter onFilterChange={searchProps.onFilterChange} />
             <SearchTextField
               label="ブック・トピック検索"
-              value={searchProps.query.q}
+              value={searchProps.input}
               onSearchInput={searchProps.onSearchInput}
               onSearchInputReset={searchProps.onSearchInputReset}
+              onSearchSubmit={searchProps.onSearchSubmit}
             />
           </>
         }

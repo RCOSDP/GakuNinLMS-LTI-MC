@@ -163,9 +163,10 @@ export default function Topics(props: Props) {
             <AuthorFilter onFilterChange={searchProps.onFilterChange} />
             <SearchTextField
               label="トピック検索"
-              value={searchProps.query.q}
+              value={searchProps.input}
               onSearchInput={searchProps.onSearchInput}
               onSearchInputReset={searchProps.onSearchInputReset}
+              onSearchSubmit={searchProps.onSearchSubmit}
             />
           </>
         }

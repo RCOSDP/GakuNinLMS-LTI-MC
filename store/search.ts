@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { atom, useAtom } from "jotai";
 import clsx from "clsx";
 import stringify from "$utils/search/stringify";
@@ -23,8 +23,12 @@ const queryAtom = atom<{
   page: 0,
 });
 
+const inputAtom = atom<string>("");
+
 export function useSearchAtom() {
   const [query, updateQuery] = useAtom(queryAtom);
+  const [input, updateInput] = useAtom(inputAtom);
+  useEffect(() => updateInput(query.q), [updateInput, query]);
   const setType: (type: "book" | "topic") => void = useCallback(
     (type) =>
       updateQuery({
@@ -42,6 +46,10 @@ export function useSearchAtom() {
     [updateQuery]
   );
   const onSearchInput: (q: string) => void = useCallback(
+    (q) => updateInput(q),
+    [updateInput]
+  );
+  const onSearchSubmit: (q: string) => void = useCallback(
     (q) => updateQuery((query) => ({ ...query, q, page: 0 })),
     [updateQuery]
   );
@@ -80,10 +88,12 @@ export function useSearchAtom() {
 
   return {
     query,
+    input,
     setType,
     setPage,
     onSearchInput,
     onSearchInputReset,
+    onSearchSubmit,
     onFilterChange,
     onSortChange,
     onLtiContextClick,
