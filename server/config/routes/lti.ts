@@ -21,7 +21,7 @@ export async function login(fastify: FastifyInstance) {
   const { method, get, post } = ltiLoginService;
 
   fastify.get<{
-    Params: ltiLoginService.Props;
+    Querystring: ltiLoginService.Props;
   }>(path, { schema: method.get }, handler(get));
 
   fastify.post<{
