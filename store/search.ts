@@ -71,19 +71,19 @@ export function useSearchAtom() {
     (link) =>
       updateQuery((query) => ({
         ...query,
-        q: clsx(query.q, stringify({ link: [link] })),
+        q: clsx(input, stringify({ link: [link] })),
         page: 0,
       })),
-    [updateQuery]
+    [updateQuery, input]
   );
   const onKeywordClick: (keyword: KeywordSchema) => void = useCallback(
     (keyword) =>
       updateQuery((query) => ({
         ...query,
-        q: clsx(query.q, stringify({ keyword: [keyword.name] })),
+        q: clsx(input, stringify({ keyword: [keyword.name] })),
         page: 0,
       })),
-    [updateQuery]
+    [updateQuery, input]
   );
 
   return {
