@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from "react";
-import { useDebouncedCallback } from "use-debounce";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
 import { outlinedInputClasses } from "@mui/material/OutlinedInput";
@@ -30,14 +29,12 @@ const SearchTextField = styled(
     useEffect(() => {
       setValueState(value);
     }, [setValueState, value]);
-    const debouncedSearchInput = useDebouncedCallback(onSearchInput, 500);
-    const handleSearchInput = useCallback(
-      (event: React.ChangeEvent<HTMLInputElement>) => {
-        setValueState(event.target.value);
-        debouncedSearchInput(event.target.value);
-      },
-      [setValueState, debouncedSearchInput]
+    const handleChange = useCallback(
+      (event: React.ChangeEvent<HTMLInputElement>) =>
+        setValueState(event.target.value),
+      [setValueState]
     );
+    const handleBlur = () => onSearchInput(valueState);
     const handleKeyDown = (event: React.KeyboardEvent) => {
       if (event.key === "Enter") {
         handleSearchSubmit();
@@ -47,7 +44,8 @@ const SearchTextField = styled(
     return (
       <TextField
         value={valueState}
-        onChange={handleSearchInput}
+        onChange={handleChange}
+        onBlur={handleBlur}
         onKeyDown={handleKeyDown}
         variant="outlined"
         InputProps={{
