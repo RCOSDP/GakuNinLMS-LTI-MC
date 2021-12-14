@@ -112,7 +112,10 @@ export default function TopicViewerContent({ topic, onEnded, offset }: Props) {
           ...authors(topic),
         ]}
       />
-      <Box component="article" sx={{ ":not(:empty)": { my: -1.5 } }}>
+      <Box
+        component="article"
+        sx={{ "> :first-child, > :last-child": { my: 0 } }}
+      >
         <Markdown>{topic.description}</Markdown>
       </Box>
     </>
