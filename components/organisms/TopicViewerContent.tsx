@@ -1,7 +1,6 @@
 import type { TopicSchema } from "$server/models/topic";
 import Typography from "@mui/material/Typography";
 import Chip from "@mui/material/Chip";
-import Box from "@mui/material/Box";
 import { useTheme } from "@mui/material/styles";
 import Video from "$organisms/Video";
 import DescriptionList from "$atoms/DescriptionList";
@@ -70,9 +69,9 @@ export default function TopicViewerContent({ topic, onEnded, offset }: Props) {
           ...authors(topic),
         ]}
       />
-      <Box component="article" sx={{ my: -1.5 }}>
+      <article>
         <Markdown>{topic.description}</Markdown>
-      </Box>
+      </article>
     </>
   );
 }
