@@ -18,7 +18,7 @@ import AuthorsInput from "$organisms/AuthorsInput";
 import KeywordsInput from "$organisms/KeywordsInput";
 import SubtitleChip from "$atoms/SubtitleChip";
 import SubtitleUploadDialog from "$organisms/SubtitleUploadDialog";
-import Video from "$organisms/Video";
+import VideoResource from "$organisms/Video/VideoResource";
 import useCardStyles from "styles/card";
 import gray from "theme/colors/gray";
 import type { TopicProps, TopicSchema } from "$server/models/topic";
@@ -213,7 +213,10 @@ export default function TopicForm(props: Props) {
           )}
         />
         {videoResource && (
-          <Video {...videoResource} onDurationChange={handleDurationChange} />
+          <VideoResource
+            {...videoResource}
+            onDurationChange={handleDurationChange}
+          />
         )}
         <TextField
           label="教材の主要な言語"
