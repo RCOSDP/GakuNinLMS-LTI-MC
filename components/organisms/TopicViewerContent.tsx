@@ -2,7 +2,6 @@ import clsx from "clsx";
 import type { TopicSchema } from "$server/models/topic";
 import Typography from "@mui/material/Typography";
 import Chip from "@mui/material/Chip";
-import Box from "@mui/material/Box";
 import { useTheme } from "@mui/material/styles";
 import Video from "$organisms/Video";
 import VideoPlayer from "$organisms/Video/VideoPlayer";
@@ -112,9 +111,9 @@ export default function TopicViewerContent({ topic, onEnded, offset }: Props) {
           ...authors(topic),
         ]}
       />
-      <Box component="article">
+      <article>
         <Markdown>{topic.description}</Markdown>
-      </Box>
+      </article>
     </>
   );
 }
