@@ -114,7 +114,12 @@ export default function TopicViewerContent({ topic, onEnded, offset }: Props) {
       />
       <Box
         component="article"
-        sx={{ "> :first-child, > :last-child": { my: 0 } }}
+        sx={{
+          "> :first-child": {
+            mt: 0,
+          },
+          "> :last-child": { mb: 0 },
+        }}
       >
         <Markdown>{topic.description}</Markdown>
       </Box>
