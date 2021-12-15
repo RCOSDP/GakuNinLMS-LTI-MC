@@ -128,29 +128,23 @@ export default function BookImport(props: Props) {
     setPreviewTopic(topic);
   return (
     <Container classes={containerClasses} maxWidth="md">
-      <ActionHeader
-        title={
-          <>
-            ブックの再利用
-            <Typography variant="body1">
-              再利用するトピックを選んで下さい
-            </Typography>
-          </>
-        }
-        action={
-          <>
-            <SortSelect onSortChange={searchProps.onSortChange} />
-            <AuthorFilter onFilterChange={searchProps.onFilterChange} />
-            <SearchTextField
-              label="ブック・トピック検索"
-              value={searchProps.input}
-              onSearchInput={searchProps.onSearchInput}
-              onSearchInputReset={searchProps.onSearchInputReset}
-              onSearchSubmit={searchProps.onSearchSubmit}
-            />
-          </>
-        }
-      />
+      <Typography sx={{ mt: 5 }} variant="h4">
+        ブックの再利用
+      </Typography>
+      <Typography sx={{ mt: 1 }} variant="body1">
+        再利用するトピックを選んで下さい
+      </Typography>
+      <ActionHeader>
+        <SortSelect onSortChange={searchProps.onSortChange} />
+        <AuthorFilter onFilterChange={searchProps.onFilterChange} />
+        <SearchTextField
+          label="ブック・トピック検索"
+          value={searchProps.input}
+          onSearchInput={searchProps.onSearchInput}
+          onSearchInputReset={searchProps.onSearchInputReset}
+          onSearchSubmit={searchProps.onSearchSubmit}
+        />
+      </ActionHeader>
       <TreeView
         defaultCollapseIcon={<ExpandMoreIcon />}
         defaultExpandIcon={<ChevronRightIcon />}

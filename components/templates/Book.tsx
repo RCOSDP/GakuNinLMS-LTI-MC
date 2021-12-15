@@ -163,40 +163,37 @@ export default function Book(props: Props) {
 
   return (
     <Container maxWidth="lg">
-      <ActionHeader
-        considerAppBar={considerAppBar}
-        action={
-          <header className={classes.header}>
-            <Typography
-              className={clsx(classes.title, { [classes.mobile]: !matches })}
-              variant="h4"
-            >
-              {book?.name}
-            </Typography>
-            {book?.shared && <SharedIndicator />}
-            {isInstructor &&
-              book &&
-              onBookEditClick &&
-              (isContentEditable(book) || book.shared) && (
-                <EditButton
-                  variant="book"
-                  size="medium"
-                  onClick={handleBookEditClick}
-                />
-              )}
-            {isInstructor && linked && onOtherBookLinkClick && (
-              <Button
-                size="small"
-                color="primary"
-                onClick={handleOtherBookLinkClick}
-              >
-                <LinkIcon className={classes.icon} />
-                他のブックを提供
-              </Button>
+      <ActionHeader considerAppBar={considerAppBar}>
+        <header className={classes.header}>
+          <Typography
+            className={clsx(classes.title, { [classes.mobile]: !matches })}
+            variant="h4"
+          >
+            {book?.name}
+          </Typography>
+          {book?.shared && <SharedIndicator />}
+          {isInstructor &&
+            book &&
+            onBookEditClick &&
+            (isContentEditable(book) || book.shared) && (
+              <EditButton
+                variant="book"
+                size="medium"
+                onClick={handleBookEditClick}
+              />
             )}
-          </header>
-        }
-      />
+          {isInstructor && linked && onOtherBookLinkClick && (
+            <Button
+              size="small"
+              color="primary"
+              onClick={handleOtherBookLinkClick}
+            >
+              <LinkIcon className={classes.icon} />
+              他のブックを提供
+            </Button>
+          )}
+        </header>
+      </ActionHeader>
       {book && (
         <>
           <div className={classes.description}>

@@ -6,6 +6,7 @@ import { styled } from "@mui/material/styles";
 import Badge from "@mui/material/Badge";
 import Button from "@mui/material/Button";
 import Checkbox from "@mui/material/Checkbox";
+import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import AddIcon from "@mui/icons-material/Add";
 import ActionHeader from "$organisms/ActionHeader";
@@ -109,53 +110,47 @@ export default function Topics(props: Props) {
   } = useDialogProps<ContentSchema>();
   return (
     <Container classes={containerClasses} maxWidth="lg">
-      <ActionHeader
-        title={
-          <>
-            トピック
-            <Button size="small" color="primary" onClick={onTopicNewClick}>
-              <AddIcon sx={{ mr: 0.5 }} />
-              トピックの作成
-            </Button>
-          </>
-        }
-        action={
-          <>
-            <ContentTypeIndicator type="topic" />
-            <Badge
-              sx={{
-                display: "inline-flex",
-                padding: 0,
-                backgroundColor: "white",
-                border: "1px solid",
-                borderColor: grey[300],
-                borderRadius: 2,
-              }}
-              badgeContent={selected.size}
-              color="primary"
-            >
-              <Checkbox
-                size="small"
-                color="primary"
-                checked={selected.size === contents.length && selected.size > 0}
-                indeterminate={
-                  selected.size !== contents.length && selected.size > 0
-                }
-                onChange={handleCheckAll}
-              />
-            </Badge>
-            <SortSelect onSortChange={searchProps.onSortChange} />
-            <AuthorFilter onFilterChange={searchProps.onFilterChange} />
-            <SearchTextField
-              label="トピック検索"
-              value={searchProps.input}
-              onSearchInput={searchProps.onSearchInput}
-              onSearchInputReset={searchProps.onSearchInputReset}
-              onSearchSubmit={searchProps.onSearchSubmit}
-            />
-          </>
-        }
-      />
+      <Typography sx={{ mt: 5 }} variant="h4">
+        トピック
+        <Button size="small" color="primary" onClick={onTopicNewClick}>
+          <AddIcon sx={{ mr: 0.5 }} />
+          トピックの作成
+        </Button>
+      </Typography>
+      <ActionHeader>
+        <ContentTypeIndicator type="topic" />
+        <Badge
+          sx={{
+            display: "inline-flex",
+            padding: 0,
+            backgroundColor: "white",
+            border: "1px solid",
+            borderColor: grey[300],
+            borderRadius: 2,
+          }}
+          badgeContent={selected.size}
+          color="primary"
+        >
+          <Checkbox
+            size="small"
+            color="primary"
+            checked={selected.size === contents.length && selected.size > 0}
+            indeterminate={
+              selected.size !== contents.length && selected.size > 0
+            }
+            onChange={handleCheckAll}
+          />
+        </Badge>
+        <SortSelect onSortChange={searchProps.onSortChange} />
+        <AuthorFilter onFilterChange={searchProps.onFilterChange} />
+        <SearchTextField
+          label="トピック検索"
+          value={searchProps.input}
+          onSearchInput={searchProps.onSearchInput}
+          onSearchInputReset={searchProps.onSearchInputReset}
+          onSearchSubmit={searchProps.onSearchSubmit}
+        />
+      </ActionHeader>
       <ContentPreviews>
         {contents.map((content) => (
           <ContentPreview

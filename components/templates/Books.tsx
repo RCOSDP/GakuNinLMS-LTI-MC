@@ -2,6 +2,7 @@ import Skeleton from "@mui/material/Skeleton";
 import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
 import AddIcon from "@mui/icons-material/Add";
 import ActionHeader from "$organisms/ActionHeader";
 import ContentTypeIndicator from "$atoms/ContentTypeIndicator";
@@ -55,65 +56,54 @@ export default function Books(props: Props) {
   const containerClasses = useContainerStyles();
 
   return (
-    <>
-      <ActionHeader
-        maxWidth="lg"
-        title={
-          <>
-            ブック
-            <Button size="small" color="primary" onClick={handleBookNewClick}>
-              <AddIcon sx={{ mr: 0.5 }} />
-              ブックの作成
-            </Button>
-            <Button
-              size="small"
-              color="primary"
-              onClick={handleBooksImportClick}
-            >
-              <AddIcon sx={{ mr: 0.5 }} />
-              一括登録
-            </Button>
-          </>
-        }
-        body={
-          <LinkInfo book={linkedBook} onLinkedBookClick={onLinkedBookClick} />
-        }
-        action={
-          <>
-            <ContentTypeIndicator type="book" />
-            <SortSelect onSortChange={searchProps.onSortChange} />
-            <AuthorFilter onFilterChange={searchProps.onFilterChange} />
-            <SearchTextField
-              label="ブック・トピック検索"
-              value={searchProps.input}
-              onSearchInput={searchProps.onSearchInput}
-              onSearchInputReset={searchProps.onSearchInputReset}
-              onSearchSubmit={searchProps.onSearchSubmit}
-            />
-          </>
-        }
+    <Container classes={containerClasses} maxWidth="lg">
+      <Typography sx={{ mt: 5 }} variant="h4">
+        ブック
+        <Button size="small" color="primary" onClick={handleBookNewClick}>
+          <AddIcon sx={{ mr: 0.5 }} />
+          ブックの作成
+        </Button>
+        <Button size="small" color="primary" onClick={handleBooksImportClick}>
+          <AddIcon sx={{ mr: 0.5 }} />
+          一括登録
+        </Button>
+      </Typography>
+      <LinkInfo
+        sx={{ mt: 1 }}
+        book={linkedBook}
+        onLinkedBookClick={onLinkedBookClick}
       />
-      <Container classes={containerClasses} maxWidth="lg">
-        <ContentPreviews>
-          {contents.map((content) => (
-            <ContentPreview
-              key={content.id}
-              content={content}
-              linked={content.id === linkedBook?.id}
-              onContentPreviewClick={onContentPreviewClick}
-              onContentEditClick={onContentEditClick}
-              onContentLinkClick={onContentLinkClick}
-              onLtiContextClick={searchProps.onLtiContextClick}
-              onKeywordClick={searchProps.onKeywordClick}
-            />
+      <ActionHeader>
+        <ContentTypeIndicator type="book" />
+        <SortSelect onSortChange={searchProps.onSortChange} />
+        <AuthorFilter onFilterChange={searchProps.onFilterChange} />
+        <SearchTextField
+          label="ブック・トピック検索"
+          value={searchProps.input}
+          onSearchInput={searchProps.onSearchInput}
+          onSearchInputReset={searchProps.onSearchInputReset}
+          onSearchSubmit={searchProps.onSearchSubmit}
+        />
+      </ActionHeader>
+      <ContentPreviews>
+        {contents.map((content) => (
+          <ContentPreview
+            key={content.id}
+            content={content}
+            linked={content.id === linkedBook?.id}
+            onContentPreviewClick={onContentPreviewClick}
+            onContentEditClick={onContentEditClick}
+            onContentLinkClick={onContentLinkClick}
+            onLtiContextClick={searchProps.onLtiContextClick}
+            onKeywordClick={searchProps.onKeywordClick}
+          />
+        ))}
+        {loading &&
+          [...Array(6)].map((_, i) => (
+            <Skeleton key={i} height={324} /* TODO: 妥当な値にしてほしい */ />
           ))}
-          {loading &&
-            [...Array(6)].map((_, i) => (
-              <Skeleton key={i} height={324} /* TODO: 妥当な値にしてほしい */ />
-            ))}
-        </ContentPreviews>
-        <SearchPagination sx={{ mt: 4 }} totalCount={totalCount} />
-      </Container>
-    </>
+      </ContentPreviews>
+      <SearchPagination sx={{ mt: 4 }} totalCount={totalCount} />
+    </Container>
   );
 }

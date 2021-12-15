@@ -1,7 +1,6 @@
 import type { ComponentProps } from "react";
 import clsx from "clsx";
 import Container from "@mui/material/Container";
-import Typography from "@mui/material/Typography";
 import { useTheme } from "@mui/material/styles";
 import makeStyles from "@mui/styles/makeStyles";
 import { gray } from "$theme/colors";
@@ -10,20 +9,6 @@ import useAppBarOffset from "$utils/useAppBarOffset";
 import sumPixels from "$utils/sumPixels";
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    paddingTop: theme.spacing(5),
-  },
-  title: {
-    "& > *": {
-      marginRight: theme.spacing(1),
-    },
-    "& > p": {
-      paddingTop: theme.spacing(1),
-    },
-  },
-  body: {
-    paddingTop: theme.spacing(2),
-  },
   action: {
     display: "flex",
     alignItems: "center",
@@ -43,14 +28,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type Props = Pick<ComponentProps<typeof Container>, "maxWidth"> & {
-  title?: React.ReactNode;
-  body?: React.ReactNode;
-  action: React.ReactNode;
+  children: React.ReactNode;
   considerAppBar?: boolean;
 };
 
 export default function ActionHeader(props: Props) {
-  const { maxWidth, title, body, action, considerAppBar = true } = props;
+  const { maxWidth, children, considerAppBar = true } = props;
   const classes = useStyles();
   const theme = useTheme();
   const appBarOffset = useAppBarOffset();
@@ -62,28 +45,11 @@ export default function ActionHeader(props: Props) {
     zIndex: 2,
   });
   return (
-    <>
-      {(title || body) && (
-        <div className={classes.root}>
-          <Container
-            className={clsx({ [classes.container]: !maxWidth })}
-            maxWidth={maxWidth}
-          >
-            {title && (
-              <Typography className={classes.title} variant="h4">
-                {title}
-              </Typography>
-            )}
-            {body && <div className={classes.body}>{body}</div>}
-          </Container>
-        </div>
-      )}
-      <Container
-        className={clsx({ [classes.container]: !maxWidth }, sticky)}
-        maxWidth={maxWidth}
-      >
-        <div className={classes.action}>{action}</div>
-      </Container>
-    </>
+    <Container
+      className={clsx({ [classes.container]: !maxWidth }, sticky)}
+      maxWidth={maxWidth}
+    >
+      <div className={classes.action}>{children}</div>
+    </Container>
   );
 }

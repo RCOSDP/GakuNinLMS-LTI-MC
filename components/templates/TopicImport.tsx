@@ -78,29 +78,23 @@ export default function TopicImport(props: Props) {
   } = useDialogProps<ContentSchema>();
   return (
     <Container classes={containerClasses} maxWidth="lg">
-      <ActionHeader
-        title={
-          <>
-            トピックの再利用
-            <Typography variant="body1">
-              再利用するトピックを選んで下さい
-            </Typography>
-          </>
-        }
-        action={
-          <>
-            <SortSelect onSortChange={searchProps.onSortChange} />
-            <AuthorFilter onFilterChange={searchProps.onFilterChange} />
-            <SearchTextField
-              label="トピック検索"
-              value={searchProps.input}
-              onSearchInput={searchProps.onSearchInput}
-              onSearchInputReset={searchProps.onSearchInputReset}
-              onSearchSubmit={searchProps.onSearchSubmit}
-            />
-          </>
-        }
-      />
+      <Typography sx={{ mt: 5 }} variant="h4">
+        トピックの再利用
+      </Typography>
+      <Typography sx={{ mt: 1 }} variant="body1">
+        再利用するトピックを選んで下さい
+      </Typography>
+      <ActionHeader>
+        <SortSelect onSortChange={searchProps.onSortChange} />
+        <AuthorFilter onFilterChange={searchProps.onFilterChange} />
+        <SearchTextField
+          label="トピック検索"
+          value={searchProps.input}
+          onSearchInput={searchProps.onSearchInput}
+          onSearchInputReset={searchProps.onSearchInputReset}
+          onSearchSubmit={searchProps.onSearchSubmit}
+        />
+      </ActionHeader>
       <div className={classes.topics}>
         {contents.map((content, index) => (
           <ContentPreview
