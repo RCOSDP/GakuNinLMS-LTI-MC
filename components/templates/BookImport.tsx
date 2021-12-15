@@ -127,7 +127,7 @@ export default function BookImport(props: Props) {
   const handleTopicPreviewClick = (topic: TopicSchema) =>
     setPreviewTopic(topic);
   return (
-    <Container classes={containerClasses} maxWidth="md">
+    <Container classes={containerClasses} maxWidth="lg">
       <Typography sx={{ mt: 5 }} variant="h4">
         ブックの再利用
       </Typography>
@@ -173,7 +173,7 @@ export default function BookImport(props: Props) {
         })}
       </TreeView>
       {loading && [...Array(5)].map((_, i) => <Skeleton key={i} height={40} />)}
-      <ActionFooter maxWidth="md">
+      <ActionFooter maxWidth="lg">
         <form className={classes.form} onSubmit={handleSubmit}>
           <Button
             color="primary"
