@@ -17,10 +17,14 @@ function SearchPagination({ className = "", sx, totalCount }: Props) {
 
   const page = searchProps.query.page + 1;
   return (
-    <Grid container component="div" justifyContent="center">
+    <Grid
+      className={className}
+      sx={sx}
+      container
+      component="div"
+      justifyContent="center"
+    >
       <Pagination
-        className={className}
-        sx={sx}
         color="primary"
         page={page}
         count={count}
