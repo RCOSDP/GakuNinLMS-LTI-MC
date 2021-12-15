@@ -1,5 +1,5 @@
 import Skeleton from "@mui/material/Skeleton";
-import { styled } from "@mui/material/styles";
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
@@ -17,12 +17,6 @@ import type { BookSchema } from "$server/models/book";
 import type { LinkedBook } from "$types/linkedBook";
 import useContainerStyles from "styles/container";
 import { useSearchAtom } from "$store/search";
-
-const ContentPreviews = styled("div")(({ theme }) => ({
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fill, 296px)",
-  gap: theme.spacing(2),
-}));
 
 export type Props = {
   totalCount: number;
@@ -56,8 +50,23 @@ export default function Books(props: Props) {
   const containerClasses = useContainerStyles();
 
   return (
-    <Container classes={containerClasses} maxWidth="lg">
-      <Typography sx={{ mt: 5 }} variant="h4">
+    <Container
+      sx={{
+        display: "grid",
+        gridTemplateAreas: `
+          ". title"
+          ". link-info"
+          "side action-header"
+          "side items"
+          "side search-pagination"
+        `,
+        gridTemplateColumns: "300px 1fr",
+        columnGap: 2,
+      }}
+      classes={containerClasses}
+      maxWidth="xl"
+    >
+      <Typography sx={{ mt: 5, gridArea: "title" }} variant="h4">
         ブック
         <Button size="small" color="primary" onClick={handleBookNewClick}>
           <AddIcon sx={{ mr: 0.5 }} />
@@ -69,11 +78,11 @@ export default function Books(props: Props) {
         </Button>
       </Typography>
       <LinkInfo
-        sx={{ mt: 1 }}
+        sx={{ mt: 1, gridArea: "link-info" }}
         book={linkedBook}
         onLinkedBookClick={onLinkedBookClick}
       />
-      <ActionHeader>
+      <ActionHeader sx={{ gridArea: "action-header" }}>
         <ContentTypeIndicator type="book" />
         <SortSelect onSortChange={searchProps.onSortChange} />
         <AuthorFilter onFilterChange={searchProps.onFilterChange} />
@@ -85,7 +94,17 @@ export default function Books(props: Props) {
           onSearchSubmit={searchProps.onSearchSubmit}
         />
       </ActionHeader>
-      <ContentPreviews>
+      <Box gridArea="side">
+        <Typography sx={{ pt: 4 }} variant="h5">
+          絞り込み
+        </Typography>
+      </Box>
+      <Box
+        display="grid"
+        gridTemplateColumns="repeat(auto-fill, 296px)"
+        gap={2}
+        gridArea="items"
+      >
         {contents.map((content) => (
           <ContentPreview
             key={content.id}
@@ -102,8 +121,11 @@ export default function Books(props: Props) {
           [...Array(6)].map((_, i) => (
             <Skeleton key={i} height={324} /* TODO: 妥当な値にしてほしい */ />
           ))}
-      </ContentPreviews>
-      <SearchPagination sx={{ mt: 4 }} totalCount={totalCount} />
+      </Box>
+      <SearchPagination
+        sx={{ mt: 4, gridArea: "search-pagination" }}
+        totalCount={totalCount}
+      />
     </Container>
   );
 }

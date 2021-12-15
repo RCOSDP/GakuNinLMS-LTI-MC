@@ -2,7 +2,7 @@ import type { ChangeEvent } from "react";
 import { useState } from "react";
 import { useConfirm } from "material-ui-confirm";
 import Skeleton from "@mui/material/Skeleton";
-import { styled } from "@mui/material/styles";
+import Box from "@mui/material/Box";
 import Badge from "@mui/material/Badge";
 import Button from "@mui/material/Button";
 import Checkbox from "@mui/material/Checkbox";
@@ -24,12 +24,6 @@ import { grey } from "@mui/material/colors";
 import useContainerStyles from "$styles/container";
 import useDialogProps from "$utils/useDialogProps";
 import { useSearchAtom } from "$store/search";
-
-const ContentPreviews = styled("div")(({ theme }) => ({
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fill, 296px)",
-  gap: theme.spacing(2),
-}));
 
 type Props = {
   totalCount: number;
@@ -109,15 +103,29 @@ export default function Topics(props: Props) {
     ...dialogProps
   } = useDialogProps<ContentSchema>();
   return (
-    <Container classes={containerClasses} maxWidth="lg">
-      <Typography sx={{ mt: 5 }} variant="h4">
+    <Container
+      sx={{
+        display: "grid",
+        gridTemplateAreas: `
+          ". title"
+          "side action-header"
+          "side items"
+          "side search-pagination"
+        `,
+        gridTemplateColumns: "300px 1fr",
+        columnGap: 2,
+      }}
+      classes={containerClasses}
+      maxWidth="xl"
+    >
+      <Typography sx={{ mt: 5, gridArea: "title" }} variant="h4">
         トピック
         <Button size="small" color="primary" onClick={onTopicNewClick}>
           <AddIcon sx={{ mr: 0.5 }} />
           トピックの作成
         </Button>
       </Typography>
-      <ActionHeader>
+      <ActionHeader sx={{ gridArea: "action-header" }}>
         <ContentTypeIndicator type="topic" />
         <Badge
           sx={{
@@ -151,7 +159,17 @@ export default function Topics(props: Props) {
           onSearchSubmit={searchProps.onSearchSubmit}
         />
       </ActionHeader>
-      <ContentPreviews>
+      <Box gridArea="side">
+        <Typography sx={{ pt: 4 }} variant="h5">
+          絞り込み
+        </Typography>
+      </Box>
+      <Box
+        display="grid"
+        gridTemplateColumns="repeat(auto-fill, 296px)"
+        gap={2}
+        gridArea="items"
+      >
         {contents.map((content) => (
           <ContentPreview
             key={content.id}
@@ -167,8 +185,11 @@ export default function Topics(props: Props) {
           [...Array(6)].map((_, i) => (
             <Skeleton key={i} height={324 /* TODO: 妥当な値にしてほしい */} />
           ))}
-      </ContentPreviews>
-      <SearchPagination sx={{ mt: 4 }} totalCount={totalCount} />
+      </Box>
+      <SearchPagination
+        sx={{ mt: 4, gridArea: "search-pagination" }}
+        totalCount={totalCount}
+      />
       {selected.size > 0 && (
         <ActionFooter maxWidth="lg">
           <Button
