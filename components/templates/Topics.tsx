@@ -2,7 +2,7 @@ import type { ChangeEvent } from "react";
 import { useState } from "react";
 import { useConfirm } from "material-ui-confirm";
 import Skeleton from "@mui/material/Skeleton";
-import makeStyles from "@mui/styles/makeStyles";
+import { styled } from "@mui/material/styles";
 import Badge from "@mui/material/Badge";
 import Button from "@mui/material/Button";
 import Checkbox from "@mui/material/Checkbox";
@@ -24,30 +24,10 @@ import useContainerStyles from "$styles/container";
 import useDialogProps from "$utils/useDialogProps";
 import { useSearchAtom } from "$store/search";
 
-const useStyles = makeStyles((theme) => ({
-  icon: {
-    marginRight: theme.spacing(0.5),
-  },
-  topics: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fill, 296px)",
-    gap: theme.spacing(2),
-  },
-  fieldset: {
-    display: "inline-flex",
-    padding: theme.spacing(0),
-    backgroundColor: "white",
-    border: "1px solid",
-    borderColor: grey[300],
-    borderRadius: 8,
-  },
-  checkbox: {},
-  footerButton: {
-    marginRight: theme.spacing(1),
-  },
-  pagination: {
-    marginTop: theme.spacing(4),
-  },
+const ContentPreviews = styled("div")(({ theme }) => ({
+  display: "grid",
+  gridTemplateColumns: "repeat(auto-fill, 296px)",
+  gap: theme.spacing(2),
 }));
 
 type Props = {
@@ -73,7 +53,6 @@ export default function Topics(props: Props) {
     onTopicNewClick,
   } = props;
   const searchProps = useSearchAtom();
-  const classes = useStyles();
   const containerClasses = useContainerStyles();
   const confirm = useConfirm();
   const [selected, select] = useState<Map<ContentSchema["id"], ContentSchema>>(
@@ -135,7 +114,7 @@ export default function Topics(props: Props) {
           <>
             トピック
             <Button size="small" color="primary" onClick={onTopicNewClick}>
-              <AddIcon className={classes.icon} />
+              <AddIcon sx={{ mr: 0.5 }} />
               トピックの作成
             </Button>
           </>
@@ -144,12 +123,18 @@ export default function Topics(props: Props) {
           <>
             <ContentTypeIndicator type="topic" />
             <Badge
-              className={classes.fieldset}
+              sx={{
+                display: "inline-flex",
+                padding: 0,
+                backgroundColor: "white",
+                border: "1px solid",
+                borderColor: grey[300],
+                borderRadius: 2,
+              }}
               badgeContent={selected.size}
               color="primary"
             >
               <Checkbox
-                className={classes.checkbox}
                 size="small"
                 color="primary"
                 checked={selected.size === contents.length && selected.size > 0}
@@ -171,7 +156,7 @@ export default function Topics(props: Props) {
           </>
         }
       />
-      <div className={classes.topics}>
+      <ContentPreviews>
         {contents.map((content) => (
           <ContentPreview
             key={content.id}
@@ -187,15 +172,12 @@ export default function Topics(props: Props) {
           [...Array(6)].map((_, i) => (
             <Skeleton key={i} height={324 /* TODO: 妥当な値にしてほしい */} />
           ))}
-      </div>
-      <SearchPagination
-        className={classes.pagination}
-        totalCount={totalCount}
-      />
+      </ContentPreviews>
+      <SearchPagination sx={{ mt: 4 }} totalCount={totalCount} />
       {selected.size > 0 && (
         <ActionFooter maxWidth="lg">
           <Button
-            className={classes.footerButton}
+            sx={{ mr: 1 }}
             color="primary"
             size="large"
             variant="contained"
@@ -204,7 +186,7 @@ export default function Topics(props: Props) {
             ブック作成
           </Button>
           <Button
-            className={classes.footerButton}
+            sx={{ mr: 1 }}
             color="primary"
             size="large"
             variant="contained"
@@ -213,7 +195,7 @@ export default function Topics(props: Props) {
             シェア
           </Button>
           <Button
-            className={classes.footerButton}
+            sx={{ mr: 1 }}
             color="primary"
             size="large"
             variant="contained"
@@ -222,7 +204,7 @@ export default function Topics(props: Props) {
             シェア解除
           </Button>
           <Button
-            className={classes.footerButton}
+            sx={{ mr: 1 }}
             color="error"
             size="large"
             variant="contained"
