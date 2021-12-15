@@ -1,4 +1,3 @@
-import { css } from "@emotion/css";
 import Skeleton from "@mui/material/Skeleton";
 import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
@@ -17,19 +16,12 @@ import type { BookSchema } from "$server/models/book";
 import type { LinkedBook } from "$types/linkedBook";
 import useContainerStyles from "styles/container";
 import { useSearchAtom } from "$store/search";
-import theme from "$theme";
 
 const ContentPreviews = styled("div")(({ theme }) => ({
   display: "grid",
   gridTemplateColumns: "repeat(auto-fill, 296px)",
   gap: theme.spacing(2),
 }));
-
-const classes = {
-  pagination: css({
-    marginTop: theme.spacing(4),
-  }),
-};
 
 export type Props = {
   totalCount: number;
@@ -120,10 +112,7 @@ export default function Books(props: Props) {
               <Skeleton key={i} height={324} /* TODO: 妥当な値にしてほしい */ />
             ))}
         </ContentPreviews>
-        <SearchPagination
-          className={classes.pagination}
-          totalCount={totalCount}
-        />
+        <SearchPagination sx={{ mt: 4 }} totalCount={totalCount} />
       </Container>
     </>
   );
