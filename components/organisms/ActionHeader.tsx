@@ -1,5 +1,6 @@
 import type { ComponentProps } from "react";
 import clsx from "clsx";
+import type { SxProps } from "@mui/system";
 import Container from "@mui/material/Container";
 import { useTheme } from "@mui/material/styles";
 import makeStyles from "@mui/styles/makeStyles";
@@ -28,12 +29,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type Props = Pick<ComponentProps<typeof Container>, "maxWidth"> & {
+  sx?: SxProps;
   children: React.ReactNode;
   considerAppBar?: boolean;
 };
 
 export default function ActionHeader(props: Props) {
-  const { maxWidth, children, considerAppBar = true } = props;
+  const { sx, maxWidth, children, considerAppBar = true } = props;
   const classes = useStyles();
   const theme = useTheme();
   const appBarOffset = useAppBarOffset();
@@ -46,6 +48,7 @@ export default function ActionHeader(props: Props) {
   });
   return (
     <Container
+      sx={sx}
       className={clsx({ [classes.container]: !maxWidth }, sticky)}
       maxWidth={maxWidth}
     >
