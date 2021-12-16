@@ -1,14 +1,13 @@
 import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import makeStyles from "@mui/styles/makeStyles";
 import SectionsEdit from "$organisms/SectionsEdit";
 import BookForm from "$organisms/BookForm";
 import TopicPreviewDialog from "$organisms/TopicPreviewDialog";
+import Container from "$atoms/Container";
 import RequiredDot from "$atoms/RequiredDot";
 import BackButton from "$atoms/BackButton";
-import useContainerStyles from "styles/container";
 import type { BookSchema } from "$server/models/book";
 import type { BookPropsWithSubmitOptions } from "$types/bookPropsWithSubmitOptions";
 import type { SectionProps } from "$server/models/book/section";
@@ -75,7 +74,6 @@ export default function BookEdit({
   linked = false,
 }: Props) {
   const classes = useStyles();
-  const containerClasses = useContainerStyles();
   const confirm = useConfirm();
   const {
     data: previewTopic,
@@ -94,11 +92,7 @@ export default function BookEdit({
   };
 
   return (
-    <Container
-      classes={containerClasses}
-      className={classes.container}
-      maxWidth="md"
-    >
+    <Container className={classes.container} maxWidth="md">
       <BackButton onClick={onCancel}>戻る</BackButton>
       <Typography className={classes.title} variant="h4">
         ブック「{book.name}」の編集

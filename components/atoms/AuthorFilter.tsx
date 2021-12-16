@@ -1,44 +1,10 @@
 import { useCallback } from "react";
 import RadioGroup from "@mui/material/RadioGroup";
+import FormLabel from "@mui/material/FormLabel";
+import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
-import makeStyles from "@mui/styles/makeStyles";
-import { grey } from "@mui/material/colors";
 import type { AuthorFilterType } from "$server/models/authorFilter";
-
-const useStyles = makeStyles((theme) => ({
-  fieldset: {
-    display: "inline-flex",
-    marginTop: "-0.375rem",
-    padding: theme.spacing(0),
-    backgroundColor: "white",
-    border: "1px solid",
-    borderColor: grey[300],
-    borderRadius: 8,
-  },
-  legend: {
-    marginLeft: theme.spacing(1),
-    marginBottom: theme.spacing(-1),
-    color: grey[700],
-    fontSize: "0.75rem",
-  },
-  group: {
-    "& > :first-child": {
-      marginLeft: 0,
-    },
-    "& > :not(:last-child)": {
-      marginRight: theme.spacing(1.5),
-    },
-  },
-}));
-
-const useFormControlLabelStyles = makeStyles((theme) => ({
-  label: {
-    color: grey[800],
-    fontSize: "0.875rem",
-    marginLeft: theme.spacing(-0.5),
-  },
-}));
 
 const options: ReadonlyArray<{
   value: AuthorFilterType;
@@ -56,8 +22,6 @@ type Props = {
 
 function AuthorFilter(props: Props) {
   const { disabled = false, onFilterChange } = props;
-  const classes = useStyles();
-  const formControlLabelClasses = useFormControlLabelStyles();
   const handleChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       onFilterChange?.(event.target.value as AuthorFilterType);
@@ -65,18 +29,12 @@ function AuthorFilter(props: Props) {
     [onFilterChange]
   );
   return (
-    <fieldset className={classes.fieldset}>
-      <legend className={classes.legend}>著者</legend>
-      <RadioGroup
-        className={classes.group}
-        defaultValue={options[0].value}
-        onChange={handleChange}
-        row
-      >
+    <FormControl component="fieldset">
+      <FormLabel component="legend">著者</FormLabel>
+      <RadioGroup defaultValue={options[0].value} onChange={handleChange}>
         {options.map(({ value, label }) => (
           <FormControlLabel
             key={value}
-            classes={formControlLabelClasses}
             value={value}
             control={<Radio color="primary" size="small" />}
             label={label}
@@ -84,7 +42,7 @@ function AuthorFilter(props: Props) {
           />
         ))}
       </RadioGroup>
-    </fieldset>
+    </FormControl>
   );
 }
 

@@ -1,39 +1,22 @@
 import type { FormEvent } from "react";
 import { useState } from "react";
 import Skeleton from "@mui/material/Skeleton";
-import makeStyles from "@mui/styles/makeStyles";
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
 import ActionHeader from "$organisms/ActionHeader";
 import ActionFooter from "$organisms/ActionFooter";
 import ContentPreview from "$organisms/ContentPreview";
 import TopicPreviewDialog from "$organisms/TopicPreviewDialog";
 import SearchPagination from "$organisms/SearchPagination";
+import Container from "$atoms/Container";
 import SortSelect from "$atoms/SortSelect";
 import AuthorFilter from "$atoms/AuthorFilter";
 import SearchTextField from "$atoms/SearchTextField";
 import type { ContentSchema } from "$server/models/content";
 import type { TopicSchema } from "$server/models/topic";
-import useContainerStyles from "$styles/container";
 import useDialogProps from "$utils/useDialogProps";
 import { useSearchAtom } from "$store/search";
-
-const useStyles = makeStyles((theme) => ({
-  topics: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fill, 296px)",
-    gap: theme.spacing(2),
-  },
-  form: {
-    "& > *": {
-      marginRight: theme.spacing(1),
-    },
-  },
-  pagination: {
-    marginTop: theme.spacing(4),
-  },
-}));
 
 type Props = {
   totalCount: number;
@@ -55,8 +38,6 @@ export default function TopicImport(props: Props) {
     onContentEditClick,
   } = props;
   const searchProps = useSearchAtom();
-  const classes = useStyles();
-  const containerClasses = useContainerStyles();
   const [selectedIndexes, select] = useState<Set<number>>(new Set());
   const handleChecked = (index: number) => () =>
     select((indexes) =>
@@ -77,31 +58,35 @@ export default function TopicImport(props: Props) {
     ...dialogProps
   } = useDialogProps<ContentSchema>();
   return (
-    <Container classes={containerClasses} maxWidth="lg">
-      <ActionHeader
-        title={
-          <>
-            トピックの再利用
-            <Typography variant="body1">
-              再利用するトピックを選んで下さい
-            </Typography>
-          </>
-        }
-        action={
-          <>
-            <SortSelect onSortChange={searchProps.onSortChange} />
-            <AuthorFilter onFilterChange={searchProps.onFilterChange} />
-            <SearchTextField
-              label="トピック検索"
-              value={searchProps.input}
-              onSearchInput={searchProps.onSearchInput}
-              onSearchInputReset={searchProps.onSearchInputReset}
-              onSearchSubmit={searchProps.onSearchSubmit}
-            />
-          </>
-        }
-      />
-      <div className={classes.topics}>
+    <Container twoColumns maxWidth="xl">
+      <Typography sx={{ mt: 5, gridArea: "title" }} variant="h4">
+        トピックの再利用
+      </Typography>
+      <Typography sx={{ mt: 1, gridArea: "description" }} variant="body1">
+        再利用するトピックを選んで下さい
+      </Typography>
+      <ActionHeader sx={{ gridArea: "action-header" }}>
+        <SortSelect onSortChange={searchProps.onSortChange} />
+        <SearchTextField
+          label="トピック検索"
+          value={searchProps.input}
+          onSearchInput={searchProps.onSearchInput}
+          onSearchInputReset={searchProps.onSearchInputReset}
+          onSearchSubmit={searchProps.onSearchSubmit}
+        />
+      </ActionHeader>
+      <Box gridArea="side">
+        <Typography sx={{ pt: 4, mb: 4 }} variant="h5">
+          絞り込み
+        </Typography>
+        <AuthorFilter onFilterChange={searchProps.onFilterChange} />
+      </Box>
+      <Box
+        display="grid"
+        gridTemplateColumns="repeat(auto-fill, 296px)"
+        gap={2}
+        gridArea="items"
+      >
         {contents.map((content, index) => (
           <ContentPreview
             key={index}
@@ -117,17 +102,12 @@ export default function TopicImport(props: Props) {
           [...Array(6)].map((_, i) => (
             <Skeleton key={i} height={324 /* TODO: 妥当な値にしてほしい */} />
           ))}
-      </div>
+      </Box>
       <ActionFooter maxWidth="lg">
-        <form className={classes.form} onSubmit={handleSubmit}>
-          <Button
-            color="primary"
-            size="small"
-            variant="text"
-            onClick={onCancel}
-          >
-            キャンセル
-          </Button>
+        <Button color="primary" size="small" variant="text" onClick={onCancel}>
+          キャンセル
+        </Button>
+        <form onSubmit={handleSubmit}>
           <Button
             color="primary"
             size="large"
@@ -139,7 +119,7 @@ export default function TopicImport(props: Props) {
         </form>
       </ActionFooter>
       <SearchPagination
-        className={classes.pagination}
+        sx={{ mt: 4, gridArea: "search-pagination" }}
         totalCount={totalCount}
       />
       {previewContent?.type === "topic" && (

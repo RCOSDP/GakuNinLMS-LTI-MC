@@ -32,8 +32,18 @@ export default function ActionFooter(props: Props) {
       color="default"
       {...others}
     >
-      <Toolbar>
-        <Container maxWidth={maxWidth}>{children}</Container>
+      <Toolbar disableGutters>
+        <Container
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            flexWrap: "wrap",
+            gap: 2,
+          }}
+          maxWidth={maxWidth}
+        >
+          {children}
+        </Container>
       </Toolbar>
     </AppBar>
   );

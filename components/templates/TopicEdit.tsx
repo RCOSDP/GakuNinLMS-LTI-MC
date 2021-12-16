@@ -1,12 +1,11 @@
 import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import makeStyles from "@mui/styles/makeStyles";
 import TopicForm from "$organisms/TopicForm";
+import Container from "$atoms/Container";
 import RequiredDot from "$atoms/RequiredDot";
 import BackButton from "$atoms/BackButton";
-import useContainerStyles from "styles/container";
 import type { TopicProps, TopicSchema } from "$server/models/topic";
 import type {
   VideoTrackProps,
@@ -58,7 +57,6 @@ export default function TopicEdit(props: Props) {
     onAuthorSubmit,
   } = props;
   const classes = useStyles();
-  const containerClasses = useContainerStyles();
   const confirm = useConfirm();
   const handleDeleteButtonClick = async () => {
     await confirm({
@@ -70,11 +68,7 @@ export default function TopicEdit(props: Props) {
   };
 
   return (
-    <Container
-      classes={containerClasses}
-      className={classes.container}
-      maxWidth="md"
-    >
+    <Container className={classes.container} maxWidth="md">
       <BackButton onClick={onCancel}>戻る</BackButton>
       <Typography className={classes.title} variant="h4">
         トピックの編集

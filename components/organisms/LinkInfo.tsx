@@ -1,3 +1,4 @@
+import type { SxProps } from "@mui/system";
 import Link from "@mui/material/Link";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
@@ -29,15 +30,16 @@ const Info = styled("div")(({ theme }) => ({
 }));
 
 type Props = {
+  sx?: SxProps;
   book?: BookSchema;
   onLinkedBookClick?(book: BookSchema): void;
 };
 
-export default function LinkInfo({ book, onLinkedBookClick }: Props) {
+export default function LinkInfo({ sx, book, onLinkedBookClick }: Props) {
   const { session } = useSessionAtom();
   const handleLinkedBookClick = () => book && onLinkedBookClick?.(book);
   return (
-    <Info>
+    <Info sx={sx}>
       <Thumb>
         <LinkIcon />
       </Thumb>

@@ -1,10 +1,9 @@
 import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
 import makeStyles from "@mui/styles/makeStyles";
 import BooksImportForm from "$organisms/BooksImportForm";
 import ContentPreview from "$organisms/ContentPreview";
+import Container from "$atoms/Container";
 import BackButton from "$atoms/BackButton";
-import useContainerStyles from "$styles/container";
 import { useSearchAtom } from "$store/search";
 import type {
   BooksImportParams,
@@ -62,7 +61,6 @@ export default function BooksImport({
   onAuthorSubmit,
 }: Props) {
   const classes = useStyles();
-  const containerClasses = useContainerStyles();
   const searchProps = useSearchAtom();
 
   const showSuccess = importResult?.books && importResult.books.length > 0;
@@ -71,11 +69,7 @@ export default function BooksImport({
   const showForm = !showSuccess;
 
   return (
-    <Container
-      classes={containerClasses}
-      className={classes.container}
-      maxWidth="lg"
-    >
+    <Container className={classes.container} maxWidth="lg">
       <BackButton onClick={onCancel}>戻る</BackButton>
       {showForm && (
         <>

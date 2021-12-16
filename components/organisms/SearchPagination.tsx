@@ -1,13 +1,15 @@
+import type { SxProps } from "@mui/system";
 import Grid from "@mui/material/Grid";
 import Pagination from "@mui/material/Pagination";
 import { useSearchAtom } from "$store/search";
 
 type Props = {
   className?: string;
+  sx?: SxProps;
   totalCount: number;
 };
 
-function SearchPagination({ className = "", totalCount }: Props) {
+function SearchPagination({ className = "", sx, totalCount }: Props) {
   const searchProps = useSearchAtom();
   const count = Math.ceil(totalCount / searchProps.query.perPage);
 
@@ -15,9 +17,14 @@ function SearchPagination({ className = "", totalCount }: Props) {
 
   const page = searchProps.query.page + 1;
   return (
-    <Grid container component="div" justifyContent="center">
+    <Grid
+      className={className}
+      sx={sx}
+      container
+      component="div"
+      justifyContent="center"
+    >
       <Pagination
-        className={className}
         color="primary"
         page={page}
         count={count}

@@ -1,35 +1,21 @@
-import { css } from "@emotion/css";
 import Skeleton from "@mui/material/Skeleton";
-import { styled } from "@mui/material/styles";
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
 import AddIcon from "@mui/icons-material/Add";
 import ActionHeader from "$organisms/ActionHeader";
 import ContentTypeIndicator from "$atoms/ContentTypeIndicator";
 import ContentPreview from "$organisms/ContentPreview";
 import LinkInfo from "$organisms/LinkInfo";
 import SearchPagination from "$organisms/SearchPagination";
+import Container from "$atoms/Container";
 import SortSelect from "$atoms/SortSelect";
 import AuthorFilter from "$atoms/AuthorFilter";
 import SearchTextField from "$atoms/SearchTextField";
 import type { ContentSchema } from "$server/models/content";
 import type { BookSchema } from "$server/models/book";
 import type { LinkedBook } from "$types/linkedBook";
-import useContainerStyles from "styles/container";
 import { useSearchAtom } from "$store/search";
-import theme from "$theme";
-
-const ContentPreviews = styled("div")(({ theme }) => ({
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fill, 296px)",
-  gap: theme.spacing(2),
-}));
-
-const classes = {
-  pagination: css({
-    marginTop: theme.spacing(4),
-  }),
-};
 
 export type Props = {
   totalCount: number;
@@ -60,71 +46,69 @@ export default function Books(props: Props) {
   const searchProps = useSearchAtom();
   const handleBookNewClick = () => onBookNewClick();
   const handleBooksImportClick = () => onBooksImportClick();
-  const containerClasses = useContainerStyles();
 
   return (
-    <>
-      <ActionHeader
-        maxWidth="lg"
-        title={
-          <>
-            ブック
-            <Button size="small" color="primary" onClick={handleBookNewClick}>
-              <AddIcon sx={{ mr: 0.5 }} />
-              ブックの作成
-            </Button>
-            <Button
-              size="small"
-              color="primary"
-              onClick={handleBooksImportClick}
-            >
-              <AddIcon sx={{ mr: 0.5 }} />
-              一括登録
-            </Button>
-          </>
-        }
-        body={
-          <LinkInfo book={linkedBook} onLinkedBookClick={onLinkedBookClick} />
-        }
-        action={
-          <>
-            <ContentTypeIndicator type="book" />
-            <SortSelect onSortChange={searchProps.onSortChange} />
-            <AuthorFilter onFilterChange={searchProps.onFilterChange} />
-            <SearchTextField
-              label="ブック・トピック検索"
-              value={searchProps.input}
-              onSearchInput={searchProps.onSearchInput}
-              onSearchInputReset={searchProps.onSearchInputReset}
-              onSearchSubmit={searchProps.onSearchSubmit}
-            />
-          </>
-        }
+    <Container twoColumns maxWidth="xl">
+      <Typography sx={{ mt: 5, gridArea: "title" }} variant="h4">
+        ブック
+        <Button size="small" color="primary" onClick={handleBookNewClick}>
+          <AddIcon sx={{ mr: 0.5 }} />
+          ブックの作成
+        </Button>
+        <Button size="small" color="primary" onClick={handleBooksImportClick}>
+          <AddIcon sx={{ mr: 0.5 }} />
+          一括登録
+        </Button>
+      </Typography>
+      <LinkInfo
+        sx={{ mt: 1, gridArea: "description" }}
+        book={linkedBook}
+        onLinkedBookClick={onLinkedBookClick}
       />
-      <Container classes={containerClasses} maxWidth="lg">
-        <ContentPreviews>
-          {contents.map((content) => (
-            <ContentPreview
-              key={content.id}
-              content={content}
-              linked={content.id === linkedBook?.id}
-              onContentPreviewClick={onContentPreviewClick}
-              onContentEditClick={onContentEditClick}
-              onContentLinkClick={onContentLinkClick}
-              onLtiContextClick={searchProps.onLtiContextClick}
-              onKeywordClick={searchProps.onKeywordClick}
-            />
-          ))}
-          {loading &&
-            [...Array(6)].map((_, i) => (
-              <Skeleton key={i} height={324} /* TODO: 妥当な値にしてほしい */ />
-            ))}
-        </ContentPreviews>
-        <SearchPagination
-          className={classes.pagination}
-          totalCount={totalCount}
+      <ActionHeader sx={{ gridArea: "action-header" }}>
+        <ContentTypeIndicator type="book" />
+        <SortSelect onSortChange={searchProps.onSortChange} />
+        <SearchTextField
+          label="ブック・トピック検索"
+          value={searchProps.input}
+          onSearchInput={searchProps.onSearchInput}
+          onSearchInputReset={searchProps.onSearchInputReset}
+          onSearchSubmit={searchProps.onSearchSubmit}
         />
-      </Container>
-    </>
+      </ActionHeader>
+      <Box gridArea="side">
+        <Typography sx={{ pt: 4, mb: 4 }} variant="h5">
+          絞り込み
+        </Typography>
+        <AuthorFilter onFilterChange={searchProps.onFilterChange} />
+      </Box>
+      <Box
+        display="grid"
+        gridTemplateColumns="repeat(auto-fill, 296px)"
+        gap={2}
+        gridArea="items"
+      >
+        {contents.map((content) => (
+          <ContentPreview
+            key={content.id}
+            content={content}
+            linked={content.id === linkedBook?.id}
+            onContentPreviewClick={onContentPreviewClick}
+            onContentEditClick={onContentEditClick}
+            onContentLinkClick={onContentLinkClick}
+            onLtiContextClick={searchProps.onLtiContextClick}
+            onKeywordClick={searchProps.onKeywordClick}
+          />
+        ))}
+        {loading &&
+          [...Array(6)].map((_, i) => (
+            <Skeleton key={i} height={324} /* TODO: 妥当な値にしてほしい */ />
+          ))}
+      </Box>
+      <SearchPagination
+        sx={{ mt: 4, gridArea: "search-pagination" }}
+        totalCount={totalCount}
+      />
+    </Container>
   );
 }
