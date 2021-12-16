@@ -1,3 +1,4 @@
+import type { Prisma } from "@prisma/client";
 import type { AuthorFilter } from "$server/models/authorFilter";
 import type { SearchResultSchema } from "$server/models/search";
 import {
@@ -33,7 +34,8 @@ async function bookSearch(
   page: number,
   perPage: number
 ): Promise<SearchResultSchema> {
-  const where = {
+  const insensitiveMode = { mode: "insensitive" as const };
+  const where: Prisma.BookWhereInput = {
     AND: [
       // NOTE: 管理者でなければ共有されている範囲のみ
       ...(filter.type !== "self" && !filter.admin ? [{ shared: true }] : []),
@@ -46,13 +48,19 @@ async function bookSearch(
       // NOTE: text - 検索文字列 (名称 OR 説明 OR 著者名)
       ...text.map((t) => ({
         OR: [
-          { name: { contains: t } },
-          { description: { contains: t } },
-          { sections: { some: { name: { contains: t } } } },
+          { name: { contains: t, ...insensitiveMode } },
+          { description: { contains: t, ...insensitiveMode } },
+          { sections: { some: { name: { contains: t, ...insensitiveMode } } } },
           {
             sections: {
               some: {
-                topicSections: { some: { topic: { name: { contains: t } } } },
+                topicSections: {
+                  some: {
+                    topic: {
+                      name: { contains: t, ...insensitiveMode },
+                    },
+                  },
+                },
               },
             },
           },
@@ -60,23 +68,35 @@ async function bookSearch(
             sections: {
               some: {
                 topicSections: {
-                  some: { topic: { description: { contains: t } } },
+                  some: {
+                    topic: { description: { contains: t, ...insensitiveMode } },
+                  },
                 },
               },
             },
           },
-          { authors: { some: { user: { name: { contains: t } } } } },
+          {
+            authors: {
+              some: {
+                user: { name: { contains: t, ...insensitiveMode } },
+              },
+            },
+          },
         ],
       })),
       // NOTE: name - 名称 (ブック名・セクション名・トピック名)
       ...name.map((n) => ({
         OR: [
-          { name: { contains: n } },
-          { sections: { some: { name: { contains: n } } } },
+          { name: { contains: n, ...insensitiveMode } },
+          { sections: { some: { name: { contains: n, ...insensitiveMode } } } },
           {
             sections: {
               some: {
-                topicSections: { some: { topic: { name: { contains: n } } } },
+                topicSections: {
+                  some: {
+                    topic: { name: { contains: n, ...insensitiveMode } },
+                  },
+                },
               },
             },
           },
@@ -85,12 +105,14 @@ async function bookSearch(
       // NOTE: description - 説明 (Markdown)
       ...description.map((d) => ({
         OR: [
-          { description: { contains: d } },
+          { description: { contains: d, ...insensitiveMode } },
           {
             sections: {
               some: {
                 topicSections: {
-                  some: { topic: { description: { contains: d } } },
+                  some: {
+                    topic: { description: { contains: d, ...insensitiveMode } },
+                  },
                 },
               },
             },
@@ -99,7 +121,11 @@ async function bookSearch(
       })),
       // NOTE: author - 著者名
       ...author.map((a) => ({
-        authors: { some: { user: { name: { contains: a } } } },
+        authors: {
+          some: {
+            user: { name: { contains: a, ...insensitiveMode } },
+          },
+        },
       })),
       // NOTE: keyword - キーワード
       ...keyword.map((k) => ({
