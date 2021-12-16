@@ -43,11 +43,9 @@ export default function Video({ className, sx, resource, onEnded }: Props) {
   const { book, itemIndex, itemExists } = useBookAtom();
   const prevItemIndex = usePrevious(itemIndex);
   useEffect(() => {
-    if (!book) {
-      video.clear();
-      return;
-    }
+    if (!book) return;
     updateVideo(book.sections);
+    return () => video.clear();
   }, [book, video, updateVideo]);
   useEffect(() => {
     if (prevItemIndex?.some((v, i) => v !== itemIndex[i])) {
