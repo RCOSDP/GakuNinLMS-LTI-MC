@@ -1,7 +1,7 @@
 import type { FormEvent } from "react";
 import { useState } from "react";
 import Skeleton from "@mui/material/Skeleton";
-import makeStyles from "@mui/styles/makeStyles";
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
@@ -18,22 +18,6 @@ import type { TopicSchema } from "$server/models/topic";
 import useContainerStyles from "$styles/container";
 import useDialogProps from "$utils/useDialogProps";
 import { useSearchAtom } from "$store/search";
-
-const useStyles = makeStyles((theme) => ({
-  topics: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fill, 296px)",
-    gap: theme.spacing(2),
-  },
-  form: {
-    "& > *": {
-      marginRight: theme.spacing(1),
-    },
-  },
-  pagination: {
-    marginTop: theme.spacing(4),
-  },
-}));
 
 type Props = {
   totalCount: number;
@@ -55,7 +39,6 @@ export default function TopicImport(props: Props) {
     onContentEditClick,
   } = props;
   const searchProps = useSearchAtom();
-  const classes = useStyles();
   const containerClasses = useContainerStyles();
   const [selectedIndexes, select] = useState<Set<number>>(new Set());
   const handleChecked = (index: number) => () =>
@@ -77,14 +60,30 @@ export default function TopicImport(props: Props) {
     ...dialogProps
   } = useDialogProps<ContentSchema>();
   return (
-    <Container classes={containerClasses} maxWidth="lg">
-      <Typography sx={{ mt: 5 }} variant="h4">
+    <Container
+      sx={{
+        display: "grid",
+        gridTemplateAreas: `
+          ". title"
+          ". description"
+          "side action-header"
+          "side items"
+          "side skeleton"
+          "side search-pagination"
+        `,
+        gridTemplateColumns: "300px 1fr",
+        columnGap: 2,
+      }}
+      classes={containerClasses}
+      maxWidth="xl"
+    >
+      <Typography sx={{ mt: 5, gridArea: "title" }} variant="h4">
         トピックの再利用
       </Typography>
-      <Typography sx={{ mt: 1 }} variant="body1">
+      <Typography sx={{ mt: 1, gridArea: "description" }} variant="body1">
         再利用するトピックを選んで下さい
       </Typography>
-      <ActionHeader>
+      <ActionHeader sx={{ gridArea: "action-header" }}>
         <SortSelect onSortChange={searchProps.onSortChange} />
         <AuthorFilter onFilterChange={searchProps.onFilterChange} />
         <SearchTextField
@@ -95,7 +94,17 @@ export default function TopicImport(props: Props) {
           onSearchSubmit={searchProps.onSearchSubmit}
         />
       </ActionHeader>
-      <div className={classes.topics}>
+      <Box gridArea="side">
+        <Typography sx={{ pt: 4, mb: 4 }} variant="h5">
+          絞り込み
+        </Typography>
+      </Box>
+      <Box
+        display="grid"
+        gridTemplateColumns="repeat(auto-fill, 296px)"
+        gap={2}
+        gridArea="items"
+      >
         {contents.map((content, index) => (
           <ContentPreview
             key={index}
@@ -111,10 +120,11 @@ export default function TopicImport(props: Props) {
           [...Array(6)].map((_, i) => (
             <Skeleton key={i} height={324 /* TODO: 妥当な値にしてほしい */} />
           ))}
-      </div>
+      </Box>
       <ActionFooter maxWidth="lg">
-        <form className={classes.form} onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit}>
           <Button
+            sx={{ mr: 1 }}
             color="primary"
             size="small"
             variant="text"
@@ -123,6 +133,7 @@ export default function TopicImport(props: Props) {
             キャンセル
           </Button>
           <Button
+            sx={{ mr: 1 }}
             color="primary"
             size="large"
             variant="contained"
@@ -133,7 +144,7 @@ export default function TopicImport(props: Props) {
         </form>
       </ActionFooter>
       <SearchPagination
-        className={classes.pagination}
+        sx={{ mt: 4, gridArea: "search-pagination" }}
         totalCount={totalCount}
       />
       {previewContent?.type === "topic" && (
