@@ -1,5 +1,4 @@
 import useSWR, { mutate } from "swr";
-import { useDebounce } from "use-debounce";
 import type {
   ApiV2SearchGetFilterEnum,
   ApiV2SearchGetSortEnum,
@@ -13,9 +12,6 @@ import { revalidateBook } from "./book";
 import { revalidateTopic } from "./topic";
 
 const key = "/api/v2/search";
-
-/** リクエストを間引くための間隔 (ms) */
-const wait = 500;
 
 async function fetchContents(
   _: typeof key,
@@ -62,11 +58,8 @@ function useContents({
   perPage: number;
   page: number;
 }) {
-  const [debouncedQuery] = useDebounce(q, wait);
   const { data, isValidating } = useSWR(
-    type === "none"
-      ? null
-      : [key, type, debouncedQuery, filter, sort, perPage, page],
+    type === "none" ? null : [key, type, q, filter, sort, perPage, page],
     fetchContents
   );
   const totalCount = data?.totalCount ?? 0;
