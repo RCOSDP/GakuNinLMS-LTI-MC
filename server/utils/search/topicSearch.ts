@@ -1,3 +1,4 @@
+import type { Prisma } from "@prisma/client";
 import type { AuthorFilter } from "$server/models/authorFilter";
 import type { SearchResultSchema } from "$server/models/search";
 import makeSortOrderQuery from "$server/utils/makeSortOrderQuery";
@@ -32,7 +33,8 @@ async function topicSearch(
   page: number,
   perPage: number
 ): Promise<SearchResultSchema> {
-  const where = {
+  const insensitiveMode = { mode: "insensitive" as const };
+  const where: Prisma.TopicWhereInput = {
     AND: [
       // NOTE: 管理者でなければ共有されている範囲のみ
       ...(filter.type !== "self" && !filter.admin ? [{ shared: true }] : []),
@@ -45,22 +47,32 @@ async function topicSearch(
       // NOTE: text - 検索文字列 (名称 OR 説明 OR 著者名)
       ...text.map((t) => ({
         OR: [
-          { name: { contains: t } },
-          { description: { contains: t } },
-          { authors: { some: { user: { name: { contains: t } } } } },
+          { name: { contains: t, ...insensitiveMode } },
+          { description: { contains: t, ...insensitiveMode } },
+          {
+            authors: {
+              some: {
+                user: { name: { contains: t, ...insensitiveMode } },
+              },
+            },
+          },
         ],
       })),
       // NOTE: name - 名称 (トピック名)
       ...name.map((n) => ({
-        name: { contains: n },
+        name: { contains: n, ...insensitiveMode },
       })),
       // NOTE: description - 説明 (Markdown)
       ...description.map((d) => ({
-        description: { contains: d },
+        description: { contains: d, ...insensitiveMode },
       })),
       // NOTE: author - 著者名
       ...author.map((a) => ({
-        authors: { some: { user: { name: { contains: a } } } },
+        authors: {
+          some: {
+            user: { name: { contains: a, ...insensitiveMode } },
+          },
+        },
       })),
       // NOTE: keyword - キーワード
       ...keyword.map((k) => ({
