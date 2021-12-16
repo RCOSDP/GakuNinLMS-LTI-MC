@@ -32,7 +32,7 @@ export default function ActionFooter(props: Props) {
       color="default"
       {...others}
     >
-      <Toolbar>
+      <Toolbar disableGutters>
         <Container maxWidth={maxWidth}>{children}</Container>
       </Toolbar>
     </AppBar>
