@@ -1,42 +1,19 @@
-import type { ComponentProps } from "react";
-import clsx from "clsx";
 import type { SxProps } from "@mui/system";
-import Container from "@mui/material/Container";
+import Box from "@mui/material/Box";
 import { useTheme } from "@mui/material/styles";
-import makeStyles from "@mui/styles/makeStyles";
 import { gray } from "$theme/colors";
 import useSticky from "$utils/useSticky";
 import useAppBarOffset from "$utils/useAppBarOffset";
 import sumPixels from "$utils/sumPixels";
 
-const useStyles = makeStyles((theme) => ({
-  action: {
-    display: "flex",
-    alignItems: "center",
-    flexWrap: "wrap",
-    // NOTE: actionにもたせたかったのはspacing(2)で、
-    // 残りの余分なspacing(2)はstickyで張り付く際のネガティブマージン
-    // See also https://github.com/npocccties/chibichilo/pull/243#issuecomment-785729721
-    paddingTop: theme.spacing(4),
-    "& > *": {
-      marginRight: theme.spacing(2),
-      marginBottom: theme.spacing(2),
-    },
-  },
-  container: {
-    padding: 0,
-  },
-}));
-
-type Props = Pick<ComponentProps<typeof Container>, "maxWidth"> & {
+type Props = {
   sx?: SxProps;
   children: React.ReactNode;
   considerAppBar?: boolean;
 };
 
 export default function ActionHeader(props: Props) {
-  const { sx, maxWidth, children, considerAppBar = true } = props;
-  const classes = useStyles();
+  const { sx, children, considerAppBar = true } = props;
   const theme = useTheme();
   const appBarOffset = useAppBarOffset();
   const sticky = useSticky({
@@ -47,12 +24,22 @@ export default function ActionHeader(props: Props) {
     zIndex: 2,
   });
   return (
-    <Container
-      sx={sx}
-      className={clsx({ [classes.container]: !maxWidth }, sticky)}
-      maxWidth={maxWidth}
+    <Box
+      display="flex"
+      alignItems="center"
+      flexWrap="wrap"
+      gap={2}
+      sx={{
+        // NOTE: actionにもたせたかったのはspacing(2)で、
+        // 残りの余分なspacing(2)はstickyで張り付く際のネガティブマージン
+        // See also https://github.com/npocccties/chibichilo/pull/243#issuecomment-785729721
+        pt: 4,
+        pb: 2,
+        ...sx,
+      }}
+      className={sticky}
     >
-      <div className={classes.action}>{children}</div>
-    </Container>
+      {children}
+    </Box>
   );
 }
