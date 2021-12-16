@@ -33,7 +33,17 @@ export default function ActionFooter(props: Props) {
       {...others}
     >
       <Toolbar disableGutters>
-        <Container maxWidth={maxWidth}>{children}</Container>
+        <Container
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            flexWrap: "wrap",
+            gap: 2,
+          }}
+          maxWidth={maxWidth}
+        >
+          {children}
+        </Container>
       </Toolbar>
     </AppBar>
   );

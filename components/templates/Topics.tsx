@@ -177,7 +177,6 @@ export default function Topics(props: Props) {
       {selected.size > 0 && (
         <ActionFooter maxWidth="lg">
           <Button
-            sx={{ mr: 1 }}
             color="primary"
             size="large"
             variant="contained"
@@ -186,7 +185,6 @@ export default function Topics(props: Props) {
             ブック作成
           </Button>
           <Button
-            sx={{ mr: 1 }}
             color="primary"
             size="large"
             variant="contained"
@@ -195,7 +193,6 @@ export default function Topics(props: Props) {
             シェア
           </Button>
           <Button
-            sx={{ mr: 1 }}
             color="primary"
             size="large"
             variant="contained"
@@ -204,7 +201,6 @@ export default function Topics(props: Props) {
             シェア解除
           </Button>
           <Button
-            sx={{ mr: 1 }}
             color="error"
             size="large"
             variant="contained"

@@ -104,18 +104,11 @@ export default function TopicImport(props: Props) {
           ))}
       </Box>
       <ActionFooter maxWidth="lg">
+        <Button color="primary" size="small" variant="text" onClick={onCancel}>
+          キャンセル
+        </Button>
         <form onSubmit={handleSubmit}>
           <Button
-            sx={{ mr: 1 }}
-            color="primary"
-            size="small"
-            variant="text"
-            onClick={onCancel}
-          >
-            キャンセル
-          </Button>
-          <Button
-            sx={{ mr: 1 }}
             color="primary"
             size="large"
             variant="contained"

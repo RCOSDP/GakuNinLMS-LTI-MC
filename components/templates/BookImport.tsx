@@ -160,18 +160,11 @@ export default function BookImport(props: Props) {
           [...Array(5)].map((_, i) => <Skeleton key={i} height={40} />)}
       </Box>
       <ActionFooter maxWidth="lg">
+        <Button color="primary" size="small" variant="text" onClick={onCancel}>
+          キャンセル
+        </Button>
         <form onSubmit={handleSubmit}>
           <Button
-            sx={{ mr: 1 }}
-            color="primary"
-            size="small"
-            variant="text"
-            onClick={onCancel}
-          >
-            キャンセル
-          </Button>
-          <Button
-            sx={{ mr: 1 }}
             color="primary"
             size="large"
             variant="contained"
