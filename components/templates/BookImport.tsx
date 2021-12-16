@@ -4,7 +4,6 @@ import Skeleton from "@mui/material/Skeleton";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
 import TreeView from "@mui/lab/TreeView";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
@@ -13,6 +12,7 @@ import ActionHeader from "$organisms/ActionHeader";
 import ActionFooter from "$organisms/ActionFooter";
 import BookTree from "$organisms/BookTree";
 import SearchPagination from "$organisms/SearchPagination";
+import Container from "$atoms/Container";
 import SortSelect from "$atoms/SortSelect";
 import AuthorFilter from "$atoms/AuthorFilter";
 import SearchTextField from "$atoms/SearchTextField";
@@ -21,7 +21,6 @@ import type { BookSchema } from "$server/models/book";
 import type { SectionSchema } from "$server/models/book/section";
 import type { TopicSchema } from "$server/models/topic";
 import type { IsContentEditable } from "$types/content";
-import useContainerStyles from "$styles/container";
 import { useSearchAtom } from "$store/search";
 import useDialogProps from "$utils/useDialogProps";
 
@@ -57,7 +56,6 @@ export default function BookImport(props: Props) {
     onTopicEditClick,
     isContentEditable,
   } = props;
-  const containerClasses = useContainerStyles();
   const searchProps = useSearchAtom();
   const [selectedNodeIds, select] = useState<Set<string>>(new Set());
   const handleTreeChange = (nodeId: string) => {
@@ -107,23 +105,7 @@ export default function BookImport(props: Props) {
   const handleTopicPreviewClick = (topic: TopicSchema) =>
     setPreviewTopic(topic);
   return (
-    <Container
-      sx={{
-        display: "grid",
-        gridTemplateAreas: `
-          ". title"
-          ". description"
-          "side action-header"
-          "side items"
-          "side skeleton"
-          "side search-pagination"
-        `,
-        gridTemplateColumns: "300px 1fr",
-        columnGap: 2,
-      }}
-      classes={containerClasses}
-      maxWidth="lg"
-    >
+    <Container twoColumns maxWidth="lg">
       <Typography sx={{ mt: 5, gridArea: "title" }} variant="h4">
         ブックの再利用
       </Typography>

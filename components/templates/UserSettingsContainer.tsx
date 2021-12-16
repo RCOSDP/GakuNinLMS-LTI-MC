@@ -1,9 +1,8 @@
 import { useCallback } from "react";
 import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
 import makeStyles from "@mui/styles/makeStyles";
-import useContainerStyles from "styles/container";
 import ZoomImportEnabledSwitch from "$organisms/ZoomImportEnabledSwitch";
+import Container from "$atoms/Container";
 import { useSessionAtom } from "$store/session";
 import type { UserSettingsProps } from "$server/models/userSettings";
 import { updateUserSettings } from "$utils/userSettings";
@@ -44,7 +43,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function UserSettingsContainer() {
   const classes = useStyles();
-  const containerClasses = useContainerStyles();
   const { session } = useSessionAtom();
   const userSettings = session?.user.settings as UserSettingsProps;
   const onChange = useCallback(async (userSettings: UserSettingsProps) => {
@@ -52,11 +50,7 @@ export default function UserSettingsContainer() {
   }, []);
 
   return (
-    <Container
-      classes={containerClasses}
-      className={classes.container}
-      maxWidth="md"
-    >
+    <Container className={classes.container} maxWidth="md">
       <Typography className={classes.title} variant="h4">
         設定
       </Typography>

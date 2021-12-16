@@ -7,7 +7,6 @@ import Badge from "@mui/material/Badge";
 import Button from "@mui/material/Button";
 import Checkbox from "@mui/material/Checkbox";
 import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
 import AddIcon from "@mui/icons-material/Add";
 import ActionHeader from "$organisms/ActionHeader";
 import ActionFooter from "$organisms/ActionFooter";
@@ -15,13 +14,13 @@ import ContentTypeIndicator from "$atoms/ContentTypeIndicator";
 import ContentPreview from "$organisms/ContentPreview";
 import TopicPreviewDialog from "$organisms/TopicPreviewDialog";
 import SearchPagination from "$organisms/SearchPagination";
+import Container from "$atoms/Container";
 import SortSelect from "$atoms/SortSelect";
 import AuthorFilter from "$atoms/AuthorFilter";
 import SearchTextField from "$atoms/SearchTextField";
 import type { ContentSchema } from "$server/models/content";
 import type { TopicSchema } from "$server/models/topic";
 import { grey } from "@mui/material/colors";
-import useContainerStyles from "$styles/container";
 import useDialogProps from "$utils/useDialogProps";
 import { useSearchAtom } from "$store/search";
 
@@ -48,7 +47,6 @@ export default function Topics(props: Props) {
     onTopicNewClick,
   } = props;
   const searchProps = useSearchAtom();
-  const containerClasses = useContainerStyles();
   const confirm = useConfirm();
   const [selected, select] = useState<Map<ContentSchema["id"], ContentSchema>>(
     new Map()
@@ -103,21 +101,7 @@ export default function Topics(props: Props) {
     ...dialogProps
   } = useDialogProps<ContentSchema>();
   return (
-    <Container
-      sx={{
-        display: "grid",
-        gridTemplateAreas: `
-          ". title"
-          "side action-header"
-          "side items"
-          "side search-pagination"
-        `,
-        gridTemplateColumns: "300px 1fr",
-        columnGap: 2,
-      }}
-      classes={containerClasses}
-      maxWidth="xl"
-    >
+    <Container twoColumns maxWidth="xl">
       <Typography sx={{ mt: 5, gridArea: "title" }} variant="h4">
         トピック
         <Button size="small" color="primary" onClick={onTopicNewClick}>

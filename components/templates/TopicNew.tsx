@@ -1,11 +1,10 @@
 import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
 import Alert from "@mui/material/Alert";
 import makeStyles from "@mui/styles/makeStyles";
 import TopicForm from "$organisms/TopicForm";
+import Container from "$atoms/Container";
 import RequiredDot from "$atoms/RequiredDot";
 import BackButton from "$atoms/BackButton";
-import useContainerStyles from "styles/container";
 import type { TopicSchema } from "$server/models/topic";
 import type { AuthorSchema } from "$server/models/author";
 import type { TopicPropsWithAuthors } from "$types/topicPropsWithAuthors";
@@ -66,14 +65,9 @@ export default function TopicNew({
     ...(forkFrom && { name: [topic.name, "フォーク"].join("_") }),
   };
   const classes = useStyles();
-  const containerClasses = useContainerStyles();
 
   return (
-    <Container
-      classes={containerClasses}
-      className={classes.container}
-      maxWidth="md"
-    >
+    <Container className={classes.container} maxWidth="md">
       <BackButton onClick={onCancel}>戻る</BackButton>
       <Typography className={classes.title} variant="h4">
         トピックの作成

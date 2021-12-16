@@ -4,18 +4,17 @@ import Skeleton from "@mui/material/Skeleton";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
 import ActionHeader from "$organisms/ActionHeader";
 import ActionFooter from "$organisms/ActionFooter";
 import ContentPreview from "$organisms/ContentPreview";
 import TopicPreviewDialog from "$organisms/TopicPreviewDialog";
 import SearchPagination from "$organisms/SearchPagination";
+import Container from "$atoms/Container";
 import SortSelect from "$atoms/SortSelect";
 import AuthorFilter from "$atoms/AuthorFilter";
 import SearchTextField from "$atoms/SearchTextField";
 import type { ContentSchema } from "$server/models/content";
 import type { TopicSchema } from "$server/models/topic";
-import useContainerStyles from "$styles/container";
 import useDialogProps from "$utils/useDialogProps";
 import { useSearchAtom } from "$store/search";
 
@@ -39,7 +38,6 @@ export default function TopicImport(props: Props) {
     onContentEditClick,
   } = props;
   const searchProps = useSearchAtom();
-  const containerClasses = useContainerStyles();
   const [selectedIndexes, select] = useState<Set<number>>(new Set());
   const handleChecked = (index: number) => () =>
     select((indexes) =>
@@ -60,23 +58,7 @@ export default function TopicImport(props: Props) {
     ...dialogProps
   } = useDialogProps<ContentSchema>();
   return (
-    <Container
-      sx={{
-        display: "grid",
-        gridTemplateAreas: `
-          ". title"
-          ". description"
-          "side action-header"
-          "side items"
-          "side skeleton"
-          "side search-pagination"
-        `,
-        gridTemplateColumns: "300px 1fr",
-        columnGap: 2,
-      }}
-      classes={containerClasses}
-      maxWidth="xl"
-    >
+    <Container twoColumns maxWidth="xl">
       <Typography sx={{ mt: 5, gridArea: "title" }} variant="h4">
         トピックの再利用
       </Typography>

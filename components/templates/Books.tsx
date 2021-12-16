@@ -1,7 +1,6 @@
 import Skeleton from "@mui/material/Skeleton";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import AddIcon from "@mui/icons-material/Add";
 import ActionHeader from "$organisms/ActionHeader";
@@ -9,13 +8,13 @@ import ContentTypeIndicator from "$atoms/ContentTypeIndicator";
 import ContentPreview from "$organisms/ContentPreview";
 import LinkInfo from "$organisms/LinkInfo";
 import SearchPagination from "$organisms/SearchPagination";
+import Container from "$atoms/Container";
 import SortSelect from "$atoms/SortSelect";
 import AuthorFilter from "$atoms/AuthorFilter";
 import SearchTextField from "$atoms/SearchTextField";
 import type { ContentSchema } from "$server/models/content";
 import type { BookSchema } from "$server/models/book";
 import type { LinkedBook } from "$types/linkedBook";
-import useContainerStyles from "styles/container";
 import { useSearchAtom } from "$store/search";
 
 export type Props = {
@@ -47,25 +46,9 @@ export default function Books(props: Props) {
   const searchProps = useSearchAtom();
   const handleBookNewClick = () => onBookNewClick();
   const handleBooksImportClick = () => onBooksImportClick();
-  const containerClasses = useContainerStyles();
 
   return (
-    <Container
-      sx={{
-        display: "grid",
-        gridTemplateAreas: `
-          ". title"
-          ". link-info"
-          "side action-header"
-          "side items"
-          "side search-pagination"
-        `,
-        gridTemplateColumns: "300px 1fr",
-        columnGap: 2,
-      }}
-      classes={containerClasses}
-      maxWidth="xl"
-    >
+    <Container twoColumns maxWidth="xl">
       <Typography sx={{ mt: 5, gridArea: "title" }} variant="h4">
         ブック
         <Button size="small" color="primary" onClick={handleBookNewClick}>
@@ -78,7 +61,7 @@ export default function Books(props: Props) {
         </Button>
       </Typography>
       <LinkInfo
-        sx={{ mt: 1, gridArea: "link-info" }}
+        sx={{ mt: 1, gridArea: "description" }}
         book={linkedBook}
         onLinkedBookClick={onLinkedBookClick}
       />

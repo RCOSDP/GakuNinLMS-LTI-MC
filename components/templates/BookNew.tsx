@@ -1,11 +1,10 @@
 import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
 import Alert from "@mui/material/Alert";
 import makeStyles from "@mui/styles/makeStyles";
 import BookForm from "$organisms/BookForm";
+import Container from "$atoms/Container";
 import RequiredDot from "$atoms/RequiredDot";
 import BackButton from "$atoms/BackButton";
-import useContainerStyles from "styles/container";
 import type { BookSchema } from "$server/models/book";
 import type { TopicSchema } from "$server/models/topic";
 import type { BookPropsWithSubmitOptions } from "$types/bookPropsWithSubmitOptions";
@@ -59,7 +58,6 @@ export default function BookNew({
     ...(forkFrom && { name: [book.name, "フォーク"].join("_") }),
   };
   const classes = useStyles();
-  const containerClasses = useContainerStyles();
 
   const availableTopics = [];
   if (topics && topics.length) {
@@ -72,11 +70,7 @@ export default function BookNew({
   }
 
   return (
-    <Container
-      classes={containerClasses}
-      className={classes.container}
-      maxWidth="md"
-    >
+    <Container className={classes.container} maxWidth="md">
       <BackButton onClick={onCancel}>戻る</BackButton>
       <Typography className={classes.title} variant="h4">
         ブックの作成
