@@ -16,7 +16,6 @@ const Container = styled(({ twoColumns: _, ...other }: Props) => (
           ". description"
           "side action-header"
           "side items"
-          "side skeleton"
           "side search-pagination"
         `,
     gridTemplateColumns: "256px 1fr",

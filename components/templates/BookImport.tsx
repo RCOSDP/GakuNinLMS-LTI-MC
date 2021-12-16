@@ -128,41 +128,37 @@ export default function BookImport(props: Props) {
         </Typography>
         <AuthorFilter onFilterChange={searchProps.onFilterChange} />
       </Box>
-      <TreeView
-        sx={{ gridArea: "items" }}
-        defaultCollapseIcon={<ExpandMoreIcon />}
-        defaultExpandIcon={<ChevronRightIcon />}
-      >
-        {contents.map((content) => {
-          if (content.type !== "book") return null;
-          const handleItem =
-            (handler?: (topic: TopicSchema) => void) =>
-            ([sectionIndex, topicIndex]: ItemIndex) =>
-              handler?.(content.sections[sectionIndex].topics[topicIndex]);
-          return (
-            <BookTree
-              key={content.id}
-              book={content}
-              onItemPreviewClick={handleItem(handleTopicPreviewClick)}
-              onItemEditClick={handleItem(onTopicEditClick)}
-              onBookPreviewClick={onBookPreviewClick}
-              onBookEditClick={
-                isContentEditable?.(content) ? onBookEditClick : undefined
-              }
-              onLtiContextClick={searchProps.onLtiContextClick}
-              isContentEditable={isContentEditable}
-              onTreeChange={handleTreeChange}
-            />
-          );
-        })}
-      </TreeView>
-      {loading && (
-        <Box gridArea="skeleton">
-          {[...Array(5)].map((_, i) => (
-            <Skeleton key={i} height={40} />
-          ))}
-        </Box>
-      )}
+      <Box gridArea="items">
+        <TreeView
+          defaultCollapseIcon={<ExpandMoreIcon />}
+          defaultExpandIcon={<ChevronRightIcon />}
+        >
+          {contents.map((content) => {
+            if (content.type !== "book") return null;
+            const handleItem =
+              (handler?: (topic: TopicSchema) => void) =>
+              ([sectionIndex, topicIndex]: ItemIndex) =>
+                handler?.(content.sections[sectionIndex].topics[topicIndex]);
+            return (
+              <BookTree
+                key={content.id}
+                book={content}
+                onItemPreviewClick={handleItem(handleTopicPreviewClick)}
+                onItemEditClick={handleItem(onTopicEditClick)}
+                onBookPreviewClick={onBookPreviewClick}
+                onBookEditClick={
+                  isContentEditable?.(content) ? onBookEditClick : undefined
+                }
+                onLtiContextClick={searchProps.onLtiContextClick}
+                isContentEditable={isContentEditable}
+                onTreeChange={handleTreeChange}
+              />
+            );
+          })}
+        </TreeView>
+        {loading &&
+          [...Array(5)].map((_, i) => <Skeleton key={i} height={40} />)}
+      </Box>
       <ActionFooter maxWidth="lg">
         <form onSubmit={handleSubmit}>
           <Button
