@@ -85,7 +85,6 @@ export default function TopicImport(props: Props) {
       </Typography>
       <ActionHeader sx={{ gridArea: "action-header" }}>
         <SortSelect onSortChange={searchProps.onSortChange} />
-        <AuthorFilter onFilterChange={searchProps.onFilterChange} />
         <SearchTextField
           label="トピック検索"
           value={searchProps.input}
@@ -98,6 +97,7 @@ export default function TopicImport(props: Props) {
         <Typography sx={{ pt: 4, mb: 4 }} variant="h5">
           絞り込み
         </Typography>
+        <AuthorFilter onFilterChange={searchProps.onFilterChange} />
       </Box>
       <Box
         display="grid"

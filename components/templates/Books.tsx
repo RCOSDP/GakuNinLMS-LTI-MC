@@ -85,7 +85,6 @@ export default function Books(props: Props) {
       <ActionHeader sx={{ gridArea: "action-header" }}>
         <ContentTypeIndicator type="book" />
         <SortSelect onSortChange={searchProps.onSortChange} />
-        <AuthorFilter onFilterChange={searchProps.onFilterChange} />
         <SearchTextField
           label="ブック・トピック検索"
           value={searchProps.input}
@@ -95,9 +94,10 @@ export default function Books(props: Props) {
         />
       </ActionHeader>
       <Box gridArea="side">
-        <Typography sx={{ pt: 4 }} variant="h5">
+        <Typography sx={{ pt: 4, mb: 4 }} variant="h5">
           絞り込み
         </Typography>
+        <AuthorFilter onFilterChange={searchProps.onFilterChange} />
       </Box>
       <Box
         display="grid"

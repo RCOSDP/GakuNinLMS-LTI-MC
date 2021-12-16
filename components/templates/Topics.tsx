@@ -150,7 +150,6 @@ export default function Topics(props: Props) {
           />
         </Badge>
         <SortSelect onSortChange={searchProps.onSortChange} />
-        <AuthorFilter onFilterChange={searchProps.onFilterChange} />
         <SearchTextField
           label="トピック検索"
           value={searchProps.input}
@@ -160,9 +159,10 @@ export default function Topics(props: Props) {
         />
       </ActionHeader>
       <Box gridArea="side">
-        <Typography sx={{ pt: 4 }} variant="h5">
+        <Typography sx={{ pt: 4, mb: 4 }} variant="h5">
           絞り込み
         </Typography>
+        <AuthorFilter onFilterChange={searchProps.onFilterChange} />
       </Box>
       <Box
         display="grid"
