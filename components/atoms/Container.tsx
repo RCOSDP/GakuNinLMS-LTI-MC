@@ -5,12 +5,13 @@ type Props = Parameters<typeof MuiContainer>[0] & {
   twoColumns?: boolean;
 };
 
-const Container = styled((props: Props) => <MuiContainer {...props} />)<Props>(
-  ({ theme, twoColumns }) => [
-    { marginBottom: theme.spacing(10) },
-    twoColumns && {
-      display: "grid",
-      gridTemplateAreas: `
+const Container = styled(({ twoColumns: _, ...other }: Props) => (
+  <MuiContainer {...other} />
+))<Props>(({ theme, twoColumns }) => [
+  { marginBottom: theme.spacing(10) },
+  twoColumns && {
+    display: "grid",
+    gridTemplateAreas: `
           ". title"
           ". description"
           "side action-header"
@@ -18,10 +19,9 @@ const Container = styled((props: Props) => <MuiContainer {...props} />)<Props>(
           "side skeleton"
           "side search-pagination"
         `,
-      gridTemplateColumns: "256px 1fr",
-      columnGap: 2,
-    },
-  ]
-);
+    gridTemplateColumns: "256px 1fr",
+    columnGap: 2,
+  },
+]);
 
 export default Container;
