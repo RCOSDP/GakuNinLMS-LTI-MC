@@ -18,7 +18,7 @@ const Container = styled((props: Props) => <MuiContainer {...props} />)<Props>(
           "side skeleton"
           "side search-pagination"
         `,
-      gridTemplateColumns: "300px 1fr",
+      gridTemplateColumns: "256px 1fr",
       columnGap: 2,
     },
   ]
