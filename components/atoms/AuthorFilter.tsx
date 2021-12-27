@@ -1,4 +1,5 @@
 import { useCallback } from "react";
+import type { SxProps } from "@mui/system";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormLabel from "@mui/material/FormLabel";
 import FormControl from "@mui/material/FormControl";
@@ -16,12 +17,12 @@ const options: ReadonlyArray<{
 ];
 
 type Props = {
+  sx?: SxProps;
   disabled?: boolean;
   onFilterChange?: (value: AuthorFilterType) => void;
 };
 
-function AuthorFilter(props: Props) {
-  const { disabled = false, onFilterChange } = props;
+function AuthorFilter({ sx, disabled = false, onFilterChange }: Props) {
   const handleChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       onFilterChange?.(event.target.value as AuthorFilterType);
@@ -29,7 +30,7 @@ function AuthorFilter(props: Props) {
     [onFilterChange]
   );
   return (
-    <FormControl component="fieldset">
+    <FormControl component="fieldset" sx={sx}>
       <FormLabel component="legend">著者</FormLabel>
       <RadioGroup defaultValue={options[0].value} onChange={handleChange}>
         {options.map(({ value, label }) => (
