@@ -1,7 +1,7 @@
 import * as base from "search-query-parser";
 import yn from "yn";
 import type { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
-import type { SearchQueryBase } from "./query";
+import type { SearchQueryBase } from "$server/models/searchQuery";
 
 const options = {
   keywords: [

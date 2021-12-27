@@ -1,11 +1,13 @@
 import { useCallback, useEffect } from "react";
 import { atom, useAtom } from "jotai";
+import { RESET, atomWithReset } from "jotai/utils";
 import clsx from "clsx";
 import stringify from "$utils/search/stringify";
 import type { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
 import type { KeywordSchema } from "$server/models/keyword";
 import type { SortOrder } from "$server/models/sortOrder";
 import type { AuthorFilterType } from "$server/models/authorFilter";
+import type { SearchQueryBase } from "$server/models/searchQuery";
 
 const queryAtom = atom<{
   type: "none" | "book" | "topic";
@@ -23,14 +25,25 @@ const queryAtom = atom<{
   page: 0,
 });
 
+const searchQueryAtom = atomWithReset<Partial<SearchQueryBase>>({});
+
 const inputAtom = atom<string>("");
 
 export function useSearchAtom() {
   const [query, updateQuery] = useAtom(queryAtom);
+  const [searchQuery, updateSearchQuery] = useAtom(searchQueryAtom);
   const [input, updateInput] = useAtom(inputAtom);
-  useEffect(() => updateInput(query.q), [updateInput, query]);
+  useEffect(
+    () =>
+      updateQuery((query) => ({
+        ...query,
+        q: clsx(input, stringify(searchQuery)),
+        page: 0,
+      })),
+    [updateQuery, input, searchQuery]
+  );
   const setType: (type: "book" | "topic") => void = useCallback(
-    (type) =>
+    (type) => {
       updateQuery({
         type,
         q: "",
@@ -38,25 +51,37 @@ export function useSearchAtom() {
         sort: "updated",
         perPage: 30,
         page: 0,
-      }),
-    [updateQuery]
+      });
+      updateSearchQuery(RESET);
+      updateInput("");
+    },
+    [updateQuery, updateSearchQuery, updateInput]
   );
   const setPage: (page: number) => void = useCallback(
     (page) => updateQuery((query) => ({ ...query, page })),
     [updateQuery]
   );
-  const onSearchInput: (q: string) => void = useCallback(
-    (q) => updateInput(q),
+  const onSearchInput: (input: string) => void = useCallback(
+    (input) => updateInput(input),
     [updateInput]
   );
-  const onSearchSubmit: (q: string) => void = useCallback(
-    (q) => updateQuery((query) => ({ ...query, q, page: 0 })),
-    [updateQuery]
+  const onSearchSubmit: (input: string) => void = useCallback(
+    (input) =>
+      updateQuery((query) => ({
+        ...query,
+        q: clsx(input, stringify(searchQuery)),
+        page: 0,
+      })),
+    [updateQuery, searchQuery]
   );
-  const onSearchInputReset: () => void = useCallback(
-    () => updateQuery((query) => ({ ...query, q: "", page: 0 })),
-    [updateQuery]
-  );
+  const onSearchInputReset: () => void = useCallback(() => {
+    updateQuery((query) => ({
+      ...query,
+      q: stringify(searchQuery),
+      page: 0,
+    }));
+    updateInput("");
+  }, [updateQuery, searchQuery, updateInput]);
   const onFilterChange: (filter: AuthorFilterType) => void = useCallback(
     (filter) => updateQuery((query) => ({ ...query, filter, page: 0 })),
     [updateQuery]
@@ -69,21 +94,19 @@ export function useSearchAtom() {
     link: Pick<LtiResourceLinkSchema, "consumerId" | "contextId">
   ) => void = useCallback(
     (link) =>
-      updateQuery((query) => ({
-        ...query,
-        q: clsx(input, stringify({ link: [link] })),
-        page: 0,
+      updateSearchQuery((searchQuery) => ({
+        ...searchQuery,
+        link: [...(searchQuery.link ?? []), link],
       })),
-    [updateQuery, input]
+    [updateSearchQuery]
   );
   const onKeywordClick: (keyword: KeywordSchema) => void = useCallback(
     (keyword) =>
-      updateQuery((query) => ({
-        ...query,
-        q: clsx(input, stringify({ keyword: [keyword.name] })),
-        page: 0,
+      updateSearchQuery((searchQuery) => ({
+        ...searchQuery,
+        keyword: [...(searchQuery.keyword ?? []), keyword.name],
       })),
-    [updateQuery, input]
+    [updateSearchQuery]
   );
 
   return {
