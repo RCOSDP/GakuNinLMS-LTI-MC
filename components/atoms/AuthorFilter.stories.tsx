@@ -1,9 +1,10 @@
-export default { title: "atoms/AuthorFilter" };
-
+import type { Story } from "@storybook/react";
 import AuthorFilter from "./AuthorFilter";
 
-export const Default = () => <AuthorFilter onFilterChange={console.log} />;
+export default { title: "atoms/AuthorFilter", component: AuthorFilter };
 
-export const Disabled = () => (
-  <AuthorFilter onFilterChange={console.log} disabled />
+const Template: Story<Parameters<typeof AuthorFilter>[0]> = (args) => (
+  <AuthorFilter {...args} />
 );
+
+export const Default = Template.bind({});
