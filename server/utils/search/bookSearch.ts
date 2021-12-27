@@ -7,7 +7,7 @@ import {
 } from "$server/utils/book/bookToBookSchema";
 import makeSortOrderQuery from "$server/utils/makeSortOrderQuery";
 import prisma from "$server/utils/prisma";
-import type { BookSearchQuery } from "./query";
+import type { BookSearchQuery } from "$server/models/searchQuery";
 
 /**
  * 検索クエリーによるブック検索

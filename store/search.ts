@@ -7,7 +7,7 @@ import type { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
 import type { KeywordSchema } from "$server/models/keyword";
 import type { SortOrder } from "$server/models/sortOrder";
 import type { AuthorFilterType } from "$server/models/authorFilter";
-import type { SearchQueryBase } from "$server/utils/search/query";
+import type { SearchQueryBase } from "$server/models/searchQuery";
 
 const queryAtom = atom<{
   type: "none" | "book" | "topic";

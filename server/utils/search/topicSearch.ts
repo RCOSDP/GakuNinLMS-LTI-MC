@@ -7,7 +7,7 @@ import {
   topicsWithResourcesArg,
   topicToTopicSchema,
 } from "$server/utils/topic/topicToTopicSchema";
-import type { TopicSearchQuery } from "./query";
+import type { TopicSearchQuery } from "$server/models/searchQuery";
 
 /**
  * 検索クエリーによるトピック検索

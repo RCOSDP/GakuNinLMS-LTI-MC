@@ -1,5 +1,5 @@
 import { stringify as stringifyBase } from "$server/utils/search/parser";
-import type { SearchQueryBase } from "$server/utils/search/query";
+import type { SearchQueryBase } from "$server/models/searchQuery";
 
 /**
  * 検索クエリーを検索クエリー文字列に変換
