@@ -53,8 +53,9 @@ export function useSearchAtom() {
         page: 0,
       });
       updateSearchQuery(RESET);
+      updateInput("");
     },
-    [updateQuery, updateSearchQuery]
+    [updateQuery, updateSearchQuery, updateInput]
   );
   const setPage: (page: number) => void = useCallback(
     (page) => updateQuery((query) => ({ ...query, page })),
