@@ -2,6 +2,7 @@ import { useCallback, useEffect } from "react";
 import { atom, useAtom } from "jotai";
 import { RESET, atomWithReset } from "jotai/utils";
 import clsx from "clsx";
+import yn from "yn";
 import stringify from "$utils/search/stringify";
 import type { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
 import type { KeywordSchema } from "$server/models/keyword";
@@ -25,7 +26,11 @@ const queryAtom = atom<{
   page: 0,
 });
 
-const searchQueryAtom = atomWithReset<Partial<SearchQueryBase>>({});
+const searchQueryAtom = atomWithReset<
+  Partial<
+    Omit<SearchQueryBase, "link"> & { link: Array<LtiResourceLinkSchema> }
+  >
+>({});
 
 const inputAtom = atom<string>("");
 
@@ -82,21 +87,48 @@ export function useSearchAtom() {
     }));
     updateInput("");
   }, [updateQuery, searchQuery, updateInput]);
-  const onFilterChange: (filter: AuthorFilterType) => void = useCallback(
+  const onAuthorFilterChange: (filter: AuthorFilterType) => void = useCallback(
     (filter) => updateQuery((query) => ({ ...query, filter, page: 0 })),
     [updateQuery]
+  );
+  const onSharedFilterChange: (filter: "true" | "false" | "all") => void =
+    useCallback(
+      (filter) => {
+        const value = yn(filter);
+        updateSearchQuery((searchQuery) => ({
+          ...searchQuery,
+          shared: typeof value === "boolean" ? [value] : [],
+        }));
+      },
+      [updateSearchQuery]
+    );
+  const onLicenseFilterChange: (filter: string) => void = useCallback(
+    (filter) =>
+      updateSearchQuery((searchQuery) => ({
+        ...searchQuery,
+        license: [filter],
+      })),
+    [updateSearchQuery]
   );
   const onSortChange: (sort: SortOrder) => void = useCallback(
     (sort) => updateQuery((query) => ({ ...query, sort, page: 0 })),
     [updateQuery]
   );
-  const onLtiContextClick: (
-    link: Pick<LtiResourceLinkSchema, "consumerId" | "contextId">
-  ) => void = useCallback(
+  const onLtiContextClick: (link: LtiResourceLinkSchema) => void = useCallback(
     (link) =>
       updateSearchQuery((searchQuery) => ({
         ...searchQuery,
         link: [...(searchQuery.link ?? []), link],
+      })),
+    [updateSearchQuery]
+  );
+  const onLtiContextDelete: (link: LtiResourceLinkSchema) => void = useCallback(
+    (removalLink) =>
+      updateSearchQuery((searchQuery) => ({
+        ...searchQuery,
+        link: (searchQuery.link ?? []).filter(
+          (link) => link.id != removalLink.id
+        ),
       })),
     [updateSearchQuery]
   );
@@ -108,18 +140,33 @@ export function useSearchAtom() {
       })),
     [updateSearchQuery]
   );
+  const onKeywordDelete: (keyword: string) => void = useCallback(
+    (removalKeyword) =>
+      updateSearchQuery((searchQuery) => ({
+        ...searchQuery,
+        keyword: (searchQuery.keyword ?? []).filter(
+          (keyword) => keyword != removalKeyword
+        ),
+      })),
+    [updateSearchQuery]
+  );
 
   return {
     query,
+    searchQuery,
     input,
     setType,
     setPage,
     onSearchInput,
     onSearchInputReset,
     onSearchSubmit,
-    onFilterChange,
+    onAuthorFilterChange,
+    onSharedFilterChange,
+    onLicenseFilterChange,
     onSortChange,
     onLtiContextClick,
+    onLtiContextDelete,
     onKeywordClick,
+    onKeywordDelete,
   };
 }

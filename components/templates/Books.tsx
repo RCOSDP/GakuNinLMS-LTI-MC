@@ -7,10 +7,10 @@ import ActionHeader from "$organisms/ActionHeader";
 import ContentTypeIndicator from "$atoms/ContentTypeIndicator";
 import ContentPreview from "$organisms/ContentPreview";
 import LinkInfo from "$organisms/LinkInfo";
+import FilterColumn from "$organisms/FilterColumn";
 import SearchPagination from "$organisms/SearchPagination";
 import Container from "$atoms/Container";
 import SortSelect from "$atoms/SortSelect";
-import AuthorFilter from "$atoms/AuthorFilter";
 import SearchTextField from "$atoms/SearchTextField";
 import type { ContentSchema } from "$server/models/content";
 import type { BookSchema } from "$server/models/book";
@@ -76,12 +76,7 @@ export default function Books(props: Props) {
           onSearchSubmit={searchProps.onSearchSubmit}
         />
       </ActionHeader>
-      <Box gridArea="side">
-        <Typography sx={{ pt: 4, mb: 4 }} variant="h5">
-          絞り込み
-        </Typography>
-        <AuthorFilter onFilterChange={searchProps.onFilterChange} />
-      </Box>
+      <FilterColumn sx={{ gridArea: "side" }} />
       <Box
         display="grid"
         gridTemplateColumns="repeat(auto-fill, 296px)"

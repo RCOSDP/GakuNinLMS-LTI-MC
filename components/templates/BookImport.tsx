@@ -10,11 +10,11 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import TopicPreviewDialog from "$organisms/TopicPreviewDialog";
 import ActionHeader from "$organisms/ActionHeader";
 import ActionFooter from "$organisms/ActionFooter";
+import FilterColumn from "$organisms/FilterColumn";
 import BookTree from "$organisms/BookTree";
 import SearchPagination from "$organisms/SearchPagination";
 import Container from "$atoms/Container";
 import SortSelect from "$atoms/SortSelect";
-import AuthorFilter from "$atoms/AuthorFilter";
 import SearchTextField from "$atoms/SearchTextField";
 import type { ContentSchema } from "$server/models/content";
 import type { BookSchema } from "$server/models/book";
@@ -122,12 +122,7 @@ export default function BookImport(props: Props) {
           onSearchSubmit={searchProps.onSearchSubmit}
         />
       </ActionHeader>
-      <Box gridArea="side">
-        <Typography sx={{ pt: 4, mb: 4 }} variant="h5">
-          絞り込み
-        </Typography>
-        <AuthorFilter onFilterChange={searchProps.onFilterChange} />
-      </Box>
+      <FilterColumn sx={{ gridArea: "side" }} />
       <Box gridArea="items">
         <TreeView
           defaultCollapseIcon={<ExpandMoreIcon />}
