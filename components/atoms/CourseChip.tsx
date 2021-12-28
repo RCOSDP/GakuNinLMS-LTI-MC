@@ -1,5 +1,6 @@
 import type { MouseEvent } from "react";
 import { useCallback, useState } from "react";
+import type { SxProps } from "@mui/system";
 import Chip from "@mui/material/Chip";
 import Popover from "@mui/material/Popover";
 import makeStyles from "@mui/styles/makeStyles";
@@ -18,11 +19,17 @@ const useStyles = makeStyles((theme) => ({
 type Props = {
   ltiResourceLink: LtiResourceLinkSchema;
   onLtiResourceLinkClick?(ltiResourceLink: LtiResourceLinkSchema): void;
+  sx?: SxProps;
+  onDelete?: () => void;
 };
 
-export default function CourseChip(props: Props) {
+export default function CourseChip({
+  ltiResourceLink,
+  onLtiResourceLinkClick,
+  sx,
+  onDelete,
+}: Props) {
   const classes = useStyles();
-  const { ltiResourceLink, onLtiResourceLinkClick } = props;
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const open = Boolean(anchorEl);
   const handlePopoverOpen = useCallback(
@@ -45,13 +52,14 @@ export default function CourseChip(props: Props) {
   return (
     <>
       <Chip
+        sx={sx}
         aria-haspopup="true"
         variant="outlined"
         size="small"
         color="primary"
         label={ltiResourceLink.contextLabel}
-        clickable
-        onClick={handleClick}
+        onClick={onLtiResourceLinkClick && handleClick}
+        onDelete={onDelete}
         onMouseEnter={handlePopoverOpen}
         onMouseLeave={handlePopoverClose}
       />
