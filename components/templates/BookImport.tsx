@@ -122,7 +122,7 @@ export default function BookImport(props: Props) {
           onSearchSubmit={searchProps.onSearchSubmit}
         />
       </ActionHeader>
-      <FilterColumn sx={{ gridArea: "side" }} />
+      <FilterColumn sx={{ gridArea: "side" }} variant="book" />
       <Box gridArea="items">
         <TreeView
           defaultCollapseIcon={<ExpandMoreIcon />}

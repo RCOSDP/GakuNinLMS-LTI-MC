@@ -142,7 +142,7 @@ export default function Topics(props: Props) {
           onSearchSubmit={searchProps.onSearchSubmit}
         />
       </ActionHeader>
-      <FilterColumn sx={{ gridArea: "side" }} />
+      <FilterColumn sx={{ gridArea: "side" }} variant="topic" />
       <Box
         display="grid"
         gridTemplateColumns="repeat(auto-fill, 296px)"

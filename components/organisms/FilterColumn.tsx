@@ -12,9 +12,9 @@ import TextField from "$atoms/TextField";
 import licenses from "$utils/licenses";
 import { useSearchAtom } from "$store/search";
 
-type Props = { sx?: SxProps };
+type Props = { sx?: SxProps; variant: "book" | "topic" };
 
-export default function FilterColumn({ sx }: Props) {
+export default function FilterColumn({ sx, variant }: Props) {
   const {
     searchQuery,
     onAuthorFilterChange,
@@ -37,24 +37,26 @@ export default function FilterColumn({ sx }: Props) {
         sx={{ display: "flex", mb: 2 }}
         onFilterChange={onSharedFilterChange}
       />
-      <TextField
-        label="ライセンス"
-        select
-        fullWidth
-        defaultValue=""
-        onChange={(event) => {
-          onLicenseFilterChange(String(event.target.value));
-        }}
-        inputProps={{ displayEmpty: true }}
-        sx={{ mb: 2, maxWidth: "80%" }}
-      >
-        <MenuItem value="">すべて</MenuItem>
-        {Object.entries(licenses).map(([value, { name }]) => (
-          <MenuItem key={value} value={value}>
-            {name}
-          </MenuItem>
-        ))}
-      </TextField>
+      {variant === "topic" && (
+        <TextField
+          label="ライセンス"
+          select
+          fullWidth
+          defaultValue=""
+          onChange={(event) => {
+            onLicenseFilterChange(String(event.target.value));
+          }}
+          inputProps={{ displayEmpty: true }}
+          sx={{ mb: 2, maxWidth: "80%" }}
+        >
+          <MenuItem value="">すべて</MenuItem>
+          {Object.entries(licenses).map(([value, { name }]) => (
+            <MenuItem key={value} value={value}>
+              {name}
+            </MenuItem>
+          ))}
+        </TextField>
+      )}
       <FormControl component="fieldset" sx={{ display: "block", mb: 2 }}>
         <FormLabel component="legend" sx={{ mb: 1 }}>
           コース
