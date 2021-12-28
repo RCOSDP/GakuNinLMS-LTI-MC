@@ -33,7 +33,7 @@ function SharedFilter({ sx, disabled = false, onFilterChange }: Props) {
   return (
     <FormControl component="fieldset" sx={sx}>
       <FormLabel component="legend">共有</FormLabel>
-      <RadioGroup defaultValue={options[0].value} onChange={handleChange}>
+      <RadioGroup defaultValue="all" onChange={handleChange}>
         {options.map(({ value, label }) => (
           <FormControlLabel
             key={value}
