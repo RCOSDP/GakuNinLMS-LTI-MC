@@ -115,12 +115,14 @@ export function useSearchAtom() {
     [updateQuery]
   );
   const onLtiContextClick: (link: LtiResourceLinkSchema) => void = useCallback(
-    (link) =>
+    (link) => {
+      if (searchQuery.link?.find(({ id }) => id === link.id)) return;
       updateSearchQuery((searchQuery) => ({
         ...searchQuery,
         link: [...(searchQuery.link ?? []), link],
-      })),
-    [updateSearchQuery]
+      }));
+    },
+    [searchQuery.link, updateSearchQuery]
   );
   const onLtiContextDelete: (link: LtiResourceLinkSchema) => void = useCallback(
     (removalLink) =>
@@ -133,12 +135,14 @@ export function useSearchAtom() {
     [updateSearchQuery]
   );
   const onKeywordClick: (keyword: KeywordSchema) => void = useCallback(
-    (keyword) =>
+    (keyword) => {
+      if (searchQuery.keyword?.includes(keyword.name)) return;
       updateSearchQuery((searchQuery) => ({
         ...searchQuery,
         keyword: [...(searchQuery.keyword ?? []), keyword.name],
-      })),
-    [updateSearchQuery]
+      }));
+    },
+    [searchQuery.keyword, updateSearchQuery]
   );
   const onKeywordDelete: (keyword: string) => void = useCallback(
     (removalKeyword) =>
