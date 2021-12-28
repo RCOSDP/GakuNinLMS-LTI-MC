@@ -16,6 +16,7 @@ type Props = { sx?: SxProps; variant: "book" | "topic" };
 
 export default function FilterColumn({ sx, variant }: Props) {
   const {
+    query,
     searchQuery,
     onAuthorFilterChange,
     onSharedFilterChange,
@@ -35,6 +36,7 @@ export default function FilterColumn({ sx, variant }: Props) {
       />
       <SharedFilter
         sx={{ display: "flex", mb: 2 }}
+        disabled={query.filter === "other"}
         onFilterChange={onSharedFilterChange}
       />
       {variant === "topic" && (
