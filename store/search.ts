@@ -116,7 +116,13 @@ export function useSearchAtom() {
   );
   const onLtiContextClick: (link: LtiResourceLinkSchema) => void = useCallback(
     (link) => {
-      if (searchQuery.link?.find(({ id }) => id === link.id)) return;
+      if (
+        searchQuery.link?.find(
+          ({ id, consumerId }) =>
+            id === link.id && consumerId === link.consumerId
+        )
+      )
+        return;
       updateSearchQuery((searchQuery) => ({
         ...searchQuery,
         link: [...(searchQuery.link ?? []), link],
