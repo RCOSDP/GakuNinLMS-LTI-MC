@@ -115,7 +115,7 @@ export function useSearchAtom() {
     (filter) =>
       updateSearchQuery((searchQuery) => ({
         ...searchQuery,
-        license: [filter],
+        license: filter !== "all" ? [filter !== "none" ? filter : ""] : [],
       })),
     [updateSearchQuery]
   );

@@ -47,14 +47,15 @@ export default function FilterColumn({ sx, variant }: Props) {
           label="ライセンス"
           select
           fullWidth
-          defaultValue=""
+          defaultValue="all"
           onChange={(event) => {
             onLicenseFilterChange(String(event.target.value));
           }}
           inputProps={{ displayEmpty: true }}
           sx={{ mb: 2, maxWidth: "80%" }}
         >
-          <MenuItem value="">すべて</MenuItem>
+          <MenuItem value="all">すべて</MenuItem>
+          <MenuItem value="none">なし</MenuItem>
           {Object.entries(licenses).map(([value, { name }]) => (
             <MenuItem key={value} value={value}>
               {name}
