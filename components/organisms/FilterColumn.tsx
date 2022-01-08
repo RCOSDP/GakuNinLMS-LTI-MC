@@ -11,6 +11,7 @@ import CourseChip from "$atoms/CourseChip";
 import TextField from "$atoms/TextField";
 import licenses from "$utils/licenses";
 import { useSearchAtom } from "$store/search";
+import type { SharedFilterType } from "$types/sharedFilter";
 
 type Props = { sx?: SxProps; variant: "book" | "topic" };
 
@@ -31,10 +32,12 @@ export default function FilterColumn({ sx, variant }: Props) {
         絞り込み
       </Typography>
       <AuthorFilter
+        value={query.filter}
         sx={{ display: "flex", mb: 2 }}
         onFilterChange={onAuthorFilterChange}
       />
       <SharedFilter
+        value={String(searchQuery?.shared?.[0] ?? "all") as SharedFilterType}
         sx={{ display: "flex", mb: 2 }}
         disabled={query.filter === "other"}
         onFilterChange={onSharedFilterChange}

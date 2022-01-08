@@ -88,8 +88,17 @@ export function useSearchAtom() {
     updateInput("");
   }, [updateQuery, searchQuery, updateInput]);
   const onAuthorFilterChange: (filter: AuthorFilterType) => void = useCallback(
-    (filter) => updateQuery((query) => ({ ...query, filter, page: 0 })),
-    [updateQuery]
+    (filter) => {
+      updateQuery((query) => ({ ...query, filter, page: 0 }));
+      // NOTE: 「著者:すべて」and「共有:なし or すべて」は実用上無意味
+      if (filter === "other") {
+        updateSearchQuery((searchQuery) => ({
+          ...searchQuery,
+          shared: [true],
+        }));
+      }
+    },
+    [updateQuery, updateSearchQuery]
   );
   const onSharedFilterChange: (filter: "true" | "false" | "all") => void =
     useCallback(

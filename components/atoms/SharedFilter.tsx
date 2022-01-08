@@ -5,8 +5,7 @@ import FormLabel from "@mui/material/FormLabel";
 import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
-
-type SharedFilterType = "true" | "false" | "all";
+import type { SharedFilterType } from "$types/sharedFilter";
 
 const options: ReadonlyArray<{
   value: SharedFilterType;
@@ -18,12 +17,13 @@ const options: ReadonlyArray<{
 ];
 
 type Props = {
+  value?: SharedFilterType;
   sx?: SxProps;
   disabled?: boolean;
   onFilterChange?: (value: SharedFilterType) => void;
 };
 
-function SharedFilter({ sx, disabled = false, onFilterChange }: Props) {
+function SharedFilter({ value, sx, disabled = false, onFilterChange }: Props) {
   const handleChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       onFilterChange?.(event.target.value as SharedFilterType);
@@ -33,7 +33,7 @@ function SharedFilter({ sx, disabled = false, onFilterChange }: Props) {
   return (
     <FormControl component="fieldset" sx={sx}>
       <FormLabel component="legend">共有</FormLabel>
-      <RadioGroup defaultValue="all" onChange={handleChange}>
+      <RadioGroup defaultValue="all" value={value} onChange={handleChange}>
         {options.map(({ value, label }) => (
           <FormControlLabel
             key={value}

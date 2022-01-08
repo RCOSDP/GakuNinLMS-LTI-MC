@@ -17,12 +17,13 @@ const options: ReadonlyArray<{
 ];
 
 type Props = {
+  value?: AuthorFilterType;
   sx?: SxProps;
   disabled?: boolean;
   onFilterChange?: (value: AuthorFilterType) => void;
 };
 
-function AuthorFilter({ sx, disabled = false, onFilterChange }: Props) {
+function AuthorFilter({ value, sx, disabled = false, onFilterChange }: Props) {
   const handleChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       onFilterChange?.(event.target.value as AuthorFilterType);
@@ -32,7 +33,11 @@ function AuthorFilter({ sx, disabled = false, onFilterChange }: Props) {
   return (
     <FormControl component="fieldset" sx={sx}>
       <FormLabel component="legend">著者</FormLabel>
-      <RadioGroup defaultValue={options[0].value} onChange={handleChange}>
+      <RadioGroup
+        defaultValue={options[0].value}
+        value={value}
+        onChange={handleChange}
+      >
         {options.map(({ value, label }) => (
           <FormControlLabel
             key={value}
