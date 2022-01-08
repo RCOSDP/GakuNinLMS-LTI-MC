@@ -63,7 +63,7 @@ export default function FilterColumn({ sx, variant }: Props) {
         <FormLabel component="legend" sx={{ mb: 1 }}>
           コース
         </FormLabel>
-        {(searchQuery.link?.length ?? 0) < 1 && <Typography>なし</Typography>}
+        {(searchQuery.link?.length ?? 0) === 0 && <Typography>なし</Typography>}
         {searchQuery.link?.map((ltiResourceLink) => (
           <CourseChip
             sx={{ mr: 0.5 }}
@@ -77,7 +77,7 @@ export default function FilterColumn({ sx, variant }: Props) {
         <FormLabel component="legend" sx={{ mb: 1 }}>
           キーワード
         </FormLabel>
-        {(searchQuery.keyword?.length ?? 0) < 1 && (
+        {(searchQuery.keyword?.length ?? 0) === 0 && (
           <Typography>なし</Typography>
         )}
         {searchQuery.keyword?.map((keyword) => (
