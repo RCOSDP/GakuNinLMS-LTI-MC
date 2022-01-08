@@ -112,11 +112,17 @@ export function useSearchAtom() {
       [updateSearchQuery]
     );
   const onLicenseFilterChange: (filter: string) => void = useCallback(
-    (filter) =>
+    (filter) => {
+      const values = {
+        [filter]: [filter],
+        all: [],
+        none: [""],
+      };
       updateSearchQuery((searchQuery) => ({
         ...searchQuery,
-        license: filter !== "all" ? [filter !== "none" ? filter : ""] : [],
-      })),
+        license: values[filter],
+      }));
+    },
     [updateSearchQuery]
   );
   const onSortChange: (sort: SortOrder) => void = useCallback(
