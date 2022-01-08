@@ -11,7 +11,7 @@ export type SearchQueryBase = {
   author: string[];
   /** キーワード */
   keyword: string[];
-  /** ライセンス (SPDX License Identifier) */
+  /** ライセンス (文字列: SPDX License Identifier, 空文字列: 未設定) */
   license: string[];
   /** 共有可否 (true: シェアする, それ以外: シェアしない) */
   shared: boolean[];
