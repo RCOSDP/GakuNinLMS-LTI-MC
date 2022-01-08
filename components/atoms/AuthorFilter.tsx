@@ -23,7 +23,12 @@ type Props = {
   onFilterChange?: (value: AuthorFilterType) => void;
 };
 
-function AuthorFilter({ value, sx, disabled = false, onFilterChange }: Props) {
+function AuthorFilter({
+  value = options[0].value,
+  sx,
+  disabled = false,
+  onFilterChange,
+}: Props) {
   const handleChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       onFilterChange?.(event.target.value as AuthorFilterType);
@@ -33,11 +38,7 @@ function AuthorFilter({ value, sx, disabled = false, onFilterChange }: Props) {
   return (
     <FormControl component="fieldset" sx={sx}>
       <FormLabel component="legend">著者</FormLabel>
-      <RadioGroup
-        defaultValue={options[0].value}
-        value={value}
-        onChange={handleChange}
-      >
+      <RadioGroup value={value} onChange={handleChange}>
         {options.map(({ value, label }) => (
           <FormControlLabel
             key={value}
