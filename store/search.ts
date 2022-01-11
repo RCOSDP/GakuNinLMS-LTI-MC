@@ -90,7 +90,7 @@ export function useSearchAtom() {
   const onAuthorFilterChange: (filter: AuthorFilterType) => void = useCallback(
     (filter) => {
       updateQuery((query) => ({ ...query, filter, page: 0 }));
-      // NOTE: 「著者:自分以外」and「共有:なし or すべて」は実用上無意味
+      // NOTE: 「作成者:自分以外」and「共有:なし or すべて」は実用上無意味
       if (filter === "other") {
         updateSearchQuery((searchQuery) => ({
           ...searchQuery,

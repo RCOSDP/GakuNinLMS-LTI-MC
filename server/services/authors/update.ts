@@ -7,7 +7,7 @@ import topicExists from "$server/utils/topic/topicExists";
 import bookExists from "$server/utils/book/bookExists";
 import { isUsersOrAdmin } from "$server/utils/session";
 
-/** 著者の更新 */
+/** 作成者の更新 */
 async function update({
   session,
   body,

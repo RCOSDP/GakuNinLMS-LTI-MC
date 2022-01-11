@@ -1,15 +1,15 @@
 import type { UserSchema } from "$server/models/user";
 
-/** 著者フィルター */
+/** 作成者フィルター */
 export type AuthorFilter =
   | {
-      /** 著者に自分が含まれるもの */
+      /** 作成者に自分が含まれるもの */
       type: "self";
       /** 利用者 */
       by: UserSchema["id"];
     }
   | {
-      /** 著者に自分が含まれないもの */
+      /** 作成者に自分が含まれないもの */
       type: "other";
       /** 利用者 */
       by: UserSchema["id"];

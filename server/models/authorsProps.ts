@@ -1,6 +1,6 @@
 import type { FromSchema } from "json-schema-to-ts";
 
-/** コンテンツ著者の更新のためのリクエストパラメーター */
+/** コンテンツ作成者の更新のためのリクエストパラメーター */
 export const AuthorsProps = {
   type: "object",
   required: ["authors"],
@@ -21,5 +21,5 @@ export const AuthorsProps = {
   additionalProperties: false,
 } as const;
 
-/** コンテンツ著者の更新のためのリクエストパラメーター */
+/** コンテンツ作成者の更新のためのリクエストパラメーター */
 export type AuthorsProps = FromSchema<typeof AuthorsProps>;

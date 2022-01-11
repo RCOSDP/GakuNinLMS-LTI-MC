@@ -1,13 +1,13 @@
 import type { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
 
 export type SearchQueryBase = {
-  /** 検索文字列 (名称 OR 説明 OR 著者名) */
+  /** 検索文字列 (名称 OR 説明 OR 作成者名) */
   text: string[];
   /** 名称 (トピックの場合: トピック名、ブックの場合: ブック名・セクション名・トピック名) */
   name: string[];
   /** 説明 (Markdown) */
   description: string[];
-  /** 著者名 */
+  /** 作成者名 */
   author: string[];
   /** キーワード */
   keyword: string[];

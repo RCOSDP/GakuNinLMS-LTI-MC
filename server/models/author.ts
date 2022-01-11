@@ -6,12 +6,12 @@ import { UserSchema } from "./user";
  * @todo 多言語対応したい
  */
 const _roleNames = {
-  author: "著者",
-  "co-author": "共同著者",
+  author: "作成者",
+  "co-author": "共同作成者",
   collaborator: "協力者",
 } as const;
 
-/** 著者 */
+/** 作成者 */
 export const AuthorSchema = {
   type: "object",
   required: [...UserSchema.required, "roleName"],
@@ -24,5 +24,5 @@ export const AuthorSchema = {
   _roleNames,
 } as const;
 
-/** 著者 */
+/** 作成者 */
 export type AuthorSchema = FromSchema<typeof AuthorSchema>;

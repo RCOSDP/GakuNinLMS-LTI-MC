@@ -10,7 +10,7 @@ const book = {
   timeRequired: null,
   shared: true,
   license: "",
-  authors: [{ ...user, roleName: "著者" }],
+  authors: [{ ...user, roleName: "作成者" }],
   keywords: [],
   ltiResourceLinks: [ltiResourceLink],
   createdAt: new Date(),

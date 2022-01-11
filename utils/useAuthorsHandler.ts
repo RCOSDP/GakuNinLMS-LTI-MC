@@ -45,7 +45,7 @@ function useAuthorsHandler(content?: ContentSchema) {
     else if (additionalAuthors.length === 0)
       updateState({
         error: false,
-        helperText: "すでに著者に含まれています",
+        helperText: "すでに作成者に含まれています",
       });
     else onReset();
     const authors = [...authorsState, ...additionalAuthors];
