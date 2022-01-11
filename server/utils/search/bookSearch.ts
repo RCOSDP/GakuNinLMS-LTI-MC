@@ -24,6 +24,7 @@ async function bookSearch(
     name,
     description,
     author,
+    partialKeyword,
     keyword,
     license,
     shared,
@@ -133,6 +134,10 @@ async function bookSearch(
             user: { name: { contains: a, ...insensitiveMode } },
           },
         },
+      })),
+      // NOTE: partial-keyword - キーワード (部分一致)
+      ...partialKeyword.map((pk) => ({
+        keywords: { some: { name: { contains: pk, ...insensitiveMode } } },
       })),
       // NOTE: keyword - キーワード
       ...keyword.map((k) => ({
