@@ -1,5 +1,16 @@
 import { parse, stringify } from "./parser";
 
+const emptyQuery = {
+  text: [],
+  name: [],
+  description: [],
+  author: [],
+  keyword: [],
+  license: [],
+  shared: [],
+  link: [],
+};
+
 describe("parse()", function () {
   test("検索クエリー文字列をパースできる", function () {
     expect(
@@ -16,6 +27,14 @@ describe("parse()", function () {
       shared: [true],
       link: [{ consumerId: "hoge", contextId: "piyo" }],
     });
+  });
+
+  test("`license:none` は空文字列が得られる", function () {
+    expect(parse(`license:none`).license).toEqual([""]);
+  });
+
+  test("`license:` の無効値の場合は何も得られない", function () {
+    expect(parse("license:")).toEqual(emptyQuery);
   });
 
   test("`link:` 以降にいくつかキーワードが含まれる文字列をパースできる", function () {
@@ -36,43 +55,36 @@ describe("parse()", function () {
   });
 
   test("`link:` キーワードに区切り文字 `:` が含まない無効値の場合は何も得られない", function () {
-    expect(parse("link:foo")).toEqual({
-      text: [],
-      name: [],
-      description: [],
-      author: [],
-      keyword: [],
-      license: [],
-      shared: [],
-      link: [],
-    });
+    expect(parse("link:foo")).toEqual(emptyQuery);
   });
 });
 
 describe("stringify()", function () {
   test("検索クエリー文字列に変換", () => {
     const query = {
+      ...emptyQuery,
       text: ["a", "b"],
-      name: [],
-      description: [],
-      author: [],
       keyword: ["foo", "bar"],
-      license: [],
-      shared: [],
-      link: [],
     };
     expect(stringify(query)).toBe("a b keyword:foo,bar");
   });
 
+  test("空の検索クエリーは空文字列に変換", () => {
+    const query = emptyQuery;
+    expect(stringify(query)).toBe("");
+  });
+
+  test("ライセンス:未設定の検索クエリー文字列に変換", () => {
+    const query = {
+      ...emptyQuery,
+      license: [""],
+    };
+    expect(stringify(query)).toBe("license:none");
+  });
+
   test("LTI Contextを検索クエリー文字列に変換", () => {
     const query = {
-      text: [],
-      name: [],
-      description: [],
-      author: [],
-      keyword: [],
-      license: [],
-      shared: [],
+      ...emptyQuery,
       link: [{ consumerId: "foo", contextId: "bar" }],
     };
     expect(stringify(query)).toBe("link:foo:bar");
@@ -80,13 +92,7 @@ describe("stringify()", function () {
 
   test("いくつかのLTI Contextを検索クエリー文字列に変換", () => {
     const query = {
-      text: [],
-      name: [],
-      description: [],
-      author: [],
-      keyword: [],
-      license: [],
-      shared: [],
+      ...emptyQuery,
       link: [
         { consumerId: "foo", contextId: "bar" },
         { consumerId: "hoge", contextId: "piyo" },
@@ -97,13 +103,7 @@ describe("stringify()", function () {
 
   test("`:` や `,` や空白が含まれるLTI Contextを検索クエリー文字列に変換", () => {
     const query = {
-      text: [],
-      name: [],
-      description: [],
-      author: [],
-      keyword: [],
-      license: [],
-      shared: [],
+      ...emptyQuery,
       link: [{ consumerId: "te:s,t", contextId: "fo o" }],
     };
     expect(stringify(query)).toBe("link:te%3As%2Ct:fo%20o");
@@ -111,14 +111,8 @@ describe("stringify()", function () {
 
   test("共有可否を検索クエリー文字列に変換", () => {
     const query = {
-      text: [],
-      name: [],
-      description: [],
-      author: [],
-      keyword: [],
-      license: [],
+      ...emptyQuery,
       shared: [true],
-      link: [],
     };
     expect(stringify(query)).toBe("shared:true");
   });
