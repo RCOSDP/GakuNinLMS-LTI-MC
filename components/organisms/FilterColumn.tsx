@@ -63,20 +63,24 @@ export default function FilterColumn({ sx, variant }: Props) {
           ))}
         </TextField>
       )}
-      <FormControl component="fieldset" sx={{ display: "block", mb: 2 }}>
-        <FormLabel component="legend" sx={{ mb: 1 }}>
-          コース
-        </FormLabel>
-        {(searchQuery.link?.length ?? 0) === 0 && <Typography>なし</Typography>}
-        {searchQuery.link?.map((ltiResourceLink) => (
-          <CourseChip
-            sx={{ mr: 0.5 }}
-            key={ltiResourceLink.contextId}
-            ltiResourceLink={ltiResourceLink}
-            onDelete={() => onLtiContextDelete(ltiResourceLink)}
-          />
-        ))}
-      </FormControl>
+      {variant === "book" && (
+        <FormControl component="fieldset" sx={{ display: "block", mb: 2 }}>
+          <FormLabel component="legend" sx={{ mb: 1 }}>
+            コース
+          </FormLabel>
+          {(searchQuery.link?.length ?? 0) === 0 && (
+            <Typography>なし</Typography>
+          )}
+          {searchQuery.link?.map((ltiResourceLink) => (
+            <CourseChip
+              sx={{ mr: 0.5 }}
+              key={ltiResourceLink.contextId}
+              ltiResourceLink={ltiResourceLink}
+              onDelete={() => onLtiContextDelete(ltiResourceLink)}
+            />
+          ))}
+        </FormControl>
+      )}
       <FormControl component="fieldset" sx={{ display: "block" }}>
         <FormLabel component="legend" sx={{ mb: 1 }}>
           キーワード
