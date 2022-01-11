@@ -12,11 +12,11 @@ import ActionHeader from "$organisms/ActionHeader";
 import ActionFooter from "$organisms/ActionFooter";
 import ContentTypeIndicator from "$atoms/ContentTypeIndicator";
 import ContentPreview from "$organisms/ContentPreview";
+import FilterColumn from "$organisms/FilterColumn";
 import TopicPreviewDialog from "$organisms/TopicPreviewDialog";
 import SearchPagination from "$organisms/SearchPagination";
 import Container from "$atoms/Container";
 import SortSelect from "$atoms/SortSelect";
-import AuthorFilter from "$atoms/AuthorFilter";
 import SearchTextField from "$atoms/SearchTextField";
 import type { ContentSchema } from "$server/models/content";
 import type { TopicSchema } from "$server/models/topic";
@@ -142,12 +142,7 @@ export default function Topics(props: Props) {
           onSearchSubmit={searchProps.onSearchSubmit}
         />
       </ActionHeader>
-      <Box gridArea="side">
-        <Typography sx={{ pt: 4, mb: 4 }} variant="h5">
-          絞り込み
-        </Typography>
-        <AuthorFilter onFilterChange={searchProps.onFilterChange} />
-      </Box>
+      <FilterColumn sx={{ gridArea: "side" }} variant="topic" />
       <Box
         display="grid"
         gridTemplateColumns="repeat(auto-fill, 296px)"

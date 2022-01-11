@@ -80,7 +80,8 @@
     "video.js": "^7.14.3",
     "videojs-seek-buttons": "^2.1.0",
     "videojs-youtube": "^2.6.1",
-    "webpack": "^5.51.1"
+    "webpack": "^5.51.1",
+    "yn": "^4.0.0"
   },
   "scripts": {
     "test": "jest",

@@ -5,39 +5,39 @@ import FormLabel from "@mui/material/FormLabel";
 import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
-import type { AuthorFilterType } from "$server/models/authorFilter";
+import type { SharedFilterType } from "$types/sharedFilter";
 
 const options: ReadonlyArray<{
-  value: AuthorFilterType;
+  value: SharedFilterType;
   label: string;
 }> = [
-  { value: "self", label: "自分" },
-  { value: "other", label: "自分以外" },
+  { value: "true", label: "あり" },
+  { value: "false", label: "なし" },
   { value: "all", label: "すべて" },
 ];
 
 type Props = {
-  value?: AuthorFilterType;
+  value?: SharedFilterType;
   sx?: SxProps;
   disabled?: boolean;
-  onFilterChange?: (value: AuthorFilterType) => void;
+  onFilterChange?: (value: SharedFilterType) => void;
 };
 
-function AuthorFilter({
-  value = options[0].value,
+function SharedFilter({
+  value = options[2].value,
   sx,
   disabled = false,
   onFilterChange,
 }: Props) {
   const handleChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      onFilterChange?.(event.target.value as AuthorFilterType);
+      onFilterChange?.(event.target.value as SharedFilterType);
     },
     [onFilterChange]
   );
   return (
     <FormControl component="fieldset" sx={sx}>
-      <FormLabel component="legend">著者</FormLabel>
+      <FormLabel component="legend">共有</FormLabel>
       <RadioGroup value={value} onChange={handleChange}>
         {options.map(({ value, label }) => (
           <FormControlLabel
@@ -53,4 +53,4 @@ function AuthorFilter({
   );
 }
 
-export default AuthorFilter;
+export default SharedFilter;
