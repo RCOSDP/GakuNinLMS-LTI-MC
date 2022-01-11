@@ -55,7 +55,7 @@ export default function FilterColumn({ sx, variant }: Props) {
           sx={{ mb: 2, maxWidth: "80%" }}
         >
           <MenuItem value="all">すべて</MenuItem>
-          <MenuItem value="none">なし</MenuItem>
+          <MenuItem value="none">未設定</MenuItem>
           {Object.entries(licenses).map(([value, { name }]) => (
             <MenuItem key={value} value={value}>
               {name}
