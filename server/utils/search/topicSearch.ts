@@ -24,6 +24,7 @@ async function topicSearch(
     name,
     description,
     author,
+    partialKeyword,
     keyword,
     license,
     shared,
@@ -44,7 +45,7 @@ async function topicSearch(
       ...(filter.type === "other"
         ? [{ NOT: { authors: { some: { userId: filter.by } } } }]
         : []),
-      // NOTE: text - 検索文字列 (名称 OR 説明 OR 著者名)
+      // NOTE: text - 検索文字列 (名称 OR 説明 OR 著者名 OR キーワード)
       ...text.map((t) => ({
         OR: [
           { name: { contains: t, ...insensitiveMode } },
@@ -53,6 +54,13 @@ async function topicSearch(
             authors: {
               some: {
                 user: { name: { contains: t, ...insensitiveMode } },
+              },
+            },
+          },
+          {
+            keywords: {
+              some: {
+                name: { contains: t, ...insensitiveMode },
               },
             },
           },
@@ -73,6 +81,10 @@ async function topicSearch(
             user: { name: { contains: a, ...insensitiveMode } },
           },
         },
+      })),
+      // NOTE: partial-keyword - キーワード (部分一致)
+      ...partialKeyword.map((pk) => ({
+        keywords: { some: { name: { contains: pk, ...insensitiveMode } } },
       })),
       // NOTE: keyword - キーワード
       ...keyword.map((k) => ({

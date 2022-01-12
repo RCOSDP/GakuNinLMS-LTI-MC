@@ -12,6 +12,7 @@ function stringify(query: Partial<SearchQueryBase>): string {
     name: [],
     description: [],
     author: [],
+    partialKeyword: [],
     keyword: [],
     license: [],
     shared: [],

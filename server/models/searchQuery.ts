@@ -9,6 +9,8 @@ export type SearchQueryBase = {
   description: string[];
   /** 著者名 */
   author: string[];
+  /** キーワード (部分一致) */
+  partialKeyword: string[];
   /** キーワード */
   keyword: string[];
   /** ライセンス (文字列: SPDX License Identifier, 空文字列: 未設定) */

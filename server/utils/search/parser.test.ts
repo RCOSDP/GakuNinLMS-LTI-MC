@@ -5,6 +5,7 @@ const emptyQuery = {
   name: [],
   description: [],
   author: [],
+  partialKeyword: [],
   keyword: [],
   license: [],
   shared: [],
@@ -15,14 +16,15 @@ describe("parse()", function () {
   test("検索クエリー文字列をパースできる", function () {
     expect(
       parse(
-        `name:a description:"b b" author:c keyword:d,e license:CC-BY-4.0 shared:true link:hoge:piyo foo bar baz`
+        `name:a description:"b b" author:c partial-keyword:d keyword:e license:CC-BY-4.0 shared:true link:hoge:piyo foo bar baz`
       )
     ).toEqual({
       text: ["foo", "bar", "baz"],
       name: ["a"],
       description: ["b b"],
       author: ["c"],
-      keyword: ["d", "e"],
+      partialKeyword: ["d"],
+      keyword: ["e"],
       license: ["CC-BY-4.0"],
       shared: [true],
       link: [{ consumerId: "hoge", contextId: "piyo" }],
