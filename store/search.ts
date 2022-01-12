@@ -116,7 +116,6 @@ export function useSearchAtom() {
       const values = {
         [filter]: [filter],
         all: [],
-        none: [""],
       };
       updateSearchQuery((searchQuery) => ({
         ...searchQuery,

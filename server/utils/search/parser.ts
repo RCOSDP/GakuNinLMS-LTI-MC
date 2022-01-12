@@ -37,6 +37,20 @@ function parseBoolean(input: string): boolean[] {
 }
 
 /**
+ * 検索クエリー文字列 `license:` キーワードのパース
+ * @param input `license:` 以降の文字列
+ * @return 一致するライセンス
+ */
+function parseLicense(input: string): string[] {
+  switch (input) {
+    case "none":
+      return [""];
+    default:
+      return [input];
+  }
+}
+
+/**
  * 検索クエリー文字列 `link:` キーワードのパース
  * @param input `link:` 以降の文字列
  * @return LtiResourceLink に関する情報
@@ -58,10 +72,24 @@ export function parse(query: string): SearchQueryBase {
     description: res.description ?? [],
     author: res.author ?? [],
     keyword: res.keyword ?? [],
-    license: res.license ?? [],
+    license: res.license?.flatMap(parseLicense) ?? [],
     shared: res.shared?.flatMap(parseBoolean) ?? [],
     link: res.link?.flatMap(parseLink) ?? [],
   };
+}
+
+/**
+ * ライセンスを検索クエリー文字列に変換
+ * @param license ライセンス
+ * @return 検索クエリー文字列
+ */
+function stringifyLicense(license: string): string {
+  switch (license) {
+    case "":
+      return "none";
+    default:
+      return license;
+  }
 }
 
 /**
@@ -79,8 +107,9 @@ function stringifyLink(
 }
 
 export function stringify(query: SearchQueryBase): string {
-  const { shared, link, ...rest } = query;
+  const { license, shared, link, ...rest } = query;
   const token = {
+    license: license.map(stringifyLicense).join(),
     shared: shared.map(String).join(),
     link: link.map(stringifyLink).join(),
   };
