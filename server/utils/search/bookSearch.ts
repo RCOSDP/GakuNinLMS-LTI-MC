@@ -8,6 +8,7 @@ import {
 import makeSortOrderQuery from "$server/utils/makeSortOrderQuery";
 import prisma from "$server/utils/prisma";
 import type { BookSearchQuery } from "$server/models/searchQuery";
+import createScopes from "./createScopes";
 
 /**
  * 検索クエリーによるブック検索
@@ -38,14 +39,7 @@ async function bookSearch(
   const insensitiveMode = { mode: "insensitive" as const };
   const where: Prisma.BookWhereInput = {
     AND: [
-      // NOTE: 管理者でなければ共有されている範囲のみ
-      ...(filter.type !== "self" && !filter.admin ? [{ shared: true }] : []),
-      ...(filter.type === "self"
-        ? [{ authors: { some: { userId: filter.by } } }]
-        : []),
-      ...(filter.type === "other"
-        ? [{ NOT: { authors: { some: { userId: filter.by } } } }]
-        : []),
+      ...createScopes(filter),
       // NOTE: text - 検索文字列 (名称 OR 説明 OR 著者名 OR キーワード)
       ...text.map((t) => ({
         OR: [
