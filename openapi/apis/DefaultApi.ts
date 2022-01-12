@@ -289,8 +289,8 @@ export interface ApiV2UsersEmailGetRequest {
 export class DefaultApi extends runtime.BaseAPI {
 
     /**
-     * ブックの作成者を更新します。 教員または管理者でなければなりません。 教員は自身の著作のブックでなければなりません。
-     * ブックの作成者の更新
+     * ブックの著者を更新します。 教員または管理者でなければなりません。 教員は自身の著作のブックでなければなりません。
+     * ブックの著者の更新
      */
     async apiV2BookBookIdAuthorsPutRaw(requestParameters: ApiV2BookBookIdAuthorsPutRequest): Promise<runtime.ApiResponse<Array<InlineResponse2001Authors>>> {
         if (requestParameters.bookId === null || requestParameters.bookId === undefined) {
@@ -315,8 +315,8 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * ブックの作成者を更新します。 教員または管理者でなければなりません。 教員は自身の著作のブックでなければなりません。
-     * ブックの作成者の更新
+     * ブックの著者を更新します。 教員または管理者でなければなりません。 教員は自身の著作のブックでなければなりません。
+     * ブックの著者の更新
      */
     async apiV2BookBookIdAuthorsPut(requestParameters: ApiV2BookBookIdAuthorsPutRequest): Promise<Array<InlineResponse2001Authors>> {
         const response = await this.apiV2BookBookIdAuthorsPutRaw(requestParameters);
@@ -1366,8 +1366,8 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * トピックの作成者を更新します。 教員または管理者でなければなりません。 教員は自身の著作のトピックでなければなりません。
-     * トピックの作成者の更新
+     * トピックの著者を更新します。 教員または管理者でなければなりません。 教員は自身の著作のトピックでなければなりません。
+     * トピックの著者の更新
      */
     async apiV2TopicTopicIdAuthorsPutRaw(requestParameters: ApiV2TopicTopicIdAuthorsPutRequest): Promise<runtime.ApiResponse<Array<InlineResponse2001Authors>>> {
         if (requestParameters.topicId === null || requestParameters.topicId === undefined) {
@@ -1392,8 +1392,8 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * トピックの作成者を更新します。 教員または管理者でなければなりません。 教員は自身の著作のトピックでなければなりません。
-     * トピックの作成者の更新
+     * トピックの著者を更新します。 教員または管理者でなければなりません。 教員は自身の著作のトピックでなければなりません。
+     * トピックの著者の更新
      */
     async apiV2TopicTopicIdAuthorsPut(requestParameters: ApiV2TopicTopicIdAuthorsPutRequest): Promise<Array<InlineResponse2001Authors>> {
         const response = await this.apiV2TopicTopicIdAuthorsPutRaw(requestParameters);
@@ -1570,7 +1570,7 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * 利用者が作成者に含まれるブックの一覧を取得します。 教員または管理者でなければなりません。
+     * 利用者が著者に含まれるブックの一覧を取得します。 教員または管理者でなければなりません。
      * 自分のブックの一覧 (非推奨)
      */
     async apiV2UserUserIdBooksGetRaw(requestParameters: ApiV2UserUserIdBooksGetRequest): Promise<runtime.ApiResponse<InlineResponse2002>> {
@@ -1605,7 +1605,7 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * 利用者が作成者に含まれるブックの一覧を取得します。 教員または管理者でなければなりません。
+     * 利用者が著者に含まれるブックの一覧を取得します。 教員または管理者でなければなりません。
      * 自分のブックの一覧 (非推奨)
      */
     async apiV2UserUserIdBooksGet(requestParameters: ApiV2UserUserIdBooksGetRequest): Promise<InlineResponse2002> {
@@ -1614,7 +1614,7 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * 利用者が作成者に含まれるトピックの一覧を取得します。 教員または管理者でなければなりません。
+     * 利用者が著者に含まれるトピックの一覧を取得します。 教員または管理者でなければなりません。
      * 自分のトピックの一覧 (非推奨)
      */
     async apiV2UserUserIdTopicsGetRaw(requestParameters: ApiV2UserUserIdTopicsGetRequest): Promise<runtime.ApiResponse<InlineResponse2003>> {
@@ -1649,7 +1649,7 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * 利用者が作成者に含まれるトピックの一覧を取得します。 教員または管理者でなければなりません。
+     * 利用者が著者に含まれるトピックの一覧を取得します。 教員または管理者でなければなりません。
      * 自分のトピックの一覧 (非推奨)
      */
     async apiV2UserUserIdTopicsGet(requestParameters: ApiV2UserUserIdTopicsGetRequest): Promise<InlineResponse2003> {

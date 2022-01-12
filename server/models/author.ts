@@ -11,7 +11,7 @@ const _roleNames = {
   collaborator: "協力者",
 } as const;
 
-/** 作成者 */
+/** 著者 */
 export const AuthorSchema = {
   type: "object",
   required: [...UserSchema.required, "roleName"],
@@ -24,5 +24,5 @@ export const AuthorSchema = {
   _roleNames,
 } as const;
 
-/** 作成者 */
+/** 著者 */
 export type AuthorSchema = FromSchema<typeof AuthorSchema>;

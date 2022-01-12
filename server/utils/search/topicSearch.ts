@@ -12,7 +12,7 @@ import type { TopicSearchQuery } from "$server/models/searchQuery";
 /**
  * 検索クエリーによるトピック検索
  * @param query 検索クエリー
- * @param filter 作成者フィルター
+ * @param filter 著者フィルター
  * @param sort 並び順
  * @param page ページ番号
  * @param perPage 1ページあたりの表示件数
@@ -44,7 +44,7 @@ async function topicSearch(
       ...(filter.type === "other"
         ? [{ NOT: { authors: { some: { userId: filter.by } } } }]
         : []),
-      // NOTE: text - 検索文字列 (名称 OR 説明 OR 作成者名)
+      // NOTE: text - 検索文字列 (名称 OR 説明 OR 著者名)
       ...text.map((t) => ({
         OR: [
           { name: { contains: t, ...insensitiveMode } },
@@ -66,7 +66,7 @@ async function topicSearch(
       ...description.map((d) => ({
         description: { contains: d, ...insensitiveMode },
       })),
-      // NOTE: author - 作成者名
+      // NOTE: author - 著者名
       ...author.map((a) => ({
         authors: {
           some: {

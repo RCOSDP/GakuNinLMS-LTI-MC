@@ -16,7 +16,7 @@ export const method = {
     summary: "自分のトピックの一覧 (非推奨)",
     deprecated: true,
     description: outdent`
-      利用者が作成者に含まれるトピックの一覧を取得します。
+      利用者が著者に含まれるトピックの一覧を取得します。
       教員または管理者でなければなりません。`,
     querystring: paginationPropsSchema,
     params: userParamsSchema,

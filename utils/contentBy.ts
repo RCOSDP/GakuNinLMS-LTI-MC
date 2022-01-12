@@ -2,10 +2,10 @@ import type { UserSchema } from "$server/models/user";
 import type { ContentAuthors } from "$types/content";
 
 /**
- * コンテンツの作成者の判定
+ * コンテンツの著者の判定
  * @param content ブックかトピック
  * @param by ユーザー
- * @returns コンテンツ作成者にユーザーが含まれる場合: true、それ以外: false
+ * @returns コンテンツ著者にユーザーが含まれる場合: true、それ以外: false
  */
 export function contentBy(
   content: ContentAuthors,
