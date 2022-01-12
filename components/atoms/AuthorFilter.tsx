@@ -37,7 +37,7 @@ function AuthorFilter({
   );
   return (
     <FormControl component="fieldset" sx={sx}>
-      <FormLabel component="legend">著者</FormLabel>
+      <FormLabel component="legend">作成者</FormLabel>
       <RadioGroup value={value} onChange={handleChange}>
         {options.map(({ value, label }) => (
           <FormControlLabel

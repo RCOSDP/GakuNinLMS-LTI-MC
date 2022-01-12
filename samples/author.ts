@@ -3,7 +3,7 @@ import user from "./user";
 
 const author: AuthorSchema = {
   ...user,
-  roleName: "著者",
+  roleName: "作成者",
 };
 
 export default author;

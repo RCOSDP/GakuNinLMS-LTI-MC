@@ -96,7 +96,7 @@ export default function AuthorsInput({
   return (
     <div>
       <InputLabel htmlFor={id} sx={{ mb: 1 }}>
-        著者
+        作成者
       </InputLabel>
       {authors.map((author) => (
         <AuthorItem key={author.id}>

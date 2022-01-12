@@ -6,8 +6,8 @@ import { UserSchema } from "./user";
  * @todo 多言語対応したい
  */
 const _roleNames = {
-  author: "著者",
-  "co-author": "共同著者",
+  author: "作成者",
+  "co-author": "共同作成者",
   collaborator: "協力者",
 } as const;
 
