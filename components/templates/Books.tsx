@@ -9,9 +9,9 @@ import ContentPreview from "$organisms/ContentPreview";
 import LinkInfo from "$organisms/LinkInfo";
 import FilterColumn from "$organisms/FilterColumn";
 import SearchPagination from "$organisms/SearchPagination";
+import Search from "$organisms/Search";
 import Container from "$atoms/Container";
 import SortSelect from "$atoms/SortSelect";
-import SearchTextField from "$atoms/SearchTextField";
 import type { ContentSchema } from "$server/models/content";
 import type { BookSchema } from "$server/models/book";
 import type { LinkedBook } from "$types/linkedBook";
@@ -68,12 +68,14 @@ export default function Books(props: Props) {
       <ActionHeader sx={{ gridArea: "action-header" }}>
         <ContentTypeIndicator type="book" />
         <SortSelect onSortChange={searchProps.onSortChange} />
-        <SearchTextField
+        <Search
           label="ブック・トピック検索"
           value={searchProps.input}
+          target={searchProps.target}
           onSearchInput={searchProps.onSearchInput}
           onSearchInputReset={searchProps.onSearchInputReset}
           onSearchSubmit={searchProps.onSearchSubmit}
+          onSearchTargetChange={searchProps.onSearchTargetChange}
         />
       </ActionHeader>
       <FilterColumn sx={{ gridArea: "side" }} variant="book" />
