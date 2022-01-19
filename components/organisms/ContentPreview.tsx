@@ -86,10 +86,6 @@ const Header = styled(
   },
 }));
 
-const LinkArea = styled("div")({
-  position: "relative",
-});
-
 const Description = styled("p")({
   color: gray[700],
   margin: 0,
@@ -185,8 +181,8 @@ export default function ContentPreview({
           alt="サムネイル"
         />
       </CardActionArea>
-      {linked !== undefined && onContentLinkClick && (
-        <LinkArea>
+      <Box position="relative">
+        {linked !== undefined && onContentLinkClick && (
           <LinkSwitch
             sx={{
               position: "absolute",
@@ -197,8 +193,18 @@ export default function ContentPreview({
             checked={linked}
             onChange={handleContentLinkClick}
           />
-        </LinkArea>
-      )}
+        )}
+        {content.license && (
+          <License
+            sx={{
+              position: "absolute",
+              bottom: 0,
+              right: 0,
+            }}
+            license={content.license}
+          />
+        )}
+      </Box>
       <DescriptionList
         nowrap
         sx={{ mx: 2, my: 1 }}
@@ -208,14 +214,6 @@ export default function ContentPreview({
             value: getLocaleDateString(content.updatedAt, "ja"),
           },
           ...authors(content),
-          ...(content.license
-            ? [
-                {
-                  key: "ライセンス",
-                  value: <License license={content.license} />,
-                },
-              ]
-            : []),
           ...(content.type === "book" && content.ltiResourceLinks.length > 0
             ? [
                 {
