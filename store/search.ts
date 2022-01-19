@@ -1,8 +1,8 @@
 import { useCallback, useEffect } from "react";
 import { atom, useAtom } from "jotai";
 import { RESET, atomWithReset } from "jotai/utils";
-import clsx from "clsx";
 import yn from "yn";
+import { parse } from "search-query-parser";
 import stringify from "$utils/search/stringify";
 import type { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
 import type { KeywordSchema } from "$server/models/keyword";
@@ -38,14 +38,15 @@ const inputAtom = atom<string>("");
 
 const targetAtom = atom<SearchTarget>("all");
 
-const getInputWithTarget = (input: string, target: SearchTarget) => {
+const getInputQuery = (input: string, target: SearchTarget) => {
+  const query = parse(input, { alwaysArray: true, tokenize: true });
   switch (target) {
     case "all":
-      return input;
+      return query;
     case "keyword":
-      return `partial-keyword:"${input}"`;
+      return { "partial-keyword": query.text };
     default:
-      return `${target}:"${input}"`;
+      return { [target]: query.text };
   }
 };
 
@@ -58,7 +59,7 @@ export function useSearchAtom() {
     () =>
       updateQuery((query) => ({
         ...query,
-        q: clsx(getInputWithTarget(input, target), stringify(searchQuery)),
+        q: stringify({ ...searchQuery, ...getInputQuery(input, target) }),
         page: 0,
       })),
     [updateQuery, input, target, searchQuery]
@@ -90,7 +91,7 @@ export function useSearchAtom() {
     (input) =>
       updateQuery((query) => ({
         ...query,
-        q: clsx(getInputWithTarget(input, target), stringify(searchQuery)),
+        q: stringify({ ...searchQuery, ...getInputQuery(input, target) }),
         page: 0,
       })),
     [updateQuery, target, searchQuery]
