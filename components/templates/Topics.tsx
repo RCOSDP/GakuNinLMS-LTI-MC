@@ -15,9 +15,9 @@ import ContentPreview from "$organisms/ContentPreview";
 import FilterColumn from "$organisms/FilterColumn";
 import TopicPreviewDialog from "$organisms/TopicPreviewDialog";
 import SearchPagination from "$organisms/SearchPagination";
+import Search from "$organisms/Search";
 import Container from "$atoms/Container";
 import SortSelect from "$atoms/SortSelect";
-import SearchTextField from "$atoms/SearchTextField";
 import type { ContentSchema } from "$server/models/content";
 import type { TopicSchema } from "$server/models/topic";
 import { grey } from "@mui/material/colors";
@@ -134,12 +134,14 @@ export default function Topics(props: Props) {
           />
         </Badge>
         <SortSelect onSortChange={searchProps.onSortChange} />
-        <SearchTextField
+        <Search
           label="トピック検索"
           value={searchProps.input}
+          target={searchProps.target}
           onSearchInput={searchProps.onSearchInput}
           onSearchInputReset={searchProps.onSearchInputReset}
           onSearchSubmit={searchProps.onSearchSubmit}
+          onSearchTargetChange={searchProps.onSearchTargetChange}
         />
       </ActionHeader>
       <FilterColumn sx={{ gridArea: "side" }} variant="topic" />

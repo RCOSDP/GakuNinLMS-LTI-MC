@@ -13,9 +13,9 @@ import ActionFooter from "$organisms/ActionFooter";
 import FilterColumn from "$organisms/FilterColumn";
 import BookTree from "$organisms/BookTree";
 import SearchPagination from "$organisms/SearchPagination";
+import Search from "$organisms/Search";
 import Container from "$atoms/Container";
 import SortSelect from "$atoms/SortSelect";
-import SearchTextField from "$atoms/SearchTextField";
 import type { ContentSchema } from "$server/models/content";
 import type { BookSchema } from "$server/models/book";
 import type { SectionSchema } from "$server/models/book/section";
@@ -114,12 +114,14 @@ export default function BookImport(props: Props) {
       </Typography>
       <ActionHeader sx={{ gridArea: "action-header" }}>
         <SortSelect onSortChange={searchProps.onSortChange} />
-        <SearchTextField
+        <Search
           label="ブック・トピック検索"
           value={searchProps.input}
+          target={searchProps.target}
           onSearchInput={searchProps.onSearchInput}
           onSearchInputReset={searchProps.onSearchInputReset}
           onSearchSubmit={searchProps.onSearchSubmit}
+          onSearchTargetChange={searchProps.onSearchTargetChange}
         />
       </ActionHeader>
       <FilterColumn sx={{ gridArea: "side" }} variant="book" />

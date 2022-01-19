@@ -10,6 +10,7 @@ import type { SortOrder } from "$server/models/sortOrder";
 import type { AuthorFilterType } from "$server/models/authorFilter";
 import type { SearchQueryBase } from "$server/models/searchQuery";
 import type { SharedFilterType } from "$types/sharedFilter";
+import type { SearchTarget } from "$types/searchTarget";
 
 const queryAtom = atom<{
   type: "none" | "book" | "topic";
@@ -35,18 +36,32 @@ const searchQueryAtom = atomWithReset<
 
 const inputAtom = atom<string>("");
 
+const targetAtom = atom<SearchTarget>("all");
+
+const getInputWithTarget = (input: string, target: SearchTarget) => {
+  switch (target) {
+    case "all":
+      return input;
+    case "keyword":
+      return `partial-keyword:"${input}"`;
+    default:
+      return `${target}:"${input}"`;
+  }
+};
+
 export function useSearchAtom() {
   const [query, updateQuery] = useAtom(queryAtom);
   const [searchQuery, updateSearchQuery] = useAtom(searchQueryAtom);
   const [input, updateInput] = useAtom(inputAtom);
+  const [target, updateTarget] = useAtom(targetAtom);
   useEffect(
     () =>
       updateQuery((query) => ({
         ...query,
-        q: clsx(input, stringify(searchQuery)),
+        q: clsx(getInputWithTarget(input, target), stringify(searchQuery)),
         page: 0,
       })),
-    [updateQuery, input, searchQuery]
+    [updateQuery, input, target, searchQuery]
   );
   const setType: (type: "book" | "topic") => void = useCallback(
     (type) => {
@@ -75,10 +90,10 @@ export function useSearchAtom() {
     (input) =>
       updateQuery((query) => ({
         ...query,
-        q: clsx(input, stringify(searchQuery)),
+        q: clsx(getInputWithTarget(input, target), stringify(searchQuery)),
         page: 0,
       })),
-    [updateQuery, searchQuery]
+    [updateQuery, target, searchQuery]
   );
   const onSearchInputReset: () => void = useCallback(() => {
     updateQuery((query) => ({
@@ -88,6 +103,10 @@ export function useSearchAtom() {
     }));
     updateInput("");
   }, [updateQuery, searchQuery, updateInput]);
+  const onSearchTargetChange: (target: SearchTarget) => void = useCallback(
+    (target) => updateTarget(target),
+    [updateTarget]
+  );
   const onAuthorFilterChange: (filter: AuthorFilterType) => void = useCallback(
     (filter) => {
       updateQuery((query) => ({ ...query, filter, page: 0 }));
@@ -179,11 +198,13 @@ export function useSearchAtom() {
     query,
     searchQuery,
     input,
+    target,
     setType,
     setPage,
     onSearchInput,
     onSearchInputReset,
     onSearchSubmit,
+    onSearchTargetChange,
     onAuthorFilterChange,
     onSharedFilterChange,
     onLicenseFilterChange,
