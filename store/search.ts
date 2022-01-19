@@ -9,6 +9,7 @@ import type { KeywordSchema } from "$server/models/keyword";
 import type { SortOrder } from "$server/models/sortOrder";
 import type { AuthorFilterType } from "$server/models/authorFilter";
 import type { SearchQueryBase } from "$server/models/searchQuery";
+import type { SharedFilterType } from "$types/sharedFilter";
 
 const queryAtom = atom<{
   type: "none" | "book" | "topic";
@@ -100,17 +101,16 @@ export function useSearchAtom() {
     },
     [updateQuery, updateSearchQuery]
   );
-  const onSharedFilterChange: (filter: "true" | "false" | "all") => void =
-    useCallback(
-      (filter) => {
-        const value = yn(filter);
-        updateSearchQuery((searchQuery) => ({
-          ...searchQuery,
-          shared: typeof value === "boolean" ? [value] : [],
-        }));
-      },
-      [updateSearchQuery]
-    );
+  const onSharedFilterChange: (filter: SharedFilterType) => void = useCallback(
+    (filter) => {
+      const value = yn(filter);
+      updateSearchQuery((searchQuery) => ({
+        ...searchQuery,
+        shared: typeof value === "boolean" ? [value] : [],
+      }));
+    },
+    [updateSearchQuery]
+  );
   const onLicenseFilterChange: (filter: string) => void = useCallback(
     (filter) => {
       const values = {
