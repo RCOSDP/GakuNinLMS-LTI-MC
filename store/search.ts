@@ -132,8 +132,8 @@ export function useSearchAtom() {
     (link) => {
       if (
         searchQuery.link?.find(
-          ({ id, consumerId }) =>
-            id === link.id && consumerId === link.consumerId
+          ({ contextId, consumerId }) =>
+            contextId === link.contextId && consumerId === link.consumerId
         )
       )
         return;
