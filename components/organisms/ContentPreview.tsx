@@ -10,6 +10,7 @@ import CardMedia from "@mui/material/CardMedia";
 import Checkbox from "@mui/material/Checkbox";
 import Chip from "@mui/material/Chip";
 import { styled } from "@mui/material/styles";
+import { grey } from "@mui/material/colors";
 import EditButton from "$atoms/EditButton";
 import DescriptionList from "$atoms/DescriptionList";
 import License from "$atoms/License";
@@ -19,7 +20,7 @@ import LinkSwitch from "$atoms/LinkSwitch";
 import type { ContentSchema } from "$server/models/content";
 import type { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
 import type { KeywordSchema } from "$server/models/keyword";
-import { primary, gray } from "$theme/colors";
+import { primary } from "$theme/colors";
 import useLineClampStyles from "$styles/lineClamp";
 import { getSectionsOutline } from "$utils/outline";
 import getLocaleDateString from "$utils/getLocaleDateString";
@@ -87,12 +88,12 @@ const Header = styled(
 }));
 
 const Description = styled("p")({
-  color: gray[700],
+  color: grey[700],
   margin: 0,
 });
 
 const Preview = styled(Card)(({ theme }) => ({
-  border: `1px solid ${gray[400]}`,
+  border: `1px solid ${grey[300]}`,
   borderRadius: 12,
   boxShadow: "none",
   ".shared": {
