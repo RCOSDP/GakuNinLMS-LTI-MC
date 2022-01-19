@@ -199,6 +199,8 @@ export default function ContentPreview({
           <License
             sx={{
               position: "absolute",
+              px: 2,
+              py: 1,
               bottom: 0,
               right: 0,
             }}
