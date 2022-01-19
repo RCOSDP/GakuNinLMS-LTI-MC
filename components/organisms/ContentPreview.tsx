@@ -12,6 +12,7 @@ import Chip from "@mui/material/Chip";
 import { styled } from "@mui/material/styles";
 import EditButton from "$atoms/EditButton";
 import DescriptionList from "$atoms/DescriptionList";
+import License from "$atoms/License";
 import SharedIndicator from "$atoms/SharedIndicator";
 import CourseChip from "$atoms/CourseChip";
 import LinkSwitch from "$atoms/LinkSwitch";
@@ -207,6 +208,14 @@ export default function ContentPreview({
             value: getLocaleDateString(content.updatedAt, "ja"),
           },
           ...authors(content),
+          ...(content.license
+            ? [
+                {
+                  key: "ライセンス",
+                  value: <License license={content.license} />,
+                },
+              ]
+            : []),
           ...(content.type === "book" && content.ltiResourceLinks.length > 0
             ? [
                 {
