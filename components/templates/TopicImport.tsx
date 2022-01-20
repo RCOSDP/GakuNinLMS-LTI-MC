@@ -10,9 +10,9 @@ import FilterColumn from "$organisms/FilterColumn";
 import ContentPreview from "$organisms/ContentPreview";
 import TopicPreviewDialog from "$organisms/TopicPreviewDialog";
 import SearchPagination from "$organisms/SearchPagination";
+import Search from "$organisms/Search";
 import Container from "$atoms/Container";
 import SortSelect from "$atoms/SortSelect";
-import SearchTextField from "$atoms/SearchTextField";
 import type { ContentSchema } from "$server/models/content";
 import type { TopicSchema } from "$server/models/topic";
 import useDialogProps from "$utils/useDialogProps";
@@ -67,12 +67,14 @@ export default function TopicImport(props: Props) {
       </Typography>
       <ActionHeader sx={{ gridArea: "action-header" }}>
         <SortSelect onSortChange={searchProps.onSortChange} />
-        <SearchTextField
+        <Search
           label="トピック検索"
           value={searchProps.input}
+          target={searchProps.target}
           onSearchInput={searchProps.onSearchInput}
           onSearchInputReset={searchProps.onSearchInputReset}
           onSearchSubmit={searchProps.onSearchSubmit}
+          onSearchTargetChange={searchProps.onSearchTargetChange}
         />
       </ActionHeader>
       <FilterColumn sx={{ gridArea: "side" }} variant="topic" />
