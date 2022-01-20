@@ -10,15 +10,17 @@ import CardMedia from "@mui/material/CardMedia";
 import Checkbox from "@mui/material/Checkbox";
 import Chip from "@mui/material/Chip";
 import { styled } from "@mui/material/styles";
+import { grey } from "@mui/material/colors";
 import EditButton from "$atoms/EditButton";
 import DescriptionList from "$atoms/DescriptionList";
+import License from "$atoms/License";
 import SharedIndicator from "$atoms/SharedIndicator";
 import CourseChip from "$atoms/CourseChip";
 import LinkSwitch from "$atoms/LinkSwitch";
 import type { ContentSchema } from "$server/models/content";
 import type { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
 import type { KeywordSchema } from "$server/models/keyword";
-import { primary, gray } from "$theme/colors";
+import { primary } from "$theme/colors";
 import useLineClampStyles from "$styles/lineClamp";
 import { getSectionsOutline } from "$utils/outline";
 import getLocaleDateString from "$utils/getLocaleDateString";
@@ -85,17 +87,13 @@ const Header = styled(
   },
 }));
 
-const LinkArea = styled("div")({
-  position: "relative",
-});
-
 const Description = styled("p")({
-  color: gray[700],
+  color: grey[700],
   margin: 0,
 });
 
 const Preview = styled(Card)(({ theme }) => ({
-  border: `1px solid ${gray[400]}`,
+  border: `1px solid ${grey[300]}`,
   borderRadius: 12,
   boxShadow: "none",
   ".shared": {
@@ -184,8 +182,8 @@ export default function ContentPreview({
           alt="サムネイル"
         />
       </CardActionArea>
-      {linked !== undefined && onContentLinkClick && (
-        <LinkArea>
+      <Box position="relative">
+        {linked !== undefined && onContentLinkClick && (
           <LinkSwitch
             sx={{
               position: "absolute",
@@ -196,8 +194,20 @@ export default function ContentPreview({
             checked={linked}
             onChange={handleContentLinkClick}
           />
-        </LinkArea>
-      )}
+        )}
+        {content.license && (
+          <License
+            sx={{
+              position: "absolute",
+              px: 2,
+              py: 1,
+              bottom: 0,
+              right: 0,
+            }}
+            license={content.license}
+          />
+        )}
+      </Box>
       <DescriptionList
         nowrap
         sx={{ mx: 2, my: 1 }}
