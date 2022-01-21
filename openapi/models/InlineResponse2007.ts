@@ -14,22 +14,10 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    InlineResponse2003Learner,
-    InlineResponse2003LearnerFromJSON,
-    InlineResponse2003LearnerFromJSONTyped,
-    InlineResponse2003LearnerToJSON,
-    InlineResponse2007BookActivities,
-    InlineResponse2007BookActivitiesFromJSON,
-    InlineResponse2007BookActivitiesFromJSONTyped,
-    InlineResponse2007BookActivitiesToJSON,
-    InlineResponse2007CourseBooks,
-    InlineResponse2007CourseBooksFromJSON,
-    InlineResponse2007CourseBooksFromJSONTyped,
-    InlineResponse2007CourseBooksToJSON,
-    InlineResponse2001Resource,
-    InlineResponse2001ResourceFromJSON,
-    InlineResponse2001ResourceFromJSONTyped,
-    InlineResponse2001ResourceToJSON,
+    InlineResponse2001Topics,
+    InlineResponse2001TopicsFromJSON,
+    InlineResponse2001TopicsFromJSONTyped,
+    InlineResponse2001TopicsToJSON,
 } from './';
 
 /**
@@ -40,28 +28,10 @@ import {
 export interface InlineResponse2007 {
     /**
      * 
-     * @type {Array<InlineResponse2003Learner>}
+     * @type {Array<InlineResponse2001Topics>}
      * @memberof InlineResponse2007
      */
-    learners: Array<InlineResponse2003Learner>;
-    /**
-     * 
-     * @type {Array<InlineResponse2007CourseBooks>}
-     * @memberof InlineResponse2007
-     */
-    courseBooks: Array<InlineResponse2007CourseBooks>;
-    /**
-     * 
-     * @type {Array<InlineResponse2007BookActivities>}
-     * @memberof InlineResponse2007
-     */
-    bookActivities: Array<InlineResponse2007BookActivities>;
-    /**
-     * 
-     * @type {Array<InlineResponse2001Resource>}
-     * @memberof InlineResponse2007
-     */
-    resources?: Array<InlineResponse2001Resource>;
+    topics?: Array<InlineResponse2001Topics>;
     /**
      * 
      * @type {number}
@@ -86,10 +56,7 @@ export function InlineResponse2007FromJSONTyped(json: any, ignoreDiscriminator: 
     }
     return {
         
-        'learners': ((json['learners'] as Array<any>).map(InlineResponse2003LearnerFromJSON)),
-        'courseBooks': ((json['courseBooks'] as Array<any>).map(InlineResponse2007CourseBooksFromJSON)),
-        'bookActivities': ((json['bookActivities'] as Array<any>).map(InlineResponse2007BookActivitiesFromJSON)),
-        'resources': !exists(json, 'resources') ? undefined : ((json['resources'] as Array<any>).map(InlineResponse2001ResourceFromJSON)),
+        'topics': !exists(json, 'topics') ? undefined : ((json['topics'] as Array<any>).map(InlineResponse2001TopicsFromJSON)),
         'page': !exists(json, 'page') ? undefined : json['page'],
         'perPage': !exists(json, 'perPage') ? undefined : json['perPage'],
     };
@@ -104,10 +71,7 @@ export function InlineResponse2007ToJSON(value?: InlineResponse2007 | null): any
     }
     return {
         
-        'learners': ((value.learners as Array<any>).map(InlineResponse2003LearnerToJSON)),
-        'courseBooks': ((value.courseBooks as Array<any>).map(InlineResponse2007CourseBooksToJSON)),
-        'bookActivities': ((value.bookActivities as Array<any>).map(InlineResponse2007BookActivitiesToJSON)),
-        'resources': value.resources === undefined ? undefined : ((value.resources as Array<any>).map(InlineResponse2001ResourceToJSON)),
+        'topics': value.topics === undefined ? undefined : ((value.topics as Array<any>).map(InlineResponse2001TopicsToJSON)),
         'page': value.page,
         'perPage': value.perPage,
     };
