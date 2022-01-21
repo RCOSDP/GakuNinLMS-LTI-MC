@@ -1,4 +1,4 @@
-import { ResourceSchema } from "$server/models/resource";
+import type { ResourceSchema } from "$server/models/resource";
 import prisma from "$server/utils/prisma";
 import makeSortOrderQuery from "$server/utils/makeSortOrderQuery";
 import { resourceWithVideoArg, resourceToResourceSchema } from "./toSchema";

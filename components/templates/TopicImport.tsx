@@ -1,66 +1,43 @@
-import { FormEvent, useState } from "react";
-import useInfiniteScroll from "react-infinite-scroll-hook";
+import type { FormEvent } from "react";
+import { useState } from "react";
 import Skeleton from "@mui/material/Skeleton";
-import makeStyles from "@mui/styles/makeStyles";
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
 import ActionHeader from "$organisms/ActionHeader";
 import ActionFooter from "$organisms/ActionFooter";
-import TopicPreview from "$organisms/TopicPreview";
+import FilterColumn from "$organisms/FilterColumn";
+import ContentPreview from "$organisms/ContentPreview";
 import TopicPreviewDialog from "$organisms/TopicPreviewDialog";
+import SearchPagination from "$organisms/SearchPagination";
+import Container from "$atoms/Container";
 import SortSelect from "$atoms/SortSelect";
-import CreatorFilter from "$atoms/CreatorFilter";
 import SearchTextField from "$atoms/SearchTextField";
-import { TopicSchema } from "$server/models/topic";
-import { SortOrder } from "$server/models/sortOrder";
-import { Filter } from "$types/filter";
-import useContainerStyles from "$styles/container";
+import type { ContentSchema } from "$server/models/content";
+import type { TopicSchema } from "$server/models/topic";
 import useDialogProps from "$utils/useDialogProps";
 import { useSearchAtom } from "$store/search";
 
-const useStyles = makeStyles((theme) => ({
-  topics: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fill, 296px)",
-    gap: theme.spacing(2),
-  },
-  form: {
-    "& > *": {
-      marginRight: theme.spacing(1),
-    },
-  },
-}));
-
 type Props = {
-  topics: TopicSchema[];
+  totalCount: number;
+  contents: ContentSchema[];
   loading?: boolean;
-  hasNextPage?: boolean;
   onLoadMore?(): void;
   onSubmit(topics: TopicSchema[]): void;
   onCancel(): void;
-  onTopicEditClick(topic: TopicSchema): void;
-  onSortChange?(sort: SortOrder): void;
-  onFilterChange?(filter: Filter): void;
-  isTopicEditable(topic: TopicSchema): boolean | undefined;
+  onContentEditClick(content: ContentSchema): void;
 };
 
 export default function TopicImport(props: Props) {
   const {
-    topics,
+    totalCount,
+    contents,
     loading = false,
-    hasNextPage = false,
-    onLoadMore = () => undefined,
     onSubmit,
     onCancel,
-    onTopicEditClick,
-    onSortChange,
-    onFilterChange,
-    isTopicEditable,
+    onContentEditClick,
   } = props;
-  const { query, onSearchInput, onSearchInputReset } = useSearchAtom();
-  const classes = useStyles();
-  const containerClasses = useContainerStyles();
+  const searchProps = useSearchAtom();
   const [selectedIndexes, select] = useState<Set<number>>(new Set());
   const handleChecked = (index: number) => () =>
     select((indexes) =>
@@ -68,68 +45,64 @@ export default function TopicImport(props: Props) {
     );
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    onSubmit([...selectedIndexes].map((i) => topics[i]));
+    onSubmit(
+      [...selectedIndexes].flatMap((i) => {
+        const content = contents[i];
+        return content.type === "topic" ? [content] : [];
+      })
+    );
   };
   const {
-    data: previewTopic,
-    dispatch: setPreviewTopic,
+    data: previewContent,
+    dispatch: handlePreviewClick,
     ...dialogProps
-  } = useDialogProps<TopicSchema>();
-  const handleTopicPreviewClick = (topic: TopicSchema) =>
-    setPreviewTopic(topic);
-  const handleTopicEditClick = (topic: TopicSchema) =>
-    isTopicEditable(topic) && (() => onTopicEditClick(topic));
-  const [infiniteRef] = useInfiniteScroll({ loading, hasNextPage, onLoadMore });
+  } = useDialogProps<ContentSchema>();
   return (
-    <Container ref={infiniteRef} classes={containerClasses} maxWidth="lg">
-      <ActionHeader
-        title={
-          <>
-            トピックの再利用
-            <Typography variant="body1">
-              再利用するトピックを選んで下さい
-            </Typography>
-          </>
-        }
-        action={
-          <>
-            <SortSelect onSortChange={onSortChange} />
-            <CreatorFilter onFilterChange={onFilterChange} />
-            <SearchTextField
-              label="トピック検索"
-              value={query.input}
-              onSearchInput={onSearchInput}
-              onSearchInputReset={onSearchInputReset}
-            />
-          </>
-        }
-      />
-      <div className={classes.topics}>
-        {topics.map((topic, index) => (
-          <TopicPreview
+    <Container twoColumns maxWidth="xl">
+      <Typography sx={{ mt: 5, gridArea: "title" }} variant="h4">
+        トピックの再利用
+      </Typography>
+      <Typography sx={{ mt: 1, gridArea: "description" }} variant="body1">
+        再利用するトピックを選んで下さい
+      </Typography>
+      <ActionHeader sx={{ gridArea: "action-header" }}>
+        <SortSelect onSortChange={searchProps.onSortChange} />
+        <SearchTextField
+          label="トピック検索"
+          value={searchProps.input}
+          onSearchInput={searchProps.onSearchInput}
+          onSearchInputReset={searchProps.onSearchInputReset}
+          onSearchSubmit={searchProps.onSearchSubmit}
+        />
+      </ActionHeader>
+      <FilterColumn sx={{ gridArea: "side" }} variant="topic" />
+      <Box
+        display="grid"
+        gridTemplateColumns="repeat(auto-fill, 296px)"
+        gap={2}
+        gridArea="items"
+      >
+        {contents.map((content, index) => (
+          <ContentPreview
             key={index}
-            topic={topic}
+            content={content}
             checked={selectedIndexes.has(index)}
             onChange={handleChecked(index)}
-            onTopicPreviewClick={handleTopicPreviewClick}
-            onTopicEditClick={handleTopicEditClick(topic)}
+            onContentPreviewClick={handlePreviewClick}
+            onContentEditClick={onContentEditClick}
+            onKeywordClick={searchProps.onKeywordClick}
           />
         ))}
         {loading &&
           [...Array(6)].map((_, i) => (
-            <Skeleton key={i} height={324 /* NOTE: 適当 */} />
+            <Skeleton key={i} height={324 /* TODO: 妥当な値にしてほしい */} />
           ))}
-      </div>
+      </Box>
       <ActionFooter maxWidth="lg">
-        <form className={classes.form} onSubmit={handleSubmit}>
-          <Button
-            color="primary"
-            size="small"
-            variant="text"
-            onClick={onCancel}
-          >
-            キャンセル
-          </Button>
+        <Button color="primary" size="small" variant="text" onClick={onCancel}>
+          キャンセル
+        </Button>
+        <form onSubmit={handleSubmit}>
           <Button
             color="primary"
             size="large"
@@ -140,8 +113,12 @@ export default function TopicImport(props: Props) {
           </Button>
         </form>
       </ActionFooter>
-      {previewTopic && (
-        <TopicPreviewDialog {...dialogProps} topic={previewTopic} />
+      <SearchPagination
+        sx={{ mt: 4, gridArea: "search-pagination" }}
+        totalCount={totalCount}
+      />
+      {previewContent?.type === "topic" && (
+        <TopicPreviewDialog {...dialogProps} topic={previewContent} />
       )}
     </Container>
   );

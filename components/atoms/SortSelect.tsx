@@ -1,8 +1,7 @@
 import { useCallback } from "react";
 import MenuItem from "@mui/material/MenuItem";
-import MuiSelect from "@mui/material/Select";
 import type { SelectChangeEvent } from "@mui/material/Select";
-import useSelectStyles from "styles/select";
+import Select from "$atoms/Select";
 import type { SortOrder } from "$server/models/sortOrder";
 
 const options: ReadonlyArray<{
@@ -35,13 +34,12 @@ const options: ReadonlyArray<{
   },
 ];
 
-type Props = Parameters<typeof MuiSelect>[0] & {
+type Props = Parameters<typeof Select>[0] & {
   onSortChange?(value: SortOrder): void;
 };
 
 export default function SortSelect(props: Props) {
   const { onSortChange, ...other } = props;
-  const selectClasses = useSelectStyles();
   const handleChange = useCallback(
     (event: SelectChangeEvent<unknown>) => {
       onSortChange?.(event.target.value as SortOrder);
@@ -49,8 +47,7 @@ export default function SortSelect(props: Props) {
     [onSortChange]
   );
   return (
-    <MuiSelect
-      classes={selectClasses}
+    <Select
       defaultValue={options[0].value}
       disabled={!onSortChange}
       onChange={handleChange}
@@ -61,6 +58,6 @@ export default function SortSelect(props: Props) {
           {option.label}
         </MenuItem>
       ))}
-    </MuiSelect>
+    </Select>
   );
 }

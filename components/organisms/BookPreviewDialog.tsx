@@ -1,3 +1,4 @@
+import type { ComponentProps } from "react";
 import { useEffect, forwardRef } from "react";
 import Dialog from "@mui/material/Dialog";
 import CloseIcon from "@mui/icons-material/Close";
@@ -12,7 +13,7 @@ import type { BookSchema } from "$server/models/book";
 import { gray } from "$theme/colors";
 
 const Transition = forwardRef(function Transition(
-  props: TransitionProps & React.ComponentProps<typeof Slide>,
+  props: TransitionProps & { children?: React.ReactElement },
   ref: React.Ref<unknown>
 ) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -39,7 +40,7 @@ type Props = {
   onClose: React.MouseEventHandler;
   children(
     props: Pick<
-      React.ComponentProps<typeof Book>,
+      ComponentProps<typeof Book>,
       | "book"
       | "index"
       | "linked"

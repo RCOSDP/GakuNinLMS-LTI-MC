@@ -1,4 +1,5 @@
-import { useState, forwardRef, ComponentProps, Ref, Fragment } from "react";
+import type { ComponentProps, Ref } from "react";
+import { useState, forwardRef } from "react";
 import MuiAppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Button from "@mui/material/Button";
@@ -13,8 +14,8 @@ import clsx from "clsx";
 import AppBarNavButton from "$atoms/AppBarNavButton";
 import LtiItemDialog from "$organisms/LtiItemDialog";
 import useAppBarStyles from "$styles/appBar";
-import { SessionSchema } from "$server/models/session";
-import type { UserSettingsProp } from "$server/validators/userSettings";
+import type { SessionSchema } from "$server/models/session";
+import type { UserSettingsProps } from "$server/models/userSettings";
 import { gray } from "$theme/colors";
 import { isAdministrator, isInstructor } from "$utils/session";
 import { updateUserSettings } from "$utils/userSettings";
@@ -103,13 +104,13 @@ function AppBar(props: Props, ref: Ref<HTMLDivElement>) {
     await updateUserSettings({ zoomImportEnabled: false });
     setShowZoomImportNotice(false);
   };
-  const userSettings = session?.user?.settings as UserSettingsProp;
+  const userSettings = session?.user?.settings as UserSettingsProps;
   const [showZoomImportNotice, setShowZoomImportNotice] = useState(
     session?.systemSettings?.zoomImportEnabled &&
       userSettings?.zoomImportEnabled == undefined
   );
   const actionZoomImportNotice = (
-    <Fragment>
+    <>
       <Button
         variant="contained"
         size="small"
@@ -121,7 +122,7 @@ function AppBar(props: Props, ref: Ref<HTMLDivElement>) {
       <Button size="small" color="primary" onClick={handleDisableZoomImport}>
         後で
       </Button>
-    </Fragment>
+    </>
   );
 
   return (

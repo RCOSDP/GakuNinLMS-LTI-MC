@@ -1,4 +1,4 @@
-import { VideoResource } from "$server/models/videoResource";
+import type { VideoResource } from "$server/models/videoResource";
 import { providerMatch } from "$server/utils/videoResource";
 
 function isValidVideoResource(

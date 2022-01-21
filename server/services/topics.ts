@@ -1,19 +1,17 @@
-import Method from "$server/types/method";
 import { outdent } from "outdent";
 import { topicSchema } from "$server/models/topic";
-import {
-  PaginationProps,
-  paginationPropsSchema,
-} from "$server/validators/paginationProps";
+import type { PaginationProps } from "$server/validators/paginationProps";
+import { paginationPropsSchema } from "$server/validators/paginationProps";
 import authUser from "$server/auth/authUser";
 import authInstructor from "$server/auth/authInstructor";
 import findTopics from "$server/utils/topic/findTopics";
 
 export type Query = PaginationProps;
 
-export const method: Method = {
+export const method = {
   get: {
-    summary: "トピック一覧",
+    summary: "トピック一覧 (非推奨)",
+    deprecated: true,
     description: outdent`
       トピックの一覧を取得します。
       教員または管理者でなければなりません。`,
@@ -33,7 +31,7 @@ export const method: Method = {
       },
     },
   },
-};
+} as const;
 
 export const hooks = {
   get: { auth: [authUser, authInstructor] },

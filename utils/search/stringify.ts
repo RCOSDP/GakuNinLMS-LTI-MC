@@ -1,17 +1,24 @@
-import { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
+import { stringify as stringifyBase } from "$server/utils/search/parser";
+import type { SearchQueryBase } from "$server/models/searchQuery";
 
 /**
- * LTI Contextを検索クエリー文字列に変換
- * @param link LTI Context
+ * 検索クエリーを検索クエリー文字列に変換
+ * @param query 検索クエリー
  * @return 検索クエリー文字列
  */
-function stringify(
-  link: Pick<LtiResourceLinkSchema, "consumerId" | "contextId">
-): string {
-  const [consumerId, contextId] = [link.consumerId, link.contextId].map(
-    encodeURIComponent
-  );
-  return `link:${consumerId}:${contextId}`;
+function stringify(query: Partial<SearchQueryBase>): string {
+  return stringifyBase({
+    text: [],
+    name: [],
+    description: [],
+    author: [],
+    partialKeyword: [],
+    keyword: [],
+    license: [],
+    shared: [],
+    link: [],
+    ...query,
+  });
 }
 
 export default stringify;

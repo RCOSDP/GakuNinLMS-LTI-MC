@@ -1,17 +1,18 @@
-import { FastifyRequest } from "fastify";
+import type { FastifyRequest } from "fastify";
 import { FRONTEND_ORIGIN, FRONTEND_PATH } from "$server/utils/env";
 import { upsertUser } from "$server/utils/user";
 import {
   findLtiResourceLink,
   upsertLtiResourceLink,
 } from "$server/utils/ltiResourceLink";
-import { upsertLtiMember } from "$server/utils/ltiMember";
-import { isInstructor } from "$utils/session";
+import { isInstructor } from "$server/utils/session";
+import { getSystemSettings } from "$server/utils/systemSettings";
 
 const frontendUrl = `${FRONTEND_ORIGIN}${FRONTEND_PATH}`;
 
 /** 起動時の初期化プロセス */
 async function init({ session }: FastifyRequest) {
+  const systemSettings = getSystemSettings();
   const ltiResourceLink = await findLtiResourceLink({
     consumerId: session.oauthClient.id,
     id: session.ltiResourceLinkRequest.id,
@@ -36,15 +37,7 @@ async function init({ session }: FastifyRequest) {
         : "",
   });
 
-  if (ltiResourceLink && !isInstructor(session)) {
-    await upsertLtiMember(
-      ltiResourceLink.consumerId,
-      ltiResourceLink.contextId,
-      user.ltiUserId
-    );
-  }
-
-  Object.assign(session, { ltiResourceLink, user });
+  Object.assign(session, { ltiResourceLink, user, systemSettings });
 
   return {
     status: 302,

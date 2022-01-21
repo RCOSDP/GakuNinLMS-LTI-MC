@@ -1,4 +1,5 @@
 import { useRouter } from "next/router";
+import type { ContentSchema } from "$server/models/content";
 import type { BookSchema } from "$server/models/book";
 import { useSessionAtom } from "$store/session";
 import BooksTemplate from "$templates/Books";
@@ -10,6 +11,8 @@ import { pagesPath } from "$utils/$path";
 import { updateLtiResourceLink } from "$utils/ltiResourceLink";
 import getLtiResourceLink from "$utils/getLtiResourceLink";
 import useDialogProps from "$utils/useDialogProps";
+import { useSearchAtom } from "$store/search";
+import { revalidateContents } from "utils/useContents";
 
 const Books = (
   props: Omit<
@@ -20,17 +23,16 @@ const Books = (
 
 function Index() {
   const router = useRouter();
-  const { session, isBookEditable } = useSessionAtom();
+  const { session, isContentEditable } = useSessionAtom();
   const { linkedBook } = useLinkedBook();
   const {
-    data: dialog,
-    open,
-    onClose,
-    dispatch,
-  } = useDialogProps<BookSchema>();
-  const handleBookPreviewClick = (book: BookSchema) => dispatch(book);
-  const handleBookEditClick = (book: Pick<BookSchema, "id" | "author">) => {
-    const action = isBookEditable(book) ? "edit" : "generate";
+    data: previewContent,
+    dispatch: onContentPreviewClick,
+    ...dialogProps
+  } = useDialogProps<ContentSchema>();
+  const { query } = useSearchAtom();
+  const onContentEditClick = (book: Pick<ContentSchema, "id" | "authors">) => {
+    const action = isContentEditable(book) ? "edit" : "generate";
     return router.push(
       pagesPath.book[action].$url({
         query: { context: "books", bookId: book.id },
@@ -47,28 +49,29 @@ function Index() {
       pagesPath.books.import.$url({ query: { context: "books" } })
     );
   };
-  const handleBookLinkClick = async (book: Pick<BookSchema, "id">) => {
+  const onContentLinkClick = async (book: Pick<ContentSchema, "id">) => {
     const ltiResourceLink = getLtiResourceLink(session);
     if (ltiResourceLink == null) return;
     const bookId = book.id;
     await updateLtiResourceLink({ ...ltiResourceLink, bookId });
+    await revalidateContents(query);
   };
   const handleLinkedBookClick = (book: Pick<BookSchema, "id">) =>
     router.push(pagesPath.book.$url({ query: { bookId: book.id } }));
   const handlers = {
-    onBookPreviewClick: handleBookPreviewClick,
-    onBookEditClick: handleBookEditClick,
+    onContentPreviewClick,
+    onContentEditClick,
     onBookNewClick: handleBookNewClick,
     onBooksImportClick: handleBooksImportClick,
-    onBookLinkClick: handleBookLinkClick,
+    onContentLinkClick,
     onLinkedBookClick: handleLinkedBookClick,
   };
 
   return (
     <>
       <Books linkedBook={linkedBook} {...handlers} />
-      {dialog && (
-        <BookPreviewDialog open={open} onClose={onClose} book={dialog}>
+      {previewContent?.type === "book" && (
+        <BookPreviewDialog {...dialogProps} book={previewContent}>
           {(props) => <Book {...props} />}
         </BookPreviewDialog>
       )}

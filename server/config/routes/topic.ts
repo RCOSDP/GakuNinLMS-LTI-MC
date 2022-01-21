@@ -1,8 +1,9 @@
-import { FastifyInstance } from "fastify";
+import type { FastifyInstance } from "fastify";
 import makeHooks from "$server/utils/makeHooks";
 import handler from "$server/utils/handler";
 import * as service from "$server/services/topic";
 import * as activityService from "$server/services/topic/activity";
+import * as authorsService from "$server/services/topic/authors";
 
 const basePath = "/topic";
 const pathWithParams = `${basePath}/:topic_id`;
@@ -41,5 +42,16 @@ export async function topicActivity(fastify: FastifyInstance) {
   fastify.put<{
     Params: activityService.Params;
     Body: activityService.Props;
+  }>(path, { schema: method.put, ...hooks.put }, handler(update));
+}
+
+export async function topicAuthors(fastify: FastifyInstance) {
+  const path = `${pathWithParams}/authors`;
+  const { method, update } = authorsService;
+  const hooks = makeHooks(fastify, authorsService.hooks);
+
+  fastify.put<{
+    Params: authorsService.Params;
+    Body: authorsService.Props;
   }>(path, { schema: method.put, ...hooks.put }, handler(update));
 }

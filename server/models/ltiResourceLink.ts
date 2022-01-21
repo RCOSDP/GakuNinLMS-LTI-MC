@@ -32,7 +32,7 @@ export class LtiResourceLinkSchema extends LtiResourceLinkProps {
   id!: string;
 
   @IsInt()
-  authorId!: number;
+  creatorId!: number;
 }
 
 export const {

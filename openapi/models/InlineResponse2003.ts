@@ -18,20 +18,42 @@ import {
     InlineResponse2003ActivityFromJSON,
     InlineResponse2003ActivityFromJSONTyped,
     InlineResponse2003ActivityToJSON,
+    InlineResponse2001Topics,
+    InlineResponse2001TopicsFromJSON,
+    InlineResponse2001TopicsFromJSONTyped,
+    InlineResponse2001TopicsToJSON,
 } from './';
 
 /**
- * 
+ * 作成したトピックの一覧
  * @export
  * @interface InlineResponse2003
  */
 export interface InlineResponse2003 {
     /**
      * 
+     * @type {Array<InlineResponse2001Topics>}
+     * @memberof InlineResponse2003
+     */
+     topics?: Array<InlineResponse2001Topics>;
+     /**
+      * 
+      * @type {number}
+      * @memberof InlineResponse2003
+      */
+     page?: number;
+     /**
+      * 
+      * @type {number}
+      * @memberof InlineResponse2003
+      */
+     perPage?: number;
+    /**
+     * 
      * @type {Array<InlineResponse2003Activity>}
      * @memberof InlineResponse2003
      */
-    activity: Array<InlineResponse2003Activity>;
+     activity: Array<InlineResponse2003Activity>;
 }
 
 export function InlineResponse2003FromJSON(json: any): InlineResponse2003 {
@@ -45,6 +67,9 @@ export function InlineResponse2003FromJSONTyped(json: any, ignoreDiscriminator: 
     return {
         
         'activity': ((json['activity'] as Array<any>).map(InlineResponse2003ActivityFromJSON)),
+        'topics': !exists(json, 'topics') ? undefined : ((json['topics'] as Array<any>).map(InlineResponse2001TopicsFromJSON)),
+        'page': !exists(json, 'page') ? undefined : json['page'],
+        'perPage': !exists(json, 'perPage') ? undefined : json['perPage'],
     };
 }
 
@@ -58,6 +83,9 @@ export function InlineResponse2003ToJSON(value?: InlineResponse2003 | null): any
     return {
         
         'activity': ((value.activity as Array<any>).map(InlineResponse2003ActivityToJSON)),
+        'topics': value.topics === undefined ? undefined : ((value.topics as Array<any>).map(InlineResponse2001TopicsToJSON)),
+        'page': value.page,
+        'perPage': value.perPage,
     };
 }
 

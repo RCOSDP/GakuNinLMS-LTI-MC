@@ -1,4 +1,4 @@
-import { ResourceProps } from "$server/models/resource";
+import type { ResourceProps } from "$server/models/resource";
 import { parse } from "$server/utils/videoResource";
 
 function resourceConnectOrCreateInput(resource: ResourceProps) {

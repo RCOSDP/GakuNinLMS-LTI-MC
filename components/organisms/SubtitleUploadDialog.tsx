@@ -7,7 +7,7 @@ import makeStyles from "@mui/styles/makeStyles";
 import { useForm } from "react-hook-form";
 import TextField from "$atoms/TextField";
 import useCardStyles from "$styles/card";
-import { VideoTrackProps } from "$server/models/videoTrack";
+import type { VideoTrackProps } from "$server/models/videoTrack";
 import languages from "$utils/languages";
 
 const useStyles = makeStyles((theme) => ({

@@ -14,6 +14,10 @@
 
 import { exists, mapValues } from '../runtime';
 import {
+    ApiV2BookBookIdKeywords,
+    ApiV2BookBookIdKeywordsFromJSON,
+    ApiV2BookBookIdKeywordsFromJSONTyped,
+    ApiV2BookBookIdKeywordsToJSON,
     ApiV2TopicTopicIdResource,
     ApiV2TopicTopicIdResourceFromJSON,
     ApiV2TopicTopicIdResourceFromJSONTyped,
@@ -55,6 +59,12 @@ export interface InlineObject6 {
      * @type {string}
      * @memberof InlineObject6
      */
+    license?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineObject6
+     */
     description?: string;
     /**
      * 
@@ -62,6 +72,12 @@ export interface InlineObject6 {
      * @memberof InlineObject6
      */
     resource?: ApiV2TopicTopicIdResource;
+    /**
+     * 
+     * @type {Array<ApiV2BookBookIdKeywords>}
+     * @memberof InlineObject6
+     */
+    keywords?: Array<ApiV2BookBookIdKeywords>;
 }
 
 export function InlineObject6FromJSON(json: any): InlineObject6 {
@@ -78,8 +94,10 @@ export function InlineObject6FromJSONTyped(json: any, ignoreDiscriminator: boole
         'language': !exists(json, 'language') ? undefined : json['language'],
         'timeRequired': !exists(json, 'timeRequired') ? undefined : json['timeRequired'],
         'shared': !exists(json, 'shared') ? undefined : json['shared'],
+        'license': !exists(json, 'license') ? undefined : json['license'],
         'description': !exists(json, 'description') ? undefined : json['description'],
         'resource': !exists(json, 'resource') ? undefined : ApiV2TopicTopicIdResourceFromJSON(json['resource']),
+        'keywords': !exists(json, 'keywords') ? undefined : ((json['keywords'] as Array<any>).map(ApiV2BookBookIdKeywordsFromJSON)),
     };
 }
 
@@ -96,8 +114,10 @@ export function InlineObject6ToJSON(value?: InlineObject6 | null): any {
         'language': value.language,
         'timeRequired': value.timeRequired,
         'shared': value.shared,
+        'license': value.license,
         'description': value.description,
         'resource': ApiV2TopicTopicIdResourceToJSON(value.resource),
+        'keywords': value.keywords === undefined ? undefined : ((value.keywords as Array<any>).map(ApiV2BookBookIdKeywordsToJSON)),
     };
 }
 

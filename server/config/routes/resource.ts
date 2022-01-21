@@ -1,29 +1,40 @@
-import { FastifyInstance } from "fastify";
+import type { FastifyInstance } from "fastify";
 import makeHooks from "$server/utils/makeHooks";
 import handler from "$server/utils/handler";
-import * as service from "$server/services/videoTrack";
+import * as videoTrackService from "$server/services/videoTrack";
+import * as oembedService from "$server/services/oembed";
 
 export async function videoTrack(fastify: FastifyInstance) {
   const basePath = "/resource/:resource_id/video_track";
   const pathWithParams = `${basePath}/:video_track_id`;
   const vttPath = `${pathWithParams}/vtt`;
-  const { method, show, create, destroy } = service;
-  const hooks = makeHooks(fastify, service.hooks);
+  const { method, show, create, destroy } = videoTrackService;
+  const hooks = makeHooks(fastify, videoTrackService.hooks);
 
   fastify.get<{
-    Params: service.Params;
+    Params: videoTrackService.Params;
   }>(vttPath, { schema: method.get, ...hooks.get }, handler(show));
 
   fastify.post<{
-    Params: service.CreateParams;
-    Body: service.CreateBody;
+    Params: videoTrackService.CreateParams;
+    Body: videoTrackService.CreateBody;
   }>(basePath, { schema: method.post, ...hooks.post }, handler(create));
 
   fastify.delete<{
-    Params: service.Params;
+    Params: videoTrackService.Params;
   }>(
     pathWithParams,
     { schema: method.delete, ...hooks.delete },
     handler(destroy)
   );
+}
+
+export async function oembed(fastify: FastifyInstance) {
+  const path = "/resource/:resource_id/oembed";
+  const { method, index } = oembedService;
+  const hooks = makeHooks(fastify, oembedService.hooks);
+
+  fastify.get<{
+    Params: oembedService.Params;
+  }>(path, { schema: method.get, ...hooks.get }, handler(index));
 }

@@ -26,6 +26,10 @@ import {
     InlineResponse2007CourseBooksFromJSON,
     InlineResponse2007CourseBooksFromJSONTyped,
     InlineResponse2007CourseBooksToJSON,
+    InlineResponse2001Resource,
+    InlineResponse2001ResourceFromJSON,
+    InlineResponse2001ResourceFromJSONTyped,
+    InlineResponse2001ResourceToJSON,
 } from './';
 
 /**
@@ -52,6 +56,24 @@ export interface InlineResponse2007 {
      * @memberof InlineResponse2007
      */
     bookActivities: Array<InlineResponse2007BookActivities>;
+    /**
+     * 
+     * @type {Array<InlineResponse2001Resource>}
+     * @memberof InlineResponse2007
+     */
+    resources?: Array<InlineResponse2001Resource>;
+    /**
+     * 
+     * @type {number}
+     * @memberof InlineResponse2007
+     */
+    page?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof InlineResponse2007
+     */
+    perPage?: number;
 }
 
 export function InlineResponse2007FromJSON(json: any): InlineResponse2007 {
@@ -67,6 +89,9 @@ export function InlineResponse2007FromJSONTyped(json: any, ignoreDiscriminator: 
         'learners': ((json['learners'] as Array<any>).map(InlineResponse2003LearnerFromJSON)),
         'courseBooks': ((json['courseBooks'] as Array<any>).map(InlineResponse2007CourseBooksFromJSON)),
         'bookActivities': ((json['bookActivities'] as Array<any>).map(InlineResponse2007BookActivitiesFromJSON)),
+        'resources': !exists(json, 'resources') ? undefined : ((json['resources'] as Array<any>).map(InlineResponse2001ResourceFromJSON)),
+        'page': !exists(json, 'page') ? undefined : json['page'],
+        'perPage': !exists(json, 'perPage') ? undefined : json['perPage'],
     };
 }
 
@@ -82,6 +107,9 @@ export function InlineResponse2007ToJSON(value?: InlineResponse2007 | null): any
         'learners': ((value.learners as Array<any>).map(InlineResponse2003LearnerToJSON)),
         'courseBooks': ((value.courseBooks as Array<any>).map(InlineResponse2007CourseBooksToJSON)),
         'bookActivities': ((value.bookActivities as Array<any>).map(InlineResponse2007BookActivitiesToJSON)),
+        'resources': value.resources === undefined ? undefined : ((value.resources as Array<any>).map(InlineResponse2001ResourceToJSON)),
+        'page': value.page,
+        'perPage': value.perPage,
     };
 }
 

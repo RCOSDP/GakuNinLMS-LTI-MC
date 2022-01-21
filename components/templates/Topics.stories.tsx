@@ -1,13 +1,15 @@
-export default {
-  title: "templates/Topics",
-  parameters: { layout: "fullscreen" },
-};
-
+import type { Story } from "@storybook/react";
 import Topics from "./Topics";
 import Slide from "@mui/material/Slide";
 import useScrollTrigger from "@mui/material/useScrollTrigger";
 import AppBar from "$organisms/AppBar";
 import { topic, session } from "$samples";
+
+export default {
+  title: "templates/Topics",
+  parameters: { layout: "fullscreen" },
+  component: Topics,
+};
 
 const appBarHandlers = {
   onBooksClick: console.log,
@@ -15,16 +17,10 @@ const appBarHandlers = {
   onDashboardClick: console.log,
 };
 
-const topics = [...Array(10)].map(() => topic);
-
-const handlers = {
-  onBookNewClick: console.log,
-  onTopicsShareClick: console.log,
-  onTopicsUnshareClick: console.log,
-  onTopicsDeleteClick: console.log,
-  onTopicEditClick: console.log,
-  onTopicNewClick: console.log,
-};
+const contents = [...Array(10)].map(() => ({
+  type: "topic" as const,
+  ...topic,
+}));
 
 function SlideAppBar() {
   const trigger = useScrollTrigger();
@@ -35,16 +31,21 @@ function SlideAppBar() {
   );
 }
 
-export const Default = () => (
+const Template: Story<Parameters<typeof Topics>[0]> = (args) => (
   <>
     <SlideAppBar />
-    <Topics topics={topics} {...handlers} />
+    <Topics {...args} />
   </>
 );
 
-export const Empty = () => (
-  <>
-    <SlideAppBar />
-    <Topics topics={[]} {...handlers} />
-  </>
-);
+export const Default = Template.bind({});
+Default.args = {
+  totalCount: 123,
+  contents,
+};
+
+export const Empty = Template.bind({});
+Empty.args = {
+  totalCount: 0,
+  contents: [],
+};

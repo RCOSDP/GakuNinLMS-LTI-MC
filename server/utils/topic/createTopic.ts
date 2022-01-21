@@ -1,5 +1,5 @@
-import { User } from "@prisma/client";
-import { TopicProps, TopicSchema } from "$server/models/topic";
+import type { User } from "@prisma/client";
+import type { TopicProps, TopicSchema } from "$server/models/topic";
 import prisma from "$server/utils/prisma";
 import {
   topicsWithResourcesArg,
@@ -8,11 +8,11 @@ import {
 import topicCreateInput from "./topicCreateInput";
 
 async function createTopic(
-  creatorId: User["id"],
+  authorId: User["id"],
   topic: TopicProps
 ): Promise<TopicSchema | undefined> {
   const created = await prisma.topic.create({
-    data: topicCreateInput(creatorId, topic),
+    data: topicCreateInput(authorId, topic),
   });
 
   if (!created) return;
