@@ -20,10 +20,8 @@ export default function License({ license, sx }: Props) {
     return <Text sx={sx}>{license} ライセンス</Text>;
   const { button, url } = licenses[license];
   return (
-    <>
-      <Link sx={sx} target="_blank" rel="license noreferrer" href={url}>
-        <img alt={license} src={button} />
-      </Link>
-    </>
+    <Link sx={sx} target="_blank" rel="license noreferrer" href={url}>
+      <img alt={license} src={button} />
+    </Link>
   );
 }
