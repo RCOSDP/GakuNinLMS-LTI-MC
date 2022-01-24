@@ -23,6 +23,7 @@ import type { TopicSchema } from "$server/models/topic";
 import { grey } from "@mui/material/colors";
 import useDialogProps from "$utils/useDialogProps";
 import { useSearchAtom } from "$store/search";
+import { useSessionAtom } from "$store/session";
 
 type Props = {
   totalCount: number;
@@ -47,6 +48,7 @@ export default function Topics(props: Props) {
     onTopicNewClick,
   } = props;
   const searchProps = useSearchAtom();
+  const { isAdministrator } = useSessionAtom();
   const confirm = useConfirm();
   const [selected, select] = useState<Map<ContentSchema["id"], ContentSchema>>(
     new Map()
@@ -181,30 +183,34 @@ export default function Topics(props: Props) {
           >
             ブック作成
           </Button>
-          <Button
-            color="primary"
-            size="large"
-            variant="contained"
-            onClick={handleTopicsShareClick}
-          >
-            シェア
-          </Button>
-          <Button
-            color="primary"
-            size="large"
-            variant="contained"
-            onClick={handleTopicsUnshareClick}
-          >
-            シェア解除
-          </Button>
-          <Button
-            color="error"
-            size="large"
-            variant="contained"
-            onClick={handleTopicsDeleteClick}
-          >
-            削除
-          </Button>
+          {(isAdministrator || searchProps.query.filter === "self") && (
+            <>
+              <Button
+                color="primary"
+                size="large"
+                variant="contained"
+                onClick={handleTopicsShareClick}
+              >
+                シェア
+              </Button>
+              <Button
+                color="primary"
+                size="large"
+                variant="contained"
+                onClick={handleTopicsUnshareClick}
+              >
+                シェア解除
+              </Button>
+              <Button
+                color="error"
+                size="large"
+                variant="contained"
+                onClick={handleTopicsDeleteClick}
+              >
+                削除
+              </Button>
+            </>
+          )}
         </ActionFooter>
       )}
       {previewContent?.type === "topic" && (
