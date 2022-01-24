@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useCallback } from "react";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
@@ -26,8 +26,6 @@ export default function Search({
   onSearchTargetChange,
   ...other
 }: Props) {
-  const [expanded, setExpanded] = useState(false);
-  const handleClick = () => setExpanded(!expanded);
   const handleChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       onSearchTargetChange(event.target.value as SearchTarget);
