@@ -23,6 +23,7 @@ import type { TopicSchema } from "$server/models/topic";
 import { grey } from "@mui/material/colors";
 import useDialogProps from "$utils/useDialogProps";
 import { useSearchAtom } from "$store/search";
+import { useSessionAtom } from "$store/session";
 
 type Props = {
   totalCount: number;
@@ -47,6 +48,8 @@ export default function Topics(props: Props) {
     onTopicNewClick,
   } = props;
   const searchProps = useSearchAtom();
+  const { isAdministrator } = useSessionAtom();
+  const isClickable = isAdministrator || searchProps.query.filter === "self";
   const confirm = useConfirm();
   const [selected, select] = useState<Map<ContentSchema["id"], ContentSchema>>(
     new Map()
@@ -185,6 +188,7 @@ export default function Topics(props: Props) {
             color="primary"
             size="large"
             variant="contained"
+            disabled={!isClickable}
             onClick={handleTopicsShareClick}
           >
             シェア
@@ -193,6 +197,7 @@ export default function Topics(props: Props) {
             color="primary"
             size="large"
             variant="contained"
+            disabled={!isClickable}
             onClick={handleTopicsUnshareClick}
           >
             シェア解除
@@ -201,6 +206,7 @@ export default function Topics(props: Props) {
             color="error"
             size="large"
             variant="contained"
+            disabled={!isClickable}
             onClick={handleTopicsDeleteClick}
           >
             削除
