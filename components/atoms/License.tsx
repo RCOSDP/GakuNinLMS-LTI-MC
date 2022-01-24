@@ -10,20 +10,22 @@ const Text = styled("span")({
   fontSize: 12,
 });
 
+const Image = styled("img")();
+
 type Props = {
   license: ContentSchema["license"];
   sx?: SxProps;
+  clickable?: boolean;
 };
 
-export default function License({ license, sx }: Props) {
+export default function License({ license, sx, clickable = true }: Props) {
   if (!Object.keys(licenses).includes(license))
     return <Text sx={sx}>{license} ライセンス</Text>;
   const { button, url } = licenses[license];
+  if (!clickable) return <Image sx={sx} alt={license} src={button} />;
   return (
-    <>
-      <Link sx={sx} target="_blank" rel="license noreferrer" href={url}>
-        <img alt={license} src={button} />
-      </Link>
-    </>
+    <Link sx={sx} target="_blank" rel="license noreferrer" href={url}>
+      <img alt={license} src={button} />
+    </Link>
   );
 }
