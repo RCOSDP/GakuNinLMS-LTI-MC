@@ -1,4 +1,5 @@
-import { useMemo, Fragment, ReactNode } from "react";
+import type { ReactNode } from "react";
+import { useMemo, Fragment } from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";

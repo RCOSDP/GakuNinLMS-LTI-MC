@@ -1,6 +1,6 @@
-import { BookSchema } from "$server/models/book";
-import { TopicSchema } from "$server/models/topic";
-import { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
+import type { BookSchema } from "$server/models/book";
+import type { TopicSchema } from "$server/models/topic";
+import type { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
 
 function isDisplayableBook(
   book: Pick<BookSchema, "id" | "shared" | "author">,

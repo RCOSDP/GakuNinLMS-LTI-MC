@@ -1,5 +1,5 @@
-import { BookSchema } from "$server/models/book";
-import { UserSchema } from "$server/models/user";
+import type { BookSchema } from "$server/models/book";
+import type { UserSchema } from "$server/models/user";
 
 /**
  * ブックの作成者の判定

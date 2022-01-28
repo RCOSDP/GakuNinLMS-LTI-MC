@@ -1,14 +1,14 @@
-import { Prisma } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
 import sortedIndexOf from "lodash.sortedindexof";
-import { UserSchema } from "$server/models/user";
-import { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
-import { BookActivitySchema } from "$server/models/bookActivity";
-import { CourseBookSchema } from "$server/models/courseBook";
+import type { UserSchema } from "$server/models/user";
+import type { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
+import type { BookActivitySchema } from "$server/models/bookActivity";
+import type { CourseBookSchema } from "$server/models/courseBook";
 import getDisplayableBook from "$server/utils/getDisplayableBook";
 import bookCreateBy from "$server/utils/bookCreateBy";
 import topicCreateBy from "$server/utils/topicCreateBy";
 import isCompleted from "./isCompleted";
-import { ActivitySchema } from "$server/models/activity";
+import type { ActivitySchema } from "$server/models/activity";
 
 export const bookIncludingTopicArg = {
   // NOTE: toSchema() での並び替えの最適化を図る目的

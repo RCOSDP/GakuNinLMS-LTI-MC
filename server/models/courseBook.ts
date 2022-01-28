@@ -1,4 +1,4 @@
-import { FromSchema } from "json-schema-to-ts";
+import type { FromSchema } from "json-schema-to-ts";
 
 /** 受講コースのブック */
 export const CourseBookSchema = {

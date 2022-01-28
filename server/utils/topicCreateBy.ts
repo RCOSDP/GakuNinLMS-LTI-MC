@@ -1,5 +1,5 @@
-import { TopicSchema } from "$server/models/topic";
-import { UserSchema } from "$server/models/user";
+import type { TopicSchema } from "$server/models/topic";
+import type { UserSchema } from "$server/models/user";
 
 /**
  * トピックの作成者の判定

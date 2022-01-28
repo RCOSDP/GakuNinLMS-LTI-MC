@@ -1,6 +1,7 @@
 import { outdent } from "outdent";
-import { BookParams, bookParamsSchema } from "$server/validators/bookParams";
-import { SessionSchema } from "$server/models/session";
+import type { BookParams} from "$server/validators/bookParams";
+import { bookParamsSchema } from "$server/validators/bookParams";
+import type { SessionSchema } from "$server/models/session";
 import { ActivitySchema } from "$server/models/activity";
 import authUser from "$server/auth/authUser";
 import fetchActivity from "$server/utils/activity/fetchActivity";

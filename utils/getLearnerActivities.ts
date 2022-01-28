@@ -1,8 +1,8 @@
-import { BookSchema } from "$server/models/book";
-import { TopicSchema } from "$server/models/topic";
-import { LearnerSchema } from "$server/models/learner";
-import { BookActivitySchema } from "$server/models/bookActivity";
-import { CourseBookSchema } from "$server/models/courseBook";
+import type { BookSchema } from "$server/models/book";
+import type { TopicSchema } from "$server/models/topic";
+import type { LearnerSchema } from "$server/models/learner";
+import type { BookActivitySchema } from "$server/models/bookActivity";
+import type { CourseBookSchema } from "$server/models/courseBook";
 
 export function stringify({
   book,

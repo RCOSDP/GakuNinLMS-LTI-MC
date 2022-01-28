@@ -1,7 +1,7 @@
 import useSWR from "swr";
-import { BookSchema } from "$server/models/book";
+import type { BookSchema } from "$server/models/book";
 import { api } from "./api";
-import { ActivitySchema } from "$server/models/activity";
+import type { ActivitySchema } from "$server/models/activity";
 import { useActivityAtom } from "$store/activity";
 import { NEXT_PUBLIC_ACTIVITY_SEND_INTERVAL } from "./env";
 

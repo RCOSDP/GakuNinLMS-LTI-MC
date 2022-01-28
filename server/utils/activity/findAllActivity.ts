@@ -1,9 +1,9 @@
 import type { SessionSchema } from "$server/models/session";
-import { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
-import { UserSchema } from "$server/models/user";
-import { LearnerSchema } from "$server/models/learner";
-import { CourseBookSchema } from "$server/models/courseBook";
-import { BookActivitySchema } from "$server/models/bookActivity";
+import type { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
+import type { UserSchema } from "$server/models/user";
+import type { LearnerSchema } from "$server/models/learner";
+import type { CourseBookSchema } from "$server/models/courseBook";
+import type { BookActivitySchema } from "$server/models/bookActivity";
 import prisma from "$server/utils/prisma";
 import { bookIncludingTopicArg, toSchema } from "./bookWithActivity";
 

@@ -3,9 +3,9 @@ import makeStyles from "@mui/styles/makeStyles";
 import LearningStatusLabels from "$molecules/LearningStatusLabels";
 import { learningStatus, gray } from "$theme/colors";
 import useLineClampStyles from "$styles/lineClamp";
-import { BookSchema } from "$server/models/book";
-import { BookActivitySchema } from "$server/models/bookActivity";
-import { LearnerSchema } from "$server/models/learner";
+import type { BookSchema } from "$server/models/book";
+import type { BookActivitySchema } from "$server/models/bookActivity";
+import type { LearnerSchema } from "$server/models/learner";
 
 type LearningBargraphProps = {
   className?: string;

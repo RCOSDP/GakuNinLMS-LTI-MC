@@ -1,4 +1,4 @@
-import { FastifyRequest } from "fastify";
+import type { FastifyRequest } from "fastify";
 import { outdent } from "outdent";
 import { LearnerSchema } from "$server/models/learner";
 import { CourseBookSchema } from "$server/models/courseBook";
