@@ -8,7 +8,7 @@ import Typography from "@mui/material/Typography";
 import { makeStyles, createStyles } from "@mui/styles";
 import type { Theme } from "@mui/material/styles";
 import EditButton from "$atoms/EditButton";
-import type { ContentAuthors } from "$types/content";
+import type { ContentAuthors } from "$server/models/content";
 import type { SectionSchema } from "$server/models/book/section";
 import { primary, gray } from "$theme/colors";
 import { isNamedSection, getOutlineNumber } from "$utils/outline";

@@ -27,3 +27,7 @@ type BookSchema = BookSchemaBase & {
 };
 
 export type ContentSchema = TopicSchema | BookSchema;
+
+export type ContentAuthors = Pick<ContentSchema, "authors">;
+
+export type IsContentEditable = (content: ContentAuthors) => boolean;

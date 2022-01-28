@@ -13,7 +13,7 @@ import type { BookPropsWithSubmitOptions } from "$types/bookPropsWithSubmitOptio
 import type { SectionProps } from "$server/models/book/section";
 import type { TopicSchema } from "$server/models/topic";
 import type { AuthorSchema } from "$server/models/author";
-import type { IsContentEditable } from "$types/content";
+import type { IsContentEditable } from "$server/models/content";
 import { useConfirm } from "material-ui-confirm";
 import useDialogProps from "$utils/useDialogProps";
 

@@ -1,5 +1,3 @@
-import { useEffect } from "react";
-import usePrevious from "@rooks/use-previous";
 import clsx from "clsx";
 import type { TopicSchema } from "$server/models/topic";
 import Card from "@mui/material/Card";

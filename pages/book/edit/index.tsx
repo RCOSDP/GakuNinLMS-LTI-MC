@@ -3,7 +3,7 @@ import type { BookSchema } from "$server/models/book";
 import type { BookPropsWithSubmitOptions } from "$types/bookPropsWithSubmitOptions";
 import type { SectionProps } from "$server/models/book/section";
 import type { TopicSchema } from "$server/models/topic";
-import type { ContentAuthors } from "$types/content";
+import type { ContentAuthors } from "$server/models/content";
 import { useSessionAtom } from "$store/session";
 import BookEdit from "$templates/BookEdit";
 import Placeholder from "$templates/Placeholder";

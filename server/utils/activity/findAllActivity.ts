@@ -5,7 +5,8 @@ import type { LearnerSchema } from "$server/models/learner";
 import type { CourseBookSchema } from "$server/models/courseBook";
 import type { BookActivitySchema } from "$server/models/bookActivity";
 import prisma from "$server/utils/prisma";
-import { bookIncludingTopicArg, toSchema } from "./bookWithActivity";
+import { bookIncludingTopicsArg } from "$server/utils/book/bookToBookSchema";
+import { toSchema } from "./bookWithActivity";
 
 /** 受講者の取得 */
 async function findLtiMembers(
@@ -50,8 +51,11 @@ async function findLtiMembers(
                             },
                           },
                           {
-                            // NOTE: 表示可能な範囲 … 共有されているか作成者が一致
-                            OR: [{ shared: true }, { authorId: instructor.id }],
+                            // NOTE: 表示可能な範囲 … 共有されている範囲または著者に含まれる範囲
+                            OR: [
+                              { shared: true },
+                              { authors: { some: { userId: instructor.id } } },
+                            ],
                           },
                         ],
                       },
@@ -85,7 +89,7 @@ async function findAllActivity(session: SessionSchema): Promise<{
     select: { bookId: true },
   });
   const books = await prisma.book.findMany({
-    ...bookIncludingTopicArg,
+    ...bookIncludingTopicsArg,
     where: {
       ltiResourceLinks: { some: { consumerId, contextId } },
     },

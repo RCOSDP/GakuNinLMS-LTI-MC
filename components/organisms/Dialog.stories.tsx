@@ -1,6 +1,6 @@
 export default { title: "organisms/Dialog" };
 
-import type { ReactElement, Ref } from "react";
+import type { Ref } from "react";
 import { forwardRef, useState } from "react";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";

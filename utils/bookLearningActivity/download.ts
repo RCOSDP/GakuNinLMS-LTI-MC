@@ -16,6 +16,7 @@ async function download(
   filename: string,
   session: SessionSchema
 ) {
+  if (data.length === 0) return;
   const decoratedData = data.map((a) =>
     Object.fromEntries(getLocaleEntries(a, session))
   );

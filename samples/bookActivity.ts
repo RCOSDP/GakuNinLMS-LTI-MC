@@ -2,7 +2,7 @@ import book from "./book";
 import activity from "./activity";
 import type { BookActivitySchema } from "$server/models/bookActivity";
 
-const { completed, ...activityWithoutCompleted } = activity;
+const { completed: _, ...activityWithoutCompleted } = activity;
 
 const bookActivity: BookActivitySchema = {
   ...activityWithoutCompleted,

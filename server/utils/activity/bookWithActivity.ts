@@ -1,54 +1,18 @@
-import type { Prisma } from "@prisma/client";
 import sortedIndexOf from "lodash.sortedindexof";
 import type { UserSchema } from "$server/models/user";
 import type { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
 import type { BookActivitySchema } from "$server/models/bookActivity";
 import type { CourseBookSchema } from "$server/models/courseBook";
-import getDisplayableBook from "$server/utils/getDisplayableBook";
-import bookCreateBy from "$server/utils/bookCreateBy";
-import topicCreateBy from "$server/utils/topicCreateBy";
-import isCompleted from "./isCompleted";
 import type { ActivitySchema } from "$server/models/activity";
+import type { BookWithTopics } from "$server/utils/book/bookToBookSchema";
+import { bookToBookSchema } from "$server/utils/book/bookToBookSchema";
+import getDisplayableBook from "$server/utils/getDisplayableBook";
+import contentBy from "$server/utils/contentBy";
+import isCompleted from "./isCompleted";
 
-export const bookIncludingTopicArg = {
-  // NOTE: toSchema() での並び替えの最適化を図る目的
-  orderBy: { id: "asc" },
-  include: {
-    author: true,
-    sections: {
-      orderBy: { order: "asc" },
-      select: {
-        topicSections: {
-          orderBy: { order: "asc" },
-          select: {
-            topic: {
-              select: {
-                id: true,
-                name: true,
-                timeRequired: true,
-                creator: true,
-                shared: true,
-              },
-            },
-          },
-        },
-      },
-    },
-  },
-} as const;
-
-type BookWithTopic = Prisma.BookGetPayload<typeof bookIncludingTopicArg>;
-
-function bookToCourseBook(user: Pick<UserSchema, "id">, book: BookWithTopic) {
-  const courseBook = getDisplayableBook(
-    {
-      ...book,
-      sections: book.sections.map((section) => ({
-        topics: section.topicSections.map(({ topic }) => topic),
-      })),
-    },
-    (book) => bookCreateBy(book, user),
-    (topic) => topicCreateBy(topic, user)
+function bookToCourseBook(user: Pick<UserSchema, "id">, book: BookWithTopics) {
+  const courseBook = getDisplayableBook(bookToBookSchema(book), (content) =>
+    contentBy(content, user)
   );
 
   return courseBook;
@@ -69,12 +33,12 @@ export function toSchema({
       "learner" | "topic" | "totalTimeMs" | "createdAt" | "updatedAt"
     >
   >;
-  books: Array<BookWithTopic>;
+  books: Array<BookWithTopics>;
 }): {
   courseBooks: Array<CourseBookSchema>;
   bookActivities: Array<BookActivitySchema>;
 } {
-  const sortedBooks: Array<BookWithTopic> = [];
+  const sortedBooks: Array<BookWithTopics> = [];
   const booksMap = new Map(books.map((book) => [book.id, book] as const));
   const ids = [...booksMap.keys()];
   for (const { bookId } of ltiResourceLinks) {
