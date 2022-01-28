@@ -1,5 +1,5 @@
 import { outdent } from "outdent";
-import type { BookParams} from "$server/validators/bookParams";
+import type { BookParams } from "$server/validators/bookParams";
 import { bookParamsSchema } from "$server/validators/bookParams";
 import type { SessionSchema } from "$server/models/session";
 import { ActivitySchema } from "$server/models/activity";
