@@ -1,28 +1,30 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
+import type { ContentSchema } from "$server/models/content";
 import type {
   BooksImportParams,
   BooksImportResult,
-} from "$server/validators/booksImportParams";
-import type { BookSchema } from "$server/models/book";
+} from "$server/models/booksImportParams";
 import BooksImport from "$templates/BooksImport";
 import Book from "$templates/Book";
 import BookPreviewDialog from "$organisms/BookPreviewDialog";
-import { importBooks } from "$utils/books";
+import importBooks from "$utils/importBooks";
 import { pagesPath } from "$utils/$path";
+import useAuthorsHandler from "$utils/useAuthorsHandler";
 import useDialogProps from "$utils/useDialogProps";
 
 export type Query = { context?: "books" };
 
 function Import({ context }: Query) {
   const router = useRouter();
+  const { handleAuthorSubmit } = useAuthorsHandler();
   const [importResult, setImportResult] = useState<BooksImportResult>({});
   const {
-    data: dialog,
+    data: previewContent,
     open,
     onClose,
-    dispatch,
-  } = useDialogProps<BookSchema>();
+    dispatch: onContentPreviewClick,
+  } = useDialogProps<ContentSchema>();
   const back = () => {
     switch (context) {
       case "books":
@@ -31,7 +33,6 @@ function Import({ context }: Query) {
         return router.push(pagesPath.books.$url());
     }
   };
-  const handleBookPreviewClick = (book: BookSchema) => dispatch(book);
   const handleSubmit = async (props: BooksImportParams) => {
     try {
       setImportResult(await importBooks(props));
@@ -44,16 +45,17 @@ function Import({ context }: Query) {
     return back();
   };
   const handlers = {
-    onBookPreviewClick: handleBookPreviewClick,
+    onContentPreviewClick,
     onSubmit: handleSubmit,
     onCancel: handleCancel,
+    onAuthorSubmit: handleAuthorSubmit,
   };
 
   return (
     <>
       <BooksImport importResult={importResult} {...handlers} />
-      {dialog && (
-        <BookPreviewDialog open={open} onClose={onClose} book={dialog}>
+      {previewContent?.type === "book" && (
+        <BookPreviewDialog open={open} onClose={onClose} book={previewContent}>
           {(props) => <Book {...props} />}
         </BookPreviewDialog>
       )}

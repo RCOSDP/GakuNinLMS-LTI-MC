@@ -1,4 +1,4 @@
-import { FromSchema } from "json-schema-to-ts";
+import type { FromSchema } from "json-schema-to-ts";
 
 export const LtiUserSchema = {
   title: "LTI User",
@@ -7,6 +7,7 @@ export const LtiUserSchema = {
   properties: {
     id: { title: "End-User ID", type: "string" },
     name: { title: "End-User's full name in displayable", type: "string" },
+    email: { title: "End-User's preferred e-mail address", type: "string" },
   },
   additionalProperties: false,
 } as const;

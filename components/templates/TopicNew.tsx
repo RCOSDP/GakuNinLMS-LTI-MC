@@ -1,12 +1,13 @@
 import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
 import Alert from "@mui/material/Alert";
 import makeStyles from "@mui/styles/makeStyles";
 import TopicForm from "$organisms/TopicForm";
+import Container from "$atoms/Container";
 import RequiredDot from "$atoms/RequiredDot";
 import BackButton from "$atoms/BackButton";
-import useContainerStyles from "styles/container";
-import type { TopicProps, TopicSchema } from "$server/models/topic";
+import type { TopicSchema } from "$server/models/topic";
+import type { AuthorSchema } from "$server/models/author";
+import type { TopicPropsWithAuthors } from "$types/topicPropsWithAuthors";
 import type {
   VideoTrackProps,
   VideoTrackSchema,
@@ -36,30 +37,37 @@ const useStyles = makeStyles((theme) => ({
 
 type Props = {
   topic?: TopicSchema;
-  onSubmit(topic: TopicProps): void;
+  onSubmit(topic: TopicPropsWithAuthors): void;
   onSubtitleDelete(videoTrack: VideoTrackSchema): void;
   onSubtitleSubmit(videoTrack: VideoTrackProps): void;
   onCancel(): void;
+  onAuthorsUpdate(authors: AuthorSchema[]): void;
+  onAuthorSubmit(author: Pick<AuthorSchema, "email">): void;
 };
 
-export default function TopicNew(props: Props) {
-  const { topic, onSubmit, onSubtitleDelete, onSubtitleSubmit, onCancel } =
-    props;
-  const { isTopicEditable } = useSessionAtom();
-  const forkFrom = topic && !isTopicEditable(topic) && topic.creator;
+export default function TopicNew({
+  topic,
+  onSubmit,
+  onSubtitleDelete,
+  onSubtitleSubmit,
+  onCancel,
+  onAuthorsUpdate,
+  onAuthorSubmit,
+}: Props) {
+  const { isContentEditable } = useSessionAtom();
+  const forkFrom =
+    topic &&
+    !isContentEditable(topic) &&
+    topic.authors.length > 0 &&
+    topic.authors;
   const defaultTopic = topic && {
     ...topic,
     ...(forkFrom && { name: [topic.name, "フォーク"].join("_") }),
   };
   const classes = useStyles();
-  const containerClasses = useContainerStyles();
 
   return (
-    <Container
-      classes={containerClasses}
-      className={classes.container}
-      maxWidth="md"
-    >
+    <Container className={classes.container} maxWidth="md">
       <BackButton onClick={onCancel}>戻る</BackButton>
       <Typography className={classes.title} variant="h4">
         トピックの作成
@@ -70,7 +78,8 @@ export default function TopicNew(props: Props) {
       </Typography>
       {forkFrom && (
         <Alert className={classes.alert} severity="info">
-          {forkFrom.name} さんが作成したトピックをフォークしようとしています
+          {forkFrom.map(({ name }) => `${name} さん`).join("、")}
+          のトピックをフォークしようとしています
         </Alert>
       )}
       <TopicForm
@@ -79,6 +88,8 @@ export default function TopicNew(props: Props) {
         onSubmit={onSubmit}
         onSubtitleDelete={onSubtitleDelete}
         onSubtitleSubmit={onSubtitleSubmit}
+        onAuthorsUpdate={onAuthorsUpdate}
+        onAuthorSubmit={onAuthorSubmit}
       />
     </Container>
   );

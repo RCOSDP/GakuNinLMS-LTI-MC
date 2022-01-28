@@ -1,11 +1,14 @@
-import { IsInt } from "class-validator";
-import { validationMetadatasToSchemas } from "class-validator-jsonschema";
+import type { FromSchema } from "json-schema-to-ts";
 import { ResourceParams } from "./resourceParams";
 
-export class VideoTrackParams extends ResourceParams {
-  @IsInt()
-  video_track_id!: number;
-}
+export const VideoTrackParams = {
+  type: "object",
+  required: ["video_track_id", ...ResourceParams.required],
+  properties: {
+    video_track_id: { type: "number" },
+    ...ResourceParams.properties,
+  },
+  additionalProperties: false,
+} as const;
 
-export const videoTrackParamsSchema =
-  validationMetadatasToSchemas().VideoTrackParams;
+export type VideoTrackParams = FromSchema<typeof VideoTrackParams>;

@@ -13,13 +13,6 @@
  */
 
 import { exists, mapValues } from '../runtime';
-import {
-    ApiV2BookBookIdSections,
-    ApiV2BookBookIdSectionsFromJSON,
-    ApiV2BookBookIdSectionsFromJSONTyped,
-    ApiV2BookBookIdSectionsToJSON,
-} from './';
-
 /**
  * 
  * @export
@@ -28,34 +21,10 @@ import {
 export interface InlineObject1 {
     /**
      * 
-     * @type {string}
-     * @memberof InlineObject1
-     */
-    name?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineObject1
-     */
-    description?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineObject1
-     */
-    language?: string;
-    /**
-     * 
      * @type {boolean}
      * @memberof InlineObject1
      */
-    shared?: boolean;
-    /**
-     * 
-     * @type {Array<ApiV2BookBookIdSections>}
-     * @memberof InlineObject1
-     */
-    sections?: Array<ApiV2BookBookIdSections>;
+    zoomImportEnabled?: boolean;
 }
 
 export function InlineObject1FromJSON(json: any): InlineObject1 {
@@ -68,11 +37,7 @@ export function InlineObject1FromJSONTyped(json: any, ignoreDiscriminator: boole
     }
     return {
         
-        'name': !exists(json, 'name') ? undefined : json['name'],
-        'description': !exists(json, 'description') ? undefined : json['description'],
-        'language': !exists(json, 'language') ? undefined : json['language'],
-        'shared': !exists(json, 'shared') ? undefined : json['shared'],
-        'sections': !exists(json, 'sections') ? undefined : ((json['sections'] as Array<any>).map(ApiV2BookBookIdSectionsFromJSON)),
+        'zoomImportEnabled': !exists(json, 'zoomImportEnabled') ? undefined : json['zoomImportEnabled'],
     };
 }
 
@@ -85,11 +50,7 @@ export function InlineObject1ToJSON(value?: InlineObject1 | null): any {
     }
     return {
         
-        'name': value.name,
-        'description': value.description,
-        'language': value.language,
-        'shared': value.shared,
-        'sections': value.sections === undefined ? undefined : ((value.sections as Array<any>).map(ApiV2BookBookIdSectionsToJSON)),
+        'zoomImportEnabled': value.zoomImportEnabled,
     };
 }
 

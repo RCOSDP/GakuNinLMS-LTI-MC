@@ -1,9 +1,7 @@
-import { FastifyRequest, FastifySchema } from "fastify";
+import type { FastifyRequest, FastifySchema } from "fastify";
 import { outdent } from "outdent";
-import {
-  ltiResourceLinkParamsSchema,
-  LtiResourceLinkParams,
-} from "$server/validators/ltiResourceLinkParams";
+import type { LtiResourceLinkParams } from "$server/validators/ltiResourceLinkParams";
+import { ltiResourceLinkParamsSchema } from "$server/validators/ltiResourceLinkParams";
 import authUser from "$server/auth/authUser";
 import authInstructor from "$server/auth/authInstructor";
 import { destroyLtiResourceLink } from "$server/utils/ltiResourceLink";
@@ -23,6 +21,7 @@ export const destroyHooks = {
   auth: [authUser, authInstructor],
 };
 
+// TODO: 複数著者に対応してほしい
 export async function destroy({
   params,
   session,

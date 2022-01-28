@@ -3,6 +3,7 @@ import type { BookSchema } from "$server/models/book";
 import type { BookPropsWithSubmitOptions } from "$types/bookPropsWithSubmitOptions";
 import type { SectionProps } from "$server/models/book/section";
 import type { TopicSchema } from "$server/models/topic";
+import type { ContentAuthors } from "$types/content";
 import { useSessionAtom } from "$store/session";
 import BookEdit from "$templates/BookEdit";
 import Placeholder from "$templates/Placeholder";
@@ -10,18 +11,23 @@ import BookNotFoundProblem from "$templates/TopicNotFoundProblem";
 import { destroyBook, updateBook, useBook } from "$utils/book";
 import { pagesPath } from "$utils/$path";
 import useBookLinkHandler from "$utils/useBookLinkHandler";
+import useAuthorsHandler from "$utils/useAuthorsHandler";
 
-export type Query = { bookId: BookSchema["id"]; context?: "books" };
+export type Query = { bookId: BookSchema["id"]; context?: "books" | "topics" };
 
 function Edit({ bookId, context }: Query) {
   const query = { bookId, ...(context && { context }) };
-  const { session, isBookEditable, isTopicEditable } = useSessionAtom();
-  const { book, error } = useBook(bookId, isBookEditable, isTopicEditable);
+  const { session, isContentEditable } = useSessionAtom();
+  const { book, error } = useBook(bookId, isContentEditable);
   const router = useRouter();
   const handleBookLink = useBookLinkHandler();
+  const { handleAuthorsUpdate, handleAuthorSubmit } = useAuthorsHandler(
+    book && { type: "book", ...book }
+  );
   const back = () => {
     switch (context) {
       case "books":
+      case "topics":
         return router.push(pagesPath[context].$url());
       default:
         return router.push(pagesPath.book.$url({ query }));
@@ -43,6 +49,7 @@ function Edit({ bookId, context }: Query) {
     await destroyBook(id);
     switch (context) {
       case "books":
+      case "topics":
         return router.push(pagesPath[context].$url());
       default:
         return router.push(pagesPath.books.$url());
@@ -58,8 +65,10 @@ function Edit({ bookId, context }: Query) {
       sections: sections.filter((section) => section.topics.length > 0),
     });
   }
-  function handleTopicEditClick(topic: Pick<TopicSchema, "id" | "creator">) {
-    const action = isTopicEditable(topic) ? "edit" : "generate";
+  function handleTopicEditClick(
+    topic: Pick<TopicSchema, "id"> & ContentAuthors
+  ) {
+    const action = isContentEditable(topic) ? "edit" : "generate";
     const url = pagesPath.book.edit.topic[action].$url({
       query: { ...query, topicId: topic.id },
     });
@@ -84,7 +93,9 @@ function Edit({ bookId, context }: Query) {
     onTopicImportClick: handleTopicImportClick,
     onTopicNewClick: handleTopicNewClick,
     onTopicEditClick: handleTopicEditClick,
-    isTopicEditable: () => true,
+    onAuthorsUpdate: handleAuthorsUpdate,
+    onAuthorSubmit: handleAuthorSubmit,
+    isContentEditable: () => true,
   };
 
   if (error) return <BookNotFoundProblem />;

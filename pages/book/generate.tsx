@@ -10,8 +10,8 @@ import type { Query as BookEditQuery } from "./edit";
 export type Query = BookEditQuery;
 
 function Generate({ bookId, context }: Query) {
-  const { isBookEditable, isTopicEditable } = useSessionAtom();
-  const { book, error } = useBook(bookId, isBookEditable, isTopicEditable);
+  const { isContentEditable } = useSessionAtom();
+  const { book, error } = useBook(bookId, isContentEditable);
   const handlers = useBookNewHandlers(context, bookId);
 
   if (error) return <BookNotFoundProblem />;

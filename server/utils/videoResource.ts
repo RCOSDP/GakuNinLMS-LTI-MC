@@ -1,5 +1,5 @@
-import { VideoResource } from "$server/models/videoResource";
-import VideoResourceMatcher from "$server/types/videoResourceMatcher";
+import type { VideoResource } from "$server/models/videoResource";
+import type VideoResourceMatcher from "$server/types/videoResourceMatcher";
 import { providerMatchers } from "$server/config/video/provider";
 import getValidUrl from "./getValidUrl";
 

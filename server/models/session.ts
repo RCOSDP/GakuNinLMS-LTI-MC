@@ -1,8 +1,6 @@
-import {
-  LtiResourceLinkSchema,
-  ltiResourceLinkSchema,
-} from "./ltiResourceLink";
-import { UserSchema, userSchema } from "$server/models/user";
+import type { LtiResourceLinkSchema } from "./ltiResourceLink";
+import { ltiResourceLinkSchema } from "./ltiResourceLink";
+import { UserSchema } from "$server/models/user";
 import { OauthClientSchema } from "./oauthClient";
 import { LtiVersionSchema } from "./ltiVersion";
 import { LtiUserSchema } from "./ltiUser";
@@ -10,6 +8,7 @@ import { LtiRolesSchema } from "./ltiRoles";
 import { LtiResourceLinkRequestSchema } from "./ltiResourceLinkRequest";
 import { LtiContextSchema } from "./ltiContext";
 import { LtiLaunchPresentationSchema } from "./ltiLaunchPresentation";
+import { SystemSettingsSchema } from "./systemSettings";
 
 /** セッション */
 export type SessionSchema = {
@@ -22,6 +21,7 @@ export type SessionSchema = {
   ltiLaunchPresentation?: LtiLaunchPresentationSchema;
   ltiResourceLink: null | LtiResourceLinkSchema;
   user: UserSchema;
+  systemSettings: SystemSettingsSchema;
 };
 
 export const sessionSchema = {
@@ -35,6 +35,7 @@ export const sessionSchema = {
     "ltiResourceLinkRequest",
     "ltiContext",
     "user",
+    "systemSettings",
   ],
   properties: {
     oauthClient: OauthClientSchema,
@@ -48,7 +49,8 @@ export const sessionSchema = {
       ...ltiResourceLinkSchema,
       nullable: true,
     },
-    user: userSchema,
+    user: UserSchema,
+    systemSettings: SystemSettingsSchema,
   },
   additionalProperties: false,
 } as const;

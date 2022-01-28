@@ -1,5 +1,7 @@
 root: true
 parser: "@typescript-eslint/parser"
+parserOptions:
+  project: "tsconfig.json"
 plugins:
   - react
   - "@typescript-eslint"
@@ -17,6 +19,10 @@ extends:
   - prettier
 rules:
   "@typescript-eslint/explicit-module-boundary-types": "off"
+  "@typescript-eslint/consistent-type-imports": "error"
+  "@typescript-eslint/no-floating-promises":
+    - "error"
+    - ignoreVoid: true
   "@typescript-eslint/no-unused-vars":
     - "error"
     - varsIgnorePattern: "^_"
@@ -28,13 +34,6 @@ rules:
   filenames/match-exported: error
   tsc/config: [error, { configFile: "tsconfig.json" }]
 overrides:
-  - files:
-      - jest.config.js
-      - next.config.js
-    env:
-      node: true
-    rules:
-      "@typescript-eslint/no-var-requires": "off"
   - files:
       - samples/**
     rules:

@@ -1,6 +1,6 @@
-import { Resource, Video } from "@prisma/client";
-import jsonSchema from "$server/prisma/json-schema.json";
-import { VideoTrackSchema, videoTrackSchema } from "./videoTrack";
+import type { Resource, Video } from "@prisma/client";
+import type { VideoTrackSchema } from "./videoTrack";
+import { videoTrackSchema } from "./videoTrack";
 
 export type VideoResource = {
   url: Resource["url"];
@@ -12,26 +12,23 @@ export type VideoResourcePropsSchema = Pick<VideoResource, "url">;
 export type VideoResourceSchema = Resource &
   Pick<VideoResource, "providerUrl" | "tracks">;
 
-const { id, url, details } = jsonSchema.definitions.Resource.properties;
-const { providerUrl } = jsonSchema.definitions.Video.properties;
-
 export const videoResourcePropsSchema = {
   type: "object",
   properties: {
-    url,
+    url: { type: "string" },
   },
-};
+} as const;
 
 export const videoResourceSchema = {
   type: "object",
   properties: {
-    id,
-    url,
-    details,
-    providerUrl,
+    id: { type: "integer" },
+    url: { type: "string" },
+    details: { type: "object" },
+    providerUrl: { type: "string", nullable: true },
     tracks: {
       type: "array",
       items: videoTrackSchema,
     },
   },
-};
+} as const;

@@ -1,4 +1,4 @@
-import { SessionSchema } from "$server/models/session";
+import type { SessionSchema } from "$server/models/session";
 import ltiResourceLink from "./ltiResourceLink";
 import user from "./user";
 
@@ -15,6 +15,7 @@ const session: SessionSchema = {
   },
   ltiResourceLink,
   user,
+  systemSettings: { zoomImportEnabled: false },
 };
 
 export default session;

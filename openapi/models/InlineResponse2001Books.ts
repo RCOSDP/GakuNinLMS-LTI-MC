@@ -18,10 +18,14 @@ import {
     InlineResponse200FromJSON,
     InlineResponse200FromJSONTyped,
     InlineResponse200ToJSON,
-    InlineResponse2001Author,
-    InlineResponse2001AuthorFromJSON,
-    InlineResponse2001AuthorFromJSONTyped,
-    InlineResponse2001AuthorToJSON,
+    InlineResponse2001Authors,
+    InlineResponse2001AuthorsFromJSON,
+    InlineResponse2001AuthorsFromJSONTyped,
+    InlineResponse2001AuthorsToJSON,
+    InlineResponse2001Keywords,
+    InlineResponse2001KeywordsFromJSON,
+    InlineResponse2001KeywordsFromJSONTyped,
+    InlineResponse2001KeywordsToJSON,
     InlineResponse2001Sections,
     InlineResponse2001SectionsFromJSON,
     InlineResponse2001SectionsFromJSONTyped,
@@ -96,10 +100,16 @@ export interface InlineResponse2001Books {
     details?: object;
     /**
      * 
-     * @type {InlineResponse2001Author}
+     * @type {Array<InlineResponse2001Authors>}
      * @memberof InlineResponse2001Books
      */
-    author?: InlineResponse2001Author;
+    authors?: Array<InlineResponse2001Authors>;
+    /**
+     * 
+     * @type {Array<InlineResponse2001Keywords>}
+     * @memberof InlineResponse2001Books
+     */
+    keywords?: Array<InlineResponse2001Keywords>;
     /**
      * 
      * @type {Array<InlineResponse2001Sections>}
@@ -134,7 +144,8 @@ export function InlineResponse2001BooksFromJSONTyped(json: any, ignoreDiscrimina
         'createdAt': !exists(json, 'createdAt') ? undefined : (new Date(json['createdAt'])),
         'updatedAt': !exists(json, 'updatedAt') ? undefined : (new Date(json['updatedAt'])),
         'details': !exists(json, 'details') ? undefined : json['details'],
-        'author': !exists(json, 'author') ? undefined : InlineResponse2001AuthorFromJSON(json['author']),
+        'authors': !exists(json, 'authors') ? undefined : ((json['authors'] as Array<any>).map(InlineResponse2001AuthorsFromJSON)),
+        'keywords': !exists(json, 'keywords') ? undefined : ((json['keywords'] as Array<any>).map(InlineResponse2001KeywordsFromJSON)),
         'sections': !exists(json, 'sections') ? undefined : ((json['sections'] as Array<any>).map(InlineResponse2001SectionsFromJSON)),
         'ltiResourceLinks': !exists(json, 'ltiResourceLinks') ? undefined : ((json['ltiResourceLinks'] as Array<any>).map(InlineResponse200FromJSON)),
     };
@@ -159,7 +170,8 @@ export function InlineResponse2001BooksToJSON(value?: InlineResponse2001Books | 
         'createdAt': value.createdAt === undefined ? undefined : (value.createdAt.toISOString()),
         'updatedAt': value.updatedAt === undefined ? undefined : (value.updatedAt.toISOString()),
         'details': value.details,
-        'author': InlineResponse2001AuthorToJSON(value.author),
+        'authors': value.authors === undefined ? undefined : ((value.authors as Array<any>).map(InlineResponse2001AuthorsToJSON)),
+        'keywords': value.keywords === undefined ? undefined : ((value.keywords as Array<any>).map(InlineResponse2001KeywordsToJSON)),
         'sections': value.sections === undefined ? undefined : ((value.sections as Array<any>).map(InlineResponse2001SectionsToJSON)),
         'ltiResourceLinks': value.ltiResourceLinks === undefined ? undefined : ((value.ltiResourceLinks as Array<any>).map(InlineResponse200ToJSON)),
     };

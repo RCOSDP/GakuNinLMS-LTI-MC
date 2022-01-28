@@ -1,5 +1,6 @@
-import { User, Topic } from "@prisma/client";
-import { TopicProps, TopicSchema } from "$server/models/topic";
+import type { User, Topic } from "@prisma/client";
+import type { TopicProps, TopicSchema } from "$server/models/topic";
+import type { KeywordSchema } from "$server/models/keyword";
 import prisma from "$server/utils/prisma";
 import {
   topicsWithResourcesArg,
@@ -8,25 +9,34 @@ import {
 import topicInput from "./topicInput";
 import resourceConnectOrCreateInput from "./resourceConnectOrCreateInput";
 import topicCreateInput from "./topicCreateInput";
+import keywordsConnectOrCreateInput from "$server/utils/keyword/keywordsConnectOrCreateInput";
+import keywordsDisconnectInput from "../keyword/keywordsDisconnectInput";
 
-function topicUpdateInput(creatorId: User["id"], topic: TopicProps) {
+function topicUpdateInput(topic: TopicProps, keywords: KeywordSchema[]) {
   const input = {
-    ...topicInput(creatorId, topic),
+    ...topicInput(topic),
     resource: resourceConnectOrCreateInput(topic.resource),
+    keywords: {
+      ...keywordsConnectOrCreateInput(topic.keywords ?? []),
+      ...keywordsDisconnectInput(keywords, topic.keywords ?? []),
+    },
   };
 
   return input;
 }
 
 async function upsertTopic(
-  creatorId: User["id"],
+  authorId: User["id"],
   { id, ...topic }: TopicProps & Pick<Topic, "id">
 ): Promise<TopicSchema | undefined> {
+  const keywords = await prisma.keyword.findMany({
+    where: { topics: { every: { id } } },
+  });
   const created = await prisma.topic.upsert({
     ...topicsWithResourcesArg,
     where: { id },
-    create: topicCreateInput(creatorId, topic),
-    update: topicUpdateInput(creatorId, topic),
+    create: topicCreateInput(authorId, topic),
+    update: topicUpdateInput(topic, keywords),
   });
 
   if (!created) return;

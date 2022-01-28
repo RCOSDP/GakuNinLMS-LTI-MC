@@ -35,13 +35,17 @@ function SlideAppBar() {
 export const Default = () => (
   <>
     <SlideAppBar />
-    <BookImport books={books} {...handlers} />
+    <BookImport
+      totalCount={123}
+      contents={books.map((book) => ({ type: "book", ...book }))}
+      {...handlers}
+    />
   </>
 );
 
 export const Empty = () => (
   <>
     <SlideAppBar />
-    <BookImport books={[]} {...handlers} />
+    <BookImport totalCount={0} contents={[]} {...handlers} />
   </>
 );

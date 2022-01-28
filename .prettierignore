@@ -7,7 +7,6 @@ node_modules/
 /public/storybook/
 /public/LICENSE
 /server/dist/
-/server/prisma/json-schema.json
 /server/prisma/migrations/
 /utils/$path.ts
 .env*

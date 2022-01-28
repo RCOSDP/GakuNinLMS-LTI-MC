@@ -23,6 +23,7 @@ import { useSessionAtom } from "$store/session";
 import useSticky from "$utils/useSticky";
 import useAppBarOffset from "$utils/useAppBarOffset";
 import getLocaleDateString from "$utils/getLocaleDateString";
+import { authors } from "$utils/descriptionList";
 import extractNumberFromPx from "$utils/extractNumberFromPx";
 import sumPixels from "$utils/sumPixels";
 
@@ -126,7 +127,7 @@ export default function Book(props: Props) {
     considerAppBar = true,
   } = props;
   const topic = book?.sections[sectionIndex]?.topics[topicIndex];
-  const { isInstructor, isBookEditable, isTopicEditable } = useSessionAtom();
+  const { isInstructor, isContentEditable } = useSessionAtom();
   const [expanded, setExpanded] = useState(false);
   const handleLinkClick = () => setExpanded(!expanded);
   const theme = useTheme();
@@ -162,44 +163,42 @@ export default function Book(props: Props) {
 
   return (
     <Container maxWidth="lg">
-      <ActionHeader
-        considerAppBar={considerAppBar}
-        action={
-          <header className={classes.header}>
-            <Typography
-              className={clsx(classes.title, { [classes.mobile]: !matches })}
-              variant="h4"
-            >
-              {book?.name}
-            </Typography>
-            {book?.shared && <SharedIndicator />}
-            {isInstructor &&
-              book &&
-              onBookEditClick &&
-              (isBookEditable(book) || book.shared) && (
-                <EditButton
-                  variant="book"
-                  size="medium"
-                  onClick={handleBookEditClick}
-                />
-              )}
-            {isInstructor && linked && onOtherBookLinkClick && (
-              <Button
-                size="small"
-                color="primary"
-                onClick={handleOtherBookLinkClick}
-              >
-                <LinkIcon className={classes.icon} />
-                他のブックを提供
-              </Button>
+      <ActionHeader sx={{ pb: 0 }} considerAppBar={considerAppBar}>
+        <header className={classes.header}>
+          <Typography
+            className={clsx(classes.title, { [classes.mobile]: !matches })}
+            variant="h4"
+          >
+            {book?.name}
+          </Typography>
+          {book?.shared && <SharedIndicator />}
+          {isInstructor &&
+            book &&
+            onBookEditClick &&
+            (isContentEditable(book) || book.shared) && (
+              <EditButton
+                variant="book"
+                size="medium"
+                onClick={handleBookEditClick}
+              />
             )}
-          </header>
-        }
-      />
+          {isInstructor && linked && onOtherBookLinkClick && (
+            <Button
+              size="small"
+              color="primary"
+              onClick={handleOtherBookLinkClick}
+            >
+              <LinkIcon className={classes.icon} />
+              他のブックを提供
+            </Button>
+          )}
+        </header>
+      </ActionHeader>
       {book && (
         <>
           <div className={classes.description}>
             <DescriptionList
+              inline
               nowrap
               value={[
                 {
@@ -210,10 +209,7 @@ export default function Book(props: Props) {
                   key: "更新日",
                   value: getLocaleDateString(book.updatedAt, "ja"),
                 },
-                {
-                  key: "ブック作成者",
-                  value: book.author.name,
-                },
+                ...authors(book),
               ]}
             />
             <Link
@@ -253,7 +249,7 @@ export default function Book(props: Props) {
             sections={book?.sections ?? []}
             onItemClick={handleItemClick}
             onItemEditClick={handleItemEditClick}
-            isTopicEditable={isTopicEditable}
+            isContentEditable={isContentEditable}
           />
         </div>
       </div>

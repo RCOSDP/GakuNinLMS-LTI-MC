@@ -13,6 +13,17 @@
  */
 
 import { exists, mapValues } from '../runtime';
+import {
+    ApiV2BookBookIdKeywords,
+    ApiV2BookBookIdKeywordsFromJSON,
+    ApiV2BookBookIdKeywordsFromJSONTyped,
+    ApiV2BookBookIdKeywordsToJSON,
+    ApiV2TopicTopicIdResource,
+    ApiV2TopicTopicIdResourceFromJSON,
+    ApiV2TopicTopicIdResourceFromJSONTyped,
+    ApiV2TopicTopicIdResourceToJSON,
+} from './';
+
 /**
  * 
  * @export
@@ -24,13 +35,49 @@ export interface InlineObject7 {
      * @type {string}
      * @memberof InlineObject7
      */
-    language?: string;
+    name?: string;
     /**
      * 
      * @type {string}
      * @memberof InlineObject7
      */
-    content?: string;
+    language?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof InlineObject7
+     */
+    timeRequired?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof InlineObject7
+     */
+    shared?: boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineObject7
+     */
+    license?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineObject7
+     */
+    description?: string;
+    /**
+     * 
+     * @type {ApiV2TopicTopicIdResource}
+     * @memberof InlineObject7
+     */
+    resource?: ApiV2TopicTopicIdResource;
+    /**
+     * 
+     * @type {Array<ApiV2BookBookIdKeywords>}
+     * @memberof InlineObject7
+     */
+    keywords?: Array<ApiV2BookBookIdKeywords>;
 }
 
 export function InlineObject7FromJSON(json: any): InlineObject7 {
@@ -43,8 +90,14 @@ export function InlineObject7FromJSONTyped(json: any, ignoreDiscriminator: boole
     }
     return {
         
+        'name': !exists(json, 'name') ? undefined : json['name'],
         'language': !exists(json, 'language') ? undefined : json['language'],
-        'content': !exists(json, 'content') ? undefined : json['content'],
+        'timeRequired': !exists(json, 'timeRequired') ? undefined : json['timeRequired'],
+        'shared': !exists(json, 'shared') ? undefined : json['shared'],
+        'license': !exists(json, 'license') ? undefined : json['license'],
+        'description': !exists(json, 'description') ? undefined : json['description'],
+        'resource': !exists(json, 'resource') ? undefined : ApiV2TopicTopicIdResourceFromJSON(json['resource']),
+        'keywords': !exists(json, 'keywords') ? undefined : ((json['keywords'] as Array<any>).map(ApiV2BookBookIdKeywordsFromJSON)),
     };
 }
 
@@ -57,8 +110,14 @@ export function InlineObject7ToJSON(value?: InlineObject7 | null): any {
     }
     return {
         
+        'name': value.name,
         'language': value.language,
-        'content': value.content,
+        'timeRequired': value.timeRequired,
+        'shared': value.shared,
+        'license': value.license,
+        'description': value.description,
+        'resource': ApiV2TopicTopicIdResourceToJSON(value.resource),
+        'keywords': value.keywords === undefined ? undefined : ((value.keywords as Array<any>).map(ApiV2BookBookIdKeywordsToJSON)),
     };
 }
 

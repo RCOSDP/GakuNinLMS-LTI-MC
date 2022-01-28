@@ -13,6 +13,17 @@
  */
 
 import { exists, mapValues } from '../runtime';
+import {
+    ApiV2BookBookIdKeywords,
+    ApiV2BookBookIdKeywordsFromJSON,
+    ApiV2BookBookIdKeywordsFromJSONTyped,
+    ApiV2BookBookIdKeywordsToJSON,
+    ApiV2BookBookIdSections,
+    ApiV2BookBookIdSectionsFromJSON,
+    ApiV2BookBookIdSectionsFromJSONTyped,
+    ApiV2BookBookIdSectionsToJSON,
+} from './';
+
 /**
  * 
  * @export
@@ -24,25 +35,37 @@ export interface InlineObject3 {
      * @type {string}
      * @memberof InlineObject3
      */
-    json?: string;
+    name?: string;
     /**
      * 
      * @type {string}
      * @memberof InlineObject3
      */
-    file?: string;
+    description?: string;
     /**
      * 
      * @type {string}
      * @memberof InlineObject3
      */
-    provider: string;
+    language?: string;
     /**
      * 
-     * @type {string}
+     * @type {boolean}
      * @memberof InlineObject3
      */
-    wowzaBaseUrl: string;
+    shared?: boolean;
+    /**
+     * 
+     * @type {Array<ApiV2BookBookIdSections>}
+     * @memberof InlineObject3
+     */
+    sections?: Array<ApiV2BookBookIdSections>;
+    /**
+     * 
+     * @type {Array<ApiV2BookBookIdKeywords>}
+     * @memberof InlineObject3
+     */
+    keywords?: Array<ApiV2BookBookIdKeywords>;
 }
 
 export function InlineObject3FromJSON(json: any): InlineObject3 {
@@ -55,10 +78,12 @@ export function InlineObject3FromJSONTyped(json: any, ignoreDiscriminator: boole
     }
     return {
         
-        'json': !exists(json, 'json') ? undefined : json['json'],
-        'file': !exists(json, 'file') ? undefined : json['file'],
-        'provider': json['provider'],
-        'wowzaBaseUrl': json['wowzaBaseUrl'],
+        'name': !exists(json, 'name') ? undefined : json['name'],
+        'description': !exists(json, 'description') ? undefined : json['description'],
+        'language': !exists(json, 'language') ? undefined : json['language'],
+        'shared': !exists(json, 'shared') ? undefined : json['shared'],
+        'sections': !exists(json, 'sections') ? undefined : ((json['sections'] as Array<any>).map(ApiV2BookBookIdSectionsFromJSON)),
+        'keywords': !exists(json, 'keywords') ? undefined : ((json['keywords'] as Array<any>).map(ApiV2BookBookIdKeywordsFromJSON)),
     };
 }
 
@@ -71,10 +96,12 @@ export function InlineObject3ToJSON(value?: InlineObject3 | null): any {
     }
     return {
         
-        'json': value.json,
-        'file': value.file,
-        'provider': value.provider,
-        'wowzaBaseUrl': value.wowzaBaseUrl,
+        'name': value.name,
+        'description': value.description,
+        'language': value.language,
+        'shared': value.shared,
+        'sections': value.sections === undefined ? undefined : ((value.sections as Array<any>).map(ApiV2BookBookIdSectionsToJSON)),
+        'keywords': value.keywords === undefined ? undefined : ((value.keywords as Array<any>).map(ApiV2BookBookIdKeywordsToJSON)),
     };
 }
 

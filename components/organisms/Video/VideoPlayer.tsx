@@ -1,22 +1,25 @@
 import { useEffect } from "react";
+import type { SxProps } from "@mui/system";
 import type { VideoInstance } from "$types/videoInstance";
+import Box from "@mui/material/Box";
 import useVolume from "$utils/useVolume";
 import Vimeo from "./Vimeo";
 import VideoJs from "./VideoJs";
 import videoJsDurationChangeShims from "$utils/videoJsDurationChangeShims";
 
 type Props = {
-  videoInstance: VideoInstance;
+  sx?: SxProps;
   className?: string;
+  videoInstance: VideoInstance;
   onEnded?: () => void;
   onDurationChange?: (duration: number) => void;
 };
 
 export default function VideoPlayer({
   videoInstance,
-  className,
   onEnded,
   onDurationChange,
+  ...other
 }: Props) {
   useVolume(videoInstance.player);
   useEffect(() => {
@@ -38,10 +41,10 @@ export default function VideoPlayer({
   }, [videoInstance, onEnded, onDurationChange]);
 
   return (
-    <div className={className}>
+    <Box {...other}>
       {videoInstance.type === "vimeo" && <Vimeo {...videoInstance} />}
       {videoInstance.type === "youtube" && <VideoJs {...videoInstance} />}
       {videoInstance.type === "wowza" && <VideoJs {...videoInstance} />}
-    </div>
+    </Box>
   );
 }

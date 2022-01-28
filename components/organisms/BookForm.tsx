@@ -2,20 +2,24 @@ import Card from "@mui/material/Card";
 import Checkbox from "@mui/material/Checkbox";
 import Divider from "@mui/material/Divider";
 import Button from "@mui/material/Button";
-import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import makeStyles from "@mui/styles/makeStyles";
 import { useForm } from "react-hook-form";
 import clsx from "clsx";
+import InputLabel from "$atoms/InputLabel";
 import TextField from "$atoms/TextField";
+import AuthorsInput from "$organisms/AuthorsInput";
+import KeywordsInput from "$organisms/KeywordsInput";
 import useCardStyles from "styles/card";
-import useInputLabelStyles from "styles/inputLabel";
 import gray from "theme/colors/gray";
 import type { BookSchema } from "$server/models/book";
 import type { BookPropsWithSubmitOptions } from "$types/bookPropsWithSubmitOptions";
+import type { AuthorSchema } from "$server/models/author";
+import { useAuthorsAtom } from "store/authors";
 import languages from "$utils/languages";
+import useKeywordsInput from "$utils/useKeywordsInput";
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -45,36 +49,46 @@ const label = {
 
 type Props = {
   book?: BookSchema;
+  topics?: number[];
   id?: string;
   linked?: boolean;
   className?: string;
   variant?: "create" | "update";
   onSubmit?: (book: BookPropsWithSubmitOptions) => void;
+  onAuthorsUpdate(authors: AuthorSchema[]): void;
+  onAuthorSubmit(author: Pick<AuthorSchema, "email">): void;
 };
 
 export default function BookForm({
   book,
+  topics,
   className,
   id,
   linked = false,
   variant = "create",
   onSubmit = () => undefined,
+  onAuthorsUpdate,
+  onAuthorSubmit,
 }: Props) {
   const cardClasses = useCardStyles();
-  const inputLabelClasses = useInputLabelStyles();
   const classes = useStyles();
+  const { updateState: _updateState, ...authorsInputProps } = useAuthorsAtom();
+  const keywordsInputProps = useKeywordsInput(book?.keywords ?? []);
   const defaultValues: BookPropsWithSubmitOptions = {
     name: book?.name ?? "",
     description: book?.description ?? "",
     shared: Boolean(book?.shared),
     language: book?.language ?? Object.getOwnPropertyNames(languages)[0],
     sections: book?.sections,
+    authors: book?.authors ?? [],
+    keywords: book?.keywords ?? [],
     submitWithLink: false,
   };
   const { handleSubmit, register, setValue } =
     useForm<BookPropsWithSubmitOptions>({
       defaultValues,
     });
+  setValue("topics", topics);
 
   return (
     <Card
@@ -82,7 +96,11 @@ export default function BookForm({
       className={clsx(classes.margin, className)}
       id={id}
       component="form"
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={handleSubmit((values) => {
+        values.authors = authorsInputProps.authors;
+        values.keywords = keywordsInputProps.keywords;
+        onSubmit(values);
+      })}
     >
       <TextField
         inputProps={register("name")}
@@ -101,10 +119,13 @@ export default function BookForm({
         required
         fullWidth
       />
+      <AuthorsInput
+        {...authorsInputProps}
+        onAuthorsUpdate={onAuthorsUpdate}
+        onAuthorSubmit={onAuthorSubmit}
+      />
       <div>
-        <InputLabel classes={inputLabelClasses} htmlFor="shared">
-          他の教員にシェア
-        </InputLabel>
+        <InputLabel htmlFor="shared">他の教員にシェア</InputLabel>
         <Checkbox
           id="shared"
           name="shared"
@@ -125,6 +146,7 @@ export default function BookForm({
           </MenuItem>
         ))}
       </TextField>
+      <KeywordsInput {...keywordsInputProps} />
       <TextField
         label={
           <>
@@ -152,7 +174,7 @@ export default function BookForm({
       <Divider className={classes.divider} />
       {!linked && (
         <div>
-          <InputLabel classes={inputLabelClasses} htmlFor="submit-with-link">
+          <InputLabel htmlFor="submit-with-link">
             {label[variant].submitWithLink}
           </InputLabel>
           <Checkbox

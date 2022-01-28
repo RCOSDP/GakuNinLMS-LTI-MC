@@ -3,32 +3,28 @@ import path from "path";
 import unzipper from "unzipper";
 // @ts-expect-error Could not find a declaration file for module 'recursive-readdir-synchronous'
 import recursive from "recursive-readdir-synchronous";
-import dateFormat from "dateformat";
+import format from "date-fns/format";
+import utcToZoneTime from "date-fns-tz/utcToZonedTime";
 import { Buffer } from "buffer";
-import scp from "node-scp";
 
-import { validate, ValidationError } from "class-validator";
-import { UserSchema } from "$server/models/user";
-import { BookSchema } from "$server/models/book";
-import {
+import type { ValidationError } from "class-validator";
+import { validate } from "class-validator";
+import type { UserSchema } from "$server/models/user";
+import type { BookSchema } from "$server/models/book";
+import type {
   BooksImportParams,
   BooksImportResult,
   ImportTopic,
   ImportSection,
   ImportBook,
-  ImportBooks,
-} from "$server/validators/booksImportParams";
+} from "$server/models/booksImportParams";
+import { ImportBooks } from "$server/models/booksImportParams";
 import prisma from "$server/utils/prisma";
 import findBook from "./findBook";
 import { parse as parseProviderUrl } from "$server/utils/videoResource";
-import {
-  WOWZA_SCP_HOST,
-  WOWZA_SCP_PORT,
-  WOWZA_SCP_USERNAME,
-  WOWZA_SCP_PRIVATE_KEY,
-  WOWZA_SCP_PASS_PHRASE,
-  WOWZA_SCP_SERVER_PATH,
-} from "$server/utils/env";
+import { scpUpload } from "$server/utils/wowza/scpUpload";
+import findRoles from "$server/utils/author/findRoles";
+import insertAuthors from "$server/utils/author/insertAuthors";
 
 async function importBooksUtil(
   user: UserSchema,
@@ -86,6 +82,23 @@ class ImportBooksUtil {
         const res = await findBook(book.id);
         if (res) this.books.push(res as BookSchema);
       }
+
+      const roles = await findRoles();
+      const contents = {
+        books: this.books,
+        topics: this.books.flatMap((book) =>
+          book.sections.flatMap((section) => section.topics)
+        ),
+      };
+
+      await prisma.$transaction([
+        ...contents.books.map((book) =>
+          insertAuthors(roles, "book", book.id, this.params.authors)
+        ),
+        ...contents.topics.map((topic) =>
+          insertAuthors(roles, "topic", topic.id, this.params.authors)
+        ),
+      ]);
     } catch (e) {
       console.error(e);
       this.errors.push(...(Array.isArray(e) ? e : [String(e)]));
@@ -211,7 +224,10 @@ class ImportBooksUtil {
       recursive: true,
     });
     const uploaddir = fs.mkdtempSync(
-      `${uploadauthor}/${dateFormat(new Date(), "yyyymmdd-HHMM")}-`
+      `${uploadauthor}/${format(
+        utcToZoneTime(new Date(), "Asia/Tokyo"),
+        "yyyyMMdd-HHmm"
+      )}-`
     );
     const uploadsubdir = uploaddir.substring(uploadroot.length);
 
@@ -260,19 +276,7 @@ class ImportBooksUtil {
     if (!filenames.length) return;
 
     try {
-      // error  This expression is not callable.
-      // Type 'typeof import("./node_modules/node-scp/lib/index")' has no call signatures
-      // eslint-disable-next-line tsc/config
-      const client = await scp({
-        host: WOWZA_SCP_HOST,
-        port: WOWZA_SCP_PORT,
-        username: WOWZA_SCP_USERNAME,
-        // password: WOWZA_SCP_PASSWORD,
-        privateKey: fs.readFileSync(WOWZA_SCP_PRIVATE_KEY),
-        passphrase: WOWZA_SCP_PASS_PHRASE,
-      });
-      await client.uploadDir(uploadroot, WOWZA_SCP_SERVER_PATH);
-      client.close();
+      await scpUpload(uploadroot);
     } catch (e) {
       this.errors.push(`サーバーにアップロードできませんでした。\n${e}`);
     }
@@ -287,7 +291,7 @@ class ImportBooksUtil {
     return {
       ...importBook,
       timeRequired: this.timeRequired,
-      author: { connect: { id: this.user.id } },
+      authors: { create: { userId: this.user.id, roleId: 1 } },
       publishedAt: new Date(importBook.publishedAt),
       createdAt: new Date(importBook.createdAt),
       updatedAt: new Date(importBook.updatedAt),
@@ -333,7 +337,7 @@ class ImportBooksUtil {
 
     const topic = {
       ...sectionTopic,
-      creator: { connect: { id: this.user.id } },
+      authors: { create: { userId: this.user.id, roleId: 1 } },
       createdAt: new Date(sectionTopic.createdAt),
       updatedAt: new Date(sectionTopic.updatedAt),
       keywords: this.getKeywords(sectionTopic.keywords),

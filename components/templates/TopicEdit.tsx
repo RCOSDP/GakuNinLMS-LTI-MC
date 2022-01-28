@@ -1,17 +1,17 @@
 import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import makeStyles from "@mui/styles/makeStyles";
 import TopicForm from "$organisms/TopicForm";
+import Container from "$atoms/Container";
 import RequiredDot from "$atoms/RequiredDot";
 import BackButton from "$atoms/BackButton";
-import useContainerStyles from "styles/container";
 import type { TopicProps, TopicSchema } from "$server/models/topic";
 import type {
   VideoTrackProps,
   VideoTrackSchema,
 } from "$server/models/videoTrack";
+import type { AuthorSchema } from "$server/models/author";
 import { useConfirm } from "material-ui-confirm";
 
 const useStyles = makeStyles((theme) => ({
@@ -41,6 +41,8 @@ type Props = {
   onCancel(): void;
   onSubtitleDelete(videoTrack: VideoTrackSchema): void;
   onSubtitleSubmit(videoTrack: VideoTrackProps): void;
+  onAuthorsUpdate(authors: AuthorSchema[]): void;
+  onAuthorSubmit(author: Pick<AuthorSchema, "email">): void;
 };
 
 export default function TopicEdit(props: Props) {
@@ -51,9 +53,10 @@ export default function TopicEdit(props: Props) {
     onCancel,
     onSubtitleDelete,
     onSubtitleSubmit,
+    onAuthorsUpdate,
+    onAuthorSubmit,
   } = props;
   const classes = useStyles();
-  const containerClasses = useContainerStyles();
   const confirm = useConfirm();
   const handleDeleteButtonClick = async () => {
     await confirm({
@@ -65,11 +68,7 @@ export default function TopicEdit(props: Props) {
   };
 
   return (
-    <Container
-      classes={containerClasses}
-      className={classes.container}
-      maxWidth="md"
-    >
+    <Container className={classes.container} maxWidth="md">
       <BackButton onClick={onCancel}>戻る</BackButton>
       <Typography className={classes.title} variant="h4">
         トピックの編集
@@ -85,6 +84,8 @@ export default function TopicEdit(props: Props) {
         onSubmit={onSubmit}
         onSubtitleDelete={onSubtitleDelete}
         onSubtitleSubmit={onSubtitleSubmit}
+        onAuthorsUpdate={onAuthorsUpdate}
+        onAuthorSubmit={onAuthorSubmit}
       />
       <Button size="small" color="primary" onClick={handleDeleteButtonClick}>
         <DeleteOutlinedIcon />

@@ -6,8 +6,8 @@ type Props = Omit<Parameters<typeof IconButton>[0], "tooltipProps">;
 export default function SearchClearButton({ ...other }: Props) {
   return (
     <IconButton
-      color="primary"
       size="small"
+      color="secondary"
       {...other}
       tooltipProps={{ title: `検索を解除` }}
     >

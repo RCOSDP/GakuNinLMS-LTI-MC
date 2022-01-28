@@ -1,42 +1,39 @@
-export default {
-  title: "templates/TopicEdit",
-  parameters: { layout: "fullscreen" },
-};
-
+import type { Story } from "@storybook/react";
 import TopicEdit from "./TopicEdit";
-import { topic } from "samples";
+import { topic } from "$samples";
 import { useVideoTrackAtom } from "$store/videoTrack";
 import type {
   VideoTrackProps,
   VideoTrackSchema,
 } from "$server/models/videoTrack";
 
-const handlers = {
-  onSubmit: console.log,
-  onDelete: console.log,
-  onCancel: () => console.log("back"),
+export default {
+  title: "templates/TopicEdit",
+  parameters: { layout: "fullscreen" },
+  component: TopicEdit,
 };
 
-const handleSubtitleSubmit =
-  (handler: (videoTrack: VideoTrackSchema) => void) =>
-  (videoTrackProps: VideoTrackProps) => {
-    const { language, content } = videoTrackProps;
-    handler({
-      id: Date.now(),
-      kind: "subtitles",
-      language,
-      url: URL.createObjectURL(new Blob([content])),
-    });
-  };
-
-export const Default = () => {
+const Template: Story<Parameters<typeof TopicEdit>[0]> = (args) => {
   const { addVideoTrack, deleteVideoTrack } = useVideoTrackAtom();
+  const handleSubtitleSubmit =
+    (handler: (videoTrack: VideoTrackSchema) => void) =>
+    (videoTrackProps: VideoTrackProps) => {
+      const { language, content } = videoTrackProps;
+      handler({
+        id: Date.now(),
+        kind: "subtitles",
+        language,
+        url: URL.createObjectURL(new Blob([content])),
+      });
+    };
   return (
     <TopicEdit
-      topic={topic}
+      {...args}
       onSubtitleDelete={({ id }) => deleteVideoTrack(id)}
       onSubtitleSubmit={handleSubtitleSubmit(addVideoTrack)}
-      {...handlers}
     />
   );
 };
+
+export const Default = Template.bind({});
+Default.args = { topic };

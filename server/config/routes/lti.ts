@@ -1,4 +1,4 @@
-import { FastifyInstance } from "fastify";
+import type { FastifyInstance } from "fastify";
 import makeHooks from "$server/utils/makeHooks";
 import handler from "$server/utils/handler";
 import * as ltiLaunchService from "$server/services/ltiLaunch";
@@ -21,7 +21,7 @@ export async function login(fastify: FastifyInstance) {
   const { method, get, post } = ltiLoginService;
 
   fastify.get<{
-    Params: ltiLoginService.Props;
+    Querystring: ltiLoginService.Props;
   }>(path, { schema: method.get }, handler(get));
 
   fastify.post<{

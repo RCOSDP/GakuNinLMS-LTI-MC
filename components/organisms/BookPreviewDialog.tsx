@@ -1,4 +1,5 @@
-import { useEffect, forwardRef, ComponentProps } from "react";
+import type { ComponentProps } from "react";
+import { useEffect, forwardRef } from "react";
 import Dialog from "@mui/material/Dialog";
 import CloseIcon from "@mui/icons-material/Close";
 import makeStyles from "@mui/styles/makeStyles";

@@ -1,20 +1,24 @@
 import { useCallback, useMemo } from "react";
 import { useRouter } from "next/router";
 import type { BookSchema } from "$server/models/book";
-import type { TopicProps, TopicSchema } from "$server/models/topic";
+import type { TopicSchema } from "$server/models/topic";
 import type { VideoTrackSchema } from "$server/models/videoTrack";
+import type { TopicPropsWithAuthors } from "$types/topicPropsWithAuthors";
 import { useVideoTrackAtom } from "$store/videoTrack";
 import { createTopic } from "./topic";
 import { uploadVideoTrack } from "./videoTrack";
 import { addTopicToBook, replaceTopicInBook } from "./book";
+import useAuthorsHandler from "$utils/useAuthorsHandler";
+import { updateTopicAuthors } from "./topicAuthors";
 
 /** TopicNew コンポーネントのためのハンドラー生成 (要 TopicNew, ./index.tsx, ./edit.tsx) */
 function useTopicNewHandlers(
-  context: "books" | undefined,
+  context: "books" | "topics" | undefined,
   book?: BookSchema,
   targetTopic?: TopicSchema
 ) {
   const router = useRouter();
+  const { handleAuthorsUpdate, handleAuthorSubmit } = useAuthorsHandler();
   const bookEditQuery = useMemo(
     () => ({
       ...(book && { bookId: book.id }),
@@ -36,8 +40,15 @@ function useTopicNewHandlers(
     [deleteVideoTrack]
   );
   const handleSubmit = useCallback(
-    async (props: TopicProps) => {
+    async ({ authors, ...props }: TopicPropsWithAuthors) => {
       const topic = await createTopic(props);
+      await updateTopicAuthors({
+        id: topic.id,
+        authors: [
+          ...topic.authors.map(({ id, roleName }) => ({ id, roleName })),
+          ...authors,
+        ],
+      });
       await Promise.all(
         videoTracksProps.map((vt) => uploadVideoTrack(topic.resource.id, vt))
       );
@@ -59,6 +70,8 @@ function useTopicNewHandlers(
     onSubtitleDelete: handleSubtitleDelete,
     onSubmit: handleSubmit,
     onCancel: back,
+    onAuthorsUpdate: handleAuthorsUpdate,
+    onAuthorSubmit: handleAuthorSubmit,
   };
 
   return handlers;

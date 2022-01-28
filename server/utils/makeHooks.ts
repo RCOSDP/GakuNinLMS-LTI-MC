@@ -1,4 +1,4 @@
-import {
+import type {
   FastifyInstance,
   RawRequestDefaultExpression,
   RawServerBase,
@@ -6,9 +6,9 @@ import {
   RawReplyDefaultExpression,
   RouteShorthandOptions,
 } from "fastify";
-import { RouteGenericInterface } from "fastify/types/route";
-import { FastifyAuthFunction } from "fastify-auth";
-import Hooks from "$server/types/hooks";
+import type { RouteGenericInterface } from "fastify/types/route";
+import type { FastifyAuthFunction } from "fastify-auth";
+import type Hooks from "$server/types/hooks";
 
 function makePreHandler(
   fastify: FastifyInstance,

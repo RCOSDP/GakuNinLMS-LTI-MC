@@ -4,7 +4,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import makeStyles from "@mui/styles/makeStyles";
 import DescriptionList from "$atoms/DescriptionList";
-import { SessionSchema } from "$server/models/session";
+import type { SessionSchema } from "$server/models/session";
 import useCardStyles from "$styles/card";
 
 const useStyles = makeStyles((theme) => ({
@@ -34,6 +34,7 @@ function useLtiLaunchBody(session: SessionSchema) {
       context_title: session.ltiContext.title,
       context_label: session.ltiContext.label,
       lis_person_name_full: session.ltiUser.name,
+      lis_person_contact_email_primary: session.ltiUser.email,
       launch_presentation_return_url: session.ltiLaunchPresentation?.returnUrl,
     }),
     [session]

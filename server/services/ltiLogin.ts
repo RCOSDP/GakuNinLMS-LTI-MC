@@ -1,7 +1,7 @@
-import { FastifyRequest } from "fastify";
+import type { FastifyRequest } from "fastify";
 import { outdent } from "outdent";
-import { LtiVersionSchema } from "$server/models/ltiVersion";
-import { OauthClientSchema } from "$server/models/oauthClient";
+import type { LtiVersionSchema } from "$server/models/ltiVersion";
+import type { OauthClientSchema } from "$server/models/oauthClient";
 import { LtiLoginProps } from "$server/validators/ltiLoginProps";
 import createAccount from "$server/utils/ltiv1p3/createAccount";
 
@@ -48,8 +48,8 @@ async function baseAction(req: FastifyRequest, props: Props) {
   };
 }
 
-export async function get(req: FastifyRequest<{ Params: Props }>) {
-  return await baseAction(req, req.params);
+export async function get(req: FastifyRequest<{ Querystring: Props }>) {
+  return await baseAction(req, req.query);
 }
 
 export async function post(req: FastifyRequest<{ Body: Props }>) {

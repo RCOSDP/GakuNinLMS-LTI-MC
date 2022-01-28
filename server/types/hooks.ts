@@ -1,5 +1,5 @@
-import { HTTPMethods } from "fastify";
-import { FastifyAuthFunction } from "fastify-auth";
+import type { HTTPMethods } from "fastify";
+import type { FastifyAuthFunction } from "fastify-auth";
 
 type Hooks = {
   [K in Lowercase<HTTPMethods>]?: {

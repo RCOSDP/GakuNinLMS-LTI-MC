@@ -1,4 +1,4 @@
-import { UrlObject } from "url";
+import type { UrlObject } from "url";
 import { useRouter } from "next/router";
 import { useSessionAtom } from "$store/session";
 import UnlinkedProblem from "$templates/UnlinkedProblem";
@@ -8,7 +8,7 @@ import { useLoggerInit } from "$utils/eventLogger/loggerSessionPersister";
 
 function Replace(props: { href: string | UrlObject }) {
   const router = useRouter();
-  router.replace(props.href);
+  void router.replace(props.href);
   return <Placeholder />;
 }
 

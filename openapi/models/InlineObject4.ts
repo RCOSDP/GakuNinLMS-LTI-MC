@@ -14,10 +14,10 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    ApiV2TopicTopicIdResource,
-    ApiV2TopicTopicIdResourceFromJSON,
-    ApiV2TopicTopicIdResourceFromJSONTyped,
-    ApiV2TopicTopicIdResourceToJSON,
+    ApiV2BookBookIdAuthorsAuthors,
+    ApiV2BookBookIdAuthorsAuthorsFromJSON,
+    ApiV2BookBookIdAuthorsAuthorsFromJSONTyped,
+    ApiV2BookBookIdAuthorsAuthorsToJSON,
 } from './';
 
 /**
@@ -28,40 +28,10 @@ import {
 export interface InlineObject4 {
     /**
      * 
-     * @type {string}
+     * @type {Array<ApiV2BookBookIdAuthorsAuthors>}
      * @memberof InlineObject4
      */
-    name?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineObject4
-     */
-    language?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof InlineObject4
-     */
-    timeRequired?: number;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof InlineObject4
-     */
-    shared?: boolean;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineObject4
-     */
-    description?: string;
-    /**
-     * 
-     * @type {ApiV2TopicTopicIdResource}
-     * @memberof InlineObject4
-     */
-    resource?: ApiV2TopicTopicIdResource;
+    authors: Array<ApiV2BookBookIdAuthorsAuthors>;
 }
 
 export function InlineObject4FromJSON(json: any): InlineObject4 {
@@ -74,12 +44,7 @@ export function InlineObject4FromJSONTyped(json: any, ignoreDiscriminator: boole
     }
     return {
         
-        'name': !exists(json, 'name') ? undefined : json['name'],
-        'language': !exists(json, 'language') ? undefined : json['language'],
-        'timeRequired': !exists(json, 'timeRequired') ? undefined : json['timeRequired'],
-        'shared': !exists(json, 'shared') ? undefined : json['shared'],
-        'description': !exists(json, 'description') ? undefined : json['description'],
-        'resource': !exists(json, 'resource') ? undefined : ApiV2TopicTopicIdResourceFromJSON(json['resource']),
+        'authors': ((json['authors'] as Array<any>).map(ApiV2BookBookIdAuthorsAuthorsFromJSON)),
     };
 }
 
@@ -92,12 +57,7 @@ export function InlineObject4ToJSON(value?: InlineObject4 | null): any {
     }
     return {
         
-        'name': value.name,
-        'language': value.language,
-        'timeRequired': value.timeRequired,
-        'shared': value.shared,
-        'description': value.description,
-        'resource': ApiV2TopicTopicIdResourceToJSON(value.resource),
+        'authors': ((value.authors as Array<any>).map(ApiV2BookBookIdAuthorsAuthorsToJSON)),
     };
 }
 
