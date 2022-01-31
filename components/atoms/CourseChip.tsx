@@ -1,16 +1,18 @@
 import type { MouseEvent } from "react";
 import { useCallback, useState } from "react";
 import type { SxProps } from "@mui/system";
-import Chip from "@mui/material/Chip";
-import Popover from "@mui/material/Popover";
-import makeStyles from "@mui/styles/makeStyles";
+import { styled } from "@mui/material/styles";
+import MuiChip from "@mui/material/Chip";
+import MuiPopover, { popoverClasses } from "@mui/material/Popover";
 import type { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
 
-const useStyles = makeStyles((theme) => ({
-  popover: {
-    pointerEvents: "none",
-  },
-  paper: {
+const Chip = styled(MuiChip)({
+  maxWidth: "100%",
+});
+
+const Popover = styled(MuiPopover)(({ theme }) => ({
+  pointerEvents: "none",
+  [`.${popoverClasses.paper}`]: {
     padding: theme.spacing(1),
     marginTop: theme.spacing(1),
   },
@@ -29,7 +31,6 @@ export default function CourseChip({
   sx,
   onDelete,
 }: Props) {
-  const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const open = Boolean(anchorEl);
   const handlePopoverOpen = useCallback(
@@ -64,8 +65,6 @@ export default function CourseChip({
         onMouseLeave={handlePopoverClose}
       />
       <Popover
-        className={classes.popover}
-        classes={{ paper: classes.paper }}
         open={open}
         onClose={handlePopoverClose}
         anchorEl={anchorEl}

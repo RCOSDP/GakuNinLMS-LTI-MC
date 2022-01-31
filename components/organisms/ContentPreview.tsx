@@ -8,7 +8,6 @@ import Card from "@mui/material/Card";
 import CardActionArea from "@mui/material/CardActionArea";
 import CardMedia from "@mui/material/CardMedia";
 import Checkbox from "@mui/material/Checkbox";
-import Chip from "@mui/material/Chip";
 import { styled } from "@mui/material/styles";
 import { grey } from "@mui/material/colors";
 import EditButton from "$atoms/EditButton";
@@ -16,6 +15,7 @@ import DescriptionList from "$atoms/DescriptionList";
 import License from "$atoms/License";
 import SharedIndicator from "$atoms/SharedIndicator";
 import CourseChip from "$atoms/CourseChip";
+import KeywordChip from "$atoms/KeywordChip";
 import LinkSwitch from "$atoms/LinkSwitch";
 import type { ContentSchema } from "$server/models/content";
 import type { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
@@ -149,8 +149,6 @@ export default function ContentPreview({
       : content.sections[0]?.topics[0]?.resource.id
   );
   const handleContentLinkClick = () => onContentLinkClick?.(content);
-  const handleKeywordClick = (keyword: Pick<KeywordSchema, "name">) => () =>
-    onKeywordClick(keyword);
   return (
     <Preview className={clsx({ selected: checked })}>
       <Header
@@ -240,15 +238,11 @@ export default function ContentPreview({
       />
       <Box sx={{ mx: 2, my: 1 }}>
         {content.keywords.map((keyword) => (
-          <Chip
+          <KeywordChip
             key={keyword.id}
-            onClick={handleKeywordClick(keyword)}
-            clickable
-            variant="outlined"
-            color="primary"
-            label={keyword.name}
-            size="small"
-            sx={{ mr: 0.5, borderRadius: 1 }}
+            keyword={keyword}
+            onKeywordClick={onKeywordClick}
+            sx={{ mr: 0.5 }}
           />
         ))}
       </Box>
