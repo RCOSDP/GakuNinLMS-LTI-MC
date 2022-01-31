@@ -12,6 +12,7 @@ type Props = {
 
 const Chip = styled(MuiChip)({
   borderRadius: 4,
+  maxWidth: "100%",
 });
 
 export default function KeywordChip({

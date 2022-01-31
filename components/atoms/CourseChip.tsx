@@ -1,10 +1,14 @@
 import type { MouseEvent } from "react";
 import { useCallback, useState } from "react";
 import type { SxProps } from "@mui/system";
-import Chip from "@mui/material/Chip";
 import { styled } from "@mui/material/styles";
+import MuiChip from "@mui/material/Chip";
 import MuiPopover, { popoverClasses } from "@mui/material/Popover";
 import type { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
+
+const Chip = styled(MuiChip)({
+  maxWidth: "100%",
+});
 
 const Popover = styled(MuiPopover)(({ theme }) => ({
   pointerEvents: "none",
