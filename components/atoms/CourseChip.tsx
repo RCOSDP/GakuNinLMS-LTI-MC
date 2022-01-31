@@ -32,7 +32,7 @@ export default function CourseChip({
   );
 
   return (
-    <Tooltip title={ltiResourceLink.contextTitle}>
+    <Tooltip title={ltiResourceLink.contextTitle} disableInteractive>
       <Chip
         sx={sx}
         aria-haspopup="true"
