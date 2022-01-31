@@ -24,7 +24,7 @@ export default function KeywordChip({
 }: Props) {
   const handleClick = () => onKeywordClick?.(keyword);
   return (
-    <Tooltip title={keyword.name}>
+    <Tooltip title={keyword.name} disableInteractive>
       <Chip
         sx={sx}
         variant="outlined"
