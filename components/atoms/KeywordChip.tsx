@@ -1,5 +1,6 @@
 import { styled } from "@mui/material/styles";
 import MuiChip from "@mui/material/Chip";
+import Tooltip from "@mui/material/Tooltip";
 import type { SxProps } from "@mui/system";
 import type { KeywordPropSchema } from "$server/models/keyword";
 
@@ -23,14 +24,16 @@ export default function KeywordChip({
 }: Props) {
   const handleClick = () => onKeywordClick?.(keyword);
   return (
-    <Chip
-      sx={sx}
-      variant="outlined"
-      size="small"
-      color="primary"
-      label={keyword.name}
-      onClick={onKeywordClick && handleClick}
-      onDelete={onDelete}
-    />
+    <Tooltip title={keyword.name}>
+      <Chip
+        sx={sx}
+        variant="outlined"
+        size="small"
+        color="primary"
+        label={keyword.name}
+        onClick={onKeywordClick && handleClick}
+        onDelete={onDelete}
+      />
+    </Tooltip>
   );
 }
