@@ -220,6 +220,7 @@ export default function ContentPreview({
           sx={{
             mx: 2,
             mb: 1,
+            // TODO: 深い階層に対するスタイルの上書きが不要なコンポーネントの整理
             dt: { flexShrink: 0 },
             dd: { overflow: "hidden" },
           }}
