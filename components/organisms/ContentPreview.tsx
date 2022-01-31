@@ -1,4 +1,3 @@
-import { Fragment } from "react";
 import clsx from "clsx";
 import Markdown from "react-markdown";
 import gfm from "remark-gfm";
@@ -207,35 +206,42 @@ export default function ContentPreview({
       </Box>
       <DescriptionList
         nowrap
-        sx={{ mx: 2, my: 1 }}
+        sx={{ mx: 2, mt: 1 }}
         value={[
           {
             key: "更新日",
             value: getLocaleDateString(content.updatedAt, "ja"),
           },
           ...authors(content),
-          ...(content.type === "book" && content.ltiResourceLinks.length > 0
-            ? [
-                {
-                  key: "コース",
-                  value: (
-                    <Fragment>
-                      {content.ltiResourceLinks.map(
-                        (ltiResourceLink, index) => (
-                          <CourseChip
-                            key={index}
-                            ltiResourceLink={ltiResourceLink}
-                            onLtiResourceLinkClick={onLtiContextClick}
-                          />
-                        )
-                      )}
-                    </Fragment>
-                  ),
-                },
-              ]
-            : []),
         ]}
       />
+      {content.type === "book" && content.ltiResourceLinks.length > 0 && (
+        <DescriptionList
+          sx={{
+            mx: 2,
+            mb: 1,
+            dt: { flexShrink: 0 },
+            dd: { overflow: "hidden" },
+          }}
+          value={[
+            {
+              key: "コース",
+              value: (
+                <>
+                  {content.ltiResourceLinks.map((ltiResourceLink, index) => (
+                    <CourseChip
+                      sx={{ mr: 0.5, my: 0.125 }}
+                      key={index}
+                      ltiResourceLink={ltiResourceLink}
+                      onLtiResourceLinkClick={onLtiContextClick}
+                    />
+                  ))}
+                </>
+              ),
+            },
+          ]}
+        />
+      )}
       <Box sx={{ mx: 2, my: 1 }}>
         {content.keywords.map((keyword) => (
           <KeywordChip
