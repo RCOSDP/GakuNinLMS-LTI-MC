@@ -217,7 +217,7 @@ export default function ContentPreview({
           ...(content.type === "book" && content.ltiResourceLinks.length > 0
             ? [
                 {
-                  key: "リンク",
+                  key: "コース",
                   value: (
                     <Fragment>
                       {content.ltiResourceLinks.map(
