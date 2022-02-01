@@ -4,12 +4,9 @@ datasource db {
 }
 
 generator client {
-  provider = "prisma-client-js"
-}
-
-generator jsonSchema {
-  provider = "prisma-json-schema-generator"
-  output   = "."
+  provider        = "prisma-client-js"
+  // TODO: v3 以降ならば不要
+  previewFeatures = ["orderByRelation"]
 }
 
 // Resource Objects
@@ -25,15 +22,15 @@ model ZoomMeeting {
 
 /// 教育用外部リソース
 model Resource {
-  id      Int     @id @default(autoincrement())
-  topics  Topic[]
+  id          Int          @id @default(autoincrement())
+  topics      Topic[]
   zoomMeeting ZoomMeeting?
-  video   Video?  @relation(fields: [videoId], references: [id])
-  videoId Int?    @map("video_id")
+  video       Video?       @relation(fields: [videoId], references: [id])
+  videoId     Int?         @unique @map("video_id")
   /// 外部リソースのアドレス
-  url     String  @unique
+  url         String       @unique
   /// 詳細
-  details Json
+  details     Json
 
   @@map("resources")
 }
@@ -84,11 +81,10 @@ model Topic {
   timeRequired Int            @map("time_required")
   /// 共有可否 (true: シェアする, それ以外: シェアしない)
   shared       Boolean        @default(true)
-  /// ライセンス (https://spdx.org/licenses/ に準拠するものを入力する)
+  /// 著作者
+  authors      Authorship[]
+  /// ライセンス (https://spdx.org/licenses/ に準拠するもの, "" は無効)
   license      String         @default("")
-  /// 作成者
-  creator      User           @relation(fields: [creatorId], references: [id])
-  creatorId    Int            @map("creator_id")
   /// 作成日
   createdAt    DateTime       @default(now()) @map("created_at")
   /// 更新日
@@ -104,7 +100,7 @@ model Keyword {
   id     Int     @id @default(autoincrement())
   topics Topic[] @relation(references: [id])
   books  Book[]  @relation(references: [id])
-  /// 名称 (カンマ "," を含めない)
+  /// 名称
   name   String  @unique
 
   @@map("keywords")
@@ -116,7 +112,7 @@ model Keyword {
 model LtiPlatform {
   /// OpenID Connect Issuer ID
   issuer   String        @id
-  /// OpenID Connect Issuer Metadata: authorization_endpoint, jwks_uri, token_endpoint etc.
+  /// OpenID Connect Issuer Metadata: creatorization_endpoint, jwks_uri, token_endpoint etc.
   metadata Json
   /// OpenID Connect Clients
   clients  LtiConsumer[]
@@ -176,8 +172,8 @@ model LtiResourceLink {
   title      String
   book       Book        @relation(fields: [bookId], references: [id])
   bookId     Int         @map("book_id")
-  author     User        @relation(fields: [authorId], references: [id])
-  authorId   Int         @map("author_id")
+  creator    User        @relation(fields: [creatorId], references: [id])
+  creatorId  Int         @map("creator_id")
 
   @@id([consumerId, id])
   @@map("lti_resource_link")
@@ -200,8 +196,9 @@ model Book {
   /// 共有可否 (true: シェアする, それ以外: シェアしない)
   shared           Boolean           @default(true)
   /// 著作者
-  author           User              @relation(fields: [authorId], references: [id])
-  authorId         Int               @map("author_id")
+  authors          Authorship[]
+  /// ライセンス (https://spdx.org/licenses/ に準拠するもの, "" は無効)
+  license          String            @default("")
   /// 公開日
   publishedAt      DateTime          @default(now()) @map("published_at")
   /// 作成日
@@ -211,7 +208,6 @@ model Book {
   /// 詳細
   details          Json
 
-  @@index([authorId], name: "author_id")
   @@map("books")
 }
 
@@ -249,8 +245,7 @@ model TopicSection {
 /// 利用者
 model User {
   id               Int               @id @default(autoincrement())
-  createdTopics    Topic[]
-  writtenBooks     Book[]
+  editableContents Authorship[]
   ltiResourceLinks LtiResourceLink[]
   ltiMembers       LtiMember[]
   ltiConsumer      LtiConsumer       @relation(fields: [ltiConsumerId], references: [id])
@@ -259,14 +254,14 @@ model User {
   activities       Activity[]
   /// 氏名
   name             String
-  /// メールアドレス
+  /// メールアドレス ("" は無効値)
   email            String            @default("")
   /// 詳細
   settings         Json              @default("{}")
 
   @@unique([ltiConsumerId, ltiUserId])
-  @@map("users")
   @@index([email])
+  @@map("users")
 }
 
 /// 学習活動
@@ -299,6 +294,32 @@ model ActivityTimeRange {
 
   @@id([activityId, startMs])
   @@map("activities_time_ranges")
+}
+
+// 著作
+model Authorship {
+  id      Int         @id @default(autoincrement())
+  user    User        @relation(fields: [userId], references: [id])
+  userId  Int         @map("user_id")
+  role    ContentRole @relation(fields: [roleId], references: [id])
+  roleId  Int         @map("role_id")
+  topic   Topic?      @relation(fields: [topicId], references: [id])
+  topicId Int?        @map("topic_id")
+  book    Book?       @relation(fields: [bookId], references: [id])
+  bookId  Int?        @map("book_id")
+
+  @@map("authorships")
+}
+
+// コンテンツでの役割
+model ContentRole {
+  id          Int          @id @default(autoincrement())
+  /// 役割の名前
+  roleName    String       @map("role_name")
+  /// 著作
+  authorships Authorship[]
+
+  @@map("content_roles")
 }
 
 // Etc.

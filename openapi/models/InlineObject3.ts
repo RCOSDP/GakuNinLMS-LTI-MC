@@ -14,6 +14,10 @@
 
 import { exists, mapValues } from '../runtime';
 import {
+    ApiV2BookBookIdKeywords,
+    ApiV2BookBookIdKeywordsFromJSON,
+    ApiV2BookBookIdKeywordsFromJSONTyped,
+    ApiV2BookBookIdKeywordsToJSON,
     ApiV2BookBookIdSections,
     ApiV2BookBookIdSectionsFromJSON,
     ApiV2BookBookIdSectionsFromJSONTyped,
@@ -56,6 +60,12 @@ export interface InlineObject3 {
      * @memberof InlineObject3
      */
     sections?: Array<ApiV2BookBookIdSections>;
+    /**
+     * 
+     * @type {Array<ApiV2BookBookIdKeywords>}
+     * @memberof InlineObject3
+     */
+    keywords?: Array<ApiV2BookBookIdKeywords>;
 }
 
 export function InlineObject3FromJSON(json: any): InlineObject3 {
@@ -73,6 +83,7 @@ export function InlineObject3FromJSONTyped(json: any, ignoreDiscriminator: boole
         'language': !exists(json, 'language') ? undefined : json['language'],
         'shared': !exists(json, 'shared') ? undefined : json['shared'],
         'sections': !exists(json, 'sections') ? undefined : ((json['sections'] as Array<any>).map(ApiV2BookBookIdSectionsFromJSON)),
+        'keywords': !exists(json, 'keywords') ? undefined : ((json['keywords'] as Array<any>).map(ApiV2BookBookIdKeywordsFromJSON)),
     };
 }
 
@@ -90,6 +101,7 @@ export function InlineObject3ToJSON(value?: InlineObject3 | null): any {
         'language': value.language,
         'shared': value.shared,
         'sections': value.sections === undefined ? undefined : ((value.sections as Array<any>).map(ApiV2BookBookIdSectionsToJSON)),
+        'keywords': value.keywords === undefined ? undefined : ((value.keywords as Array<any>).map(ApiV2BookBookIdKeywordsToJSON)),
     };
 }
 

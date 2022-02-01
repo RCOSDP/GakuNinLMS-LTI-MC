@@ -7,13 +7,13 @@ import type {
 /**
  * セッションからltiResourceLinkを作成
  * @param session セッション
- * @return authorIdとbookIdを除いたLTIリソースリンク
+ * @return creatorIdとbookIdを除いたLTIリソースリンク
  */
 function getLtiResourceLink(
   session?: SessionSchema
 ): Omit<
   LtiResourceLinkSchema & LtiResourceLinkProps,
-  "authorId" | "bookId"
+  "creatorId" | "bookId"
 > | null {
   if (session == null) return null;
 

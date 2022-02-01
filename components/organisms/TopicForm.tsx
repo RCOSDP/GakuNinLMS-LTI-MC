@@ -1,9 +1,9 @@
-import { ChangeEvent, useCallback, useState } from "react";
+import type { ChangeEvent } from "react";
+import { useCallback, useState } from "react";
 import Card from "@mui/material/Card";
 import Checkbox from "@mui/material/Checkbox";
 import Divider from "@mui/material/Divider";
 import Button from "@mui/material/Button";
-import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
@@ -12,12 +12,14 @@ import Autocomplete from "$atoms/Autocomplete";
 import { useForm } from "react-hook-form";
 import { useDebouncedCallback } from "use-debounce";
 import clsx from "clsx";
+import InputLabel from "$atoms/InputLabel";
 import TextField from "$atoms/TextField";
+import AuthorsInput from "$organisms/AuthorsInput";
+import KeywordsInput from "$organisms/KeywordsInput";
 import SubtitleChip from "$atoms/SubtitleChip";
 import SubtitleUploadDialog from "$organisms/SubtitleUploadDialog";
-import Video from "$organisms/Video";
+import VideoResource from "$organisms/Video/VideoResource";
 import useCardStyles from "styles/card";
-import useInputLabelStyles from "styles/inputLabel";
 import gray from "theme/colors/gray";
 import type { TopicProps, TopicSchema } from "$server/models/topic";
 import type {
@@ -25,9 +27,14 @@ import type {
   VideoTrackSchema,
 } from "$server/models/videoTrack";
 import languages from "$utils/languages";
+import licenses from "$utils/licenses";
 import providers from "$utils/providers";
 import useVideoResourceProps from "$utils/useVideoResourceProps";
+import type { AuthorSchema } from "$server/models/author";
+import type { TopicPropsWithAuthors } from "$types/topicPropsWithAuthors";
+import { useAuthorsAtom } from "store/authors";
 import { useVideoTrackAtom } from "$store/videoTrack";
+import useKeywordsInput from "$utils/useKeywordsInput";
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -61,9 +68,11 @@ type Props = {
   topic?: TopicSchema;
   className?: string;
   variant?: "create" | "update";
-  onSubmit?(topic: TopicProps): void;
+  onSubmit?(topic: TopicPropsWithAuthors): void;
   onSubtitleSubmit(videoTrack: VideoTrackProps): void;
   onSubtitleDelete(videoTrack: VideoTrackSchema): void;
+  onAuthorsUpdate(authors: AuthorSchema[]): void;
+  onAuthorSubmit(author: Pick<AuthorSchema, "email">): void;
 };
 
 export default function TopicForm(props: Props) {
@@ -74,9 +83,10 @@ export default function TopicForm(props: Props) {
     onSubmit = () => undefined,
     onSubtitleSubmit,
     onSubtitleDelete,
+    onAuthorsUpdate,
+    onAuthorSubmit,
   } = props;
   const cardClasses = useCardStyles();
-  const inputLabelClasses = useInputLabelStyles();
   const classes = useStyles();
   const { videoResource, setUrl } = useVideoResourceProps(topic?.resource);
   const handleResourceUrlChange = useDebouncedCallback(
@@ -98,11 +108,14 @@ export default function TopicForm(props: Props) {
   const handleSubtitleDelete = (videoTrack: VideoTrackSchema) => {
     onSubtitleDelete(videoTrack);
   };
+  const { updateState: _updateState, ...authorsInputProps } = useAuthorsAtom();
+  const keywordsInputProps = useKeywordsInput(topic?.keywords ?? []);
   const defaultValues = {
     name: topic?.name,
     description: topic?.description ?? "",
     shared: Boolean(topic?.shared),
     language: topic?.language ?? Object.getOwnPropertyNames(languages)[0],
+    license: topic?.license ?? "",
     timeRequired: topic?.timeRequired,
   };
   const { handleSubmit, register, getValues, setValue } = useForm<
@@ -130,6 +143,8 @@ export default function TopicForm(props: Props) {
           onSubmit({
             ...values,
             resource,
+            authors: authorsInputProps.authors,
+            keywords: keywordsInputProps.keywords,
           });
         })}
       >
@@ -150,10 +165,13 @@ export default function TopicForm(props: Props) {
           required
           fullWidth
         />
+        <AuthorsInput
+          {...authorsInputProps}
+          onAuthorsUpdate={onAuthorsUpdate}
+          onAuthorSubmit={onAuthorSubmit}
+        />
         <div>
-          <InputLabel classes={inputLabelClasses} htmlFor="shared">
-            他の教員にシェア
-          </InputLabel>
+          <InputLabel htmlFor="shared">他の教員にシェア</InputLabel>
           <Checkbox
             id="shared"
             name="shared"
@@ -195,7 +213,10 @@ export default function TopicForm(props: Props) {
           )}
         />
         {videoResource && (
-          <Video {...videoResource} onDurationChange={handleDurationChange} />
+          <VideoResource
+            {...videoResource}
+            onDurationChange={handleDurationChange}
+          />
         )}
         <TextField
           label="教材の主要な言語"
@@ -218,8 +239,22 @@ export default function TopicForm(props: Props) {
             min: 1,
           }}
         />
+        <TextField
+          label="ライセンス"
+          select
+          defaultValue={defaultValues.license}
+          inputProps={{ displayEmpty: true, ...register("license") }}
+        >
+          <MenuItem value="">未設定</MenuItem>
+          {Object.entries(licenses).map(([value, { name }]) => (
+            <MenuItem key={value} value={value}>
+              {name}
+            </MenuItem>
+          ))}
+        </TextField>
+        <KeywordsInput {...keywordsInputProps} />
         <div>
-          <InputLabel classes={inputLabelClasses}>字幕</InputLabel>
+          <InputLabel>字幕</InputLabel>
           <div className={classes.subtitles}>
             {videoTracks.map((track) => (
               <SubtitleChip

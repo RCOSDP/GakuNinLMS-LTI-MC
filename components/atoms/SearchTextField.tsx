@@ -1,110 +1,103 @@
-import { ComponentProps, FormEvent, useCallback } from "react";
-import clsx from "clsx";
+import { useState, useEffect, useCallback } from "react";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
-import makeStyles from "@mui/styles/makeStyles";
+import { outlinedInputClasses } from "@mui/material/OutlinedInput";
+import { inputLabelClasses } from "@mui/material/InputLabel";
+import { styled } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
-import SearchClearButton from "./SearchClearButton";
-import Divider from "@mui/material/Divider";
-import gray from "$theme/colors/gray";
+import SearchClearButton from "$atoms/SearchClearButton";
+import { grey, common } from "@mui/material/colors";
+import IconButton from "$atoms/IconButton";
 
-const useOutlinedInputStyles = makeStyles((theme) => ({
-  root: {
-    backgroundColor: "#fff",
+type Props = Omit<Parameters<typeof TextField>[0], "variant" | "value"> & {
+  value: string;
+  onSearchInput: (value: string) => void;
+  onSearchInputReset: () => void;
+  onSearchSubmit: (value: string) => void;
+};
+
+const SearchTextField = styled(
+  ({
+    value,
+    onSearchInput,
+    onSearchInputReset,
+    onSearchSubmit,
+    InputProps,
+    ...other
+  }: Props) => {
+    const [valueState, setValueState] = useState(value);
+    useEffect(() => {
+      setValueState(value);
+    }, [setValueState, value]);
+    const handleChange = useCallback(
+      (event: React.ChangeEvent<HTMLInputElement>) =>
+        setValueState(event.target.value),
+      [setValueState]
+    );
+    const handleBlur = () => onSearchInput(valueState);
+    const handleKeyDown = (event: React.KeyboardEvent) => {
+      if (event.key === "Enter") {
+        handleSearchSubmit();
+      }
+    };
+    const handleSearchSubmit = () => onSearchSubmit(valueState);
+    return (
+      <TextField
+        value={valueState}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        onKeyDown={handleKeyDown}
+        variant="outlined"
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <SearchClearButton onClick={onSearchInputReset} />
+              <IconButton
+                onClick={handleSearchSubmit}
+                size="small"
+                color="primary"
+                tooltipProps={{ title: "検索" }}
+              >
+                <SearchIcon />
+              </IconButton>
+            </InputAdornment>
+          ),
+          ...InputProps,
+        }}
+        {...other}
+      />
+    );
+  }
+)(({ theme }) => ({
+  [`.${outlinedInputClasses.root}`]: {
+    backgroundColor: common.white,
     borderRadius: "1.25rem",
-    paddingRight: theme.spacing(2),
-    "&:hover $notchedOutline": {
-      borderColor: gray[500],
+    paddingRight: theme.spacing(1),
+    [`&:hover .${outlinedInputClasses.notchedOutline}`]: {
+      borderColor: grey[300],
       borderWidth: "1px",
     },
-    "@media (hover: none)": {
-      "&:hover $notchedOutline": {
-        borderColor: gray[500],
+    [`&.${outlinedInputClasses.focused} .${outlinedInputClasses.notchedOutline}`]:
+      {
+        borderColor: theme.palette.primary.main,
+        borderWidth: "1px",
       },
-    },
-    "&$focused $notchedOutline": {
-      borderColor: theme.palette.primary.main,
-      borderWidth: "1px",
-    },
   },
-  input: {
+  [`.${outlinedInputClasses.notchedOutline}`]: {
+    borderColor: grey[300],
+    transition: theme.transitions.create(["border-color"]),
+  },
+  [`.${outlinedInputClasses.input}`]: {
     height: "1.25rem",
     padding: theme.spacing(1, 2),
     paddingRight: 0,
   },
-  focused: {},
-  notchedOutline: {
-    borderColor: gray[500],
-    transition: theme.transitions.create(["border-color"]),
-  },
-}));
-
-const useInputLabelStyles = makeStyles((theme) => ({
-  outlined: {
+  [`.${inputLabelClasses.outlined}`]: {
     transform: `translate(${theme.spacing(2)}, 6px)`,
-    "&$shrink": {
+    [`&.${inputLabelClasses.shrink}`]: {
       transform: "translate(14px, -9px) scale(0.75)",
     },
   },
-  shrink: {},
 }));
 
-const useStyles = makeStyles(() => ({
-  hide: {
-    visibility: "hidden",
-  },
-  divider: { height: 28, margin: 4 },
-}));
-type Props = {
-  value: string;
-  onSearchInput: (input: string) => void;
-  onSearchInputReset: () => void;
-} & Omit<ComponentProps<typeof TextField>, "value">;
-
-export default function SearchTextField({
-  onSearchInput,
-  onSearchInputReset,
-  ...props
-}: Props) {
-  const outlinedInputClasses = useOutlinedInputStyles();
-  const inputLabelClasses = useInputLabelStyles();
-  const classes = useStyles();
-  const handleInput = useCallback(
-    (event: FormEvent<HTMLInputElement>) => {
-      onSearchInput?.(event.currentTarget.value);
-    },
-    [onSearchInput]
-  );
-  return (
-    <div>
-      <TextField
-        variant="outlined"
-        inputProps={{
-          onInput: handleInput,
-          ...props.inputProps,
-        }}
-        InputProps={{
-          classes: outlinedInputClasses,
-          endAdornment: (
-            <InputAdornment position="end">
-              <SearchClearButton
-                onClick={onSearchInputReset}
-                className={clsx({
-                  [classes.hide]: !props.value,
-                })}
-              />
-              <Divider orientation="vertical" className={classes.divider} />
-              <SearchIcon style={{ color: gray[700] }} />
-            </InputAdornment>
-          ),
-          ...props.InputProps,
-        }}
-        InputLabelProps={{
-          classes: inputLabelClasses,
-          ...props.InputLabelProps,
-        }}
-        {...props}
-      />
-    </div>
-  );
-}
+export default SearchTextField;

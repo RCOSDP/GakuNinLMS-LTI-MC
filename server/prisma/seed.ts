@@ -29,16 +29,16 @@ async function seed() {
     });
     createdUsers.push(created);
   }
-  const authorId = createdUsers[0].id;
+  const creatorId = createdUsers[0].id;
 
   // TODO: upsert時の一意性の問題が解決したら `Promise.all()` 等に修正して。
   //       See also https://github.com/prisma/prisma/issues/3242
   for (const topic of topics) {
-    await upsertTopic(authorId, topic);
+    await upsertTopic(creatorId, topic);
   }
 
   const createdBooks = (await Promise.all(
-    books.map((book) => createBook(authorId, book))
+    books.map((book) => createBook(creatorId, book))
   )) as BookSchema[];
 
   // TODO: upsert時の一意性の問題が解決したら `Promise.all()` 等に修正して。
@@ -48,7 +48,7 @@ async function seed() {
       ...link,
       consumerId: ltiConsumer.id,
       bookId: createdBooks[0].id,
-      authorId,
+      creatorId,
     });
   }
 }
@@ -71,4 +71,4 @@ async function main() {
   }
 }
 
-main();
+void main();

@@ -15,8 +15,9 @@ import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import makeStyles from "@mui/styles/makeStyles";
 import SectionsTree from "$molecules/SectionsTree";
 import DraggableSections from "$molecules/DraggableSections";
-import { SectionSchema } from "$server/models/book/section";
-import { TopicSchema } from "$server/models/topic";
+import type { SectionSchema } from "$server/models/book/section";
+import type { TopicSchema } from "$server/models/topic";
+import type { IsContentEditable } from "$server/models/content";
 import useCardStyles from "$styles/card";
 import useSortableSectionsProps from "$utils/useSortableSectionsProps";
 
@@ -76,7 +77,7 @@ type Props = {
   onSectionsUpdate(sections: SectionSchema[]): void;
   onTopicPreviewClick(topic: TopicSchema): void;
   onTopicEditClick?(topic: TopicSchema): void;
-  isTopicEditable?(topic: TopicSchema): boolean | undefined;
+  isContentEditable?: IsContentEditable;
 };
 
 export default function SectionsEdit(props: Props) {
@@ -86,7 +87,7 @@ export default function SectionsEdit(props: Props) {
     onTopicPreviewClick,
     onTopicEditClick,
     onSectionsUpdate,
-    isTopicEditable,
+    isContentEditable,
   } = props;
   const cardClasses = useCardStyles();
   const classes = useStyles();
@@ -207,7 +208,7 @@ export default function SectionsEdit(props: Props) {
             sections={sections}
             onItemPreviewClick={handleItem(onTopicPreviewClick)}
             onItemEditClick={handleItem(onTopicEditClick)}
-            isTopicEditable={isTopicEditable}
+            isContentEditable={isContentEditable}
           />
         </TreeView>
       )}

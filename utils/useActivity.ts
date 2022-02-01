@@ -1,7 +1,7 @@
 import useSWR from "swr";
-import { LearnerSchema } from "$server/models/learner";
-import { CourseBookSchema } from "$server/models/courseBook";
-import { BookActivitySchema } from "$server/models/bookActivity";
+import type { LearnerSchema } from "$server/models/learner";
+import type { CourseBookSchema } from "$server/models/courseBook";
+import type { BookActivitySchema } from "$server/models/bookActivity";
 import { api } from "./api";
 
 const key = "/api/v2/activity";

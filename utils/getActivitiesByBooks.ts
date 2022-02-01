@@ -1,7 +1,7 @@
-import { BookSchema } from "$server/models/book";
-import { BookActivitySchema } from "$server/models/bookActivity";
-import { CourseBookSchema } from "$server/models/courseBook";
-import { LearnerSchema } from "$server/models/learner";
+import type { BookSchema } from "$server/models/book";
+import type { BookActivitySchema } from "$server/models/bookActivity";
+import type { CourseBookSchema } from "$server/models/courseBook";
+import type { LearnerSchema } from "$server/models/learner";
 
 function getActivitiesByBooks({
   courseBooks,

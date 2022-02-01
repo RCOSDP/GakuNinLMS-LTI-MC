@@ -1,62 +1,55 @@
-import { Topic, Prisma } from "@prisma/client";
-import jsonSchema from "$server/prisma/json-schema.json";
-import {
-  ResourceProps,
-  ResourceSchema,
-  resourcePropsSchema,
-  resourceSchema,
-} from "./resource";
-import { UserSchema, userSchema } from "./user";
+import type { Topic, Prisma } from "@prisma/client";
+import type { ResourceProps, ResourceSchema } from "./resource";
+import { resourcePropsSchema, resourceSchema } from "./resource";
+import { AuthorSchema } from "./author";
+import { KeywordPropSchema, KeywordSchema } from "./keyword";
 
 export type TopicProps = Pick<
-  Prisma.TopicCreateWithoutCreatorInput,
-  "name" | "language" | "timeRequired" | "shared" | "description"
+  Prisma.TopicCreateInput,
+  "name" | "language" | "timeRequired" | "shared" | "license" | "description"
 > & {
   resource: ResourceProps;
+  keywords?: KeywordPropSchema[];
 };
 
-export type TopicSchema = Omit<Topic, "creatorId"> & {
-  creator: UserSchema;
+export type TopicSchema = Topic & {
+  authors: AuthorSchema[];
+  keywords: KeywordSchema[];
   resource: ResourceSchema;
 };
-
-const {
-  id,
-  name,
-  language,
-  timeRequired,
-  shared,
-  description,
-  createdAt,
-  updatedAt,
-  details,
-} = jsonSchema.definitions.Topic.properties;
 
 export const topicPropsSchema = {
   type: "object",
   properties: {
-    name,
-    language: { ...language, nullable: true },
-    timeRequired,
-    shared: { ...shared, nullable: true },
-    description,
+    name: { type: "string" },
+    language: { type: "string", nullable: true },
+    timeRequired: { type: "integer" },
+    shared: { type: "boolean", nullable: true },
+    license: { type: "string", format: "license" },
+    description: { type: "string" },
     resource: resourcePropsSchema,
+    keywords: {
+      type: "array",
+      items: KeywordPropSchema,
+    },
   },
-};
+} as const;
 
 export const topicSchema = {
   type: "object",
   properties: {
-    id,
-    name,
-    language,
-    timeRequired,
-    shared,
-    description,
-    createdAt,
-    updatedAt,
-    details,
-    creator: userSchema,
+    id: { type: "integer" },
+    name: { type: "string" },
+    language: { type: "string" },
+    timeRequired: { type: "integer" },
+    shared: { type: "boolean" },
+    license: { type: "string" },
+    description: { type: "string" },
+    createdAt: { type: "string", format: "date-time" },
+    updatedAt: { type: "string", format: "date-time" },
+    details: { type: "object" },
+    authors: { type: "array", items: AuthorSchema },
+    keywords: { type: "array", items: KeywordSchema },
     resource: resourceSchema,
   },
-};
+} as const;

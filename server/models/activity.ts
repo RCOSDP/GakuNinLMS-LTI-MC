@@ -1,8 +1,6 @@
-import { FromSchema } from "json-schema-to-ts";
-import {
-  ActivityTimeRangeProps,
-  activityTimeRangePropsSchema,
-} from "./activityTimeRange";
+import type { FromSchema } from "json-schema-to-ts";
+import type { ActivityTimeRangeProps } from "./activityTimeRange";
+import { activityTimeRangePropsSchema } from "./activityTimeRange";
 
 export type ActivityProps = {
   timeRanges: ActivityTimeRangeProps[];

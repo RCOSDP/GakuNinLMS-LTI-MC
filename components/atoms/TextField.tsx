@@ -1,43 +1,40 @@
-import { ComponentProps } from "react";
-import { OutlinedInputProps } from "@mui/material/OutlinedInput";
 import MuiTextField from "@mui/material/TextField";
+import type { OutlinedTextFieldProps } from "@mui/material/TextField";
+import { inputLabelClasses } from "@mui/material/InputLabel";
+import { styled } from "@mui/material/styles";
 import RequiredDot from "$atoms/RequiredDot";
-import useTextFieldStyles from "styles/textField";
-import useInputStyles from "styles/input";
-import useInputLabelStyles from "styles/inputLabel";
-import useSelectStyles from "styles/select";
+import inputLabel from "$styles/inputLabel";
+import outlinedInput from "$styles/outlinedInput";
+import select from "$styles/select";
 
-export default function TextField(props: ComponentProps<typeof MuiTextField>) {
-  const textFieldClasses = useTextFieldStyles();
-  const inputClasses = useInputStyles();
-  const inputLabelClasses = useInputLabelStyles();
-  const selectClasses = useSelectStyles();
-  const { InputProps, InputLabelProps, SelectProps, label } = props;
-  return (
-    <MuiTextField
-      classes={textFieldClasses}
-      {...props}
-      InputProps={
-        {
-          ...InputProps,
-          classes: inputClasses,
-        } as Exclude<typeof InputProps, Partial<OutlinedInputProps> | undefined>
-      }
-      InputLabelProps={{
-        ...InputLabelProps,
-        classes: inputLabelClasses,
-        shrink: true,
-      }}
-      SelectProps={{
-        ...SelectProps,
-        classes: selectClasses,
-      }}
-      label={
-        <span>
-          {label}
-          <RequiredDot />
-        </span>
-      }
-    />
-  );
-}
+const TextField = styled(
+  ({
+    InputLabelProps,
+    label,
+    ...other
+  }: Omit<OutlinedTextFieldProps, "variant">) => {
+    return (
+      <MuiTextField
+        {...other}
+        InputLabelProps={{ ...InputLabelProps, shrink: true }}
+        variant="outlined"
+        label={
+          <span>
+            {label}
+            <RequiredDot />
+          </span>
+        }
+      />
+    );
+  }
+)(({ theme }) => ({
+  display: "block",
+  [`> .${inputLabelClasses.root}`]: {
+    marginBottom: theme.spacing(1.25),
+  },
+  ...inputLabel(theme),
+  ...outlinedInput(theme),
+  ...select(theme),
+}));
+
+export default TextField;

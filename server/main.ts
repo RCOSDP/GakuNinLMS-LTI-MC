@@ -11,7 +11,8 @@ import {
 } from "$server/utils/env";
 import { sessionStore } from "$server/utils/prisma";
 import staticHandler from "$server/utils/staticHandler";
-import app, { Options } from "$server/config/app";
+import type { Options } from "$server/config/app";
+import app from "$server/config/app";
 import { setupZoomImportScheduler } from "$server/utils/zoom/importScheduler";
 
 const isDev = process.env.NODE_ENV !== "production";
@@ -21,7 +22,7 @@ if (HTTPS_CERT && HTTPS_KEY) {
   Object.assign(options, { https: { cert: HTTPS_CERT, key: HTTPS_KEY } });
 }
 
-fastify({ logger: isDev, trustProxy: true, ...options })
+void fastify({ logger: isDev, trustProxy: true, ...options })
   .get(
     path.join(FRONTEND_PATH, "*"),
     staticHandler({ public: path.join(__dirname, "public") })
@@ -34,4 +35,4 @@ fastify({ logger: isDev, trustProxy: true, ...options })
   })
   .listen(PORT, "::"); // TODO: UNIXドメインソケット(引数にファイルパスを指定)未対応
 
-setupZoomImportScheduler();
+void setupZoomImportScheduler();

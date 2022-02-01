@@ -1,4 +1,4 @@
-import { ElementType } from "react";
+import type { ElementType } from "react";
 import Typography from "@mui/material/Typography";
 import makeStyles from "@mui/styles/makeStyles";
 import gray from "theme/colors/gray";

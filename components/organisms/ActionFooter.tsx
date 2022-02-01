@@ -1,4 +1,4 @@
-import { ComponentProps } from "react";
+import type { ComponentProps } from "react";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Container from "@mui/material/Container";
@@ -32,8 +32,18 @@ export default function ActionFooter(props: Props) {
       color="default"
       {...others}
     >
-      <Toolbar>
-        <Container maxWidth={maxWidth}>{children}</Container>
+      <Toolbar disableGutters>
+        <Container
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            flexWrap: "wrap",
+            gap: 2,
+          }}
+          maxWidth={maxWidth}
+        >
+          {children}
+        </Container>
       </Toolbar>
     </AppBar>
   );

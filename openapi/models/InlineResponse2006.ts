@@ -13,6 +13,13 @@
  */
 
 import { exists, mapValues } from '../runtime';
+import {
+    InlineResponse2002Books,
+    InlineResponse2002BooksFromJSON,
+    InlineResponse2002BooksFromJSONTyped,
+    InlineResponse2002BooksToJSON,
+} from './';
+
 /**
  * 成功時
  * @export
@@ -21,10 +28,10 @@ import { exists, mapValues } from '../runtime';
 export interface InlineResponse2006 {
     /**
      * 
-     * @type {Array<object>}
+     * @type {Array<InlineResponse2002Books>}
      * @memberof InlineResponse2006
      */
-    resources?: Array<object>;
+    books?: Array<InlineResponse2002Books>;
     /**
      * 
      * @type {number}
@@ -49,7 +56,7 @@ export function InlineResponse2006FromJSONTyped(json: any, ignoreDiscriminator: 
     }
     return {
         
-        'resources': !exists(json, 'resources') ? undefined : json['resources'],
+        'books': !exists(json, 'books') ? undefined : ((json['books'] as Array<any>).map(InlineResponse2002BooksFromJSON)),
         'page': !exists(json, 'page') ? undefined : json['page'],
         'perPage': !exists(json, 'perPage') ? undefined : json['perPage'],
     };
@@ -64,7 +71,7 @@ export function InlineResponse2006ToJSON(value?: InlineResponse2006 | null): any
     }
     return {
         
-        'resources': value.resources,
+        'books': value.books === undefined ? undefined : ((value.books as Array<any>).map(InlineResponse2002BooksToJSON)),
         'page': value.page,
         'perPage': value.perPage,
     };

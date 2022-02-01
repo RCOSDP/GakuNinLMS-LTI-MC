@@ -6,7 +6,7 @@ const ltiResourceLink = {
   contextLabel: "R30023001",
   title: "LTIリンク",
   bookId: 1,
-  authorId: 1,
+  creatorId: 1,
 };
 
 export default ltiResourceLink;

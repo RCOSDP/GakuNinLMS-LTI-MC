@@ -1,37 +1,33 @@
-import { BookSchema } from "$server/models/book";
-import { TopicSchema } from "$server/models/topic";
-import { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
+import type { BookSchema } from "$server/models/book";
+import type { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
+import type { IsContentEditable } from "$server/models/content";
+import contentBy from "./contentBy";
 
 function isDisplayableBook(
-  book: Pick<BookSchema, "id" | "shared" | "author">,
+  book: BookSchema,
   ltiResourceLink:
-    | Pick<LtiResourceLinkSchema, "bookId" | "authorId">
+    | Pick<LtiResourceLinkSchema, "bookId" | "creatorId">
     | undefined,
-  isBookEditable: (book: Pick<BookSchema, "author">) => boolean
+  isContentEditable: IsContentEditable
 ) {
   const linked = book.id === ltiResourceLink?.bookId;
-  return book.shared || linked || isBookEditable(book);
+  return book.shared || linked || isContentEditable(book);
 }
 
-function getDisplayableBook<
-  Book extends Pick<BookSchema, "id" | "shared" | "author"> & {
-    sections: Array<{ topics: Array<Pick<TopicSchema, "shared" | "creator">> }>;
-  }
->(
-  book: Book | undefined,
-  isBookEditable: (book: Pick<BookSchema, "author">) => boolean,
-  isTopicEditable: (topic: Pick<TopicSchema, "creator">) => boolean,
-  ltiResourceLink?: Pick<LtiResourceLinkSchema, "bookId" | "authorId">
-): Book | undefined {
+function getDisplayableBook(
+  book: BookSchema | undefined,
+  isContentEditable: IsContentEditable,
+  ltiResourceLink?: Pick<LtiResourceLinkSchema, "bookId" | "creatorId">
+): BookSchema | undefined {
   if (book === undefined) return;
-  if (!isDisplayableBook(book, ltiResourceLink, isBookEditable)) return;
+  if (!isDisplayableBook(book, ltiResourceLink, isContentEditable)) return;
 
   const sections = book.sections.flatMap((section) => {
     const topics = section.topics.filter(
       (topic) =>
         topic.shared ||
-        topic.creator.id === ltiResourceLink?.authorId ||
-        isTopicEditable(topic)
+        contentBy(topic, { id: ltiResourceLink?.creatorId }) ||
+        isContentEditable(topic)
     );
     return topics.length > 0 ? [{ ...section, topics }] : [];
   });

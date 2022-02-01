@@ -1,57 +1,17 @@
-import clsx from "clsx";
-import { TopicSchema } from "$server/models/topic";
+import type { TopicSchema } from "$server/models/topic";
 import Typography from "@mui/material/Typography";
 import Chip from "@mui/material/Chip";
 import { useTheme } from "@mui/material/styles";
-import makeStyles from "@mui/styles/makeStyles";
 import Video from "$organisms/Video";
-import VideoPlayer from "$organisms/Video/VideoPlayer";
 import DescriptionList from "$atoms/DescriptionList";
+import License from "$atoms/License";
 import Markdown from "$atoms/Markdown";
 import useSticky from "$utils/useSticky";
 import getLocaleDateString from "$utils/getLocaleDateString";
+import { authors } from "$utils/descriptionList";
 import formatInterval from "$utils/formatInterval";
-import { NEXT_PUBLIC_VIDEO_MAX_HEIGHT } from "$utils/env";
 import { isVideoResource } from "$utils/videoResource";
-import { useVideoAtom } from "$store/video";
 import { gray } from "$theme/colors";
-
-const useStyles = makeStyles((theme) => ({
-  video: {
-    margin: theme.spacing(-2, -3, 2),
-    backgroundColor: gray[800],
-    "& > *": {
-      /* NOTE: 各動画プレイヤーのレスポンシブ対応により、高さはpaddingTopによってwidthのpercentage分
-       * 確保されるため、heightによる制限ではなくwidthによる制限をおこなう必要がある */
-      // NOTE: 16:9前提になっているが本当はアスペクト比に応じて最大高さを変えたい
-      maxWidth:
-        NEXT_PUBLIC_VIDEO_MAX_HEIGHT === "unset"
-          ? "unset"
-          : `calc(${NEXT_PUBLIC_VIDEO_MAX_HEIGHT} * 16 / 9)`,
-      margin: "0 auto",
-    },
-  },
-  hidden: {
-    width: 0,
-    margin: 0,
-    "& *": {
-      visibility: "hidden",
-    },
-  },
-  header: {
-    "& > *": {
-      marginRight: theme.spacing(1),
-      marginBottom: theme.spacing(0.5),
-    },
-  },
-  title: {
-    display: "inline-block",
-    verticalAlign: "middle",
-  },
-  description: {
-    margin: theme.spacing(2.5, 0, 2),
-  },
-}));
 
 type Props = {
   topic: TopicSchema;
@@ -60,39 +20,40 @@ type Props = {
 };
 
 export default function TopicViewerContent({ topic, onEnded, offset }: Props) {
-  const classes = useStyles();
   const theme = useTheme();
   const sticky = useSticky({
     offset: offset ?? theme.spacing(-2),
+    backgroundColor: gray[800],
   });
-  const { video } = useVideoAtom();
   return (
     <>
-      {Array.from(video.values()).map((videoInstance) => (
-        <VideoPlayer
-          key={videoInstance.url}
-          className={clsx(classes.video, sticky, {
-            [classes.hidden]: topic.resource.url != videoInstance.url,
-          })}
-          videoInstance={videoInstance}
-          onEnded={onEnded}
-        />
-      ))}
-      {video.size === 0 && isVideoResource(topic.resource) && (
+      {isVideoResource(topic.resource) && (
         <Video
-          className={clsx(classes.video, sticky)}
-          {...topic.resource}
+          className={sticky}
+          sx={{ mt: -2, mx: -3, mb: 2 }}
+          resource={topic.resource}
           onEnded={onEnded}
-          autoplay
         />
       )}
-      <header className={classes.header}>
-        <Typography className={classes.title} variant="h6">
+      <header>
+        <Typography
+          sx={{
+            display: "inline-block",
+            verticalAlign: "middle",
+            mr: 1,
+            mb: 0.5,
+          }}
+          variant="h6"
+        >
           {topic.name}
         </Typography>
         <Chip
+          sx={{ mr: 1, mb: 0.5 }}
           label={`学習時間 ${formatInterval(0, topic.timeRequired * 1000)}`}
         />
+        {topic.license && (
+          <License sx={{ mr: 1, mb: 0.5 }} license={topic.license} />
+        )}
       </header>
       <DescriptionList
         inline
@@ -105,13 +66,10 @@ export default function TopicViewerContent({ topic, onEnded, offset }: Props) {
             key: "更新日",
             value: getLocaleDateString(topic.updatedAt, "ja"),
           },
-          {
-            key: "トピック作成者",
-            value: topic.creator.name,
-          },
+          ...authors(topic),
         ]}
       />
-      <article className={classes.description}>
+      <article>
         <Markdown>{topic.description}</Markdown>
       </article>
     </>

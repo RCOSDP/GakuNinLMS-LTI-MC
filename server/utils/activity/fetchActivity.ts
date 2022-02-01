@@ -1,6 +1,6 @@
-import { ActivitySchema } from "$server/models/activity";
-import { UserSchema } from "$server/models/user";
-import { BookSchema } from "$server/models/book";
+import type { ActivitySchema } from "$server/models/activity";
+import type { UserSchema } from "$server/models/user";
+import type { BookSchema } from "$server/models/book";
 import prisma from "$server/utils/prisma";
 import isCompleted from "./isCompleted";
 

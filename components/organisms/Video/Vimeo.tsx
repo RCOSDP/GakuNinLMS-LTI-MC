@@ -26,7 +26,7 @@ function Vimeo({ element, player }: Props) {
     return () => {
       // TODO: 要素を取り除くと学習活動の記録のために使われている getPlayed() が resolve しないので残す
       //       メモリリークにつながるので避けたほうが望ましく、学習活動の送信後すみやかに取り除くべき
-      player.pause();
+      void player.pause();
       element.classList.remove(classes.player);
       current.removeChild(element);
     };

@@ -1,13 +1,14 @@
-import { FromSchema } from "json-schema-to-ts";
+import type { FromSchema } from "json-schema-to-ts";
 
+/** System Settings */
 export const SystemSettingsSchema = {
-  title: "System Settings",
   type: "object",
   required: ["zoomImportEnabled"],
   properties: {
-    zoomImportEnabled: { title: "zoomImportEnabled", type: "boolean" },
+    zoomImportEnabled: { type: "boolean" },
   },
   additionalProperties: false,
 } as const;
 
+/** System Settings */
 export type SystemSettingsSchema = FromSchema<typeof SystemSettingsSchema>;

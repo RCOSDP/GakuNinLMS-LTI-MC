@@ -6,7 +6,7 @@ import { pagesPath } from "$utils/$path";
 function Router() {
   const router = useRouter();
   useEffect(() => {
-    router.replace(pagesPath.books.$url());
+    void router.replace(pagesPath.books.$url());
   }, [router]);
   return <Placeholder />;
 }

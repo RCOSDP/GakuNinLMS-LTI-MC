@@ -1,5 +1,5 @@
-import { Book } from "@prisma/client";
-import { BookSchema } from "$server/models/book";
+import type { Book } from "@prisma/client";
+import type { BookSchema } from "$server/models/book";
 import prisma from "$server/utils/prisma";
 import {
   bookIncludingTopicsArg,

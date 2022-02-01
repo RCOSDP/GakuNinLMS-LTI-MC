@@ -1,8 +1,9 @@
 import ReactMarkdown from "react-markdown";
-import { NormalComponents } from "react-markdown/lib/complex-types";
+import type { NormalComponents } from "react-markdown/lib/complex-types";
 import gfm from "remark-gfm";
 import breaks from "remark-breaks";
 import Link from "@mui/material/Link";
+import { css } from "@emotion/css";
 
 // NOTE: 型に差異があるので変換
 const MarkdownLink: NormalComponents["a"] = ({
@@ -24,11 +25,24 @@ const components = {
   a: MarkdownLink,
 } as const;
 
+const root = css({
+  "> :first-child": {
+    marginTop: 0,
+  },
+  "> :last-child": {
+    marginBottom: 0,
+  },
+});
+
 type Props = Pick<Parameters<typeof ReactMarkdown>[0], "children">;
 
 export default function Markdown({ children }: Props) {
   return (
-    <ReactMarkdown remarkPlugins={[gfm, breaks]} components={components}>
+    <ReactMarkdown
+      className={root}
+      remarkPlugins={[gfm, breaks]}
+      components={components}
+    >
       {children}
     </ReactMarkdown>
   );

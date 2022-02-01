@@ -1,4 +1,4 @@
-import { FastifySchema, HTTPMethods } from "fastify";
+import type { FastifySchema, HTTPMethods } from "fastify";
 import "fastify-swagger";
 
 type Method = {

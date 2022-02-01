@@ -1,5 +1,5 @@
 import roleUrns from "$server/config/roleUrns";
-import { LtiRolesSchema } from "$server/models/ltiRoles";
+import type { LtiRolesSchema } from "$server/models/ltiRoles";
 
 /** LIS Context Role 名前空間の接頭辞 */
 const lisContextRolePrefix = "urn:lti:role:ims/lis/";

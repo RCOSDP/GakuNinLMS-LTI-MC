@@ -1,5 +1,5 @@
-import { BookProps } from "$server/models/book";
-import { BookParams } from "$server/validators/bookParams";
+import type { BookProps } from "$server/models/book";
+import type { BookParams } from "$server/validators/bookParams";
 import { showSchema, showHooks, show } from "./show";
 import { createSchema, createHooks, create } from "./create";
 import { updateSchema, updateHooks, update } from "./update";

@@ -1,25 +1,13 @@
-export default { title: "atoms/InputLabel" };
+import type { Story } from "@storybook/react";
+import InputLabel from "./InputLabel";
 
-import InputLabel from "@mui/material/InputLabel";
-import RequiredDot from "$atoms/RequiredDot";
-import useInputLabelStyles from "styles/inputLabel";
+export default { title: "atoms/InputLabel", component: InputLabel };
 
-export const Default = () => {
-  const inputLabelClasses = useInputLabelStyles();
-  return (
-    <InputLabel classes={inputLabelClasses}>
-      Label
-      <RequiredDot />
-    </InputLabel>
-  );
-};
+const Template: Story<Parameters<typeof InputLabel>[0]> = (args) => (
+  <InputLabel {...args} />
+);
 
-export const Required = () => {
-  const inputLabelClasses = useInputLabelStyles();
-  return (
-    <InputLabel classes={inputLabelClasses} required>
-      Label
-      <RequiredDot />
-    </InputLabel>
-  );
+export const Default = Template.bind({});
+Default.args = {
+  children: "Label",
 };

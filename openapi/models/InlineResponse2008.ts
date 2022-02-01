@@ -14,44 +14,36 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    InlineResponse200,
-    InlineResponse200FromJSON,
-    InlineResponse200FromJSONTyped,
-    InlineResponse200ToJSON,
-    InlineResponse2001Author,
-    InlineResponse2001AuthorFromJSON,
-    InlineResponse2001AuthorFromJSONTyped,
-    InlineResponse2001AuthorToJSON,
-    InlineResponse2008LtiLaunchBody,
-    InlineResponse2008LtiLaunchBodyFromJSON,
-    InlineResponse2008LtiLaunchBodyFromJSONTyped,
-    InlineResponse2008LtiLaunchBodyToJSON,
+    InlineResponse2001Resource,
+    InlineResponse2001ResourceFromJSON,
+    InlineResponse2001ResourceFromJSONTyped,
+    InlineResponse2001ResourceToJSON,
 } from './';
 
 /**
- * セッション情報
+ * 成功時
  * @export
  * @interface InlineResponse2008
  */
 export interface InlineResponse2008 {
     /**
      * 
-     * @type {InlineResponse2008LtiLaunchBody}
+     * @type {Array<InlineResponse2001Resource>}
      * @memberof InlineResponse2008
      */
-    ltiLaunchBody?: InlineResponse2008LtiLaunchBody;
+    resources?: Array<InlineResponse2001Resource>;
     /**
      * 
-     * @type {InlineResponse200}
+     * @type {number}
      * @memberof InlineResponse2008
      */
-    ltiResourceLink?: InlineResponse200;
+    page?: number;
     /**
      * 
-     * @type {InlineResponse2001Author}
+     * @type {number}
      * @memberof InlineResponse2008
      */
-    user?: InlineResponse2001Author;
+    perPage?: number;
 }
 
 export function InlineResponse2008FromJSON(json: any): InlineResponse2008 {
@@ -64,9 +56,9 @@ export function InlineResponse2008FromJSONTyped(json: any, ignoreDiscriminator: 
     }
     return {
         
-        'ltiLaunchBody': !exists(json, 'ltiLaunchBody') ? undefined : InlineResponse2008LtiLaunchBodyFromJSON(json['ltiLaunchBody']),
-        'ltiResourceLink': !exists(json, 'ltiResourceLink') ? undefined : InlineResponse200FromJSON(json['ltiResourceLink']),
-        'user': !exists(json, 'user') ? undefined : InlineResponse2001AuthorFromJSON(json['user']),
+        'resources': !exists(json, 'resources') ? undefined : ((json['resources'] as Array<any>).map(InlineResponse2001ResourceFromJSON)),
+        'page': !exists(json, 'page') ? undefined : json['page'],
+        'perPage': !exists(json, 'perPage') ? undefined : json['perPage'],
     };
 }
 
@@ -79,9 +71,9 @@ export function InlineResponse2008ToJSON(value?: InlineResponse2008 | null): any
     }
     return {
         
-        'ltiLaunchBody': InlineResponse2008LtiLaunchBodyToJSON(value.ltiLaunchBody),
-        'ltiResourceLink': InlineResponse200ToJSON(value.ltiResourceLink),
-        'user': InlineResponse2001AuthorToJSON(value.user),
+        'resources': value.resources === undefined ? undefined : ((value.resources as Array<any>).map(InlineResponse2001ResourceToJSON)),
+        'page': value.page,
+        'perPage': value.perPage,
     };
 }
 

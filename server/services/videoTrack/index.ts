@@ -1,5 +1,5 @@
-import { ResourceParams } from "$server/validators/resourceParams";
-import { VideoTrackParams } from "$server/validators/videoTrackParams";
+import type { ResourceParams } from "$server/validators/resourceParams";
+import type { VideoTrackParams } from "$server/validators/videoTrackParams";
 import { showSchema, showHooks, show } from "./show";
 import { createSchema, createHooks, create } from "./create";
 import { destroySchema, destroyHooks, destroy } from "./destroy";

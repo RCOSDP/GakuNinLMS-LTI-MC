@@ -13,6 +13,13 @@
  */
 
 import { exists, mapValues } from '../runtime';
+import {
+    ApiV2TopicTopicIdActivityTimeRanges,
+    ApiV2TopicTopicIdActivityTimeRangesFromJSON,
+    ApiV2TopicTopicIdActivityTimeRangesFromJSONTyped,
+    ApiV2TopicTopicIdActivityTimeRangesToJSON,
+} from './';
+
 /**
  * 
  * @export
@@ -21,16 +28,10 @@ import { exists, mapValues } from '../runtime';
 export interface InlineObject8 {
     /**
      * 
-     * @type {string}
+     * @type {Array<ApiV2TopicTopicIdActivityTimeRanges>}
      * @memberof InlineObject8
      */
-    language?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineObject8
-     */
-    content?: string;
+    timeRanges?: Array<ApiV2TopicTopicIdActivityTimeRanges>;
 }
 
 export function InlineObject8FromJSON(json: any): InlineObject8 {
@@ -43,8 +44,7 @@ export function InlineObject8FromJSONTyped(json: any, ignoreDiscriminator: boole
     }
     return {
         
-        'language': !exists(json, 'language') ? undefined : json['language'],
-        'content': !exists(json, 'content') ? undefined : json['content'],
+        'timeRanges': !exists(json, 'timeRanges') ? undefined : ((json['timeRanges'] as Array<any>).map(ApiV2TopicTopicIdActivityTimeRangesFromJSON)),
     };
 }
 
@@ -57,8 +57,7 @@ export function InlineObject8ToJSON(value?: InlineObject8 | null): any {
     }
     return {
         
-        'language': value.language,
-        'content': value.content,
+        'timeRanges': value.timeRanges === undefined ? undefined : ((value.timeRanges as Array<any>).map(ApiV2TopicTopicIdActivityTimeRangesToJSON)),
     };
 }
 

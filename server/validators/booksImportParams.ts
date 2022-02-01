@@ -1,3 +1,4 @@
+import type { ValidatorConstraintInterface } from "class-validator";
 import {
   IsOptional,
   IsString,
@@ -13,14 +14,14 @@ import {
   ValidateNested,
   ValidateIf,
   registerDecorator,
-  ValidatorConstraintInterface,
 } from "class-validator";
 import {
   validationMetadatasToSchemas,
   JSONSchema,
 } from "class-validator-jsonschema";
 import parse from "spdx-expression-parse";
-import { BookSchema, bookSchema } from "$server/models/book";
+import type { BookSchema } from "$server/models/book";
+import { bookSchema } from "$server/models/book";
 
 export class BooksImportParams {
   @IsOptional()

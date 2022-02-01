@@ -7,21 +7,24 @@ import format from "date-fns/format";
 import utcToZoneTime from "date-fns-tz/utcToZonedTime";
 import { Buffer } from "buffer";
 
-import { validate, ValidationError } from "class-validator";
-import { UserSchema } from "$server/models/user";
-import { BookSchema } from "$server/models/book";
-import {
+import type { ValidationError } from "class-validator";
+import { validate } from "class-validator";
+import type { UserSchema } from "$server/models/user";
+import type { BookSchema } from "$server/models/book";
+import type {
   BooksImportParams,
   BooksImportResult,
   ImportTopic,
   ImportSection,
   ImportBook,
-  ImportBooks,
-} from "$server/validators/booksImportParams";
+} from "$server/models/booksImportParams";
+import { ImportBooks } from "$server/models/booksImportParams";
 import prisma from "$server/utils/prisma";
 import findBook from "./findBook";
 import { parse as parseProviderUrl } from "$server/utils/videoResource";
 import { scpUpload } from "$server/utils/wowza/scpUpload";
+import findRoles from "$server/utils/author/findRoles";
+import insertAuthors from "$server/utils/author/insertAuthors";
 
 async function importBooksUtil(
   user: UserSchema,
@@ -79,6 +82,23 @@ class ImportBooksUtil {
         const res = await findBook(book.id);
         if (res) this.books.push(res as BookSchema);
       }
+
+      const roles = await findRoles();
+      const contents = {
+        books: this.books,
+        topics: this.books.flatMap((book) =>
+          book.sections.flatMap((section) => section.topics)
+        ),
+      };
+
+      await prisma.$transaction([
+        ...contents.books.map((book) =>
+          insertAuthors(roles, "book", book.id, this.params.authors)
+        ),
+        ...contents.topics.map((topic) =>
+          insertAuthors(roles, "topic", topic.id, this.params.authors)
+        ),
+      ]);
     } catch (e) {
       console.error(e);
       this.errors.push(...(Array.isArray(e) ? e : [String(e)]));
@@ -271,7 +291,7 @@ class ImportBooksUtil {
     return {
       ...importBook,
       timeRequired: this.timeRequired,
-      author: { connect: { id: this.user.id } },
+      authors: { create: { userId: this.user.id, roleId: 1 } },
       publishedAt: new Date(importBook.publishedAt),
       createdAt: new Date(importBook.createdAt),
       updatedAt: new Date(importBook.updatedAt),
@@ -317,7 +337,7 @@ class ImportBooksUtil {
 
     const topic = {
       ...sectionTopic,
-      creator: { connect: { id: this.user.id } },
+      authors: { create: { userId: this.user.id, roleId: 1 } },
       createdAt: new Date(sectionTopic.createdAt),
       updatedAt: new Date(sectionTopic.updatedAt),
       keywords: this.getKeywords(sectionTopic.keywords),

@@ -1,38 +1,20 @@
 import clsx from "clsx";
-import makeStyles from "@mui/styles/makeStyles";
-import createStyles from "@mui/styles/createStyles";
-import type { Theme } from "@mui/material/styles";
+import type { SxProps } from "@mui/system";
+import { styled } from "@mui/material/styles";
 import { grey } from "@mui/material/colors";
 
-type StyleProps = {
-  color: string;
-  fontSize: string;
-};
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      margin: 0,
-      color: ({ color }: StyleProps) => color,
-      fontSize: ({ fontSize }: StyleProps) => fontSize,
-      lineHeight: 1.25,
-      "& > $item:not(:last-child)": {
+const List = styled("dl")<Pick<Props, "color" | "fontSize">>(
+  ({ theme, color, fontSize }) => ({
+    margin: 0,
+    lineHeight: 1.25,
+    color,
+    fontSize,
+    "& > .item": {
+      display: "flex",
+      alignItems: "center",
+      "&:not(:last-child)": {
         marginBottom: theme.spacing(0.5),
       },
-      "&$inline > $item, &$nowrap > $item": {
-        display: "inline-flex",
-      },
-      "&$inline > $item:not(:last-child), &$nowrap > $item:not(:last-child)": {
-        marginRight: theme.spacing(1.25),
-      },
-      "&$nowrap": {
-        overflow: "hidden",
-        textOverflow: "ellipsis",
-        whiteSpace: "nowrap",
-      },
-    },
-    item: {
-      display: "flex",
       "& > dt::after": {
         content: "':'",
         marginRight: theme.spacing(0.25),
@@ -41,8 +23,21 @@ const useStyles = makeStyles((theme: Theme) =>
         margin: 0,
       },
     },
-    inline: {},
-    nowrap: {},
+    "&.inline": {
+      "& > .item": {
+        display: "inline-flex",
+        "&:not(:last-child)": {
+          marginRight: theme.spacing(1.25),
+        },
+      },
+    },
+    "&.nowrap": {
+      whiteSpace: "nowrap",
+      "&.inline, &:not(.inline) > .item > dd": {
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+      },
+    },
   })
 );
 
@@ -52,7 +47,8 @@ type Props = {
   fontSize?: string;
   inline?: boolean;
   nowrap?: boolean;
-  value: Array<{ key: string; value: string }>;
+  sx?: SxProps;
+  value: Array<{ key: string; value: React.ReactNode }>;
 };
 
 export default function DescriptionList({
@@ -61,25 +57,22 @@ export default function DescriptionList({
   fontSize = "0.75rem",
   inline = false,
   nowrap = false,
+  sx,
   value,
 }: Props) {
-  const classes = useStyles({ color, fontSize });
-
   return (
-    <dl
-      className={clsx(
-        className,
-        classes.root,
-        { [classes.inline]: inline },
-        { [classes.nowrap]: nowrap }
-      )}
+    <List
+      className={clsx(className, { inline, nowrap })}
+      color={color}
+      fontSize={fontSize}
+      sx={sx}
     >
       {value.map(({ key, value }, index) => (
-        <div key={index} className={classes.item}>
+        <div key={index} className="item">
           <dt>{key}</dt>
           <dd>{value}</dd>
         </div>
       ))}
-    </dl>
+    </List>
   );
 }

@@ -1,4 +1,4 @@
-import { BookSchema } from "$server/models/book";
+import type { BookSchema } from "$server/models/book";
 import prisma from "$server/utils/prisma";
 import makeSortOrderQuery from "$server/utils/makeSortOrderQuery";
 import {

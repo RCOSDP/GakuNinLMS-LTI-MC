@@ -1,18 +1,17 @@
 import { useState, useMemo, useCallback } from "react";
 import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
 import Card from "@mui/material/Card";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Button from "@mui/material/Button";
 import GetAppOutlinedIcon from "@mui/icons-material/GetAppOutlined";
 import makeStyles from "@mui/styles/makeStyles";
+import Container from "$atoms/Container";
 import ActionHeader from "$organisms/ActionHeader";
 import LearningStatusDot from "$atoms/LearningStatusDot";
 import LearningActivityItem from "$molecules/LearningActivityItem";
 import LearnerActivityItem from "$molecules/LearnerActivityItem";
 import LearnerActivityDialog from "$organisms/LearnerActivityDialog";
-import useContainerStyles from "$styles/container";
 import useCardStyles from "$styles/card";
 import type { CourseBookSchema } from "$server/models/courseBook";
 import type { BookActivitySchema } from "$server/models/bookActivity";
@@ -101,14 +100,13 @@ type Props = {
 export default function Dashboard(props: Props) {
   const { session, learners, courseBooks, bookActivities } = props;
   const classes = useStyles();
-  const containerClasses = useContainerStyles();
   const cardClasses = useCardStyles();
   const [tabIndex, setTabIndex] = useState(0);
   const handleChange = (_: React.ChangeEvent<unknown>, value: number) => {
     setTabIndex(value);
   };
   const handleDownloadClick = useCallback(() => {
-    download(bookActivities, "分析データ.csv", session);
+    void download(bookActivities, "分析データ.csv", session);
   }, [bookActivities, session]);
   const learnerActivities = useMemo(
     () =>
@@ -147,27 +145,24 @@ export default function Dashboard(props: Props) {
     [dispatch]
   );
   return (
-    <Container classes={containerClasses} maxWidth="md">
-      <ActionHeader
-        title="学習分析"
-        action={
-          <>
-            <Typography variant="h6">{session.ltiContext.title}</Typography>
-            <span className={classes.contextLabel}>
-              {session.ltiContext.label}
-            </span>
-            <Button
-              onClick={handleDownloadClick}
-              color="primary"
-              variant="contained"
-              size="small"
-            >
-              <GetAppOutlinedIcon fontSize="small" />
-              分析データをダウンロード
-            </Button>
-          </>
-        }
-      />
+    <Container maxWidth="md">
+      <Typography sx={{ mt: 5 }} variant="h4">
+        学習分析
+      </Typography>
+      <ActionHeader>
+        <Typography variant="h6">{session.ltiContext.title}</Typography>
+        <span className={classes.contextLabel}>{session.ltiContext.label}</span>
+        <Button
+          onClick={handleDownloadClick}
+          color="primary"
+          variant="contained"
+          size="small"
+          disabled={bookActivities.length === 0}
+        >
+          <GetAppOutlinedIcon fontSize="small" />
+          分析データをダウンロード
+        </Button>
+      </ActionHeader>
       <Card classes={cardClasses} className={classes.card}>
         <Tabs
           className={classes.tabs}

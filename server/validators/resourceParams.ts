@@ -1,10 +1,12 @@
-import { IsInt } from "class-validator";
-import { validationMetadatasToSchemas } from "class-validator-jsonschema";
+import type { FromSchema } from "json-schema-to-ts";
 
-export class ResourceParams {
-  @IsInt()
-  resource_id!: number;
-}
+export const ResourceParams = {
+  type: "object",
+  required: ["resource_id"],
+  properties: {
+    resource_id: { type: "number" },
+  },
+  additionalProperties: false,
+} as const;
 
-export const resourceParamsSchema =
-  validationMetadatasToSchemas().ResourceParams;
+export type ResourceParams = FromSchema<typeof ResourceParams>;

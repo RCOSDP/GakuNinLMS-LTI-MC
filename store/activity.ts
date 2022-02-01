@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from "react";
 import { atom, useAtom } from "jotai";
-import { ActivitySchema } from "$server/models/activity";
-import { TopicSchema } from "$server/models/topic";
+import type { ActivitySchema } from "$server/models/activity";
+import type { TopicSchema } from "$server/models/topic";
 
 type ActivityState = Map<TopicSchema["id"], ActivitySchema>;
 

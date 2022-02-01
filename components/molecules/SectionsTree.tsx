@@ -1,4 +1,4 @@
-import { ReactNode, MouseEvent } from "react";
+import type { ReactNode, MouseEvent } from "react";
 import TreeItem from "@mui/lab/TreeItem";
 import Checkbox from "@mui/material/Checkbox";
 import makeStyles from "@mui/styles/makeStyles";
@@ -6,8 +6,8 @@ import PreviewButton from "$atoms/PreviewButton";
 import EditButton from "$atoms/EditButton";
 import SharedIndicator from "$atoms/SharedIndicator";
 import useTreeItemStyle from "$styles/treeItem";
-import { SectionSchema } from "$server/models/book/section";
-import { TopicSchema } from "$server/models/topic";
+import type { SectionSchema } from "$server/models/book/section";
+import type { IsContentEditable } from "$server/models/content";
 import { isNamedSection, getOutlineNumber } from "$utils/outline";
 
 const useStyles = makeStyles((theme) => ({
@@ -78,7 +78,7 @@ type Props = {
   onItemEditClick?(index: ItemIndex): void;
   onTreeChange?(nodeId: string): void;
   selectedIndexes?: Set<string>;
-  isTopicEditable?(topic: TopicSchema): boolean | undefined;
+  isContentEditable?: IsContentEditable;
 };
 
 export default function SectionsTree(props: Props) {
@@ -90,7 +90,7 @@ export default function SectionsTree(props: Props) {
     onItemEditClick,
     onTreeChange,
     selectedIndexes,
-    isTopicEditable,
+    isContentEditable,
   } = props;
   const classes = useStyles();
   const treeItemClasses = useTreeItemStyle();
@@ -142,7 +142,7 @@ export default function SectionsTree(props: Props) {
                       variant="topic"
                       onClick={handle(onItemPreviewClick)}
                     />
-                    {isTopicEditable?.(topic) && onItemEditClick && (
+                    {isContentEditable?.(topic) && onItemEditClick && (
                       <EditButton
                         variant="topic"
                         onClick={handle(onItemEditClick)}

@@ -1,17 +1,14 @@
-import { FastifyRequest, FastifySchema } from "fastify";
+import type { FastifyRequest, FastifySchema } from "fastify";
 import authUser from "$server/auth/authUser";
 import { updateUserSettings } from "$server/utils/user";
-import {
-  UserSettingsProp,
-  userSettingsPropSchema,
-} from "$server/validators/userSettings";
+import { UserSettingsProps } from "$server/models/userSettings";
 
-export type Prop = UserSettingsProp;
+export type Prop = UserSettingsProps;
 
 const updateSchema: FastifySchema = {
   summary: "ユーザー設定値の更新",
   description: "ユーザーの設定内容を更新し、セッションとdbに保存します。",
-  body: userSettingsPropSchema,
+  body: UserSettingsProps,
   response: {
     200: {},
   },
@@ -30,9 +27,9 @@ export const Hooks = {
 export async function update({
   session,
   body,
-}: FastifyRequest<{ Body: UserSettingsProp }>) {
+}: FastifyRequest<{ Body: UserSettingsProps }>) {
   Object.assign(session.user.settings, body);
-  await updateUserSettings(session.user.id, session.user.settings);
+  await updateUserSettings(session.user.id, session.user.settings ?? {});
 
   return {
     status: 200,

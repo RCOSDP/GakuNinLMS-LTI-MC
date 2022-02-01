@@ -20,6 +20,7 @@ export default function BookInfo({ className, id, book }: Props) {
     <Card className={className} classes={cardClasses} id={id}>
       <DescriptionList
         color={grey[900]}
+        sx={{ mb: 0.5 }}
         value={[
           {
             key: "学習時間",

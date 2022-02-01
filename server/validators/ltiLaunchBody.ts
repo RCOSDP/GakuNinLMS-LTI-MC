@@ -1,6 +1,5 @@
-import { LtiLaunchPresentationSchema } from "$server/models/ltiLaunchPresentation";
-import { SessionSchema } from "$server/models/session";
-import { getSystemSettings } from "$server/utils/systemSettings";
+import type { LtiLaunchPresentationSchema } from "$server/models/ltiLaunchPresentation";
+import type { SessionSchema } from "$server/models/session";
 import { IsNotEmpty, IsOptional, IsString } from "class-validator";
 import { validationMetadatasToSchemas } from "class-validator-jsonschema";
 
@@ -86,7 +85,7 @@ export const ltiLaunchBodySchema = validationMetadatasToSchemas().LtiLaunchBody;
 
 export function toSessionSchema(
   body: LtiLaunchBody
-): Omit<SessionSchema, "ltiResourceLink" | "user"> {
+): Omit<SessionSchema, "ltiResourceLink" | "user" | "systemSettings"> {
   let ltiLaunchPresentation: undefined | LtiLaunchPresentationSchema;
   if ("launch_presentation_return_url" in body) {
     ltiLaunchPresentation = {
@@ -113,6 +112,5 @@ export function toSessionSchema(
       title: body.context_title,
     },
     ...(ltiLaunchPresentation && { ltiLaunchPresentation }),
-    systemSettings: getSystemSettings(),
   };
 }

@@ -1,4 +1,4 @@
-import { Resource, Track } from "@prisma/client";
+import type { Resource, Track } from "@prisma/client";
 import prisma from "$server/utils/prisma";
 
 async function findVideoTrack(

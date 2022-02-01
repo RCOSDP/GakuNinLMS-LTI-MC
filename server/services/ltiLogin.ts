@@ -1,7 +1,7 @@
-import { FastifyRequest } from "fastify";
+import type { FastifyRequest } from "fastify";
 import { outdent } from "outdent";
-import { LtiVersionSchema } from "$server/models/ltiVersion";
-import { OauthClientSchema } from "$server/models/oauthClient";
+import type { LtiVersionSchema } from "$server/models/ltiVersion";
+import type { OauthClientSchema } from "$server/models/oauthClient";
 import { LtiLoginProps } from "$server/validators/ltiLoginProps";
 import createAccount from "$server/utils/ltiv1p3/createAccount";
 

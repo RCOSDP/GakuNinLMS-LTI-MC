@@ -1,240 +1,220 @@
-import { useState, ChangeEvent } from "react";
+import type { ChangeEvent } from "react";
+import { useState } from "react";
 import { useConfirm } from "material-ui-confirm";
-import useInfiniteScroll from "react-infinite-scroll-hook";
 import Skeleton from "@mui/material/Skeleton";
-import makeStyles from "@mui/styles/makeStyles";
+import Box from "@mui/material/Box";
+import Badge from "@mui/material/Badge";
 import Button from "@mui/material/Button";
 import Checkbox from "@mui/material/Checkbox";
-import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
 import AddIcon from "@mui/icons-material/Add";
 import ActionHeader from "$organisms/ActionHeader";
 import ActionFooter from "$organisms/ActionFooter";
-import TopicPreview from "$organisms/TopicPreview";
+import ContentTypeIndicator from "$atoms/ContentTypeIndicator";
+import ContentPreview from "$organisms/ContentPreview";
+import FilterColumn from "$organisms/FilterColumn";
 import TopicPreviewDialog from "$organisms/TopicPreviewDialog";
+import SearchPagination from "$organisms/SearchPagination";
+import Search from "$organisms/Search";
+import Container from "$atoms/Container";
 import SortSelect from "$atoms/SortSelect";
-import CreatorFilter from "$atoms/CreatorFilter";
-import SearchTextField from "$atoms/SearchTextField";
-import { TopicSchema } from "$server/models/topic";
-import { SortOrder } from "$server/models/sortOrder";
-import { gray } from "$theme/colors";
-import { Filter } from "$types/filter";
-import useContainerStyles from "$styles/container";
+import type { ContentSchema } from "$server/models/content";
+import type { TopicSchema } from "$server/models/topic";
+import { grey } from "@mui/material/colors";
 import useDialogProps from "$utils/useDialogProps";
 import { useSearchAtom } from "$store/search";
-
-const useStyles = makeStyles((theme) => ({
-  icon: {
-    marginRight: theme.spacing(0.5),
-  },
-  topics: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fill, 296px)",
-    gap: theme.spacing(2),
-  },
-  fieldset: {
-    display: "inline-flex",
-    padding: theme.spacing(0),
-    backgroundColor: "white",
-    border: "1px solid",
-    borderColor: gray[500],
-    borderRadius: 8,
-  },
-  checkbox: {},
-  footerButton: {
-    marginRight: theme.spacing(1),
-  },
-}));
+import { useSessionAtom } from "$store/session";
 
 type Props = {
-  topics: TopicSchema[];
+  totalCount: number;
+  contents: ContentSchema[];
   loading?: boolean;
-  hasNextPage?: boolean;
-  onLoadMore?(): void;
   onBookNewClick(topics: TopicSchema[]): void;
   onTopicsShareClick(topics: TopicSchema[], shared: boolean): void;
   onTopicsDeleteClick(topics: TopicSchema[]): void;
-  onTopicEditClick(topic: TopicSchema): void;
+  onContentEditClick(content: ContentSchema): void;
   onTopicNewClick(): void;
-  onSortChange?(sort: SortOrder): void;
-  onFilterChange?(filter: Filter): void;
 };
 
 export default function Topics(props: Props) {
   const {
-    topics,
+    totalCount,
+    contents,
     loading = false,
-    hasNextPage = false,
-    onLoadMore = () => undefined,
     onBookNewClick,
     onTopicsShareClick,
     onTopicsDeleteClick,
-    onTopicEditClick,
+    onContentEditClick,
     onTopicNewClick,
-    onSortChange,
-    onFilterChange,
   } = props;
-  const { query, onSearchInput, onSearchInputReset } = useSearchAtom();
-  const classes = useStyles();
-  const containerClasses = useContainerStyles();
+  const searchProps = useSearchAtom();
+  const { isAdministrator } = useSessionAtom();
   const confirm = useConfirm();
-
-  const [selectedIndexes, select] = useState<Set<number>>(new Set());
-  const handleChecked = (index: number) => () =>
-    select((indexes) =>
-      indexes.delete(index) ? new Set(indexes) : new Set(indexes.add(index))
+  const [selected, select] = useState<Map<ContentSchema["id"], ContentSchema>>(
+    new Map()
+  );
+  const getSelectedTopics = () =>
+    [...selected.values()].filter(
+      (content) => content.type === "topic"
+    ) as TopicSchema[];
+  const handleChecked = (content: ContentSchema) => () =>
+    select(
+      (selected) =>
+        new Map(
+          selected.delete(content.id)
+            ? selected
+            : selected.set(content.id, content)
+        )
     );
   const handleCheckAll = (event: ChangeEvent<HTMLInputElement>) => {
-    select(() =>
-      event.target.checked
-        ? new Set(topics.map((_, index) => index))
-        : new Set()
+    select(
+      () =>
+        new Map(
+          event.target.checked
+            ? contents.map((content) => [content.id, content] as const)
+            : []
+        )
     );
   };
-  const handleSortChange = (sort: SortOrder) => {
-    select(() => new Set());
-    if (onSortChange) onSortChange(sort);
-  };
-  const handleFilterChange = (filter: Filter) => {
-    select(() => new Set());
-    if (onFilterChange) onFilterChange(filter);
-  };
-  const handleSearchInput = (input: string) => {
-    select(() => new Set());
-    if (onSearchInput) onSearchInput(input);
-  };
-  const handleSearchInputReset = () => {
-    select(() => new Set());
-    if (onSearchInputReset) onSearchInputReset();
-  };
-
   const handleBookNewClick = () => {
-    onBookNewClick([...selectedIndexes].map((i) => topics[i]));
+    onBookNewClick(getSelectedTopics());
   };
   const handleTopicsShareClick = () => {
-    onTopicsShareClick(
-      [...selectedIndexes].map((i) => topics[i]),
-      true
-    );
+    onTopicsShareClick(getSelectedTopics(), true);
   };
   const handleTopicsUnshareClick = () => {
-    onTopicsShareClick(
-      [...selectedIndexes].map((i) => topics[i]),
-      false
-    );
+    onTopicsShareClick(getSelectedTopics(), false);
   };
   const handleTopicsDeleteClick = async () => {
-    const ids = [...selectedIndexes].map((i) => topics[i]);
-    if (!ids || !ids.length) return;
-
+    const topics = getSelectedTopics();
+    if (topics.length === 0) return;
     await confirm({
-      title: `${ids.length}件のトピックを削除します。よろしいですか？`,
+      title: `${topics.length}件のトピックを削除します。よろしいですか？`,
       cancellationText: "キャンセル",
       confirmationText: "OK",
     });
-    onTopicsDeleteClick(ids);
+    onTopicsDeleteClick(topics);
+    select(() => new Map([]));
   };
 
   const {
-    data: previewTopic,
-    dispatch: setPreviewTopic,
+    data: previewContent,
+    dispatch: handlePreviewClick,
     ...dialogProps
-  } = useDialogProps<TopicSchema>();
-  const handleTopicPreviewClick = (topic: TopicSchema) =>
-    setPreviewTopic(topic);
-  const [infiniteRef] = useInfiniteScroll({ loading, hasNextPage, onLoadMore });
+  } = useDialogProps<ContentSchema>();
   return (
-    <Container ref={infiniteRef} classes={containerClasses} maxWidth="lg">
-      <ActionHeader
-        title={
-          <>
-            トピック
-            <Button size="small" color="primary" onClick={onTopicNewClick}>
-              <AddIcon className={classes.icon} />
-              トピックの作成
-            </Button>
-          </>
-        }
-        action={
-          <>
-            <fieldset className={classes.fieldset}>
-              <Checkbox
-                className={classes.checkbox}
-                size="small"
-                color="primary"
-                checked={
-                  selectedIndexes.size == topics.length &&
-                  selectedIndexes.size > 0
-                }
-                onChange={handleCheckAll}
-              />
-            </fieldset>
-            <SortSelect onSortChange={handleSortChange} />
-            <CreatorFilter onFilterChange={handleFilterChange} />
-            <SearchTextField
-              label="トピック検索"
-              value={query.input}
-              onSearchInput={handleSearchInput}
-              onSearchInputReset={handleSearchInputReset}
-            />
-          </>
-        }
-      />
-      <div className={classes.topics}>
-        {topics.map((topic, index) => (
-          <TopicPreview
-            key={index}
-            topic={topic}
-            checked={selectedIndexes.has(index)}
-            onChange={handleChecked(index)}
-            onTopicPreviewClick={handleTopicPreviewClick}
-            onTopicEditClick={onTopicEditClick}
+    <Container twoColumns maxWidth="xl">
+      <Typography sx={{ mt: 5, gridArea: "title" }} variant="h4">
+        トピック
+        <Button size="small" color="primary" onClick={onTopicNewClick}>
+          <AddIcon sx={{ mr: 0.5 }} />
+          トピックの作成
+        </Button>
+      </Typography>
+      <ActionHeader sx={{ gridArea: "action-header" }}>
+        <ContentTypeIndicator type="topic" />
+        <Badge
+          sx={{
+            display: "inline-flex",
+            padding: 0,
+            backgroundColor: "white",
+            border: "1px solid",
+            borderColor: grey[300],
+            borderRadius: 2,
+          }}
+          badgeContent={selected.size}
+          color="primary"
+        >
+          <Checkbox
+            size="small"
+            color="primary"
+            checked={selected.size === contents.length && selected.size > 0}
+            indeterminate={
+              selected.size !== contents.length && selected.size > 0
+            }
+            onChange={handleCheckAll}
+          />
+        </Badge>
+        <SortSelect onSortChange={searchProps.onSortChange} />
+        <Search
+          label="トピック検索"
+          value={searchProps.input}
+          target={searchProps.target}
+          onSearchInput={searchProps.onSearchInput}
+          onSearchInputReset={searchProps.onSearchInputReset}
+          onSearchSubmit={searchProps.onSearchSubmit}
+          onSearchTargetChange={searchProps.onSearchTargetChange}
+        />
+      </ActionHeader>
+      <FilterColumn sx={{ gridArea: "side" }} variant="topic" />
+      <Box
+        display="grid"
+        gridTemplateColumns="repeat(auto-fill, 296px)"
+        gap={2}
+        gridArea="items"
+      >
+        {contents.map((content) => (
+          <ContentPreview
+            key={content.id}
+            content={content}
+            checked={selected.has(content.id)}
+            onChange={handleChecked(content)}
+            onContentPreviewClick={handlePreviewClick}
+            onContentEditClick={onContentEditClick}
+            onKeywordClick={searchProps.onKeywordClick}
           />
         ))}
         {loading &&
           [...Array(6)].map((_, i) => (
-            <Skeleton key={i} height={324 /* NOTE: 適当 */} />
+            <Skeleton key={i} height={324 /* TODO: 妥当な値にしてほしい */} />
           ))}
-      </div>
-      <ActionFooter maxWidth="lg">
-        <Button
-          className={classes.footerButton}
-          color="primary"
-          size="large"
-          variant="contained"
-          onClick={handleBookNewClick}
-        >
-          ブック作成
-        </Button>
-        <Button
-          className={classes.footerButton}
-          color="primary"
-          size="large"
-          variant="contained"
-          onClick={handleTopicsShareClick}
-        >
-          シェア
-        </Button>
-        <Button
-          className={classes.footerButton}
-          color="primary"
-          size="large"
-          variant="contained"
-          onClick={handleTopicsUnshareClick}
-        >
-          シェア解除
-        </Button>
-        <Button
-          className={classes.footerButton}
-          color="error"
-          size="large"
-          variant="contained"
-          onClick={handleTopicsDeleteClick}
-        >
-          削除
-        </Button>
-      </ActionFooter>
-      {previewTopic && (
-        <TopicPreviewDialog {...dialogProps} topic={previewTopic} />
+      </Box>
+      <SearchPagination
+        sx={{ mt: 4, gridArea: "search-pagination" }}
+        totalCount={totalCount}
+      />
+      {selected.size > 0 && (
+        <ActionFooter maxWidth="lg">
+          <Button
+            color="primary"
+            size="large"
+            variant="contained"
+            onClick={handleBookNewClick}
+          >
+            ブック作成
+          </Button>
+          {(isAdministrator || searchProps.query.filter === "self") && (
+            <>
+              <Button
+                color="primary"
+                size="large"
+                variant="contained"
+                onClick={handleTopicsShareClick}
+              >
+                シェア
+              </Button>
+              <Button
+                color="primary"
+                size="large"
+                variant="contained"
+                onClick={handleTopicsUnshareClick}
+              >
+                シェア解除
+              </Button>
+              <Button
+                color="error"
+                size="large"
+                variant="contained"
+                onClick={handleTopicsDeleteClick}
+              >
+                削除
+              </Button>
+            </>
+          )}
+        </ActionFooter>
+      )}
+      {previewContent?.type === "topic" && (
+        <TopicPreviewDialog {...dialogProps} topic={previewContent} />
       )}
     </Container>
   );

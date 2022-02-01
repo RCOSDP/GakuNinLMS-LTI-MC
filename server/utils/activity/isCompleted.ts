@@ -1,5 +1,5 @@
-import { TopicSchema } from "$server/models/topic";
-import { ActivitySchema } from "$server/models/activity";
+import type { TopicSchema } from "$server/models/topic";
+import type { ActivitySchema } from "$server/models/activity";
 import { ACTIVITY_RATE_MIN } from "$server/utils/env";
 
 /**

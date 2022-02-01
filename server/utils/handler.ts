@@ -1,4 +1,4 @@
-import {
+import type {
   FastifyRequest,
   FastifyReply,
   RawRequestDefaultExpression,
@@ -6,8 +6,8 @@ import {
   RawServerDefault,
   RawReplyDefaultExpression,
 } from "fastify";
-import { RouteGenericInterface } from "fastify/types/route";
-import Controller from "$server/types/controller";
+import type { RouteGenericInterface } from "fastify/types/route";
+import type Controller from "$server/types/controller";
 
 const handler =
   <
@@ -24,8 +24,8 @@ const handler =
     reply: FastifyReply<RawServer, RawRequest, RawReply>
   ) => {
     const { status, headers, body } = await method(request);
-    if (headers != null) reply.headers(headers);
-    reply.code(status).send(body);
+    if (headers != null) void reply.headers(headers);
+    void reply.code(status).send(body);
   };
 
 export default handler;

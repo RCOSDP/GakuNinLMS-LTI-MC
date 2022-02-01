@@ -14,36 +14,54 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    InlineResponse2001Books,
-    InlineResponse2001BooksFromJSON,
-    InlineResponse2001BooksFromJSONTyped,
-    InlineResponse2001BooksToJSON,
+    InlineResponse2001Settings,
+    InlineResponse2001SettingsFromJSON,
+    InlineResponse2001SettingsFromJSONTyped,
+    InlineResponse2001SettingsToJSON,
 } from './';
 
 /**
- * 成功時
+ * 
  * @export
  * @interface InlineResponse2004
  */
 export interface InlineResponse2004 {
     /**
      * 
-     * @type {Array<InlineResponse2001Books>}
-     * @memberof InlineResponse2004
-     */
-    books?: Array<InlineResponse2001Books>;
-    /**
-     * 
      * @type {number}
      * @memberof InlineResponse2004
      */
-    page?: number;
+    id: number;
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof InlineResponse2004
      */
-    perPage?: number;
+    ltiConsumerId: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineResponse2004
+     */
+    ltiUserId: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineResponse2004
+     */
+    name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineResponse2004
+     */
+    email?: string;
+    /**
+     * 
+     * @type {InlineResponse2001Settings}
+     * @memberof InlineResponse2004
+     */
+    settings?: InlineResponse2001Settings;
 }
 
 export function InlineResponse2004FromJSON(json: any): InlineResponse2004 {
@@ -56,9 +74,12 @@ export function InlineResponse2004FromJSONTyped(json: any, ignoreDiscriminator: 
     }
     return {
         
-        'books': !exists(json, 'books') ? undefined : ((json['books'] as Array<any>).map(InlineResponse2001BooksFromJSON)),
-        'page': !exists(json, 'page') ? undefined : json['page'],
-        'perPage': !exists(json, 'perPage') ? undefined : json['perPage'],
+        'id': json['id'],
+        'ltiConsumerId': json['ltiConsumerId'],
+        'ltiUserId': json['ltiUserId'],
+        'name': json['name'],
+        'email': !exists(json, 'email') ? undefined : json['email'],
+        'settings': !exists(json, 'settings') ? undefined : InlineResponse2001SettingsFromJSON(json['settings']),
     };
 }
 
@@ -71,9 +92,12 @@ export function InlineResponse2004ToJSON(value?: InlineResponse2004 | null): any
     }
     return {
         
-        'books': value.books === undefined ? undefined : ((value.books as Array<any>).map(InlineResponse2001BooksToJSON)),
-        'page': value.page,
-        'perPage': value.perPage,
+        'id': value.id,
+        'ltiConsumerId': value.ltiConsumerId,
+        'ltiUserId': value.ltiUserId,
+        'name': value.name,
+        'email': value.email,
+        'settings': InlineResponse2001SettingsToJSON(value.settings),
     };
 }
 

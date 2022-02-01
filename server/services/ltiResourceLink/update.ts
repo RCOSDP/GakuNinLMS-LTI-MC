@@ -1,14 +1,12 @@
-import { FastifyRequest, FastifySchema } from "fastify";
+import type { FastifyRequest, FastifySchema } from "fastify";
 import { outdent } from "outdent";
+import type { LtiResourceLinkProps } from "$server/models/ltiResourceLink";
 import {
-  LtiResourceLinkProps,
   ltiResourceLinkPropsSchema,
   ltiResourceLinkSchema,
 } from "$server/models/ltiResourceLink";
-import {
-  LtiResourceLinkParams,
-  ltiResourceLinkParamsSchema,
-} from "$server/validators/ltiResourceLinkParams";
+import type { LtiResourceLinkParams } from "$server/validators/ltiResourceLinkParams";
+import { ltiResourceLinkParamsSchema } from "$server/validators/ltiResourceLinkParams";
 import authUser from "$server/auth/authUser";
 import authInstructor from "$server/auth/authInstructor";
 import { upsertLtiResourceLink } from "$server/utils/ltiResourceLink";
@@ -30,6 +28,7 @@ export const updateHooks = {
   auth: [authUser, authInstructor],
 };
 
+// TODO: 複数著者に対応してほしい
 export async function update({
   body,
   params,
@@ -42,7 +41,7 @@ export async function update({
     ...body,
     consumerId: params.lti_consumer_id,
     id: params.lti_resource_link_id,
-    authorId: session.user.id,
+    creatorId: session.user.id,
   });
 
   session.ltiResourceLink = link;

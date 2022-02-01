@@ -1,4 +1,4 @@
-import { Topic } from "@prisma/client";
+import type { Topic } from "@prisma/client";
 import prisma from "$server/utils/prisma";
 
 async function destroyTopic(id: Topic["id"]) {
@@ -16,6 +16,9 @@ async function destroyTopic(id: Topic["id"]) {
       prisma.activity.deleteMany({
         where: { topicId: id },
       }),
+      prisma.authorship.deleteMany({
+        where: { topicId: id },
+      }),
       prisma.topic.deleteMany({
         where: { id },
       }),
@@ -29,6 +32,9 @@ async function destroyTopic(id: Topic["id"]) {
         where: { resource: { topics: { every: { id } } } },
       }),
       prisma.resource.deleteMany({
+        where: { topics: { every: { id } } },
+      }),
+      prisma.keyword.deleteMany({
         where: { topics: { every: { id } } },
       }),
     ]);

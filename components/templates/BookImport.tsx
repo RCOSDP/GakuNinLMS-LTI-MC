@@ -1,50 +1,33 @@
-import { FormEvent, useState } from "react";
-import useInfiniteScroll from "react-infinite-scroll-hook";
+import type { FormEvent } from "react";
+import { useState } from "react";
 import Skeleton from "@mui/material/Skeleton";
-import makeStyles from "@mui/styles/makeStyles";
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
 import TreeView from "@mui/lab/TreeView";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import TopicPreviewDialog from "$organisms/TopicPreviewDialog";
 import ActionHeader from "$organisms/ActionHeader";
 import ActionFooter from "$organisms/ActionFooter";
+import FilterColumn from "$organisms/FilterColumn";
 import BookTree from "$organisms/BookTree";
+import SearchPagination from "$organisms/SearchPagination";
+import Search from "$organisms/Search";
+import Container from "$atoms/Container";
 import SortSelect from "$atoms/SortSelect";
-import CreatorFilter from "$atoms/CreatorFilter";
-import SearchTextField from "$atoms/SearchTextField";
-import { BookSchema } from "$server/models/book";
-import { SectionSchema } from "$server/models/book/section";
-import { TopicSchema } from "$server/models/topic";
-import { SortOrder } from "$server/models/sortOrder";
-import { Filter } from "$types/filter";
-import useContainerStyles from "$styles/container";
+import type { ContentSchema } from "$server/models/content";
+import type { BookSchema } from "$server/models/book";
+import type { SectionSchema } from "$server/models/book/section";
+import type { TopicSchema } from "$server/models/topic";
+import type { IsContentEditable } from "$server/models/content";
 import { useSearchAtom } from "$store/search";
 import useDialogProps from "$utils/useDialogProps";
 
-const useStyles = makeStyles((theme) => ({
-  icon: {
-    marginRight: theme.spacing(0.5),
-  },
-  books: {
-    "&> :not(:last-child)": {
-      marginBottom: theme.spacing(2),
-    },
-  },
-  form: {
-    "& > *": {
-      marginRight: theme.spacing(1),
-    },
-  },
-}));
-
 type Props = {
-  books: BookSchema[];
+  totalCount: number;
+  contents: ContentSchema[];
   loading?: boolean;
-  hasNextPage?: boolean;
-  onLoadMore?(): void;
   onSubmit({
     books,
     sections,
@@ -58,32 +41,22 @@ type Props = {
   onBookPreviewClick?(book: BookSchema): void;
   onBookEditClick?(book: BookSchema): void;
   onTopicEditClick?(topic: TopicSchema): void;
-  onSortChange?(sort: SortOrder): void;
-  onFilterChange?(filter: Filter): void;
-  isBookEditable?(book: BookSchema): boolean | undefined;
-  isTopicEditable?(topic: TopicSchema): boolean | undefined;
+  isContentEditable?: IsContentEditable;
 };
 
 export default function BookImport(props: Props) {
   const {
-    books,
+    totalCount,
+    contents,
     loading = false,
-    hasNextPage = false,
-    onLoadMore = () => undefined,
     onSubmit,
     onCancel,
     onBookPreviewClick,
     onBookEditClick,
     onTopicEditClick,
-    onSortChange,
-    onFilterChange,
-    isBookEditable,
-    isTopicEditable,
+    isContentEditable,
   } = props;
-  const classes = useStyles();
-  const containerClasses = useContainerStyles();
-  const { query, onSearchInput, onLtiContextClick, onSearchInputReset } =
-    useSearchAtom();
+  const searchProps = useSearchAtom();
   const [selectedNodeIds, select] = useState<Set<string>>(new Set());
   const handleTreeChange = (nodeId: string) => {
     select((nodeIds) =>
@@ -101,8 +74,10 @@ export default function BookImport(props: Props) {
         .replace(/:[^:]*$/, "")
         .split("-")
         .map((id) => Number(id));
-      const book = books.find((book) => book.id === bookId);
-      if (!book) return;
+      const book = contents.find(
+        (content) => content.type === "book" && content.id === bookId
+      );
+      if (book?.type !== "book") return;
       const section = book.sections.find((section) => section.id === sectionId);
       if (!section) {
         selectedBooks.push(book);
@@ -129,68 +104,63 @@ export default function BookImport(props: Props) {
   } = useDialogProps<TopicSchema>();
   const handleTopicPreviewClick = (topic: TopicSchema) =>
     setPreviewTopic(topic);
-  const [infiniteRef] = useInfiniteScroll({ loading, hasNextPage, onLoadMore });
   return (
-    <Container ref={infiniteRef} classes={containerClasses} maxWidth="md">
-      <ActionHeader
-        title={
-          <>
-            ブックの再利用
-            <Typography variant="body1">
-              再利用するトピックを選んで下さい
-            </Typography>
-          </>
-        }
-        action={
-          <>
-            <SortSelect onSortChange={onSortChange} />
-            <CreatorFilter onFilterChange={onFilterChange} />
-            <SearchTextField
-              label="ブック・トピック検索"
-              value={query.input}
-              onSearchInput={onSearchInput}
-              onSearchInputReset={onSearchInputReset}
-            />
-          </>
-        }
-      />
-      <TreeView
-        defaultCollapseIcon={<ExpandMoreIcon />}
-        defaultExpandIcon={<ChevronRightIcon />}
-      >
-        {books.map((book) => {
-          const handleItem =
-            (handler?: (topic: TopicSchema) => void) =>
-            ([sectionIndex, topicIndex]: ItemIndex) =>
-              handler?.(book.sections[sectionIndex].topics[topicIndex]);
-          return (
-            <BookTree
-              key={book.id}
-              book={book}
-              onItemPreviewClick={handleItem(handleTopicPreviewClick)}
-              onItemEditClick={handleItem(onTopicEditClick)}
-              onBookPreviewClick={onBookPreviewClick}
-              onBookEditClick={
-                isBookEditable?.(book) ? onBookEditClick : undefined
-              }
-              onLtiContextClick={onLtiContextClick}
-              isTopicEditable={isTopicEditable}
-              onTreeChange={handleTreeChange}
-            />
-          );
-        })}
-      </TreeView>
-      {loading && [...Array(5)].map((_, i) => <Skeleton key={i} height={40} />)}
-      <ActionFooter maxWidth="md">
-        <form className={classes.form} onSubmit={handleSubmit}>
-          <Button
-            color="primary"
-            size="small"
-            variant="text"
-            onClick={onCancel}
-          >
-            キャンセル
-          </Button>
+    <Container twoColumns maxWidth="lg">
+      <Typography sx={{ mt: 5, gridArea: "title" }} variant="h4">
+        ブックの再利用
+      </Typography>
+      <Typography sx={{ mt: 1, gridArea: "description" }} variant="body1">
+        再利用するトピックを選んで下さい
+      </Typography>
+      <ActionHeader sx={{ gridArea: "action-header" }}>
+        <SortSelect onSortChange={searchProps.onSortChange} />
+        <Search
+          label="ブック・トピック検索"
+          value={searchProps.input}
+          target={searchProps.target}
+          onSearchInput={searchProps.onSearchInput}
+          onSearchInputReset={searchProps.onSearchInputReset}
+          onSearchSubmit={searchProps.onSearchSubmit}
+          onSearchTargetChange={searchProps.onSearchTargetChange}
+        />
+      </ActionHeader>
+      <FilterColumn sx={{ gridArea: "side" }} variant="book" />
+      <Box gridArea="items">
+        <TreeView
+          defaultCollapseIcon={<ExpandMoreIcon />}
+          defaultExpandIcon={<ChevronRightIcon />}
+        >
+          {contents.map((content) => {
+            if (content.type !== "book") return null;
+            const handleItem =
+              (handler?: (topic: TopicSchema) => void) =>
+              ([sectionIndex, topicIndex]: ItemIndex) =>
+                handler?.(content.sections[sectionIndex].topics[topicIndex]);
+            return (
+              <BookTree
+                key={content.id}
+                book={content}
+                onItemPreviewClick={handleItem(handleTopicPreviewClick)}
+                onItemEditClick={handleItem(onTopicEditClick)}
+                onBookPreviewClick={onBookPreviewClick}
+                onBookEditClick={
+                  isContentEditable?.(content) ? onBookEditClick : undefined
+                }
+                onLtiContextClick={searchProps.onLtiContextClick}
+                isContentEditable={isContentEditable}
+                onTreeChange={handleTreeChange}
+              />
+            );
+          })}
+        </TreeView>
+        {loading &&
+          [...Array(5)].map((_, i) => <Skeleton key={i} height={40} />)}
+      </Box>
+      <ActionFooter maxWidth="lg">
+        <Button color="primary" size="small" variant="text" onClick={onCancel}>
+          キャンセル
+        </Button>
+        <form onSubmit={handleSubmit}>
           <Button
             color="primary"
             size="large"
@@ -201,6 +171,10 @@ export default function BookImport(props: Props) {
           </Button>
         </form>
       </ActionFooter>
+      <SearchPagination
+        sx={{ mt: 4, gridArea: "search-pagination" }}
+        totalCount={totalCount}
+      />
       {previewTopic && (
         <TopicPreviewDialog {...topicPreviewDialogProps} topic={previewTopic} />
       )}

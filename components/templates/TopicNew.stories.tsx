@@ -1,36 +1,27 @@
-export default {
-  title: "templates/TopicNew",
-  parameters: { layout: "fullscreen" },
-};
-
+import type { Story } from "@storybook/react";
 import TopicNew from "./TopicNew";
 import { useVideoTrackAtom } from "$store/videoTrack";
 import { topic } from "$samples";
 
-const handlers = {
-  onSubmit: console.log,
-  onCancel: () => console.log("back"),
+export default {
+  title: "templates/TopicNew",
+  parameters: { layout: "fullscreen" },
+  component: TopicNew,
 };
 
-export const Default = () => {
+const Template: Story<Parameters<typeof TopicNew>[0]> = (args) => {
   const { addVideoTrack, deleteVideoTrack } = useVideoTrackAtom();
   return (
     <TopicNew
+      {...args}
       onSubtitleDelete={({ id }) => deleteVideoTrack(id)}
       onSubtitleSubmit={addVideoTrack}
-      {...handlers}
     />
   );
 };
 
-export const Fork = () => {
-  const { addVideoTrack, deleteVideoTrack } = useVideoTrackAtom();
-  return (
-    <TopicNew
-      topic={topic}
-      onSubtitleDelete={({ id }) => deleteVideoTrack(id)}
-      onSubtitleSubmit={addVideoTrack}
-      {...handlers}
-    />
-  );
-};
+export const Default = Template.bind({});
+Default.args = {};
+
+export const Fork = Template.bind({});
+Fork.args = { topic };
