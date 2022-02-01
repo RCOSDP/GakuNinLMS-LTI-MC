@@ -10,7 +10,7 @@ const Text = styled("span")({
   fontSize: 12,
 });
 
-const Image = styled("img")();
+const Image = styled("img")({});
 
 type Props = {
   license: ContentSchema["license"];

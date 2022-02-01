@@ -1,6 +1,5 @@
 import type { SxProps } from "@mui/system";
 import Box from "@mui/material/Box";
-import Chip from "@mui/material/Chip";
 import FormLabel from "@mui/material/FormLabel";
 import FormControl from "@mui/material/FormControl";
 import MenuItem from "@mui/material/MenuItem";
@@ -8,6 +7,7 @@ import Typography from "@mui/material/Typography";
 import AuthorFilter from "$atoms/AuthorFilter";
 import SharedFilter from "$atoms/SharedFilter";
 import CourseChip from "$atoms/CourseChip";
+import KeywordChip from "$atoms/KeywordChip";
 import TextField from "$atoms/TextField";
 import licenses from "$utils/licenses";
 import { useSearchAtom } from "$store/search";
@@ -89,13 +89,10 @@ export default function FilterColumn({ sx, variant }: Props) {
           <Typography>なし</Typography>
         )}
         {searchQuery.keyword?.map((keyword) => (
-          <Chip
+          <KeywordChip
             key={keyword}
-            variant="outlined"
-            color="primary"
-            label={keyword}
-            size="small"
-            sx={{ mr: 0.5, borderRadius: 1 }}
+            keyword={{ name: keyword }}
+            sx={{ mr: 0.5 }}
             onDelete={() => onKeywordDelete(keyword)}
           />
         ))}
