@@ -14,10 +14,11 @@ async function fetchActivity(
       topic: { select: { id: true, name: true, timeRequired: true } },
     },
     where: {
-      AND: [
-        { learnerId },
-        { topic: { topicSection: { some: { section: { bookId } } } } },
-      ],
+      learnerId,
+      topic: { topicSection: { some: { section: { bookId } } } },
+      // TODO: コースごとでの活動を取得できるようにしてほしい
+      ltiConsumerId: "",
+      ltiContextId: "",
     },
   });
 

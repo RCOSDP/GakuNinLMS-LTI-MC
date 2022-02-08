@@ -22,6 +22,8 @@ async function findLtiMembers(
       id: true,
       name: true,
       activities: {
+        // TODO: コースごとでの活動を取得できるようにしてほしい
+        where: { ltiConsumerId: "", ltiContextId: "" },
         include: {
           learner: { select: { id: true, name: true } },
           topic: {

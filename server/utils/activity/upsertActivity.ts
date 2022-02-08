@@ -1,12 +1,35 @@
 import { IntervalTree } from "$server/utils/intervalTree";
-import type { User, Topic, Activity } from "@prisma/client";
+import type {
+  User,
+  Topic,
+  Activity,
+  LtiConsumer,
+  LtiContext,
+} from "@prisma/client";
 import type { ActivityProps } from "$server/models/activity";
 import type { ActivityTimeRangeProps } from "$server/models/activityTimeRange";
 import prisma from "$server/utils/prisma";
 
-function findActivity(learnerId: User["id"], topicId: Topic["id"]) {
+function findActivity({
+  learnerId,
+  topicId,
+  ltiConsumerId,
+  ltiContextId,
+}: {
+  learnerId: User["id"];
+  topicId: Topic["id"];
+  ltiConsumerId: LtiConsumer["id"];
+  ltiContextId: LtiContext["id"];
+}) {
   return prisma.activity.findUnique({
-    where: { topicId_learnerId: { topicId, learnerId } },
+    where: {
+      topicId_learnerId_ltiConsumerId_ltiContextId: {
+        topicId,
+        learnerId,
+        ltiConsumerId,
+        ltiContextId,
+      },
+    },
     select: { id: true, timeRanges: { orderBy: { startMs: "asc" } } },
   });
 }
@@ -36,39 +59,74 @@ function cleanup(activityId: Activity["id"]) {
   return prisma.activityTimeRange.deleteMany({ where: { activityId } });
 }
 
-function upsert(
-  learnerId: User["id"],
-  topicId: Topic["id"],
-  timeRanges: ActivityTimeRangeProps[]
-) {
+function upsert({
+  learnerId,
+  topicId,
+  ltiConsumerId,
+  ltiContextId,
+  timeRanges,
+}: {
+  learnerId: User["id"];
+  topicId: Topic["id"];
+  ltiConsumerId: LtiConsumer["id"];
+  ltiContextId: LtiContext["id"];
+  timeRanges: ActivityTimeRangeProps[];
+}) {
   const totalTimeMs = timeRanges.reduce(
     (a, { startMs, endMs }) => a + endMs - startMs,
     0
   );
   const input = {
-    learner: { connect: { id: learnerId } },
-    topic: { connect: { id: topicId } },
     totalTimeMs,
     timeRanges: { create: timeRanges },
   };
   return prisma.activity.upsert({
-    where: { topicId_learnerId: { topicId, learnerId } },
-    create: input,
+    where: {
+      topicId_learnerId_ltiConsumerId_ltiContextId: {
+        topicId,
+        learnerId,
+        ltiConsumerId,
+        ltiContextId,
+      },
+    },
+    create: {
+      ...input,
+      learner: { connect: { id: learnerId } },
+      topic: { connect: { id: topicId } },
+      ltiContext: {
+        connect: {
+          consumerId_id: { consumerId: ltiConsumerId, id: ltiContextId },
+        },
+      },
+    },
     update: { ...input, updatedAt: new Date() },
   });
 }
 
-async function upsertActivity(
-  learnerId: User["id"],
-  topicId: Topic["id"],
-  activity: ActivityProps
-): Promise<ActivityProps> {
-  const exists = await findActivity(learnerId, topicId);
+async function upsertActivity({
+  learnerId,
+  topicId,
+  ltiConsumerId = "",
+  ltiContextId = "",
+  activity,
+}: {
+  learnerId: User["id"];
+  topicId: Topic["id"];
+  ltiConsumerId?: LtiConsumer["id"];
+  ltiContextId?: LtiContext["id"];
+  activity: ActivityProps;
+}): Promise<ActivityProps> {
+  const exists = await findActivity({
+    learnerId,
+    topicId,
+    ltiConsumerId,
+    ltiContextId,
+  });
   const timeRanges = merge(exists?.timeRanges ?? [], activity.timeRanges);
 
   await prisma.$transaction([
     ...(exists ? [cleanup(exists.id)] : []),
-    upsert(learnerId, topicId, timeRanges),
+    upsert({ learnerId, topicId, ltiConsumerId, ltiContextId, timeRanges }),
   ]);
 
   return { timeRanges };

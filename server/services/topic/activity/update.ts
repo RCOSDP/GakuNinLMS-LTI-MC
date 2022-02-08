@@ -6,7 +6,8 @@ import { topicParamsSchema } from "$server/validators/topicParams";
 import type { SessionSchema } from "$server/models/session";
 import authUser from "$server/auth/authUser";
 import topicExists from "$server/utils/topic/topicExists";
-import upsertActivity from "$server/utils/activity/upsertActivity";
+import upsertTopicActivity from "$server/utils/activity/upsertTopicActivity";
+import upsertLtiContextActivity from "$server/utils/activity/upsertLtiContextActivity";
 
 export const updateSchema: FastifySchema = {
   summary: "学習活動の更新",
@@ -37,7 +38,19 @@ export async function update({
 
   if (!found) return { status: 404 };
 
-  const created = await upsertActivity(session.user.id, params.topic_id, body);
+  await upsertLtiContextActivity({
+    learnerId: session.user.id,
+    topicId: params.topic_id,
+    ltiConsumerId: session.oauthClient.id,
+    ltiContextId: session.ltiContext.id,
+    activity: body,
+  });
+
+  const created = await upsertTopicActivity({
+    learnerId: session.user.id,
+    topicId: params.topic_id,
+    activity: body,
+  });
 
   return {
     status: created == null ? 400 : 201,

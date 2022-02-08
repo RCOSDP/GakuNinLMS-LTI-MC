@@ -140,9 +140,11 @@ model LtiConsumer {
 model LtiContext {
   consumer      LtiConsumer       @relation(fields: [consumerId], references: [id])
   consumerId    String            @map("consumer_id")
+  /// LTI Context ID ("" はすべてのコース)
   id            String
   resourceLinks LtiResourceLink[]
   members       LtiMember[]
+  activities    Activity[]
   title         String
   label         String
 
@@ -266,20 +268,23 @@ model User {
 
 /// 学習活動
 model Activity {
-  id          Int                 @id @default(autoincrement())
-  timeRanges  ActivityTimeRange[]
-  topic       Topic               @relation(fields: [topicId], references: [id])
-  topicId     Int                 @map("topic_id")
-  learner     User                @relation(fields: [learnerId], references: [id])
-  learnerId   Int                 @map("learner_id")
+  id            Int                 @id @default(autoincrement())
+  timeRanges    ActivityTimeRange[]
+  topic         Topic               @relation(fields: [topicId], references: [id])
+  topicId       Int                 @map("topic_id")
+  learner       User                @relation(fields: [learnerId], references: [id])
+  learnerId     Int                 @map("learner_id")
+  ltiContext    LtiContext          @relation(fields: [ltiConsumerId, ltiContextId], references: [consumerId, id])
+  ltiConsumerId String              @default("") @map("lti_consumer_id")
+  ltiContextId  String              @default("") @map("lti_context_id")
   /// 合計時間 (ms)
-  totalTimeMs Int                 @map("total_time_ms")
+  totalTimeMs   Int                 @map("total_time_ms")
   /// 作成日
-  createdAt   DateTime            @default(now()) @map("created_at")
+  createdAt     DateTime            @default(now()) @map("created_at")
   /// 更新日
-  updatedAt   DateTime            @default(now()) @map("updated_at")
+  updatedAt     DateTime            @default(now()) @map("updated_at")
 
-  @@unique([topicId, learnerId])
+  @@unique([topicId, learnerId, ltiConsumerId, ltiContextId])
   @@map("activities")
 }
 
