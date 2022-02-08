@@ -34,14 +34,11 @@ function Edit({ bookId, context }: Query) {
     }
   };
   async function handleSubmit({
+    sections: _,
     submitWithLink,
     ...props
   }: BookPropsWithSubmitOptions) {
-    await updateBook({
-      id: bookId,
-      ...props,
-      sections: props.sections?.filter((section) => section.topics.length > 0),
-    });
+    await updateBook({ id: bookId, ...props });
     if (submitWithLink) await handleBookLink({ id: bookId });
     return back();
   }
