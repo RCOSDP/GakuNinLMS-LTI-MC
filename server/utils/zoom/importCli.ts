@@ -1,13 +1,13 @@
 import dotenv from "dotenv";
 
 import prisma from "$server/utils/prisma";
-import { validateSettings, logger } from "$server/utils/zoom/env";
+import { validateZoomSettings, logger } from "$server/utils/zoom/env";
 import { zoomImport } from "$server/utils/zoom/import";
 
 async function main() {
   dotenv.config();
   let exitCode = 1;
-  if (!validateSettings()) {
+  if (!validateZoomSettings()) {
     process.exit(exitCode);
     return;
   }

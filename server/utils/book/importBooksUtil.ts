@@ -3,8 +3,6 @@ import path from "path";
 import unzipper from "unzipper";
 // @ts-expect-error Could not find a declaration file for module 'recursive-readdir-synchronous'
 import recursive from "recursive-readdir-synchronous";
-import format from "date-fns/format";
-import utcToZoneTime from "date-fns-tz/utcToZonedTime";
 import { Buffer } from "buffer";
 
 import type { ValidationError } from "class-validator";
@@ -22,7 +20,8 @@ import { ImportBooks } from "$server/models/booksImportParams";
 import prisma from "$server/utils/prisma";
 import findBook from "./findBook";
 import { parse as parseProviderUrl } from "$server/utils/videoResource";
-import { scpUpload } from "$server/utils/wowza/scpUpload";
+import { startWowzaUpload } from "$server/utils/wowza/upload";
+import { validateWowzaSettings } from "$server/utils/wowza/env";
 import findRoles from "$server/utils/author/findRoles";
 import insertAuthors from "$server/utils/author/insertAuthors";
 
@@ -212,73 +211,75 @@ class ImportBooksUtil {
   }
 
   async uploadFiles(importBooks: ImportBooks) {
-    const uploadroot = fs.mkdtempSync(`${this.tmpdir}/upload-wowza-`);
-    // recursive:true が利かない https://github.com/nodejs/node/issues/27293
-    const uploaddomain = fs.mkdirSync(
-      `${uploadroot}/${this.user.ltiConsumerId}`,
-      {
-        recursive: true,
-      }
-    );
-    const uploadauthor = fs.mkdirSync(`${uploaddomain}/${this.user.id}`, {
-      recursive: true,
-    });
-    const uploaddir = fs.mkdtempSync(
-      `${uploadauthor}/${format(
-        utcToZoneTime(new Date(), "Asia/Tokyo"),
-        "yyyyMMdd-HHmm"
-      )}-`
-    );
-    const uploadsubdir = uploaddir.substring(uploadroot.length);
-
+    const uploadEnabled =
+      this.params.provider == "https://www.wowza.com/" &&
+      validateWowzaSettings(false);
+    const now = new Date();
     const filenames = [];
-    for (const importBook of importBooks.books) {
-      for (const bookSection of importBook.sections) {
-        for (const sectionTopic of bookSection.topics) {
-          if (sectionTopic.resource.file) {
-            const filename = path.basename(sectionTopic.resource.file);
-            if (filenames.indexOf(filename) > -1) {
-              this.errors.push(
-                `ファイル ${filename} が重複しています。(サブフォルダはまとめられます)`
-              );
-            }
+    let wowzaUpload;
 
-            const fullpath = this.unzippedFiles.find(
-              (element) => path.basename(element) == filename
-            );
-            if (!fullpath) {
-              this.errors.push(`ファイル ${filename} がありません。`);
-              continue;
-            }
+    try {
+      wowzaUpload = await startWowzaUpload(
+        this.user.ltiConsumerId,
+        this.user.id
+      );
+      for (const importBook of importBooks.books) {
+        for (const bookSection of importBook.sections) {
+          for (const sectionTopic of bookSection.topics) {
+            if (sectionTopic.resource.file) {
+              if (!uploadEnabled) {
+                this.errors.push("動画ファイルのアップロードはできません。");
+                return;
+              }
 
-            filenames.push(filename);
-            sectionTopic.resource.providerUrl = this.params.provider;
-            sectionTopic.resource.url = `${this.params.wowzaBaseUrl}${uploadsubdir}/${filename}`;
-            fs.renameSync(fullpath, `${uploaddir}/${filename}`);
-          } else {
-            try {
-              const parsedResource = parseProviderUrl(
-                sectionTopic.resource.url
+              const filename = path.basename(sectionTopic.resource.file);
+              if (filenames.indexOf(filename) > -1) {
+                this.errors.push(
+                  `ファイル ${filename} が重複しています。(サブフォルダはまとめられます)`
+                );
+              }
+
+              const fullpath = this.unzippedFiles.find(
+                (element) => path.basename(element) == filename
               );
-              sectionTopic.resource.providerUrl =
-                parsedResource?.providerUrl ??
-                sectionTopic.resource.providerUrl;
-              sectionTopic.resource.url =
-                parsedResource?.url ?? sectionTopic.resource.url;
-            } catch (e) {
-              // nop
+              if (!fullpath) {
+                this.errors.push(`ファイル ${filename} がありません。`);
+                continue;
+              }
+
+              filenames.push(filename);
+              const uploadpath = await wowzaUpload.moveFileToUpload(
+                fullpath,
+                now,
+                "Asia/Tokyo"
+              );
+              sectionTopic.resource.providerUrl = this.params.provider;
+              sectionTopic.resource.url = `${this.params.wowzaBaseUrl}${uploadpath}`;
+            } else {
+              try {
+                const parsedResource = parseProviderUrl(
+                  sectionTopic.resource.url
+                );
+                sectionTopic.resource.providerUrl =
+                  parsedResource?.providerUrl ??
+                  sectionTopic.resource.providerUrl;
+                sectionTopic.resource.url =
+                  parsedResource?.url ?? sectionTopic.resource.url;
+              } catch (e) {
+                // nop
+              }
             }
           }
         }
       }
-    }
-    if (this.errors.length) return;
-    if (!filenames.length) return;
 
-    try {
-      await scpUpload(uploadroot);
+      if (this.errors.length) return;
+      if (!filenames.length) return;
+      await wowzaUpload.upload();
     } catch (e) {
       this.errors.push(`サーバーにアップロードできませんでした。\n${e}`);
+    } finally {
+      if (wowzaUpload) await wowzaUpload.cleanUp();
     }
   }
 
