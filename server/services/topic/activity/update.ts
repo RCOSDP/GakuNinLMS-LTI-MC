@@ -2,8 +2,7 @@ import type { FastifySchema, FastifyRequest } from "fastify";
 import type { TopicParams } from "$server/validators/topicParams";
 import { topicParamsSchema } from "$server/validators/topicParams";
 import { ActivityQuery } from "$server/validators/activityQuery";
-import type { ActivityProps } from "$server/models/activity";
-import { activityPropsSchema } from "$server/models/activity";
+import { ActivityProps } from "$server/validators/activityProps";
 import authUser from "$server/auth/authUser";
 import topicExists from "$server/utils/topic/topicExists";
 import upsertTopicActivity from "$server/utils/activity/upsertTopicActivity";
@@ -18,9 +17,9 @@ export const updateSchema: FastifySchema = {
   description: "自身の学習活動を更新します。",
   params: topicParamsSchema,
   querystring: ActivityQuery,
-  body: activityPropsSchema,
+  body: ActivityProps,
   response: {
-    201: activityPropsSchema,
+    201: ActivityProps,
     400: {},
     404: {},
   },

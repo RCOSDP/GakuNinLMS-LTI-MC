@@ -6,8 +6,8 @@ import type {
   LtiConsumer,
   LtiContext,
 } from "@prisma/client";
-import type { ActivityProps } from "$server/models/activity";
-import type { ActivityTimeRangeProps } from "$server/models/activityTimeRange";
+import type { ActivityProps } from "$server/validators/activityProps";
+import type { ActivityTimeRangeProps } from "$server/validators/activityTimeRange";
 import prisma from "$server/utils/prisma";
 
 function findActivity({

@@ -1,5 +1,5 @@
 import type { User, Topic } from "@prisma/client";
-import type { ActivityProps } from "$server/models/activity";
+import type { ActivityProps } from "$server/validators/activityProps";
 import upsertActivity from "./upsertActivity";
 
 /** トピックでの学習活動の挿入 */
