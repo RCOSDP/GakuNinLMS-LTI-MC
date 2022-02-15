@@ -7,9 +7,7 @@ export async function activity(fastify: FastifyInstance) {
   const { method, index } = service;
   const hooks = makeHooks(fastify, service.hooks);
 
-  fastify.get(
-    "/activity",
-    { schema: method.get, ...hooks.get },
-    handler(index)
-  );
+  fastify.get<{
+    Querystring: service.Query;
+  }>("/activity", { schema: method.get, ...hooks.get }, handler(index));
 }

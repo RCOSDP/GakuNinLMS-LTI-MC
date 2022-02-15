@@ -14,16 +14,19 @@ async function findLtiMembers(
   {
     consumerId,
     contextId,
-  }: Pick<LtiResourceLinkSchema, "consumerId" | "contextId">
+  }: Pick<LtiResourceLinkSchema, "consumerId" | "contextId">,
+  currentLtiContextOnly: boolean
 ) {
+  const activityScope = currentLtiContextOnly
+    ? { ltiConsumerId: consumerId, ltiContextId: contextId }
+    : { ltiConsumerId: "", ltiContextId: "" };
   const learners = await prisma.user.findMany({
     orderBy: { name: "asc" },
     select: {
       id: true,
       name: true,
       activities: {
-        // TODO: コースごとでの活動を取得できるようにしてほしい
-        where: { ltiConsumerId: "", ltiContextId: "" },
+        where: activityScope,
         include: {
           learner: { select: { id: true, name: true } },
           topic: {
@@ -33,50 +36,42 @@ async function findLtiMembers(
       },
     },
     where: {
-      AND: [
-        { ltiMembers: { some: { consumerId, contextId } } },
-        {
-          activities: {
-            some: {
-              topic: {
-                topicSection: {
-                  some: {
-                    section: {
-                      book: {
-                        AND: [
-                          {
-                            ltiResourceLinks: {
-                              some: {
-                                consumerId,
-                                contextId,
-                              },
-                            },
-                          },
-                          {
-                            // NOTE: 表示可能な範囲 … 共有されている範囲または著者に含まれる範囲
-                            OR: [
-                              { shared: true },
-                              { authors: { some: { userId: instructor.id } } },
-                            ],
-                          },
-                        ],
-                      },
-                    },
+      ltiMembers: { some: { consumerId, contextId } },
+      activities: {
+        some: {
+          topic: {
+            topicSection: {
+              some: {
+                section: {
+                  book: {
+                    ltiResourceLinks: { some: { consumerId, contextId } },
+                    // NOTE: 表示可能な範囲 … 共有されている範囲または著者に含まれる範囲
+                    OR: [
+                      { shared: true },
+                      { authors: { some: { userId: instructor.id } } },
+                    ],
                   },
                 },
               },
             },
           },
         },
-      ],
+      },
     },
   });
 
   return learners;
 }
 
-/** LTI Context に紐づくブックに含まれる表示可能なトピックの学習活動の取得 */
-async function findAllActivity(session: SessionSchema): Promise<{
+/**
+ * LTI Context に紐づくブックに含まれる表示可能なトピックの学習活動の取得
+ * @param session セッション
+ * @param currentLtiContextOnly 現在の LTI Context ごとでの学習状況を取得するか否か (true: LTI Context ごと, それ以外: すべて)
+ */
+async function findAllActivity(
+  session: SessionSchema,
+  currentLtiContextOnly: boolean
+): Promise<{
   learners: Array<LearnerSchema>;
   courseBooks: Array<CourseBookSchema>;
   bookActivities: Array<BookActivitySchema>;
@@ -84,7 +79,11 @@ async function findAllActivity(session: SessionSchema): Promise<{
   const user = session.user;
   const consumerId = session.oauthClient.id;
   const contextId = session.ltiContext.id;
-  const ltiMembers = await findLtiMembers(user, { consumerId, contextId });
+  const ltiMembers = await findLtiMembers(
+    user,
+    { consumerId, contextId },
+    currentLtiContextOnly
+  );
   const ltiResourceLinks = await prisma.ltiResourceLink.findMany({
     where: { consumerId, contextId },
     orderBy: { title: "asc" },

@@ -1,12 +1,14 @@
+import type { FastifyRequest } from "fastify";
 import { outdent } from "outdent";
 import type { BookParams } from "$server/validators/bookParams";
 import { bookParamsSchema } from "$server/validators/bookParams";
-import type { SessionSchema } from "$server/models/session";
 import { ActivitySchema } from "$server/models/activity";
+import { ActivityQuery } from "$server/validators/activityQuery";
 import authUser from "$server/auth/authUser";
 import fetchActivity from "$server/utils/activity/fetchActivity";
 
 export type Params = BookParams;
+export type Query = ActivityQuery;
 
 const indexSchema = {
   summary: "学習状況の取得",
@@ -14,6 +16,7 @@ const indexSchema = {
     現在のセッションの学習状況の詳細を取得します。
     自身以外の学習者の学習状況を取得することはできません。`,
   params: bookParamsSchema,
+  querystring: ActivityQuery,
   response: {
     200: {
       type: "object",
@@ -32,14 +35,21 @@ const indexHooks = {
 async function index({
   session,
   params,
-}: {
-  session: SessionSchema;
-  params: BookParams;
-}) {
+  query,
+}: FastifyRequest<{
+  Params: Params;
+  Querystring: Query;
+}>) {
   const activity: Array<ActivitySchema> = await fetchActivity(
-    session.user.id,
-    params.book_id
+    {
+      learnerId: session.user.id,
+      bookId: params.book_id,
+      ltiConsumerId: session.oauthClient.id,
+      ltiContextId: session.ltiContext.id,
+    },
+    Boolean(query.current_lti_context_only)
   );
+
   return { status: 200, body: { activity } };
 }
 

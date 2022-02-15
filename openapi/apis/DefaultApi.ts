@@ -104,8 +104,13 @@ import {
     InlineResponse2011ToJSON,
 } from '../models';
 
+export interface ApiV2ActivityGetRequest {
+    currentLtiContextOnly?: boolean;
+}
+
 export interface ApiV2BookBookIdActivityGetRequest {
     bookId: number;
+    currentLtiContextOnly?: boolean;
 }
 
 export interface ApiV2BookBookIdAuthorsPutRequest {
@@ -244,6 +249,7 @@ export interface ApiV2TopicPostRequest {
 
 export interface ApiV2TopicTopicIdActivityPutRequest {
     topicId: number;
+    currentLtiContextOnly?: boolean;
     body?: InlineObject8;
 }
 
@@ -302,8 +308,12 @@ export class DefaultApi extends runtime.BaseAPI {
      * 受講者の学習活動の一覧を取得します。 受講者以外の学習活動は含みません。 現在のセッションの LTI Context に紐づくブックに含まれる表示可能なトピックの学習活動を得ます。 教員または管理者でなければなりません。 自身以外の作成した共有されていないブック・トピックの学習活動は含みません。
      * 受講者の学習活動一覧
      */
-    async apiV2ActivityGetRaw(): Promise<runtime.ApiResponse<InlineResponse20010>> {
+    async apiV2ActivityGetRaw(requestParameters: ApiV2ActivityGetRequest): Promise<runtime.ApiResponse<InlineResponse20010>> {
         const queryParameters: runtime.HTTPQuery = {};
+
+        if (requestParameters.currentLtiContextOnly !== undefined) {
+            queryParameters['current_lti_context_only'] = requestParameters.currentLtiContextOnly;
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -321,8 +331,8 @@ export class DefaultApi extends runtime.BaseAPI {
      * 受講者の学習活動の一覧を取得します。 受講者以外の学習活動は含みません。 現在のセッションの LTI Context に紐づくブックに含まれる表示可能なトピックの学習活動を得ます。 教員または管理者でなければなりません。 自身以外の作成した共有されていないブック・トピックの学習活動は含みません。
      * 受講者の学習活動一覧
      */
-    async apiV2ActivityGet(): Promise<InlineResponse20010> {
-        const response = await this.apiV2ActivityGetRaw();
+    async apiV2ActivityGet(requestParameters: ApiV2ActivityGetRequest): Promise<InlineResponse20010> {
+        const response = await this.apiV2ActivityGetRaw(requestParameters);
         return await response.value();
     }
 
@@ -336,6 +346,10 @@ export class DefaultApi extends runtime.BaseAPI {
         }
 
         const queryParameters: runtime.HTTPQuery = {};
+
+        if (requestParameters.currentLtiContextOnly !== undefined) {
+            queryParameters['current_lti_context_only'] = requestParameters.currentLtiContextOnly;
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -624,7 +638,7 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * LTIツールとして起動するためのエンドポイントです。 このエンドポイントをLMSのLTIツールのリダイレクトURIに指定して利用します。 成功時 / にリダイレクトします。
+     * LTIツールとして起動するためのエンドポイントです。 このエンドポイントをLMSのLTIツールのリダイレクトURIに指定して利用します。 成功時 http://localhost:3000/ にリダイレクトします。
      * LTI v1.3 リダイレクトURI
      */
     async apiV2LtiCallbackPostRaw(requestParameters: ApiV2LtiCallbackPostRequest): Promise<runtime.ApiResponse<void>> {
@@ -674,7 +688,7 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * LTIツールとして起動するためのエンドポイントです。 このエンドポイントをLMSのLTIツールのリダイレクトURIに指定して利用します。 成功時 / にリダイレクトします。
+     * LTIツールとして起動するためのエンドポイントです。 このエンドポイントをLMSのLTIツールのリダイレクトURIに指定して利用します。 成功時 http://localhost:3000/ にリダイレクトします。
      * LTI v1.3 リダイレクトURI
      */
     async apiV2LtiCallbackPost(requestParameters: ApiV2LtiCallbackPostRequest): Promise<void> {
@@ -682,7 +696,7 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * LTI v1.1 ツールとして起動するためのエンドポイントです。 このエンドポイントをLMSのLTIツールのURLに指定して利用します。 成功時 / にリダイレクトします。
+     * LTI v1.1 ツールとして起動するためのエンドポイントです。 このエンドポイントをLMSのLTIツールのURLに指定して利用します。 成功時 http://localhost:3000/ にリダイレクトします。
      * LTI v1.1 起動エンドポイント (非推奨)
      */
     async apiV2LtiLaunchPostRaw(requestParameters: ApiV2LtiLaunchPostRequest): Promise<runtime.ApiResponse<void>> {
@@ -836,7 +850,7 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * LTI v1.1 ツールとして起動するためのエンドポイントです。 このエンドポイントをLMSのLTIツールのURLに指定して利用します。 成功時 / にリダイレクトします。
+     * LTI v1.1 ツールとして起動するためのエンドポイントです。 このエンドポイントをLMSのLTIツールのURLに指定して利用します。 成功時 http://localhost:3000/ にリダイレクトします。
      * LTI v1.1 起動エンドポイント (非推奨)
      */
     async apiV2LtiLaunchPost(requestParameters: ApiV2LtiLaunchPostRequest): Promise<void> {
@@ -1410,6 +1424,10 @@ export class DefaultApi extends runtime.BaseAPI {
         }
 
         const queryParameters: runtime.HTTPQuery = {};
+
+        if (requestParameters.currentLtiContextOnly !== undefined) {
+            queryParameters['current_lti_context_only'] = requestParameters.currentLtiContextOnly;
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
