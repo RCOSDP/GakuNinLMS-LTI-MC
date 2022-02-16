@@ -32,10 +32,7 @@ async function init({ session }: FastifyRequest) {
     ltiConsumerId: session.oauthClient.id,
     ltiUserId: session.ltiUser.id,
     name: session.ltiUser.name ?? "",
-    email:
-      session.ltiUser.email && isInstructor(session)
-        ? session.ltiUser.email
-        : "",
+    email: session.ltiUser.email ?? "",
   });
 
   if (ltiResourceLink && !isInstructor(session)) {
