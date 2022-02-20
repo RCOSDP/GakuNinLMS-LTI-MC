@@ -85,27 +85,23 @@ export default function BooksImportForm(props: Props) {
       })}
     >
       <TextField
-        label={
-          <>
-            json ファイル、または json ファイルを含む zip ファイル
-            <Typography
-              className={classes.labelDescription}
-              variant="caption"
-              component="span"
-            >
-              <Link
-                href="https://github.com/npocccties/chilospeech/blob/main/docs/spec/import.md"
-                target="_blank"
-                rel="noreferrer"
-              >
-                json ファイルの仕様
-              </Link>
-            </Typography>
-          </>
-        }
+        label="json ファイル、または json ファイルを含む zip ファイル"
         type="file"
         inputProps={register("file")}
       />
+      <Typography
+        className={classes.labelDescription}
+        variant="caption"
+        component="span"
+      >
+        <Link
+          href="https://github.com/npocccties/chilospeech/blob/main/docs/spec/import.md"
+          target="_blank"
+          rel="noreferrer"
+        >
+          json ファイルの仕様
+        </Link>
+      </Typography>
       {Boolean(Object.entries(providers).length) && (
         <TextField
           label={
