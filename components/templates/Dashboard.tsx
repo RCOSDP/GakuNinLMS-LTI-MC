@@ -9,6 +9,8 @@ import makeStyles from "@mui/styles/makeStyles";
 import Container from "$atoms/Container";
 import ActionHeader from "$organisms/ActionHeader";
 import LearningStatusDot from "$atoms/LearningStatusDot";
+import type { ActivityScope } from "$types/activityScope";
+import ActivityScopeSelect from "$molecules/ActivityScopeSelect";
 import LearningActivityItem from "$molecules/LearningActivityItem";
 import LearnerActivityItem from "$molecules/LearnerActivityItem";
 import LearnerActivityDialog from "$organisms/LearnerActivityDialog";
@@ -55,6 +57,7 @@ function TabPanel({
 
 const useStyles = makeStyles((theme) => ({
   contextLabel: {
+    flexGrow: 1,
     fontSize: "0.875rem",
     color: gray[700],
   },
@@ -95,6 +98,8 @@ type Props = {
   learners: Array<LearnerSchema>;
   courseBooks: Array<CourseBookSchema>;
   bookActivities: Array<BookActivitySchema>;
+  scope: ActivityScope;
+  onScopeChange(activityScope: ActivityScope): void;
 };
 
 export default function Dashboard(props: Props) {
@@ -152,6 +157,10 @@ export default function Dashboard(props: Props) {
       <ActionHeader>
         <Typography variant="h6">{session.ltiContext.title}</Typography>
         <span className={classes.contextLabel}>{session.ltiContext.label}</span>
+        <ActivityScopeSelect
+          value={props.scope}
+          onActivityScopeChange={props.onScopeChange}
+        />
         <Button
           onClick={handleDownloadClick}
           color="primary"
