@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import type { TopicProps, TopicSchema } from "$server/models/topic";
+import type { TopicPropsWithUpload, TopicSchema } from "$server/models/topic";
 import type {
   VideoTrackProps,
   VideoTrackSchema,
@@ -29,7 +29,7 @@ function Edit({ topicId, back }: EditProps) {
   const { handleAuthorsUpdate, handleAuthorSubmit } = useAuthorsHandler(
     topic && { type: "topic", ...topic }
   );
-  async function handleSubmit(props: TopicProps) {
+  async function handleSubmit(props: TopicPropsWithUpload) {
     await updateTopic({ id: topicId, ...props });
     return back();
   }

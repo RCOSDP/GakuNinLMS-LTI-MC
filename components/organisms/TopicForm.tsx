@@ -21,17 +21,19 @@ import SubtitleUploadDialog from "$organisms/SubtitleUploadDialog";
 import VideoResource from "$organisms/Video/VideoResource";
 import useCardStyles from "styles/card";
 import gray from "theme/colors/gray";
-import type { TopicProps, TopicSchema } from "$server/models/topic";
+import type { TopicPropsWithUpload, TopicSchema } from "$server/models/topic";
 import type {
   VideoTrackProps,
   VideoTrackSchema,
 } from "$server/models/videoTrack";
+import { useSessionAtom } from "$store/session";
+import { NEXT_PUBLIC_API_BASE_PATH } from "$utils/env";
 import languages from "$utils/languages";
 import licenses from "$utils/licenses";
 import providers from "$utils/providers";
 import useVideoResourceProps from "$utils/useVideoResourceProps";
 import type { AuthorSchema } from "$server/models/author";
-import type { TopicPropsWithAuthors } from "$types/topicPropsWithAuthors";
+import type { TopicPropsWithUploadAndAuthors } from "$types/topicPropsWithAuthors";
 import { useAuthorsAtom } from "store/authors";
 import { useVideoTrackAtom } from "$store/videoTrack";
 import useKeywordsInput from "$utils/useKeywordsInput";
@@ -68,7 +70,7 @@ type Props = {
   topic?: TopicSchema;
   className?: string;
   variant?: "create" | "update";
-  onSubmit?(topic: TopicPropsWithAuthors): void;
+  onSubmit?(topic: TopicPropsWithUploadAndAuthors): void;
   onSubtitleSubmit(videoTrack: VideoTrackProps): void;
   onSubtitleDelete(videoTrack: VideoTrackSchema): void;
   onAuthorsUpdate(authors: AuthorSchema[]): void;
@@ -88,6 +90,7 @@ export default function TopicForm(props: Props) {
   } = props;
   const cardClasses = useCardStyles();
   const classes = useStyles();
+  const { session } = useSessionAtom();
   const { videoResource, setUrl } = useVideoResourceProps(topic?.resource);
   const handleResourceUrlChange = useDebouncedCallback(
     (event: ChangeEvent<HTMLInputElement>) => setUrl(event.target.value),
@@ -110,24 +113,34 @@ export default function TopicForm(props: Props) {
   };
   const { updateState: _updateState, ...authorsInputProps } = useAuthorsAtom();
   const keywordsInputProps = useKeywordsInput(topic?.keywords ?? []);
+  const uploadProviders: { [key: string]: string } = {};
+  if (session?.systemSettings?.wowzaUploadEnabled) {
+    uploadProviders.wowza = "https://www.wowza.com/";
+  }
   const defaultValues = {
-    name: topic?.name,
-    description: topic?.description ?? "",
-    shared: Boolean(topic?.shared),
-    language: topic?.language ?? Object.getOwnPropertyNames(languages)[0],
-    license: topic?.license ?? "",
-    timeRequired: topic?.timeRequired,
+    topic: {
+      name: topic?.name,
+      description: topic?.description ?? "",
+      shared: Boolean(topic?.shared),
+      language: topic?.language ?? Object.getOwnPropertyNames(languages)[0],
+      license: topic?.license ?? "",
+      timeRequired: topic?.timeRequired,
+    },
+    provider: Object.values(uploadProviders)[0] ?? "",
+    wowzaBaseUrl: `${NEXT_PUBLIC_API_BASE_PATH}/api/v2/wowza`,
+    fileName: "",
+    fileContent: "",
   };
   const { handleSubmit, register, getValues, setValue } = useForm<
-    Omit<TopicProps, "resource">
+    Omit<TopicPropsWithUpload, "resource">
   >({
     defaultValues,
   });
   const handleDurationChange = useCallback(
     (duration: number) => {
-      const { timeRequired } = getValues();
-      if (timeRequired > 0) return;
-      setValue("timeRequired", Math.floor(duration));
+      const { topic } = getValues();
+      if (topic.timeRequired > 0) return;
+      setValue("topic.timeRequired", Math.floor(duration));
     },
     [getValues, setValue]
   );
@@ -140,16 +153,48 @@ export default function TopicForm(props: Props) {
         component="form"
         onSubmit={handleSubmit((values) => {
           const resource = videoResource ?? { url: "" };
-          onSubmit({
-            ...values,
-            resource,
-            authors: authorsInputProps.authors,
-            keywords: keywordsInputProps.keywords,
-          });
+          if (values?.fileContent?.length) {
+            const file = values.fileContent[0] as unknown as File;
+            const reader = new FileReader();
+            reader.addEventListener(
+              "load",
+              function () {
+                onSubmit({
+                  topic: {
+                    ...values.topic,
+                    resource,
+                    keywords: keywordsInputProps.keywords,
+                  },
+                  authors: authorsInputProps.authors,
+                  provider: values.provider,
+                  wowzaBaseUrl: values.wowzaBaseUrl,
+                  fileName: file.name,
+                  fileContent: Buffer.from(
+                    reader.result as ArrayBuffer
+                  ).toString("base64"),
+                });
+              },
+              false
+            );
+            reader.readAsArrayBuffer(file);
+          } else {
+            onSubmit({
+              topic: {
+                ...values.topic,
+                resource,
+                keywords: keywordsInputProps.keywords,
+              },
+              authors: authorsInputProps.authors,
+              provider: "",
+              wowzaBaseUrl: "",
+              fileName: "",
+              fileContent: "",
+            });
+          }
         })}
       >
         <TextField
-          inputProps={register("name")}
+          inputProps={register("topic.name")}
           label={
             <>
               タイトル
@@ -175,8 +220,8 @@ export default function TopicForm(props: Props) {
           <Checkbox
             id="shared"
             name="shared"
-            onChange={(_, checked) => setValue("shared", checked)}
-            defaultChecked={defaultValues.shared}
+            onChange={(_, checked) => setValue("topic.shared", checked)}
+            defaultChecked={defaultValues.topic.shared}
             color="primary"
           />
         </div>
@@ -218,11 +263,34 @@ export default function TopicForm(props: Props) {
             onDurationChange={handleDurationChange}
           />
         )}
+
+        {Boolean(Object.entries(uploadProviders).length) && (
+          <>
+            <TextField
+              label="動画ファイル"
+              type="file"
+              inputProps={register("fileContent")}
+            />
+            <TextField
+              label="動画ファイルをアップロードするサービス"
+              select
+              defaultValue={defaultValues.provider}
+              inputProps={register("provider")}
+            >
+              {Object.entries(uploadProviders).map(([label, value]) => (
+                <MenuItem key={value} value={value}>
+                  {label}
+                </MenuItem>
+              ))}
+            </TextField>
+          </>
+        )}
+
         <TextField
           label="教材の主要な言語"
           select
-          defaultValue={defaultValues.language}
-          inputProps={register("language")}
+          defaultValue={defaultValues.topic.language}
+          inputProps={register("topic.language")}
         >
           {Object.entries(languages).map(([value, label]) => (
             <MenuItem key={value} value={value}>
@@ -234,7 +302,7 @@ export default function TopicForm(props: Props) {
           label="学習時間 (秒)"
           type="number"
           inputProps={{
-            ...register("timeRequired", { valueAsNumber: true }),
+            ...register("topic.timeRequired", { valueAsNumber: true }),
             required: true,
             min: 1,
           }}
@@ -242,8 +310,8 @@ export default function TopicForm(props: Props) {
         <TextField
           label="ライセンス"
           select
-          defaultValue={defaultValues.license}
-          inputProps={{ displayEmpty: true, ...register("license") }}
+          defaultValue={defaultValues.topic.license}
+          inputProps={{ displayEmpty: true, ...register("topic.license") }}
         >
           <MenuItem value="">未設定</MenuItem>
           {Object.entries(licenses).map(([value, { name }]) => (
@@ -294,7 +362,7 @@ export default function TopicForm(props: Props) {
           }
           fullWidth
           multiline
-          inputProps={register("description")}
+          inputProps={register("topic.description")}
         />
         <Divider className={classes.divider} />
         <Button variant="contained" color="primary" type="submit">

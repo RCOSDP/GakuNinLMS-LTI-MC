@@ -1,7 +1,7 @@
 import type { FastifyRequest, FastifySchema } from "fastify";
 import { outdent } from "outdent";
-import type { TopicProps } from "$server/models/topic";
-import { topicPropsSchema, topicSchema } from "$server/models/topic";
+import type { TopicPropsWithUpload } from "$server/models/topic";
+import { topicPropsWithUploadSchema, topicSchema } from "$server/models/topic";
 import authUser from "$server/auth/authUser";
 import authInstructor from "$server/auth/authInstructor";
 import createTopic from "$server/utils/topic/createTopic";
@@ -13,7 +13,7 @@ export const createSchema: FastifySchema = {
   description: outdent`
     トピックを作成します。
     教員または管理者でなければなりません。`,
-  body: topicPropsSchema,
+  body: topicPropsWithUploadSchema,
   response: {
     201: topicSchema,
     400: {},
@@ -30,14 +30,14 @@ export async function create({
   session,
   body,
 }: FastifyRequest<{
-  Body: TopicProps;
+  Body: TopicPropsWithUpload;
 }>) {
   const additionalProviderUrl = WOWZA_BASE_URL && `${protocol}://${hostname}/`;
-  if (!isValidVideoResource(body.resource, additionalProviderUrl)) {
+  if (!isValidVideoResource(body.topic.resource, additionalProviderUrl)) {
     return { status: 400 };
   }
 
-  const created = await createTopic(session.user.id, body);
+  const created = await createTopic(session.user.id, body.topic);
 
   return {
     status: created == null ? 400 : 201,

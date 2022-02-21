@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import type { BookSchema } from "$server/models/book";
 import type { TopicSchema } from "$server/models/topic";
 import type { VideoTrackSchema } from "$server/models/videoTrack";
-import type { TopicPropsWithAuthors } from "$types/topicPropsWithAuthors";
+import type { TopicPropsWithUploadAndAuthors } from "$types/topicPropsWithAuthors";
 import { useVideoTrackAtom } from "$store/videoTrack";
 import { createTopic } from "./topic";
 import { uploadVideoTrack } from "./videoTrack";
@@ -40,7 +40,7 @@ function useTopicNewHandlers(
     [deleteVideoTrack]
   );
   const handleSubmit = useCallback(
-    async ({ authors, ...props }: TopicPropsWithAuthors) => {
+    async ({ authors, ...props }: TopicPropsWithUploadAndAuthors) => {
       const topic = await createTopic(props);
       await updateTopicAuthors({
         id: topic.id,

@@ -12,6 +12,14 @@ export type TopicProps = Pick<
   keywords?: KeywordPropSchema[];
 };
 
+export type TopicPropsWithUpload = {
+  topic: TopicProps;
+  provider: string;
+  wowzaBaseUrl: string;
+  fileName: string;
+  fileContent: string;
+};
+
 export type TopicSchema = Topic & {
   authors: AuthorSchema[];
   keywords: KeywordSchema[];
@@ -32,6 +40,17 @@ export const topicPropsSchema = {
       type: "array",
       items: KeywordPropSchema,
     },
+  },
+} as const;
+
+export const topicPropsWithUploadSchema = {
+  type: "object",
+  properties: {
+    topic: topicPropsSchema,
+    provider: { type: "string" },
+    wowzaBaseUrl: { type: "string" },
+    fileName: { type: "string" },
+    fileContent: { type: "string" },
   },
 } as const;
 
