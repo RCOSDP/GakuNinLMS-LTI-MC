@@ -138,7 +138,9 @@ export default function LearningStatusLabels(props: Props) {
     onLearnerClick,
   } = props;
   const unopenedLearners = useMemo(() => {
-    const map = new Map(learners.map(({ id, name }) => [id, name]));
+    const map: Map<LearnerSchema["id"], LearnerSchema> = new Map(
+      learners.map((learner) => [learner.id, learner])
+    );
     [...completedLearners, ...incompletedLearners].forEach(({ id }) =>
       map.delete(id)
     );
@@ -160,7 +162,7 @@ export default function LearningStatusLabels(props: Props) {
         {
           status: "unopened",
           label: label.unopened,
-          learners: [...unopenedLearners].map(([id, name]) => ({ id, name })),
+          learners: Array.from(unopenedLearners.values()),
         },
       ] as const,
     [completedLearners, incompletedLearners, unopenedLearners]

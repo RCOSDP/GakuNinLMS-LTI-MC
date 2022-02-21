@@ -24,7 +24,7 @@ async function fetchActivity(
     : { ltiConsumerId: "", ltiContextId: "" };
   const activity = await prisma.activity.findMany({
     include: {
-      learner: { select: { id: true, name: true } },
+      learner: { select: { id: true, name: true, email: true } },
       topic: { select: { id: true, name: true, timeRequired: true } },
     },
     where: {

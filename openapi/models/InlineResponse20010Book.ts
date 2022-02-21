@@ -16,34 +16,28 @@ import { exists, mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface InlineResponse2005Learner
+ * @interface InlineResponse20010Book
  */
-export interface InlineResponse2005Learner {
+export interface InlineResponse20010Book {
     /**
      * 
      * @type {number}
-     * @memberof InlineResponse2005Learner
+     * @memberof InlineResponse20010Book
      */
     id: number;
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse2005Learner
+     * @memberof InlineResponse20010Book
      */
     name: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineResponse2005Learner
-     */
-    email: string;
 }
 
-export function InlineResponse2005LearnerFromJSON(json: any): InlineResponse2005Learner {
-    return InlineResponse2005LearnerFromJSONTyped(json, false);
+export function InlineResponse20010BookFromJSON(json: any): InlineResponse20010Book {
+    return InlineResponse20010BookFromJSONTyped(json, false);
 }
 
-export function InlineResponse2005LearnerFromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse2005Learner {
+export function InlineResponse20010BookFromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse20010Book {
     if ((json === undefined) || (json === null)) {
         return json;
     }
@@ -51,11 +45,10 @@ export function InlineResponse2005LearnerFromJSONTyped(json: any, ignoreDiscrimi
         
         'id': json['id'],
         'name': json['name'],
-        'email': json['email'],
     };
 }
 
-export function InlineResponse2005LearnerToJSON(value?: InlineResponse2005Learner | null): any {
+export function InlineResponse20010BookToJSON(value?: InlineResponse20010Book | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -66,7 +59,6 @@ export function InlineResponse2005LearnerToJSON(value?: InlineResponse2005Learne
         
         'id': value.id,
         'name': value.name,
-        'email': value.email,
     };
 }
 

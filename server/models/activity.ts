@@ -1,17 +1,11 @@
 import type { FromSchema } from "json-schema-to-ts";
+import { LearnerSchema } from "./learner";
 
 /** 学習活動 */
 export const ActivitySchema = {
   type: "object",
   properties: {
-    learner: {
-      type: "object",
-      properties: {
-        id: { type: "integer" },
-        name: { type: "string" },
-      },
-      required: ["id", "name"],
-    },
+    learner: LearnerSchema,
     topic: {
       type: "object",
       properties: {
@@ -20,6 +14,7 @@ export const ActivitySchema = {
         timeRequired: { type: "integer" },
       },
       required: ["id", "name", "timeRequired"],
+      additionalProperties: false,
     },
     /** 学習状況 - 完了: true, それ以外: false */
     completed: { type: "boolean" },
@@ -38,6 +33,7 @@ export const ActivitySchema = {
     "createdAt",
     "updatedAt",
   ],
+  additionalProperties: false,
 } as const;
 
 /** 学習活動 */

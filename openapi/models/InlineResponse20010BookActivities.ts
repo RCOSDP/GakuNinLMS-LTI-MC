@@ -14,6 +14,10 @@
 
 import { exists, mapValues } from '../runtime';
 import {
+    InlineResponse20010Book,
+    InlineResponse20010BookFromJSON,
+    InlineResponse20010BookFromJSONTyped,
+    InlineResponse20010BookToJSON,
     InlineResponse2005Learner,
     InlineResponse2005LearnerFromJSON,
     InlineResponse2005LearnerFromJSONTyped,
@@ -68,10 +72,10 @@ export interface InlineResponse20010BookActivities {
     updatedAt?: Date;
     /**
      * 
-     * @type {InlineResponse2005Learner}
+     * @type {InlineResponse20010Book}
      * @memberof InlineResponse20010BookActivities
      */
-    book: InlineResponse2005Learner;
+    book: InlineResponse20010Book;
     /**
      * 
      * @type {string}
@@ -96,7 +100,7 @@ export function InlineResponse20010BookActivitiesFromJSONTyped(json: any, ignore
         'totalTimeMs': !exists(json, 'totalTimeMs') ? undefined : json['totalTimeMs'],
         'createdAt': !exists(json, 'createdAt') ? undefined : (new Date(json['createdAt'])),
         'updatedAt': !exists(json, 'updatedAt') ? undefined : (new Date(json['updatedAt'])),
-        'book': InlineResponse2005LearnerFromJSON(json['book']),
+        'book': InlineResponse20010BookFromJSON(json['book']),
         'status': json['status'],
     };
 }
@@ -116,7 +120,7 @@ export function InlineResponse20010BookActivitiesToJSON(value?: InlineResponse20
         'totalTimeMs': value.totalTimeMs,
         'createdAt': value.createdAt === undefined ? undefined : (value.createdAt.toISOString()),
         'updatedAt': value.updatedAt === undefined ? undefined : (value.updatedAt.toISOString()),
-        'book': InlineResponse2005LearnerToJSON(value.book),
+        'book': InlineResponse20010BookToJSON(value.book),
         'status': value.status,
     };
 }

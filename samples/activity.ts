@@ -5,6 +5,7 @@ const activity = {
   learner: {
     id: user.id,
     name: user.name,
+    email: user.email,
   },
   topic: {
     id: topic.id,

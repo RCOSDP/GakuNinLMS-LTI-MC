@@ -25,10 +25,11 @@ async function findLtiMembers(
     select: {
       id: true,
       name: true,
+      email: true,
       activities: {
         where: activityScope,
         include: {
-          learner: { select: { id: true, name: true } },
+          learner: { select: { id: true, name: true, email: true } },
           topic: {
             select: { id: true, name: true, timeRequired: true },
           },

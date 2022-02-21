@@ -7,8 +7,11 @@ export const LearnerSchema = {
     id: { type: "integer" },
     /** 氏名 */
     name: { type: "string" },
+    /** メールアドレス ("" は無効値) */
+    email: { type: "string" },
   },
-  required: ["id", "name"],
+  required: ["id", "name", "email"],
+  additionalProperties: false,
 } as const;
 
 /** 学習者 */

@@ -99,9 +99,6 @@ import {
     InlineResponse201,
     InlineResponse201FromJSON,
     InlineResponse201ToJSON,
-    InlineResponse2011,
-    InlineResponse2011FromJSON,
-    InlineResponse2011ToJSON,
 } from '../models';
 
 export interface ApiV2ActivityGetRequest {
@@ -1418,7 +1415,7 @@ export class DefaultApi extends runtime.BaseAPI {
      * 自身の学習活動を更新します。
      * 学習活動の更新
      */
-    async apiV2TopicTopicIdActivityPutRaw(requestParameters: ApiV2TopicTopicIdActivityPutRequest): Promise<runtime.ApiResponse<InlineResponse2011>> {
+    async apiV2TopicTopicIdActivityPutRaw(requestParameters: ApiV2TopicTopicIdActivityPutRequest): Promise<runtime.ApiResponse<{ [key: string]: object; }>> {
         if (requestParameters.topicId === null || requestParameters.topicId === undefined) {
             throw new runtime.RequiredError('topicId','Required parameter requestParameters.topicId was null or undefined when calling apiV2TopicTopicIdActivityPut.');
         }
@@ -1441,14 +1438,14 @@ export class DefaultApi extends runtime.BaseAPI {
             body: InlineObject8ToJSON(requestParameters.body),
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2011FromJSON(jsonValue));
+        return new runtime.JSONApiResponse<any>(response);
     }
 
     /**
      * 自身の学習活動を更新します。
      * 学習活動の更新
      */
-    async apiV2TopicTopicIdActivityPut(requestParameters: ApiV2TopicTopicIdActivityPutRequest): Promise<InlineResponse2011> {
+    async apiV2TopicTopicIdActivityPut(requestParameters: ApiV2TopicTopicIdActivityPutRequest): Promise<{ [key: string]: object; }> {
         const response = await this.apiV2TopicTopicIdActivityPutRaw(requestParameters);
         return await response.value();
     }

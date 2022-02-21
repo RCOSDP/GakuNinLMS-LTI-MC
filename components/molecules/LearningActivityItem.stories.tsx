@@ -5,7 +5,11 @@ import { book, bookActivity } from "$samples";
 
 const han = (n: number) =>
   new Intl.NumberFormat("ja-JP-u-nu-hanidec").format(n);
-const learner = (id: number) => ({ id, name: `山田 ${han(id)}太郎` });
+const learner = (id: number) => ({
+  id,
+  name: `山田 ${han(id)}太郎`,
+  email: `yamada${id}@example.com`,
+});
 
 export const Default = () => (
   <LearningActivityItem

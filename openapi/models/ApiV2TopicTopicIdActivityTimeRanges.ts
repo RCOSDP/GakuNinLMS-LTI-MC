@@ -24,13 +24,13 @@ export interface ApiV2TopicTopicIdActivityTimeRanges {
      * @type {number}
      * @memberof ApiV2TopicTopicIdActivityTimeRanges
      */
-    startMs?: number;
+    startMs: number;
     /**
      * 
      * @type {number}
      * @memberof ApiV2TopicTopicIdActivityTimeRanges
      */
-    endMs?: number;
+    endMs: number;
 }
 
 export function ApiV2TopicTopicIdActivityTimeRangesFromJSON(json: any): ApiV2TopicTopicIdActivityTimeRanges {
@@ -43,8 +43,8 @@ export function ApiV2TopicTopicIdActivityTimeRangesFromJSONTyped(json: any, igno
     }
     return {
         
-        'startMs': !exists(json, 'startMs') ? undefined : json['startMs'],
-        'endMs': !exists(json, 'endMs') ? undefined : json['endMs'],
+        'startMs': json['startMs'],
+        'endMs': json['endMs'],
     };
 }
 

@@ -7,6 +7,7 @@ import type { SessionSchema } from "$server/models/session";
 export const keyOrder = [
   "learner.id",
   "learner.name",
+  "learner.email",
   "ltiContext.label",
   "ltiContext.title",
   "book.id",
@@ -24,6 +25,7 @@ export const keyOrder = [
 export const label: Readonly<{ [key in typeof keyOrder[number]]: string }> = {
   "learner.id": "ユーザID",
   "learner.name": "ユーザ名",
+  "learner.email": "メールアドレス",
   "ltiContext.label": "コースID",
   "ltiContext.title": "コース名",
   "book.id": "ブックID",
