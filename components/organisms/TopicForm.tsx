@@ -4,8 +4,12 @@ import Card from "@mui/material/Card";
 import Checkbox from "@mui/material/Checkbox";
 import Divider from "@mui/material/Divider";
 import Button from "@mui/material/Button";
+import FormLabel from "@mui/material/FormLabel";
+import FormControlLabel from "@mui/material/FormControlLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Link from "@mui/material/Link";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
 import Typography from "@mui/material/Typography";
 import makeStyles from "@mui/styles/makeStyles";
 import Autocomplete from "$atoms/Autocomplete";
@@ -98,6 +102,7 @@ export default function TopicForm(props: Props) {
   );
   const { videoTracks } = useVideoTrackAtom();
   const [open, setOpen] = useState(false);
+  const [method, setMethod] = useState("url");
   const handleClickSubtitle = () => {
     setOpen(true);
   };
@@ -153,7 +158,7 @@ export default function TopicForm(props: Props) {
         component="form"
         onSubmit={handleSubmit((values) => {
           const resource = videoResource ?? { url: "" };
-          if (values?.fileContent?.length) {
+          if (method == "file" && values?.fileContent?.length) {
             const file = values.fileContent[0] as unknown as File;
             const reader = new FileReader();
             reader.addEventListener(
@@ -225,55 +230,82 @@ export default function TopicForm(props: Props) {
             color="primary"
           />
         </div>
-        <Autocomplete
-          id="resource.url"
-          freeSolo
-          options={[...Object.values(providers)].map(({ baseUrl }) => baseUrl)}
-          defaultValue={topic?.resource.url}
-          renderInput={({ InputProps, inputProps }) => (
-            <TextField
-              InputProps={{ ref: InputProps.ref }}
-              inputProps={inputProps}
-              name="resource.url"
-              label={
-                <>
-                  動画のURL
-                  <Typography
-                    className={classes.labelDescription}
-                    variant="caption"
-                    component="span"
-                  >
-                    {[...Object.values(providers)]
-                      .map(({ name }) => name)
-                      .join(", ")}
-                    に対応しています
-                  </Typography>
-                </>
-              }
-              type="url"
-              required
-              fullWidth
-              onChange={handleResourceUrlChange}
-            />
-          )}
-        />
-        {videoResource && (
-          <VideoResource
-            {...videoResource}
-            onDurationChange={handleDurationChange}
-          />
-        )}
 
         {Boolean(Object.entries(uploadProviders).length) && (
+          <>
+            <FormLabel>動画の指定方法</FormLabel>
+            <RadioGroup
+              defaultValue="url"
+              row
+              onChange={(event, value) => setMethod(value)}
+            >
+              <FormControlLabel value="url" control={<Radio />} label="URL" />
+              <FormControlLabel
+                value="file"
+                control={<Radio />}
+                label="ファイルアップロード"
+              />
+            </RadioGroup>
+          </>
+        )}
+
+        {method == "url" && (
+          <>
+            <Autocomplete
+              id="resource.url"
+              freeSolo
+              options={[...Object.values(providers)].map(
+                ({ baseUrl }) => baseUrl
+              )}
+              defaultValue={topic?.resource.url}
+              renderInput={({ InputProps, inputProps }) => (
+                <TextField
+                  InputProps={{ ref: InputProps.ref }}
+                  inputProps={inputProps}
+                  name="resource.url"
+                  label={
+                    <>
+                      動画のURL
+                      <Typography
+                        className={classes.labelDescription}
+                        variant="caption"
+                        component="span"
+                      >
+                        {[...Object.values(providers)]
+                          .map(({ name }) => name)
+                          .join(", ")}
+                        に対応しています
+                      </Typography>
+                    </>
+                  }
+                  type="url"
+                  required
+                  fullWidth
+                  onChange={handleResourceUrlChange}
+                />
+              )}
+            />
+            {videoResource && (
+              <VideoResource
+                {...videoResource}
+                onDurationChange={handleDurationChange}
+              />
+            )}
+          </>
+        )}
+
+        {method == "file" && (
           <>
             <TextField
               label="動画ファイル"
               type="file"
+              required
               inputProps={register("fileContent")}
             />
             <TextField
               label="動画ファイルをアップロードするサービス"
               select
+              required
               defaultValue={defaultValues.provider}
               inputProps={register("provider")}
             >
