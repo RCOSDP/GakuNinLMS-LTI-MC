@@ -63,6 +63,9 @@ const useStyles = makeStyles((theme) => ({
       marginBottom: theme.spacing(1),
     },
   },
+  localVideo: {
+    width: "100%",
+  },
 }));
 
 const label = {
@@ -103,6 +106,7 @@ export default function TopicForm(props: Props) {
   const { videoTracks } = useVideoTrackAtom();
   const [open, setOpen] = useState(false);
   const [method, setMethod] = useState("url");
+  const [dataUrl, setDataUrl] = useState("");
   const handleClickSubtitle = () => {
     setOpen(true);
   };
@@ -148,6 +152,15 @@ export default function TopicForm(props: Props) {
       setValue("topic.timeRequired", Math.floor(duration));
     },
     [getValues, setValue]
+  );
+  const handleFileChange = useDebouncedCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      if (event?.target?.files?.length) {
+        const file = event.target.files[0] as unknown as File;
+        setDataUrl(URL.createObjectURL(file));
+      }
+    },
+    500
   );
 
   return (
@@ -301,6 +314,7 @@ export default function TopicForm(props: Props) {
               type="file"
               required
               inputProps={register("fileContent")}
+              onChange={handleFileChange}
             />
             <TextField
               label="動画ファイルをアップロードするサービス"
@@ -315,6 +329,16 @@ export default function TopicForm(props: Props) {
                 </MenuItem>
               ))}
             </TextField>
+            <video
+              className={classes.localVideo}
+              src={dataUrl}
+              controls={true}
+              autoPlay
+              onDurationChange={(event) => {
+                const video = event.target as HTMLVideoElement;
+                handleDurationChange(video.duration);
+              }}
+            />
           </>
         )}
 
