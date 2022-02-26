@@ -26,7 +26,7 @@ export type TopicSchema = Topic & {
   resource: ResourceSchema;
 };
 
-export const topicPropsSchema = {
+const topicPropsSchema = {
   type: "object",
   properties: {
     name: { type: "string" },

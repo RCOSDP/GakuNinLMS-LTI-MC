@@ -1,4 +1,5 @@
 import fs from "fs";
+import path from "path";
 import { Buffer } from "buffer";
 
 import { startWowzaUpload } from "$server/utils/wowza/upload";
@@ -14,7 +15,7 @@ async function wowzaUpload(
   let wowzaUpload;
   try {
     tmpdir = await fs.promises.mkdtemp("/tmp/topic-wowza-upload-");
-    const fullpath = `${tmpdir}/${fileName}`;
+    const fullpath = `${tmpdir}/${path.basename(fileName)}`;
     await fs.promises.writeFile(
       fullpath,
       Buffer.from(fileContent as string, "base64")

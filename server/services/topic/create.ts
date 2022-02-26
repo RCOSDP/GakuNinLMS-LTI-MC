@@ -7,6 +7,7 @@ import authInstructor from "$server/auth/authInstructor";
 import createTopic from "$server/utils/topic/createTopic";
 import isValidVideoResource from "$server/utils/isValidVideoResource";
 import { WOWZA_BASE_URL } from "$server/utils/env";
+import wowzaUpload from "$server/utils/topic/wowzaUpload";
 
 export const createSchema: FastifySchema = {
   summary: "トピックの作成",
@@ -32,6 +33,19 @@ export async function create({
 }: FastifyRequest<{
   Body: TopicPropsWithUpload;
 }>) {
+  if (
+    body.provider == "https://www.wowza.com/" &&
+    body.fileName &&
+    body.fileContent
+  )
+    body.topic.resource.url = await wowzaUpload(
+      session.user.ltiConsumerId,
+      session.user.id,
+      body.fileName,
+      body.fileContent,
+      body.wowzaBaseUrl
+    );
+
   const additionalProviderUrl = WOWZA_BASE_URL && `${protocol}://${hostname}/`;
   if (!isValidVideoResource(body.topic.resource, additionalProviderUrl)) {
     return { status: 400 };
