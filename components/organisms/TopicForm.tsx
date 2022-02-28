@@ -329,16 +329,18 @@ export default function TopicForm(props: Props) {
                 </MenuItem>
               ))}
             </TextField>
-            <video
-              className={classes.localVideo}
-              src={dataUrl}
-              controls={true}
-              autoPlay
-              onDurationChange={(event) => {
-                const video = event.target as HTMLVideoElement;
-                handleDurationChange(video.duration);
-              }}
-            />
+            {dataUrl && (
+              <video
+                className={classes.localVideo}
+                src={dataUrl}
+                controls={true}
+                autoPlay
+                onDurationChange={(event) => {
+                  const video = event.target as HTMLVideoElement;
+                  handleDurationChange(video.duration);
+                }}
+              />
+            )}
           </>
         )}
 
