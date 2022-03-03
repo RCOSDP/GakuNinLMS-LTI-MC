@@ -7,7 +7,7 @@ import SharedIndicator from "$atoms/SharedIndicator";
 import SectionsTree from "$molecules/SectionsTree";
 import useTreeItemStyle from "$styles/treeItem";
 import type { BookSchema } from "$server/models/book";
-import type { IsContentEditable } from "$types/content";
+import type { IsContentEditable } from "$server/models/content";
 import type { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
 
 const useStyles = makeStyles((theme) => ({

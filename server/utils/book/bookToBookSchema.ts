@@ -41,7 +41,9 @@ type SectionWithTopics = Section & {
   topicSections: TopicSectionWithTopic[];
 };
 
-type BookWithTopics = Prisma.BookGetPayload<typeof bookIncludingTopicsArg>;
+export type BookWithTopics = Prisma.BookGetPayload<
+  typeof bookIncludingTopicsArg
+>;
 
 export function bookToBookSchema(book: BookWithTopics): BookSchema {
   return {

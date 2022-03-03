@@ -2,6 +2,7 @@ import type { FastifyInstance } from "fastify";
 import makeHooks from "$server/utils/makeHooks";
 import handler from "$server/utils/handler";
 import * as service from "$server/services/book";
+import * as activityService from "$server/services/book/activity";
 import * as authorsService from "$server/services/book/authors";
 
 const basePath = "/book";
@@ -33,6 +34,16 @@ export async function book(fastify: FastifyInstance) {
   );
 }
 
+export async function bookActivity(fastify: FastifyInstance) {
+  const path = `${pathWithParams}/activity`;
+  const { method, index } = activityService;
+  const hooks = makeHooks(fastify, activityService.hooks);
+
+  fastify.get<{
+    Params: activityService.Params;
+    Querystring: activityService.Query;
+  }>(path, { schema: method.get, ...hooks.get }, handler(index));
+}
 export async function bookAuthors(fastify: FastifyInstance) {
   const path = `${pathWithParams}/authors`;
   const { method, update } = authorsService;
