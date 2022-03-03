@@ -63,6 +63,7 @@
     "outdent": "^0.8.0",
     "pino-pretty": "^6.0.0",
     "prisma": "^2.30.2",
+    "prisma-json-schema-generator": "^1.4.0",
     "recursive-readdir-synchronous": "^0.0.4",
     "search-query-parser": "^1.6.0",
     "serve-handler": "^6.1.3",

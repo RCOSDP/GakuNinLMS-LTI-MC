@@ -13,7 +13,7 @@ import type { BookPropsWithSubmitOptions } from "$types/bookPropsWithSubmitOptio
 import type { SectionProps } from "$server/models/book/section";
 import type { TopicSchema } from "$server/models/topic";
 import type { AuthorSchema } from "$server/models/author";
-import type { IsContentEditable } from "$types/content";
+import type { IsContentEditable } from "$server/models/content";
 import { useConfirm } from "material-ui-confirm";
 import useDialogProps from "$utils/useDialogProps";
 
@@ -110,6 +110,22 @@ export default function BookEdit({
         onBookImportClick={onBookImportClick}
         onSectionsUpdate={onSectionsUpdate}
         isContentEditable={isContentEditable}
+      />
+      <Typography className={classes.subtitle} variant="h5">
+        基本情報
+        <Typography variant="caption" component="span" aria-hidden="true">
+          <RequiredDot />
+          は必須項目です
+        </Typography>
+      </Typography>
+      <BookForm
+        className={classes.content}
+        book={book}
+        linked={linked}
+        variant="update"
+        onSubmit={onSubmit}
+        onAuthorsUpdate={onAuthorsUpdate}
+        onAuthorSubmit={onAuthorSubmit}
       />
       <Typography className={classes.subtitle} variant="h5">
         基本情報

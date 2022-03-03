@@ -16,6 +16,7 @@ const WOWZA_BASE_URL = process.env.WOWZA_BASE_URL ?? "";
 const WOWZA_SECURE_TOKEN = process.env.WOWZA_SECURE_TOKEN ?? "";
 const WOWZA_QUERY_PREFIX = process.env.WOWZA_QUERY_PREFIX ?? "wowzatoken";
 const WOWZA_EXPIRES_IN = Number(process.env.WOWZA_EXPIRES_IN ?? "0");
+const ACTIVITY_RATE_MIN = Number(process.env.ACTIVITY_RATE_MIN ?? "0.9");
 const WOWZA_SCP_HOST = process.env.WOWZA_SCP_HOST ?? "localhost";
 const WOWZA_SCP_PORT = Number(process.env.WOWZA_SCP_PORT ?? "22");
 const WOWZA_SCP_USERNAME = process.env.WOWZA_SCP_USERNAME ?? "www-data";
@@ -47,6 +48,7 @@ export {
   WOWZA_SECURE_TOKEN,
   WOWZA_QUERY_PREFIX,
   WOWZA_EXPIRES_IN,
+  ACTIVITY_RATE_MIN,
   WOWZA_SCP_HOST,
   WOWZA_SCP_PORT,
   WOWZA_SCP_USERNAME,
