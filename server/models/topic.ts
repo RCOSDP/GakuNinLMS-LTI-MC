@@ -6,7 +6,14 @@ import { KeywordPropSchema, KeywordSchema } from "./keyword";
 
 export type TopicProps = Pick<
   Prisma.TopicCreateInput,
-  "name" | "language" | "timeRequired" | "shared" | "license" | "description"
+  | "name"
+  | "language"
+  | "timeRequired"
+  | "startTime"
+  | "stopTime"
+  | "shared"
+  | "license"
+  | "description"
 > & {
   resource: ResourceProps;
   keywords?: KeywordPropSchema[];
@@ -32,6 +39,8 @@ const topicPropsSchema = {
     name: { type: "string" },
     language: { type: "string", nullable: true },
     timeRequired: { type: "integer" },
+    startTime: { type: "integer" },
+    stopTime: { type: "integer" },
     shared: { type: "boolean", nullable: true },
     license: { type: "string", format: "license" },
     description: { type: "string" },
@@ -61,6 +70,8 @@ export const topicSchema = {
     name: { type: "string" },
     language: { type: "string" },
     timeRequired: { type: "integer" },
+    startTime: { type: "integer" },
+    stopTime: { type: "integer" },
     shared: { type: "boolean" },
     license: { type: "string" },
     description: { type: "string" },

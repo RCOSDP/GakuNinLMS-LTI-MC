@@ -50,6 +50,18 @@ export interface ApiV2TopicTopicIdTopic {
     timeRequired?: number;
     /**
      * 
+     * @type {number}
+     * @memberof ApiV2TopicTopicIdTopic
+     */
+    startTime?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ApiV2TopicTopicIdTopic
+     */
+    stopTime?: number;
+    /**
+     * 
      * @type {boolean}
      * @memberof ApiV2TopicTopicIdTopic
      */
@@ -93,6 +105,8 @@ export function ApiV2TopicTopicIdTopicFromJSONTyped(json: any, ignoreDiscriminat
         'name': !exists(json, 'name') ? undefined : json['name'],
         'language': !exists(json, 'language') ? undefined : json['language'],
         'timeRequired': !exists(json, 'timeRequired') ? undefined : json['timeRequired'],
+        'startTime': !exists(json, 'startTime') ? undefined : json['startTime'],
+        'stopTime': !exists(json, 'stopTime') ? undefined : json['stopTime'],
         'shared': !exists(json, 'shared') ? undefined : json['shared'],
         'license': !exists(json, 'license') ? undefined : json['license'],
         'description': !exists(json, 'description') ? undefined : json['description'],
@@ -113,6 +127,8 @@ export function ApiV2TopicTopicIdTopicToJSON(value?: ApiV2TopicTopicIdTopic | nu
         'name': value.name,
         'language': value.language,
         'timeRequired': value.timeRequired,
+        'startTime': value.startTime,
+        'stopTime': value.stopTime,
         'shared': value.shared,
         'license': value.license,
         'description': value.description,
