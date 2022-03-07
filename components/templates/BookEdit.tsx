@@ -127,22 +127,6 @@ export default function BookEdit({
         onAuthorsUpdate={onAuthorsUpdate}
         onAuthorSubmit={onAuthorSubmit}
       />
-      <Typography className={classes.subtitle} variant="h5">
-        基本情報
-        <Typography variant="caption" component="span" aria-hidden="true">
-          <RequiredDot />
-          は必須項目です
-        </Typography>
-      </Typography>
-      <BookForm
-        className={classes.content}
-        book={book}
-        linked={linked}
-        variant="update"
-        onSubmit={onSubmit}
-        onAuthorsUpdate={onAuthorsUpdate}
-        onAuthorSubmit={onAuthorSubmit}
-      />
       <Button size="small" color="primary" onClick={handleDeleteButtonClick}>
         <DeleteOutlinedIcon />
         ブックを削除
