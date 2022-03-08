@@ -31,7 +31,7 @@ export interface InlineObject8 {
      * @type {Array<ApiV2TopicTopicIdActivityTimeRanges>}
      * @memberof InlineObject8
      */
-    timeRanges?: Array<ApiV2TopicTopicIdActivityTimeRanges>;
+    timeRanges: Array<ApiV2TopicTopicIdActivityTimeRanges>;
 }
 
 export function InlineObject8FromJSON(json: any): InlineObject8 {
@@ -44,7 +44,7 @@ export function InlineObject8FromJSONTyped(json: any, ignoreDiscriminator: boole
     }
     return {
         
-        'timeRanges': !exists(json, 'timeRanges') ? undefined : ((json['timeRanges'] as Array<any>).map(ApiV2TopicTopicIdActivityTimeRangesFromJSON)),
+        'timeRanges': ((json['timeRanges'] as Array<any>).map(ApiV2TopicTopicIdActivityTimeRangesFromJSON)),
     };
 }
 
@@ -57,7 +57,7 @@ export function InlineObject8ToJSON(value?: InlineObject8 | null): any {
     }
     return {
         
-        'timeRanges': value.timeRanges === undefined ? undefined : ((value.timeRanges as Array<any>).map(ApiV2TopicTopicIdActivityTimeRangesToJSON)),
+        'timeRanges': ((value.timeRanges as Array<any>).map(ApiV2TopicTopicIdActivityTimeRangesToJSON)),
     };
 }
 

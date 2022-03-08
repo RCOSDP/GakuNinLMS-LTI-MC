@@ -1,6 +1,6 @@
 export default { title: "organisms/Dialog" };
 
-import type { ReactElement, Ref } from "react";
+import type { Ref } from "react";
 import { forwardRef, useState } from "react";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
@@ -11,7 +11,7 @@ import type { TransitionProps } from "@mui/material/transitions";
 import CloseIcon from "@mui/icons-material/Close";
 
 const Transition = forwardRef(function Transition(
-  props: TransitionProps & { children?: ReactElement },
+  props: TransitionProps & React.ComponentProps<typeof Slide>,
   ref: Ref<unknown>
 ) {
   return <Slide direction="up" ref={ref} {...props} />;

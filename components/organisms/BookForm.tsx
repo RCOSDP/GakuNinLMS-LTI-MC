@@ -148,29 +148,26 @@ export default function BookForm({
       </TextField>
       <KeywordsInput {...keywordsInputProps} />
       <TextField
-        label={
-          <>
-            解説
-            <Typography
-              className={classes.labelDescription}
-              variant="caption"
-              component="span"
-            >
-              <Link
-                href="https://github.github.com/gfm/"
-                target="_blank"
-                rel="noreferrer"
-              >
-                GitHub Flavored Markdown
-              </Link>
-              に一部準拠しています
-            </Typography>
-          </>
-        }
+        label="解説"
         fullWidth
         multiline
         inputProps={register("description")}
       />
+      <Typography
+        className={classes.labelDescription}
+        variant="caption"
+        component="span"
+      >
+        <Link
+          href="https://github.github.com/gfm/"
+          target="_blank"
+          rel="noreferrer"
+        >
+          GitHub Flavored Markdown
+        </Link>
+        {` `}
+        に一部準拠しています
+      </Typography>
       <Divider className={classes.divider} />
       {!linked && (
         <div>
