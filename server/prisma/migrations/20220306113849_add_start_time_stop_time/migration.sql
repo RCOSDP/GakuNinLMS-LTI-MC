@@ -1,3 +1,0 @@
--- AlterTable
-ALTER TABLE "topics" ADD COLUMN     "start_time" INTEGER NOT NULL DEFAULT 0,
-ADD COLUMN     "stop_time" INTEGER NOT NULL DEFAULT 0;
