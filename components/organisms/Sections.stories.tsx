@@ -1,12 +1,25 @@
 import type { Story } from "@storybook/react";
 import Sections from "./Sections";
-import { sections } from "samples";
+import { sections, user } from "samples";
+import { useActivityAtom } from "$store/activity";
 
 export default { title: "organisms/Sections", component: Sections };
 
-const Template: Story<Parameters<typeof Sections>[0]> = (args) => (
-  <Sections {...args} />
-);
+const activityBySections = sections
+  .flatMap(({ topics }) => topics)
+  .map((topic) => ({
+    topic,
+    learner: user,
+    completed: Math.floor(Math.random() * 2) === 0,
+    totalTimeMs: 100_000,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  }));
+
+const Template: Story<Parameters<typeof Sections>[0]> = (args) => {
+  useActivityAtom(activityBySections);
+  return <Sections {...args} />;
+};
 
 export const Default = Template.bind({});
 Default.args = {

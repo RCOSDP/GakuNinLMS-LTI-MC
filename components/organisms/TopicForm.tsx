@@ -44,8 +44,8 @@ import useKeywordsInput from "$utils/useKeywordsInput";
 
 const useStyles = makeStyles((theme) => ({
   margin: {
-    "& > :not(:last-child)": {
-      marginBottom: theme.spacing(2.5),
+    "& > :not(:first-child)": {
+      marginTop: theme.spacing(2.5),
     },
   },
   labelDescription: {
@@ -103,6 +103,15 @@ export default function TopicForm(props: Props) {
     (event: ChangeEvent<HTMLInputElement>) => setUrl(event.target.value),
     500
   );
+  const handleFileChange = useDebouncedCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      if (event?.target?.files?.length) {
+        const file = event.target.files[0] as unknown as File;
+        setDataUrl(URL.createObjectURL(file));
+      }
+    },
+    500
+  );
   const { videoTracks } = useVideoTrackAtom();
   const [open, setOpen] = useState(false);
   const [method, setMethod] = useState("url");
@@ -152,15 +161,6 @@ export default function TopicForm(props: Props) {
       setValue("topic.timeRequired", Math.floor(duration));
     },
     [getValues, setValue]
-  );
-  const handleFileChange = useDebouncedCallback(
-    (event: ChangeEvent<HTMLInputElement>) => {
-      if (event?.target?.files?.length) {
-        const file = event.target.files[0] as unknown as File;
-        setDataUrl(URL.createObjectURL(file));
-      }
-    },
-    500
   );
 
   return (
@@ -399,29 +399,26 @@ export default function TopicForm(props: Props) {
           </Button>
         </div>
         <TextField
-          label={
-            <>
-              解説
-              <Typography
-                className={classes.labelDescription}
-                variant="caption"
-                component="span"
-              >
-                <Link
-                  href="https://github.github.com/gfm/"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  GitHub Flavored Markdown
-                </Link>
-                に一部準拠しています
-              </Typography>
-            </>
-          }
+          label="解説"
           fullWidth
           multiline
           inputProps={register("topic.description")}
         />
+        <Typography
+          className={classes.labelDescription}
+          variant="caption"
+          component="span"
+        >
+          <Link
+            href="https://github.github.com/gfm/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            GitHub Flavored Markdown
+          </Link>
+          {` `}
+          に一部準拠しています
+        </Typography>
         <Divider className={classes.divider} />
         <Button variant="contained" color="primary" type="submit">
           {label[variant]}

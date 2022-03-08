@@ -13,8 +13,9 @@ import { useBook } from "$utils/book";
 import { useBookAtom } from "$store/book";
 import { useVideoAtom } from "$store/video";
 import type { TopicSchema } from "$server/models/topic";
-import type { ContentAuthors } from "$types/content";
+import type { ContentAuthors } from "$server/models/content";
 import { pagesPath } from "$utils/$path";
+import useBookActivity from "$utils/useBookActivity";
 import { useActivityTracking } from "$utils/activity";
 import logger from "$utils/eventLogger/logger";
 
@@ -27,6 +28,7 @@ function Show(query: Query) {
     isContentEditable,
     session?.ltiResourceLink
   );
+  useBookActivity(query.bookId);
   const { updateBook, itemIndex, nextItemIndex, itemExists, updateItemIndex } =
     useBookAtom();
   useEffect(() => {

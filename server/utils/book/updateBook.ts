@@ -1,4 +1,4 @@
-import type { Book } from "@prisma/client";
+import type { Book, PrismaPromise } from "@prisma/client";
 import type { BookProps, BookSchema } from "$server/models/book";
 import type { SectionProps } from "$server/models/book/section";
 import prisma from "$server/utils/prisma";
@@ -20,20 +20,26 @@ function upsertSections(bookId: Book["id"], sections: SectionProps[]) {
 
 async function updateBook({
   id,
+  sections,
   ...book
 }: Pick<Book, "id"> & BookProps): Promise<BookSchema | undefined> {
-  const timeRequired = await aggregateTimeRequired(book);
-  const cleanup = cleanupSections(id);
-  const { sections, ...other } = book;
-  const upsert = upsertSections(id, sections ?? []);
+  const ops: Array<PrismaPromise<unknown>> = [];
+
+  if (sections != null) {
+    const cleanup = cleanupSections(id);
+    const upsert = upsertSections(id, sections);
+    ops.push(...cleanup, ...upsert);
+  }
+
+  const timeRequired = sections && (await aggregateTimeRequired({ sections }));
   const keywords = await prisma.keyword.findMany({
     where: { books: { every: { id } } },
   });
   const update = prisma.book.update({
     where: { id },
     data: {
-      ...other,
-      timeRequired,
+      ...book,
+      ...(timeRequired && { timeRequired }),
       keywords: {
         ...keywordsConnectOrCreateInput(book.keywords ?? []),
         ...keywordsDisconnectInput(keywords, book.keywords ?? []),
@@ -41,10 +47,11 @@ async function updateBook({
       updatedAt: new Date(),
     },
   });
+  ops.push(update);
 
-  await prisma.$transaction([...cleanup, ...upsert, update]);
+  await prisma.$transaction(ops);
 
-  return findBook(id);
+  return await findBook(id);
 }
 
 export default updateBook;

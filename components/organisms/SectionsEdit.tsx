@@ -17,7 +17,7 @@ import SectionsTree from "$molecules/SectionsTree";
 import DraggableSections from "$molecules/DraggableSections";
 import type { SectionSchema } from "$server/models/book/section";
 import type { TopicSchema } from "$server/models/topic";
-import type { IsContentEditable } from "$types/content";
+import type { IsContentEditable } from "$server/models/content";
 import useCardStyles from "$styles/card";
 import useSortableSectionsProps from "$utils/useSortableSectionsProps";
 

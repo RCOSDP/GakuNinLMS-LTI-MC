@@ -41,6 +41,7 @@ export async function topicActivity(fastify: FastifyInstance) {
 
   fastify.put<{
     Params: activityService.Params;
+    Querystring: activityService.Query;
     Body: activityService.Props;
   }>(path, { schema: method.put, ...hooks.put }, handler(update));
 }
