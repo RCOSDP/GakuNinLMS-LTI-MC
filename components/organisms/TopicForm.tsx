@@ -100,12 +100,16 @@ export default function TopicForm(props: Props) {
   const { session } = useSessionAtom();
   const { videoResource, setUrl } = useVideoResourceProps(topic?.resource);
   const handleResourceUrlChange = useDebouncedCallback(
-    (event: ChangeEvent<HTMLInputElement>) => setUrl(event.target.value),
+    (event: ChangeEvent<HTMLInputElement>) => {
+      setValue("topic.timeRequired", 0);
+      setUrl(event.target.value);
+    },
     500
   );
   const handleFileChange = useDebouncedCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
       if (event?.target?.files?.length) {
+        setValue("topic.timeRequired", 0);
         const file = event.target.files[0] as unknown as File;
         setDataUrl(URL.createObjectURL(file));
       }
@@ -116,6 +120,8 @@ export default function TopicForm(props: Props) {
   const [open, setOpen] = useState(false);
   const [method, setMethod] = useState("url");
   const [dataUrl, setDataUrl] = useState("");
+  const [duration, setDuration] = useState(0);
+  const [currentTime, setCurrentTime] = useState(0);
   const handleClickSubtitle = () => {
     setOpen(true);
   };
@@ -143,6 +149,8 @@ export default function TopicForm(props: Props) {
       language: topic?.language ?? Object.getOwnPropertyNames(languages)[0],
       license: topic?.license ?? "",
       timeRequired: topic?.timeRequired,
+      startTime: topic?.startTime,
+      stopTime: topic?.stopTime,
     },
     provider: Object.values(uploadProviders)[0] ?? "",
     wowzaBaseUrl: `${NEXT_PUBLIC_API_BASE_PATH}/api/v2/wowza`,
@@ -156,12 +164,38 @@ export default function TopicForm(props: Props) {
   });
   const handleDurationChange = useCallback(
     (duration: number) => {
+      setDuration(duration);
       const { topic } = getValues();
       if (topic.timeRequired > 0) return;
       setValue("topic.timeRequired", Math.floor(duration));
+      setValue("topic.startTime", null);
+      setValue("topic.stopTime", null);
+      setCurrentTime(0);
     },
-    [getValues, setValue]
+    [getValues, setValue, setCurrentTime]
   );
+  const handleTimeUpdate = useCallback(
+    (newCurrentTime: number) => {
+      setCurrentTime(newCurrentTime);
+    },
+    [setCurrentTime]
+  );
+  const handleStartTimeStopTimeChange = useCallback(() => {
+    const { topic } = getValues();
+    setValue(
+      "topic.timeRequired",
+      // eslint-disable-next-line tsc/config
+      (topic.stopTime | duration) - (topic.startTime | 0)
+    );
+  }, [getValues, setValue, duration]);
+  const handleSetStartTime = useCallback(() => {
+    setValue("topic.startTime", Math.floor(currentTime));
+    handleStartTimeStopTimeChange();
+  }, [setValue, currentTime, handleStartTimeStopTimeChange]);
+  const handleSetStopTime = useCallback(() => {
+    setValue("topic.stopTime", Math.floor(currentTime));
+    handleStartTimeStopTimeChange();
+  }, [setValue, currentTime, handleStartTimeStopTimeChange]);
 
   return (
     <>
@@ -299,10 +333,27 @@ export default function TopicForm(props: Props) {
               )}
             />
             {videoResource && (
-              <VideoResource
-                {...videoResource}
-                onDurationChange={handleDurationChange}
-              />
+              <>
+                <VideoResource
+                  {...videoResource}
+                  onDurationChange={handleDurationChange}
+                  onTimeUpdate={handleTimeUpdate}
+                />
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  onClick={handleSetStartTime}
+                >
+                  開始位置に設定
+                </Button>
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  onClick={handleSetStopTime}
+                >
+                  終了位置に設定
+                </Button>
+              </>
             )}
           </>
         )}
@@ -330,16 +381,36 @@ export default function TopicForm(props: Props) {
               ))}
             </TextField>
             {dataUrl && (
-              <video
-                className={classes.localVideo}
-                src={dataUrl}
-                controls={true}
-                autoPlay
-                onDurationChange={(event) => {
-                  const video = event.target as HTMLVideoElement;
-                  handleDurationChange(video.duration);
-                }}
-              />
+              <>
+                <video
+                  className={classes.localVideo}
+                  src={dataUrl}
+                  controls={true}
+                  autoPlay
+                  onDurationChange={(event) => {
+                    const video = event.target as HTMLVideoElement;
+                    handleDurationChange(video.duration);
+                  }}
+                  onTimeUpdate={(event) => {
+                    const video = event.target as HTMLVideoElement;
+                    handleTimeUpdate(video.currentTime);
+                  }}
+                />
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  onClick={handleSetStartTime}
+                >
+                  開始位置に設定
+                </Button>
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  onClick={handleSetStopTime}
+                >
+                  終了位置に設定
+                </Button>
+              </>
             )}
           </>
         )}
@@ -364,6 +435,24 @@ export default function TopicForm(props: Props) {
             required: true,
             min: 1,
           }}
+        />
+        <TextField
+          label="再生開始位置 (秒)"
+          type="number"
+          inputProps={{
+            ...register("topic.startTime", { valueAsNumber: true }),
+            min: 0,
+          }}
+          onChange={handleStartTimeStopTimeChange}
+        />
+        <TextField
+          label="再生終了位置 (秒)"
+          type="number"
+          inputProps={{
+            ...register("topic.stopTime", { valueAsNumber: true }),
+            min: 1,
+          }}
+          onChange={handleStartTimeStopTimeChange}
         />
         <TextField
           label="ライセンス"
