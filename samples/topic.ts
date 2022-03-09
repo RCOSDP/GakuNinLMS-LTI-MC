@@ -22,8 +22,8 @@ const topic = {
 
   実体参照テスト: &nbsp; てすと`,
   timeRequired: 60,
-  startTime: 0,
-  stopTime: 60,
+  startTime: null,
+  stopTime: null,
   createdAt: new Date(),
   updatedAt: new Date(),
   details: {},

@@ -17,9 +17,8 @@ export function useTopic(id: TopicSchema["id"]) {
 export async function createTopic(
   body: TopicPropsWithUpload
 ): Promise<TopicSchema> {
-  const res = (await api.apiV2TopicPost({
-    body,
-  })) as TopicSchema;
+  // eslint-disable-next-line tsc/config
+  const res = (await api.apiV2TopicPost({ body })) as TopicSchema;
   await revalidateTopic(res.id, res);
   return res;
 }
@@ -30,6 +29,7 @@ export async function updateTopic({
 }: TopicPropsWithUpload & { id: TopicSchema["id"] }): Promise<TopicSchema> {
   const res = (await api.apiV2TopicTopicIdPut({
     topicId: id,
+    // eslint-disable-next-line tsc/config
     body,
   })) as TopicSchema;
   await revalidateTopic(res.id, res);
