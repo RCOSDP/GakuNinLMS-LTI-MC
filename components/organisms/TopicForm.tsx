@@ -185,15 +185,15 @@ export default function TopicForm(props: Props) {
     setValue(
       "topic.timeRequired",
       // eslint-disable-next-line tsc/config
-      (topic.stopTime | duration) - (topic.startTime | 0)
+      Math.floor((topic.stopTime | duration) - (topic.startTime | 0))
     );
   }, [getValues, setValue, duration]);
   const handleSetStartTime = useCallback(() => {
-    setValue("topic.startTime", Math.floor(currentTime));
+    setValue("topic.startTime", Math.floor(currentTime * 1000) / 1000);
     handleStartTimeStopTimeChange();
   }, [setValue, currentTime, handleStartTimeStopTimeChange]);
   const handleSetStopTime = useCallback(() => {
-    setValue("topic.stopTime", Math.floor(currentTime));
+    setValue("topic.stopTime", Math.floor(currentTime * 1000) / 1000);
     handleStartTimeStopTimeChange();
   }, [setValue, currentTime, handleStartTimeStopTimeChange]);
 
@@ -441,6 +441,7 @@ export default function TopicForm(props: Props) {
           type="number"
           inputProps={{
             ...register("topic.startTime", { valueAsNumber: true }),
+            step: 0.001,
             min: 0,
           }}
           onChange={handleStartTimeStopTimeChange}
@@ -450,7 +451,8 @@ export default function TopicForm(props: Props) {
           type="number"
           inputProps={{
             ...register("topic.stopTime", { valueAsNumber: true }),
-            min: 1,
+            step: 0.001,
+            min: 0.001,
           }}
           onChange={handleStartTimeStopTimeChange}
         />
