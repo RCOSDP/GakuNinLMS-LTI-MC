@@ -3,6 +3,7 @@ import type { SxProps } from "@mui/system";
 import type { VideoResourceSchema } from "$server/models/videoResource";
 import VideoPlayer from "./VideoPlayer";
 import getVideoInstance from "$utils/video/getVideoInstance";
+import { useVideoAtom } from "$store/video";
 
 type Props = Pick<VideoResourceSchema, "providerUrl" | "url" | "tracks"> & {
   sx?: SxProps;
@@ -26,6 +27,9 @@ export default function VideoResource({
       autoplay
     );
   }, [providerUrl, url, autoplay, resourceTracks]);
+
+  const { video } = useVideoAtom();
+  video.set(url, videoInstance);
 
   return <VideoPlayer videoInstance={videoInstance} {...other} />;
 }
