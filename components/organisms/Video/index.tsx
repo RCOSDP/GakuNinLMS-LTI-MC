@@ -35,10 +35,19 @@ type Props = {
   className?: string;
   sx?: SxProps;
   resource: VideoResourceSchema;
+  startTime: number | null;
+  stopTime: number | null;
   onEnded?: () => void;
 };
 
-export default function Video({ className, sx, resource, onEnded }: Props) {
+export default function Video({
+  className,
+  sx,
+  resource,
+  startTime,
+  stopTime,
+  onEnded,
+}: Props) {
   const { video, updateVideo } = useVideoAtom();
   const { book, itemIndex, itemExists } = useBookAtom();
   const prevItemIndex = usePrevious(itemIndex);
@@ -54,15 +63,68 @@ export default function Video({ className, sx, resource, onEnded }: Props) {
     const videoInstance = video.get(itemExists(itemIndex)?.resource.url ?? "");
     if (!videoInstance) return;
     if (videoInstance.type == "vimeo") {
-      void videoInstance.player.setCurrentTime(0);
-      void videoInstance.player.play();
+      videoInstance.player.on("ended", () => onEnded?.());
+      videoInstance.player.on("timeupdate", async () => {
+        const currentTime = await videoInstance.player.getCurrentTime();
+        // eslint-disable-next-line tsc/config
+        if (Number.isFinite(stopTime) && currentTime > stopTime) {
+          void videoInstance.player.pause();
+          onEnded?.();
+        }
+        // eslint-disable-next-line tsc/config
+        if (Number.isFinite(startTime) && currentTime < startTime) {
+          void videoInstance.player.setCurrentTime(startTime || 0);
+        }
+      });
+      void videoInstance.player.setCurrentTime(startTime || 0);
+      videoInstance.player.play().catch(() => {
+        // nop
+      });
     } else {
+      const handleEnded = () => {
+        videoInstance.player.off("timeupdate", handleTimeUpdate);
+        videoInstance.player.off("seeked", handleSeeked);
+        videoInstance.player.pause();
+        onEnded?.();
+      };
+      const handleSeeked = () => {
+        const currentTime = videoInstance.player.currentTime();
+        // eslint-disable-next-line tsc/config
+        if (Number.isFinite(startTime) && currentTime < startTime) {
+          videoInstance.player.currentTime(startTime || 0);
+        }
+      };
+      const handleTimeUpdate = () => {
+        const currentTime = videoInstance.player.currentTime();
+        // eslint-disable-next-line tsc/config
+        if (Number.isFinite(stopTime) && currentTime > stopTime) {
+          handleEnded();
+        }
+      };
+      videoInstance.player.on("ended", () => handleEnded());
+      videoInstance.player.on("firstplay", () =>
+        videoInstance.player.currentTime(startTime || 0)
+      );
       videoInstance.player.ready(() => {
-        videoInstance.player.currentTime(0);
+        const currentTime = videoInstance.player.currentTime();
+        // eslint-disable-next-line tsc/config
+        if (Number.isFinite(stopTime) && currentTime > stopTime) {
+          videoInstance.player.currentTime(startTime || 0);
+        }
+        videoInstance.player.on("timeupdate", handleTimeUpdate);
+        videoInstance.player.on("seeked", handleSeeked);
         void videoInstance.player.play();
       });
     }
-  }, [video, itemExists, prevItemIndex, itemIndex]);
+  }, [
+    video,
+    itemExists,
+    prevItemIndex,
+    itemIndex,
+    startTime,
+    stopTime,
+    onEnded,
+  ]);
   return (
     <>
       {Array.from(video.values()).map((videoInstance) => (
@@ -73,7 +135,6 @@ export default function Video({ className, sx, resource, onEnded }: Props) {
           })}
           sx={{ ...videoStyle, ...sx }}
           videoInstance={videoInstance}
-          onEnded={onEnded}
         />
       ))}
       {video.size === 0 && (
@@ -81,7 +142,6 @@ export default function Video({ className, sx, resource, onEnded }: Props) {
           className={className}
           sx={{ ...videoStyle, ...sx }}
           {...resource}
-          onEnded={onEnded}
           autoplay
         />
       )}

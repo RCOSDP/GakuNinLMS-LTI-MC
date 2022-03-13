@@ -32,6 +32,8 @@ export default function TopicViewerContent({ topic, onEnded, offset }: Props) {
           className={sticky}
           sx={{ mt: -2, mx: -3, mb: 2 }}
           resource={topic.resource}
+          startTime={topic.startTime}
+          stopTime={topic.stopTime}
           onEnded={onEnded}
         />
       )}
