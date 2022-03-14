@@ -92,6 +92,7 @@ docker-compose down
 | `ZOOM_IMPORT_TO`             | Zoom からインポートした動画のアップロード先 (デフォルト: 無効 ""、例: `wowza`)                                                  |
 | `ZOOM_IMPORT_WOWZA_BASE_URL` | Zoom からインポートした動画の URL のルート (デフォルト: 無効 ""、例: フロント側の設定値の `NEXT_PUBLIC_API_BASE_PATH` と同じ値) |
 | `ZOOM_IMPORT_AUTODELETE`     | Zoom からインポートした動画の自動削除設定 (デフォルト: 無効 ""、例: `1`)                                                        |
+| `ACTIVITY_RATE_MIN`          | 学習活動の完了とみなす最小の視聴時間の割合 (デフォルト:`0.9`)                                                                   |
 
 [database_connection_url]: https://www.prisma.io/docs/reference/database-connectors/connection-urls/
 

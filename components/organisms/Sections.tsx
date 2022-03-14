@@ -8,10 +8,12 @@ import Typography from "@mui/material/Typography";
 import { makeStyles, createStyles } from "@mui/styles";
 import type { Theme } from "@mui/material/styles";
 import EditButton from "$atoms/EditButton";
-import type { ContentAuthors } from "$types/content";
+import type { ContentAuthors } from "$server/models/content";
 import type { SectionSchema } from "$server/models/book/section";
 import { primary, gray } from "$theme/colors";
 import { isNamedSection, getOutlineNumber } from "$utils/outline";
+import { useActivityAtom } from "$store/activity";
+import LearningStatusChip from "$atoms/LearningStatusChip";
 import formatInterval from "$utils/formatInterval";
 
 function SectionItem({
@@ -102,6 +104,7 @@ export default function Sections({
       event.stopPropagation();
       onItemEditClick?.(index);
     };
+  const { isCompleted } = useActivityAtom();
   return (
     <div className={className}>
       {sections.map((section, sectionItemIndex) => (
@@ -132,6 +135,9 @@ export default function Sections({
                   {formatInterval(0, topic.timeRequired * 1000)}
                 </Typography>
               </ListItemText>
+              {!isContentEditable(topic) && isCompleted(topic.id) && (
+                <LearningStatusChip type="completed" size="small" />
+              )}
               {isContentEditable(topic) && onItemEditClick && (
                 <ListItemSecondaryAction>
                   <EditButton

@@ -7,7 +7,7 @@ import EditButton from "$atoms/EditButton";
 import SharedIndicator from "$atoms/SharedIndicator";
 import useTreeItemStyle from "$styles/treeItem";
 import type { SectionSchema } from "$server/models/book/section";
-import type { IsContentEditable } from "$types/content";
+import type { IsContentEditable } from "$server/models/content";
 import { isNamedSection, getOutlineNumber } from "$utils/outline";
 
 const useStyles = makeStyles((theme) => ({
