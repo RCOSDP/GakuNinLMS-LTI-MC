@@ -16,7 +16,6 @@ export function validateWowzaSettings(logging = true) {
     !WOWZA_SCP_PORT ||
     !WOWZA_SCP_USERNAME ||
     !WOWZA_SCP_PRIVATE_KEY ||
-    !WOWZA_SCP_PASS_PHRASE ||
     !WOWZA_SCP_SERVER_PATH
   ) {
     if (logging)
