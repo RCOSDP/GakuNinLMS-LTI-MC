@@ -1,11 +1,16 @@
 import type { ChangeEvent } from "react";
 import { useCallback, useState } from "react";
+import Alert from "@mui/material/Alert";
 import Card from "@mui/material/Card";
 import Checkbox from "@mui/material/Checkbox";
 import Divider from "@mui/material/Divider";
 import Button from "@mui/material/Button";
+import FormLabel from "@mui/material/FormLabel";
+import FormControlLabel from "@mui/material/FormControlLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Link from "@mui/material/Link";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
 import Typography from "@mui/material/Typography";
 import makeStyles from "@mui/styles/makeStyles";
 import Autocomplete from "$atoms/Autocomplete";
@@ -21,17 +26,19 @@ import SubtitleUploadDialog from "$organisms/SubtitleUploadDialog";
 import VideoResource from "$organisms/Video/VideoResource";
 import useCardStyles from "styles/card";
 import gray from "theme/colors/gray";
-import type { TopicProps, TopicSchema } from "$server/models/topic";
+import type { TopicPropsWithUpload, TopicSchema } from "$server/models/topic";
 import type {
   VideoTrackProps,
   VideoTrackSchema,
 } from "$server/models/videoTrack";
+import { useSessionAtom } from "$store/session";
+import { NEXT_PUBLIC_API_BASE_PATH } from "$utils/env";
 import languages from "$utils/languages";
 import licenses from "$utils/licenses";
 import providers from "$utils/providers";
 import useVideoResourceProps from "$utils/useVideoResourceProps";
 import type { AuthorSchema } from "$server/models/author";
-import type { TopicPropsWithAuthors } from "$types/topicPropsWithAuthors";
+import type { TopicPropsWithUploadAndAuthors } from "$types/topicPropsWithAuthors";
 import { useAuthorsAtom } from "store/authors";
 import { useVideoTrackAtom } from "$store/videoTrack";
 import useKeywordsInput from "$utils/useKeywordsInput";
@@ -57,6 +64,9 @@ const useStyles = makeStyles((theme) => ({
       marginBottom: theme.spacing(1),
     },
   },
+  localVideo: {
+    width: "100%",
+  },
 }));
 
 const label = {
@@ -66,9 +76,10 @@ const label = {
 
 type Props = {
   topic?: TopicSchema;
+  submitResult: string;
   className?: string;
   variant?: "create" | "update";
-  onSubmit?(topic: TopicPropsWithAuthors): void;
+  onSubmit?(topic: TopicPropsWithUploadAndAuthors): void;
   onSubtitleSubmit(videoTrack: VideoTrackProps): void;
   onSubtitleDelete(videoTrack: VideoTrackSchema): void;
   onAuthorsUpdate(authors: AuthorSchema[]): void;
@@ -78,6 +89,7 @@ type Props = {
 export default function TopicForm(props: Props) {
   const {
     topic,
+    submitResult,
     className,
     variant = "create",
     onSubmit = () => undefined,
@@ -88,13 +100,25 @@ export default function TopicForm(props: Props) {
   } = props;
   const cardClasses = useCardStyles();
   const classes = useStyles();
+  const { session } = useSessionAtom();
   const { videoResource, setUrl } = useVideoResourceProps(topic?.resource);
   const handleResourceUrlChange = useDebouncedCallback(
     (event: ChangeEvent<HTMLInputElement>) => setUrl(event.target.value),
     500
   );
+  const handleFileChange = useDebouncedCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      if (event?.target?.files?.length) {
+        const file = event.target.files[0] as unknown as File;
+        setDataUrl(URL.createObjectURL(file));
+      }
+    },
+    500
+  );
   const { videoTracks } = useVideoTrackAtom();
   const [open, setOpen] = useState(false);
+  const [method, setMethod] = useState("url");
+  const [dataUrl, setDataUrl] = useState("");
   const handleClickSubtitle = () => {
     setOpen(true);
   };
@@ -110,24 +134,34 @@ export default function TopicForm(props: Props) {
   };
   const { updateState: _updateState, ...authorsInputProps } = useAuthorsAtom();
   const keywordsInputProps = useKeywordsInput(topic?.keywords ?? []);
+  const uploadProviders: { [key: string]: string } = {};
+  if (session?.systemSettings?.wowzaUploadEnabled) {
+    uploadProviders.wowza = "https://www.wowza.com/";
+  }
   const defaultValues = {
-    name: topic?.name,
-    description: topic?.description ?? "",
-    shared: Boolean(topic?.shared),
-    language: topic?.language ?? Object.getOwnPropertyNames(languages)[0],
-    license: topic?.license ?? "",
-    timeRequired: topic?.timeRequired,
+    topic: {
+      name: topic?.name,
+      description: topic?.description ?? "",
+      shared: Boolean(topic?.shared),
+      language: topic?.language ?? Object.getOwnPropertyNames(languages)[0],
+      license: topic?.license ?? "",
+      timeRequired: topic?.timeRequired,
+    },
+    provider: Object.values(uploadProviders)[0] ?? "",
+    wowzaBaseUrl: `${NEXT_PUBLIC_API_BASE_PATH}/api/v2/wowza`,
+    fileName: "",
+    fileContent: "",
   };
   const { handleSubmit, register, getValues, setValue } = useForm<
-    Omit<TopicProps, "resource">
+    Omit<TopicPropsWithUpload, "resource">
   >({
     defaultValues,
   });
   const handleDurationChange = useCallback(
     (duration: number) => {
-      const { timeRequired } = getValues();
-      if (timeRequired > 0) return;
-      setValue("timeRequired", Math.floor(duration));
+      const { topic } = getValues();
+      if (topic.timeRequired > 0) return;
+      setValue("topic.timeRequired", Math.floor(duration));
     },
     [getValues, setValue]
   );
@@ -140,16 +174,48 @@ export default function TopicForm(props: Props) {
         component="form"
         onSubmit={handleSubmit((values) => {
           const resource = videoResource ?? { url: "" };
-          onSubmit({
-            ...values,
-            resource,
-            authors: authorsInputProps.authors,
-            keywords: keywordsInputProps.keywords,
-          });
+          if (method == "file" && values?.fileContent?.length) {
+            const file = values.fileContent[0] as unknown as File;
+            const reader = new FileReader();
+            reader.addEventListener(
+              "load",
+              () => {
+                onSubmit({
+                  topic: {
+                    ...values.topic,
+                    resource,
+                    keywords: keywordsInputProps.keywords,
+                  },
+                  authors: authorsInputProps.authors,
+                  provider: values.provider,
+                  wowzaBaseUrl: values.wowzaBaseUrl,
+                  fileName: file.name,
+                  fileContent: Buffer.from(
+                    reader.result as ArrayBuffer
+                  ).toString("base64"),
+                });
+              },
+              false
+            );
+            reader.readAsArrayBuffer(file);
+          } else {
+            onSubmit({
+              topic: {
+                ...values.topic,
+                resource,
+                keywords: keywordsInputProps.keywords,
+              },
+              authors: authorsInputProps.authors,
+              provider: "",
+              wowzaBaseUrl: "",
+              fileName: "",
+              fileContent: "",
+            });
+          }
         })}
       >
         <TextField
-          inputProps={register("name")}
+          inputProps={register("topic.name")}
           label={
             <>
               タイトル
@@ -175,54 +241,117 @@ export default function TopicForm(props: Props) {
           <Checkbox
             id="shared"
             name="shared"
-            onChange={(_, checked) => setValue("shared", checked)}
-            defaultChecked={defaultValues.shared}
+            onChange={(_, checked) => setValue("topic.shared", checked)}
+            defaultChecked={defaultValues.topic.shared}
             color="primary"
           />
         </div>
-        <Autocomplete
-          id="resource.url"
-          freeSolo
-          options={[...Object.values(providers)].map(({ baseUrl }) => baseUrl)}
-          defaultValue={topic?.resource.url}
-          renderInput={({ InputProps, inputProps }) => (
-            <TextField
-              InputProps={{ ref: InputProps.ref }}
-              inputProps={inputProps}
-              name="resource.url"
-              label={
-                <>
-                  動画のURL
-                  <Typography
-                    className={classes.labelDescription}
-                    variant="caption"
-                    component="span"
-                  >
-                    {[...Object.values(providers)]
-                      .map(({ name }) => name)
-                      .join(", ")}
-                    に対応しています
-                  </Typography>
-                </>
-              }
-              type="url"
-              required
-              fullWidth
-              onChange={handleResourceUrlChange}
-            />
-          )}
-        />
-        {videoResource && (
-          <VideoResource
-            {...videoResource}
-            onDurationChange={handleDurationChange}
-          />
+
+        {Boolean(Object.entries(uploadProviders).length) && (
+          <>
+            <FormLabel>動画の指定方法</FormLabel>
+            <RadioGroup
+              defaultValue="url"
+              row
+              onChange={(event, value) => setMethod(value)}
+            >
+              <FormControlLabel value="url" control={<Radio />} label="URL" />
+              <FormControlLabel
+                value="file"
+                control={<Radio />}
+                label="ファイルアップロード"
+              />
+            </RadioGroup>
+          </>
         )}
+
+        {method == "url" && (
+          <>
+            <Autocomplete
+              id="resource.url"
+              freeSolo
+              options={[...Object.values(providers)].map(
+                ({ baseUrl }) => baseUrl
+              )}
+              defaultValue={topic?.resource.url}
+              renderInput={({ InputProps, inputProps }) => (
+                <TextField
+                  InputProps={{ ref: InputProps.ref }}
+                  inputProps={inputProps}
+                  name="resource.url"
+                  label={
+                    <>
+                      動画のURL
+                      <Typography
+                        className={classes.labelDescription}
+                        variant="caption"
+                        component="span"
+                      >
+                        {[...Object.values(providers)]
+                          .map(({ name }) => name)
+                          .join(", ")}
+                        に対応しています
+                      </Typography>
+                    </>
+                  }
+                  type="url"
+                  required
+                  fullWidth
+                  onChange={handleResourceUrlChange}
+                />
+              )}
+            />
+            {videoResource && (
+              <VideoResource
+                {...videoResource}
+                onDurationChange={handleDurationChange}
+              />
+            )}
+          </>
+        )}
+
+        {method == "file" && (
+          <>
+            <TextField
+              label="動画ファイル"
+              type="file"
+              required
+              inputProps={register("fileContent")}
+              onChange={handleFileChange}
+            />
+            <TextField
+              label="動画ファイルをアップロードするサービス"
+              select
+              required
+              defaultValue={defaultValues.provider}
+              inputProps={register("provider")}
+            >
+              {Object.entries(uploadProviders).map(([label, value]) => (
+                <MenuItem key={value} value={value}>
+                  {label}
+                </MenuItem>
+              ))}
+            </TextField>
+            {dataUrl && (
+              <video
+                className={classes.localVideo}
+                src={dataUrl}
+                controls={true}
+                autoPlay
+                onDurationChange={(event) => {
+                  const video = event.target as HTMLVideoElement;
+                  handleDurationChange(video.duration);
+                }}
+              />
+            )}
+          </>
+        )}
+
         <TextField
           label="教材の主要な言語"
           select
-          defaultValue={defaultValues.language}
-          inputProps={register("language")}
+          defaultValue={defaultValues.topic.language}
+          inputProps={register("topic.language")}
         >
           {Object.entries(languages).map(([value, label]) => (
             <MenuItem key={value} value={value}>
@@ -234,7 +363,7 @@ export default function TopicForm(props: Props) {
           label="学習時間 (秒)"
           type="number"
           inputProps={{
-            ...register("timeRequired", { valueAsNumber: true }),
+            ...register("topic.timeRequired", { valueAsNumber: true }),
             required: true,
             min: 1,
           }}
@@ -242,8 +371,8 @@ export default function TopicForm(props: Props) {
         <TextField
           label="ライセンス"
           select
-          defaultValue={defaultValues.license}
-          inputProps={{ displayEmpty: true, ...register("license") }}
+          defaultValue={defaultValues.topic.license}
+          inputProps={{ displayEmpty: true, ...register("topic.license") }}
         >
           <MenuItem value="">未設定</MenuItem>
           {Object.entries(licenses).map(([value, { name }]) => (
@@ -276,7 +405,7 @@ export default function TopicForm(props: Props) {
           label="解説"
           fullWidth
           multiline
-          inputProps={register("description")}
+          inputProps={register("topic.description")}
         />
         <Typography
           className={classes.labelDescription}
@@ -297,6 +426,7 @@ export default function TopicForm(props: Props) {
         <Button variant="contained" color="primary" type="submit">
           {label[variant]}
         </Button>
+        {submitResult && <Alert severity="error">{submitResult}</Alert>}
       </Card>
 
       <SubtitleUploadDialog

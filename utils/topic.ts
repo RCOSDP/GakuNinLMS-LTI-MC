@@ -1,5 +1,5 @@
 import useSWR, { mutate } from "swr";
-import type { TopicProps, TopicSchema } from "$server/models/topic";
+import type { TopicPropsWithUpload, TopicSchema } from "$server/models/topic";
 import { api } from "./api";
 
 const key = "/api/v2/topic/{topic_id}";
@@ -14,7 +14,9 @@ export function useTopic(id: TopicSchema["id"]) {
   return data;
 }
 
-export async function createTopic(body: TopicProps): Promise<TopicSchema> {
+export async function createTopic(
+  body: TopicPropsWithUpload
+): Promise<TopicSchema> {
   const res = (await api.apiV2TopicPost({
     body,
   })) as TopicSchema;
@@ -25,7 +27,7 @@ export async function createTopic(body: TopicProps): Promise<TopicSchema> {
 export async function updateTopic({
   id,
   ...body
-}: TopicProps & { id: TopicSchema["id"] }): Promise<TopicSchema> {
+}: TopicPropsWithUpload & { id: TopicSchema["id"] }): Promise<TopicSchema> {
   const res = (await api.apiV2TopicTopicIdPut({
     topicId: id,
     body,
