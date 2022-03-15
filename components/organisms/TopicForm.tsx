@@ -1,5 +1,6 @@
 import type { ChangeEvent } from "react";
 import { useCallback, useState } from "react";
+import Alert from "@mui/material/Alert";
 import Card from "@mui/material/Card";
 import Checkbox from "@mui/material/Checkbox";
 import Divider from "@mui/material/Divider";
@@ -75,6 +76,7 @@ const label = {
 
 type Props = {
   topic?: TopicSchema;
+  submitResult: string;
   className?: string;
   variant?: "create" | "update";
   onSubmit?(topic: TopicPropsWithUploadAndAuthors): void;
@@ -87,6 +89,7 @@ type Props = {
 export default function TopicForm(props: Props) {
   const {
     topic,
+    submitResult,
     className,
     variant = "create",
     onSubmit = () => undefined,
@@ -176,7 +179,7 @@ export default function TopicForm(props: Props) {
             const reader = new FileReader();
             reader.addEventListener(
               "load",
-              function () {
+              () => {
                 onSubmit({
                   topic: {
                     ...values.topic,
@@ -423,6 +426,7 @@ export default function TopicForm(props: Props) {
         <Button variant="contained" color="primary" type="submit">
           {label[variant]}
         </Button>
+        {submitResult && <Alert severity="error">{submitResult}</Alert>}
       </Card>
 
       <SubtitleUploadDialog

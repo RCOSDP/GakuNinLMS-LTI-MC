@@ -36,6 +36,7 @@ const useStyles = makeStyles((theme) => ({
 
 type Props = {
   topic: TopicSchema;
+  submitResult: string;
   onSubmit(topic: TopicPropsWithUpload): void;
   onDelete(topic: TopicSchema): void;
   onCancel(): void;
@@ -48,6 +49,7 @@ type Props = {
 export default function TopicEdit(props: Props) {
   const {
     topic,
+    submitResult,
     onSubmit,
     onDelete,
     onCancel,
@@ -80,6 +82,7 @@ export default function TopicEdit(props: Props) {
       <TopicForm
         className={classes.form}
         topic={topic}
+        submitResult={submitResult}
         variant="update"
         onSubmit={onSubmit}
         onSubtitleDelete={onSubtitleDelete}

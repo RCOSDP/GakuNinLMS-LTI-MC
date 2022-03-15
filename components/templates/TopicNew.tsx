@@ -37,6 +37,7 @@ const useStyles = makeStyles((theme) => ({
 
 type Props = {
   topic?: TopicSchema;
+  submitResult: string;
   onSubmit(topic: TopicPropsWithUploadAndAuthors): void;
   onSubtitleDelete(videoTrack: VideoTrackSchema): void;
   onSubtitleSubmit(videoTrack: VideoTrackProps): void;
@@ -47,6 +48,7 @@ type Props = {
 
 export default function TopicNew({
   topic,
+  submitResult,
   onSubmit,
   onSubtitleDelete,
   onSubtitleSubmit,
@@ -84,6 +86,7 @@ export default function TopicNew({
       )}
       <TopicForm
         topic={defaultTopic}
+        submitResult={submitResult}
         variant="create"
         onSubmit={onSubmit}
         onSubtitleDelete={onSubtitleDelete}
