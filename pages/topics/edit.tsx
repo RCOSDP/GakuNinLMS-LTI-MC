@@ -36,8 +36,14 @@ function Edit({ topicId, back }: EditProps) {
       await updateTopic({ id: topicId, ...props });
       return back();
     } catch (e) {
-      // @ts-expect-error TODO: Object is of type 'unknown'
-      setSubmitResult((await e.json()).message);
+      const response = e as Response;
+      const status = response.status;
+      const statusText = response.statusText;
+      try {
+        setSubmitResult((await response.json()).message);
+      } catch (e) {
+        setSubmitResult(`${status} ${statusText}`);
+      }
     }
   }
   async function handleDelete(topic: TopicSchema) {
