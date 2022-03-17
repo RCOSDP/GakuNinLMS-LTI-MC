@@ -69,6 +69,9 @@ const useStyles = makeStyles((theme) => ({
   localVideo: {
     width: "100%",
   },
+  videoButtons: {
+    marginRight: theme.spacing(2),
+  },
 }));
 
 const label = {
@@ -180,15 +183,16 @@ export default function TopicForm(props: Props) {
     },
     [getValues, setValue]
   );
+  const getPlayer = useCallback(() => {
+    if (method == "url") return video.get(videoResource?.url ?? "")?.player;
+    else return localVideo.current;
+  }, [method, video, videoResource, localVideo]);
   const getDuration = useCallback(async () => {
     if (method == "url") {
       const videoInstance = video.get(videoResource?.url ?? "");
-      if (!videoInstance) return 0;
-      if (videoInstance.type == "vimeo") {
+      if (videoInstance?.type == "vimeo")
         return await videoInstance.player.getDuration();
-      } else {
-        return videoInstance.player.duration();
-      }
+      else return videoInstance?.player.duration() ?? 0;
     } else {
       return localVideo.current?.duration ?? 0;
     }
@@ -196,16 +200,69 @@ export default function TopicForm(props: Props) {
   const getCurrentTime = useCallback(async () => {
     if (method == "url") {
       const videoInstance = video.get(videoResource?.url ?? "");
-      if (!videoInstance) return 0;
-      if (videoInstance.type == "vimeo") {
+      if (videoInstance?.type == "vimeo")
         return await videoInstance.player.getCurrentTime();
-      } else {
-        return videoInstance.player.currentTime();
-      }
+      else return videoInstance?.player.currentTime() ?? 0;
     } else {
       return localVideo.current?.currentTime ?? 0;
     }
   }, [method, video, videoResource, localVideo]);
+  const setCurrentTime = useCallback(
+    async (currentTime: number) => {
+      if (method == "url") {
+        const videoInstance = video.get(videoResource?.url ?? "");
+        if (videoInstance?.type == "vimeo")
+          await videoInstance.player.setCurrentTime(currentTime);
+        else videoInstance?.player.currentTime(currentTime);
+      } else {
+        const currentLocalVideo = localVideo.current;
+        if (currentLocalVideo) currentLocalVideo.currentTime = currentTime;
+      }
+    },
+    [method, video, videoResource, localVideo]
+  );
+  const addPlayerEventListener = useCallback(
+    (type: string, listener: EventListener) => {
+      if (method == "url")
+        video.get(videoResource?.url ?? "")?.player.on(type, listener);
+      else localVideo.current?.addEventListener(type, listener);
+    },
+    [method, video, videoResource, localVideo]
+  );
+  const removePlayerEventListener = useCallback(
+    (type: string, listener: EventListener) => {
+      if (method == "url")
+        video.get(videoResource?.url ?? "")?.player.off(type, listener);
+      else localVideo.current?.removeEventListener(type, listener);
+    },
+    [method, video, videoResource, localVideo]
+  );
+  const handlePreview = useCallback(async () => {
+    const player = getPlayer();
+    if (!player) return;
+
+    const { topic } = getValues();
+    const duration = await getDuration();
+    const handleTimeUpdate = async () => {
+      const currentTime = await getCurrentTime();
+      if (currentTime >= (topic.stopTime || duration)) {
+        void player.pause();
+        removePlayerEventListener("timeupdate", handleTimeUpdate);
+      }
+    };
+    removePlayerEventListener("timeupdate", handleTimeUpdate);
+    addPlayerEventListener("timeupdate", handleTimeUpdate);
+    await setCurrentTime(topic.startTime || 0);
+    void player.play();
+  }, [
+    getPlayer,
+    getValues,
+    getDuration,
+    getCurrentTime,
+    removePlayerEventListener,
+    addPlayerEventListener,
+    setCurrentTime,
+  ]);
   const handleStartTimeStopTimeChange = useCallback(async () => {
     const duration = await getDuration();
     const { topic } = getValues();
@@ -382,6 +439,7 @@ export default function TopicForm(props: Props) {
                   onDurationChange={handleDurationChange}
                 />
                 <Button
+                  className={classes.videoButtons}
                   variant="outlined"
                   color="primary"
                   onClick={handleSetStartTime}
@@ -389,11 +447,20 @@ export default function TopicForm(props: Props) {
                   開始位置に設定
                 </Button>
                 <Button
+                  className={classes.videoButtons}
                   variant="outlined"
                   color="primary"
                   onClick={handleSetStopTime}
                 >
                   終了位置に設定
+                </Button>
+                <Button
+                  className={classes.videoButtons}
+                  variant="outlined"
+                  color="primary"
+                  onClick={handlePreview}
+                >
+                  プレビュー
                 </Button>
               </>
             )}
@@ -436,6 +503,7 @@ export default function TopicForm(props: Props) {
                   }}
                 />
                 <Button
+                  className={classes.videoButtons}
                   variant="outlined"
                   color="primary"
                   onClick={handleSetStartTime}
@@ -443,11 +511,20 @@ export default function TopicForm(props: Props) {
                   開始位置に設定
                 </Button>
                 <Button
+                  className={classes.videoButtons}
                   variant="outlined"
                   color="primary"
                   onClick={handleSetStopTime}
                 >
                   終了位置に設定
+                </Button>
+                <Button
+                  className={classes.videoButtons}
+                  variant="outlined"
+                  color="primary"
+                  onClick={handlePreview}
+                >
+                  プレビュー
                 </Button>
               </>
             )}
