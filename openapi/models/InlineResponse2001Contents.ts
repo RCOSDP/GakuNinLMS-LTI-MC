@@ -74,6 +74,18 @@ export interface InlineResponse2001Contents {
     timeRequired?: number;
     /**
      * 
+     * @type {number}
+     * @memberof InlineResponse2001Contents
+     */
+    startTime?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof InlineResponse2001Contents
+     */
+    stopTime?: number;
+    /**
+     * 
      * @type {boolean}
      * @memberof InlineResponse2001Contents
      */
@@ -161,6 +173,8 @@ export function InlineResponse2001ContentsFromJSONTyped(json: any, ignoreDiscrim
         'name': !exists(json, 'name') ? undefined : json['name'],
         'language': !exists(json, 'language') ? undefined : json['language'],
         'timeRequired': !exists(json, 'timeRequired') ? undefined : json['timeRequired'],
+        'startTime': !exists(json, 'startTime') ? undefined : json['startTime'],
+        'stopTime': !exists(json, 'stopTime') ? undefined : json['stopTime'],
         'shared': !exists(json, 'shared') ? undefined : json['shared'],
         'license': !exists(json, 'license') ? undefined : json['license'],
         'description': !exists(json, 'description') ? undefined : json['description'],
@@ -190,6 +204,8 @@ export function InlineResponse2001ContentsToJSON(value?: InlineResponse2001Conte
         'name': value.name,
         'language': value.language,
         'timeRequired': value.timeRequired,
+        'startTime': value.startTime,
+        'stopTime': value.stopTime,
         'shared': value.shared,
         'license': value.license,
         'description': value.description,
