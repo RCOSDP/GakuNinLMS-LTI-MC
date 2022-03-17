@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import type { BookSchema } from "$server/models/book";
 import type { TopicSchema } from "$server/models/topic";
@@ -39,33 +39,58 @@ function useTopicNewHandlers(
     ({ id }: VideoTrackSchema) => deleteVideoTrack(id),
     [deleteVideoTrack]
   );
+  const [submitResult, setSubmitResult] = useState("");
   const handleSubmit = useCallback(
     async ({ authors, ...props }: TopicPropsWithUploadAndAuthors) => {
-      const topic = await createTopic(props);
-      await updateTopicAuthors({
-        id: topic.id,
-        authors: [
-          ...topic.authors.map(({ id, roleName }) => ({ id, roleName })),
-          ...authors,
-        ],
-      });
-      await Promise.all(
-        videoTracksProps.map((vt) => uploadVideoTrack(topic.resource.id, vt))
-      );
-      if (book) {
-        if (targetTopic) await replaceTopicInBook(book, targetTopic, topic);
-        else await addTopicToBook(book, topic);
+      try {
+        const topic = await createTopic(props);
+        await updateTopicAuthors({
+          id: topic.id,
+          authors: [
+            ...topic.authors.map(({ id, roleName }) => ({ id, roleName })),
+            ...authors,
+          ],
+        });
+        await Promise.all(
+          videoTracksProps.map((vt) => uploadVideoTrack(topic.resource.id, vt))
+        );
+        if (book) {
+          if (targetTopic) await replaceTopicInBook(book, targetTopic, topic);
+          else await addTopicToBook(book, topic);
+        }
+        await router.replace(
+          {
+            pathname: "./edit",
+            query: { ...bookEditQuery, topicId: topic.id },
+          },
+          undefined,
+          { shallow: true }
+        );
+        return back();
+      } catch (e) {
+        const response = e as Response;
+        const status = response.status;
+        const statusText = response.statusText;
+        try {
+          setSubmitResult((await response.json()).message);
+        } catch (e) {
+          setSubmitResult(`${status} ${statusText}`);
+        }
+        return undefined;
       }
-      await router.replace(
-        { pathname: "./edit", query: { ...bookEditQuery, topicId: topic.id } },
-        undefined,
-        { shallow: true }
-      );
-      return back();
     },
-    [book, targetTopic, router, bookEditQuery, videoTracksProps, back]
+    [
+      book,
+      targetTopic,
+      router,
+      bookEditQuery,
+      videoTracksProps,
+      back,
+      setSubmitResult,
+    ]
   );
   const handlers = {
+    submitResult: submitResult,
     onSubtitleSubmit: handleSubtitleSubmit,
     onSubtitleDelete: handleSubtitleDelete,
     onSubmit: handleSubmit,
