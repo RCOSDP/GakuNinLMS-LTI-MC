@@ -21,4 +21,4 @@ The dashboard page is focused on confirming the overview of students' progress i
 The system has a module for advanced analytics based on video.js to collect detailed video viewing behavior log data. This module saves video viewing log data such as play, pause, fast-forward, rewind, and playback speed changes every 10 seconds, in accordance with the log format defined by National Institute of Informatics (NII), Japan’s only general academic research institution.
 
 ## Citation
-
+Shizuka Shirai, Masumi Hori, Masako Furukawa, Mehrasa Alizadeh, Noriko Takemura, Haruo Takemura and Hajime Nagahara. 2022. Design of open-source video viewing behavior analysis system. In Companion Proceedings 12th International Conference on Learning Analytics & Knowledge (LAK22), March 23-25, 2022, online. Society for Learning Analytics Research, 82. https://www.solaresearch.org/core/lak22-companion-proceedings/
