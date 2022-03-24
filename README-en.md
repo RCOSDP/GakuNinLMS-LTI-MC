@@ -1,6 +1,6 @@
 # ViLOG
 
-[English](README-en.md) | 日本語
+[English](README-en.md) |[Japanese](README-ja.md)
 
 ## What kind of program is it?
 
