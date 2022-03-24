@@ -2,11 +2,9 @@
 
 [English](README-en.md) | 日本語
 
-## これは何をするプログラムか
+## What kind of program is it?
 
-ViLOGシステムはオープンソースのビデオ視聴行動分析システムです。
-本システムは，Wowza, YouTube, Vimeo 上に存在する動画コンテンツを、学習者が利用しやすいコンテンツにまとめ上げる機能と，動画視聴時のログを収集し，可視化する機能を提供します。
-本システムは，LTIツールプロバイダーであり，Moodle や BlackBoard などの LMSと連携して利用できます。
+ViLOG is an open-source program for analyzing video viewing logs. This program allows you to compile video contents already existing on Wowza, YouTube, and Vimeo into easy-to-use contents for learners and to collect and visualize video viewing logs. This system is an LTI tool provider and can be used in conjunction with LMS such as Moodle and BlackBoard.
 
 <!--- わかりやすい動画例を添付する。 --- LTI リンクを起点とする操作例 Gif か mp4 へのリンク-->
 
