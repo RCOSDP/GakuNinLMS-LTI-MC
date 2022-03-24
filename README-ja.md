@@ -1,4 +1,4 @@
-# CHiBi-CHiLO
+# ViLOG
 
 [English](README-en.md) | 日本語
 
