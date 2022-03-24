@@ -12,10 +12,10 @@ ViLOG is an open-source program for analyzing video viewing logs. This program a
 
 Please read the installation guide (INSTALL-ja.md).
 
-### 学習分析
+### Learning Analytics
 
-教員または管理者は、学習分析データとして CSV ファイル(BOM 付き)をダウンロードできます。
-CSV ファイルの各カラムの詳細は次のとおりです。
+Instructors or administrators can download CSV files (with BOM) as learning analytics data.
+The details of each column in the CSV file are as follows.
 
 | CSV                | RDB                        | 説明                                                                    |
 | ------------------ | -------------------------- | ----------------------------------------------------------------------- |
