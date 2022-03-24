@@ -1,4 +1,4 @@
-# ![ロゴ](docs/assets/ViLOG_s.png)ViLOG: Video viewing LOG analytics system
+# ![ロゴ](docs/assets/ViLOG_s.png)  ViLOG: Video viewing LOG analytics system
 
 [English](README-en.md) | [日本語](README-ja.md)
 
