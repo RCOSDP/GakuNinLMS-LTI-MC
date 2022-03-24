@@ -19,14 +19,14 @@ The details of each column in the CSV file are as follows.
 
 | CSV                | RDB                        | 説明                                                                    |
 | ------------------ | -------------------------- | ----------------------------------------------------------------------- |
-| `User ID`          | `users.id`                 | Learner - Identifier                                                         |
-| `Username`         | `users.name`               | Learner - Full name                                                           |
-| `Email address`    | `users.email`              | Learner - メールアドレス ("" は無効値)                                   |
-| `Course ID`        | -                          | LTI - 短縮されたコース名称                                              |
-| `Course name`          | -                          | LTI - コース名称                                                        |
-| `Book ID`         | `books.id`                 | ブック - 識別子                                                         |
-| `Book name`         | `books.name`               | ブック - 題名                                                           |
-| `Topic ID`       | `topics.id`                | トピック - 識別子                                                       |
+| `User ID`          | `users.id`                 | Learner - Identifier                                                    |
+| `Username`         | `users.name`               | Learner - Full name                                                     |
+| `Email address`    | `users.email`              | Learner - Email address ("" is invalid value)                           |
+| `Course ID`        | -                          | LTI - Shortened course name                                              |
+| `Course name`      | -                          | LTI - Course name                                                       |
+| `Book ID`          | `books.id`                 | Book - Identifier                                                        |
+| `Book name`        | `books.name`               | Book - Title                                                           |
+| `Topic ID`         | `topics.id`                | トピック - 識別子                                                       |
 | `Topic name`       | `topics.name`              | トピック - トピック名称                                                 |
 | `Video length`       | `topics.time_required`     | トピック - 学習所要時間 (秒)                                            |
 | `Viewing time` | `activities.total_time_ms` | 学習活動 - 合計時間 (ms)                                                |
