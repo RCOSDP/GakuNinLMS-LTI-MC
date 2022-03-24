@@ -30,7 +30,7 @@ The details of each column in the CSV file are as follows.
 | `Topic name`       | `topics.name`              | トピック - トピック名称                                                 |
 | `Video length`       | `topics.time_required`     | トピック - 学習所要時間 (秒)                                            |
 | `Viewing time` | `activities.total_time_ms` | 学習活動 - 合計時間 (ms)                                                |
-| `Status of Learning`         | -                          | 学習状況 - 完了: "completed", 未完了: "incompleted", 未開封: "unopened" |
+| `Status of learning`         | -                          | 学習状況 - 完了: "completed", 未完了: "incompleted", 未開封: "unopened" |
 | `Learning completion rate`       | -                          | 学習完了率 - ユニーク視聴時間が動画の長さを占める割合 (パーセント)      |
 | `First access`     | `activities.created_at`    | 学習活動 - 作成日                                                       |
 | `Last access`     | `activities.updated_at`    | 学習活動 - 更新日                                                       |
