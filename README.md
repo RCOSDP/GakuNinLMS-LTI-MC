@@ -1,9 +1,6 @@
-# ![ロゴ](docs/assets/chibichilo_s.png)CHiBi-CHiLO
+# ![ロゴ](docs/assets/ViLOG_s.png)ViLOG: Video viewing LOG analytics system
 
 [English](README-en.md) | [日本語](README-ja.md)
 
-CHiBi-CHiLO とは，LMS と外部接続する[LTI ツールプロバイダー](https://www.imsglobal.org/activity/learning-tools-interoperability) です．
-ビデオを共有・再利用することを目的に開発されました．Youtube や Vimeo などのインターネット上のビデオを組み合わせ，「ブック」と呼ばれる形式のビデオ教材として LMS で配信することができます．
+ViLOG (Video viewing LOG analytics system) is an open-source video viewing behavior analysis system developed as the first step of an ongoing research project on engagement analytics for video-based learning. This system was developed as a Learning Tools Interoperability (LTI)-compliant tool so that it would be easy to implement in any environment and to extend features to validate the new framework. This system consists of two main features regarding video viewing log: dashboard page and log collecting module. The dashboard page is focused on confirming the overview of students' progress in real time. In addition, the module saves video viewing log data such as play, pause, fast-forward, rewind, and playback speed changes every 10 seconds, in accordance with the log format defined by National Institute of Informatics. 
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https%3A%2F%2Fgithub.com%2Fnpocccties%2Fchibichilo&env=SESSION_SECRET,DATABASE_URL)
