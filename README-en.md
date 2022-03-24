@@ -8,9 +8,9 @@ ViLOG is an open-source program for analyzing video viewing logs. This program a
 
 <!--- わかりやすい動画例を添付する。 --- LTI リンクを起点とする操作例 Gif か mp4 へのリンク-->
 
-## 使い方
+## How to Use ViLOG
 
-[インストール方法](INSTALL-ja.md)を読んでください。
+Please read the installation guide (INSTALL-ja.md).
 
 ### 学習分析
 
