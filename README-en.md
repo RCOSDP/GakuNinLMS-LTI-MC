@@ -19,9 +19,9 @@ The details of each column in the CSV file are as follows.
 
 | CSV                | RDB                        | 説明                                                                    |
 | ------------------ | -------------------------- | ----------------------------------------------------------------------- |
-| `User ID`          | `users.id`                 | 学習者 - 識別子                                                         |
-| `Username`         | `users.name`               | 学習者 - 氏名                                                           |
-| `Email address`    | `users.email`              | 学習者 - メールアドレス ("" は無効値)                                   |
+| `User ID`          | `users.id`                 | Learner - Identifier                                                         |
+| `Username`         | `users.name`               | Learner - Full name                                                           |
+| `Email address`    | `users.email`              | Learner - メールアドレス ("" は無効値)                                   |
 | `Course ID`        | -                          | LTI - 短縮されたコース名称                                              |
 | `Course name`          | -                          | LTI - コース名称                                                        |
 | `Book ID`         | `books.id`                 | ブック - 識別子                                                         |
