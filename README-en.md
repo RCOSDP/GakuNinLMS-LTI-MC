@@ -26,11 +26,11 @@ The details of each column in the CSV file are as follows.
 | `Course name`      | -                          | LTI - Course name                                                       |
 | `Book ID`          | `books.id`                 | Book - Identifier                                                        |
 | `Book name`        | `books.name`               | Book - Title                                                           |
-| `Topic ID`         | `topics.id`                | トピック - 識別子                                                       |
-| `Topic name`       | `topics.name`              | トピック - トピック名称                                                 |
-| `Video length`       | `topics.time_required`     | トピック - 学習所要時間 (秒)                                            |
-| `Viewing time` | `activities.total_time_ms` | 学習活動 - 合計時間 (ms)                                                |
-| `Status of learning`         | -                          | 学習状況 - 完了: "completed", 未完了: "incompleted", 未開封: "unopened" |
+| `Topic ID`         | `topics.id`                | Topic - Identifier                                                       |
+| `Topic name`       | `topics.name`              | Topic - Name of topic                                                 |
+| `Video length`     | `topics.time_required`     | Topic - Required learning time (in seconds)                                            |
+| `Viewing time`     | `activities.total_time_ms` | Learning activities - Total time (in ms)                                                |
+| `Status of learning` | -                        | Status of learning - Completed: "completed", Incomplete: "incomplete", Unopened: "unopened" |
 | `Learning completion rate`       | -                          | 学習完了率 - ユニーク視聴時間が動画の長さを占める割合 (パーセント)      |
 | `First access`     | `activities.created_at`    | 学習活動 - 作成日                                                       |
 | `Last access`     | `activities.updated_at`    | 学習活動 - 更新日                                                       |
