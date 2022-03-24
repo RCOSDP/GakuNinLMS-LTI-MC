@@ -35,18 +35,18 @@ The details of each column in the CSV file are as follows.
 | `First access`     | `activities.created_at`    | 学習活動 - 作成日                                                       |
 | `Last access`     | `activities.updated_at`    | 学習活動 - 更新日                                                       |
 
-## アーキテクチャ
+## Architecture
 
 [アーキテクチャの概要](ARCHITECTURE.md)を参照してください。
 
-## ドキュメント
-
-インストールしたあと、下記の URL から操作方法を学んでください。
+## Documents
+TBA
+<!--インストールしたあと、下記の URL から操作方法を学んでください。--?
 
 <!--## 貢献方法
 
 contributing.md を参考にしてください。著作権が発生するほどのコードやドキュメントを貢献していただいた方々には、Authors.rst にお名前と連絡用のメールアドレスを記載します。-->
 
-## ライセンス
+## License
 
 MIT
