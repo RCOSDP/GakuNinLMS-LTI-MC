@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type { ReactChild } from "react";
 import { Provider } from "jotai";
 import type { AppProps } from "next/app";
 import Head from "next/head";
@@ -24,7 +24,7 @@ import { pagesPath } from "$utils/$path";
 import "video.js/dist/video-js.css";
 import "videojs-seek-buttons/dist/videojs-seek-buttons.css";
 
-function Content({ children }: { children: ReactNode }) {
+function Content({ children }: { children: ReactChild }) {
   const router = useRouter();
   const { session, isInstructor, error } = useSessionInit();
   const trigger = useScrollTrigger();
@@ -64,7 +64,7 @@ function Content({ children }: { children: ReactNode }) {
   );
 }
 
-function ThemeProvider({ children }: { children: ReactNode }) {
+function ThemeProvider({ children }: { children: ReactChild }) {
   return (
     <>
       <Head>
