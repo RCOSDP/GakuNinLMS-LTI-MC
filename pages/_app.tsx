@@ -29,6 +29,7 @@ function Content({ children }: { children: ReactNode }) {
   const { session, isInstructor, error } = useSessionInit();
   const trigger = useScrollTrigger();
 
+  if (!isInstructor && router.pathname === "/book") return <>{children}</>;
   if (error) {
     return (
       <Problem title="セッション情報が得られませんでした">

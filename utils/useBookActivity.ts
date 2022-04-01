@@ -9,6 +9,7 @@ import {
 } from "./env";
 
 const key = "/api/v2/book/{book_id}/activity";
+const initialActivity: [] = [];
 
 async function fetchBookActivity(_: typeof key, bookId: BookSchema["id"]) {
   const res = await api.apiV2BookBookIdActivityGet({
@@ -22,7 +23,7 @@ function useBookActivity(bookId: BookSchema["id"]) {
   const { data } = useSWR([key, bookId], fetchBookActivity, {
     refreshInterval: NEXT_PUBLIC_ACTIVITY_SEND_INTERVAL * 1_000,
   });
-  useActivityAtom(data ?? []);
+  useActivityAtom(data ?? initialActivity);
 }
 
 export default useBookActivity;
