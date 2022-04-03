@@ -202,9 +202,6 @@ export default function TopicForm(props: Props) {
         Math.floor((Math.max(topic.startTime, 0) || 0) * 1000 + 1) / 1000;
       setStopTimeMin(stopMin);
 
-      console.log(duration);
-      console.log(topic.startTime);
-      console.log(startMax);
       setStartTimeError(
         Number.isFinite(topic.startTime) &&
           // eslint-disable-next-line tsc/config
@@ -225,10 +222,12 @@ export default function TopicForm(props: Props) {
       setStartStopMinMax(topic, await getDuration());
       if (!Number.isFinite(duration)) return;
       if (topic.timeRequired > 0) return;
+
       setVideoChanged(Boolean(topic.startTime || topic.stopTime));
       setValue("topic.timeRequired", Math.floor(duration));
-      setValue("topic.startTime", null);
-      setValue("topic.stopTime", null);
+      setValue("topic.startTime", NaN);
+      setValue("topic.stopTime", NaN);
+      setStartStopMinMax(topic, await getDuration());
     },
     [getDuration, getValues, setValue, setStartStopMinMax]
   );
