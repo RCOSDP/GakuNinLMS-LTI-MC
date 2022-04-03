@@ -130,6 +130,7 @@ export default function TopicForm(props: Props) {
   const [open, setOpen] = useState(false);
   const [method, setMethod] = useState("url");
   const [dataUrl, setDataUrl] = useState("");
+  const [videoChanged, setVideoChanged] = useState(false);
   const [startTimeError, setStartTimeError] = useState(false);
   const [startTimeMax, setStartTimeMax] = useState(0.001);
   const [stopTimeError, setStopTimeError] = useState(false);
@@ -224,6 +225,7 @@ export default function TopicForm(props: Props) {
       setStartStopMinMax(topic, await getDuration());
       if (!Number.isFinite(duration)) return;
       if (topic.timeRequired > 0) return;
+      setVideoChanged(Boolean(topic.startTime || topic.stopTime));
       setValue("topic.timeRequired", Math.floor(duration));
       setValue("topic.startTime", null);
       setValue("topic.stopTime", null);
@@ -557,6 +559,11 @@ export default function TopicForm(props: Props) {
               </>
             )}
           </>
+        )}
+        {videoChanged && (
+          <Alert severity="warning" onClose={() => setVideoChanged(false)}>
+            動画が変更されました。再生開始位置と終了位置を再設定してください。
+          </Alert>
         )}
 
         <TextField
