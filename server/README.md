@@ -79,12 +79,12 @@ docker-compose down
 | `WOWZA_SECURE_TOKEN`         | Wowza SecureToken Shared Secret (デフォルト: "")                                                                                |
 | `WOWZA_QUERY_PREFIX`         | Wowza SecureToken Hash Query Parameter Prefix (デフォルト: `wowzatoken`)                                                        |
 | `WOWZA_EXPIRES_IN`           | Wowza SecureToken lifetime (seconds) (デフォルト: いつまでも持続 `0`)                                                           |
-| `WOWZA_SCP_HOST`             | 一括登録時の動画ファイルのアップロード先 (デフォルト: `localhost`)                                                              |
+| `WOWZA_SCP_HOST`             | 一括登録時の動画ファイルのアップロード先 (デフォルト: "")                                                                       |
 | `WOWZA_SCP_PORT`             | 一括登録時の動画ファイルのアップロード先 ssh ポート番号 (デフォルト: `22`)                                                      |
-| `WOWZA_SCP_USERNAME`         | 一括登録時の動画ファイルのアップロード先 ssh ユーザー名 (デフォルト: `www-data`)                                                |
-| `WOWZA_SCP_PRIVATE_KEY`      | 一括登録時の動画ファイルのアップロード先 ssh ユーザーの秘密鍵 (デフォルト: `/var/www/.ssh/id_rsa`)                              |
+| `WOWZA_SCP_USERNAME`         | 一括登録時の動画ファイルのアップロード先 ssh ユーザー名 (デフォルト: "")                                                        |
+| `WOWZA_SCP_PRIVATE_KEY`      | 一括登録時の動画ファイルのアップロード先 ssh ユーザーの秘密鍵 (デフォルト: "")                                                  |
 | `WOWZA_SCP_PASS_PHRASE`      | 一括登録時の動画ファイルのアップロード先 ssh ユーザーの秘密鍵のパスワード (デフォルト: "")                                      |
-| `WOWZA_SCP_SERVER_PATH`      | 一括登録時の動画ファイルのアップロード先フォルダ (デフォルト: `/var/www/wowza-upload`)                                          |
+| `WOWZA_SCP_SERVER_PATH`      | 一括登録時の動画ファイルのアップロード先フォルダ (デフォルト: "")                                                               |
 | `ZOOM_API_KEY`               | Zoom API アクセスキー                                                                                                           |
 | `ZOOM_API_SECRET`            | Zoom API シークレット                                                                                                           |
 | `ZOOM_IMPORT_CONSUMER_KEY`   | Zoom インポートのユーザー検索に用いるコンシューマーキー (デフォルト: 無効 ""、例: 設定値 `OAUTH_CONSUMER_KEY` と同じ値)         |
