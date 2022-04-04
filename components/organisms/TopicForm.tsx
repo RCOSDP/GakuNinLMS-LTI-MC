@@ -227,7 +227,7 @@ export default function TopicForm(props: Props) {
       setValue("topic.timeRequired", Math.floor(duration));
       setValue("topic.startTime", NaN);
       setValue("topic.stopTime", NaN);
-      setStartStopMinMax(topic, await getDuration());
+      setStartStopMinMax(topic, duration);
     },
     [getDuration, getValues, setValue, setStartStopMinMax]
   );
@@ -302,6 +302,7 @@ export default function TopicForm(props: Props) {
     setCurrentTime,
   ]);
   const handleStartTimeStopTimeChange = useCallback(async () => {
+    setVideoChanged(false);
     const duration = await getDuration();
     const { topic } = getValues();
     setValue(
