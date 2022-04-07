@@ -178,7 +178,7 @@ export default function TopicForm(props: Props) {
     defaultValues,
   });
   const setStartStopMinMax = useCallback(
-    (topic: TopicPropsWithUpload["topic"]) => {
+    (topic: TopicPropsWithUpload["topic"], duration: number) => {
       const roundedDuration = Math.floor(duration * 1000) / 1000;
       setStopTimeMax(roundedDuration);
 
@@ -206,7 +206,7 @@ export default function TopicForm(props: Props) {
           (roundedDuration < topic.stopTime || topic.stopTime < stopMin)
       );
     },
-    [duration]
+    []
   );
   const getDuration = useCallback(async () => {
     if (method == "url") {
@@ -221,11 +221,11 @@ export default function TopicForm(props: Props) {
   const handleDurationChange = useCallback(
     async (changedDuration: number) => {
       const newDuration = changedDuration || (await getDuration());
-      const { topic } = getValues();
 
       if (Number.isFinite(newDuration) && newDuration > 0) {
+        const { topic } = getValues();
         setDuration(newDuration);
-        setStartStopMinMax(topic);
+        setStartStopMinMax(topic, newDuration);
 
         if (
           Number.isFinite(changedDuration) &&
@@ -317,7 +317,7 @@ export default function TopicForm(props: Props) {
       "topic.timeRequired",
       Math.floor((topic.stopTime || duration) - (topic.startTime || 0))
     );
-    setStartStopMinMax(topic);
+    setStartStopMinMax(topic, duration);
   }, [duration, getValues, setValue, setStartStopMinMax]);
   const handleSetStartTime = useCallback(async () => {
     setValue(
