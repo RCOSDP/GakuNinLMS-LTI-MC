@@ -131,6 +131,7 @@ export default function TopicForm(props: Props) {
   const [method, setMethod] = useState("url");
   const [dataUrl, setDataUrl] = useState("");
   const [duration, setDuration] = useState(0);
+  const [inPreview, setInPreview] = useState(false);
   const [videoChanged, setVideoChanged] = useState(false);
   const [startTimeError, setStartTimeError] = useState(false);
   const [startTimeMax, setStartTimeMax] = useState(0.001);
@@ -245,6 +246,16 @@ export default function TopicForm(props: Props) {
     if (method == "url") return video.get(videoResource?.url ?? "")?.player;
     else return localVideo.current;
   }, [method, video, videoResource, localVideo]);
+  const handleTimeUpdate = useCallback(
+    async (currentTime: number) => {
+      const { topic } = getValues();
+      if (inPreview && currentTime >= (topic.stopTime || duration)) {
+        setInPreview(false);
+        void getPlayer()?.pause();
+      }
+    },
+    [getValues, getPlayer, duration, inPreview, setInPreview]
+  );
   const getCurrentTime = useCallback(async () => {
     if (method == "url") {
       const videoInstance = video.get(videoResource?.url ?? "");
@@ -269,47 +280,15 @@ export default function TopicForm(props: Props) {
     },
     [method, video, videoResource, localVideo]
   );
-  const addPlayerEventListener = useCallback(
-    (type: string, listener: EventListener) => {
-      if (method == "url")
-        video.get(videoResource?.url ?? "")?.player.on(type, listener);
-      else localVideo.current?.addEventListener(type, listener);
-    },
-    [method, video, videoResource, localVideo]
-  );
-  const removePlayerEventListener = useCallback(
-    (type: string, listener: EventListener) => {
-      if (method == "url")
-        video.get(videoResource?.url ?? "")?.player.off(type, listener);
-      else localVideo.current?.removeEventListener(type, listener);
-    },
-    [method, video, videoResource, localVideo]
-  );
   const handlePreview = useCallback(async () => {
     const player = getPlayer();
     if (!player) return;
 
+    setInPreview(true);
     const { topic } = getValues();
-    const handleTimeUpdate = async () => {
-      const currentTime = await getCurrentTime();
-      if (currentTime >= (topic.stopTime || duration)) {
-        void player.pause();
-        removePlayerEventListener("timeupdate", handleTimeUpdate);
-      }
-    };
-    removePlayerEventListener("timeupdate", handleTimeUpdate);
-    addPlayerEventListener("timeupdate", handleTimeUpdate);
     await setCurrentTime(topic.startTime || 0);
     void player.play();
-  }, [
-    duration,
-    getPlayer,
-    getValues,
-    getCurrentTime,
-    removePlayerEventListener,
-    addPlayerEventListener,
-    setCurrentTime,
-  ]);
+  }, [getPlayer, getValues, setCurrentTime, setInPreview]);
   const handleStartTimeStopTimeChange = useCallback(async () => {
     setVideoChanged(false);
     const { topic } = getValues();
@@ -475,6 +454,7 @@ export default function TopicForm(props: Props) {
                   {...videoResource}
                   autoplay={true}
                   onDurationChange={handleDurationChange}
+                  onTimeUpdate={handleTimeUpdate}
                 />
                 <Button
                   className={classes.videoButtons}
@@ -538,6 +518,10 @@ export default function TopicForm(props: Props) {
                   onDurationChange={(event) => {
                     const video = event.target as HTMLVideoElement;
                     void handleDurationChange(video.duration);
+                  }}
+                  onTimeUpdate={(event) => {
+                    const video = event.target as HTMLVideoElement;
+                    void handleTimeUpdate(video.currentTime);
                   }}
                 />
                 <Button
