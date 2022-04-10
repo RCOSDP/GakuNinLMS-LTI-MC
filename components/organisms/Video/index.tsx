@@ -82,8 +82,7 @@ export default function Video({
       });
     } else {
       const handleEnded = () => {
-        videoInstance.player.off("timeupdate", handleTimeUpdate);
-        videoInstance.player.off("seeked", handleSeeked);
+        videoInstance.stopTimeOver = true;
         videoInstance.player.pause();
         onEnded?.();
       };
@@ -96,25 +95,36 @@ export default function Video({
       };
       const handleTimeUpdate = () => {
         const currentTime = videoInstance.player.currentTime();
-        // eslint-disable-next-line tsc/config
-        if (Number.isFinite(stopTime) && currentTime > stopTime) {
+        if (
+          !videoInstance.stopTimeOver &&
+          Number.isFinite(stopTime) &&
+          // eslint-disable-next-line tsc/config
+          currentTime > stopTime
+        ) {
           handleEnded();
         }
       };
-      videoInstance.player.on("ended", () => handleEnded());
-      videoInstance.player.on("firstplay", () =>
-        videoInstance.player.currentTime(startTime || 0)
-      );
-      videoInstance.player.ready(() => {
-        const currentTime = videoInstance.player.currentTime();
-        // eslint-disable-next-line tsc/config
-        if (Number.isFinite(stopTime) && currentTime > stopTime) {
+      const handlePlay = () => {
+        // 終了位置より後ろにシークすると、意図せず再生が再開してしまうことがあるので、ユーザーの操作によらない再生開始を抑制する
+        if (videoInstance.stopTimeOver) videoInstance.player.pause();
+      };
+      const handleFirstPlay = () => {
+        videoInstance.player.currentTime(startTime || 0);
+      };
+      const handleReady = () => {
+        if (videoInstance.stopTimeOver) {
           videoInstance.player.currentTime(startTime || 0);
+          videoInstance.stopTimeOver = false;
         }
         videoInstance.player.on("timeupdate", handleTimeUpdate);
         videoInstance.player.on("seeked", handleSeeked);
         void videoInstance.player.play();
-      });
+      };
+
+      videoInstance.player.on("ended", handleEnded);
+      videoInstance.player.on("play", handlePlay);
+      videoInstance.player.on("firstplay", handleFirstPlay);
+      videoInstance.player.ready(handleReady);
     }
   }, [
     video,
