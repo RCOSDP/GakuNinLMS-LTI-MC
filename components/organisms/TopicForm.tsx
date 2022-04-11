@@ -39,6 +39,7 @@ import languages from "$utils/languages";
 import licenses from "$utils/licenses";
 import providers from "$utils/providers";
 import useVideoResourceProps from "$utils/useVideoResourceProps";
+import usePaused from "$utils/video/usePaused";
 import type { AuthorSchema } from "$server/models/author";
 import type { TopicPropsWithUploadAndAuthors } from "$types/topicPropsWithAuthors";
 import { useAuthorsAtom } from "store/authors";
@@ -249,6 +250,7 @@ export default function TopicForm(props: Props) {
     if (method == "url") return video.get(videoResource?.url ?? "")?.player;
     else return localVideo.current;
   }, [method, video, videoResource, localVideo]);
+  const [paused, onTogglePause] = usePaused(getPlayer);
   const handleTimeUpdate = useCallback(
     async (currentTime: number) => {
       const { topic } = getValues();
@@ -525,6 +527,7 @@ export default function TopicForm(props: Props) {
             onSeekToStart={handleSeekToStart}
             onSeekToEnd={handleSeekToEnd}
             onStartTimeStopTimeChange={handleStartTimeStopTimeChange}
+            onTogglePause={onTogglePause}
             startTimeInputProps={register("topic.startTime", {
               valueAsNumber: true,
             })}
@@ -536,6 +539,7 @@ export default function TopicForm(props: Props) {
             stopTimeMax={stopTimeMax}
             startTimeError={startTimeError}
             stopTimeError={stopTimeError}
+            paused={paused}
           />
         )}
         {videoChanged && (
