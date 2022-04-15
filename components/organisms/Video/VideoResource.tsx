@@ -10,6 +10,7 @@ type Props = Pick<VideoResourceSchema, "providerUrl" | "url" | "tracks"> & {
   className?: string;
   onEnded?: () => void;
   onDurationChange?: (duration: number) => void;
+  onTimeUpdate?: (currentTime: number) => void;
   autoplay?: boolean;
 };
 

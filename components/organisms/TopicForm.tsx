@@ -130,8 +130,14 @@ export default function TopicForm(props: Props) {
   const [open, setOpen] = useState(false);
   const [method, setMethod] = useState("url");
   const [dataUrl, setDataUrl] = useState("");
+  const [duration, setDuration] = useState(0);
+  const [inPreview, setInPreview] = useState(false);
+  const [videoChanged, setVideoChanged] = useState(false);
   const [startTimeError, setStartTimeError] = useState(false);
+  const [startTimeMax, setStartTimeMax] = useState(0.001);
   const [stopTimeError, setStopTimeError] = useState(false);
+  const [stopTimeMin, setStopTimeMin] = useState(0.001);
+  const [stopTimeMax, setStopTimeMax] = useState(0.001);
   const handleClickSubtitle = () => {
     setOpen(true);
   };
@@ -172,21 +178,37 @@ export default function TopicForm(props: Props) {
   >({
     defaultValues,
   });
-  const handleDurationChange = useCallback(
-    (duration: number) => {
-      if (!Number.isFinite(duration)) return;
-      const { topic } = getValues();
-      if (topic.timeRequired > 0) return;
-      setValue("topic.timeRequired", Math.floor(duration));
-      setValue("topic.startTime", null);
-      setValue("topic.stopTime", null);
+  const setStartStopMinMax = useCallback(
+    (topic: TopicPropsWithUpload["topic"], duration: number) => {
+      const roundedDuration = Math.floor(duration * 1000) / 1000;
+      setStopTimeMax(roundedDuration);
+
+      const startMax =
+        Math.floor(
+          // eslint-disable-next-line tsc/config
+          (Math.min(topic.stopTime, roundedDuration) || roundedDuration) *
+            1000 -
+            1
+        ) / 1000;
+      setStartTimeMax(startMax);
+      const stopMin =
+        // eslint-disable-next-line tsc/config
+        Math.floor((Math.max(topic.startTime, 0) || 0) * 1000 + 1) / 1000;
+      setStopTimeMin(stopMin);
+
+      setStartTimeError(
+        Number.isFinite(topic.startTime) &&
+          // eslint-disable-next-line tsc/config
+          (0 > topic.startTime || topic.startTime > startMax)
+      );
+      setStopTimeError(
+        Number.isFinite(topic.stopTime) &&
+          // eslint-disable-next-line tsc/config
+          (roundedDuration < topic.stopTime || topic.stopTime < stopMin)
+      );
     },
-    [getValues, setValue]
+    []
   );
-  const getPlayer = useCallback(() => {
-    if (method == "url") return video.get(videoResource?.url ?? "")?.player;
-    else return localVideo.current;
-  }, [method, video, videoResource, localVideo]);
   const getDuration = useCallback(async () => {
     if (method == "url") {
       const videoInstance = video.get(videoResource?.url ?? "");
@@ -197,6 +219,43 @@ export default function TopicForm(props: Props) {
       return localVideo.current?.duration ?? 0;
     }
   }, [method, video, videoResource, localVideo]);
+  const handleDurationChange = useCallback(
+    async (changedDuration: number) => {
+      const newDuration = changedDuration || (await getDuration());
+
+      if (Number.isFinite(newDuration) && newDuration > 0) {
+        const { topic } = getValues();
+        setDuration(newDuration);
+        setStartStopMinMax(topic, newDuration);
+
+        if (
+          Number.isFinite(changedDuration) &&
+          changedDuration > 0 &&
+          topic.timeRequired <= 0
+        ) {
+          setVideoChanged(Boolean(topic.startTime || topic.stopTime));
+          setValue("topic.timeRequired", Math.floor(newDuration));
+          setValue("topic.startTime", NaN);
+          setValue("topic.stopTime", NaN);
+        }
+      }
+    },
+    [getDuration, getValues, setValue, setStartStopMinMax]
+  );
+  const getPlayer = useCallback(() => {
+    if (method == "url") return video.get(videoResource?.url ?? "")?.player;
+    else return localVideo.current;
+  }, [method, video, videoResource, localVideo]);
+  const handleTimeUpdate = useCallback(
+    async (currentTime: number) => {
+      const { topic } = getValues();
+      if (inPreview && currentTime >= (topic.stopTime || duration)) {
+        setInPreview(false);
+        void getPlayer()?.pause();
+      }
+    },
+    [getValues, getPlayer, duration, inPreview, setInPreview]
+  );
   const getCurrentTime = useCallback(async () => {
     if (method == "url") {
       const videoInstance = video.get(videoResource?.url ?? "");
@@ -221,66 +280,24 @@ export default function TopicForm(props: Props) {
     },
     [method, video, videoResource, localVideo]
   );
-  const addPlayerEventListener = useCallback(
-    (type: string, listener: EventListener) => {
-      if (method == "url")
-        video.get(videoResource?.url ?? "")?.player.on(type, listener);
-      else localVideo.current?.addEventListener(type, listener);
-    },
-    [method, video, videoResource, localVideo]
-  );
-  const removePlayerEventListener = useCallback(
-    (type: string, listener: EventListener) => {
-      if (method == "url")
-        video.get(videoResource?.url ?? "")?.player.off(type, listener);
-      else localVideo.current?.removeEventListener(type, listener);
-    },
-    [method, video, videoResource, localVideo]
-  );
   const handlePreview = useCallback(async () => {
     const player = getPlayer();
     if (!player) return;
 
+    setInPreview(true);
     const { topic } = getValues();
-    const duration = await getDuration();
-    const handleTimeUpdate = async () => {
-      const currentTime = await getCurrentTime();
-      if (currentTime >= (topic.stopTime || duration)) {
-        void player.pause();
-        removePlayerEventListener("timeupdate", handleTimeUpdate);
-      }
-    };
-    removePlayerEventListener("timeupdate", handleTimeUpdate);
-    addPlayerEventListener("timeupdate", handleTimeUpdate);
     await setCurrentTime(topic.startTime || 0);
     void player.play();
-  }, [
-    getPlayer,
-    getValues,
-    getDuration,
-    getCurrentTime,
-    removePlayerEventListener,
-    addPlayerEventListener,
-    setCurrentTime,
-  ]);
+  }, [getPlayer, getValues, setCurrentTime, setInPreview]);
   const handleStartTimeStopTimeChange = useCallback(async () => {
-    const duration = await getDuration();
+    setVideoChanged(false);
     const { topic } = getValues();
     setValue(
       "topic.timeRequired",
       Math.floor((topic.stopTime || duration) - (topic.startTime || 0))
     );
-    setStartTimeError(
-      Number.isFinite(topic.startTime) &&
-        // eslint-disable-next-line tsc/config
-        (0 > topic.startTime || topic.startTime >= (topic.stopTime || duration))
-    );
-    setStopTimeError(
-      Number.isFinite(topic.stopTime) &&
-        // eslint-disable-next-line tsc/config
-        (duration < topic.stopTime || topic.stopTime <= (topic.startTime || 0))
-    );
-  }, [getDuration, getValues, setValue]);
+    setStartStopMinMax(topic, duration);
+  }, [duration, getValues, setValue, setStartStopMinMax]);
   const handleSetStartTime = useCallback(async () => {
     setValue(
       "topic.startTime",
@@ -437,6 +454,7 @@ export default function TopicForm(props: Props) {
                   {...videoResource}
                   autoplay={true}
                   onDurationChange={handleDurationChange}
+                  onTimeUpdate={handleTimeUpdate}
                 />
                 <Button
                   className={classes.videoButtons}
@@ -499,7 +517,11 @@ export default function TopicForm(props: Props) {
                   autoPlay
                   onDurationChange={(event) => {
                     const video = event.target as HTMLVideoElement;
-                    handleDurationChange(video.duration);
+                    void handleDurationChange(video.duration);
+                  }}
+                  onTimeUpdate={(event) => {
+                    const video = event.target as HTMLVideoElement;
+                    void handleTimeUpdate(video.currentTime);
                   }}
                 />
                 <Button
@@ -530,6 +552,11 @@ export default function TopicForm(props: Props) {
             )}
           </>
         )}
+        {videoChanged && (
+          <Alert severity="warning" onClose={() => setVideoChanged(false)}>
+            動画が変更されました。再生開始位置と終了位置を再設定してください。
+          </Alert>
+        )}
 
         <TextField
           label="教材の主要な言語"
@@ -559,6 +586,7 @@ export default function TopicForm(props: Props) {
             ...register("topic.startTime", { valueAsNumber: true }),
             step: 0.001,
             min: 0,
+            max: startTimeMax,
           }}
           error={startTimeError}
           onChange={handleStartTimeStopTimeChange}
@@ -569,7 +597,8 @@ export default function TopicForm(props: Props) {
           inputProps={{
             ...register("topic.stopTime", { valueAsNumber: true }),
             step: 0.001,
-            min: 0.001,
+            min: stopTimeMin,
+            max: stopTimeMax,
           }}
           error={stopTimeError}
           onChange={handleStartTimeStopTimeChange}

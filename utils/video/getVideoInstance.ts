@@ -30,6 +30,7 @@ function getVideoInstance(
           autoplay,
         }),
         tracks: buildTracks(resource.tracks),
+        stopTimeOver: false,
       };
     case "https://vimeo.com/":
       return {
@@ -48,6 +49,7 @@ function getVideoInstance(
           autoplay,
         }),
         tracks: buildTracks(resource.tracks),
+        stopTimeOver: false,
       };
   }
 }
