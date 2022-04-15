@@ -17,15 +17,12 @@ const WOWZA_SECURE_TOKEN = process.env.WOWZA_SECURE_TOKEN ?? "";
 const WOWZA_QUERY_PREFIX = process.env.WOWZA_QUERY_PREFIX ?? "wowzatoken";
 const WOWZA_EXPIRES_IN = Number(process.env.WOWZA_EXPIRES_IN ?? "0");
 const ACTIVITY_RATE_MIN = Number(process.env.ACTIVITY_RATE_MIN ?? "0.9");
-const WOWZA_SCP_HOST = process.env.WOWZA_SCP_HOST ?? "localhost";
+const WOWZA_SCP_HOST = process.env.WOWZA_SCP_HOST ?? "";
 const WOWZA_SCP_PORT = Number(process.env.WOWZA_SCP_PORT ?? "22");
-const WOWZA_SCP_USERNAME = process.env.WOWZA_SCP_USERNAME ?? "www-data";
-const WOWZA_SCP_PASSWORD = process.env.WOWZA_SCP_PASSWORD ?? "";
-const WOWZA_SCP_PRIVATE_KEY =
-  process.env.WOWZA_SCP_PRIVATE_KEY ?? "/var/www/.ssh/id_rsa";
+const WOWZA_SCP_USERNAME = process.env.WOWZA_SCP_USERNAME ?? "";
+const WOWZA_SCP_PRIVATE_KEY = process.env.WOWZA_SCP_PRIVATE_KEY ?? "";
 const WOWZA_SCP_PASS_PHRASE = process.env.WOWZA_SCP_PASS_PHRASE ?? "";
-const WOWZA_SCP_SERVER_PATH =
-  process.env.WOWZA_SCP_SERVER_PATH ?? "/var/www/wowza-upload";
+const WOWZA_SCP_SERVER_PATH = process.env.WOWZA_SCP_SERVER_PATH ?? "";
 const ZOOM_API_KEY = process.env.ZOOM_API_KEY ?? "";
 const ZOOM_API_SECRET = process.env.ZOOM_API_SECRET ?? "";
 const ZOOM_IMPORT_CONSUMER_KEY = process.env.ZOOM_IMPORT_CONSUMER_KEY ?? "";
@@ -52,7 +49,6 @@ export {
   WOWZA_SCP_HOST,
   WOWZA_SCP_PORT,
   WOWZA_SCP_USERNAME,
-  WOWZA_SCP_PASSWORD,
   WOWZA_SCP_PRIVATE_KEY,
   WOWZA_SCP_PASS_PHRASE,
   WOWZA_SCP_SERVER_PATH,
