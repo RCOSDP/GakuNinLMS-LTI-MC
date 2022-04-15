@@ -3,24 +3,28 @@ import resource from "./resource";
 import user from "./user";
 
 const topic = {
+  // © 2015 NPO CCC-TIES, 行木孝夫 / CC-BY https://dev.chilos.jp/book/uncompress/cb00301/OEBPS/vol-1/text/vol-001-011.xhtml
   id: 1,
   resourceId: 1,
-  name: "リンゴに夢中のレッサーパンダ",
-  description: outdent`円山動物園のレッサーパンダ
+  name: "分数関数",
+  description: outdent`基本的な分数関数は次の関数で定義されます。
 
-  2行目
+  1-1
 
-  空行挟んで 4 行目
+  これを平行移動すると次の関数の形になります。
 
-  空行 2 つ挟んで 7 行目
+  1-2
 
-  半角空白文字だけの行を挟んで 9 行目
+  x軸方向へ+1、y軸方向へ+1平行移動したグラフになります。
 
-  　　　　
+  分数関数を整理するときには分子を低次化します。
 
-  全角空白文字だけの行を挟んで 11 行目
+  例えば、(x+1)/(x-1) という分数関数であれば、次のように変形します。
 
-  実体参照テスト: &nbsp; てすと`,
+  1-3
+
+  このように変形させると計算が簡単になることが多いので、覚えておきましょう。
+  `,
   timeRequired: 60,
   startTime: null,
   stopTime: null,

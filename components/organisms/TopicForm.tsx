@@ -20,6 +20,7 @@ import { useDebouncedCallback } from "use-debounce";
 import clsx from "clsx";
 import InputLabel from "$atoms/InputLabel";
 import TextField from "$atoms/TextField";
+import VideoEditor from "$molecules/VideoEditor";
 import AuthorsInput from "$organisms/AuthorsInput";
 import KeywordsInput from "$organisms/KeywordsInput";
 import SubtitleChip from "$atoms/SubtitleChip";
@@ -66,11 +67,13 @@ const useStyles = makeStyles((theme) => ({
       marginBottom: theme.spacing(1),
     },
   },
+  videoBox: {
+    display: "flex",
+    justifyContent: "center",
+    "& > *": { width: "50%" },
+  },
   localVideo: {
     width: "100%",
-  },
-  videoButtons: {
-    marginRight: theme.spacing(2),
   },
 }));
 
@@ -185,25 +188,25 @@ export default function TopicForm(props: Props) {
 
       const startMax =
         Math.floor(
-          // eslint-disable-next-line tsc/config
+          // @ts-expect-error TODO: Object is possibly 'null' or 'undefined'
           (Math.min(topic.stopTime, roundedDuration) || roundedDuration) *
             1000 -
             1
         ) / 1000;
       setStartTimeMax(startMax);
       const stopMin =
-        // eslint-disable-next-line tsc/config
+        // @ts-expect-error TODO: Object is possibly 'null' or 'undefined'
         Math.floor((Math.max(topic.startTime, 0) || 0) * 1000 + 1) / 1000;
       setStopTimeMin(stopMin);
 
       setStartTimeError(
         Number.isFinite(topic.startTime) &&
-          // eslint-disable-next-line tsc/config
+          // @ts-expect-error TODO: Object is possibly 'null' or 'undefined'
           (0 > topic.startTime || topic.startTime > startMax)
       );
       setStopTimeError(
         Number.isFinite(topic.stopTime) &&
-          // eslint-disable-next-line tsc/config
+          // @ts-expect-error TODO: Object is possibly 'null' or 'undefined'
           (roundedDuration < topic.stopTime || topic.stopTime < stopMin)
       );
     },
@@ -280,15 +283,27 @@ export default function TopicForm(props: Props) {
     },
     [method, video, videoResource, localVideo]
   );
-  const handlePreview = useCallback(async () => {
+  const handleSeekToStart = useCallback(async () => {
     const player = getPlayer();
     if (!player) return;
-
-    setInPreview(true);
     const { topic } = getValues();
-    await setCurrentTime(topic.startTime || 0);
-    void player.play();
-  }, [getPlayer, getValues, setCurrentTime, setInPreview]);
+    const startTime: number = topic.startTime || 0;
+    await setCurrentTime(startTime);
+  }, [getPlayer, getValues, setCurrentTime]);
+  const handleSeekToEnd = useCallback(async () => {
+    const player = getPlayer();
+    if (!player) return;
+    const { topic } = getValues();
+    const endTime: number = topic.stopTime || 0;
+    if (endTime === 0) {
+      const duration = await getDuration();
+      // NOTE: Video.js で duration を指定すると意図しない位置のまま停止されるので対処
+      await setCurrentTime(duration - 1);
+      void player.play();
+    } else {
+      await setCurrentTime(endTime);
+    }
+  }, [getPlayer, getValues, getDuration, setCurrentTime]);
   const handleStartTimeStopTimeChange = useCallback(async () => {
     setVideoChanged(false);
     const { topic } = getValues();
@@ -412,7 +427,7 @@ export default function TopicForm(props: Props) {
           </>
         )}
 
-        {method == "url" && (
+        {method === "url" && (
           <>
             <Autocomplete
               id="resource.url"
@@ -449,43 +464,18 @@ export default function TopicForm(props: Props) {
               )}
             />
             {videoResource && (
-              <>
+              <div className={classes.videoBox}>
                 <VideoResource
                   {...videoResource}
-                  autoplay={true}
+                  autoplay
                   onDurationChange={handleDurationChange}
                   onTimeUpdate={handleTimeUpdate}
                 />
-                <Button
-                  className={classes.videoButtons}
-                  variant="outlined"
-                  color="primary"
-                  onClick={handleSetStartTime}
-                >
-                  開始位置に設定
-                </Button>
-                <Button
-                  className={classes.videoButtons}
-                  variant="outlined"
-                  color="primary"
-                  onClick={handleSetStopTime}
-                >
-                  終了位置に設定
-                </Button>
-                <Button
-                  className={classes.videoButtons}
-                  variant="outlined"
-                  color="primary"
-                  onClick={handlePreview}
-                >
-                  プレビュー
-                </Button>
-              </>
+              </div>
             )}
           </>
         )}
-
-        {method == "file" && (
+        {method === "file" && (
           <>
             <TextField
               label="動画ファイル"
@@ -508,12 +498,12 @@ export default function TopicForm(props: Props) {
               ))}
             </TextField>
             {dataUrl && (
-              <>
+              <div className={classes.videoBox}>
                 <video
                   ref={localVideo}
                   className={classes.localVideo}
                   src={dataUrl}
-                  controls={true}
+                  controls
                   autoPlay
                   onDurationChange={(event) => {
                     const video = event.target as HTMLVideoElement;
@@ -524,40 +514,44 @@ export default function TopicForm(props: Props) {
                     void handleTimeUpdate(video.currentTime);
                   }}
                 />
-                <Button
-                  className={classes.videoButtons}
-                  variant="outlined"
-                  color="primary"
-                  onClick={handleSetStartTime}
-                >
-                  開始位置に設定
-                </Button>
-                <Button
-                  className={classes.videoButtons}
-                  variant="outlined"
-                  color="primary"
-                  onClick={handleSetStopTime}
-                >
-                  終了位置に設定
-                </Button>
-                <Button
-                  className={classes.videoButtons}
-                  variant="outlined"
-                  color="primary"
-                  onClick={handlePreview}
-                >
-                  プレビュー
-                </Button>
-              </>
+              </div>
             )}
           </>
+        )}
+        {(videoResource || dataUrl) && (
+          <VideoEditor
+            onSetStartTime={handleSetStartTime}
+            onSetStopTime={handleSetStopTime}
+            onSeekToStart={handleSeekToStart}
+            onSeekToEnd={handleSeekToEnd}
+            onStartTimeStopTimeChange={handleStartTimeStopTimeChange}
+            startTimeInputProps={register("topic.startTime", {
+              valueAsNumber: true,
+            })}
+            stopTimeInputProps={register("topic.stopTime", {
+              valueAsNumber: true,
+            })}
+            startTimeMax={startTimeMax}
+            stopTimeMin={stopTimeMin}
+            stopTimeMax={stopTimeMax}
+            startTimeError={startTimeError}
+            stopTimeError={stopTimeError}
+          />
         )}
         {videoChanged && (
           <Alert severity="warning" onClose={() => setVideoChanged(false)}>
             動画が変更されました。再生開始位置と終了位置を再設定してください。
           </Alert>
         )}
-
+        <TextField
+          label="学習時間 (秒)"
+          type="number"
+          inputProps={{
+            ...register("topic.timeRequired", { valueAsNumber: true }),
+            required: true,
+            min: 1,
+          }}
+        />
         <TextField
           label="教材の主要な言語"
           select
@@ -570,39 +564,6 @@ export default function TopicForm(props: Props) {
             </MenuItem>
           ))}
         </TextField>
-        <TextField
-          label="学習時間 (秒)"
-          type="number"
-          inputProps={{
-            ...register("topic.timeRequired", { valueAsNumber: true }),
-            required: true,
-            min: 1,
-          }}
-        />
-        <TextField
-          label="再生開始位置 (秒)"
-          type="number"
-          inputProps={{
-            ...register("topic.startTime", { valueAsNumber: true }),
-            step: 0.001,
-            min: 0,
-            max: startTimeMax,
-          }}
-          error={startTimeError}
-          onChange={handleStartTimeStopTimeChange}
-        />
-        <TextField
-          label="再生終了位置 (秒)"
-          type="number"
-          inputProps={{
-            ...register("topic.stopTime", { valueAsNumber: true }),
-            step: 0.001,
-            min: stopTimeMin,
-            max: stopTimeMax,
-          }}
-          error={stopTimeError}
-          onChange={handleStartTimeStopTimeChange}
-        />
         <TextField
           label="ライセンス"
           select
