@@ -2,6 +2,7 @@ import type { FastifyRequest } from "fastify";
 import type Method from "$server/types/method";
 import { sessionSchema } from "$server/models/session";
 import authUser from "$server/auth/authUser";
+import { getSystemSettings } from "$server/utils/systemSettings";
 
 export const method: Method = {
   get: {
@@ -17,9 +18,35 @@ export const hooks = {
   get: { auth: [authUser] },
 };
 
+const nullSession = {
+  oauthClient: {
+    id: "",
+    nonce: "",
+  },
+  ltiVersion: "",
+  ltiUser: {
+    id: "",
+    name: "",
+    email: "",
+  },
+  ltiRoles: [],
+  ltiResourceLinkRequest: { id: "", title: "" },
+  ltiContext: { id: "", label: "", title: "" },
+  user: {
+    id: 0,
+    ltiConsumerId: "",
+    ltiUserId: "",
+    name: "",
+    email: "",
+    settings: {},
+  },
+  systemSettings: getSystemSettings(),
+};
+Object.freeze(nullSession);
+
 export async function show({ session }: FastifyRequest) {
   return {
     status: 200,
-    body: session,
+    body: { ...nullSession, ...session },
   };
 }
