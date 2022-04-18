@@ -19,14 +19,15 @@ import useBookActivity from "$utils/useBookActivity";
 import { useActivityTracking } from "$utils/activity";
 import logger from "$utils/eventLogger/logger";
 
-export type Query = { bookId: BookSchema["id"] };
+export type Query = { bookId: BookSchema["id"]; token?: string };
 
 function Show(query: Query) {
   const { session, isContentEditable } = useSessionAtom();
   const { book, error } = useBook(
     query.bookId,
     isContentEditable,
-    session?.ltiResourceLink
+    session?.ltiResourceLink,
+    query.token
   );
   useBookActivity(query.bookId);
   const { updateBook, itemIndex, nextItemIndex, itemExists, updateItemIndex } =
@@ -95,10 +96,13 @@ function Show(query: Query) {
 function Router() {
   const router = useRouter();
   const bookId = Number(router.query.bookId);
+  const token = Array.isArray(router.query.token)
+    ? router.query.token.pop()
+    : router.query.token;
 
   if (!Number.isFinite(bookId)) return <BookNotFoundProblem />;
 
-  return <Show bookId={bookId} />;
+  return <Show bookId={bookId} token={token} />;
 }
 
 export default Router;

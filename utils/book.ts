@@ -10,18 +10,19 @@ import getDisplayableBook from "./getDisplayableBook";
 
 const key = "/api/v2/book/{book_id}";
 
-async function fetchBook(_: typeof key, id: BookSchema["id"]) {
-  const res = await api.apiV2BookBookIdGet({ bookId: id });
+async function fetchBook(_: typeof key, id: BookSchema["id"], token?: string) {
+  const res = await api.apiV2BookBookIdGet({ bookId: id, token });
   return res as BookSchema;
 }
 
 export function useBook(
   id: BookSchema["id"] | undefined,
   isContentEditable: IsContentEditable,
-  ltiResourceLink?: Pick<LtiResourceLinkSchema, "bookId" | "creatorId"> | null
+  ltiResourceLink?: Pick<LtiResourceLinkSchema, "bookId" | "creatorId"> | null,
+  token?: string
 ) {
   const { data, error } = useSWR<BookSchema>(
-    Number.isFinite(id) ? [key, id] : null,
+    Number.isFinite(id) ? [key, id, token] : null,
     fetchBook
   );
   const displayable = useMemo(
