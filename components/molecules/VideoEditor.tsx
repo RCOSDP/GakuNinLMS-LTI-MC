@@ -2,13 +2,18 @@ import type { InputBaseComponentProps } from "@mui/material/InputBase";
 import makeStyles from "@mui/styles/makeStyles";
 import Button from "@mui/material/Button";
 import InputAdornment from "@mui/material/InputAdornment";
+import PlayIcon from "@mui/icons-material/PlayArrow";
+import PauseIcon from "@mui/icons-material/Pause";
 import InputLabel from "$atoms/InputLabel";
 import TextField from "$atoms/TextField";
+import IconButton from "$atoms/IconButton";
 import SkipButton from "$molecules/SkipButton";
 
 const label = {
   start: "再生開始位置の設定",
   end: "再生終了位置の設定",
+  play: "再生",
+  pause: "一時停止",
 } as const;
 
 type Props = {
@@ -19,11 +24,13 @@ type Props = {
   stopTimeMax: number;
   startTimeError: boolean;
   stopTimeError: boolean;
+  paused: boolean;
   onSetStartTime(): void | Promise<void>;
   onSetStopTime(): void | Promise<void>;
   onSeekToStart(): void | Promise<void>;
   onSeekToEnd(): void | Promise<void>;
   onStartTimeStopTimeChange(): void | Promise<void>;
+  onTogglePause(): void | Promise<void>;
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -58,6 +65,15 @@ export default function VideoEditor(props: Props) {
           color="primary"
           onClick={props.onSeekToStart}
         />
+        <IconButton
+          tooltipProps={{
+            title: label[props.paused ? "play" : "pause"],
+          }}
+          color="primary"
+          onClick={props.onTogglePause}
+        >
+          {props.paused ? <PlayIcon /> : <PauseIcon />}
+        </IconButton>
         <SkipButton variant="end" color="primary" onClick={props.onSeekToEnd} />
         <Button
           variant="outlined"

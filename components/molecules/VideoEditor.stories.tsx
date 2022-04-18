@@ -17,4 +17,5 @@ Default.args = {
   stopTimeMax: 0.001,
   startTimeError: false,
   stopTimeError: false,
+  paused: true,
 };
