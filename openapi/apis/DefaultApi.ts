@@ -121,7 +121,6 @@ export interface ApiV2BookBookIdDeleteRequest {
 
 export interface ApiV2BookBookIdGetRequest {
     bookId: number;
-    token?: string;
 }
 
 export interface ApiV2BookBookIdPutRequest {
@@ -446,10 +445,6 @@ export class DefaultApi extends runtime.BaseAPI {
         }
 
         const queryParameters: runtime.HTTPQuery = {};
-
-        if (requestParameters.token !== undefined) {
-            queryParameters['token'] = requestParameters.token;
-        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
