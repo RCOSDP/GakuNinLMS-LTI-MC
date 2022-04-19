@@ -1,11 +1,11 @@
-import type { FastifySchema, FastifyRequest } from "fastify";
+import type { FastifySchema } from "fastify";
 import { outdent } from "outdent";
 import { bookSchema } from "$server/models/book";
 import type { BookParams } from "$server/validators/bookParams";
-import { bookParamsSchema, BookQuery } from "$server/validators/bookParams";
+import type { SessionSchema } from "$server/models/session";
+import { bookParamsSchema } from "$server/validators/bookParams";
 import authUser from "$server/auth/authUser";
 import findBook from "$server/utils/book/findBook";
-import findPublicBook from "$server/utils/publicBook/findPublicBook";
 import { isInstructor } from "$utils/session";
 
 export const showSchema: FastifySchema = {
@@ -14,7 +14,6 @@ export const showSchema: FastifySchema = {
     ブックの詳細を取得します。
     教員または管理者いずれでもない場合、LTIリソースとしてリンクされているブックでなければなりません。`,
   params: bookParamsSchema,
-  querystring: BookQuery,
   response: {
     200: bookSchema,
     403: {},
@@ -29,21 +28,13 @@ export const showHooks = {
 export async function show({
   session,
   params,
-  query,
-}: FastifyRequest<{
-  Params: BookParams;
-  Querystring: BookQuery;
-}>) {
-  console.log(query);
+}: {
+  session: SessionSchema;
+  params: BookParams;
+}) {
   const { book_id: bookId } = params;
 
-  if (query.token) {
-    const publicBook = await findPublicBook(query.token);
-    if (!publicBook || bookId == publicBook.bookId) return { status: 403 };
-  } else if (
-    !isInstructor(session) &&
-    session.ltiResourceLink?.bookId !== bookId
-  ) {
+  if (!isInstructor(session) && session.ltiResourceLink?.bookId !== bookId) {
     return { status: 403 };
   }
 

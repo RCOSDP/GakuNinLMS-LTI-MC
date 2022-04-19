@@ -4,7 +4,6 @@ import handler from "$server/utils/handler";
 import * as service from "$server/services/book";
 import * as activityService from "$server/services/book/activity";
 import * as authorsService from "$server/services/book/authors";
-import type { BookQuery } from "$server/validators/bookParams";
 
 const basePath = "/book";
 const pathWithParams = `${basePath}/:book_id`;
@@ -15,7 +14,6 @@ export async function book(fastify: FastifyInstance) {
 
   fastify.get<{
     Params: service.Params;
-    Querystring: BookQuery;
   }>(pathWithParams, { schema: method.get, ...hooks.get }, handler(show));
 
   fastify.post<{
