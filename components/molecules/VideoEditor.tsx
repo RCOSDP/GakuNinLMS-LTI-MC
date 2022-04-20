@@ -4,7 +4,6 @@ import Button from "@mui/material/Button";
 import InputAdornment from "@mui/material/InputAdornment";
 import PlayIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
-import InputLabel from "$atoms/InputLabel";
 import TextField from "$atoms/TextField";
 import IconButton from "$atoms/IconButton";
 import SkipButton from "$molecules/SkipButton";
@@ -51,7 +50,6 @@ export default function VideoEditor(props: Props) {
 
   return (
     <div>
-      <InputLabel>動画編集</InputLabel>
       <div className={classes.videoController}>
         <Button
           variant="outlined"
