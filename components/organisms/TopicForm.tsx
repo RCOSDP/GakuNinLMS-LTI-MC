@@ -31,6 +31,7 @@ import TextField from "$atoms/TextField";
 import VideoEditor from "$molecules/VideoEditor";
 import AuthorsInput from "$organisms/AuthorsInput";
 import KeywordsInput from "$organisms/KeywordsInput";
+import TimeRequiredInputControl from "$organisms/TopicForm/TimeRequiredInputControl";
 import SubtitleChip from "$atoms/SubtitleChip";
 import SubtitleUploadDialog from "$organisms/SubtitleUploadDialog";
 import VideoResource from "$organisms/Video/VideoResource";
@@ -218,11 +219,12 @@ export default function TopicForm(props: Props) {
     fileName: "",
     fileContent: "",
   };
-  const { handleSubmit, register, getValues, setValue } = useForm<
+  const { handleSubmit, register, control, getValues, setValue } = useForm<
     Omit<TopicPropsWithUpload, "resource">
   >({
     defaultValues,
   });
+  register("topic.timeRequired", { valueAsNumber: true });
   const setStartStopMinMax = useCallback(
     (topic: TopicPropsWithUpload["topic"], duration: number) => {
       const roundedDuration = Math.floor(duration * 1000) / 1000;
@@ -607,14 +609,10 @@ export default function TopicForm(props: Props) {
             動画が変更されました。再生開始位置と終了位置を再設定してください。
           </Alert>
         )}
-        <TextField
-          label="学習時間 (秒)"
-          type="number"
-          inputProps={{
-            ...register("topic.timeRequired", { valueAsNumber: true }),
-            min: 1,
-          }}
-          required
+        <TimeRequiredInputControl
+          topic={topic}
+          name="topic.timeRequired"
+          control={control}
         />
         <AuthorsInput
           {...authorsInputProps}
