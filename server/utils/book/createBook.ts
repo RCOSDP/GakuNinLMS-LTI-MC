@@ -24,7 +24,7 @@ async function createBook(
     },
   });
 
-  return findBook(id);
+  return findBook(id, userId);
 }
 
 export default createBook;

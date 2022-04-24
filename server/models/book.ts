@@ -15,7 +15,7 @@ export type BookProps = {
   shared?: boolean;
   sections?: SectionProps[];
   keywords?: KeywordPropSchema[];
-  public?: PublicBookSchema;
+  publicBooks?: PublicBookSchema[];
 };
 
 export type BookSchema = Book & {
@@ -23,7 +23,7 @@ export type BookSchema = Book & {
   sections: SectionSchema[];
   ltiResourceLinks: LtiResourceLinkSchema[];
   keywords: KeywordSchema[];
-  public?: PublicBookSchema;
+  publicBooks?: PublicBookSchema[];
 };
 
 export const bookPropsSchema = {
@@ -41,7 +41,10 @@ export const bookPropsSchema = {
       type: "array",
       items: KeywordPropSchema,
     },
-    public: publicBookSchema,
+    publicBooks: {
+      type: "array",
+      items: publicBookSchema,
+    },
   },
 } as const;
 
@@ -68,6 +71,9 @@ export const bookSchema = {
       type: "array",
       items: ltiResourceLinkSchema,
     },
-    public: publicBookSchema,
+    publicBooks: {
+      type: "array",
+      items: publicBookSchema,
+    },
   },
 } as const;

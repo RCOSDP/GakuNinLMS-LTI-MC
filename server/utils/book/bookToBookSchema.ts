@@ -33,6 +33,30 @@ export const bookIncludingTopicsArg = {
   },
 } as const;
 
+export const getBookIncludingArg = (userId: number) => {
+  return {
+    include: {
+      authors: authorArg,
+      ltiResourceLinks: ltiResourceLinkIncludingContextArg,
+      keywords: true,
+      sections: {
+        orderBy: { order: "asc" },
+        include: {
+          topicSections: {
+            orderBy: { order: "asc" },
+            include: { topic: topicsWithResourcesArg },
+          },
+        },
+      },
+      publicBooks: {
+        where: {
+          userId,
+        },
+      },
+    },
+  } as const;
+};
+
 type TopicSectionWithTopic = TopicSection & {
   topic: TopicWithResource;
 };

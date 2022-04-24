@@ -16,40 +16,40 @@ import { exists, mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface InlineResponse2001Public
+ * @interface InlineResponse2001PublicBooks
  */
-export interface InlineResponse2001Public {
+export interface InlineResponse2001PublicBooks {
     /**
      * 
      * @type {number}
-     * @memberof InlineResponse2001Public
+     * @memberof InlineResponse2001PublicBooks
      */
     id?: number;
     /**
      * 
      * @type {Array<string>}
-     * @memberof InlineResponse2001Public
+     * @memberof InlineResponse2001PublicBooks
      */
     domains?: Array<string>;
     /**
      * 
      * @type {Date}
-     * @memberof InlineResponse2001Public
+     * @memberof InlineResponse2001PublicBooks
      */
     expireAt?: Date;
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse2001Public
+     * @memberof InlineResponse2001PublicBooks
      */
     token?: string;
 }
 
-export function InlineResponse2001PublicFromJSON(json: any): InlineResponse2001Public {
-    return InlineResponse2001PublicFromJSONTyped(json, false);
+export function InlineResponse2001PublicBooksFromJSON(json: any): InlineResponse2001PublicBooks {
+    return InlineResponse2001PublicBooksFromJSONTyped(json, false);
 }
 
-export function InlineResponse2001PublicFromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse2001Public {
+export function InlineResponse2001PublicBooksFromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse2001PublicBooks {
     if ((json === undefined) || (json === null)) {
         return json;
     }
@@ -62,7 +62,7 @@ export function InlineResponse2001PublicFromJSONTyped(json: any, ignoreDiscrimin
     };
 }
 
-export function InlineResponse2001PublicToJSON(value?: InlineResponse2001Public | null): any {
+export function InlineResponse2001PublicBooksToJSON(value?: InlineResponse2001PublicBooks | null): any {
     if (value === undefined) {
         return undefined;
     }

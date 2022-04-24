@@ -38,7 +38,7 @@ export async function show({
     return { status: 403 };
   }
 
-  const book = await findBook(bookId);
+  const book = await findBook(bookId, session.user.id);
 
   return {
     status: book == null ? 404 : 200,

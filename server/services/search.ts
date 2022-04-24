@@ -49,7 +49,8 @@ export async function index({
         filter,
         sort,
         page,
-        perPage
+        perPage,
+        session.user.id
       );
 
       return {

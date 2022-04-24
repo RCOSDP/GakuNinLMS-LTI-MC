@@ -18,11 +18,10 @@ function upsertSections(bookId: Book["id"], sections: SectionProps[]) {
   });
 }
 
-async function updateBook({
-  id,
-  sections,
-  ...book
-}: Pick<Book, "id"> & BookProps): Promise<BookSchema | undefined> {
+async function updateBook(
+  { id, sections, publicBooks, ...book }: Pick<Book, "id"> & BookProps,
+  userId: number
+): Promise<BookSchema | undefined> {
   const ops: Array<PrismaPromise<unknown>> = [];
 
   if (sections != null) {
@@ -51,7 +50,7 @@ async function updateBook({
 
   await prisma.$transaction(ops);
 
-  return await findBook(id);
+  return await findBook(id, userId);
 }
 
 export default updateBook;

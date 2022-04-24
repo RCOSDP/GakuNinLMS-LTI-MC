@@ -11,7 +11,8 @@ async function search(
   filter: AuthorFilter,
   sort: string,
   page: number,
-  perPage: number
+  perPage: number,
+  userId: number
 ): Promise<SearchResultSchema> {
   const query = parse(queryText);
   switch (type) {
@@ -19,7 +20,14 @@ async function search(
       return await topicSearch({ type, ...query }, filter, sort, page, perPage);
     }
     case "book": {
-      return await bookSearch({ type, ...query }, filter, sort, page, perPage);
+      return await bookSearch(
+        { type, ...query },
+        filter,
+        sort,
+        page,
+        perPage,
+        userId
+      );
     }
     default:
       return { totalCount: 0, contents: [], page, perPage };

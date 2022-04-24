@@ -22,10 +22,10 @@ import {
     ApiV2BookBookIdSectionsFromJSON,
     ApiV2BookBookIdSectionsFromJSONTyped,
     ApiV2BookBookIdSectionsToJSON,
-    InlineResponse2001Public,
-    InlineResponse2001PublicFromJSON,
-    InlineResponse2001PublicFromJSONTyped,
-    InlineResponse2001PublicToJSON,
+    InlineResponse2001PublicBooks,
+    InlineResponse2001PublicBooksFromJSON,
+    InlineResponse2001PublicBooksFromJSONTyped,
+    InlineResponse2001PublicBooksToJSON,
 } from './';
 
 /**
@@ -72,10 +72,10 @@ export interface InlineObject3 {
     keywords?: Array<ApiV2BookBookIdKeywords>;
     /**
      * 
-     * @type {InlineResponse2001Public}
+     * @type {Array<InlineResponse2001PublicBooks>}
      * @memberof InlineObject3
      */
-    _public?: InlineResponse2001Public;
+    publicBooks?: Array<InlineResponse2001PublicBooks>;
 }
 
 export function InlineObject3FromJSON(json: any): InlineObject3 {
@@ -94,7 +94,7 @@ export function InlineObject3FromJSONTyped(json: any, ignoreDiscriminator: boole
         'shared': !exists(json, 'shared') ? undefined : json['shared'],
         'sections': !exists(json, 'sections') ? undefined : ((json['sections'] as Array<any>).map(ApiV2BookBookIdSectionsFromJSON)),
         'keywords': !exists(json, 'keywords') ? undefined : ((json['keywords'] as Array<any>).map(ApiV2BookBookIdKeywordsFromJSON)),
-        '_public': !exists(json, 'public') ? undefined : InlineResponse2001PublicFromJSON(json['public']),
+        'publicBooks': !exists(json, 'publicBooks') ? undefined : ((json['publicBooks'] as Array<any>).map(InlineResponse2001PublicBooksFromJSON)),
     };
 }
 
@@ -113,7 +113,7 @@ export function InlineObject3ToJSON(value?: InlineObject3 | null): any {
         'shared': value.shared,
         'sections': value.sections === undefined ? undefined : ((value.sections as Array<any>).map(ApiV2BookBookIdSectionsToJSON)),
         'keywords': value.keywords === undefined ? undefined : ((value.keywords as Array<any>).map(ApiV2BookBookIdKeywordsToJSON)),
-        'public': InlineResponse2001PublicToJSON(value._public),
+        'publicBooks': value.publicBooks === undefined ? undefined : ((value.publicBooks as Array<any>).map(InlineResponse2001PublicBooksToJSON)),
     };
 }
 

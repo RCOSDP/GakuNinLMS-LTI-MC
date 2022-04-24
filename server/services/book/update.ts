@@ -45,10 +45,13 @@ export async function update({
   if (!found) return { status: 404 };
   if (!isUsersOrAdmin(session, found.authors)) return { status: 403 };
 
-  const created = await updateBook({
-    ...body,
-    id: params.book_id,
-  });
+  const created = await updateBook(
+    {
+      ...body,
+      id: params.book_id,
+    },
+    session.user.id
+  );
 
   return {
     status: created == null ? 400 : 201,

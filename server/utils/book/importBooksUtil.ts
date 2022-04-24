@@ -78,7 +78,7 @@ class ImportBooksUtil {
       if (this.errors.length) return;
 
       for (const book of await prisma.$transaction(transactions)) {
-        const res = await findBook(book.id);
+        const res = await findBook(book.id, this.user.id);
         if (res) this.books.push(res as BookSchema);
       }
 
