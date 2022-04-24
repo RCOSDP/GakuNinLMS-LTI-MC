@@ -26,6 +26,10 @@ import {
     InlineResponse2001KeywordsFromJSON,
     InlineResponse2001KeywordsFromJSONTyped,
     InlineResponse2001KeywordsToJSON,
+    InlineResponse2001Public,
+    InlineResponse2001PublicFromJSON,
+    InlineResponse2001PublicFromJSONTyped,
+    InlineResponse2001PublicToJSON,
     InlineResponse2001Resource,
     InlineResponse2001ResourceFromJSON,
     InlineResponse2001ResourceFromJSONTyped,
@@ -156,6 +160,12 @@ export interface InlineResponse2001Contents {
      * @memberof InlineResponse2001Contents
      */
     ltiResourceLinks?: Array<InlineResponse200>;
+    /**
+     * 
+     * @type {InlineResponse2001Public}
+     * @memberof InlineResponse2001Contents
+     */
+    _public?: InlineResponse2001Public;
 }
 
 export function InlineResponse2001ContentsFromJSON(json: any): InlineResponse2001Contents {
@@ -187,6 +197,7 @@ export function InlineResponse2001ContentsFromJSONTyped(json: any, ignoreDiscrim
         'publishedAt': !exists(json, 'publishedAt') ? undefined : (new Date(json['publishedAt'])),
         'sections': !exists(json, 'sections') ? undefined : ((json['sections'] as Array<any>).map(InlineResponse2001SectionsFromJSON)),
         'ltiResourceLinks': !exists(json, 'ltiResourceLinks') ? undefined : ((json['ltiResourceLinks'] as Array<any>).map(InlineResponse200FromJSON)),
+        '_public': !exists(json, 'public') ? undefined : InlineResponse2001PublicFromJSON(json['public']),
     };
 }
 
@@ -218,6 +229,7 @@ export function InlineResponse2001ContentsToJSON(value?: InlineResponse2001Conte
         'publishedAt': value.publishedAt === undefined ? undefined : (value.publishedAt.toISOString()),
         'sections': value.sections === undefined ? undefined : ((value.sections as Array<any>).map(InlineResponse2001SectionsToJSON)),
         'ltiResourceLinks': value.ltiResourceLinks === undefined ? undefined : ((value.ltiResourceLinks as Array<any>).map(InlineResponse200ToJSON)),
+        'public': InlineResponse2001PublicToJSON(value._public),
     };
 }
 

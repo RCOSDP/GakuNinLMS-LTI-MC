@@ -27,6 +27,7 @@ export * from './InlineResponse20010Sections';
 export * from './InlineResponse2001Authors';
 export * from './InlineResponse2001Contents';
 export * from './InlineResponse2001Keywords';
+export * from './InlineResponse2001Public';
 export * from './InlineResponse2001Resource';
 export * from './InlineResponse2001ResourceTracks';
 export * from './InlineResponse2001Sections';
