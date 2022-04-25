@@ -1,3 +1,4 @@
+import { useCallback, useState } from "react";
 import Card from "@mui/material/Card";
 import Checkbox from "@mui/material/Checkbox";
 import Divider from "@mui/material/Divider";
@@ -5,21 +6,28 @@ import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import DateTimePicker from "@mui/lab/DateTimePicker";
 import makeStyles from "@mui/styles/makeStyles";
 import { useForm } from "react-hook-form";
 import clsx from "clsx";
+import ja from "date-fns/locale/ja";
 import InputLabel from "$atoms/InputLabel";
 import TextField from "$atoms/TextField";
 import AuthorsInput from "$organisms/AuthorsInput";
 import KeywordsInput from "$organisms/KeywordsInput";
+import DomainsInput from "$organisms/DomainsInput";
 import useCardStyles from "styles/card";
 import gray from "theme/colors/gray";
 import type { BookSchema } from "$server/models/book";
+import type { PublicBookSchema } from "$server/models/book/public";
 import type { BookPropsWithSubmitOptions } from "$types/bookPropsWithSubmitOptions";
 import type { AuthorSchema } from "$server/models/author";
 import { useAuthorsAtom } from "store/authors";
 import languages from "$utils/languages";
 import useKeywordsInput from "$utils/useKeywordsInput";
+import useDomainsInput from "$utils/useDomainsInput";
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -74,6 +82,23 @@ export default function BookForm({
   const classes = useStyles();
   const { updateState: _updateState, ...authorsInputProps } = useAuthorsAtom();
   const keywordsInputProps = useKeywordsInput(book?.keywords ?? []);
+  const [enablePublicBook, setEnablePublicBook] = useState(
+    Boolean(book?.publicBooks?.length)
+  );
+  const [expireAt, setExpireAt] = useState<Date | null>(
+    book?.publicBooks?.[0]?.expireAt ?? null
+  );
+  const [expireAtError, setExpireAtError] = useState(false);
+  const handleExpireAtChange = useCallback(
+    (newValue) => {
+      setExpireAtError(newValue && Number.isNaN(newValue.getTime()));
+      setExpireAt(newValue);
+    },
+    [setExpireAt]
+  );
+  const domainsInputProps = useDomainsInput(
+    book?.publicBooks?.[0]?.domains ?? []
+  );
   const defaultValues: BookPropsWithSubmitOptions = {
     name: book?.name ?? "",
     description: book?.description ?? "",
@@ -82,6 +107,7 @@ export default function BookForm({
     sections: book?.sections,
     authors: book?.authors ?? [],
     keywords: book?.keywords ?? [],
+    publicBooks: book?.publicBooks ?? [],
     submitWithLink: false,
   };
   const { handleSubmit, register, setValue } =
@@ -97,6 +123,16 @@ export default function BookForm({
       id={id}
       component="form"
       onSubmit={handleSubmit((values) => {
+        if (expireAt && Number.isNaN(expireAt.getTime())) return;
+
+        if (enablePublicBook) {
+          const publicBook = book?.publicBooks?.[0] ?? ({} as PublicBookSchema);
+          publicBook.expireAt = expireAt;
+          publicBook.domains = domainsInputProps.domains;
+          values.publicBooks = [publicBook];
+        } else {
+          values.publicBooks = [];
+        }
         values.authors = authorsInputProps.authors;
         values.keywords = keywordsInputProps.keywords;
         onSubmit(values);
@@ -168,6 +204,51 @@ export default function BookForm({
         {` `}
         に一部準拠しています
       </Typography>
+
+      <div>
+        <InputLabel htmlFor="enable-public-book">
+          公開URLを有効にする
+        </InputLabel>
+        <Checkbox
+          id="enable-public-book"
+          name="enablePublicBook"
+          onChange={(_, checked) => setEnablePublicBook(checked)}
+          defaultChecked={enablePublicBook}
+          color="primary"
+        />
+      </div>
+      {enablePublicBook && (
+        <>
+          <div>
+            <LocalizationProvider
+              dateAdapter={AdapterDateFns}
+              locale={ja}
+              dateFormats={{ monthAndYear: "yyyy年MM月" }}
+            >
+              <DateTimePicker
+                renderInput={(props) => (
+                  <TextField {...props} fullWidth error={expireAtError} />
+                )}
+                label="公開期限"
+                inputFormat="yyyy年MM月dd日 hh時mm分"
+                mask="____年__月__日 __時__分"
+                toolbarFormat="yyyy年MM月dd日"
+                leftArrowButtonText="前月を表示"
+                rightArrowButtonText="次月を表示"
+                toolbarTitle="日付選択"
+                okText="選択"
+                cancelText="キャンセル"
+                value={expireAt}
+                onChange={handleExpireAtChange}
+              />
+            </LocalizationProvider>
+          </div>
+          <div>
+            <DomainsInput {...domainsInputProps} />
+          </div>
+        </>
+      )}
+
       <Divider className={classes.divider} />
       {!linked && (
         <div>
