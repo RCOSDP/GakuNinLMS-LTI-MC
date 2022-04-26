@@ -127,7 +127,8 @@ export default function BookForm({
 
         if (enablePublicBook) {
           const publicBook = book?.publicBooks?.[0] ?? ({} as PublicBookSchema);
-          publicBook.expireAt = expireAt;
+          // @ts-expect-error TODO: 画面上ではnullでないといけないが、送信時はundefinedでないといけない
+          publicBook.expireAt = expireAt ?? undefined;
           publicBook.domains = domainsInputProps.domains;
           values.publicBooks = [publicBook];
         } else {
