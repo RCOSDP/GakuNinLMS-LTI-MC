@@ -9,6 +9,7 @@ import sectionCreateInput from "./sectionCreateInput";
 import cleanupSections from "./cleanupSections";
 import keywordsConnectOrCreateInput from "$server/utils/keyword/keywordsConnectOrCreateInput";
 import keywordsDisconnectInput from "$server/utils/keyword/keywordsDisconnectInput";
+import upsertPublicBooks from "$server/utils/publicBook/upsertPublicBooks";
 
 function upsertSections(bookId: Book["id"], sections: SectionProps[]) {
   const sectionsCreateInput = sections.map(sectionCreateInput);
@@ -73,30 +74,6 @@ function removePublicBooks(
   } else {
     return prisma.publicBook.deleteMany({ where: { bookId, userId } });
   }
-}
-
-function upsertPublicBooks(
-  userId: number,
-  bookId: Book["id"],
-  publicBooks: PublicBookSchema[]
-) {
-  const ops: Array<PrismaPromise<unknown>> = [];
-  for (const publicBook of publicBooks) {
-    const id = publicBook.id;
-    const data = {
-      book: { connect: { id: bookId } },
-      user: { connect: { id: userId } },
-      expireAt: publicBook.expireAt,
-      domains: publicBook.domains,
-      token: String(Math.random()),
-    };
-    if (id) {
-      ops.push(prisma.publicBook.update({ where: { id }, data }));
-    } else {
-      ops.push(prisma.publicBook.create({ data }));
-    }
-  }
-  return ops;
 }
 
 export default updateBook;
