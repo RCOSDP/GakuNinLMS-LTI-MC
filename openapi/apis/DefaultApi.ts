@@ -132,6 +132,11 @@ export interface ApiV2BookPostRequest {
     body?: InlineObject3;
 }
 
+export interface ApiV2BookPublicTokenGetRequest {
+    token: string;
+    originreferer?: string;
+}
+
 export interface ApiV2BooksGetRequest {
     sort?: string;
     page?: number;
@@ -530,6 +535,42 @@ export class DefaultApi extends runtime.BaseAPI {
      */
     async apiV2BookPost(requestParameters: ApiV2BookPostRequest): Promise<InlineResponse2002Books> {
         const response = await this.apiV2BookPostRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * 公開ブックの詳細を取得します。
+     * 公開ブックの取得
+     */
+    async apiV2BookPublicTokenGetRaw(requestParameters: ApiV2BookPublicTokenGetRequest): Promise<runtime.ApiResponse<InlineResponse2002Books>> {
+        if (requestParameters.token === null || requestParameters.token === undefined) {
+            throw new runtime.RequiredError('token','Required parameter requestParameters.token was null or undefined when calling apiV2BookPublicTokenGet.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (requestParameters.originreferer !== undefined && requestParameters.originreferer !== null) {
+            headerParameters['originreferer'] = String(requestParameters.originreferer);
+        }
+
+        const response = await this.request({
+            path: `/api/v2/book/public/{token}`.replace(`{${"token"}}`, encodeURIComponent(String(requestParameters.token))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2002BooksFromJSON(jsonValue));
+    }
+
+    /**
+     * 公開ブックの詳細を取得します。
+     * 公開ブックの取得
+     */
+    async apiV2BookPublicTokenGet(requestParameters: ApiV2BookPublicTokenGetRequest): Promise<InlineResponse2002Books> {
+        const response = await this.apiV2BookPublicTokenGetRaw(requestParameters);
         return await response.value();
     }
 

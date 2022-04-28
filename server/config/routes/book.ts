@@ -4,6 +4,7 @@ import handler from "$server/utils/handler";
 import * as service from "$server/services/book";
 import * as activityService from "$server/services/book/activity";
 import * as authorsService from "$server/services/book/authors";
+import * as showPublicService from "$server/services/book/public";
 
 const basePath = "/book";
 const pathWithParams = `${basePath}/:book_id`;
@@ -53,4 +54,15 @@ export async function bookAuthors(fastify: FastifyInstance) {
     Params: authorsService.Params;
     Body: authorsService.Props;
   }>(path, { schema: method.put, ...hooks.put }, handler(update));
+}
+
+export async function bookPublic(fastify: FastifyInstance) {
+  const path = `${basePath}/public/:token`;
+  const { schema, hook, method } = showPublicService;
+  const hooks = makeHooks(fastify, { get: hook });
+
+  fastify.get<{
+    Params: showPublicService.Params;
+    Headers: showPublicService.Headers;
+  }>(path, { schema, ...hooks.get }, handler(method));
 }

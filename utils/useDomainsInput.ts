@@ -12,15 +12,16 @@ function useDomainsInput(initialDomains: string[] = []) {
     setHelperText("");
   };
   const onDomainSubmit = (newDomain: string) => {
-    if (newDomain === "") {
+    const trimmed = newDomain.trim();
+    if (trimmed === "") {
       setError(true);
       setHelperText("1文字以上入力してください");
       return;
-    } else if (domains.some((domain) => domain === newDomain)) {
+    } else if (domains.some((domain) => domain === trimmed)) {
       setHelperText("すでに追加されているドメインです");
       return;
     } else onReset();
-    return setDomains([...domains, newDomain]);
+    return setDomains([...domains, trimmed]);
   };
   return {
     domains,

@@ -22,7 +22,7 @@ function upsertPublicBooks(
     const data = {
       book: { connect: { id: bookId } },
       user: { connect: { id: userId } },
-      expireAt: publicBook.expireAt,
+      expireAt: publicBook.expireAt ?? null,
       domains: publicBook.domains,
       token,
     };
@@ -43,7 +43,7 @@ function generateToken(
 ) {
   const args = [`bookId=${bookId}`, `userId=${userId}`];
   if (publicBook.expireAt) {
-    args.push(`expireAt=${publicBook.expireAt.toISOString()}`);
+    args.push(`expireAt=${publicBook.expireAt}`);
   }
   for (const domain of publicBook.domains) {
     args.push(`domain=${domain}`);
