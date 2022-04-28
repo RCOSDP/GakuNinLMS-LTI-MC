@@ -27,6 +27,18 @@ export interface InlineResponse2001PublicBooks {
     id?: number;
     /**
      * 
+     * @type {number}
+     * @memberof InlineResponse2001PublicBooks
+     */
+    bookId?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof InlineResponse2001PublicBooks
+     */
+    userId?: number;
+    /**
+     * 
      * @type {Array<string>}
      * @memberof InlineResponse2001PublicBooks
      */
@@ -56,6 +68,8 @@ export function InlineResponse2001PublicBooksFromJSONTyped(json: any, ignoreDisc
     return {
         
         'id': !exists(json, 'id') ? undefined : json['id'],
+        'bookId': !exists(json, 'bookId') ? undefined : json['bookId'],
+        'userId': !exists(json, 'userId') ? undefined : json['userId'],
         'domains': !exists(json, 'domains') ? undefined : json['domains'],
         'expireAt': !exists(json, 'expireAt') ? undefined : (new Date(json['expireAt'])),
         'token': !exists(json, 'token') ? undefined : json['token'],
@@ -72,6 +86,8 @@ export function InlineResponse2001PublicBooksToJSON(value?: InlineResponse2001Pu
     return {
         
         'id': value.id,
+        'bookId': value.bookId,
+        'userId': value.userId,
         'domains': value.domains,
         'expireAt': value.expireAt === undefined ? undefined : (value.expireAt.toISOString()),
         'token': value.token,

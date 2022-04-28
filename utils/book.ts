@@ -37,10 +37,18 @@ export function useBook(
     Number.isFinite(bookId) || token ? [key, bookId, token] : null,
     fetchBook
   );
+  const publicBook = data?.publicBooks?.find(
+    (publicBook) => publicBook.token === token
+  );
   const displayable = useMemo(
     () =>
-      getDisplayableBook(data, isContentEditable, ltiResourceLink ?? undefined),
-    [data, isContentEditable, ltiResourceLink]
+      getDisplayableBook(
+        data,
+        isContentEditable,
+        ltiResourceLink ?? undefined,
+        publicBook
+      ),
+    [data, isContentEditable, ltiResourceLink, publicBook]
   );
 
   return {
