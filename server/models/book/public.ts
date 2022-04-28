@@ -1,6 +1,9 @@
 import type { PublicBook } from "@prisma/client";
 
-export type PublicBookSchema = Pick<PublicBook, "id" | "domains" | "expireAt">;
+export type PublicBookSchema = Pick<
+  PublicBook,
+  "id" | "domains" | "expireAt" | "token"
+>;
 
 export const publicBookSchema = {
   type: "object",
