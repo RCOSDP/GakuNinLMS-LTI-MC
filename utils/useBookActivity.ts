@@ -19,10 +19,12 @@ async function fetchBookActivity(_: typeof key, bookId: BookSchema["id"]) {
   return res.activity as Array<ActivitySchema>;
 }
 
-function useBookActivity(bookId: BookSchema["id"]) {
-  const { data } = useSWR([key, bookId], fetchBookActivity, {
-    refreshInterval: NEXT_PUBLIC_ACTIVITY_SEND_INTERVAL * 1_000,
-  });
+function useBookActivity(bookId: BookSchema["id"] | undefined) {
+  const { data } = useSWR(
+    Number.isFinite(bookId) ? [key, bookId] : null,
+    fetchBookActivity,
+    { refreshInterval: NEXT_PUBLIC_ACTIVITY_SEND_INTERVAL * 1_000 }
+  );
   useActivityAtom(data ?? initialActivity);
 }
 
