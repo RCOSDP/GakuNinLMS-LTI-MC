@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import usePrevious from "@rooks/use-previous";
 import clsx from "clsx";
 import { css } from "@emotion/css";
+import type { TopicSchema } from "$server/models/topic";
 import type { VideoResourceSchema } from "$server/models/videoResource";
 import VideoPlayer from "$organisms/Video/VideoPlayer";
 import VideoResource from "$organisms/Video/VideoResource";
@@ -34,20 +35,11 @@ const videoStyle = {
 type Props = {
   className?: string;
   sx?: SxProps;
-  resource: VideoResourceSchema;
-  startTime: number | null;
-  stopTime: number | null;
+  topic: TopicSchema;
   onEnded?: () => void;
 };
 
-export default function Video({
-  className,
-  sx,
-  resource,
-  startTime,
-  stopTime,
-  onEnded,
-}: Props) {
+export default function Video({ className, sx, topic, onEnded }: Props) {
   const { video, updateVideo } = useVideoAtom();
   const { book, itemIndex, itemExists } = useBookAtom();
   const prevItemIndex = usePrevious(itemIndex);
@@ -57,10 +49,13 @@ export default function Video({
     return () => video.clear();
   }, [book, video, updateVideo]);
   useEffect(() => {
+    const topic = itemExists(itemIndex);
+    const startTime = topic?.startTime;
+    const stopTime = topic?.stopTime;
     if (prevItemIndex?.some((v, i) => v !== itemIndex[i])) {
-      video.get(itemExists(prevItemIndex)?.resource.url ?? "")?.player.pause();
+      video.get(String(itemExists(prevItemIndex)?.id))?.player.pause();
     }
-    const videoInstance = video.get(itemExists(itemIndex)?.resource.url ?? "");
+    const videoInstance = video.get(String(topic?.id));
     if (!videoInstance) return;
     if (videoInstance.type == "vimeo") {
       videoInstance.player.on("ended", () => onEnded?.());
@@ -126,22 +121,14 @@ export default function Video({
       videoInstance.player.on("firstplay", handleFirstPlay);
       videoInstance.player.ready(handleReady);
     }
-  }, [
-    video,
-    itemExists,
-    prevItemIndex,
-    itemIndex,
-    startTime,
-    stopTime,
-    onEnded,
-  ]);
+  }, [video, itemExists, prevItemIndex, itemIndex, onEnded]);
   return (
     <>
-      {Array.from(video.values()).map((videoInstance) => (
+      {Array.from(video.entries()).map(([topicId, videoInstance]) => (
         <VideoPlayer
-          key={videoInstance.url}
+          key={topicId}
           className={clsx(className, {
-            [hidden]: resource.url != videoInstance.url,
+            [hidden]: String(topic.id) !== topicId,
           })}
           sx={{ ...videoStyle, ...sx }}
           videoInstance={videoInstance}
@@ -151,7 +138,7 @@ export default function Video({
         <VideoResource
           className={className}
           sx={{ ...videoStyle, ...sx }}
-          {...resource}
+          {...(topic.resource as VideoResourceSchema)}
           autoplay
         />
       )}
