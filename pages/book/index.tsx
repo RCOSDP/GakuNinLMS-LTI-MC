@@ -38,7 +38,7 @@ function Show(query: Query) {
   const { video } = useVideoAtom();
   const tracking = usePlayerTrackingAtom();
   useEffect(() => {
-    const videoInstance = video.get(itemExists(itemIndex)?.resource.url ?? "");
+    const videoInstance = video.get(String(itemExists(itemIndex)?.id));
     if (!videoInstance) return;
     if (videoInstance.type === "vimeo") {
       tracking({ player: videoInstance.player, url: videoInstance.url });
