@@ -3,6 +3,7 @@ import type { SxProps } from "@mui/system";
 import type { VideoInstance } from "$types/videoInstance";
 import Box from "@mui/material/Box";
 import useVolume from "$utils/useVolume";
+import { usePlaybackRate } from "$utils/playbackRate";
 import Vimeo from "./Vimeo";
 import VideoJs from "./VideoJs";
 import videoJsDurationChangeShims from "$utils/videoJsDurationChangeShims";
@@ -24,6 +25,7 @@ export default function VideoPlayer({
   ...other
 }: Props) {
   useVolume(videoInstance.player);
+  usePlaybackRate(videoInstance.player);
   useEffect(() => {
     const { player } = videoInstance;
     const handleEnded = () => onEnded?.();
