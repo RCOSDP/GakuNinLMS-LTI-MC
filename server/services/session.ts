@@ -1,7 +1,6 @@
 import type { FastifyRequest } from "fastify";
 import type Method from "$server/types/method";
 import { sessionSchema } from "$server/models/session";
-import authUser from "$server/auth/authUser";
 import { getSystemSettings } from "$server/utils/systemSettings";
 
 export const method: Method = {
@@ -15,7 +14,7 @@ export const method: Method = {
 };
 
 export const hooks = {
-  get: { auth: [authUser] },
+  get: { auth: [] },
 };
 
 const nullSession = {

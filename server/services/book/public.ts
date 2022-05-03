@@ -8,7 +8,6 @@ import {
   bookPublicParamsSchema,
   bookPublicHeadersSchema,
 } from "$server/validators/bookPublicParams";
-import authUser from "$server/auth/authUser";
 import findPublicBook from "$server/utils/publicBook/findPublicBook";
 import findBook from "$server/utils/book/findBook";
 
@@ -27,7 +26,7 @@ export const schema: FastifySchema = {
 };
 
 export const hook = {
-  auth: [authUser],
+  auth: [],
 };
 
 export async function method({
