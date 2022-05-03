@@ -271,7 +271,7 @@ export default function BookForm({
           </div>
           <Alert severity="info">
             保存後、ブック一覧の <PublicIcon className={classes.inlineIcon} />{" "}
-            をクリックすると、公開用URLを確認できます。
+            をクリックすると、公開用URLをコピーできます。
           </Alert>
         </>
       )}
