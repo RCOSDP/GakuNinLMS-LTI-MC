@@ -13,7 +13,15 @@ import Link from "@mui/material/Link";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import Typography from "@mui/material/Typography";
+import { styled } from "@mui/material/styles";
 import makeStyles from "@mui/styles/makeStyles";
+import type { AccordionProps } from "@mui/material/Accordion";
+import MuiAccordion from "@mui/material/Accordion";
+import type { AccordionSummaryProps } from "@mui/material/AccordionSummary";
+import MuiAccordionSummary from "@mui/material/AccordionSummary";
+import type { AccordionDetailsProps } from "@mui/material/AccordionDetails";
+import MuiAccordionDetails from "@mui/material/AccordionDetails";
+import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
 import Autocomplete from "$atoms/Autocomplete";
 import { useForm } from "react-hook-form";
 import { useDebouncedCallback } from "use-debounce";
@@ -23,6 +31,7 @@ import TextField from "$atoms/TextField";
 import VideoEditor from "$molecules/VideoEditor";
 import AuthorsInput from "$organisms/AuthorsInput";
 import KeywordsInput from "$organisms/KeywordsInput";
+import TimeRequiredInputControl from "$organisms/TopicForm/TimeRequiredInputControl";
 import SubtitleChip from "$atoms/SubtitleChip";
 import SubtitleUploadDialog from "$organisms/SubtitleUploadDialog";
 import VideoResource from "$organisms/Video/VideoResource";
@@ -94,6 +103,39 @@ type Props = {
   onAuthorsUpdate(authors: AuthorSchema[]): void;
   onAuthorSubmit(author: Pick<AuthorSchema, "email">): void;
 };
+
+const Accordion = styled((props: AccordionProps) => (
+  <MuiAccordion {...props} />
+))({
+  boxShadow: "none",
+  "&:before": {
+    display: "none",
+  },
+});
+
+const AccordionSummary = styled((props: AccordionSummaryProps) => (
+  <MuiAccordionSummary
+    expandIcon={<ArrowForwardIosSharpIcon sx={{ fontSize: "0.9rem" }} />}
+    {...props}
+  />
+))(({ theme }) => ({
+  padding: 0,
+  flexDirection: "row-reverse",
+  "& .MuiAccordionSummary-expandIconWrapper": {
+    margin: theme.spacing(1),
+  },
+  "& .MuiAccordionSummary-expandIconWrapper.Mui-expanded": {
+    transform: "rotate(90deg)",
+  },
+}));
+
+const AccordionDetails = styled((props: AccordionDetailsProps) => (
+  <MuiAccordionDetails {...props} />
+))(({ theme }) => ({
+  "& > :not(:first-child)": {
+    marginTop: theme.spacing(2.5),
+  },
+}));
 
 export default function TopicForm(props: Props) {
   const {
@@ -177,11 +219,12 @@ export default function TopicForm(props: Props) {
     fileName: "",
     fileContent: "",
   };
-  const { handleSubmit, register, getValues, setValue } = useForm<
+  const { handleSubmit, register, control, getValues, setValue } = useForm<
     Omit<TopicPropsWithUpload, "resource">
   >({
     defaultValues,
   });
+  register("topic.timeRequired", { valueAsNumber: true });
   const setStartStopMinMax = useCallback(
     (topic: TopicPropsWithUpload["topic"], duration: number) => {
       const roundedDuration = Math.floor(duration * 1000) / 1000;
@@ -378,6 +421,16 @@ export default function TopicForm(props: Props) {
           }
         })}
       >
+        <div>
+          <InputLabel htmlFor="shared">他の教員にシェア</InputLabel>
+          <Checkbox
+            id="shared"
+            name="shared"
+            onChange={(_, checked) => setValue("topic.shared", checked)}
+            defaultChecked={defaultValues.topic.shared}
+            color="primary"
+          />
+        </div>
         <TextField
           inputProps={register("topic.name")}
           label={
@@ -395,22 +448,6 @@ export default function TopicForm(props: Props) {
           required
           fullWidth
         />
-        <AuthorsInput
-          {...authorsInputProps}
-          onAuthorsUpdate={onAuthorsUpdate}
-          onAuthorSubmit={onAuthorSubmit}
-        />
-        <div>
-          <InputLabel htmlFor="shared">他の教員にシェア</InputLabel>
-          <Checkbox
-            id="shared"
-            name="shared"
-            onChange={(_, checked) => setValue("topic.shared", checked)}
-            defaultChecked={defaultValues.topic.shared}
-            color="primary"
-          />
-        </div>
-
         {Boolean(Object.entries(uploadProviders).length) && (
           <>
             <FormLabel>動画の指定方法</FormLabel>
@@ -428,7 +465,6 @@ export default function TopicForm(props: Props) {
             </RadioGroup>
           </>
         )}
-
         {method === "url" && (
           <>
             <Autocomplete
@@ -521,86 +557,69 @@ export default function TopicForm(props: Props) {
           </>
         )}
         {(videoResource || dataUrl) && (
-          <VideoEditor
-            onSetStartTime={handleSetStartTime}
-            onSetStopTime={handleSetStopTime}
-            onSeekToStart={handleSeekToStart}
-            onSeekToEnd={handleSeekToEnd}
-            onStartTimeStopTimeChange={handleStartTimeStopTimeChange}
-            onTogglePause={onTogglePause}
-            startTimeInputProps={register("topic.startTime", {
-              valueAsNumber: true,
-            })}
-            stopTimeInputProps={register("topic.stopTime", {
-              valueAsNumber: true,
-            })}
-            startTimeMax={startTimeMax}
-            stopTimeMin={stopTimeMin}
-            stopTimeMax={stopTimeMax}
-            startTimeError={startTimeError}
-            stopTimeError={stopTimeError}
-            paused={paused}
-          />
+          <Accordion>
+            <AccordionSummary>
+              <Typography>動画を編集する</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <VideoEditor
+                onSetStartTime={handleSetStartTime}
+                onSetStopTime={handleSetStopTime}
+                onSeekToStart={handleSeekToStart}
+                onSeekToEnd={handleSeekToEnd}
+                onStartTimeStopTimeChange={handleStartTimeStopTimeChange}
+                onTogglePause={onTogglePause}
+                startTimeInputProps={register("topic.startTime", {
+                  valueAsNumber: true,
+                })}
+                stopTimeInputProps={register("topic.stopTime", {
+                  valueAsNumber: true,
+                })}
+                startTimeMax={startTimeMax}
+                stopTimeMin={stopTimeMin}
+                stopTimeMax={stopTimeMax}
+                startTimeError={startTimeError}
+                stopTimeError={stopTimeError}
+                paused={paused}
+              />
+              <div className={classes.subtitles}>
+                <InputLabel>字幕</InputLabel>
+                <div className={classes.subtitles}>
+                  {videoTracks.map((track) => (
+                    <SubtitleChip
+                      key={track.id}
+                      videoTrack={track}
+                      onDelete={handleSubtitleDelete}
+                    />
+                  ))}
+                </div>
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  onClick={handleClickSubtitle}
+                >
+                  字幕を追加
+                </Button>
+              </div>
+            </AccordionDetails>
+          </Accordion>
         )}
         {videoChanged && (
           <Alert severity="warning" onClose={() => setVideoChanged(false)}>
             動画が変更されました。再生開始位置と終了位置を再設定してください。
           </Alert>
         )}
-        <TextField
-          label="学習時間 (秒)"
-          type="number"
-          inputProps={{
-            ...register("topic.timeRequired", { valueAsNumber: true }),
-            required: true,
-            min: 1,
-          }}
+        <TimeRequiredInputControl
+          topic={topic}
+          name="topic.timeRequired"
+          control={control}
         />
-        <TextField
-          label="教材の主要な言語"
-          select
-          defaultValue={defaultValues.topic.language}
-          inputProps={register("topic.language")}
-        >
-          {Object.entries(languages).map(([value, label]) => (
-            <MenuItem key={value} value={value}>
-              {label}
-            </MenuItem>
-          ))}
-        </TextField>
-        <TextField
-          label="ライセンス"
-          select
-          defaultValue={defaultValues.topic.license}
-          inputProps={{ displayEmpty: true, ...register("topic.license") }}
-        >
-          <MenuItem value="">未設定</MenuItem>
-          {Object.entries(licenses).map(([value, { name }]) => (
-            <MenuItem key={value} value={value}>
-              {name}
-            </MenuItem>
-          ))}
-        </TextField>
+        <AuthorsInput
+          {...authorsInputProps}
+          onAuthorsUpdate={onAuthorsUpdate}
+          onAuthorSubmit={onAuthorSubmit}
+        />
         <KeywordsInput {...keywordsInputProps} />
-        <div>
-          <InputLabel>字幕</InputLabel>
-          <div className={classes.subtitles}>
-            {videoTracks.map((track) => (
-              <SubtitleChip
-                key={track.id}
-                videoTrack={track}
-                onDelete={handleSubtitleDelete}
-              />
-            ))}
-          </div>
-          <Button
-            variant="outlined"
-            color="primary"
-            onClick={handleClickSubtitle}
-          >
-            字幕を追加
-          </Button>
-        </div>
         <TextField
           label="解説"
           fullWidth
@@ -622,13 +641,44 @@ export default function TopicForm(props: Props) {
           {` `}
           に一部準拠しています
         </Typography>
+        <Accordion>
+          <AccordionSummary>
+            <Typography>詳細を設定する</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <TextField
+              label="教材の主要な言語"
+              select
+              defaultValue={defaultValues.topic.language}
+              inputProps={register("topic.language")}
+            >
+              {Object.entries(languages).map(([value, label]) => (
+                <MenuItem key={value} value={value}>
+                  {label}
+                </MenuItem>
+              ))}
+            </TextField>
+            <TextField
+              label="ライセンス"
+              select
+              defaultValue={defaultValues.topic.license}
+              inputProps={{ displayEmpty: true, ...register("topic.license") }}
+            >
+              <MenuItem value="">未設定</MenuItem>
+              {Object.entries(licenses).map(([value, { name }]) => (
+                <MenuItem key={value} value={value}>
+                  {name}
+                </MenuItem>
+              ))}
+            </TextField>
+          </AccordionDetails>
+        </Accordion>
         <Divider className={classes.divider} />
         <Button variant="contained" color="primary" type="submit">
           {label[variant]}
         </Button>
         {submitResult && <Alert severity="error">{submitResult}</Alert>}
       </Card>
-
       <SubtitleUploadDialog
         open={open}
         onClose={handleClose}
