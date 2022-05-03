@@ -5,11 +5,21 @@ import LabelOutlinedIcon from "@mui/icons-material/LabelOutlined";
 import FormControl from "@mui/material/FormControl";
 import FormHelperText from "@mui/material/FormHelperText";
 import InputAdornment from "@mui/material/InputAdornment";
+import Typography from "@mui/material/Typography";
+import makeStyles from "@mui/styles/makeStyles";
+import gray from "theme/colors/gray";
 import DomainChip from "$atoms/DomainChip";
 import IconButton from "$atoms/IconButton";
 import Input from "$atoms/Input";
 import InputLabel from "$atoms/InputLabel";
 import { remove } from "$utils/reorder";
+
+const useStyles = makeStyles((theme) => ({
+  labelDescription: {
+    marginLeft: theme.spacing(0.75),
+    color: gray[600],
+  },
+}));
 
 const Domains = styled("div")(({ theme }) => ({
   marginBottom: theme.spacing(1.5),
@@ -26,6 +36,7 @@ type Props = {
   onDomainsUpdate(domains: string[]): void;
   onDomainSubmit(domain: string): void;
 };
+
 export default function DomainsInput({
   id,
   domains,
@@ -37,6 +48,7 @@ export default function DomainsInput({
   onDomainsUpdate,
   onDomainSubmit,
 }: Props) {
+  const classes = useStyles();
   const handleDomainRemove = (delDomain: string) => () => {
     const index = domains.findIndex((domain) => domain === delDomain);
     onDomainsUpdate(remove(domains, index));
@@ -55,7 +67,15 @@ export default function DomainsInput({
   return (
     <div>
       <InputLabel htmlFor={id} sx={{ mb: 1 }}>
-        ドメイン
+        公開範囲
+        <br />
+        <Typography
+          className={classes.labelDescription}
+          variant="caption"
+          component="span"
+        >
+          * 指定しない場合は制限なしになります
+        </Typography>
       </InputLabel>
       <Domains>
         {domains.map((domain) => (
@@ -71,6 +91,7 @@ export default function DomainsInput({
         <Input
           id={id}
           value={value}
+          placeholder="example.com"
           onChange={handleInput}
           onKeyDown={handleKeyDown}
           startAdornment={

@@ -1,14 +1,25 @@
 import { useCallback, useState } from "react";
 import Card from "@mui/material/Card";
+import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import Divider from "@mui/material/Divider";
 import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
+import Alert from "@mui/material/Alert";
+import type { AccordionProps } from "@mui/material/Accordion";
+import MuiAccordion from "@mui/material/Accordion";
+import type { AccordionSummaryProps } from "@mui/material/AccordionSummary";
+import MuiAccordionSummary from "@mui/material/AccordionSummary";
+import type { AccordionDetailsProps } from "@mui/material/AccordionDetails";
+import MuiAccordionDetails from "@mui/material/AccordionDetails";
+import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
+import PublicIcon from "@mui/icons-material/Public";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import DateTimePicker from "@mui/lab/DateTimePicker";
+import { styled } from "@mui/material/styles";
 import makeStyles from "@mui/styles/makeStyles";
 import { useForm } from "react-hook-form";
 import clsx from "clsx";
@@ -39,8 +50,47 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: theme.spacing(0.75),
     color: gray[600],
   },
+  inlineIcon: {
+    verticalAlign: "middle",
+  },
   divider: {
     margin: theme.spacing(0, -3, 0),
+  },
+  marginLeft: {
+    marginLeft: theme.spacing(0.75),
+  },
+}));
+
+const Accordion = styled((props: AccordionProps) => (
+  <MuiAccordion {...props} />
+))({
+  boxShadow: "none",
+  "&:before": {
+    display: "none",
+  },
+});
+
+const AccordionSummary = styled((props: AccordionSummaryProps) => (
+  <MuiAccordionSummary
+    expandIcon={<ArrowForwardIosSharpIcon sx={{ fontSize: "0.9rem" }} />}
+    {...props}
+  />
+))(({ theme }) => ({
+  padding: 0,
+  flexDirection: "row-reverse",
+  "& .MuiAccordionSummary-expandIconWrapper": {
+    margin: theme.spacing(1),
+  },
+  "& .MuiAccordionSummary-expandIconWrapper.Mui-expanded": {
+    transform: "rotate(90deg)",
+  },
+}));
+
+const AccordionDetails = styled((props: AccordionDetailsProps) => (
+  <MuiAccordionDetails {...props} />
+))(({ theme }) => ({
+  "& > :not(:first-child)": {
+    marginTop: theme.spacing(2.5),
   },
 }));
 
@@ -139,30 +189,17 @@ export default function BookForm({
         onSubmit(values);
       })}
     >
-      <TextField
-        inputProps={register("name")}
-        label={
-          <>
-            タイトル
-            <Typography
-              className={classes.labelDescription}
-              variant="caption"
-              component="span"
-            >
-              学習者が学習範囲を簡潔に理解できるタイトルを設定できます
-            </Typography>
-          </>
-        }
-        required
-        fullWidth
-      />
-      <AuthorsInput
-        {...authorsInputProps}
-        onAuthorsUpdate={onAuthorsUpdate}
-        onAuthorSubmit={onAuthorSubmit}
-      />
       <div>
-        <InputLabel htmlFor="shared">他の教員にシェア</InputLabel>
+        <InputLabel htmlFor="shared">
+          ブックをシェアする
+          <Typography
+            className={classes.labelDescription}
+            variant="caption"
+            component="span"
+          >
+            他の教材作成者とブックを共有します
+          </Typography>
+        </InputLabel>
         <Checkbox
           id="shared"
           name="shared"
@@ -171,44 +208,17 @@ export default function BookForm({
           color="primary"
         />
       </div>
-      <TextField
-        label="教材の主要な言語"
-        select
-        defaultValue={defaultValues.language}
-        inputProps={register("language")}
-      >
-        {Object.entries(languages).map(([value, label]) => (
-          <MenuItem key={value} value={value}>
-            {label}
-          </MenuItem>
-        ))}
-      </TextField>
-      <KeywordsInput {...keywordsInputProps} />
-      <TextField
-        label="解説"
-        fullWidth
-        multiline
-        inputProps={register("description")}
-      />
-      <Typography
-        className={classes.labelDescription}
-        variant="caption"
-        component="span"
-      >
-        <Link
-          href="https://github.github.com/gfm/"
-          target="_blank"
-          rel="noreferrer"
-        >
-          GitHub Flavored Markdown
-        </Link>
-        {` `}
-        に一部準拠しています
-      </Typography>
 
       <div>
         <InputLabel htmlFor="enable-public-book">
-          公開URLを有効にする
+          ブックを公開する
+          <Typography
+            className={classes.labelDescription}
+            variant="caption"
+            component="span"
+          >
+            学習者以外もブックを視聴できるようにします
+          </Typography>
         </InputLabel>
         <Checkbox
           id="enable-public-book"
@@ -230,7 +240,19 @@ export default function BookForm({
                 renderInput={(props) => (
                   <TextField {...props} fullWidth error={expireAtError} />
                 )}
-                label="公開期限"
+                label={
+                  <>
+                    公開期限
+                    <br />
+                    <Typography
+                      className={classes.labelDescription}
+                      variant="caption"
+                      component="span"
+                    >
+                      * 指定しない場合は無期限になります
+                    </Typography>
+                  </>
+                }
                 inputFormat="yyyy年MM月dd日 hh時mm分"
                 mask="____年__月__日 __時__分"
                 toolbarFormat="yyyy年MM月dd日"
@@ -247,27 +269,86 @@ export default function BookForm({
           <div>
             <DomainsInput {...domainsInputProps} />
           </div>
+          <Alert severity="info">
+            保存後、ブック一覧の <PublicIcon className={classes.inlineIcon} />{" "}
+            をクリックすると、公開用URLを確認できます。
+          </Alert>
         </>
       )}
 
-      <Divider className={classes.divider} />
-      {!linked && (
-        <div>
-          <InputLabel htmlFor="submit-with-link">
-            {label[variant].submitWithLink}
-          </InputLabel>
-          <Checkbox
-            id="submit-with-link"
-            name="submitWithLink"
-            onChange={(_, checked) => setValue("submitWithLink", checked)}
-            defaultChecked={defaultValues.submitWithLink}
-            color="primary"
+      <TextField
+        inputProps={register("name")}
+        label="タイトル"
+        required
+        fullWidth
+      />
+      <AuthorsInput
+        {...authorsInputProps}
+        onAuthorsUpdate={onAuthorsUpdate}
+        onAuthorSubmit={onAuthorSubmit}
+      />
+      <KeywordsInput {...keywordsInputProps} />
+
+      <Accordion>
+        <AccordionSummary>
+          <Typography>詳細を設定する</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <TextField
+            label="解説"
+            fullWidth
+            multiline
+            inputProps={register("description")}
           />
-        </div>
-      )}
+          <Typography
+            className={classes.labelDescription}
+            variant="caption"
+            component="span"
+          >
+            <Link
+              href="https://github.github.com/gfm/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              GitHub Flavored Markdown
+            </Link>
+            {` `}
+            に一部準拠しています
+          </Typography>
+          <TextField
+            label="教材の主要な言語"
+            select
+            defaultValue={defaultValues.language}
+            inputProps={register("language")}
+          >
+            {Object.entries(languages).map(([value, label]) => (
+              <MenuItem key={value} value={value}>
+                {label}
+              </MenuItem>
+            ))}
+          </TextField>
+        </AccordionDetails>
+      </Accordion>
+
+      <Divider className={classes.divider} />
       <Button variant="contained" color="primary" type="submit">
         {label[variant].submit}
       </Button>
+      {!linked && (
+        <FormControlLabel
+          className={classes.marginLeft}
+          label="コースへ提供"
+          control={
+            <Checkbox
+              id="submit-with-link"
+              name="submitWithLink"
+              onChange={(_, checked) => setValue("submitWithLink", checked)}
+              defaultChecked={defaultValues.submitWithLink}
+              color="primary"
+            />
+          }
+        />
+      )}
     </Card>
   );
 }

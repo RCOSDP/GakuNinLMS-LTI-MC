@@ -1,15 +1,17 @@
 import type { MouseEvent } from "react";
 import { useState } from "react";
-import LinkOutlinedIcon from "@mui/icons-material/LinkOutlined";
+import PublicIcon from "@mui/icons-material/Public";
+import VpnLockIcon from "@mui/icons-material/VpnLock";
 import Popover from "@mui/material/Popover";
 import Typography from "@mui/material/Typography";
 import IconButton from "$atoms/IconButton";
 
 type Props = Omit<Parameters<typeof IconButton>[0], "tooltipProps"> & {
   url: string;
+  conditional: boolean;
 };
 
-export default function LinkButton({ url, ...other }: Props) {
+export default function LinkButton({ url, conditional, ...other }: Props) {
   const [anchorEl, setAnchorEl] = useState<
     (EventTarget & HTMLButtonElement) | null
   >(null);
@@ -34,7 +36,7 @@ export default function LinkButton({ url, ...other }: Props) {
         onClick={handleClick}
         {...other}
       >
-        <LinkOutlinedIcon />
+        {conditional ? <VpnLockIcon /> : <PublicIcon />}
       </IconButton>
       <Popover
         open={open}

@@ -165,6 +165,9 @@ export default function ContentPreview({
             <LinkButton
               key={publicBook.id}
               url={`${location.origin}/book?token=${publicBook.token}`}
+              conditional={Boolean(
+                publicBook.expireAt || publicBook.domains.length
+              )}
             />
           ))}
         {content.shared && <SharedIndicator className="shared" />}
