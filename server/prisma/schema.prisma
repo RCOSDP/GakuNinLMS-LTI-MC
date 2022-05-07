@@ -206,6 +206,8 @@ model Book {
   authors          Authorship[]
   /// ライセンス (https://spdx.org/licenses/ に準拠するもの, "" は無効)
   license          String            @default("")
+  /// zoomミーティングid
+  zoomMeetingId    BigInt?           @map("zoom_meeting_id")
   /// 公開日
   publishedAt      DateTime          @default(now()) @map("published_at")
   /// 作成日
