@@ -53,7 +53,7 @@ export async function zoomImport() {
       user,
       wowzaUpload,
       tmpdir
-    ).importTopics();
+    ).importBooks();
   }
 }
 
@@ -80,7 +80,7 @@ class ZoomImport {
     this.provider = ZOOM_IMPORT_TO == "wowza" ? "https://www.wowza.com/" : "";
   }
 
-  async importTopics() {
+  async importBooks() {
     try {
       const meetings = await zoomListRequest(
         `/users/${this.zoomUserId}/recordings`,
@@ -92,9 +92,9 @@ class ZoomImport {
       const transactions = [];
       const deletemeetings = [];
       for (const meeting of meetings) {
-        const data = await this.getTopic(meeting);
-        if (data && data.topic && data.zoomMeeting) {
-          transactions.push(prisma.topic.create({ data: data.topic }));
+        const data = await this.getBook(meeting);
+        if (data && data.book && data.zoomMeeting) {
+          transactions.push(prisma.book.create({ data: data.book }));
           transactions.push(
             prisma.zoomMeeting.create({ data: data.zoomMeeting })
           );
@@ -118,6 +118,26 @@ class ZoomImport {
     } finally {
       await this.cleanUp();
     }
+  }
+
+  async getBook(meeting: ZoomResponse) {
+    const data = await this.getTopic(meeting);
+    if (data && data.topic && data.zoomMeeting) {
+      const { topic, zoomMeeting } = data;
+      const topicSections = [{ order: 0, topic: { create: topic } }];
+      const sections = [{ order: 0, topicSections: { create: topicSections } }];
+      const book = {
+        name: topic.name,
+        description: topic.description,
+        timeRequired: topic.timeRequired,
+        authors: { create: { userId: this.user.id, roleId: 1 } },
+        sections: { create: sections },
+        details: {},
+        ltiResourceLinks: {},
+      };
+      return { book, zoomMeeting };
+    }
+    return;
   }
 
   async getTopic(meeting: ZoomResponse) {
