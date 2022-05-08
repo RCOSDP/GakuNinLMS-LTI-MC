@@ -16,39 +16,39 @@ import { exists, mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface InlineResponse2006
+ * @interface InlineResponse20011Book
  */
-export interface InlineResponse2006 {
+export interface InlineResponse20011Book {
     /**
      * 
      * @type {number}
-     * @memberof InlineResponse2006
+     * @memberof InlineResponse20011Book
      */
-    bookId?: number;
+    id: number;
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse2006
+     * @memberof InlineResponse20011Book
      */
-    publicToken?: string;
+    name: string;
 }
 
-export function InlineResponse2006FromJSON(json: any): InlineResponse2006 {
-    return InlineResponse2006FromJSONTyped(json, false);
+export function InlineResponse20011BookFromJSON(json: any): InlineResponse20011Book {
+    return InlineResponse20011BookFromJSONTyped(json, false);
 }
 
-export function InlineResponse2006FromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse2006 {
+export function InlineResponse20011BookFromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse20011Book {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
-        'bookId': !exists(json, 'bookId') ? undefined : json['bookId'],
-        'publicToken': !exists(json, 'publicToken') ? undefined : json['publicToken'],
+        'id': json['id'],
+        'name': json['name'],
     };
 }
 
-export function InlineResponse2006ToJSON(value?: InlineResponse2006 | null): any {
+export function InlineResponse20011BookToJSON(value?: InlineResponse20011Book | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -57,8 +57,8 @@ export function InlineResponse2006ToJSON(value?: InlineResponse2006 | null): any
     }
     return {
         
-        'bookId': value.bookId,
-        'publicToken': value.publicToken,
+        'id': value.id,
+        'name': value.name,
     };
 }
 

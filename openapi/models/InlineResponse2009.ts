@@ -13,96 +13,37 @@
  */
 
 import { exists, mapValues } from '../runtime';
+import {
+    InlineResponse2001Resource,
+    InlineResponse2001ResourceFromJSON,
+    InlineResponse2001ResourceFromJSONTyped,
+    InlineResponse2001ResourceToJSON,
+} from './';
+
 /**
- * 
+ * 成功時
  * @export
  * @interface InlineResponse2009
  */
 export interface InlineResponse2009 {
     /**
      * 
-     * @type {string}
+     * @type {Array<InlineResponse2001Resource>}
      * @memberof InlineResponse2009
      */
-    type: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineResponse2009
-     */
-    version: InlineResponse2009VersionEnum;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineResponse2009
-     */
-    title?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineResponse2009
-     */
-    author_name?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineResponse2009
-     */
-    author_url?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineResponse2009
-     */
-    provider_name?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineResponse2009
-     */
-    provider_url?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineResponse2009
-     */
-    cache_age?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineResponse2009
-     */
-    thumbnail_url?: string;
+    resources?: Array<InlineResponse2001Resource>;
     /**
      * 
      * @type {number}
      * @memberof InlineResponse2009
      */
-    thumbnail_width?: number;
+    page?: number;
     /**
      * 
      * @type {number}
      * @memberof InlineResponse2009
      */
-    thumbnail_height?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineResponse2009
-     */
-    html?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof InlineResponse2009
-     */
-    width?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof InlineResponse2009
-     */
-    height?: number;
+    perPage?: number;
 }
 
 export function InlineResponse2009FromJSON(json: any): InlineResponse2009 {
@@ -115,20 +56,9 @@ export function InlineResponse2009FromJSONTyped(json: any, ignoreDiscriminator: 
     }
     return {
         
-        'type': json['type'],
-        'version': json['version'],
-        'title': !exists(json, 'title') ? undefined : json['title'],
-        'author_name': !exists(json, 'author_name') ? undefined : json['author_name'],
-        'author_url': !exists(json, 'author_url') ? undefined : json['author_url'],
-        'provider_name': !exists(json, 'provider_name') ? undefined : json['provider_name'],
-        'provider_url': !exists(json, 'provider_url') ? undefined : json['provider_url'],
-        'cache_age': !exists(json, 'cache_age') ? undefined : json['cache_age'],
-        'thumbnail_url': !exists(json, 'thumbnail_url') ? undefined : json['thumbnail_url'],
-        'thumbnail_width': !exists(json, 'thumbnail_width') ? undefined : json['thumbnail_width'],
-        'thumbnail_height': !exists(json, 'thumbnail_height') ? undefined : json['thumbnail_height'],
-        'html': !exists(json, 'html') ? undefined : json['html'],
-        'width': !exists(json, 'width') ? undefined : json['width'],
-        'height': !exists(json, 'height') ? undefined : json['height'],
+        'resources': !exists(json, 'resources') ? undefined : ((json['resources'] as Array<any>).map(InlineResponse2001ResourceFromJSON)),
+        'page': !exists(json, 'page') ? undefined : json['page'],
+        'perPage': !exists(json, 'perPage') ? undefined : json['perPage'],
     };
 }
 
@@ -141,29 +71,10 @@ export function InlineResponse2009ToJSON(value?: InlineResponse2009 | null): any
     }
     return {
         
-        'type': value.type,
-        'version': value.version,
-        'title': value.title,
-        'author_name': value.author_name,
-        'author_url': value.author_url,
-        'provider_name': value.provider_name,
-        'provider_url': value.provider_url,
-        'cache_age': value.cache_age,
-        'thumbnail_url': value.thumbnail_url,
-        'thumbnail_width': value.thumbnail_width,
-        'thumbnail_height': value.thumbnail_height,
-        'html': value.html,
-        'width': value.width,
-        'height': value.height,
+        'resources': value.resources === undefined ? undefined : ((value.resources as Array<any>).map(InlineResponse2001ResourceToJSON)),
+        'page': value.page,
+        'perPage': value.perPage,
     };
-}
-
-/**
-* @export
-* @enum {string}
-*/
-export enum InlineResponse2009VersionEnum {
-    _1_0 = '1.0'
 }
 
 
