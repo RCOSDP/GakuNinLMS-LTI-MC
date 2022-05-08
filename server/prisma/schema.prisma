@@ -218,6 +218,7 @@ model Book {
   details          Json
 
   @@map("books")
+  @@index([zoomMeetingId])
 }
 
 /// 公開URLブック
