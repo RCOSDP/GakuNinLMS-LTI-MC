@@ -1,11 +1,8 @@
 function getLocaleListString(
   strings: string[],
-  locales: string | string[]
+  _: string | string[]
 ): string {
-  const formatter = new Intl.ListFormat(locales, {
-    type: "conjunction",
-    style: "long",
-  });
-  return formatter.format(strings);
+  const separator = "、";
+  return strings.join(separator);
 }
 export default getLocaleListString;
