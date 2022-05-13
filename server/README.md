@@ -93,7 +93,7 @@ docker-compose down
 | `ZOOM_IMPORT_WOWZA_BASE_URL`         | Zoom からインポートした動画の URL のルート (デフォルト: 無効 ""、例: フロント側の設定値の `NEXT_PUBLIC_API_BASE_PATH` と同じ値)                                  |
 | `ZOOM_IMPORT_AUTODELETE`             | Zoom からインポートした動画の自動削除設定 (デフォルト: 無効 ""、例: `1`)                                                                                         |
 | `ZOOM_IMPORT_DISABLE_AUTOPUBLIC`     | Zoom からインポートした動画に公開 URL を発行しない (デフォルト: 無効(自動で公開 URL を発行する) ""、例: `1`)                                                     |
-| `ZOOM_IMPORT_PUBLIC_DEFAULT_DOMAINS` | Zoom からインポートした動画の公開 URL に公開範囲ドメインを自動設定する。`,` で区切ると複数のドメインの指定が可能 (デフォルト: ""、例: `1`)                       |
+| `ZOOM_IMPORT_PUBLIC_DEFAULT_DOMAINS` | Zoom からインポートした動画の公開 URL に公開範囲ドメインを自動設定する。`,` で区切ると複数のドメインの指定が可能 (デフォルト: ""、例: `example.com`)             |
 | `PUBLIC_ACCESS_HASH_ALGORITHM`       | 公開 URL のトークン生成に利用するハッシュアルゴリズム (デフォルト: "sha256"、`openssl help` コマンドの "Message Digest commands" の項目に表示される値が利用可能) |
 | `ACTIVITY_RATE_MIN`                  | 学習活動の完了とみなす最小の視聴時間の割合 (デフォルト:`0.9`)                                                                                                    |
 
