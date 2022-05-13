@@ -26,15 +26,10 @@ function Show(query: Query) {
   if (query.zoom) {
     void getBookIdByZoom(query.zoom)
       .then((res) => {
-        if (res.bookId)
-          void router.push(
-            pagesPath.book.$url({ query: { bookId: res.bookId } })
-          );
-        if (res.publicToken)
-          void router.push(
-            // @ts-expect-error 型としてはbookIdがないとエラーになるが、ダミー値を入れるとリダイレクト先urlにbookIdが入ってしまう
-            pagesPath.book.$url({ query: { token: res.publicToken } })
-          );
+        void router.push(
+          // @ts-expect-error 型としてはbookIdがないとエラーになるが、ダミー値を入れるとリダイレクト先urlにbookIdが入ってしまう
+          pagesPath.book.$url({ query: { token: res.publicToken } })
+        );
       })
       .catch((_) => {
         // nop

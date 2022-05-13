@@ -1,4 +1,4 @@
-import { IsString, IsInt, IsOptional } from "class-validator";
+import { IsString, IsInt } from "class-validator";
 import { validationMetadatasToSchemas } from "class-validator-jsonschema";
 
 export class BookZoomParams {
@@ -10,12 +10,8 @@ export const bookZoomParamsSchema =
   validationMetadatasToSchemas().BookZoomParams;
 
 export class BookZoomResponse {
-  @IsInt()
-  @IsOptional()
-  bookId?: number;
   @IsString()
-  @IsOptional()
-  publicToken?: string;
+  publicToken!: string;
 }
 
 export const bookZoomResponseSchema =

@@ -1,5 +1,4 @@
 import type { FastifySchema } from "fastify";
-import type { SessionSchema } from "$server/models/session";
 import type { BookZoomParams } from "$server/validators/bookZoomParams";
 import {
   bookZoomParamsSchema,
@@ -23,19 +22,12 @@ export const hook = {
   auth: [],
 };
 
-export async function method({
-  session,
-  params,
-}: {
-  session: SessionSchema;
-  params: BookZoomParams;
-}) {
+export async function method({ params }: { params: BookZoomParams }) {
   const { meetingId } = params;
 
   const book = await findNewZoomBook(meetingId);
   if (!book) return { status: 404 };
 
-  if (session.user) return { status: 200, body: { bookId: book.id } };
   if (book.publicBooks.length)
     return { status: 200, body: { publicToken: book.publicBooks[0].token } };
 

@@ -5,7 +5,7 @@ import format from "date-fns/format";
 import utcToZoneTime from "date-fns-tz/utcToZonedTime";
 
 import prisma from "$server/utils/prisma";
-import type { Prisma, User } from "@prisma/client";
+import type { Prisma, User, Book, ZoomMeeting } from "@prisma/client";
 import type { UserSettingsProps } from "$server/models/userSettings";
 import { findUserByEmailAndLtiConsumerId } from "$server/utils/user";
 import keywordsConnectOrCreateInput from "$server/utils/keyword/keywordsConnectOrCreateInput";
@@ -13,6 +13,7 @@ import { validateWowzaSettings } from "$server/utils/wowza/env";
 import { startWowzaUpload } from "$server/utils/wowza/upload";
 import type { WowzaUpload } from "$server/utils/wowza/upload";
 import { findZoomMeeting } from "$server/utils/zoom/findZoomMeeting";
+import upsertPublicBooks from "$server/utils/publicBook/upsertPublicBooks";
 import {
   API_BASE_PATH,
   ZOOM_IMPORT_CONSUMER_KEY,
@@ -104,7 +105,8 @@ class ZoomImport {
       if (!transactions.length) return;
 
       await this.wowzaUpload.upload();
-      await prisma.$transaction(transactions);
+      const results = await prisma.$transaction(transactions);
+      await prisma.$transaction(this.getPublicBooks(results));
       for (const deletemeeting of deletemeetings) {
         await zoomRequest(
           `/meetings/${deletemeeting}/recordings`,
@@ -139,6 +141,27 @@ class ZoomImport {
       return { book, zoomMeeting };
     }
     return;
+  }
+
+  getPublicBooks(results: (Book | ZoomMeeting)[]) {
+    const transactions = [];
+    for (const result of results) {
+      if ("id" in result) {
+        const { id: bookId } = result as Book;
+        const publicBook = {
+          id: 0,
+          bookId,
+          userId: this.user.id,
+          domains: [],
+          expireAt: null,
+          token: "",
+        };
+        transactions.push(
+          ...upsertPublicBooks(this.user.id, bookId, [publicBook])
+        );
+      }
+    }
+    return transactions;
   }
 
   async getTopic(meeting: ZoomResponse) {
