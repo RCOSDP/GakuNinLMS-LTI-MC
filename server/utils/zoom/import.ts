@@ -20,6 +20,8 @@ import {
   ZOOM_IMPORT_WOWZA_BASE_URL,
   ZOOM_IMPORT_TO,
   ZOOM_IMPORT_AUTODELETE,
+  ZOOM_IMPORT_DISABLE_AUTOPUBLIC,
+  ZOOM_IMPORT_PUBLIC_DEFAULT_DOMAINS,
 } from "$server/utils/env";
 
 import type { ZoomResponse } from "$server/utils/zoom/api";
@@ -53,8 +55,25 @@ export async function zoomImport() {
       zoomUser.created_at,
       user,
       wowzaUpload,
-      tmpdir
+      tmpdir,
+      getDefaultDomains()
     ).importBooks();
+  }
+}
+
+function getDefaultDomains() {
+  return ZOOM_IMPORT_PUBLIC_DEFAULT_DOMAINS.split(",")
+    .map((domain) => getDomainFromInput(domain))
+    .filter((domain) => domain.length);
+}
+
+function getDomainFromInput(newDomain: string) {
+  const trimmed = newDomain.trim();
+  try {
+    const host = new URL(trimmed).host;
+    return host ? host : trimmed;
+  } catch (e) {
+    return trimmed;
   }
 }
 
@@ -65,19 +84,22 @@ class ZoomImport {
   wowzaUpload: WowzaUpload;
   tmpdir: string;
   provider: string;
+  publicBookDomains: string[];
 
   constructor(
     zoomUserId: string,
     createdAt: string,
     user: User,
     wowzaUpload: WowzaUpload,
-    tmpdir: string
+    tmpdir: string,
+    publicBookDomains: string[]
   ) {
     this.zoomUserId = zoomUserId;
     this.createdAt = createdAt;
     this.user = user;
     this.wowzaUpload = wowzaUpload;
     this.tmpdir = tmpdir;
+    this.publicBookDomains = publicBookDomains;
     this.provider = ZOOM_IMPORT_TO == "wowza" ? "https://www.wowza.com/" : "";
   }
 
@@ -106,7 +128,8 @@ class ZoomImport {
 
       await this.wowzaUpload.upload();
       const results = await prisma.$transaction(transactions);
-      await prisma.$transaction(this.getPublicBooks(results));
+      if (!ZOOM_IMPORT_DISABLE_AUTOPUBLIC)
+        await prisma.$transaction(this.getPublicBooks(results));
       for (const deletemeeting of deletemeetings) {
         await zoomRequest(
           `/meetings/${deletemeeting}/recordings`,
@@ -152,7 +175,7 @@ class ZoomImport {
           id: 0,
           bookId,
           userId: this.user.id,
-          domains: [],
+          domains: this.publicBookDomains,
           expireAt: null,
           token: "",
         };
