@@ -155,7 +155,7 @@ class ZoomImport {
         name: topic.name,
         description: topic.description,
         timeRequired: topic.timeRequired,
-        zoomMeetingId: meeting.id,
+        zoomMeetingId: ZOOM_IMPORT_DISABLE_AUTOPUBLIC ? null : meeting.id,
         authors: { create: { userId: this.user.id, roleId: 1 } },
         sections: { create: sections },
         details: {},
