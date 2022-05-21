@@ -1,6 +1,5 @@
 import { outdent } from "outdent";
 import getUnixTime from "date-fns/getUnixTime";
-import authUser from "$server/auth/authUser";
 import {
   WOWZA_BASE_URL,
   WOWZA_SECURE_TOKEN,
@@ -26,7 +25,7 @@ export const method = {
 };
 
 export const hooks = {
-  get: { auth: [authUser] },
+  get: { auth: [] },
 };
 
 export async function show({ params }: { params: Params }) {
