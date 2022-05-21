@@ -113,7 +113,9 @@ export default function Video({ className, sx, topic, onEnded }: Props) {
         }
         videoInstance.player.on("timeupdate", handleTimeUpdate);
         videoInstance.player.on("seeked", handleSeeked);
-        void videoInstance.player.play();
+        videoInstance.player.play()?.catch(() => {
+          // nop
+        });
       };
 
       videoInstance.player.on("ended", handleEnded);
