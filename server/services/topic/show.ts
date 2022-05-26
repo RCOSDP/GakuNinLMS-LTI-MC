@@ -1,4 +1,4 @@
-import type { FastifySchema } from "fastify";
+import type { FastifySchema, FastifyRequest } from "fastify";
 import { outdent } from "outdent";
 import { topicSchema } from "$server/models/topic";
 import type { TopicParams } from "$server/validators/topicParams";
@@ -23,9 +23,12 @@ export const showHooks = {
   auth: [authUser, authInstructor],
 };
 
-export async function show({ params }: { params: TopicParams }) {
+export async function show({
+  params,
+  ip,
+}: FastifyRequest<{ Params: TopicParams }>) {
   const { topic_id: topicId } = params;
-  const topic = await findTopic(topicId);
+  const topic = await findTopic(topicId, ip);
 
   return {
     status: topic == null ? 404 : 200,

@@ -7,6 +7,7 @@ const defaultResource = (url: URL): VideoResource => ({
   url: url.href,
   providerUrl: `${url.origin}/`,
   tracks: [],
+  accessToken: "",
 });
 
 const hostMatch =
@@ -31,5 +32,6 @@ export function parse(value: string): VideoResource | undefined {
     providerUrl: matcher.providerUrl,
     url: matcher.url(url),
     tracks: [],
+    accessToken: "",
   };
 }

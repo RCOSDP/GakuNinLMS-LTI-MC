@@ -226,6 +226,7 @@ export interface ApiV2ResourceResourceIdVideoTrackVideoTrackIdDeleteRequest {
 }
 
 export interface ApiV2ResourceResourceIdVideoTrackVideoTrackIdVttGetRequest {
+    accessToken: string;
     videoTrackId: number;
     resourceId: number;
 }
@@ -299,6 +300,10 @@ export interface ApiV2UserUserIdTopicsGetRequest {
 
 export interface ApiV2UsersEmailGetRequest {
     email: string;
+}
+
+export interface ApiV2WowzaGetRequest {
+    accessToken: string;
 }
 
 /**
@@ -1262,6 +1267,10 @@ export class DefaultApi extends runtime.BaseAPI {
      * 字幕の取得
      */
     async apiV2ResourceResourceIdVideoTrackVideoTrackIdVttGetRaw(requestParameters: ApiV2ResourceResourceIdVideoTrackVideoTrackIdVttGetRequest): Promise<runtime.ApiResponse<object>> {
+        if (requestParameters.accessToken === null || requestParameters.accessToken === undefined) {
+            throw new runtime.RequiredError('accessToken','Required parameter requestParameters.accessToken was null or undefined when calling apiV2ResourceResourceIdVideoTrackVideoTrackIdVttGet.');
+        }
+
         if (requestParameters.videoTrackId === null || requestParameters.videoTrackId === undefined) {
             throw new runtime.RequiredError('videoTrackId','Required parameter requestParameters.videoTrackId was null or undefined when calling apiV2ResourceResourceIdVideoTrackVideoTrackIdVttGet.');
         }
@@ -1271,6 +1280,10 @@ export class DefaultApi extends runtime.BaseAPI {
         }
 
         const queryParameters: runtime.HTTPQuery = {};
+
+        if (requestParameters.accessToken !== undefined) {
+            queryParameters['accessToken'] = requestParameters.accessToken;
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -1819,8 +1832,16 @@ export class DefaultApi extends runtime.BaseAPI {
      * Wowza Streaming Engine のコンテンツのパスを与えると、 そのコンテンツの playlist.m3u8 ファイルにリダイレクトします。 サーバー管理者によって無効化されている場合 404 を返します。
      * Wowza Streaming Engine にアクセスするためのエンドポイント
      */
-    async apiV2WowzaGetRaw(): Promise<runtime.ApiResponse<void>> {
+    async apiV2WowzaGetRaw(requestParameters: ApiV2WowzaGetRequest): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters.accessToken === null || requestParameters.accessToken === undefined) {
+            throw new runtime.RequiredError('accessToken','Required parameter requestParameters.accessToken was null or undefined when calling apiV2WowzaGet.');
+        }
+
         const queryParameters: runtime.HTTPQuery = {};
+
+        if (requestParameters.accessToken !== undefined) {
+            queryParameters['accessToken'] = requestParameters.accessToken;
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -1838,8 +1859,8 @@ export class DefaultApi extends runtime.BaseAPI {
      * Wowza Streaming Engine のコンテンツのパスを与えると、 そのコンテンツの playlist.m3u8 ファイルにリダイレクトします。 サーバー管理者によって無効化されている場合 404 を返します。
      * Wowza Streaming Engine にアクセスするためのエンドポイント
      */
-    async apiV2WowzaGet(): Promise<void> {
-        await this.apiV2WowzaGetRaw();
+    async apiV2WowzaGet(requestParameters: ApiV2WowzaGetRequest): Promise<void> {
+        await this.apiV2WowzaGetRaw(requestParameters);
     }
 
 }

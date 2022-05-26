@@ -30,6 +30,7 @@ export async function create({
   hostname,
   session,
   body,
+  ip,
 }: FastifyRequest<{
   Body: TopicPropsWithUpload;
 }>) {
@@ -51,7 +52,7 @@ export async function create({
     return { status: 400 };
   }
 
-  const created = await createTopic(session.user.id, body.topic);
+  const created = await createTopic(session.user.id, body.topic, ip);
 
   return {
     status: created == null ? 400 : 201,

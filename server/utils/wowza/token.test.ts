@@ -1,4 +1,4 @@
-import { sign, query } from "./token";
+import { sign, getWowzaQuery } from "./token";
 
 describe("sign()", function () {
   test("正しい署名が得られる", function () {
@@ -17,7 +17,7 @@ describe("sign()", function () {
   });
 });
 
-describe("query()", function () {
+describe("getWowzaQuery()", function () {
   test("正しいURLクエリが得られる", function () {
     const contentPath = "vod/_myInstance_/sample.mp4";
     const params = {
@@ -28,7 +28,9 @@ describe("query()", function () {
     const secret = "xyzSharedSecret";
     const algorithm = "sha256";
 
-    expect(query(contentPath, params, prefix, secret, algorithm)).toEqual(
+    expect(
+      getWowzaQuery(contentPath, params, prefix, secret, algorithm)
+    ).toEqual(
       new URLSearchParams(
         [
           "wowzatokenCustomParameter=abcdef",

@@ -12,12 +12,20 @@ async function search(
   sort: string,
   page: number,
   perPage: number,
-  userId: number
+  userId: number,
+  ip: string
 ): Promise<SearchResultSchema> {
   const query = parse(queryText);
   switch (type) {
     case "topic": {
-      return await topicSearch({ type, ...query }, filter, sort, page, perPage);
+      return await topicSearch(
+        { type, ...query },
+        filter,
+        sort,
+        page,
+        perPage,
+        ip
+      );
     }
     case "book": {
       return await bookSearch(
@@ -26,7 +34,8 @@ async function search(
         sort,
         page,
         perPage,
-        userId
+        userId,
+        ip
       );
     }
     default:
