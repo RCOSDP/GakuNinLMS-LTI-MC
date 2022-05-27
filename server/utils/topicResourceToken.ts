@@ -10,6 +10,8 @@ const SEPARATOR = "/";
 const ENCODING = "base64url";
 // 秘密鍵は32文字固定で、長くても短くてもダメ。SESSION_SECRET は最短32文字
 const SECRET_KEY = SESSION_SECRET.substring(0, 32);
+// providerUrl == "https://www.wowza.com/" ではないwowza動画が存在するため、wowza以外のサービスでなければwowzaと判定する
+const EXCEPT_WOWZA_URL = ["https://www.youtube.com/", "https://vimeo.com/"];
 
 export function getAccessToken(value: Record<string, unknown>) {
   const iv = crypto.randomBytes(16);
@@ -44,7 +46,7 @@ export function getWowzaAccessToken(
   url: string,
   providerUrl: string | null | undefined
 ) {
-  if (!ip || providerUrl != "https://www.wowza.com/") return "";
+  if (!ip || EXCEPT_WOWZA_URL.includes(providerUrl ?? "")) return "";
 
   const value = {
     ip,
