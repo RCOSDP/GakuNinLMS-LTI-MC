@@ -8,7 +8,8 @@ import {
 
 async function findBook(
   bookId: Book["id"],
-  userId: number
+  userId: number,
+  ip: string
 ): Promise<BookSchema | undefined> {
   const book = await prisma.book.findUnique({
     ...getBookIncludingArg(userId),
@@ -16,7 +17,7 @@ async function findBook(
   });
   if (book == null) return;
 
-  return bookToBookSchema(book);
+  return bookToBookSchema(book, ip);
 }
 
 export default findBook;

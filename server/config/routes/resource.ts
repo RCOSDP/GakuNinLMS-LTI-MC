@@ -13,6 +13,7 @@ export async function videoTrack(fastify: FastifyInstance) {
 
   fastify.get<{
     Params: videoTrackService.Params;
+    Querystring: videoTrackService.Query;
   }>(vttPath, { schema: method.get, ...hooks.get }, handler(show));
 
   fastify.post<{

@@ -1,5 +1,15 @@
 import { useState } from "react";
 
+function getDomainFromInput(newDomain: string) {
+  const trimmed = newDomain.trim();
+  try {
+    const host = new URL(trimmed).host;
+    return host ? host : trimmed;
+  } catch (e) {
+    return trimmed;
+  }
+}
+
 function useDomainsInput(initialDomains: string[] = []) {
   const [domains, setDomains] = useState(initialDomains);
   const [value, setValue] = useState("");
@@ -12,7 +22,7 @@ function useDomainsInput(initialDomains: string[] = []) {
     setHelperText("");
   };
   const onDomainSubmit = (newDomain: string) => {
-    const trimmed = newDomain.trim();
+    const trimmed = getDomainFromInput(newDomain);
     if (trimmed === "") {
       setError(true);
       setHelperText("1文字以上入力してください");

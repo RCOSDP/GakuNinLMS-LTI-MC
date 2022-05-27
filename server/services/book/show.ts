@@ -1,9 +1,8 @@
-import type { FastifySchema } from "fastify";
+import type { FastifySchema, FastifyRequest } from "fastify";
 import { outdent } from "outdent";
 import { bookSchema } from "$server/models/book";
 import type { BookParams } from "$server/validators/bookParams";
 import { bookParamsSchema } from "$server/validators/bookParams";
-import type { SessionSchema } from "$server/models/session";
 import authUser from "$server/auth/authUser";
 import findBook from "$server/utils/book/findBook";
 import { isInstructor } from "$utils/session";
@@ -28,17 +27,15 @@ export const showHooks = {
 export async function show({
   session,
   params,
-}: {
-  session: SessionSchema;
-  params: BookParams;
-}) {
+  ip,
+}: FastifyRequest<{ Params: BookParams }>) {
   const { book_id: bookId } = params;
 
   if (!isInstructor(session) && session.ltiResourceLink?.bookId !== bookId) {
     return { status: 403 };
   }
 
-  const book = await findBook(bookId, session.user.id);
+  const book = await findBook(bookId, session.user.id, ip);
 
   return {
     status: book == null ? 404 : 200,

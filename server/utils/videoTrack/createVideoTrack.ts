@@ -4,11 +4,13 @@ import type {
   VideoTrackSchema,
 } from "$server/models/videoTrack";
 import prisma from "$server/utils/prisma";
+import { getVttAccessToken } from "$server/utils/topicResourceToken";
 
 async function createVideoTrack(
   createRequestUrl: string,
   resourceId: Resource["id"],
-  { content, ...props }: VideoTrackProps
+  { content, ...props }: VideoTrackProps,
+  ip: string
 ): Promise<undefined | VideoTrackSchema> {
   const resource = await prisma.resource.findUnique({
     where: { id: resourceId },
@@ -30,7 +32,11 @@ async function createVideoTrack(
     select: { id: true, kind: true, language: true },
   });
 
-  return { ...created, url: `${createRequestUrl}/${created.id}/vtt` };
+  return {
+    ...created,
+    url: `${createRequestUrl}/${created.id}/vtt`,
+    accessToken: getVttAccessToken(ip, resourceId, created.id),
+  };
 }
 
 export default createVideoTrack;

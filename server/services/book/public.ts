@@ -1,4 +1,4 @@
-import type { FastifySchema } from "fastify";
+import type { FastifySchema, FastifyRequest } from "fastify";
 import { bookSchema } from "$server/models/book";
 import type {
   BookPublicParams,
@@ -32,10 +32,8 @@ export const hook = {
 export async function method({
   params,
   headers,
-}: {
-  params: BookPublicParams;
-  headers: BookPublicHeaders;
-}) {
+  ip,
+}: FastifyRequest<{ Params: BookPublicParams; Headers: BookPublicHeaders }>) {
   const { token } = params;
   const { originreferer } = headers;
 
@@ -44,7 +42,7 @@ export async function method({
     return { status: 404 };
   }
 
-  const book = await findBook(publicBook.bookId, publicBook.userId);
+  const book = await findBook(publicBook.bookId, publicBook.userId, ip);
 
   return {
     status: book == null ? 404 : 200,
