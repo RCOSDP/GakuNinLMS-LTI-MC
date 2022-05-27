@@ -8,12 +8,14 @@ import {
 
 const SEPARATOR = "/";
 const ENCODING = "base64url";
+// 秘密鍵は32文字固定で、長くても短くてもダメ。SESSION_SECRET は最短32文字
+const SECRET_KEY = SESSION_SECRET.substring(0, 32);
 
 export function getAccessToken(value: Record<string, unknown>) {
   const iv = crypto.randomBytes(16);
   const cipher = crypto.createCipheriv(
     PUBLIC_ACCESS_CRYPTO_ALGORITHM,
-    SESSION_SECRET,
+    SECRET_KEY,
     iv
   );
   const encrypted = Buffer.concat([
@@ -27,7 +29,7 @@ export function parseAccessToken(accessToken: string) {
   const [iv, encrypted] = accessToken.split(SEPARATOR);
   const decipher = crypto.createDecipheriv(
     PUBLIC_ACCESS_CRYPTO_ALGORITHM,
-    SESSION_SECRET,
+    SECRET_KEY,
     Buffer.from(iv, ENCODING)
   );
   const decrypted = Buffer.concat([
