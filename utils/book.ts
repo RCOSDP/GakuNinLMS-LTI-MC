@@ -60,7 +60,7 @@ export function useBook(
 export async function createBook(body: BookProps): Promise<BookSchema> {
   // @ts-expect-error NOTE: body.sections[].topics[].name のUnion型に null 含むか否か異なる
   const res = await api.apiV2BookPost({ body });
-  await mutate([key, res.id], res);
+  await mutate([key, res.id, undefined], res);
   return res as BookSchema;
 }
 
@@ -70,7 +70,7 @@ export async function updateBook({
 }: BookProps & { id: BookSchema["id"] }): Promise<BookSchema> {
   // @ts-expect-error NOTE: body.sections[].topics[].name のUnion型に null 含むか否か異なる
   const res = await api.apiV2BookBookIdPut({ bookId: id, body });
-  await mutate([key, res.id], res);
+  await mutate([key, res.id, undefined], res);
   return res as BookSchema;
 }
 
@@ -109,7 +109,7 @@ export function revalidateBook(
   id: BookSchema["id"],
   res?: BookSchema
 ): Promise<BookSchema> {
-  return mutate([key, id], res);
+  return mutate([key, id, undefined], res);
 }
 
 export async function getBookIdByZoom(meetingId: number) {
