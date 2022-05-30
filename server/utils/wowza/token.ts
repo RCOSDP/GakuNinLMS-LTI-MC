@@ -47,7 +47,7 @@ export function sign(
  * @param prefix SecureToken prefix
  * @param algorithm アルゴリズム
  */
-export function query(
+export function getWowzaQuery(
   contentPath: string,
   params: Record<string, string>,
   prefix: string,

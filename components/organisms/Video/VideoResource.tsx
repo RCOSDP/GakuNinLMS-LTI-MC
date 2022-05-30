@@ -5,7 +5,10 @@ import VideoPlayer from "./VideoPlayer";
 import getVideoInstance from "$utils/video/getVideoInstance";
 import { useVideoAtom } from "$store/video";
 
-type Props = Pick<VideoResourceSchema, "providerUrl" | "url" | "tracks"> & {
+type Props = Pick<
+  VideoResourceSchema,
+  "providerUrl" | "url" | "accessToken" | "tracks"
+> & {
   sx?: SxProps;
   className?: string;
   onEnded?: () => void;
@@ -17,16 +20,17 @@ type Props = Pick<VideoResourceSchema, "providerUrl" | "url" | "tracks"> & {
 export default function VideoResource({
   providerUrl,
   url,
+  accessToken,
   tracks: resourceTracks,
   autoplay = false,
   ...other
 }: Props) {
   const videoInstance = useMemo(() => {
     return getVideoInstance(
-      { providerUrl, url, tracks: resourceTracks },
+      { providerUrl, url, accessToken, tracks: resourceTracks },
       autoplay
     );
-  }, [providerUrl, url, autoplay, resourceTracks]);
+  }, [providerUrl, url, accessToken, autoplay, resourceTracks]);
 
   const { video } = useVideoAtom();
   useEffect(() => {

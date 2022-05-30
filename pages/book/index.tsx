@@ -9,7 +9,7 @@ import Book from "$templates/Book";
 import Placeholder from "$templates/Placeholder";
 import BookNotFoundProblem from "$templates/BookNotFoundProblem";
 import { useSessionAtom } from "$store/session";
-import { useBook } from "$utils/book";
+import { useBook, getBookIdByZoom } from "$utils/book";
 import { useBookAtom } from "$store/book";
 import { useVideoAtom } from "$store/video";
 import type { TopicSchema } from "$server/models/topic";
@@ -19,16 +19,31 @@ import useBookActivity from "$utils/useBookActivity";
 import { useActivityTracking } from "$utils/activity";
 import logger from "$utils/eventLogger/logger";
 
-export type Query = { bookId: BookSchema["id"] };
+export type Query = { bookId: BookSchema["id"]; token?: string; zoom?: number };
 
 function Show(query: Query) {
+  const router = useRouter();
+  if (query.zoom) {
+    void getBookIdByZoom(query.zoom)
+      .then((res) => {
+        void router.push(
+          // @ts-expect-error 型としてはbookIdがないとエラーになるが、ダミー値を入れるとリダイレクト先urlにbookIdが入ってしまう
+          pagesPath.book.$url({ query: { token: res.publicToken } })
+        );
+      })
+      .catch((_) => {
+        // nop
+      });
+  }
+
   const { session, isContentEditable } = useSessionAtom();
   const { book, error } = useBook(
     query.bookId,
     isContentEditable,
-    session?.ltiResourceLink
+    session?.ltiResourceLink,
+    query.token
   );
-  useBookActivity(query.bookId);
+  useBookActivity(book?.id);
   const { updateBook, itemIndex, nextItemIndex, itemExists, updateItemIndex } =
     useBookAtom();
   useEffect(() => {
@@ -60,7 +75,6 @@ function Show(query: Query) {
     },
     [playerTracker, nextItemIndex, itemExists, updateItemIndex]
   );
-  const router = useRouter();
   const handleBookEditClick = () => {
     const action = book && isContentEditable(book) ? "edit" : "generate";
     return router.push(pagesPath.book[action].$url({ query }));
@@ -78,7 +92,7 @@ function Show(query: Query) {
     return router.push(url);
   };
   const handlers = {
-    linked: query.bookId === session?.ltiResourceLink?.bookId,
+    linked: book?.id === session?.ltiResourceLink?.bookId,
     onTopicEnded: handleTopicNext,
     onItemClick: handleTopicNext,
     onBookEditClick: handleBookEditClick,
@@ -95,10 +109,15 @@ function Show(query: Query) {
 function Router() {
   const router = useRouter();
   const bookId = Number(router.query.bookId);
+  const token = Array.isArray(router.query.token)
+    ? router.query.token[0]
+    : router.query.token;
+  const zoom = Number(router.query.zoom);
 
-  if (!Number.isFinite(bookId)) return <BookNotFoundProblem />;
+  if (!Number.isFinite(bookId) && !token && !Number.isFinite(zoom))
+    return <BookNotFoundProblem />;
 
-  return <Show bookId={bookId} />;
+  return <Show bookId={bookId} token={token} zoom={zoom} />;
 }
 
 export default Router;

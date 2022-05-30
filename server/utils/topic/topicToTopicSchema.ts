@@ -21,10 +21,13 @@ export type TopicWithResource = Prisma.TopicGetPayload<
   typeof topicsWithResourcesArg
 >;
 
-export function topicToTopicSchema(topic: TopicWithResource): TopicSchema {
+export function topicToTopicSchema(
+  topic: TopicWithResource,
+  ip: string
+): TopicSchema {
   return {
     ...topic,
     authors: topic.authors.map(authorToAuthorSchema),
-    resource: resourceToResourceSchema(topic.resource),
+    resource: resourceToResourceSchema(topic.resource, ip),
   };
 }

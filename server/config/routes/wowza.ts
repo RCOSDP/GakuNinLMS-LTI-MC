@@ -8,7 +8,7 @@ export default async function (fastify: FastifyInstance) {
   const { method, show } = service;
   const hooks = makeHooks(fastify, service.hooks);
 
-  fastify.get<{ Params: service.Params }>(
+  fastify.get<{ Params: service.Params; Querystring: service.Query }>(
     path,
     { schema: method.get, ...hooks.get },
     handler(show)

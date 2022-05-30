@@ -39,6 +39,9 @@ export async function update({
   Querystring: Query;
   Body: Props;
 }>) {
+  if (!session.user || !session.oauthClient || !session.ltiContext)
+    return { status: 401 };
+
   const found = await topicExists(params.topic_id);
 
   if (!found) return { status: 404 };

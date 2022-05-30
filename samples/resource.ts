@@ -24,12 +24,14 @@ const resource = {
             `,
         ])
       ),
+      accessToken: "",
     },
     {
       id: 2,
       kind: "subtitles",
       language: "en",
       url: URL.createObjectURL(new Blob([])),
+      accessToken: "",
     },
   ],
   details: {},
