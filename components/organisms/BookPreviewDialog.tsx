@@ -1,5 +1,5 @@
 import type { ComponentProps } from "react";
-import { useEffect, forwardRef } from "react";
+import { useCallback, useEffect, forwardRef } from "react";
 import Dialog from "@mui/material/Dialog";
 import CloseIcon from "@mui/icons-material/Close";
 import makeStyles from "@mui/styles/makeStyles";
@@ -55,11 +55,19 @@ export default function BookPreviewDialog(props: Props) {
   const { book, open, onClose, children } = props;
   const dialogClasses = useDialogStyles();
   const classes = useStyles();
-  const { updateBook, itemIndex, updateItemIndex } = useBookAtom();
+  const { updateBook, itemIndex, nextItemIndex, updateItemIndex } =
+    useBookAtom();
   const { session } = useSessionAtom();
   useEffect(() => {
     updateBook(book);
   }, [book, updateBook]);
+  const handleTopicNext = useCallback(
+    (index: ItemIndex = nextItemIndex) => {
+      updateItemIndex(index);
+    },
+    [nextItemIndex, updateItemIndex]
+  );
+
   return (
     <Dialog
       classes={dialogClasses}
@@ -80,8 +88,8 @@ export default function BookPreviewDialog(props: Props) {
         book,
         index: itemIndex,
         linked: book.id === session?.ltiResourceLink?.bookId,
-        onTopicEnded: updateItemIndex,
-        onItemClick: updateItemIndex,
+        onTopicEnded: handleTopicNext,
+        onItemClick: handleTopicNext,
         considerAppBar: false,
       })}
     </Dialog>

@@ -14,6 +14,7 @@ type Props = Pick<
   onEnded?: () => void;
   onDurationChange?: (duration: number) => void;
   onTimeUpdate?: (currentTime: number) => void;
+  topicId: number;
   autoplay?: boolean;
 };
 
@@ -22,6 +23,7 @@ export default function VideoResource({
   url,
   accessToken,
   tracks: resourceTracks,
+  topicId,
   autoplay = false,
   ...other
 }: Props) {
@@ -34,9 +36,9 @@ export default function VideoResource({
 
   const { video } = useVideoAtom();
   useEffect(() => {
-    video.set(url, videoInstance);
+    video.set(String(topicId), videoInstance);
     return () => video.clear();
-  }, [video, url, videoInstance]);
+  }, [video, topicId, videoInstance]);
 
   return <VideoPlayer videoInstance={videoInstance} {...other} />;
 }
