@@ -17,12 +17,15 @@ import type { ContentAuthors } from "$server/models/content";
 import { pagesPath } from "$utils/$path";
 import useBookActivity from "$utils/useBookActivity";
 import { useActivityTracking } from "$utils/activity";
+import { useLoggerInit } from "$utils/eventLogger/loggerSessionPersister";
 import logger from "$utils/eventLogger/logger";
 
 export type Query = { bookId: BookSchema["id"]; token?: string };
 
 function Show(query: Query) {
   const { session, isContentEditable } = useSessionAtom();
+  // 公開URLのときもsyslogには出力する
+  useLoggerInit(session);
   const { book, error } = useBook(
     query.bookId,
     isContentEditable,
