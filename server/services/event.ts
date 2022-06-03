@@ -3,7 +3,6 @@ import { outdent } from "outdent";
 import type Method from "$server/types/method";
 import type { Event } from "$server/models/event";
 import { eventSchema } from "$server/models/event";
-import authUser from "$server/auth/authUser";
 import eventLogger from "$server/utils/eventLogger";
 
 export const method: Method = {
@@ -21,7 +20,7 @@ export const method: Method = {
 };
 
 export const hooks = {
-  post: { auth: [authUser] },
+  post: { auth: [] },
 };
 
 export async function create({
