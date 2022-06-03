@@ -9,7 +9,7 @@ import Book from "$templates/Book";
 import Placeholder from "$templates/Placeholder";
 import BookNotFoundProblem from "$templates/BookNotFoundProblem";
 import { useSessionAtom } from "$store/session";
-import { useBook } from "$utils/book";
+import { useBook, getBookIdByZoom } from "$utils/book";
 import { useBookAtom } from "$store/book";
 import { useVideoAtom } from "$store/video";
 import type { TopicSchema } from "$server/models/topic";
@@ -20,9 +20,23 @@ import { useActivityTracking } from "$utils/activity";
 import { useLoggerInit } from "$utils/eventLogger/loggerSessionPersister";
 import logger from "$utils/eventLogger/logger";
 
-export type Query = { bookId: BookSchema["id"]; token?: string };
+export type Query = { bookId: BookSchema["id"]; token?: string; zoom?: number };
 
 function Show(query: Query) {
+  const router = useRouter();
+  if (query.zoom) {
+    void getBookIdByZoom(query.zoom)
+      .then((res) => {
+        void router.push(
+          // @ts-expect-error 型としてはbookIdがないとエラーになるが、ダミー値を入れるとリダイレクト先urlにbookIdが入ってしまう
+          pagesPath.book.$url({ query: { token: res.publicToken } })
+        );
+      })
+      .catch((_) => {
+        // nop
+      });
+  }
+
   const { session, isContentEditable } = useSessionAtom();
   // 公開URLのときもsyslogには出力する
   useLoggerInit(session);
@@ -64,7 +78,6 @@ function Show(query: Query) {
     },
     [playerTracker, nextItemIndex, itemExists, updateItemIndex]
   );
-  const router = useRouter();
   const handleBookEditClick = () => {
     const action = book && isContentEditable(book) ? "edit" : "generate";
     return router.push(pagesPath.book[action].$url({ query }));
@@ -102,10 +115,12 @@ function Router() {
   const token = Array.isArray(router.query.token)
     ? router.query.token[0]
     : router.query.token;
+  const zoom = Number(router.query.zoom);
 
-  if (!Number.isFinite(bookId) && !token) return <BookNotFoundProblem />;
+  if (!Number.isFinite(bookId) && !token && !Number.isFinite(zoom))
+    return <BookNotFoundProblem />;
 
-  return <Show bookId={bookId} token={token} />;
+  return <Show bookId={bookId} token={token} zoom={zoom} />;
 }
 
 export default Router;

@@ -111,3 +111,7 @@ export function revalidateBook(
 ): Promise<BookSchema> {
   return mutate([key, id, undefined], res);
 }
+
+export async function getBookIdByZoom(meetingId: number) {
+  return await api.apiV2BookZoomMeetingIdGet({ meetingId });
+}

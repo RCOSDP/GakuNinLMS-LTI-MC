@@ -5,7 +5,7 @@ import format from "date-fns/format";
 import utcToZoneTime from "date-fns-tz/utcToZonedTime";
 
 import prisma from "$server/utils/prisma";
-import type { Prisma, User } from "@prisma/client";
+import type { Prisma, User, Book, ZoomMeeting } from "@prisma/client";
 import type { UserSettingsProps } from "$server/models/userSettings";
 import { findUserByEmailAndLtiConsumerId } from "$server/utils/user";
 import keywordsConnectOrCreateInput from "$server/utils/keyword/keywordsConnectOrCreateInput";
@@ -13,12 +13,15 @@ import { validateWowzaSettings } from "$server/utils/wowza/env";
 import { startWowzaUpload } from "$server/utils/wowza/upload";
 import type { WowzaUpload } from "$server/utils/wowza/upload";
 import { findZoomMeeting } from "$server/utils/zoom/findZoomMeeting";
+import upsertPublicBooks from "$server/utils/publicBook/upsertPublicBooks";
 import {
   API_BASE_PATH,
   ZOOM_IMPORT_CONSUMER_KEY,
   ZOOM_IMPORT_WOWZA_BASE_URL,
   ZOOM_IMPORT_TO,
   ZOOM_IMPORT_AUTODELETE,
+  ZOOM_IMPORT_DISABLE_AUTOPUBLIC,
+  ZOOM_IMPORT_PUBLIC_DEFAULT_DOMAINS,
 } from "$server/utils/env";
 
 import type { ZoomResponse } from "$server/utils/zoom/api";
@@ -52,8 +55,25 @@ export async function zoomImport() {
       zoomUser.created_at,
       user,
       wowzaUpload,
-      tmpdir
-    ).importTopics();
+      tmpdir,
+      getDefaultDomains()
+    ).importBooks();
+  }
+}
+
+function getDefaultDomains() {
+  return ZOOM_IMPORT_PUBLIC_DEFAULT_DOMAINS.split(",")
+    .map((domain) => getDomainFromInput(domain))
+    .filter((domain) => domain.length);
+}
+
+function getDomainFromInput(newDomain: string) {
+  const trimmed = newDomain.trim();
+  try {
+    const host = new URL(trimmed).host;
+    return host ? host : trimmed;
+  } catch (e) {
+    return trimmed;
   }
 }
 
@@ -64,23 +84,26 @@ class ZoomImport {
   wowzaUpload: WowzaUpload;
   tmpdir: string;
   provider: string;
+  publicBookDomains: string[];
 
   constructor(
     zoomUserId: string,
     createdAt: string,
     user: User,
     wowzaUpload: WowzaUpload,
-    tmpdir: string
+    tmpdir: string,
+    publicBookDomains: string[]
   ) {
     this.zoomUserId = zoomUserId;
     this.createdAt = createdAt;
     this.user = user;
     this.wowzaUpload = wowzaUpload;
     this.tmpdir = tmpdir;
+    this.publicBookDomains = publicBookDomains;
     this.provider = ZOOM_IMPORT_TO == "wowza" ? "https://www.wowza.com/" : "";
   }
 
-  async importTopics() {
+  async importBooks() {
     try {
       const meetings = await zoomListRequest(
         `/users/${this.zoomUserId}/recordings`,
@@ -92,9 +115,9 @@ class ZoomImport {
       const transactions = [];
       const deletemeetings = [];
       for (const meeting of meetings) {
-        const data = await this.getTopic(meeting);
-        if (data && data.topic && data.zoomMeeting) {
-          transactions.push(prisma.topic.create({ data: data.topic }));
+        const data = await this.getBook(meeting);
+        if (data && data.book && data.zoomMeeting) {
+          transactions.push(prisma.book.create({ data: data.book }));
           transactions.push(
             prisma.zoomMeeting.create({ data: data.zoomMeeting })
           );
@@ -104,7 +127,9 @@ class ZoomImport {
       if (!transactions.length) return;
 
       await this.wowzaUpload.upload();
-      await prisma.$transaction(transactions);
+      const results = await prisma.$transaction(transactions);
+      if (!ZOOM_IMPORT_DISABLE_AUTOPUBLIC)
+        await prisma.$transaction(this.getPublicBooks(results));
       for (const deletemeeting of deletemeetings) {
         await zoomRequest(
           `/meetings/${deletemeeting}/recordings`,
@@ -118,6 +143,48 @@ class ZoomImport {
     } finally {
       await this.cleanUp();
     }
+  }
+
+  async getBook(meeting: ZoomResponse) {
+    const data = await this.getTopic(meeting);
+    if (data && data.topic && data.zoomMeeting) {
+      const { topic, zoomMeeting } = data;
+      const topicSections = [{ order: 0, topic: { create: topic } }];
+      const sections = [{ order: 0, topicSections: { create: topicSections } }];
+      const book = {
+        name: topic.name,
+        description: topic.description,
+        timeRequired: topic.timeRequired,
+        zoomMeetingId: ZOOM_IMPORT_DISABLE_AUTOPUBLIC ? null : meeting.id,
+        authors: { create: { userId: this.user.id, roleId: 1 } },
+        sections: { create: sections },
+        details: {},
+        ltiResourceLinks: {},
+      };
+      return { book, zoomMeeting };
+    }
+    return;
+  }
+
+  getPublicBooks(results: (Book | ZoomMeeting)[]) {
+    const transactions = [];
+    for (const result of results) {
+      if ("id" in result) {
+        const { id: bookId } = result as Book;
+        const publicBook = {
+          id: 0,
+          bookId,
+          userId: this.user.id,
+          domains: this.publicBookDomains,
+          expireAt: null,
+          token: "",
+        };
+        transactions.push(
+          ...upsertPublicBooks(this.user.id, bookId, [publicBook])
+        );
+      }
+    }
+    return transactions;
   }
 
   async getTopic(meeting: ZoomResponse) {
