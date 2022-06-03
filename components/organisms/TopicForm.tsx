@@ -505,7 +505,7 @@ export default function TopicForm(props: Props) {
               <div className={classes.videoBox}>
                 <VideoResource
                   {...videoResource}
-                  topicId={topic?.id ?? 0}
+                  identifier={videoResource.url}
                   autoplay
                   onDurationChange={handleDurationChange}
                   onTimeUpdate={handleTimeUpdate}
