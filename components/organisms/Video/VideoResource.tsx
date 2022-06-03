@@ -14,7 +14,7 @@ type Props = Pick<
   onEnded?: () => void;
   onDurationChange?: (duration: number) => void;
   onTimeUpdate?: (currentTime: number) => void;
-  topicId: number;
+  identifier: string; // トピック編集時はURL、それ以外の再生時はtopic.id
   autoplay?: boolean;
 };
 
@@ -23,7 +23,7 @@ export default function VideoResource({
   url,
   accessToken,
   tracks: resourceTracks,
-  topicId,
+  identifier,
   autoplay = false,
   ...other
 }: Props) {
@@ -36,9 +36,9 @@ export default function VideoResource({
 
   const { video } = useVideoAtom();
   useEffect(() => {
-    video.set(String(topicId), videoInstance);
+    video.set(identifier, videoInstance);
     return () => video.clear();
-  }, [video, topicId, videoInstance]);
+  }, [video, identifier, videoInstance]);
 
   return <VideoPlayer videoInstance={videoInstance} {...other} />;
 }

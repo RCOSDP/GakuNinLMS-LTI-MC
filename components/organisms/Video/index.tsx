@@ -141,7 +141,7 @@ export default function Video({ className, sx, topic, onEnded }: Props) {
           className={className}
           sx={{ ...videoStyle, ...sx }}
           {...(topic.resource as VideoResourceSchema)}
-          topicId={topic.id}
+          identifier={String(topic.id)}
           autoplay
         />
       )}
