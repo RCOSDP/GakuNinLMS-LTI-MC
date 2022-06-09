@@ -77,15 +77,16 @@ class ImportBooksUtil {
       }
       if (this.errors.length) return;
 
+      const books = [];
       for (const book of await prisma.$transaction(transactions)) {
         const res = await findBook(book.id, this.user.id, "");
-        if (res) this.books.push(res as BookSchema);
+        if (res) books.push(res as BookSchema);
       }
 
       const roles = await findRoles();
       const contents = {
-        books: this.books,
-        topics: this.books.flatMap((book) =>
+        books,
+        topics: books.flatMap((book) =>
           book.sections.flatMap((section) => section.topics)
         ),
       };
@@ -98,6 +99,11 @@ class ImportBooksUtil {
           insertAuthors(roles, "topic", topic.id, this.params.authors)
         ),
       ]);
+
+      for (const book of books) {
+        const res = await findBook(book.id, this.user.id, "");
+        if (res) this.books.push(res as BookSchema);
+      }
     } catch (e) {
       console.error(e);
       this.errors.push(...(Array.isArray(e) ? e : [String(e)]));
