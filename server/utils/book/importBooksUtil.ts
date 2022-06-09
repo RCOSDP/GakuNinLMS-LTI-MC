@@ -292,7 +292,6 @@ class ImportBooksUtil {
     return {
       ...importBook,
       timeRequired: this.timeRequired,
-      authors: { create: { userId: this.user.id, roleId: 1 } },
       publishedAt: new Date(importBook.publishedAt),
       createdAt: new Date(importBook.createdAt),
       updatedAt: new Date(importBook.updatedAt),
@@ -338,7 +337,6 @@ class ImportBooksUtil {
 
     const topic = {
       ...sectionTopic,
-      authors: { create: { userId: this.user.id, roleId: 1 } },
       createdAt: new Date(sectionTopic.createdAt),
       updatedAt: new Date(sectionTopic.updatedAt),
       keywords: this.getKeywords(sectionTopic.keywords),
