@@ -55,7 +55,7 @@ export default function BookPreviewDialog(props: Props) {
   const { book, open, onClose, children } = props;
   const dialogClasses = useDialogStyles();
   const classes = useStyles();
-  const { updateBook, itemIndex, nextItemIndex, updateItemIndex } =
+  const { updateBook, itemIndex, nextItemIndex, itemExists, updateItemIndex } =
     useBookAtom();
   const { session } = useSessionAtom();
   useEffect(() => {
@@ -63,9 +63,12 @@ export default function BookPreviewDialog(props: Props) {
   }, [book, updateBook]);
   const handleTopicNext = useCallback(
     (index: ItemIndex = nextItemIndex) => {
+      const topic = itemExists(index);
+      if (!topic) return;
+
       updateItemIndex(index);
     },
-    [nextItemIndex, updateItemIndex]
+    [nextItemIndex, itemExists, updateItemIndex]
   );
 
   return (
