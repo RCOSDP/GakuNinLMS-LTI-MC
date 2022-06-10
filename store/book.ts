@@ -25,7 +25,7 @@ const nextItemIndexAtom = atom((get) => {
   if (itemExists(nextTopicIndex)) return nextTopicIndex;
   if (itemExists(nextSectionIndex)) return nextSectionIndex;
 
-  return itemIndex;
+  return [-1, -1] as const;
 });
 
 const updateBookAtom = atom<undefined, BookSchema>(

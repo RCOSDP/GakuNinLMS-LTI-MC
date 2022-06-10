@@ -79,7 +79,9 @@ function Show(query: Query) {
   const handleTopicNext = useCallback(
     (index: ItemIndex = nextItemIndex) => {
       const topic = itemExists(index);
-      if (topic) playerTracker?.next(topic.id);
+      if (!topic) return;
+
+      playerTracker?.next(topic.id);
       updateItemIndex(index);
     },
     [playerTracker, nextItemIndex, itemExists, updateItemIndex]

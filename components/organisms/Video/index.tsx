@@ -104,11 +104,13 @@ export default function Video({ className, sx, topic, onEnded }: Props) {
         if (videoInstance.stopTimeOver) videoInstance.player.pause();
       };
       const handleFirstPlay = () => {
-        videoInstance.player.currentTime(startTime || 0);
+        if (Number.isFinite(startTime))
+          videoInstance.player.currentTime(startTime || 0);
       };
       const handleReady = () => {
         if (videoInstance.stopTimeOver) {
-          videoInstance.player.currentTime(startTime || 0);
+          if (Number.isFinite(startTime))
+            videoInstance.player.currentTime(startTime || 0);
           videoInstance.stopTimeOver = false;
         }
         videoInstance.player.on("timeupdate", handleTimeUpdate);
