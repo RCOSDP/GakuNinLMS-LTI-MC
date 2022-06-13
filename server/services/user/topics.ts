@@ -1,3 +1,4 @@
+import type { FastifyRequest } from "fastify";
 import { outdent } from "outdent";
 import type { UserParams } from "$server/validators/userParams";
 import { userParamsSchema } from "$server/validators/userParams";
@@ -33,14 +34,12 @@ export const hooks = {
 export async function index({
   query,
   params,
-}: {
-  query: Query;
-  params: Params;
-}) {
+  ip,
+}: FastifyRequest<{ Querystring: Query; Params: Params }>) {
   const page = query.page ?? 0;
   const perPage = query.per_page ?? 50;
   const { user_id: userId } = params;
-  const topics = await findTopicsBy(userId, query.sort, page, perPage);
+  const topics = await findTopicsBy(userId, query.sort, page, perPage, ip);
 
   return {
     status: 200,

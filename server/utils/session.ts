@@ -47,6 +47,8 @@ function hasRole(
   session: SessionSchema,
   role: "isAdministrator" | "isInstructor"
 ) {
+  if (!session.ltiVersion || !session.ltiRoles) return false;
+
   const roleToFind: (ltiRoles: LtiRolesSchema) => boolean = {
     "1.0.0": ltiv1p1Roles,
     "1.3.0": ltiv1p3Roles,

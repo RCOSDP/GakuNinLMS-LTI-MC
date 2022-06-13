@@ -5,8 +5,9 @@ import getValidUrl from "./getValidUrl";
 
 const defaultResource = (url: URL): VideoResource => ({
   url: url.href,
-  providerUrl: `${url.origin}/`,
+  providerUrl: "https://www.wowza.com/", // providerMatchers に一致しないものは wowza とみなす
   tracks: [],
+  accessToken: "",
 });
 
 const hostMatch =
@@ -31,5 +32,6 @@ export function parse(value: string): VideoResource | undefined {
     providerUrl: matcher.providerUrl,
     url: matcher.url(url),
     tracks: [],
+    accessToken: "",
   };
 }

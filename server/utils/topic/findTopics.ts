@@ -9,7 +9,8 @@ import {
 async function findTopics(
   sort = "updated",
   page: number,
-  perPage: number
+  perPage: number,
+  ip: string
 ): Promise<TopicSchema[]> {
   const topics = await prisma.topic.findMany({
     ...topicsWithResourcesArg,
@@ -18,7 +19,7 @@ async function findTopics(
     take: perPage,
   });
 
-  return topics.map(topicToTopicSchema);
+  return topics.map((topic) => topicToTopicSchema(topic, ip));
 }
 
 export default findTopics;

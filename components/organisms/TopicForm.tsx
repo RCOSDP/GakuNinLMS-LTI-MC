@@ -422,7 +422,18 @@ export default function TopicForm(props: Props) {
         })}
       >
         <div>
-          <InputLabel htmlFor="shared">他の教員にシェア</InputLabel>
+          <InputLabel htmlFor="shared">
+            <>
+              トピックをシェアする
+              <Typography
+                className={classes.labelDescription}
+                variant="caption"
+                component="span"
+              >
+                他の教材作成者とトピックを共有します
+              </Typography>
+            </>
+          </InputLabel>
           <Checkbox
             id="shared"
             name="shared"
@@ -433,18 +444,7 @@ export default function TopicForm(props: Props) {
         </div>
         <TextField
           inputProps={register("topic.name")}
-          label={
-            <>
-              タイトル
-              <Typography
-                className={classes.labelDescription}
-                variant="caption"
-                component="span"
-              >
-                学習者が学習範囲を簡潔に理解できるタイトルを設定できます
-              </Typography>
-            </>
-          }
+          label="タイトル"
           required
           fullWidth
         />
@@ -505,6 +505,7 @@ export default function TopicForm(props: Props) {
               <div className={classes.videoBox}>
                 <VideoResource
                   {...videoResource}
+                  identifier={videoResource.url}
                   autoplay
                   onDurationChange={handleDurationChange}
                   onTimeUpdate={handleTimeUpdate}

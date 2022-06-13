@@ -7,7 +7,8 @@ import {
 } from "./topicToTopicSchema";
 
 async function findTopic(
-  topicId: Topic["id"]
+  topicId: Topic["id"],
+  ip: string
 ): Promise<TopicSchema | undefined> {
   const topic = await prisma.topic.findUnique({
     ...topicsWithResourcesArg,
@@ -15,7 +16,7 @@ async function findTopic(
   });
   if (topic == null) return;
 
-  return topicToTopicSchema(topic);
+  return topicToTopicSchema(topic, ip);
 }
 
 export default findTopic;

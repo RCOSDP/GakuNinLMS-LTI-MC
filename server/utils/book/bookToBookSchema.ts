@@ -33,6 +33,30 @@ export const bookIncludingTopicsArg = {
   },
 } as const;
 
+export const getBookIncludingArg = (userId: number) => {
+  return {
+    include: {
+      authors: authorArg,
+      ltiResourceLinks: ltiResourceLinkIncludingContextArg,
+      keywords: true,
+      sections: {
+        orderBy: { order: "asc" },
+        include: {
+          topicSections: {
+            orderBy: { order: "asc" },
+            include: { topic: topicsWithResourcesArg },
+          },
+        },
+      },
+      publicBooks: {
+        where: {
+          userId,
+        },
+      },
+    },
+  } as const;
+};
+
 type TopicSectionWithTopic = TopicSection & {
   topic: TopicWithResource;
 };
@@ -45,27 +69,35 @@ export type BookWithTopics = Prisma.BookGetPayload<
   typeof bookIncludingTopicsArg
 >;
 
-export function bookToBookSchema(book: BookWithTopics): BookSchema {
+export function bookToBookSchema(book: BookWithTopics, ip: string): BookSchema {
   return {
     ...book,
     authors: book.authors.map(authorToAuthorSchema),
     ltiResourceLinks: book.ltiResourceLinks.map(ltiResourceLinkToSchema),
-    sections: book.sections.map(sectionToSectionSchema),
+    sections: book.sections.map((section) =>
+      sectionToSectionSchema(section, ip)
+    ),
   };
 }
 
-function sectionToSectionSchema(section: SectionWithTopics): SectionSchema {
+function sectionToSectionSchema(
+  section: SectionWithTopics,
+  ip: string
+): SectionSchema {
   return {
     ...section,
-    topics: section.topicSections.map(topicSectionToTopicSchema),
+    topics: section.topicSections.map((topicSection) =>
+      topicSectionToTopicSchema(topicSection, ip)
+    ),
   };
 }
 
 function topicSectionToTopicSchema(
-  topicSection: TopicSectionWithTopic
+  topicSection: TopicSectionWithTopic,
+  ip: string
 ): TopicSchema {
   return {
     ...topicSection,
-    ...topicToTopicSchema(topicSection.topic),
+    ...topicToTopicSchema(topicSection.topic, ip),
   };
 }

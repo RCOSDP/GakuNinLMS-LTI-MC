@@ -77,15 +77,16 @@ class ImportBooksUtil {
       }
       if (this.errors.length) return;
 
+      const books = [];
       for (const book of await prisma.$transaction(transactions)) {
-        const res = await findBook(book.id);
-        if (res) this.books.push(res as BookSchema);
+        const res = await findBook(book.id, this.user.id, "");
+        if (res) books.push(res as BookSchema);
       }
 
       const roles = await findRoles();
       const contents = {
-        books: this.books,
-        topics: this.books.flatMap((book) =>
+        books,
+        topics: books.flatMap((book) =>
           book.sections.flatMap((section) => section.topics)
         ),
       };
@@ -98,6 +99,11 @@ class ImportBooksUtil {
           insertAuthors(roles, "topic", topic.id, this.params.authors)
         ),
       ]);
+
+      for (const book of books) {
+        const res = await findBook(book.id, this.user.id, "");
+        if (res) this.books.push(res as BookSchema);
+      }
     } catch (e) {
       console.error(e);
       this.errors.push(...(Array.isArray(e) ? e : [String(e)]));
@@ -292,7 +298,6 @@ class ImportBooksUtil {
     return {
       ...importBook,
       timeRequired: this.timeRequired,
-      authors: { create: { userId: this.user.id, roleId: 1 } },
       publishedAt: new Date(importBook.publishedAt),
       createdAt: new Date(importBook.createdAt),
       updatedAt: new Date(importBook.updatedAt),
@@ -338,7 +343,6 @@ class ImportBooksUtil {
 
     const topic = {
       ...sectionTopic,
-      authors: { create: { userId: this.user.id, roleId: 1 } },
       createdAt: new Date(sectionTopic.createdAt),
       updatedAt: new Date(sectionTopic.updatedAt),
       keywords: this.getKeywords(sectionTopic.keywords),

@@ -104,16 +104,20 @@ export default function Video({ className, sx, topic, onEnded }: Props) {
         if (videoInstance.stopTimeOver) videoInstance.player.pause();
       };
       const handleFirstPlay = () => {
-        videoInstance.player.currentTime(startTime || 0);
+        if (Number.isFinite(startTime))
+          videoInstance.player.currentTime(startTime || 0);
       };
       const handleReady = () => {
         if (videoInstance.stopTimeOver) {
-          videoInstance.player.currentTime(startTime || 0);
+          if (Number.isFinite(startTime))
+            videoInstance.player.currentTime(startTime || 0);
           videoInstance.stopTimeOver = false;
         }
         videoInstance.player.on("timeupdate", handleTimeUpdate);
         videoInstance.player.on("seeked", handleSeeked);
-        void videoInstance.player.play();
+        videoInstance.player.play()?.catch(() => {
+          // nop
+        });
       };
 
       videoInstance.player.on("ended", handleEnded);
@@ -139,6 +143,7 @@ export default function Video({ className, sx, topic, onEnded }: Props) {
           className={className}
           sx={{ ...videoStyle, ...sx }}
           {...(topic.resource as VideoResourceSchema)}
+          identifier={String(topic.id)}
           autoplay
         />
       )}

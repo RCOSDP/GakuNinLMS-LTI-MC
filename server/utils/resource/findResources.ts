@@ -6,7 +6,8 @@ import { resourceWithVideoArg, resourceToResourceSchema } from "./toSchema";
 async function findResources(
   sort = "updated",
   page: number,
-  perPage: number
+  perPage: number,
+  ip: string
 ): Promise<ResourceSchema[]> {
   const sortQuery = makeSortOrderQuery(sort);
   const resources = await prisma.resource.findMany({
@@ -16,7 +17,7 @@ async function findResources(
     take: perPage,
   });
 
-  return resources.map(resourceToResourceSchema);
+  return resources.map((resource) => resourceToResourceSchema(resource, ip));
 }
 
 export default findResources;

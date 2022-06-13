@@ -51,7 +51,8 @@ export async function findBooksBy(
   by: User["id"],
   sort = "updated",
   page: number,
-  perPage: number
+  perPage: number,
+  ip: string
 ): Promise<BookSchema[]> {
   const authorship = await prisma.authorship.findMany({
     where: { userId: by },
@@ -66,7 +67,7 @@ export async function findBooksBy(
   });
 
   return authorship.flatMap(({ book }) =>
-    book == null ? [] : [bookToBookSchema(book)]
+    book == null ? [] : [bookToBookSchema(book, ip)]
   );
 }
 
@@ -74,7 +75,8 @@ export async function findTopicsBy(
   by: User["id"],
   sort = "updated",
   page: number,
-  perPage: number
+  perPage: number,
+  ip: string
 ): Promise<TopicSchema[]> {
   const authorship = await prisma.authorship.findMany({
     where: { userId: by },
@@ -89,6 +91,6 @@ export async function findTopicsBy(
   });
 
   return authorship.flatMap(({ topic }) =>
-    topic == null ? [] : [topicToTopicSchema(topic)]
+    topic == null ? [] : [topicToTopicSchema(topic, ip)]
   );
 }

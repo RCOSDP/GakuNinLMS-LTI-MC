@@ -6,11 +6,14 @@ export type VideoResource = {
   url: Resource["url"];
   providerUrl: Video["providerUrl"];
   tracks: VideoTrackSchema[];
+  accessToken: string;
 };
 
 export type VideoResourcePropsSchema = Pick<VideoResource, "url">;
 export type VideoResourceSchema = Resource &
-  Pick<VideoResource, "providerUrl" | "tracks">;
+  Pick<VideoResource, "providerUrl" | "tracks"> & {
+    accessToken: string;
+  };
 
 export const videoResourcePropsSchema = {
   type: "object",
@@ -24,6 +27,7 @@ export const videoResourceSchema = {
   properties: {
     id: { type: "integer" },
     url: { type: "string" },
+    accessToken: { type: "string" },
     details: { type: "object" },
     providerUrl: { type: "string", nullable: true },
     tracks: {

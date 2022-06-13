@@ -10,6 +10,7 @@ import Checkbox from "@mui/material/Checkbox";
 import { styled } from "@mui/material/styles";
 import { grey } from "@mui/material/colors";
 import EditButton from "$atoms/EditButton";
+import LinkButton from "$atoms/LinkButton";
 import DescriptionList from "$atoms/DescriptionList";
 import License from "$atoms/License";
 import SharedIndicator from "$atoms/SharedIndicator";
@@ -158,6 +159,17 @@ export default function ContentPreview({
         title={content.name}
         sx={{ mx: 2, my: 1 }}
       >
+        {content.type === "book" &&
+          content.publicBooks &&
+          content.publicBooks.map((publicBook) => (
+            <LinkButton
+              key={publicBook.id}
+              url={`${location.origin}/book?token=${publicBook.token}`}
+              conditional={Boolean(
+                publicBook.expireAt || publicBook.domains.length
+              )}
+            />
+          ))}
         {content.shared && <SharedIndicator className="shared" />}
         {onContentEditClick && (
           <EditButton

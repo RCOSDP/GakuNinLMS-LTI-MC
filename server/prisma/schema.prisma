@@ -190,6 +190,7 @@ model Book {
   id               Int               @id @default(autoincrement())
   keywords         Keyword[]         @relation(references: [id])
   sections         Section[]
+  publicBooks      PublicBook[]
   ltiResourceLinks LtiResourceLink[]
   /// 題名
   name             String
@@ -205,6 +206,8 @@ model Book {
   authors          Authorship[]
   /// ライセンス (https://spdx.org/licenses/ に準拠するもの, "" は無効)
   license          String            @default("")
+  /// zoomミーティングid
+  zoomMeetingId    BigInt?           @map("zoom_meeting_id")
   /// 公開日
   publishedAt      DateTime          @default(now()) @map("published_at")
   /// 作成日
@@ -215,6 +218,26 @@ model Book {
   details          Json
 
   @@map("books")
+  @@index([zoomMeetingId])
+}
+
+/// 公開URLブック
+model PublicBook {
+  id            Int            @id @default(autoincrement())
+  /// ブック
+  book          Book           @relation(fields: [bookId], references: [id])
+  bookId        Int            @map("book_id")
+  /// ユーザー
+  user          User           @relation(fields: [userId], references: [id])
+  userId        Int            @map("user_id")
+  /// 許可ドメイン
+  domains       String[]
+  /// 期限日
+  expireAt      DateTime?      @map("expire_at")
+  /// アクセストークン
+  token         String         @unique
+
+  @@map("public_books")
 }
 
 /// セクション
@@ -258,6 +281,7 @@ model User {
   ltiConsumerId    String            @map("lti_consumer_id")
   ltiUserId        String            @map("lti_user_id")
   activities       Activity[]
+  publicBooks      PublicBook[]
   /// 氏名
   name             String
   /// メールアドレス ("" は無効値)

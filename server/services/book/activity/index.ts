@@ -40,6 +40,9 @@ async function index({
   Params: Params;
   Querystring: Query;
 }>) {
+  if (!session.user || !session.oauthClient || !session.ltiContext)
+    return { status: 401 };
+
   const activity: Array<ActivitySchema> = await fetchActivity(
     {
       learnerId: session.user.id,

@@ -11,7 +11,10 @@ import getVimeoPlayer from "./getVimeoPlayer";
  * @returns プレイヤーのHTML要素、インスタンス、video.jsであれば字幕トラック
  */
 function getVideoInstance(
-  resource: Pick<VideoResourceSchema, "providerUrl" | "url" | "tracks">,
+  resource: Pick<
+    VideoResourceSchema,
+    "providerUrl" | "url" | "accessToken" | "tracks"
+  >,
   autoplay = false
 ): VideoInstance {
   switch (resource.providerUrl) {
@@ -38,19 +41,19 @@ function getVideoInstance(
         url: resource.url,
         ...getVimeoPlayer({ url: resource.url, autoplay }),
       };
-    default:
+    default: {
+      const url = `${resource.url}?accessToken=${resource.accessToken}`;
       return {
         type: "wowza",
-        url: resource.url,
+        url,
         ...getVideoJsPlayer({
-          sources: [
-            { type: "application/vnd.apple.mpegurl", src: resource.url },
-          ],
+          sources: [{ type: "application/vnd.apple.mpegurl", src: url }],
           autoplay,
         }),
         tracks: buildTracks(resource.tracks),
         stopTimeOver: false,
       };
+    }
   }
 }
 
