@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useRouter } from "next/router";
 import type { BookSchema } from "$server/models/book";
 import {
@@ -23,6 +23,7 @@ import logger from "$utils/eventLogger/logger";
 export type Query = { bookId: BookSchema["id"]; token?: string; zoom?: number };
 
 function Show(query: Query) {
+  const [redirectError, setRedirectError] = useState(false);
   const router = useRouter();
   if (query.zoom) {
     void getBookIdByZoom(query.zoom)
@@ -33,7 +34,7 @@ function Show(query: Query) {
         );
       })
       .catch((_) => {
-        // nop
+        setRedirectError(true);
       });
   }
 
@@ -111,7 +112,16 @@ function Show(query: Query) {
     onTopicEditClick: handleTopicEditClick,
   };
 
-  if (error) return <BookNotFoundProblem />;
+  // 読み込み直後はクエリがなにもないか判断できないので、少し待ってから判断する
+  const [timedout, setTimedout] = useState(false);
+  if (!timedout) setTimeout(() => setTimedout(true), 5000);
+  const queryError =
+    timedout &&
+    !Number.isFinite(query.bookId) &&
+    !query.token &&
+    !Number.isFinite(query.zoom);
+
+  if (error || redirectError || queryError) return <BookNotFoundProblem />;
   if (!book) return <Placeholder />;
 
   return <Book book={book} index={itemIndex} {...handlers} />;
@@ -124,9 +134,6 @@ function Router() {
     ? router.query.token[0]
     : router.query.token;
   const zoom = Number(router.query.zoom);
-
-  if (!Number.isFinite(bookId) && !token && !Number.isFinite(zoom))
-    return <BookNotFoundProblem />;
 
   return <Show bookId={bookId} token={token} zoom={zoom} />;
 }
