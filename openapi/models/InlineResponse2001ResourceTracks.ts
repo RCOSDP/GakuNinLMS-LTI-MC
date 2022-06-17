@@ -43,6 +43,12 @@ export interface InlineResponse2001ResourceTracks {
      * @memberof InlineResponse2001ResourceTracks
      */
     url?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineResponse2001ResourceTracks
+     */
+    accessToken?: string;
 }
 
 export function InlineResponse2001ResourceTracksFromJSON(json: any): InlineResponse2001ResourceTracks {
@@ -59,6 +65,7 @@ export function InlineResponse2001ResourceTracksFromJSONTyped(json: any, ignoreD
         'kind': !exists(json, 'kind') ? undefined : json['kind'],
         'language': !exists(json, 'language') ? undefined : json['language'],
         'url': !exists(json, 'url') ? undefined : json['url'],
+        'accessToken': !exists(json, 'accessToken') ? undefined : json['accessToken'],
     };
 }
 
@@ -75,6 +82,7 @@ export function InlineResponse2001ResourceTracksToJSON(value?: InlineResponse200
         'kind': value.kind,
         'language': value.language,
         'url': value.url,
+        'accessToken': value.accessToken,
     };
 }
 

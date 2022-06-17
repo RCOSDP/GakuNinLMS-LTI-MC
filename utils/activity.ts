@@ -32,18 +32,20 @@ const buildUpdateHandler =
 
 /** 学習活動のトラッキングの開始 (要: useBook()) */
 export function useActivityTracking() {
-  const { isInstructor } = useSessionAtom();
+  const { session, isInstructor } = useSessionAtom();
   const { itemIndex, itemExists } = useBookAtom();
+  const loggedin = Boolean(session?.user?.id);
   const topic = itemExists(itemIndex);
   const playerTracker = usePlayerTrackerAtom();
   const unchanged = playerTracker === usePrevious(playerTracker);
   const updateHandler = useMemo(() => {
+    if (!loggedin) return;
     if (isInstructor) return;
     if (unchanged) return;
     return (
       topic && playerTracker && buildUpdateHandler(topic.id, playerTracker)
     );
-  }, [isInstructor, unchanged, topic, playerTracker]);
+  }, [isInstructor, unchanged, topic, playerTracker, loggedin]);
   const throttled = useMemo(
     () =>
       updateHandler &&

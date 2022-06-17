@@ -31,7 +31,7 @@ export default function TopicViewerContent({ topic, onEnded, offset }: Props) {
         <Video
           className={sticky}
           sx={{ mt: -2, mx: -3, mb: 2 }}
-          resource={topic.resource}
+          topic={topic}
           onEnded={onEnded}
         />
       )}

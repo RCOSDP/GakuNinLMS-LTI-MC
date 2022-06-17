@@ -48,35 +48,38 @@ export default function SubtitleUploadDialog(props: Props) {
       onClose={onClose}
       PaperProps={{
         classes: cardClasses,
-        onSubmit: handleSubmit(({ contentFile, ...values }) => {
-          const content = contentFile?.[0] ?? defaultValues.content;
-          onSubmit({ ...values, content });
-        }),
       }}
     >
-      <DialogTitle>字幕のアップロード</DialogTitle>
-      <DialogContent className={classes.margin}>
-        <TextField
-          label="字幕ファイル"
-          type="file"
-          inputProps={register("contentFile")}
-        />
-        <TextField
-          label="言語"
-          select
-          defaultValue={defaultValues.language}
-          inputProps={register("language")}
-        >
-          {Object.entries(languages).map(([value, label]) => (
-            <MenuItem key={value} value={value}>
-              {label}
-            </MenuItem>
-          ))}
-        </TextField>
-        <Button variant="contained" color="primary" type="submit">
-          アップロード
-        </Button>
-      </DialogContent>
+      <form
+        onSubmit={handleSubmit(({ contentFile, ...values }) => {
+          const content = contentFile?.[0] ?? defaultValues.content;
+          onSubmit({ ...values, content });
+        })}
+      >
+        <DialogTitle>字幕のアップロード</DialogTitle>
+        <DialogContent className={classes.margin}>
+          <TextField
+            label="字幕ファイル"
+            type="file"
+            inputProps={register("contentFile")}
+          />
+          <TextField
+            label="言語"
+            select
+            defaultValue={defaultValues.language}
+            inputProps={register("language")}
+          >
+            {Object.entries(languages).map(([value, label]) => (
+              <MenuItem key={value} value={value}>
+                {label}
+              </MenuItem>
+            ))}
+          </TextField>
+          <Button variant="contained" color="primary" type="submit">
+            アップロード
+          </Button>
+        </DialogContent>
+      </form>
     </Dialog>
   );
 }

@@ -1,14 +1,13 @@
 import { useEffect } from "react";
 import { atom, useAtom } from "jotai";
 import { RESET, atomWithReset, useUpdateAtom } from "jotai/utils";
-import type { ResourceSchema } from "$server/models/resource";
 import type { SectionSchema } from "$server/models/book/section";
 import type { VideoInstance } from "$types/videoInstance";
 import { isVideoResource } from "$utils/videoResource";
 import getVideoInstance from "$utils/video/getVideoInstance";
 
 const videoAtom = atomWithReset<{
-  video: Map<ResourceSchema["url"], VideoInstance>;
+  video: Map<string, VideoInstance>;
 }>({
   video: new Map(),
 });
@@ -17,15 +16,12 @@ const updateVideoAtom = atom(
   null,
   (get, set, sections: Pick<SectionSchema, "topics">[]) => {
     const { video } = get(videoAtom);
-    const resources = sections.flatMap(({ topics }) =>
-      topics.map(({ resource }) => resource)
-    );
-    for (const resource of resources) {
-      if (!isVideoResource(resource)) {
-        video.delete(resource.url);
+    for (const topic of sections.flatMap(({ topics }) => topics)) {
+      if (!isVideoResource(topic.resource)) {
+        video.delete(String(topic.id));
         continue;
       }
-      video.set(resource.url, getVideoInstance(resource));
+      video.set(String(topic.id), getVideoInstance(topic.resource));
     }
     set(videoAtom, { video });
   }

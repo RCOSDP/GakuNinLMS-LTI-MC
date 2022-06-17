@@ -6,7 +6,7 @@ import TopicForm from "$organisms/TopicForm";
 import Container from "$atoms/Container";
 import RequiredDot from "$atoms/RequiredDot";
 import BackButton from "$atoms/BackButton";
-import type { TopicProps, TopicSchema } from "$server/models/topic";
+import type { TopicPropsWithUpload, TopicSchema } from "$server/models/topic";
 import type {
   VideoTrackProps,
   VideoTrackSchema,
@@ -36,7 +36,8 @@ const useStyles = makeStyles((theme) => ({
 
 type Props = {
   topic: TopicSchema;
-  onSubmit(topic: TopicProps): void;
+  submitResult: string;
+  onSubmit(topic: TopicPropsWithUpload): void;
   onDelete(topic: TopicSchema): void;
   onCancel(): void;
   onSubtitleDelete(videoTrack: VideoTrackSchema): void;
@@ -48,6 +49,7 @@ type Props = {
 export default function TopicEdit(props: Props) {
   const {
     topic,
+    submitResult,
     onSubmit,
     onDelete,
     onCancel,
@@ -80,6 +82,7 @@ export default function TopicEdit(props: Props) {
       <TopicForm
         className={classes.form}
         topic={topic}
+        submitResult={submitResult}
         variant="update"
         onSubmit={onSubmit}
         onSubtitleDelete={onSubtitleDelete}

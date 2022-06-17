@@ -1,10 +1,9 @@
-import type { FastifySchema } from "fastify";
+import type { FastifySchema, FastifyRequest } from "fastify";
 import { outdent } from "outdent";
 import type { BookProps } from "$server/models/book";
 import { bookPropsSchema, bookSchema } from "$server/models/book";
 import type { BookParams } from "$server/validators/bookParams";
 import { bookParamsSchema } from "$server/validators/bookParams";
-import type { SessionSchema } from "$server/models/session";
 import authUser from "$server/auth/authUser";
 import authInstructor from "$server/auth/authInstructor";
 import { isUsersOrAdmin } from "$server/utils/session";
@@ -35,20 +34,21 @@ export async function update({
   session,
   body,
   params,
-}: {
-  session: SessionSchema;
-  body: BookProps;
-  params: BookParams;
-}) {
+  ip,
+}: FastifyRequest<{ Body: BookProps; Params: BookParams }>) {
   const found = await bookExists(params.book_id);
 
   if (!found) return { status: 404 };
   if (!isUsersOrAdmin(session, found.authors)) return { status: 403 };
 
-  const created = await updateBook({
-    ...body,
-    id: params.book_id,
-  });
+  const created = await updateBook(
+    session.user.id,
+    {
+      ...body,
+      id: params.book_id,
+    },
+    ip
+  );
 
   return {
     status: created == null ? 400 : 201,

@@ -2,6 +2,8 @@ import type { Book } from "@prisma/client";
 import { AuthorSchema } from "./author";
 import type { SectionProps, SectionSchema } from "./book/section";
 import { sectionPropsSchema, sectionSchema } from "./book/section";
+import type { PublicBookSchema } from "./book/public";
+import { publicBookSchema } from "./book/public";
 import type { LtiResourceLinkSchema } from "./ltiResourceLink";
 import { ltiResourceLinkSchema } from "./ltiResourceLink";
 import { KeywordPropSchema, KeywordSchema } from "./keyword";
@@ -13,6 +15,7 @@ export type BookProps = {
   shared?: boolean;
   sections?: SectionProps[];
   keywords?: KeywordPropSchema[];
+  publicBooks?: PublicBookSchema[];
 };
 
 export type BookSchema = Book & {
@@ -20,6 +23,7 @@ export type BookSchema = Book & {
   sections: SectionSchema[];
   ltiResourceLinks: LtiResourceLinkSchema[];
   keywords: KeywordSchema[];
+  publicBooks?: PublicBookSchema[];
 };
 
 export const bookPropsSchema = {
@@ -36,6 +40,10 @@ export const bookPropsSchema = {
     keywords: {
       type: "array",
       items: KeywordPropSchema,
+    },
+    publicBooks: {
+      type: "array",
+      items: publicBookSchema,
     },
   },
 } as const;
@@ -62,6 +70,10 @@ export const bookSchema = {
     ltiResourceLinks: {
       type: "array",
       items: ltiResourceLinkSchema,
+    },
+    publicBooks: {
+      type: "array",
+      items: publicBookSchema,
     },
   },
 } as const;

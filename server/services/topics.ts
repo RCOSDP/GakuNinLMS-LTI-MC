@@ -1,3 +1,4 @@
+import type { FastifyRequest } from "fastify";
 import { outdent } from "outdent";
 import { topicSchema } from "$server/models/topic";
 import type { PaginationProps } from "$server/validators/paginationProps";
@@ -37,10 +38,13 @@ export const hooks = {
   get: { auth: [authUser, authInstructor] },
 };
 
-export async function index({ query }: { query: Query }) {
+export async function index({
+  query,
+  ip,
+}: FastifyRequest<{ Querystring: Query }>) {
   const page = query.page ?? 0;
   const perPage = query.per_page ?? 50;
-  const topics = await findTopics(query.sort, page, perPage);
+  const topics = await findTopics(query.sort, page, perPage, ip);
 
   return {
     status: 200,

@@ -11,6 +11,8 @@ import { pagesPath } from "$utils/$path";
 import { updateLtiResourceLink } from "$utils/ltiResourceLink";
 import getLtiResourceLink from "$utils/getLtiResourceLink";
 import useDialogProps from "$utils/useDialogProps";
+import { useBookAtom } from "$store/book";
+import { useVideoAtom } from "$store/video";
 import { useSearchAtom } from "$store/search";
 import { revalidateContents } from "utils/useContents";
 
@@ -27,9 +29,17 @@ function Index() {
   const { linkedBook } = useLinkedBook();
   const {
     data: previewContent,
-    dispatch: onContentPreviewClick,
+    dispatch,
     ...dialogProps
   } = useDialogProps<ContentSchema>();
+  const { updateBook } = useBookAtom();
+  const { updateVideo } = useVideoAtom();
+  const onContentPreviewClick = (content: ContentSchema) => {
+    const book = content as BookSchema;
+    updateBook(book);
+    updateVideo(book.sections);
+    dispatch(content);
+  };
   const { query } = useSearchAtom();
   const onContentEditClick = (book: Pick<ContentSchema, "id" | "authors">) => {
     const action = isContentEditable(book) ? "edit" : "generate";

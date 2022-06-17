@@ -1,5 +1,6 @@
 import format from "date-fns/format";
 import utcToZoneTime from "date-fns-tz/utcToZonedTime";
+import { validateWowzaSettings } from "$server/utils/wowza/env";
 
 import {
   ZOOM_API_KEY,
@@ -10,7 +11,7 @@ import {
   ZOOM_IMPORT_WOWZA_BASE_URL,
 } from "$server/utils/env";
 
-export function validateSettings(logging = true) {
+export function validateZoomSettings(logging = true) {
   if (
     !ZOOM_API_KEY ||
     !ZOOM_API_SECRET ||
@@ -25,15 +26,18 @@ export function validateSettings(logging = true) {
       );
     return false;
   }
-  return validateWowzaSettings(logging);
+  return validateZoomWowzaSettings(logging);
 }
 
-function validateWowzaSettings(logging = true) {
-  if (ZOOM_IMPORT_TO == "wowza" && !ZOOM_IMPORT_WOWZA_BASE_URL) {
+function validateZoomWowzaSettings(logging = true) {
+  if (
+    ZOOM_IMPORT_TO == "wowza" &&
+    (!ZOOM_IMPORT_WOWZA_BASE_URL || !validateWowzaSettings(logging))
+  ) {
     if (logging)
       logger(
         "INFO",
-        `zoom import is disabled. ZOOM_IMPORT_WOWZA_BASE_URL is not defined.`
+        `zoom import is disabled. ZOOM_IMPORT_WOWZA_BASE_URL is not defined, or wowza upload is disabled.`
       );
     return false;
   }

@@ -1,11 +1,11 @@
 import schedule from "node-schedule";
 
 import { ZOOM_IMPORT_INTERVAL } from "$server/utils/env";
-import { validateSettings, logger } from "$server/utils/zoom/env";
+import { validateZoomSettings, logger } from "$server/utils/zoom/env";
 import { zoomImport } from "$server/utils/zoom/import";
 
 export async function setupZoomImportScheduler() {
-  if (!validateSettings()) return;
+  if (!validateZoomSettings()) return;
 
   const job = schedule.scheduleJob(ZOOM_IMPORT_INTERVAL, async () => {
     job.cancel();

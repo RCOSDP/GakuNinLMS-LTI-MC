@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useRouter } from "next/router";
 import type { BookSchema } from "$server/models/book";
 import {
@@ -9,7 +9,7 @@ import Book from "$templates/Book";
 import Placeholder from "$templates/Placeholder";
 import BookNotFoundProblem from "$templates/BookNotFoundProblem";
 import { useSessionAtom } from "$store/session";
-import { useBook } from "$utils/book";
+import { useBook, getBookIdByZoom } from "$utils/book";
 import { useBookAtom } from "$store/book";
 import { useVideoAtom } from "$store/video";
 import type { TopicSchema } from "$server/models/topic";
@@ -17,28 +17,53 @@ import type { ContentAuthors } from "$server/models/content";
 import { pagesPath } from "$utils/$path";
 import useBookActivity from "$utils/useBookActivity";
 import { useActivityTracking } from "$utils/activity";
+import { useLoggerInit } from "$utils/eventLogger/loggerSessionPersister";
 import logger from "$utils/eventLogger/logger";
 
-export type Query = { bookId: BookSchema["id"] };
+export type Query = { bookId: BookSchema["id"]; token?: string; zoom?: number };
 
 function Show(query: Query) {
+  const [redirectError, setRedirectError] = useState(false);
+  const router = useRouter();
+  if (query.zoom) {
+    void getBookIdByZoom(query.zoom)
+      .then((res) => {
+        void router.push(
+          // @ts-expect-error 型としてはbookIdがないとエラーになるが、ダミー値を入れるとリダイレクト先urlにbookIdが入ってしまう
+          pagesPath.book.$url({ query: { token: res.publicToken } })
+        );
+      })
+      .catch((_) => {
+        setRedirectError(true);
+      });
+  }
+
   const { session, isContentEditable } = useSessionAtom();
+  // 公開URLのときもsyslogには出力する
+  useLoggerInit(session);
   const { book, error } = useBook(
     query.bookId,
     isContentEditable,
-    session?.ltiResourceLink
+    session?.ltiResourceLink,
+    query.token
   );
-  useBookActivity(query.bookId);
-  const { updateBook, itemIndex, nextItemIndex, itemExists, updateItemIndex } =
-    useBookAtom();
+  useBookActivity(book?.id);
+  const {
+    book: bookAtom,
+    updateBook,
+    itemIndex,
+    nextItemIndex,
+    itemExists,
+    updateItemIndex,
+  } = useBookAtom();
   useEffect(() => {
-    if (book) updateBook(book);
-  }, [book, updateBook]);
+    if (book && !bookAtom) updateBook(book);
+  }, [book, bookAtom, updateBook]);
   useActivityTracking();
   const { video } = useVideoAtom();
   const tracking = usePlayerTrackingAtom();
   useEffect(() => {
-    const videoInstance = video.get(itemExists(itemIndex)?.resource.url ?? "");
+    const videoInstance = video.get(String(itemExists(itemIndex)?.id));
     if (!videoInstance) return;
     if (videoInstance.type === "vimeo") {
       tracking({ player: videoInstance.player, url: videoInstance.url });
@@ -55,12 +80,13 @@ function Show(query: Query) {
   const handleTopicNext = useCallback(
     (index: ItemIndex = nextItemIndex) => {
       const topic = itemExists(index);
-      if (topic) playerTracker?.next(topic.id);
+      if (!topic) return;
+
+      playerTracker?.next(topic.id);
       updateItemIndex(index);
     },
     [playerTracker, nextItemIndex, itemExists, updateItemIndex]
   );
-  const router = useRouter();
   const handleBookEditClick = () => {
     const action = book && isContentEditable(book) ? "edit" : "generate";
     return router.push(pagesPath.book[action].$url({ query }));
@@ -78,7 +104,7 @@ function Show(query: Query) {
     return router.push(url);
   };
   const handlers = {
-    linked: query.bookId === session?.ltiResourceLink?.bookId,
+    linked: book?.id === session?.ltiResourceLink?.bookId,
     onTopicEnded: handleTopicNext,
     onItemClick: handleTopicNext,
     onBookEditClick: handleBookEditClick,
@@ -86,7 +112,16 @@ function Show(query: Query) {
     onTopicEditClick: handleTopicEditClick,
   };
 
-  if (error) return <BookNotFoundProblem />;
+  // 読み込み直後はクエリがなにもないか判断できないので、少し待ってから判断する
+  const [timedout, setTimedout] = useState(false);
+  if (!timedout) setTimeout(() => setTimedout(true), 5000);
+  const queryError =
+    timedout &&
+    !Number.isFinite(query.bookId) &&
+    !query.token &&
+    !Number.isFinite(query.zoom);
+
+  if (error || redirectError || queryError) return <BookNotFoundProblem />;
   if (!book) return <Placeholder />;
 
   return <Book book={book} index={itemIndex} {...handlers} />;
@@ -95,10 +130,12 @@ function Show(query: Query) {
 function Router() {
   const router = useRouter();
   const bookId = Number(router.query.bookId);
+  const token = Array.isArray(router.query.token)
+    ? router.query.token[0]
+    : router.query.token;
+  const zoom = Number(router.query.zoom);
 
-  if (!Number.isFinite(bookId)) return <BookNotFoundProblem />;
-
-  return <Show bookId={bookId} />;
+  return <Show bookId={bookId} token={token} zoom={zoom} />;
 }
 
 export default Router;

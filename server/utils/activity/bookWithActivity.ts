@@ -10,8 +10,12 @@ import getDisplayableBook from "$server/utils/getDisplayableBook";
 import contentBy from "$server/utils/contentBy";
 import isCompleted from "./isCompleted";
 
-function bookToCourseBook(user: Pick<UserSchema, "id">, book: BookWithTopics) {
-  const courseBook = getDisplayableBook(bookToBookSchema(book), (content) =>
+function bookToCourseBook(
+  user: Pick<UserSchema, "id">,
+  book: BookWithTopics,
+  ip: string
+) {
+  const courseBook = getDisplayableBook(bookToBookSchema(book, ip), (content) =>
     contentBy(content, user)
   );
 
@@ -24,6 +28,7 @@ export function toSchema({
   ltiResourceLinks,
   activities,
   books,
+  ip,
 }: {
   user: Pick<UserSchema, "id">;
   ltiResourceLinks: Array<Pick<LtiResourceLinkSchema, "bookId">>;
@@ -34,6 +39,7 @@ export function toSchema({
     >
   >;
   books: Array<BookWithTopics>;
+  ip: string;
 }): {
   courseBooks: Array<CourseBookSchema>;
   bookActivities: Array<BookActivitySchema>;
@@ -49,7 +55,7 @@ export function toSchema({
     booksMap.delete(id);
   }
   const courseBooks = [...sortedBooks, ...booksMap.values()].flatMap((book) => {
-    const courseBook = bookToCourseBook(user, book);
+    const courseBook = bookToCourseBook(user, book, ip);
     return courseBook ? [courseBook] : [];
   });
   const bookActivities = courseBooks.flatMap((book) =>

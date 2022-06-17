@@ -14,15 +14,16 @@ function useKeywordsInput(initialKeywords: KeywordSchema[] = []) {
     setHelperText("");
   };
   const onKeywordSubmit = (keyword: KeywordPropSchema) => {
-    if (keyword.name === "") {
+    const trimmed = keyword.name.trim();
+    if (trimmed === "") {
       setError(true);
       setHelperText("1文字以上入力してください");
       return;
-    } else if (keywords.some(({ name }) => name === keyword.name)) {
+    } else if (keywords.some(({ name }) => name === trimmed)) {
       setHelperText("すでに追加されているキーワードです");
       return;
     } else onReset();
-    return setKeywords([...keywords, keyword]);
+    return setKeywords([...keywords, { name: trimmed }]);
   };
   return {
     keywords,

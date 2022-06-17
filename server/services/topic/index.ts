@@ -1,4 +1,4 @@
-import type { TopicProps } from "$server/models/topic";
+import type { TopicProps, TopicPropsWithUpload } from "$server/models/topic";
 import type { TopicParams } from "$server/validators/topicParams";
 import { showSchema, showHooks, show } from "./show";
 import { createSchema, createHooks, create } from "./create";
@@ -7,6 +7,7 @@ import { destroySchema, destroyHooks, destroy } from "./destroy";
 
 export type Params = TopicParams;
 export type Props = TopicProps;
+export type UploadProps = TopicPropsWithUpload;
 
 export const method = {
   get: showSchema,

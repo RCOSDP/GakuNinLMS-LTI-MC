@@ -30,6 +30,7 @@ export const hooks = {
 export async function index({
   session,
   query,
+  ip,
 }: FastifyRequest<{ Querystring: Query }>) {
   const filter = {
     type: query.filter ?? "all",
@@ -49,7 +50,9 @@ export async function index({
         filter,
         sort,
         page,
-        perPage
+        perPage,
+        session.user.id,
+        ip
       );
 
       return {
