@@ -22,7 +22,7 @@ jobs:
         run: |
           git -c "user.name=bot" -c "user.email=bot@example" commit -a -m "bot: lint:fix"
           git push origin HEAD
-      - uses: ataylorme/eslint-annotate-action@1.2.0
+      - uses: ataylorme/eslint-annotate-action@v2
         with: { repo-token: "${{ github.token }}" }
       - name: format
         run: yarn format
