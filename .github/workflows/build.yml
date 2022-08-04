@@ -4,10 +4,8 @@ jobs:
   main:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-        with:
-          ref: ${{ github.head_ref }}
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
           node-version: "lts/*"
           cache: yarn
@@ -16,22 +14,20 @@ jobs:
       - name: lint
         run: yarn lint:fix:report
         continue-on-error: true
-      - id: lint_git_status
-        run: echo "::set-output name=mod::$(git status --porcelain)"
-      - if: steps.lint_git_status.outputs.mod != ''
+      - name: "commit lint:fix"
         run: |
-          git -c "user.name=bot" -c "user.email=bot@example" commit -a -m "bot: lint:fix"
-          git push origin HEAD
+          if git -c "user.name=bot" -c "user.email=bot@example" commit -am "bot: lint:fix"; then
+            git push origin HEAD
+          fi
       - uses: ataylorme/eslint-annotate-action@v2
         with: { repo-token: "${{ github.token }}" }
       - name: format
         run: yarn format
-      - id: format_git_status
-        run: echo "::set-output name=mod::$(git status --porcelain)"
-      - if: steps.format_git_status.outputs.mod != ''
+      - name: "commit format"
         run: |
-          git -c "user.name=bot" -c "user.email=bot@example" commit -a -m "bot: format"
-          git push origin HEAD
+          if git -c "user.name=bot" -c "user.email=bot@example" commit -am "bot: format"; then
+            git push origin HEAD
+          fi
       - name: test
         run: yarn test
       - name: build
