@@ -93,4 +93,7 @@ export class Event {
   nonce?: string;
 }
 
-export const eventSchema = validationMetadatasToSchemas().Event;
+// NOTE: tsupによってEvent2という名前になりうる
+//       ビルド後に名前の参照に失敗することがあるのでconstructor.nameを使って回避
+export const eventSchema =
+  validationMetadatasToSchemas()[new Event().constructor.name];
