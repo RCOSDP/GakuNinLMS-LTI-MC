@@ -17,17 +17,20 @@
     "build:prisma": "prisma generate",
     "migrate": "prisma migrate deploy",
     "migrate:reset": "prisma migrate reset --skip-seed",
-    "seed": "node -r esbuild-register prisma/seed.ts",
+    "seed": "prisma db seed",
     "zoom:import": "node -r esbuild-register utils/zoom/importCli.ts",
     "start": "NODE_ENV=production node dist/index.js"
   },
+  "prisma": {
+    "seed": "node -r esbuild-register prisma/seed.ts"
+  },
   "dependencies": {
-    "@prisma/client": "^2.30.2",
+    "@prisma/client": "^4.1.1",
     "fastify-swagger": "^4.9.1",
     "node-ssh": "^12.0.0"
   },
   "devDependencies": {
-    "@quixo3/prisma-session-store": "^3.1.0",
+    "@quixo3/prisma-session-store": "^3.1.8",
     "@types/dateformat": "^3.0.1",
     "@types/jest": "^27.0.1",
     "@types/jsonwebtoken": "^8.5.4",
@@ -62,8 +65,7 @@
     "openid-client": "^4.7.5",
     "outdent": "^0.8.0",
     "pino-pretty": "^6.0.0",
-    "prisma": "^2.30.2",
-    "prisma-json-schema-generator": "^1.4.0",
+    "prisma": "^4.1.1",
     "recursive-readdir-synchronous": "^0.0.4",
     "search-query-parser": "^1.6.0",
     "serve-handler": "^6.1.3",
