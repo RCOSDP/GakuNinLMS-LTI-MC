@@ -13,7 +13,7 @@ import type { BookSchema } from "$server/models/book";
 import { gray } from "$theme/colors";
 
 const Transition = forwardRef(function Transition(
-  props: TransitionProps & { children?: React.ReactElement },
+  props: TransitionProps & { children: React.ReactElement },
   ref: React.Ref<unknown>
 ) {
   return <Slide direction="up" ref={ref} {...props} />;

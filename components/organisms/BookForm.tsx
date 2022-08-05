@@ -237,7 +237,7 @@ export default function BookForm({
               dateFormats={{ monthAndYear: "yyyy年MM月" }}
             >
               <DateTimePicker
-                renderInput={(props) => (
+                renderInput={(props: Parameters<typeof TextField>) => (
                   <TextField {...props} fullWidth error={expireAtError} />
                 )}
                 label={
