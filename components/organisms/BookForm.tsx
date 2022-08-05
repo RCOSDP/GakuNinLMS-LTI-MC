@@ -140,8 +140,8 @@ export default function BookForm({
   );
   const [expireAtError, setExpireAtError] = useState(false);
   const handleExpireAtChange = useCallback(
-    (newValue) => {
-      setExpireAtError(newValue && Number.isNaN(newValue.getTime()));
+    (newValue: Date | null) => {
+      setExpireAtError(newValue != null && Number.isNaN(newValue.getTime()));
       setExpireAt(newValue);
     },
     [setExpireAt]
