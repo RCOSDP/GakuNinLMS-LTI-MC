@@ -5,20 +5,8 @@ import breaks from "remark-breaks";
 import Link from "@mui/material/Link";
 import { css } from "@emotion/css";
 
-// NOTE: 型に差異があるので変換
-const MarkdownLink: NormalComponents["a"] = ({
-  color: _,
-  ref: legacyRef,
-  ...props
-}) => (
-  <Link
-    target="_blank"
-    rel="noreferrer"
-    // @ts-expect-error TODO: 文字列形式のrefは非推奨なので避けて
-    ref={legacyRef}
-    component="a"
-    {...props}
-  />
+const MarkdownLink: NormalComponents["a"] = (props) => (
+  <Link target="_blank" rel="noreferrer" component="a" {...props} />
 );
 
 const components = {

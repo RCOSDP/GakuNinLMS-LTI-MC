@@ -53,7 +53,7 @@ export default function Video({ className, sx, topic, onEnded }: Props) {
     const startTime = topic?.startTime;
     const stopTime = topic?.stopTime;
     if (prevItemIndex?.some((v, i) => v !== itemIndex[i])) {
-      video.get(String(itemExists(prevItemIndex)?.id))?.player.pause();
+      void video.get(String(itemExists(prevItemIndex)?.id))?.player.pause();
     }
     const videoInstance = video.get(String(topic?.id));
     if (!videoInstance) return;
@@ -61,12 +61,12 @@ export default function Video({ className, sx, topic, onEnded }: Props) {
       videoInstance.player.on("ended", () => onEnded?.());
       videoInstance.player.on("timeupdate", async () => {
         const currentTime = await videoInstance.player.getCurrentTime();
-        // eslint-disable-next-line tsc/config
+        // @ts-expect-error stopTime is number
         if (Number.isFinite(stopTime) && currentTime > stopTime) {
           void videoInstance.player.pause();
           onEnded?.();
         }
-        // eslint-disable-next-line tsc/config
+        // @ts-expect-error startTime is number
         if (Number.isFinite(startTime) && currentTime < startTime) {
           void videoInstance.player.setCurrentTime(startTime || 0);
         }
@@ -83,7 +83,7 @@ export default function Video({ className, sx, topic, onEnded }: Props) {
       };
       const handleSeeked = () => {
         const currentTime = videoInstance.player.currentTime();
-        // eslint-disable-next-line tsc/config
+        // @ts-expect-error startTime is number
         if (Number.isFinite(startTime) && currentTime < startTime) {
           videoInstance.player.currentTime(startTime || 0);
         }
@@ -93,7 +93,7 @@ export default function Video({ className, sx, topic, onEnded }: Props) {
         if (
           !videoInstance.stopTimeOver &&
           Number.isFinite(stopTime) &&
-          // eslint-disable-next-line tsc/config
+          // @ts-expect-error stopTime is number
           currentTime > stopTime
         ) {
           handleEnded();
