@@ -21,7 +21,6 @@ export function buildValidatorCompiler() {
   function validatorCompiler<T>({
     schema,
   }: FastifyRouteSchemaDef<T>): FastifyValidationResult {
-    // @ts-expect-error TODO: `errors` には `instancePath` が得られるが FastifySchemaValidationError では `dataPath` が必須
     return ajv.compile(schema);
   }
 

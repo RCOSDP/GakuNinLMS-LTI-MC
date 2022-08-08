@@ -309,8 +309,9 @@ export interface ApiV2UsersEmailGetRequest {
     email: string;
 }
 
-export interface ApiV2WowzaGetRequest {
+export interface ApiV2WowzaWildcardGetRequest {
     accessToken: string;
+    wildcard: string;
 }
 
 /**
@@ -1871,9 +1872,13 @@ export class DefaultApi extends runtime.BaseAPI {
      * Wowza Streaming Engine のコンテンツのパスを与えると、 そのコンテンツの playlist.m3u8 ファイルにリダイレクトします。 サーバー管理者によって無効化されている場合 404 を返します。
      * Wowza Streaming Engine にアクセスするためのエンドポイント
      */
-    async apiV2WowzaGetRaw(requestParameters: ApiV2WowzaGetRequest): Promise<runtime.ApiResponse<void>> {
+    async apiV2WowzaWildcardGetRaw(requestParameters: ApiV2WowzaWildcardGetRequest): Promise<runtime.ApiResponse<void>> {
         if (requestParameters.accessToken === null || requestParameters.accessToken === undefined) {
-            throw new runtime.RequiredError('accessToken','Required parameter requestParameters.accessToken was null or undefined when calling apiV2WowzaGet.');
+            throw new runtime.RequiredError('accessToken','Required parameter requestParameters.accessToken was null or undefined when calling apiV2WowzaWildcardGet.');
+        }
+
+        if (requestParameters.wildcard === null || requestParameters.wildcard === undefined) {
+            throw new runtime.RequiredError('wildcard','Required parameter requestParameters.wildcard was null or undefined when calling apiV2WowzaWildcardGet.');
         }
 
         const queryParameters: runtime.HTTPQuery = {};
@@ -1885,7 +1890,7 @@ export class DefaultApi extends runtime.BaseAPI {
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/api/v2/wowza/*`,
+            path: `/api/v2/wowza/{wildcard}`.replace(`{${"wildcard"}}`, encodeURIComponent(String(requestParameters.wildcard))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -1898,8 +1903,8 @@ export class DefaultApi extends runtime.BaseAPI {
      * Wowza Streaming Engine のコンテンツのパスを与えると、 そのコンテンツの playlist.m3u8 ファイルにリダイレクトします。 サーバー管理者によって無効化されている場合 404 を返します。
      * Wowza Streaming Engine にアクセスするためのエンドポイント
      */
-    async apiV2WowzaGet(requestParameters: ApiV2WowzaGetRequest): Promise<void> {
-        await this.apiV2WowzaGetRaw(requestParameters);
+    async apiV2WowzaWildcardGet(requestParameters: ApiV2WowzaWildcardGetRequest): Promise<void> {
+        await this.apiV2WowzaWildcardGetRaw(requestParameters);
     }
 
 }

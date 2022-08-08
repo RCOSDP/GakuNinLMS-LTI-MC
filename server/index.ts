@@ -33,6 +33,6 @@ void fastify({ logger: isDev, trustProxy: true, ...options })
     sessionSecret: SESSION_SECRET,
     sessionStore: sessionStore as Options["sessionStore"],
   })
-  .listen(PORT, "::"); // TODO: UNIXドメインソケット(引数にファイルパスを指定)未対応
+  .listen({ port: PORT, host: "::" }); // TODO: UNIXドメインソケット(引数にファイルパスを指定)未対応
 
 void setupZoomImportScheduler();

@@ -10,7 +10,6 @@ export const showSchema: FastifySchema = {
   description: "字幕を取得します。",
   params: VideoTrackParams,
   querystring: topicResourcePropsSchema,
-  // @ts-expect-error NOTE: fastify-swagger用。型が用意されていない。
   produces: ["text/vtt"],
   response: {
     200: {},

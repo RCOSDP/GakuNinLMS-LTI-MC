@@ -22,6 +22,7 @@ export const method = {
       Wowza Streaming Engine のコンテンツのパスを与えると、
       そのコンテンツの playlist.m3u8 ファイルにリダイレクトします。
       サーバー管理者によって無効化されている場合 404 を返します。`,
+    params: { type: "object", properties: { wildcard: { type: "string" } } },
     querystring: topicResourcePropsSchema,
     response: {
       302: {},
