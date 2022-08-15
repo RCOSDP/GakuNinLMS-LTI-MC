@@ -16,46 +16,46 @@ import { exists, mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface InlineResponse2005Topic
+ * @interface LTIContext
  */
-export interface InlineResponse2005Topic {
-    /**
-     * 
-     * @type {number}
-     * @memberof InlineResponse2005Topic
-     */
-    id: number;
+export interface LTIContext {
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse2005Topic
+     * @memberof LTIContext
      */
-    name: string;
+    id: string;
     /**
      * 
-     * @type {number}
-     * @memberof InlineResponse2005Topic
+     * @type {string}
+     * @memberof LTIContext
      */
-    timeRequired: number;
+    label?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof LTIContext
+     */
+    title?: string;
 }
 
-export function InlineResponse2005TopicFromJSON(json: any): InlineResponse2005Topic {
-    return InlineResponse2005TopicFromJSONTyped(json, false);
+export function LTIContextFromJSON(json: any): LTIContext {
+    return LTIContextFromJSONTyped(json, false);
 }
 
-export function InlineResponse2005TopicFromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse2005Topic {
+export function LTIContextFromJSONTyped(json: any, ignoreDiscriminator: boolean): LTIContext {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
         'id': json['id'],
-        'name': json['name'],
-        'timeRequired': json['timeRequired'],
+        'label': !exists(json, 'label') ? undefined : json['label'],
+        'title': !exists(json, 'title') ? undefined : json['title'],
     };
 }
 
-export function InlineResponse2005TopicToJSON(value?: InlineResponse2005Topic | null): any {
+export function LTIContextToJSON(value?: LTIContext | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -65,8 +65,8 @@ export function InlineResponse2005TopicToJSON(value?: InlineResponse2005Topic | 
     return {
         
         'id': value.id,
-        'name': value.name,
-        'timeRequired': value.timeRequired,
+        'label': value.label,
+        'title': value.title,
     };
 }
 

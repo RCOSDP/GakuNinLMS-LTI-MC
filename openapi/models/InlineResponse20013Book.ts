@@ -16,32 +16,39 @@ import { exists, mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface ApiV2TopicTopicIdResource
+ * @interface InlineResponse20013Book
  */
-export interface ApiV2TopicTopicIdResource {
+export interface InlineResponse20013Book {
+    /**
+     * 
+     * @type {number}
+     * @memberof InlineResponse20013Book
+     */
+    id: number;
     /**
      * 
      * @type {string}
-     * @memberof ApiV2TopicTopicIdResource
+     * @memberof InlineResponse20013Book
      */
-    url?: string;
+    name: string;
 }
 
-export function ApiV2TopicTopicIdResourceFromJSON(json: any): ApiV2TopicTopicIdResource {
-    return ApiV2TopicTopicIdResourceFromJSONTyped(json, false);
+export function InlineResponse20013BookFromJSON(json: any): InlineResponse20013Book {
+    return InlineResponse20013BookFromJSONTyped(json, false);
 }
 
-export function ApiV2TopicTopicIdResourceFromJSONTyped(json: any, ignoreDiscriminator: boolean): ApiV2TopicTopicIdResource {
+export function InlineResponse20013BookFromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse20013Book {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
-        'url': !exists(json, 'url') ? undefined : json['url'],
+        'id': json['id'],
+        'name': json['name'],
     };
 }
 
-export function ApiV2TopicTopicIdResourceToJSON(value?: ApiV2TopicTopicIdResource | null): any {
+export function InlineResponse20013BookToJSON(value?: InlineResponse20013Book | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -50,7 +57,8 @@ export function ApiV2TopicTopicIdResourceToJSON(value?: ApiV2TopicTopicIdResourc
     }
     return {
         
-        'url': value.url,
+        'id': value.id,
+        'name': value.name,
     };
 }
 

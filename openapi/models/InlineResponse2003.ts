@@ -14,36 +14,42 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    InlineResponse2001Topics,
-    InlineResponse2001TopicsFromJSON,
-    InlineResponse2001TopicsFromJSONTyped,
-    InlineResponse2001TopicsToJSON,
+    InlineResponse2003Contents,
+    InlineResponse2003ContentsFromJSON,
+    InlineResponse2003ContentsFromJSONTyped,
+    InlineResponse2003ContentsToJSON,
 } from './';
 
 /**
- * 作成したトピックの一覧
+ * 
  * @export
  * @interface InlineResponse2003
  */
 export interface InlineResponse2003 {
     /**
      * 
-     * @type {Array<InlineResponse2001Topics>}
+     * @type {number}
      * @memberof InlineResponse2003
      */
-    topics?: Array<InlineResponse2001Topics>;
+    totalCount: number;
+    /**
+     * 
+     * @type {Array<InlineResponse2003Contents>}
+     * @memberof InlineResponse2003
+     */
+    contents: Array<InlineResponse2003Contents>;
     /**
      * 
      * @type {number}
      * @memberof InlineResponse2003
      */
-    page?: number;
+    page: number;
     /**
      * 
      * @type {number}
      * @memberof InlineResponse2003
      */
-    perPage?: number;
+    perPage: number;
 }
 
 export function InlineResponse2003FromJSON(json: any): InlineResponse2003 {
@@ -56,9 +62,10 @@ export function InlineResponse2003FromJSONTyped(json: any, ignoreDiscriminator: 
     }
     return {
         
-        'topics': !exists(json, 'topics') ? undefined : ((json['topics'] as Array<any>).map(InlineResponse2001TopicsFromJSON)),
-        'page': !exists(json, 'page') ? undefined : json['page'],
-        'perPage': !exists(json, 'perPage') ? undefined : json['perPage'],
+        'totalCount': json['totalCount'],
+        'contents': ((json['contents'] as Array<any>).map(InlineResponse2003ContentsFromJSON)),
+        'page': json['page'],
+        'perPage': json['perPage'],
     };
 }
 
@@ -71,7 +78,8 @@ export function InlineResponse2003ToJSON(value?: InlineResponse2003 | null): any
     }
     return {
         
-        'topics': value.topics === undefined ? undefined : ((value.topics as Array<any>).map(InlineResponse2001TopicsToJSON)),
+        'totalCount': value.totalCount,
+        'contents': ((value.contents as Array<any>).map(InlineResponse2003ContentsToJSON)),
         'page': value.page,
         'perPage': value.perPage,
     };

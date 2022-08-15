@@ -14,123 +14,123 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    InlineResponse2001Authors,
-    InlineResponse2001AuthorsFromJSON,
-    InlineResponse2001AuthorsFromJSONTyped,
-    InlineResponse2001AuthorsToJSON,
-    InlineResponse2001Keywords,
-    InlineResponse2001KeywordsFromJSON,
-    InlineResponse2001KeywordsFromJSONTyped,
-    InlineResponse2001KeywordsToJSON,
-    InlineResponse2001Resource,
-    InlineResponse2001ResourceFromJSON,
-    InlineResponse2001ResourceFromJSONTyped,
-    InlineResponse2001ResourceToJSON,
+    InlineResponse2001BookAuthors,
+    InlineResponse2001BookAuthorsFromJSON,
+    InlineResponse2001BookAuthorsFromJSONTyped,
+    InlineResponse2001BookAuthorsToJSON,
+    InlineResponse2003Keywords,
+    InlineResponse2003KeywordsFromJSON,
+    InlineResponse2003KeywordsFromJSONTyped,
+    InlineResponse2003KeywordsToJSON,
+    InlineResponse2003Resource,
+    InlineResponse2003ResourceFromJSON,
+    InlineResponse2003ResourceFromJSONTyped,
+    InlineResponse2003ResourceToJSON,
 } from './';
 
 /**
  * 
  * @export
- * @interface InlineResponse2001Topics
+ * @interface InlineResponse2003Topics
  */
-export interface InlineResponse2001Topics {
+export interface InlineResponse2003Topics {
     /**
      * 
      * @type {number}
-     * @memberof InlineResponse2001Topics
+     * @memberof InlineResponse2003Topics
      */
     id?: number;
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse2001Topics
+     * @memberof InlineResponse2003Topics
      */
     name?: string;
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse2001Topics
+     * @memberof InlineResponse2003Topics
      */
     language?: string;
     /**
      * 
      * @type {number}
-     * @memberof InlineResponse2001Topics
+     * @memberof InlineResponse2003Topics
      */
     timeRequired?: number;
     /**
      * 
      * @type {number}
-     * @memberof InlineResponse2001Topics
+     * @memberof InlineResponse2003Topics
      */
     startTime?: number;
     /**
      * 
      * @type {number}
-     * @memberof InlineResponse2001Topics
+     * @memberof InlineResponse2003Topics
      */
     stopTime?: number;
     /**
      * 
      * @type {boolean}
-     * @memberof InlineResponse2001Topics
+     * @memberof InlineResponse2003Topics
      */
     shared?: boolean;
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse2001Topics
+     * @memberof InlineResponse2003Topics
      */
     license?: string;
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse2001Topics
+     * @memberof InlineResponse2003Topics
      */
     description?: string;
     /**
      * 
      * @type {Date}
-     * @memberof InlineResponse2001Topics
+     * @memberof InlineResponse2003Topics
      */
     createdAt?: Date;
     /**
      * 
      * @type {Date}
-     * @memberof InlineResponse2001Topics
+     * @memberof InlineResponse2003Topics
      */
     updatedAt?: Date;
     /**
      * 
      * @type {object}
-     * @memberof InlineResponse2001Topics
+     * @memberof InlineResponse2003Topics
      */
     details?: object;
     /**
      * 
-     * @type {Array<InlineResponse2001Authors>}
-     * @memberof InlineResponse2001Topics
+     * @type {Array<InlineResponse2001BookAuthors>}
+     * @memberof InlineResponse2003Topics
      */
-    authors?: Array<InlineResponse2001Authors>;
+    authors?: Array<InlineResponse2001BookAuthors>;
     /**
      * 
-     * @type {Array<InlineResponse2001Keywords>}
-     * @memberof InlineResponse2001Topics
+     * @type {Array<InlineResponse2003Keywords>}
+     * @memberof InlineResponse2003Topics
      */
-    keywords?: Array<InlineResponse2001Keywords>;
+    keywords?: Array<InlineResponse2003Keywords>;
     /**
      * 
-     * @type {InlineResponse2001Resource}
-     * @memberof InlineResponse2001Topics
+     * @type {InlineResponse2003Resource}
+     * @memberof InlineResponse2003Topics
      */
-    resource?: InlineResponse2001Resource;
+    resource?: InlineResponse2003Resource;
 }
 
-export function InlineResponse2001TopicsFromJSON(json: any): InlineResponse2001Topics {
-    return InlineResponse2001TopicsFromJSONTyped(json, false);
+export function InlineResponse2003TopicsFromJSON(json: any): InlineResponse2003Topics {
+    return InlineResponse2003TopicsFromJSONTyped(json, false);
 }
 
-export function InlineResponse2001TopicsFromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse2001Topics {
+export function InlineResponse2003TopicsFromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse2003Topics {
     if ((json === undefined) || (json === null)) {
         return json;
     }
@@ -148,13 +148,13 @@ export function InlineResponse2001TopicsFromJSONTyped(json: any, ignoreDiscrimin
         'createdAt': !exists(json, 'createdAt') ? undefined : (new Date(json['createdAt'])),
         'updatedAt': !exists(json, 'updatedAt') ? undefined : (new Date(json['updatedAt'])),
         'details': !exists(json, 'details') ? undefined : json['details'],
-        'authors': !exists(json, 'authors') ? undefined : ((json['authors'] as Array<any>).map(InlineResponse2001AuthorsFromJSON)),
-        'keywords': !exists(json, 'keywords') ? undefined : ((json['keywords'] as Array<any>).map(InlineResponse2001KeywordsFromJSON)),
-        'resource': !exists(json, 'resource') ? undefined : InlineResponse2001ResourceFromJSON(json['resource']),
+        'authors': !exists(json, 'authors') ? undefined : ((json['authors'] as Array<any>).map(InlineResponse2001BookAuthorsFromJSON)),
+        'keywords': !exists(json, 'keywords') ? undefined : ((json['keywords'] as Array<any>).map(InlineResponse2003KeywordsFromJSON)),
+        'resource': !exists(json, 'resource') ? undefined : InlineResponse2003ResourceFromJSON(json['resource']),
     };
 }
 
-export function InlineResponse2001TopicsToJSON(value?: InlineResponse2001Topics | null): any {
+export function InlineResponse2003TopicsToJSON(value?: InlineResponse2003Topics | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -175,9 +175,9 @@ export function InlineResponse2001TopicsToJSON(value?: InlineResponse2001Topics 
         'createdAt': value.createdAt === undefined ? undefined : (value.createdAt.toISOString()),
         'updatedAt': value.updatedAt === undefined ? undefined : (value.updatedAt.toISOString()),
         'details': value.details,
-        'authors': value.authors === undefined ? undefined : ((value.authors as Array<any>).map(InlineResponse2001AuthorsToJSON)),
-        'keywords': value.keywords === undefined ? undefined : ((value.keywords as Array<any>).map(InlineResponse2001KeywordsToJSON)),
-        'resource': InlineResponse2001ResourceToJSON(value.resource),
+        'authors': value.authors === undefined ? undefined : ((value.authors as Array<any>).map(InlineResponse2001BookAuthorsToJSON)),
+        'keywords': value.keywords === undefined ? undefined : ((value.keywords as Array<any>).map(InlineResponse2003KeywordsToJSON)),
+        'resource': InlineResponse2003ResourceToJSON(value.resource),
     };
 }
 

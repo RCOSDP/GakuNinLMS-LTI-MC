@@ -14,67 +14,67 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    InlineResponse2001Settings,
-    InlineResponse2001SettingsFromJSON,
-    InlineResponse2001SettingsFromJSONTyped,
-    InlineResponse2001SettingsToJSON,
+    InlineResponse2001BookSettings,
+    InlineResponse2001BookSettingsFromJSON,
+    InlineResponse2001BookSettingsFromJSONTyped,
+    InlineResponse2001BookSettingsToJSON,
 } from './';
 
 /**
  * 
  * @export
- * @interface InlineResponse2001Authors
+ * @interface InlineResponse2001BookAuthors
  */
-export interface InlineResponse2001Authors {
+export interface InlineResponse2001BookAuthors {
     /**
      * 
      * @type {number}
-     * @memberof InlineResponse2001Authors
+     * @memberof InlineResponse2001BookAuthors
      */
     id: number;
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse2001Authors
+     * @memberof InlineResponse2001BookAuthors
      */
     ltiConsumerId: string;
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse2001Authors
+     * @memberof InlineResponse2001BookAuthors
      */
     ltiUserId: string;
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse2001Authors
+     * @memberof InlineResponse2001BookAuthors
      */
     name: string;
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse2001Authors
+     * @memberof InlineResponse2001BookAuthors
      */
     email?: string;
     /**
      * 
-     * @type {InlineResponse2001Settings}
-     * @memberof InlineResponse2001Authors
+     * @type {InlineResponse2001BookSettings}
+     * @memberof InlineResponse2001BookAuthors
      */
-    settings?: InlineResponse2001Settings;
+    settings?: InlineResponse2001BookSettings;
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse2001Authors
+     * @memberof InlineResponse2001BookAuthors
      */
     roleName: string;
 }
 
-export function InlineResponse2001AuthorsFromJSON(json: any): InlineResponse2001Authors {
-    return InlineResponse2001AuthorsFromJSONTyped(json, false);
+export function InlineResponse2001BookAuthorsFromJSON(json: any): InlineResponse2001BookAuthors {
+    return InlineResponse2001BookAuthorsFromJSONTyped(json, false);
 }
 
-export function InlineResponse2001AuthorsFromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse2001Authors {
+export function InlineResponse2001BookAuthorsFromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse2001BookAuthors {
     if ((json === undefined) || (json === null)) {
         return json;
     }
@@ -85,12 +85,12 @@ export function InlineResponse2001AuthorsFromJSONTyped(json: any, ignoreDiscrimi
         'ltiUserId': json['ltiUserId'],
         'name': json['name'],
         'email': !exists(json, 'email') ? undefined : json['email'],
-        'settings': !exists(json, 'settings') ? undefined : InlineResponse2001SettingsFromJSON(json['settings']),
+        'settings': !exists(json, 'settings') ? undefined : InlineResponse2001BookSettingsFromJSON(json['settings']),
         'roleName': json['roleName'],
     };
 }
 
-export function InlineResponse2001AuthorsToJSON(value?: InlineResponse2001Authors | null): any {
+export function InlineResponse2001BookAuthorsToJSON(value?: InlineResponse2001BookAuthors | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -104,7 +104,7 @@ export function InlineResponse2001AuthorsToJSON(value?: InlineResponse2001Author
         'ltiUserId': value.ltiUserId,
         'name': value.name,
         'email': value.email,
-        'settings': InlineResponse2001SettingsToJSON(value.settings),
+        'settings': InlineResponse2001BookSettingsToJSON(value.settings),
         'roleName': value.roleName,
     };
 }

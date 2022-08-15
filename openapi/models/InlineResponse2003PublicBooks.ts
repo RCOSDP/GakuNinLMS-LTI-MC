@@ -16,52 +16,52 @@ import { exists, mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface InlineResponse2001PublicBooks
+ * @interface InlineResponse2003PublicBooks
  */
-export interface InlineResponse2001PublicBooks {
+export interface InlineResponse2003PublicBooks {
     /**
      * 
      * @type {number}
-     * @memberof InlineResponse2001PublicBooks
+     * @memberof InlineResponse2003PublicBooks
      */
     id?: number;
     /**
      * 
      * @type {number}
-     * @memberof InlineResponse2001PublicBooks
+     * @memberof InlineResponse2003PublicBooks
      */
     bookId?: number;
     /**
      * 
      * @type {number}
-     * @memberof InlineResponse2001PublicBooks
+     * @memberof InlineResponse2003PublicBooks
      */
     userId?: number;
     /**
      * 
      * @type {Array<string>}
-     * @memberof InlineResponse2001PublicBooks
+     * @memberof InlineResponse2003PublicBooks
      */
     domains?: Array<string>;
     /**
      * 
      * @type {Date}
-     * @memberof InlineResponse2001PublicBooks
+     * @memberof InlineResponse2003PublicBooks
      */
     expireAt?: Date;
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse2001PublicBooks
+     * @memberof InlineResponse2003PublicBooks
      */
     token?: string;
 }
 
-export function InlineResponse2001PublicBooksFromJSON(json: any): InlineResponse2001PublicBooks {
-    return InlineResponse2001PublicBooksFromJSONTyped(json, false);
+export function InlineResponse2003PublicBooksFromJSON(json: any): InlineResponse2003PublicBooks {
+    return InlineResponse2003PublicBooksFromJSONTyped(json, false);
 }
 
-export function InlineResponse2001PublicBooksFromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse2001PublicBooks {
+export function InlineResponse2003PublicBooksFromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse2003PublicBooks {
     if ((json === undefined) || (json === null)) {
         return json;
     }
@@ -76,7 +76,7 @@ export function InlineResponse2001PublicBooksFromJSONTyped(json: any, ignoreDisc
     };
 }
 
-export function InlineResponse2001PublicBooksToJSON(value?: InlineResponse2001PublicBooks | null): any {
+export function InlineResponse2003PublicBooksToJSON(value?: InlineResponse2003PublicBooks | null): any {
     if (value === undefined) {
         return undefined;
     }

@@ -16,22 +16,22 @@ import { exists, mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface InlineResponse2001Settings
+ * @interface InlineResponse2001BookSettings
  */
-export interface InlineResponse2001Settings {
+export interface InlineResponse2001BookSettings {
     /**
      * 
      * @type {boolean}
-     * @memberof InlineResponse2001Settings
+     * @memberof InlineResponse2001BookSettings
      */
     zoomImportEnabled?: boolean;
 }
 
-export function InlineResponse2001SettingsFromJSON(json: any): InlineResponse2001Settings {
-    return InlineResponse2001SettingsFromJSONTyped(json, false);
+export function InlineResponse2001BookSettingsFromJSON(json: any): InlineResponse2001BookSettings {
+    return InlineResponse2001BookSettingsFromJSONTyped(json, false);
 }
 
-export function InlineResponse2001SettingsFromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse2001Settings {
+export function InlineResponse2001BookSettingsFromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse2001BookSettings {
     if ((json === undefined) || (json === null)) {
         return json;
     }
@@ -41,7 +41,7 @@ export function InlineResponse2001SettingsFromJSONTyped(json: any, ignoreDiscrim
     };
 }
 
-export function InlineResponse2001SettingsToJSON(value?: InlineResponse2001Settings | null): any {
+export function InlineResponse2001BookSettingsToJSON(value?: InlineResponse2001BookSettings | null): any {
     if (value === undefined) {
         return undefined;
     }

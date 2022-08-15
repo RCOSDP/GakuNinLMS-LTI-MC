@@ -16,46 +16,46 @@ import { exists, mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface InlineResponse2001ResourceTracks
+ * @interface InlineResponse2003ResourceTracks
  */
-export interface InlineResponse2001ResourceTracks {
+export interface InlineResponse2003ResourceTracks {
     /**
      * 
      * @type {number}
-     * @memberof InlineResponse2001ResourceTracks
+     * @memberof InlineResponse2003ResourceTracks
      */
     id?: number;
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse2001ResourceTracks
+     * @memberof InlineResponse2003ResourceTracks
      */
     kind?: string;
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse2001ResourceTracks
+     * @memberof InlineResponse2003ResourceTracks
      */
     language?: string;
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse2001ResourceTracks
+     * @memberof InlineResponse2003ResourceTracks
      */
     url?: string;
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse2001ResourceTracks
+     * @memberof InlineResponse2003ResourceTracks
      */
     accessToken?: string;
 }
 
-export function InlineResponse2001ResourceTracksFromJSON(json: any): InlineResponse2001ResourceTracks {
-    return InlineResponse2001ResourceTracksFromJSONTyped(json, false);
+export function InlineResponse2003ResourceTracksFromJSON(json: any): InlineResponse2003ResourceTracks {
+    return InlineResponse2003ResourceTracksFromJSONTyped(json, false);
 }
 
-export function InlineResponse2001ResourceTracksFromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse2001ResourceTracks {
+export function InlineResponse2003ResourceTracksFromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse2003ResourceTracks {
     if ((json === undefined) || (json === null)) {
         return json;
     }
@@ -69,7 +69,7 @@ export function InlineResponse2001ResourceTracksFromJSONTyped(json: any, ignoreD
     };
 }
 
-export function InlineResponse2001ResourceTracksToJSON(value?: InlineResponse2001ResourceTracks | null): any {
+export function InlineResponse2003ResourceTracksToJSON(value?: InlineResponse2003ResourceTracks | null): any {
     if (value === undefined) {
         return undefined;
     }

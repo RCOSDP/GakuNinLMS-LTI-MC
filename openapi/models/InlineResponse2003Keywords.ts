@@ -16,28 +16,28 @@ import { exists, mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface InlineResponse20010Book
+ * @interface InlineResponse2003Keywords
  */
-export interface InlineResponse20010Book {
+export interface InlineResponse2003Keywords {
     /**
      * 
      * @type {number}
-     * @memberof InlineResponse20010Book
+     * @memberof InlineResponse2003Keywords
      */
     id: number;
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse20010Book
+     * @memberof InlineResponse2003Keywords
      */
     name: string;
 }
 
-export function InlineResponse20010BookFromJSON(json: any): InlineResponse20010Book {
-    return InlineResponse20010BookFromJSONTyped(json, false);
+export function InlineResponse2003KeywordsFromJSON(json: any): InlineResponse2003Keywords {
+    return InlineResponse2003KeywordsFromJSONTyped(json, false);
 }
 
-export function InlineResponse20010BookFromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse20010Book {
+export function InlineResponse2003KeywordsFromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse2003Keywords {
     if ((json === undefined) || (json === null)) {
         return json;
     }
@@ -48,7 +48,7 @@ export function InlineResponse20010BookFromJSONTyped(json: any, ignoreDiscrimina
     };
 }
 
-export function InlineResponse20010BookToJSON(value?: InlineResponse20010Book | null): any {
+export function InlineResponse2003KeywordsToJSON(value?: InlineResponse2003Keywords | null): any {
     if (value === undefined) {
         return undefined;
     }

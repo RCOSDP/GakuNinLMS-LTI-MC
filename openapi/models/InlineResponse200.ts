@@ -21,52 +21,10 @@ import { exists, mapValues } from '../runtime';
 export interface InlineResponse200 {
     /**
      * 
-     * @type {string}
+     * @type {Array<string>}
      * @memberof InlineResponse200
      */
-    consumerId: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineResponse200
-     */
-    id: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof InlineResponse200
-     */
-    creatorId: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineResponse200
-     */
-    contextId: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineResponse200
-     */
-    contextTitle: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineResponse200
-     */
-    contextLabel: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineResponse200
-     */
-    title: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof InlineResponse200
-     */
-    bookId: number;
+    oauthClients?: Array<string>;
 }
 
 export function InlineResponse200FromJSON(json: any): InlineResponse200 {
@@ -79,14 +37,7 @@ export function InlineResponse200FromJSONTyped(json: any, ignoreDiscriminator: b
     }
     return {
         
-        'consumerId': json['consumerId'],
-        'id': json['id'],
-        'creatorId': json['creatorId'],
-        'contextId': json['contextId'],
-        'contextTitle': json['contextTitle'],
-        'contextLabel': json['contextLabel'],
-        'title': json['title'],
-        'bookId': json['bookId'],
+        'oauthClients': !exists(json, 'oauthClients') ? undefined : json['oauthClients'],
     };
 }
 
@@ -99,14 +50,7 @@ export function InlineResponse200ToJSON(value?: InlineResponse200 | null): any {
     }
     return {
         
-        'consumerId': value.consumerId,
-        'id': value.id,
-        'creatorId': value.creatorId,
-        'contextId': value.contextId,
-        'contextTitle': value.contextTitle,
-        'contextLabel': value.contextLabel,
-        'title': value.title,
-        'bookId': value.bookId,
+        'oauthClients': value.oauthClients,
     };
 }
 

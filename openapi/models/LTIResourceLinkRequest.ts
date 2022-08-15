@@ -16,39 +16,39 @@ import { exists, mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface InlineResponse2001Keywords
+ * @interface LTIResourceLinkRequest
  */
-export interface InlineResponse2001Keywords {
-    /**
-     * 
-     * @type {number}
-     * @memberof InlineResponse2001Keywords
-     */
-    id: number;
+export interface LTIResourceLinkRequest {
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse2001Keywords
+     * @memberof LTIResourceLinkRequest
      */
-    name: string;
+    id: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof LTIResourceLinkRequest
+     */
+    title?: string;
 }
 
-export function InlineResponse2001KeywordsFromJSON(json: any): InlineResponse2001Keywords {
-    return InlineResponse2001KeywordsFromJSONTyped(json, false);
+export function LTIResourceLinkRequestFromJSON(json: any): LTIResourceLinkRequest {
+    return LTIResourceLinkRequestFromJSONTyped(json, false);
 }
 
-export function InlineResponse2001KeywordsFromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse2001Keywords {
+export function LTIResourceLinkRequestFromJSONTyped(json: any, ignoreDiscriminator: boolean): LTIResourceLinkRequest {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
         'id': json['id'],
-        'name': json['name'],
+        'title': !exists(json, 'title') ? undefined : json['title'],
     };
 }
 
-export function InlineResponse2001KeywordsToJSON(value?: InlineResponse2001Keywords | null): any {
+export function LTIResourceLinkRequestToJSON(value?: LTIResourceLinkRequest | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -58,7 +58,7 @@ export function InlineResponse2001KeywordsToJSON(value?: InlineResponse2001Keywo
     return {
         
         'id': value.id,
-        'name': value.name,
+        'title': value.title,
     };
 }
 

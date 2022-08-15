@@ -16,34 +16,34 @@ import { exists, mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface InlineResponse2005Learner
+ * @interface InlineResponse2007Learner
  */
-export interface InlineResponse2005Learner {
+export interface InlineResponse2007Learner {
     /**
      * 
      * @type {number}
-     * @memberof InlineResponse2005Learner
+     * @memberof InlineResponse2007Learner
      */
     id: number;
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse2005Learner
+     * @memberof InlineResponse2007Learner
      */
     name: string;
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse2005Learner
+     * @memberof InlineResponse2007Learner
      */
     email: string;
 }
 
-export function InlineResponse2005LearnerFromJSON(json: any): InlineResponse2005Learner {
-    return InlineResponse2005LearnerFromJSONTyped(json, false);
+export function InlineResponse2007LearnerFromJSON(json: any): InlineResponse2007Learner {
+    return InlineResponse2007LearnerFromJSONTyped(json, false);
 }
 
-export function InlineResponse2005LearnerFromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse2005Learner {
+export function InlineResponse2007LearnerFromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse2007Learner {
     if ((json === undefined) || (json === null)) {
         return json;
     }
@@ -55,7 +55,7 @@ export function InlineResponse2005LearnerFromJSONTyped(json: any, ignoreDiscrimi
     };
 }
 
-export function InlineResponse2005LearnerToJSON(value?: InlineResponse2005Learner | null): any {
+export function InlineResponse2007LearnerToJSON(value?: InlineResponse2007Learner | null): any {
     if (value === undefined) {
         return undefined;
     }
