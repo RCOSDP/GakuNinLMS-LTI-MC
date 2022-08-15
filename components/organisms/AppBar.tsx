@@ -6,6 +6,7 @@ import Button from "@mui/material/Button";
 import Snackbar from "@mui/material/Snackbar";
 import MenuBookOutlinedIcon from "@mui/icons-material/MenuBookOutlined";
 import LibraryBooksOutlinedIcon from "@mui/icons-material/LibraryBooksOutlined";
+import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
 import AssessmentOutlinedIcon from "@mui/icons-material/AssessmentOutlined";
 import LinkIcon from "@mui/icons-material/Link";
 import SettingsIcon from "@mui/icons-material/Settings";
@@ -66,6 +67,7 @@ type Props = ComponentProps<typeof MuiAppBar> & {
   session: SessionSchema;
   onBooksClick?(): void;
   onTopicsClick?(): void;
+  onCoursesClick?(): void;
   onBookClick?(): void;
   onDashboardClick?(): void;
 };
@@ -81,6 +83,7 @@ function AppBar(props: Props, ref: Ref<HTMLDivElement>) {
     session,
     onBooksClick,
     onTopicsClick,
+    onCoursesClick,
     onBookClick,
     onDashboardClick,
     ...others
@@ -148,6 +151,13 @@ function AppBar(props: Props, ref: Ref<HTMLDivElement>) {
               label="トピック"
               onClick={onTopicsClick}
               disabled={!onTopicsClick}
+            />
+            <AppBarNavButton
+              color="inherit"
+              icon={<LocalLibraryIcon />}
+              label="コース"
+              onClick={onCoursesClick}
+              disabled={!onCoursesClick}
             />
             <AppBarNavButton
               color="inherit"

@@ -13,7 +13,10 @@ import { pagesPath } from "$utils/$path";
 import useBookLinkHandler from "$utils/useBookLinkHandler";
 import useAuthorsHandler from "$utils/useAuthorsHandler";
 
-export type Query = { bookId: BookSchema["id"]; context?: "books" | "topics" };
+export type Query = {
+  bookId: BookSchema["id"];
+  context?: "books" | "topics" | "courses";
+};
 
 function Edit({ bookId, context }: Query) {
   const query = { bookId, ...(context && { context }) };
@@ -28,6 +31,7 @@ function Edit({ bookId, context }: Query) {
     switch (context) {
       case "books":
       case "topics":
+      case "courses":
         return router.push(pagesPath[context].$url());
       default:
         return router.push(pagesPath.book.$url({ query }));

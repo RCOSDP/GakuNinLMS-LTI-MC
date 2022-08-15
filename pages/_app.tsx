@@ -42,6 +42,7 @@ function Content({ children }: { children: ReactNode }) {
 
   const handleBooksClick = () => router.push(pagesPath.books.$url());
   const handleTopicsClick = () => router.push(pagesPath.topics.$url());
+  const handleCoursesClick = () => router.push(pagesPath.courses.$url());
   const handleDashboardClick = () => router.push(pagesPath.dashboard.$url());
   const handleBookClick = () => router.push(pagesPath.$url());
 
@@ -54,6 +55,7 @@ function Content({ children }: { children: ReactNode }) {
             session={session}
             onBooksClick={handleBooksClick}
             onTopicsClick={handleTopicsClick}
+            onCoursesClick={handleCoursesClick}
             onDashboardClick={handleDashboardClick}
             onBookClick={handleBookClick}
           />

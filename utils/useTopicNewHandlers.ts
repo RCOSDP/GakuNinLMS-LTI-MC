@@ -13,7 +13,7 @@ import { updateTopicAuthors } from "./topicAuthors";
 
 /** TopicNew コンポーネントのためのハンドラー生成 (要 TopicNew, ./index.tsx, ./edit.tsx) */
 function useTopicNewHandlers(
-  context: "books" | "topics" | undefined,
+  context: "books" | "topics" | "courses" | undefined,
   book?: BookSchema,
   targetTopic?: TopicSchema
 ) {

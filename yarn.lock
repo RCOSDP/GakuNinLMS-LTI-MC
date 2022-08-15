@@ -9484,6 +9484,11 @@ junk@^3.1.0:
   resolved "https://registry.yarnpkg.com/junk/-/junk-3.1.0.tgz#31499098d902b7e98c5d9b9c80f43457a88abfa1"
   integrity sha512-pBxcB3LFc8QVgdggvZWyeys+hnrNWg4OcZIU/1X59k5jQdLBlCsYGRQaz234SqoRLTCgMH00fY0xRJH+F9METQ==
 
+just-group-by@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/just-group-by/-/just-group-by-2.1.1.tgz#b1b79925e3bca7cbf44acc24aa175aa5e954ab09"
+  integrity sha512-sygLOp/lxie+ruiL3cICjylWxXAR5RBErz2Laj04yo+dFqCRbPzDB8LLWn6aCx3HpONpwQ9sVp3EA0abPA8p2A==
+
 jwa@^1.4.1:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/jwa/-/jwa-1.4.1.tgz#743c32985cb9e98655530d53641b66c8645b039a"

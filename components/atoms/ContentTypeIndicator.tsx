@@ -1,9 +1,9 @@
 import Box from "@mui/material/Box";
 import MenuBookOutlinedIcon from "@mui/icons-material/MenuBookOutlined";
 import LibraryBooksOutlinedIcon from "@mui/icons-material/LibraryBooksOutlined";
+import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
 import { styled } from "@mui/material/styles";
 import { grey } from "@mui/material/colors";
-import type { ContentSchema } from "$server/models/content";
 
 const Heading = styled("h6")({
   color: grey[700],
@@ -20,10 +20,14 @@ const value = {
     icon: <LibraryBooksOutlinedIcon sx={{ mr: 0.5 }} />,
     name: "トピック",
   },
+  course: {
+    icon: <LocalLibraryIcon sx={{ mr: 0.5 }} />,
+    name: "コース",
+  },
 } as const;
 
 type Props = {
-  type: ContentSchema["type"];
+  type: keyof typeof value;
 };
 
 export default function ContentTypeIndicator({ type }: Props) {
