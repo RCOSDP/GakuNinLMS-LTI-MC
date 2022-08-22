@@ -7,14 +7,19 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import groupBy from "just-group-by";
 import ContentTypeIndicator from "$atoms/ContentTypeIndicator";
 import Container from "$atoms/Container";
+import SortSelect from "$atoms/SortSelect";
+import CourseSearchTextField from "$molecules/CourseSearchTextField";
 import ActionHeader from "$organisms/ActionHeader";
 import Accordion from "$organisms/Accordion";
 import CourseTree from "$organisms/CourseTree";
+import CourseFilterColumn from "$organisms/CourseFilterColumn";
+import { useLinkSearchAtom } from "$store/linkSearch";
 import { useSessionAtom } from "$store/session";
 import type { LinkSchema } from "$server/models/link/content";
 import type { BookSchema } from "$server/models/book";
 
 type Props = {
+  clientIds: string[];
   contents: LinkSchema[];
   loading?: boolean;
   onBookPreviewClick(book: Pick<BookSchema, "id">): void;
@@ -22,11 +27,13 @@ type Props = {
 };
 
 export default function Courses({
+  clientIds,
   contents,
   loading = false,
   onBookPreviewClick,
   onBookEditClick,
 }: Props) {
+  const linkSearchProps = useLinkSearchAtom();
   const clients = useMemo(
     () => Object.entries(groupBy(contents, (link) => link.oauthClientId)),
     [contents]
@@ -36,18 +43,25 @@ export default function Courses({
     <Container twoColumns maxWidth="xl">
       <ActionHeader sx={{ gridArea: "action-header" }}>
         <ContentTypeIndicator type="course" />
-        {/* TODO: https://github.com/npocccties/chibichilo/issues/773
-        <SearchTextField
+        <SortSelect<"created" | "reverse-created">
+          onSortChange={linkSearchProps.onSortChange}
+          options={[
+            {
+              value: "created",
+              label: "作成日順（新しい）",
+            },
+            {
+              value: "reverse-created",
+              label: "作成日順（古い）",
+            },
+          ]}
+        />
+        <CourseSearchTextField
           label="コース名検索"
-          value={searchProps.input}
-          onSearchInput={searchProps.onSearchInput}
-          onSearchInputReset={searchProps.onSearchInputReset}
-          onSearchSubmit={searchProps.onSearchSubmit}
-          onSearchTargetChange={searchProps.onSearchTargetChange}
-        /> */}
+          onSearchSubmit={linkSearchProps.onSearchSubmit}
+        />
       </ActionHeader>
-      {/* TODO: https://github.com/npocccties/chibichilo/issues/773
-      <FilterColumn sx={{ gridArea: "side" }} variant="topic" /> */}
+      <CourseFilterColumn sx={{ gridArea: "side" }} clientIds={clientIds} />
       <Box gridArea="items">
         {clients.map(([oauthClientId, links]) => {
           const courses = Object.entries(

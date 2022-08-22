@@ -50,10 +50,12 @@ const Template: Story<Parameters<typeof Courses>[0]> = (args) => (
 
 export const Default = Template.bind({});
 Default.args = {
+  clientIds: ["test"],
   contents,
 };
 
 export const Empty = Template.bind({});
 Empty.args = {
+  clientIds: [],
   contents: [],
 };

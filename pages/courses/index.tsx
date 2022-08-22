@@ -6,18 +6,14 @@ import BookPreviewDialog from "$organisms/BookPreviewDialog";
 import type { BookSchema } from "$server/models/book";
 import { useSessionAtom } from "$store/session";
 import { useBook } from "$utils/book";
-import useLinks from "$utils/useLinks";
+import useClientIds from "$utils/courses/useClientIds";
+import useLinks from "$utils/courses/useLinks";
 import useDialogProps from "$utils/useDialogProps";
 import { pagesPath } from "$utils/$path";
 
 function Index() {
-  // TODO: https://github.com/npocccties/chibichilo/issues/773
-  const contents = useLinks({
-    q: "",
-    sort: "created",
-    page: 0,
-    perPage: 1024,
-  });
+  const clientIds = useClientIds();
+  const contents = useLinks();
   const [previewBookId, setPreviewBookId] = useState<
     BookSchema["id"] | undefined
   >();
@@ -49,7 +45,7 @@ function Index() {
 
   return (
     <>
-      <CoursesTemplate {...contents} {...handlers} />
+      <CoursesTemplate clientIds={clientIds} {...contents} {...handlers} />
       {dialogProps.data && (
         <BookPreviewDialog {...dialogProps} book={dialogProps.data}>
           {(props) => <Book {...props} />}
