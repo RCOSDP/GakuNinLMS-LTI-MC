@@ -123,6 +123,6 @@
     "storybook": "start-storybook -s ./public"
   },
   "engines": {
-    "node": ">=12 <17 || ^18.7.0"
+    "node": ">=12 <17"
   }
 }
