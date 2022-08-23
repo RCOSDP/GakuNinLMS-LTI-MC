@@ -1,5 +1,4 @@
 import type { Dispatch, SetStateAction } from "react";
-import { useState } from "react";
 import TreeItem from "@mui/lab/TreeItem";
 import Checkbox from "@mui/material/Checkbox";
 import PreviewButton from "$atoms/PreviewButton";
@@ -16,6 +15,8 @@ type Props = {
   oauthClientId: string;
   ltiContext: LtiContextSchema;
   links: Array<LinkSchema>;
+  selected: Set<string>;
+  select: Dispatch<SetStateAction<Set<string>>>;
   onTreeChange?(
     link: Pick<LinkSchema, "oauthClientId" | "ltiContext" | "ltiResourceLink">,
     checked: boolean
@@ -27,8 +28,8 @@ type Props = {
 
 type LinksTreeProps = {
   links: Array<LinkSchema>;
-  linksSet: Set<LinkSchema>;
-  updateLinksSet: Dispatch<SetStateAction<Set<LinkSchema>>>;
+  selected: Set<string>;
+  select: Dispatch<SetStateAction<Set<string>>>;
   onTreeChange?(
     link: Pick<LinkSchema, "oauthClientId" | "ltiContext" | "ltiResourceLink">,
     checked: boolean
@@ -40,8 +41,8 @@ type LinksTreeProps = {
 
 function LinksTree({
   links,
-  linksSet,
-  updateLinksSet,
+  selected,
+  select,
   onTreeChange,
   onBookPreviewClick,
   onBookEditClick,
@@ -74,7 +75,7 @@ function LinksTree({
               <>
                 {onTreeChange && (
                   <Checkbox
-                    checked={linksSet.has(link)}
+                    checked={selected.has(JSON.stringify(link))}
                     color="primary"
                     size="small"
                     onClick={(event) => {
@@ -82,10 +83,11 @@ function LinksTree({
                     }}
                     onChange={(event, checked) => {
                       event.stopPropagation();
-                      updateLinksSet((linksSet) => {
-                        if (checked) linksSet.add(link);
-                        else linksSet.delete(link);
-                        return new Set(linksSet);
+                      select((selected) => {
+                        const json = JSON.stringify(link);
+                        if (checked) selected.add(json);
+                        else selected.delete(json);
+                        return new Set(selected);
                       });
                       onTreeChange(link, checked);
                     }}
@@ -121,6 +123,8 @@ export default function CourseTree(props: Props) {
     oauthClientId,
     ltiContext,
     links,
+    selected,
+    select,
     onTreeChange,
     onBookPreviewClick,
     onBookEditClick,
@@ -130,8 +134,9 @@ export default function CourseTree(props: Props) {
   const nodeId = [oauthClientId, ltiContext.id]
     .map(encodeURIComponent)
     .join(":");
-  const [linksSet, updateLinksSet] = useState<Set<LinkSchema>>(new Set());
-  const checked = linksSet.size === links.length;
+  const checked = links.every((link) => selected.has(JSON.stringify(link)));
+  const indeterminate =
+    !checked && links.some((link) => selected.has(JSON.stringify(link)));
 
   return (
     <TreeItem
@@ -142,7 +147,7 @@ export default function CourseTree(props: Props) {
           {onTreeChange && (
             <Checkbox
               checked={checked}
-              indeterminate={!checked && linksSet.size > 0}
+              indeterminate={indeterminate}
               color="primary"
               size="small"
               onClick={(e) => {
@@ -151,7 +156,12 @@ export default function CourseTree(props: Props) {
               }}
               onChange={(event, checked) => {
                 event.stopPropagation();
-                updateLinksSet(checked ? new Set(links) : new Set());
+                select((selected) => {
+                  const jsonl = links.map((link) => JSON.stringify(link));
+                  if (checked) jsonl.forEach((json) => selected.add(json));
+                  else jsonl.forEach((json) => selected.delete(json));
+                  return new Set(selected);
+                });
                 links.forEach((link) => {
                   onTreeChange(link, checked);
                 });
@@ -164,8 +174,8 @@ export default function CourseTree(props: Props) {
     >
       <LinksTree
         links={links}
-        linksSet={linksSet}
-        updateLinksSet={updateLinksSet}
+        selected={selected}
+        select={select}
         onTreeChange={onTreeChange}
         onBookPreviewClick={onBookPreviewClick}
         onBookEditClick={onBookEditClick}

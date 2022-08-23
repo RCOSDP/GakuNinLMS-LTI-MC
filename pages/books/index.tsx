@@ -8,7 +8,10 @@ import BookPreviewDialog from "$organisms/BookPreviewDialog";
 import useBooks from "$utils/useBooks";
 import useLinkedBook from "$utils/useLinkedBook";
 import { pagesPath } from "$utils/$path";
-import { updateLtiResourceLink } from "$utils/ltiResourceLink";
+import {
+  updateLtiResourceLink,
+  destroyLtiResourceLink,
+} from "$utils/ltiResourceLink";
 import getLtiResourceLink from "$utils/getLtiResourceLink";
 import useDialogProps from "$utils/useDialogProps";
 import { useBookAtom } from "$store/book";
@@ -59,11 +62,22 @@ function Index() {
       pagesPath.books.import.$url({ query: { context: "books" } })
     );
   };
-  const onContentLinkClick = async (book: Pick<ContentSchema, "id">) => {
+  const onContentLinkClick = async (
+    content: ContentSchema,
+    checked: boolean
+  ) => {
+    const book = content as BookSchema;
     const ltiResourceLink = getLtiResourceLink(session);
     if (ltiResourceLink == null) return;
     const bookId = book.id;
-    await updateLtiResourceLink({ ...ltiResourceLink, bookId });
+    if (checked) {
+      await updateLtiResourceLink({ ...ltiResourceLink, bookId });
+    } else {
+      const link = book.ltiResourceLinks.find(
+        ({ consumerId }) => consumerId === session?.oauthClient.id
+      );
+      if (link) await destroyLtiResourceLink(link);
+    }
     await revalidateContents(query);
   };
   const handleLinkedBookClick = (book: Pick<BookSchema, "id">) =>

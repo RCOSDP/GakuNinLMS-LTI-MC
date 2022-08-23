@@ -43,5 +43,7 @@ Default.args = {
       book,
     },
   ],
+  selected: new Set(),
+  select: console.log,
   isContentEditable: () => true,
 };

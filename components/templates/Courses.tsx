@@ -1,6 +1,8 @@
-import { useMemo } from "react";
+import { useMemo, useState, useCallback } from "react";
+import { useConfirm } from "material-ui-confirm";
 import Skeleton from "@mui/material/Skeleton";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import TreeView from "@mui/lab/TreeView";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
@@ -10,6 +12,7 @@ import Container from "$atoms/Container";
 import SortSelect from "$atoms/SortSelect";
 import CourseSearchTextField from "$molecules/CourseSearchTextField";
 import ActionHeader from "$organisms/ActionHeader";
+import ActionFooter from "$organisms/ActionFooter";
 import Accordion from "$organisms/Accordion";
 import CourseTree from "$organisms/CourseTree";
 import CourseFilterColumn from "$organisms/CourseFilterColumn";
@@ -22,6 +25,9 @@ type Props = {
   clientIds: string[];
   contents: LinkSchema[];
   loading?: boolean;
+  onLinksDeleteClick(
+    links: Array<Pick<LinkSchema, "oauthClientId" | "ltiResourceLink">>
+  ): void;
   onBookPreviewClick(book: Pick<BookSchema, "id">): void;
   onBookEditClick(book: Pick<BookSchema, "id" | "authors">): void;
 };
@@ -30,6 +36,7 @@ export default function Courses({
   clientIds,
   contents,
   loading = false,
+  onLinksDeleteClick,
   onBookPreviewClick,
   onBookEditClick,
 }: Props) {
@@ -37,6 +44,29 @@ export default function Courses({
   const clients = useMemo(
     () => Object.entries(groupBy(contents, (link) => link.oauthClientId)),
     [contents]
+  );
+  const [selected, select] = useState<Set<string>>(new Set());
+  const confirm = useConfirm();
+  const handleLinksDeleteClick = useCallback(async () => {
+    if (selected.size === 0) return;
+    await confirm({
+      title: `${selected.size}件の提供を解除します。よろしいですか？`,
+      cancellationText: "キャンセル",
+      confirmationText: "OK",
+    });
+    onLinksDeleteClick([...selected].map((json) => JSON.parse(json)));
+    select(new Set());
+  }, [selected, select, onLinksDeleteClick, confirm]);
+  const onTreeChange = useCallback(
+    (link: LinkSchema, checked: boolean) => {
+      select((selected) => {
+        const json = JSON.stringify(link);
+        if (checked) selected.add(json);
+        else selected.delete(json);
+        return new Set(selected);
+      });
+    },
+    [select]
   );
   const { isContentEditable } = useSessionAtom();
   return (
@@ -87,6 +117,9 @@ export default function Courses({
                       oauthClientId={course.oauthClientId}
                       ltiContext={course.ltiContext}
                       links={links}
+                      selected={selected}
+                      select={select}
+                      onTreeChange={onTreeChange}
                       onBookPreviewClick={onBookPreviewClick}
                       onBookEditClick={onBookEditClick}
                       isContentEditable={isContentEditable}
@@ -101,6 +134,18 @@ export default function Courses({
           (loading
             ? [...Array(3)].map((_, i) => <Skeleton key={i} height={64} />)
             : "提供中のブックは存在しません")}
+        {selected.size > 0 && (
+          <ActionFooter maxWidth="lg">
+            <Button
+              color="error"
+              size="large"
+              variant="contained"
+              onClick={handleLinksDeleteClick}
+            >
+              {selected.size}件の提供解除
+            </Button>
+          </ActionFooter>
+        )}
       </Box>
     </Container>
   );

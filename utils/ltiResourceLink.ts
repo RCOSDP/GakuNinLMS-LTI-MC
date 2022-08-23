@@ -50,7 +50,7 @@ export async function destroyLtiResourceLink({
   consumerId,
   id,
 }: Pick<LtiResourceLinkSchema, "consumerId" | "id">) {
-  await api.apiV2LtiLtiConsumerIdResourceLinkLtiResourceLinkIdDelete({
+  await api.apiV2LtiLtiConsumerIdResourceLinkLtiResourceLinkIdDeleteRaw({
     ltiConsumerId: consumerId,
     ltiResourceLinkId: id,
   });
