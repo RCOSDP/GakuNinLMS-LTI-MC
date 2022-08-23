@@ -101,12 +101,18 @@ function LinksTree({
                 )}
                 <PreviewButton
                   variant="book"
-                  onClick={() => onBookPreviewClick?.(link.book)}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    onBookPreviewClick?.(link.book);
+                  }}
                 />
                 {isContentEditable?.(link.book) && (
                   <EditButton
                     variant="book"
-                    onClick={() => onBookEditClick?.(link.book)}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      onBookEditClick?.(link.book);
+                    }}
                   />
                 )}
               </>
