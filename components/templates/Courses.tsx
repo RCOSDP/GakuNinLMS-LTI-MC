@@ -110,6 +110,7 @@ export default function Courses({
                 return (
                   <TreeView
                     key={id}
+                    defaultExpanded={[id]}
                     defaultCollapseIcon={<ExpandMoreIcon />}
                     defaultExpandIcon={<ChevronRightIcon />}
                   >

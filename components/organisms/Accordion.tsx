@@ -37,7 +37,7 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
 
 export default function Accordion(props: Props) {
   return (
-    <MuiAccordion disableGutters>
+    <MuiAccordion disableGutters defaultExpanded>
       <AccordionSummary>{props.summary}</AccordionSummary>
       <AccordionDetails>{props.details}</AccordionDetails>
     </MuiAccordion>
