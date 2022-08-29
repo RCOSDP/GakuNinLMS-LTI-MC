@@ -13,7 +13,7 @@ import type { LinkSchema } from "$server/models/link/content";
 import type { AuthorFilter } from "$server/models/authorFilter";
 import { AuthorSchema } from "$server/models/author";
 import prisma from "$server/utils/prisma";
-import createScopes from "$server/utils/search/createScopes";
+import createLinkScope from "./createLinkScope";
 
 function linkToLinkSchema(
   link: LtiResourceLink & {
@@ -73,12 +73,7 @@ async function linkSearch(
   const insensitiveMode = { mode: "insensitive" as const };
   const where: Prisma.LtiResourceLinkWhereInput = {
     AND: [
-      {
-        OR: [
-          { consumerId: course.oauthClientId, contextId: course.ltiContextId },
-          { book: { AND: createScopes(filter) } },
-        ],
-      },
+      createLinkScope(filter, course),
       // NOTE: text - 検索文字列 (コース名)
       ...query.text.map((t) => ({
         context: {

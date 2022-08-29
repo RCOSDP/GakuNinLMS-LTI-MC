@@ -4,7 +4,7 @@ import authInstructor from "$server/auth/authInstructor";
 import authUser from "$server/auth/authUser";
 import { isAdministrator } from "$server/utils/session";
 import prisma from "$server/utils/prisma";
-import createScopes from "$server/utils/search/createScopes";
+import createLinkScope from "$server/utils/linkSearch/createLinkScope";
 
 export const method = {
   get: {
@@ -39,11 +39,10 @@ export async function index({ session }: FastifyRequest) {
   const clients = await prisma.ltiConsumer.findMany({
     where: {
       ltiResourceLinks: {
-        some: {
-          book: {
-            AND: createScopes(filter),
-          },
-        },
+        some: createLinkScope(filter, {
+          oauthClientId: session.oauthClient.id,
+          ltiContextId: session.ltiContext.id,
+        }),
       },
     },
   });
