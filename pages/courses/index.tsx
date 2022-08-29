@@ -28,10 +28,14 @@ function Index() {
     session?.ltiResourceLink
   );
   const dialogProps = useDialogProps<BookSchema>();
-  const { dispatch } = dialogProps;
+  const { setOpen, setData } = dialogProps;
   useEffect(() => {
-    dispatch(book);
-  }, [dispatch, book]);
+    if (book) setData(book);
+  }, [setData, book]);
+  const onOpen = (id: number) => {
+    setPreviewBookId(id);
+    setOpen(true);
+  };
   const router = useRouter();
   const handlers = {
     async onLinksDeleteClick(
@@ -48,7 +52,7 @@ function Index() {
       await revalidateLinks(linkSearchProps.query);
     },
     onBookPreviewClick(book: Pick<BookSchema, "id">) {
-      setPreviewBookId(book.id);
+      onOpen(book.id);
     },
     onBookEditClick(book: Pick<BookSchema, "id" | "authors">) {
       const action = isContentEditable(book) ? "edit" : "generate";
@@ -64,11 +68,7 @@ function Index() {
     <>
       <CoursesTemplate clientIds={clientIds} {...contents} {...handlers} />
       {dialogProps.data && (
-        <BookPreviewDialog
-          {...dialogProps}
-          onClose={() => setPreviewBookId(undefined)}
-          book={dialogProps.data}
-        >
+        <BookPreviewDialog {...dialogProps} book={dialogProps.data}>
           {(props) => <Book {...props} />}
         </BookPreviewDialog>
       )}
