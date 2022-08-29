@@ -38,7 +38,10 @@ export async function index({
   const sort = query.sort ?? "created";
   const page = query.page ?? 0;
   const perPage = query.per_page ?? 50;
-  const result = await search(query.q, filter, sort, page, perPage);
+  const result = await search(query.q, filter, sort, page, perPage, {
+    oauthClientId: session.oauthClient.id,
+    ltiContextId: session.ltiContext.id,
+  });
 
   return {
     status: 200,

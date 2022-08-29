@@ -8,10 +8,11 @@ async function search(
   filter: AuthorFilter,
   sort: string,
   page: number,
-  perPage: number
+  perPage: number,
+  course: { oauthClientId: string; ltiContextId: string }
 ): Promise<LinkSearchResultSchema> {
   const query = parse(queryText);
-  return await linkSearch(query, filter, sort, page, perPage);
+  return await linkSearch(query, filter, sort, page, perPage, course);
 }
 
 export default search;

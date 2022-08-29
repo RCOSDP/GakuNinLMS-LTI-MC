@@ -54,30 +54,39 @@ function linkToLinkSchema(
 /**
  * 検索クエリーによるリンク検索
  * @param query 検索クエリー
+ * @param filter 著者フィルター
  * @param sort 並び順
  * @param page ページ番号
  * @param perPage 1ページあたりの表示件数
+ * @param course.oauthClientId 提供されているLMS
+ * @param course.ltiContextId LTI Context ID
  * @return リンク
  */
 async function linkSearch(
-  { text, oauthClientId }: LinkSearchQuery,
+  query: LinkSearchQuery,
   filter: AuthorFilter,
   sort: string,
   page: number,
-  perPage: number
+  perPage: number,
+  course: { oauthClientId: string; ltiContextId: string }
 ): Promise<LinkSearchResultSchema> {
   const insensitiveMode = { mode: "insensitive" as const };
   const where: Prisma.LtiResourceLinkWhereInput = {
     AND: [
-      { book: { AND: createScopes(filter) } },
+      {
+        OR: [
+          { consumerId: course.oauthClientId, contextId: course.ltiContextId },
+          { book: { AND: createScopes(filter) } },
+        ],
+      },
       // NOTE: text - 検索文字列 (コース名)
-      ...text.map((t) => ({
+      ...query.text.map((t) => ({
         context: {
           title: { contains: t, ...insensitiveMode },
         },
       })),
       // NOTE: oauthClientId - 提供されているLMS
-      ...oauthClientId.map((consumerId) => ({ consumerId })),
+      ...query.oauthClientId.map((consumerId) => ({ consumerId })),
     ],
   };
 
