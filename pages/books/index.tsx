@@ -15,7 +15,6 @@ import {
 import getLtiResourceLink from "$utils/getLtiResourceLink";
 import useDialogProps from "$utils/useDialogProps";
 import { useBookAtom } from "$store/book";
-import { useVideoAtom } from "$store/video";
 import { useSearchAtom } from "$store/search";
 import { revalidateContents } from "utils/useContents";
 
@@ -36,11 +35,9 @@ function Index() {
     ...dialogProps
   } = useDialogProps<ContentSchema>();
   const { updateBook } = useBookAtom();
-  const { updateVideo } = useVideoAtom();
   const onContentPreviewClick = (content: ContentSchema) => {
     const book = content as BookSchema;
     updateBook(book);
-    updateVideo(book.sections);
     dispatch(content);
   };
   const { query } = useSearchAtom();

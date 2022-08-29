@@ -40,14 +40,9 @@ type Props = {
 };
 
 export default function Video({ className, sx, topic, onEnded }: Props) {
-  const { video, updateVideo } = useVideoAtom();
-  const { book, itemIndex, itemExists } = useBookAtom();
+  const { video } = useVideoAtom();
+  const { itemIndex, itemExists } = useBookAtom();
   const prevItemIndex = usePrevious(itemIndex);
-  useEffect(() => {
-    if (!book) return;
-    updateVideo(book.sections);
-    return () => video.clear();
-  }, [book, video, updateVideo]);
   useEffect(() => {
     const topic = itemExists(itemIndex);
     const startTime = topic?.startTime;
