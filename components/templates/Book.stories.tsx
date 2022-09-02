@@ -36,10 +36,7 @@ function SlideAppBar() {
 }
 
 export const Default = () => {
-  const { updateBook, itemIndex, updateItemIndex } = useBookAtom();
-  useEffect(() => {
-    updateBook(defaultProps.book);
-  }, [updateBook]);
+  const { itemIndex, updateItemIndex } = useBookAtom(defaultProps.book);
 
   return (
     <Book
@@ -86,12 +83,11 @@ export const EmptySection = () => {
 };
 
 export const ForInstructor = () => {
-  const { updateBook, itemIndex, updateItemIndex } = useBookAtom();
+  const { itemIndex, updateItemIndex } = useBookAtom(defaultProps.book);
   const [, updateSession] = useUpdateSessionAtom();
   useEffect(() => {
-    updateBook(defaultProps.book);
     updateSession({ session, error: false });
-  }, [updateBook, updateSession]);
+  }, [updateSession]);
 
   return (
     <>
