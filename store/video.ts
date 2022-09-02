@@ -31,9 +31,10 @@ export function useVideoAtom() {
   const [state, reset] = useAtom(videoAtom);
   useEffect(
     () => () => {
+      state.video.forEach(({ player }) => player.pause());
       reset(RESET);
     },
-    [reset]
+    [reset, state]
   );
   return state;
 }
