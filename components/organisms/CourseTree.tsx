@@ -10,6 +10,8 @@ import type { LtiContextSchema } from "$server/models/ltiContext";
 import type { LinkSchema } from "$server/models/link/content";
 import type { BookSchema } from "$server/models/book";
 import theme from "$theme";
+import { useSessionAtom } from "$store/session";
+import { isDisplayableBook } from "$utils/displayableBook";
 
 type Props = {
   oauthClientId: string;
@@ -48,6 +50,7 @@ function LinksTree({
   onBookEditClick,
   isContentEditable,
 }: LinksTreeProps) {
+  const { session } = useSessionAtom();
   return (
     <>
       {links.map((link) => {
@@ -99,13 +102,19 @@ function LinksTree({
                 {link.book.shared && (
                   <SharedIndicator sx={{ margin: theme.spacing(-0.5, 0.5) }} />
                 )}
-                <PreviewButton
-                  variant="book"
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    onBookPreviewClick?.(link.book);
-                  }}
-                />
+                {isDisplayableBook(
+                  link.book,
+                  isContentEditable,
+                  session?.ltiResourceLink ?? undefined
+                ) && (
+                  <PreviewButton
+                    variant="book"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      onBookPreviewClick?.(link.book);
+                    }}
+                  />
+                )}
                 {isContentEditable?.(link.book) && (
                   <EditButton
                     variant="book"

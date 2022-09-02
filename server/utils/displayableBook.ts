@@ -4,26 +4,28 @@ import type { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
 import type { IsContentEditable } from "$server/models/content";
 import contentBy from "./contentBy";
 
-function isDisplayableBook(
-  book: BookSchema,
+export function isDisplayableBook(
+  book: Pick<BookSchema, "id" | "shared" | "authors">,
+  isContentEditable: IsContentEditable | undefined,
   ltiResourceLink:
     | Pick<LtiResourceLinkSchema, "bookId" | "creatorId">
     | undefined,
-  isContentEditable: IsContentEditable,
   publicBook?: PublicBookSchema
 ) {
   const linked = book.id === ltiResourceLink?.bookId;
-  return book.shared || linked || isContentEditable(book) || publicBook;
+  return book.shared || linked || isContentEditable?.(book) || publicBook;
 }
 
-function getDisplayableBook(
-  book: BookSchema | undefined,
-  isContentEditable: IsContentEditable,
+export function getDisplayableBook<
+  Book extends Pick<BookSchema, "id" | "shared" | "authors" | "sections">
+>(
+  book: Book | undefined,
+  isContentEditable: IsContentEditable | undefined,
   ltiResourceLink?: Pick<LtiResourceLinkSchema, "bookId" | "creatorId">,
   publicBook?: PublicBookSchema
-): BookSchema | undefined {
+): Book | undefined {
   if (book === undefined) return;
-  if (!isDisplayableBook(book, ltiResourceLink, isContentEditable, publicBook))
+  if (!isDisplayableBook(book, isContentEditable, ltiResourceLink, publicBook))
     return;
 
   const sections = book.sections.flatMap((section) => {
@@ -32,12 +34,10 @@ function getDisplayableBook(
         topic.shared ||
         contentBy(topic, { id: ltiResourceLink?.creatorId }) ||
         (publicBook && contentBy(topic, { id: publicBook.userId })) ||
-        isContentEditable(topic)
+        isContentEditable?.(topic)
     );
     return topics.length > 0 ? [{ ...section, topics }] : [];
   });
 
   return { ...book, sections };
 }
-
-export default getDisplayableBook;
