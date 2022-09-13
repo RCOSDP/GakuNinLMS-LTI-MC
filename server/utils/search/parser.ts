@@ -18,14 +18,13 @@ const options = {
   tokenize: true,
 };
 
-type SearchParserResult = base.SearchParserResult &
-  {
-    // NOTE: keywords and `{ alwaysArray: true }`
-    [K in typeof options["keywords"][number]]?: string[];
-  } & {
-    // NOTE: `{ tokenize: true }`
-    text?: string[];
-  };
+type SearchParserResult = base.SearchParserResult & {
+  // NOTE: keywords and `{ alwaysArray: true }`
+  [K in typeof options["keywords"][number]]?: string[];
+} & {
+  // NOTE: `{ tokenize: true }`
+  text?: string[];
+};
 
 /**
  * 真偽値を表現する検索クエリー文字列のパース

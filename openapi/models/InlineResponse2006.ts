@@ -13,6 +13,13 @@
  */
 
 import { exists, mapValues } from '../runtime';
+import {
+    InlineResponse2001BookSettings,
+    InlineResponse2001BookSettingsFromJSON,
+    InlineResponse2001BookSettingsFromJSONTyped,
+    InlineResponse2001BookSettingsToJSON,
+} from './';
+
 /**
  * 
  * @export
@@ -21,10 +28,40 @@ import { exists, mapValues } from '../runtime';
 export interface InlineResponse2006 {
     /**
      * 
+     * @type {number}
+     * @memberof InlineResponse2006
+     */
+    id: number;
+    /**
+     * 
      * @type {string}
      * @memberof InlineResponse2006
      */
-    publicToken: string;
+    ltiConsumerId: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineResponse2006
+     */
+    ltiUserId: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineResponse2006
+     */
+    name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineResponse2006
+     */
+    email?: string;
+    /**
+     * 
+     * @type {InlineResponse2001BookSettings}
+     * @memberof InlineResponse2006
+     */
+    settings?: InlineResponse2001BookSettings;
 }
 
 export function InlineResponse2006FromJSON(json: any): InlineResponse2006 {
@@ -37,7 +74,12 @@ export function InlineResponse2006FromJSONTyped(json: any, ignoreDiscriminator: 
     }
     return {
         
-        'publicToken': json['publicToken'],
+        'id': json['id'],
+        'ltiConsumerId': json['ltiConsumerId'],
+        'ltiUserId': json['ltiUserId'],
+        'name': json['name'],
+        'email': !exists(json, 'email') ? undefined : json['email'],
+        'settings': !exists(json, 'settings') ? undefined : InlineResponse2001BookSettingsFromJSON(json['settings']),
     };
 }
 
@@ -50,7 +92,12 @@ export function InlineResponse2006ToJSON(value?: InlineResponse2006 | null): any
     }
     return {
         
-        'publicToken': value.publicToken,
+        'id': value.id,
+        'ltiConsumerId': value.ltiConsumerId,
+        'ltiUserId': value.ltiUserId,
+        'name': value.name,
+        'email': value.email,
+        'settings': InlineResponse2001BookSettingsToJSON(value.settings),
     };
 }
 

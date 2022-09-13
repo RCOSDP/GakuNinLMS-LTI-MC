@@ -2,6 +2,7 @@ import type { SessionSchema } from "$server/models/session";
 
 declare module "fastify" {
   interface Session {
+    state?: string;
     oauthClient: SessionSchema["oauthClient"];
     ltiVersion: SessionSchema["ltiVersion"];
     ltiUser: SessionSchema["ltiUser"];

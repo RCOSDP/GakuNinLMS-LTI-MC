@@ -6,7 +6,7 @@ import type { TopicSchema } from "$server/models/topic";
 import type { IsContentEditable } from "$server/models/content";
 import { revalidateSession } from "./session";
 import type { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
-import getDisplayableBook from "./getDisplayableBook";
+import { getDisplayableBook } from "./displayableBook";
 
 const key = "/api/v2/book/{book_id}";
 

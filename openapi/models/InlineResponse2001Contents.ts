@@ -14,30 +14,18 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    InlineResponse200,
-    InlineResponse200FromJSON,
-    InlineResponse200FromJSONTyped,
-    InlineResponse200ToJSON,
-    InlineResponse2001Authors,
-    InlineResponse2001AuthorsFromJSON,
-    InlineResponse2001AuthorsFromJSONTyped,
-    InlineResponse2001AuthorsToJSON,
-    InlineResponse2001Keywords,
-    InlineResponse2001KeywordsFromJSON,
-    InlineResponse2001KeywordsFromJSONTyped,
-    InlineResponse2001KeywordsToJSON,
-    InlineResponse2001PublicBooks,
-    InlineResponse2001PublicBooksFromJSON,
-    InlineResponse2001PublicBooksFromJSONTyped,
-    InlineResponse2001PublicBooksToJSON,
-    InlineResponse2001Resource,
-    InlineResponse2001ResourceFromJSON,
-    InlineResponse2001ResourceFromJSONTyped,
-    InlineResponse2001ResourceToJSON,
-    InlineResponse2001Sections,
-    InlineResponse2001SectionsFromJSON,
-    InlineResponse2001SectionsFromJSONTyped,
-    InlineResponse2001SectionsToJSON,
+    InlineResponse2001Book,
+    InlineResponse2001BookFromJSON,
+    InlineResponse2001BookFromJSONTyped,
+    InlineResponse2001BookToJSON,
+    LTIContext,
+    LTIContextFromJSON,
+    LTIContextFromJSONTyped,
+    LTIContextToJSON,
+    LTIResourceLinkRequest,
+    LTIResourceLinkRequestFromJSON,
+    LTIResourceLinkRequestFromJSONTyped,
+    LTIResourceLinkRequestToJSON,
 } from './';
 
 /**
@@ -51,121 +39,25 @@ export interface InlineResponse2001Contents {
      * @type {string}
      * @memberof InlineResponse2001Contents
      */
-    type: string;
+    oauthClientId: string;
     /**
      * 
-     * @type {number}
+     * @type {LTIContext}
      * @memberof InlineResponse2001Contents
      */
-    id?: number;
+    ltiContext: LTIContext;
     /**
      * 
-     * @type {string}
+     * @type {LTIResourceLinkRequest}
      * @memberof InlineResponse2001Contents
      */
-    name?: string;
+    ltiResourceLink: LTIResourceLinkRequest;
     /**
      * 
-     * @type {string}
+     * @type {InlineResponse2001Book}
      * @memberof InlineResponse2001Contents
      */
-    language?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof InlineResponse2001Contents
-     */
-    timeRequired?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof InlineResponse2001Contents
-     */
-    startTime?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof InlineResponse2001Contents
-     */
-    stopTime?: number;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof InlineResponse2001Contents
-     */
-    shared?: boolean;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineResponse2001Contents
-     */
-    license?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineResponse2001Contents
-     */
-    description?: string;
-    /**
-     * 
-     * @type {Date}
-     * @memberof InlineResponse2001Contents
-     */
-    createdAt?: Date;
-    /**
-     * 
-     * @type {Date}
-     * @memberof InlineResponse2001Contents
-     */
-    updatedAt?: Date;
-    /**
-     * 
-     * @type {object}
-     * @memberof InlineResponse2001Contents
-     */
-    details?: object;
-    /**
-     * 
-     * @type {Array<InlineResponse2001Authors>}
-     * @memberof InlineResponse2001Contents
-     */
-    authors?: Array<InlineResponse2001Authors>;
-    /**
-     * 
-     * @type {Array<InlineResponse2001Keywords>}
-     * @memberof InlineResponse2001Contents
-     */
-    keywords?: Array<InlineResponse2001Keywords>;
-    /**
-     * 
-     * @type {InlineResponse2001Resource}
-     * @memberof InlineResponse2001Contents
-     */
-    resource?: InlineResponse2001Resource;
-    /**
-     * 
-     * @type {Date}
-     * @memberof InlineResponse2001Contents
-     */
-    publishedAt?: Date;
-    /**
-     * 
-     * @type {Array<InlineResponse2001Sections>}
-     * @memberof InlineResponse2001Contents
-     */
-    sections?: Array<InlineResponse2001Sections>;
-    /**
-     * 
-     * @type {Array<InlineResponse200>}
-     * @memberof InlineResponse2001Contents
-     */
-    ltiResourceLinks?: Array<InlineResponse200>;
-    /**
-     * 
-     * @type {Array<InlineResponse2001PublicBooks>}
-     * @memberof InlineResponse2001Contents
-     */
-    publicBooks?: Array<InlineResponse2001PublicBooks>;
+    book: InlineResponse2001Book;
 }
 
 export function InlineResponse2001ContentsFromJSON(json: any): InlineResponse2001Contents {
@@ -178,26 +70,10 @@ export function InlineResponse2001ContentsFromJSONTyped(json: any, ignoreDiscrim
     }
     return {
         
-        'type': json['type'],
-        'id': !exists(json, 'id') ? undefined : json['id'],
-        'name': !exists(json, 'name') ? undefined : json['name'],
-        'language': !exists(json, 'language') ? undefined : json['language'],
-        'timeRequired': !exists(json, 'timeRequired') ? undefined : json['timeRequired'],
-        'startTime': !exists(json, 'startTime') ? undefined : json['startTime'],
-        'stopTime': !exists(json, 'stopTime') ? undefined : json['stopTime'],
-        'shared': !exists(json, 'shared') ? undefined : json['shared'],
-        'license': !exists(json, 'license') ? undefined : json['license'],
-        'description': !exists(json, 'description') ? undefined : json['description'],
-        'createdAt': !exists(json, 'createdAt') ? undefined : (new Date(json['createdAt'])),
-        'updatedAt': !exists(json, 'updatedAt') ? undefined : (new Date(json['updatedAt'])),
-        'details': !exists(json, 'details') ? undefined : json['details'],
-        'authors': !exists(json, 'authors') ? undefined : ((json['authors'] as Array<any>).map(InlineResponse2001AuthorsFromJSON)),
-        'keywords': !exists(json, 'keywords') ? undefined : ((json['keywords'] as Array<any>).map(InlineResponse2001KeywordsFromJSON)),
-        'resource': !exists(json, 'resource') ? undefined : InlineResponse2001ResourceFromJSON(json['resource']),
-        'publishedAt': !exists(json, 'publishedAt') ? undefined : (new Date(json['publishedAt'])),
-        'sections': !exists(json, 'sections') ? undefined : ((json['sections'] as Array<any>).map(InlineResponse2001SectionsFromJSON)),
-        'ltiResourceLinks': !exists(json, 'ltiResourceLinks') ? undefined : ((json['ltiResourceLinks'] as Array<any>).map(InlineResponse200FromJSON)),
-        'publicBooks': !exists(json, 'publicBooks') ? undefined : ((json['publicBooks'] as Array<any>).map(InlineResponse2001PublicBooksFromJSON)),
+        'oauthClientId': json['oauthClientId'],
+        'ltiContext': LTIContextFromJSON(json['ltiContext']),
+        'ltiResourceLink': LTIResourceLinkRequestFromJSON(json['ltiResourceLink']),
+        'book': InlineResponse2001BookFromJSON(json['book']),
     };
 }
 
@@ -210,26 +86,10 @@ export function InlineResponse2001ContentsToJSON(value?: InlineResponse2001Conte
     }
     return {
         
-        'type': value.type,
-        'id': value.id,
-        'name': value.name,
-        'language': value.language,
-        'timeRequired': value.timeRequired,
-        'startTime': value.startTime,
-        'stopTime': value.stopTime,
-        'shared': value.shared,
-        'license': value.license,
-        'description': value.description,
-        'createdAt': value.createdAt === undefined ? undefined : (value.createdAt.toISOString()),
-        'updatedAt': value.updatedAt === undefined ? undefined : (value.updatedAt.toISOString()),
-        'details': value.details,
-        'authors': value.authors === undefined ? undefined : ((value.authors as Array<any>).map(InlineResponse2001AuthorsToJSON)),
-        'keywords': value.keywords === undefined ? undefined : ((value.keywords as Array<any>).map(InlineResponse2001KeywordsToJSON)),
-        'resource': InlineResponse2001ResourceToJSON(value.resource),
-        'publishedAt': value.publishedAt === undefined ? undefined : (value.publishedAt.toISOString()),
-        'sections': value.sections === undefined ? undefined : ((value.sections as Array<any>).map(InlineResponse2001SectionsToJSON)),
-        'ltiResourceLinks': value.ltiResourceLinks === undefined ? undefined : ((value.ltiResourceLinks as Array<any>).map(InlineResponse200ToJSON)),
-        'publicBooks': value.publicBooks === undefined ? undefined : ((value.publicBooks as Array<any>).map(InlineResponse2001PublicBooksToJSON)),
+        'oauthClientId': value.oauthClientId,
+        'ltiContext': LTIContextToJSON(value.ltiContext),
+        'ltiResourceLink': LTIResourceLinkRequestToJSON(value.ltiResourceLink),
+        'book': InlineResponse2001BookToJSON(value.book),
     };
 }
 

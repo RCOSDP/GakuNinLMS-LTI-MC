@@ -32,7 +32,7 @@ export async function post(req: FastifyRequest<{ Body: Props }>) {
 
   if (!client) {
     req.log.error(`Client "${req.session.oauthClient.id}" が存在しません`);
-    await new Promise(req.destroySession.bind(req));
+    await req.session.destroy();
     return { status: 401 };
   }
 
@@ -73,7 +73,7 @@ export async function post(req: FastifyRequest<{ Body: Props }>) {
     }
 
     Object.assign(req.session, {
-      state: null,
+      state: undefined,
       ...session,
       ...(ltiLaunchPresentation && { ltiLaunchPresentation }),
     });
@@ -81,7 +81,7 @@ export async function post(req: FastifyRequest<{ Body: Props }>) {
     return await init(req);
   } catch (error) {
     req.log.error(error);
-    await new Promise(req.destroySession.bind(req));
+    await req.session.destroy();
     return { status: 401 };
   }
 }

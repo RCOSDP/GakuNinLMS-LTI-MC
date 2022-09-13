@@ -9,6 +9,7 @@ import {
   WOWZA_SCP_PORT,
   WOWZA_SCP_USERNAME,
   WOWZA_SCP_PRIVATE_KEY,
+  WOWZA_SCP_PRIVATE_KEY_PATH,
   WOWZA_SCP_PASS_PHRASE,
   WOWZA_SCP_SERVER_PATH,
 } from "$server/utils/env";
@@ -70,7 +71,9 @@ export class WowzaUpload {
         host: WOWZA_SCP_HOST,
         port: WOWZA_SCP_PORT,
         username: WOWZA_SCP_USERNAME,
-        privateKey: WOWZA_SCP_PRIVATE_KEY,
+        ...(WOWZA_SCP_PRIVATE_KEY
+          ? { privateKey: WOWZA_SCP_PRIVATE_KEY }
+          : { privateKeyPath: WOWZA_SCP_PRIVATE_KEY_PATH }),
         passphrase: WOWZA_SCP_PASS_PHRASE,
       });
       let scpError;

@@ -4,7 +4,7 @@ import type { SelectChangeEvent } from "@mui/material/Select";
 import Select from "$atoms/Select";
 import type { SortOrder } from "$server/models/sortOrder";
 
-const options: ReadonlyArray<{
+const defaultOptions: ReadonlyArray<{
   value: SortOrder;
   label: string;
 }> = [
@@ -34,26 +34,31 @@ const options: ReadonlyArray<{
   },
 ];
 
-type Props = Parameters<typeof Select>[0] & {
-  onSortChange?(value: SortOrder): void;
+type Props<Order extends SortOrder> = Parameters<typeof Select>[0] & {
+  onSortChange?(value: Order): void;
+  options?: typeof defaultOptions;
 };
 
-export default function SortSelect(props: Props) {
-  const { onSortChange, ...other } = props;
+export default function SortSelect<Order extends SortOrder>(
+  props: Props<Order>
+) {
+  const { onSortChange, options, ...other } = props;
+  const items = options ?? defaultOptions;
+  const defaultValue = items[0].value;
   const handleChange = useCallback(
     (event: SelectChangeEvent<unknown>) => {
-      onSortChange?.(event.target.value as SortOrder);
+      onSortChange?.(event.target.value as Order);
     },
     [onSortChange]
   );
   return (
     <Select
-      defaultValue={options[0].value}
+      defaultValue={defaultValue}
       disabled={!onSortChange}
       onChange={handleChange}
       {...other}
     >
-      {options.map((option) => (
+      {items.map((option) => (
         <MenuItem key={option.value} value={option.value}>
           {option.label}
         </MenuItem>

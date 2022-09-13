@@ -7,7 +7,7 @@ import type {
   RouteShorthandOptions,
 } from "fastify";
 import type { RouteGenericInterface } from "fastify/types/route";
-import type { FastifyAuthFunction } from "fastify-auth";
+import type { FastifyAuthFunction } from "@fastify/auth";
 import type Hooks from "$server/types/hooks";
 
 function makePreHandler(

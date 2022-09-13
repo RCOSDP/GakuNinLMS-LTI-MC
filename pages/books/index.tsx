@@ -8,11 +8,12 @@ import BookPreviewDialog from "$organisms/BookPreviewDialog";
 import useBooks from "$utils/useBooks";
 import useLinkedBook from "$utils/useLinkedBook";
 import { pagesPath } from "$utils/$path";
-import { updateLtiResourceLink } from "$utils/ltiResourceLink";
+import {
+  updateLtiResourceLink,
+  destroyLtiResourceLink,
+} from "$utils/ltiResourceLink";
 import getLtiResourceLink from "$utils/getLtiResourceLink";
 import useDialogProps from "$utils/useDialogProps";
-import { useBookAtom } from "$store/book";
-import { useVideoAtom } from "$store/video";
 import { useSearchAtom } from "$store/search";
 import { revalidateContents } from "utils/useContents";
 
@@ -29,17 +30,9 @@ function Index() {
   const { linkedBook } = useLinkedBook();
   const {
     data: previewContent,
-    dispatch,
+    dispatch: onContentPreviewClick,
     ...dialogProps
   } = useDialogProps<ContentSchema>();
-  const { updateBook } = useBookAtom();
-  const { updateVideo } = useVideoAtom();
-  const onContentPreviewClick = (content: ContentSchema) => {
-    const book = content as BookSchema;
-    updateBook(book);
-    updateVideo(book.sections);
-    dispatch(content);
-  };
   const { query } = useSearchAtom();
   const onContentEditClick = (book: Pick<ContentSchema, "id" | "authors">) => {
     const action = isContentEditable(book) ? "edit" : "generate";
@@ -59,11 +52,22 @@ function Index() {
       pagesPath.books.import.$url({ query: { context: "books" } })
     );
   };
-  const onContentLinkClick = async (book: Pick<ContentSchema, "id">) => {
+  const onContentLinkClick = async (
+    content: ContentSchema,
+    checked: boolean
+  ) => {
+    const book = content as BookSchema;
     const ltiResourceLink = getLtiResourceLink(session);
     if (ltiResourceLink == null) return;
     const bookId = book.id;
-    await updateLtiResourceLink({ ...ltiResourceLink, bookId });
+    if (checked) {
+      await updateLtiResourceLink({ ...ltiResourceLink, bookId });
+    } else {
+      const link = book.ltiResourceLinks.find(
+        ({ consumerId }) => consumerId === session?.oauthClient.id
+      );
+      if (link) await destroyLtiResourceLink(link);
+    }
     await revalidateContents(query);
   };
   const handleLinkedBookClick = (book: Pick<BookSchema, "id">) =>

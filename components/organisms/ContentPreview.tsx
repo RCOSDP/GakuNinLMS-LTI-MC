@@ -115,7 +115,7 @@ type Props = Parameters<typeof Checkbox>[0] & {
   content: ContentSchema;
   onContentPreviewClick(content: ContentSchema): void;
   onContentEditClick?(content: ContentSchema): void;
-  onContentLinkClick?(content: ContentSchema): void;
+  onContentLinkClick?(content: ContentSchema, checked: boolean): void;
   onLtiContextClick?(
     ltiResourceLink: Pick<LtiResourceLinkSchema, "consumerId" | "contextId">
   ): void;
@@ -148,7 +148,9 @@ export default function ContentPreview({
       ? content.resource.id
       : content.sections[0]?.topics[0]?.resource.id
   );
-  const handleContentLinkClick = () => onContentLinkClick?.(content);
+  const handleContentLinkClick = (_: unknown, checked: boolean) => {
+    onContentLinkClick?.(content, checked);
+  };
   return (
     <Preview className={clsx({ selected: checked })}>
       <Header

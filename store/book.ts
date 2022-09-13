@@ -1,8 +1,9 @@
 import { useEffect } from "react";
-import { atom, useAtom } from "jotai";
-import { RESET, atomWithReset, useUpdateAtom, useAtomValue } from "jotai/utils";
+import { atom } from "jotai";
+import { useUpdateAtom, useAtomValue } from "jotai/utils";
 import type { BookSchema } from "$server/models/book";
 import type { TopicSchema } from "$server/models/topic";
+import { updateVideoAtom } from "./video";
 
 type BookState = {
   book: BookSchema | undefined;
@@ -10,7 +11,7 @@ type BookState = {
   itemExists(itemIndex: ItemIndex): TopicSchema | undefined;
 };
 
-const bookAtom = atomWithReset<BookState>({
+const bookAtom = atom<BookState>({
   book: undefined,
   itemIndex: [0, 0],
   itemExists: () => undefined,
@@ -37,6 +38,7 @@ const updateBookAtom = atom<undefined, BookSchema>(
       itemExists: ([sectionIndex, topicIndex]) =>
         book.sections[sectionIndex]?.topics[topicIndex],
     });
+    set(updateVideoAtom, book.sections);
   }
 );
 
@@ -50,16 +52,13 @@ const updateItemIndexAtom = atom<undefined, ItemIndex | undefined>(
   }
 );
 
-export function useBookAtom() {
-  const [state, reset] = useAtom(bookAtom);
+export function useBookAtom(book?: BookSchema) {
+  const state = useAtomValue(bookAtom);
   const nextItemIndex = useAtomValue(nextItemIndexAtom);
   const updateBook = useUpdateAtom(updateBookAtom);
   const updateItemIndex = useUpdateAtom(updateItemIndexAtom);
-  useEffect(
-    () => () => {
-      reset(RESET);
-    },
-    [reset]
-  );
-  return { ...state, updateBook, updateItemIndex, nextItemIndex };
+  useEffect(() => {
+    if (book && book !== state.book) updateBook(book);
+  }, [updateBook, book, state.book]);
+  return { ...state, updateItemIndex, nextItemIndex };
 }

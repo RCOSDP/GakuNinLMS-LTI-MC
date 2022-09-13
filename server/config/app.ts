@@ -1,11 +1,11 @@
 import type { FastifyInstance } from "fastify";
-import swagger from "fastify-swagger";
-import helmet from "fastify-helmet";
-import cors from "fastify-cors";
-import session from "fastify-session";
-import cookie from "fastify-cookie";
-import auth from "fastify-auth";
-import formbody from "fastify-formbody";
+import swagger from "@fastify/swagger";
+import helmet from "@fastify/helmet";
+import cors from "@fastify/cors";
+import session from "@fastify/session";
+import cookie from "@fastify/cookie";
+import auth from "@fastify/auth";
+import formbody from "@fastify/formbody";
 import pkg from "$server/package.json";
 import { buildValidatorCompiler } from "./validations";
 import routes from "./routes";

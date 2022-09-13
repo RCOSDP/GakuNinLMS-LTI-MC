@@ -82,7 +82,8 @@ docker-compose down
 | `WOWZA_SCP_HOST`                     | 一括登録時の動画ファイルのアップロード先 (デフォルト: "")                                                                                                          |
 | `WOWZA_SCP_PORT`                     | 一括登録時の動画ファイルのアップロード先 ssh ポート番号 (デフォルト: `22`)                                                                                         |
 | `WOWZA_SCP_USERNAME`                 | 一括登録時の動画ファイルのアップロード先 ssh ユーザー名 (デフォルト: "")                                                                                           |
-| `WOWZA_SCP_PRIVATE_KEY`              | 一括登録時の動画ファイルのアップロード先 ssh ユーザーの秘密鍵 (デフォルト: "")                                                                                     |
+| `WOWZA_SCP_PRIVATE_KEY`              | 一括登録時の動画ファイルのアップロード先 ssh ユーザーの秘密鍵 (デフォルト: 無効)                                                                                   |
+| `WOWZA_SCP_PRIVATE_KEY_PATH`         | 一括登録時の動画ファイルのアップロード先 ssh ユーザーの秘密鍵のパス (デフォルトまたは `WOWZA_SCP_PRIVATE_KEY` が有効の場合: 無効)                                  |
 | `WOWZA_SCP_PASS_PHRASE`              | 一括登録時の動画ファイルのアップロード先 ssh ユーザーの秘密鍵のパスワード (デフォルト: "")                                                                         |
 | `WOWZA_SCP_SERVER_PATH`              | 一括登録時の動画ファイルのアップロード先フォルダ (デフォルト: "")                                                                                                  |
 | `ZOOM_API_KEY`                       | Zoom API アクセスキー                                                                                                                                              |

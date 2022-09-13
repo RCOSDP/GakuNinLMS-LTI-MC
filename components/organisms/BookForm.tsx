@@ -140,8 +140,8 @@ export default function BookForm({
   );
   const [expireAtError, setExpireAtError] = useState(false);
   const handleExpireAtChange = useCallback(
-    (newValue) => {
-      setExpireAtError(newValue && Number.isNaN(newValue.getTime()));
+    (newValue: Date | null) => {
+      setExpireAtError(newValue != null && Number.isNaN(newValue.getTime()));
       setExpireAt(newValue);
     },
     [setExpireAt]
@@ -237,7 +237,7 @@ export default function BookForm({
               dateFormats={{ monthAndYear: "yyyy年MM月" }}
             >
               <DateTimePicker
-                renderInput={(props) => (
+                renderInput={(props: Parameters<typeof TextField>) => (
                   <TextField {...props} fullWidth error={expireAtError} />
                 )}
                 label={

@@ -1,5 +1,5 @@
 import type { FastifySchema, HTTPMethods } from "fastify";
-import "fastify-swagger";
+import "@fastify/swagger";
 
 type Method = {
   [K in Lowercase<HTTPMethods>]?: FastifySchema;

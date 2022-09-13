@@ -18,6 +18,8 @@ function useDialogProps<T>() {
   return {
     data,
     open: data != null && open,
+    setOpen,
+    setData,
     onClose,
     dispatch,
   };
