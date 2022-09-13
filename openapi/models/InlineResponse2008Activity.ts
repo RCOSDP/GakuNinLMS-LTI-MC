@@ -14,72 +14,72 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    InlineResponse2007Learner,
-    InlineResponse2007LearnerFromJSON,
-    InlineResponse2007LearnerFromJSONTyped,
-    InlineResponse2007LearnerToJSON,
-    InlineResponse2007Topic,
-    InlineResponse2007TopicFromJSON,
-    InlineResponse2007TopicFromJSONTyped,
-    InlineResponse2007TopicToJSON,
+    InlineResponse2008Learner,
+    InlineResponse2008LearnerFromJSON,
+    InlineResponse2008LearnerFromJSONTyped,
+    InlineResponse2008LearnerToJSON,
+    InlineResponse2008Topic,
+    InlineResponse2008TopicFromJSON,
+    InlineResponse2008TopicFromJSONTyped,
+    InlineResponse2008TopicToJSON,
 } from './';
 
 /**
  * 
  * @export
- * @interface InlineResponse2007Activity
+ * @interface InlineResponse2008Activity
  */
-export interface InlineResponse2007Activity {
+export interface InlineResponse2008Activity {
     /**
      * 
-     * @type {InlineResponse2007Learner}
-     * @memberof InlineResponse2007Activity
+     * @type {InlineResponse2008Learner}
+     * @memberof InlineResponse2008Activity
      */
-    learner: InlineResponse2007Learner;
+    learner: InlineResponse2008Learner;
     /**
      * 
-     * @type {InlineResponse2007Topic}
-     * @memberof InlineResponse2007Activity
+     * @type {InlineResponse2008Topic}
+     * @memberof InlineResponse2008Activity
      */
-    topic: InlineResponse2007Topic;
+    topic: InlineResponse2008Topic;
     /**
      * 
      * @type {boolean}
-     * @memberof InlineResponse2007Activity
+     * @memberof InlineResponse2008Activity
      */
     completed: boolean;
     /**
      * 
      * @type {number}
-     * @memberof InlineResponse2007Activity
+     * @memberof InlineResponse2008Activity
      */
     totalTimeMs: number;
     /**
      * 
      * @type {Date}
-     * @memberof InlineResponse2007Activity
+     * @memberof InlineResponse2008Activity
      */
     createdAt: Date;
     /**
      * 
      * @type {Date}
-     * @memberof InlineResponse2007Activity
+     * @memberof InlineResponse2008Activity
      */
     updatedAt: Date;
 }
 
-export function InlineResponse2007ActivityFromJSON(json: any): InlineResponse2007Activity {
-    return InlineResponse2007ActivityFromJSONTyped(json, false);
+export function InlineResponse2008ActivityFromJSON(json: any): InlineResponse2008Activity {
+    return InlineResponse2008ActivityFromJSONTyped(json, false);
 }
 
-export function InlineResponse2007ActivityFromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse2007Activity {
+export function InlineResponse2008ActivityFromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse2008Activity {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
-        'learner': InlineResponse2007LearnerFromJSON(json['learner']),
-        'topic': InlineResponse2007TopicFromJSON(json['topic']),
+        'learner': InlineResponse2008LearnerFromJSON(json['learner']),
+        'topic': InlineResponse2008TopicFromJSON(json['topic']),
         'completed': json['completed'],
         'totalTimeMs': json['totalTimeMs'],
         'createdAt': (new Date(json['createdAt'])),
@@ -87,7 +87,7 @@ export function InlineResponse2007ActivityFromJSONTyped(json: any, ignoreDiscrim
     };
 }
 
-export function InlineResponse2007ActivityToJSON(value?: InlineResponse2007Activity | null): any {
+export function InlineResponse2008ActivityToJSON(value?: InlineResponse2008Activity | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -96,8 +96,8 @@ export function InlineResponse2007ActivityToJSON(value?: InlineResponse2007Activ
     }
     return {
         
-        'learner': InlineResponse2007LearnerToJSON(value.learner),
-        'topic': InlineResponse2007TopicToJSON(value.topic),
+        'learner': InlineResponse2008LearnerToJSON(value.learner),
+        'topic': InlineResponse2008TopicToJSON(value.topic),
         'completed': value.completed,
         'totalTimeMs': value.totalTimeMs,
         'createdAt': (value.createdAt.toISOString()),

@@ -14,49 +14,49 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    InlineResponse2001BookAuthors,
-    InlineResponse2001BookAuthorsFromJSON,
-    InlineResponse2001BookAuthorsFromJSONTyped,
-    InlineResponse2001BookAuthorsToJSON,
+    InlineResponse2002BookAuthors,
+    InlineResponse2002BookAuthorsFromJSON,
+    InlineResponse2002BookAuthorsFromJSONTyped,
+    InlineResponse2002BookAuthorsToJSON,
 } from './';
 
 /**
  * 
  * @export
- * @interface InlineResponse2001Book
+ * @interface InlineResponse2002Book
  */
-export interface InlineResponse2001Book {
+export interface InlineResponse2002Book {
     /**
      * 
      * @type {number}
-     * @memberof InlineResponse2001Book
+     * @memberof InlineResponse2002Book
      */
     id: number;
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse2001Book
+     * @memberof InlineResponse2002Book
      */
     name: string;
     /**
      * 
      * @type {boolean}
-     * @memberof InlineResponse2001Book
+     * @memberof InlineResponse2002Book
      */
     shared: boolean;
     /**
      * 
-     * @type {Array<InlineResponse2001BookAuthors>}
-     * @memberof InlineResponse2001Book
+     * @type {Array<InlineResponse2002BookAuthors>}
+     * @memberof InlineResponse2002Book
      */
-    authors: Array<InlineResponse2001BookAuthors>;
+    authors: Array<InlineResponse2002BookAuthors>;
 }
 
-export function InlineResponse2001BookFromJSON(json: any): InlineResponse2001Book {
-    return InlineResponse2001BookFromJSONTyped(json, false);
+export function InlineResponse2002BookFromJSON(json: any): InlineResponse2002Book {
+    return InlineResponse2002BookFromJSONTyped(json, false);
 }
 
-export function InlineResponse2001BookFromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse2001Book {
+export function InlineResponse2002BookFromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse2002Book {
     if ((json === undefined) || (json === null)) {
         return json;
     }
@@ -65,11 +65,11 @@ export function InlineResponse2001BookFromJSONTyped(json: any, ignoreDiscriminat
         'id': json['id'],
         'name': json['name'],
         'shared': json['shared'],
-        'authors': ((json['authors'] as Array<any>).map(InlineResponse2001BookAuthorsFromJSON)),
+        'authors': ((json['authors'] as Array<any>).map(InlineResponse2002BookAuthorsFromJSON)),
     };
 }
 
-export function InlineResponse2001BookToJSON(value?: InlineResponse2001Book | null): any {
+export function InlineResponse2002BookToJSON(value?: InlineResponse2002Book | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -81,7 +81,7 @@ export function InlineResponse2001BookToJSON(value?: InlineResponse2001Book | nu
         'id': value.id,
         'name': value.name,
         'shared': value.shared,
-        'authors': ((value.authors as Array<any>).map(InlineResponse2001BookAuthorsToJSON)),
+        'authors': ((value.authors as Array<any>).map(InlineResponse2002BookAuthorsToJSON)),
     };
 }
 

@@ -72,6 +72,8 @@ docker-compose down
 | `FRONTEND_ORIGIN`                    | フロントエンドのオリジン (デフォルト: 無効 ""、例: `http://localhost:3000`)                                                                                        |
 | `FRONTEND_PATH`                      | フロントエンドのパス (デフォルト: `/`)                                                                                                                             |
 | `SESSION_SECRET`                     | セッションストアの秘密鍵                                                                                                                                           |
+| `OPENID_PRIVATE_KEY`                 | クライアント認証用の PEM 形式の秘密鍵の文字列 (デフォルト: 無効)                                                                                                   |
+| `OPENID_PRIVATE_KEY_PATH`            | クライアント認証用の PEM 形式の秘密鍵のファイルパス (デフォルトまたは `OPENID_PRIVATE_KEY` が有効の場合: 無効 "")                                                  |
 | `DATABASE_URL`                       | [PostgreSQL 接続 URL][database_connection_url]                                                                                                                     |
 | `HTTPS_CERT_PATH`                    | HTTPS を使うための証明書のファイルパス (デフォルト: 無効)                                                                                                          |
 | `HTTPS_KEY_PATH`                     | HTTPS を使うための証明書の秘密鍵のファイルパス (デフォルト: 無効)                                                                                                  |
@@ -189,6 +191,22 @@ INSERT INTO "lti_platform" ("issuer", "metadata") VALUES ('http://localhost:8081
   "authorization_endpoint": "http://localhost:8081/mod/lti/auth.php"
 }');
 INSERT INTO "lti_consumer" ("platform_id", "id") VALUES ('http://localhost:8081', '***');
+```
+
+### クライアント認証用の秘密鍵の生成
+
+クライアント認証用の秘密鍵を生成します。
+
+例えば OpenSSL を利用して次のコマンドを実行します。
+
+```sh
+openssl genrsa -out credentials/private-key.pem
+```
+
+生成した秘密鍵のパスを環境変数 `OPENID_PRIVATE_KEY_PATH` に指定します。
+
+```sh
+echo OPENID_PRIVATE_KEY_PATH="$(pwd)/credentials/private-key.pem" >> .env
 ```
 
 ### 既存システムの LTI v1.3 への移行
