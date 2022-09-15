@@ -1,7 +1,5 @@
 import { outdent } from "outdent";
-import fs from "node:fs/promises";
-import crypto from "node:crypto";
-import { OPENID_PRIVATE_KEY, OPENID_PRIVATE_KEY_PATH } from "$server/utils/env";
+import { createPublicKey } from "$server/utils/ltiv1p3/jwk";
 
 export const method = {
   get: {
@@ -32,14 +30,11 @@ export const hooks = {
 };
 
 export async function index() {
-  if (!(OPENID_PRIVATE_KEY ?? OPENID_PRIVATE_KEY_PATH)) return { status: 404 };
-
-  const key =
-    OPENID_PRIVATE_KEY ?? (await fs.readFile(OPENID_PRIVATE_KEY_PATH));
-  const jwk = crypto.createPublicKey(key).export({ format: "jwk" });
+  const publicKey = await createPublicKey();
+  if (!publicKey) return { status: 404 };
 
   return {
     status: 200,
-    body: { keys: [jwk] },
+    body: { keys: [publicKey] },
   };
 }
