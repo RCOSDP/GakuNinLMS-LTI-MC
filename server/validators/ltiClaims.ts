@@ -25,6 +25,10 @@ export class LtiClaims {
             "https://purl.imsglobal.org/spec/lti/claim/launch_presentation"
           ]
         ),
+      "https://purl.imsglobal.org/spec/lti-ags/claim/endpoint":
+        new AgsEndpointClaim(
+          props?.["https://purl.imsglobal.org/spec/lti-ags/claim/endpoint"]
+        ),
     });
   }
   @Equals("LtiResourceLinkRequest")
@@ -52,6 +56,9 @@ export class LtiClaims {
   @IsOptional()
   @ValidateNested()
   "https://purl.imsglobal.org/spec/lti/claim/launch_presentation"?: LaunchPresentationClaim;
+  @IsOptional()
+  @ValidateNested()
+  "https://purl.imsglobal.org/spec/lti-ags/claim/endpoint"?: AgsEndpointClaim;
   @IsOptional()
   "https://purl.imsglobal.org/spec/lti/claim/lis"?: unknown;
   @IsOptional()
@@ -92,4 +99,19 @@ class LaunchPresentationClaim {
   @IsOptional()
   @IsString()
   return_url?: string;
+}
+
+class AgsEndpointClaim {
+  constructor(props?: Partial<AgsEndpointClaim>) {
+    Object.assign(this, props);
+  }
+  @IsOptional()
+  @IsString()
+  lineitems?: string;
+  @IsOptional()
+  @IsString()
+  lineitem?: string;
+  @IsOptional()
+  @IsString({ each: true })
+  scope?: string[];
 }
