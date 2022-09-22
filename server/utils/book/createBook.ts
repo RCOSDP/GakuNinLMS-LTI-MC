@@ -5,10 +5,12 @@ import aggregateTimeRequired from "./aggregateTimeRequired";
 import findBook from "./findBook";
 import sectionCreateInput from "./sectionCreateInput";
 import keywordsConnectOrCreateInput from "$server/utils/keyword/keywordsConnectOrCreateInput";
+import upsertPublicBooks from "$server/utils/publicBook/upsertPublicBooks";
 
 async function createBook(
   userId: UserSchema["id"],
-  book: BookProps
+  { publicBooks, ...book }: BookProps,
+  ip: string
 ): Promise<BookSchema | undefined> {
   const timeRequired = await aggregateTimeRequired(book);
   const sectionsCreateInput = book.sections?.map(sectionCreateInput) ?? [];
@@ -24,7 +26,9 @@ async function createBook(
     },
   });
 
-  return findBook(id);
+  await prisma.$transaction(upsertPublicBooks(userId, id, publicBooks ?? []));
+
+  return findBook(id, userId, ip);
 }
 
 export default createBook;

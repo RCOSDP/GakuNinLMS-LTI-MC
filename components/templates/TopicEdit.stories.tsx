@@ -24,6 +24,7 @@ const Template: Story<Parameters<typeof TopicEdit>[0]> = (args) => {
         kind: "subtitles",
         language,
         url: URL.createObjectURL(new Blob([content])),
+        accessToken: "",
       });
     };
   return (

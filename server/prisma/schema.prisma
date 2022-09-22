@@ -79,6 +79,10 @@ model Topic {
   language     String         @default("ja")
   /// 学習所要時間 (秒)
   timeRequired Int            @map("time_required")
+  /// 再生開始時間 (秒)
+  startTime    Float?         @map("start_time")
+  /// 再生終了時間 (秒)
+  stopTime     Float?         @map("stop_time")
   /// 共有可否 (true: シェアする, それ以外: シェアしない)
   shared       Boolean        @default(true)
   /// 著作者
@@ -140,13 +144,28 @@ model LtiConsumer {
 model LtiContext {
   consumer      LtiConsumer       @relation(fields: [consumerId], references: [id])
   consumerId    String            @map("consumer_id")
+  /// LTI Context ID ("" はすべてのコース)
   id            String
   resourceLinks LtiResourceLink[]
+  members       LtiMember[]
+  activities    Activity[]
   title         String
   label         String
 
   @@id([consumerId, id])
   @@map("lti_context")
+}
+
+/// LTI Member
+model LtiMember {
+  context    LtiContext @relation(fields: [consumerId, contextId], references: [consumerId, id])
+  user       User       @relation(fields: [consumerId, userId], references: [ltiConsumerId, ltiUserId])
+  consumerId String     @map("consumer_id")
+  contextId  String     @map("context_id")
+  userId     String     @map("user_id")
+
+  @@id([consumerId, contextId, userId])
+  @@map("lti_members")
 }
 
 /// LTI Resource Link
@@ -171,6 +190,7 @@ model Book {
   id               Int               @id @default(autoincrement())
   keywords         Keyword[]         @relation(references: [id])
   sections         Section[]
+  publicBooks      PublicBook[]
   ltiResourceLinks LtiResourceLink[]
   /// 題名
   name             String
@@ -186,6 +206,8 @@ model Book {
   authors          Authorship[]
   /// ライセンス (https://spdx.org/licenses/ に準拠するもの, "" は無効)
   license          String            @default("")
+  /// zoomミーティングid
+  zoomMeetingId    BigInt?           @map("zoom_meeting_id")
   /// 公開日
   publishedAt      DateTime          @default(now()) @map("published_at")
   /// 作成日
@@ -196,6 +218,26 @@ model Book {
   details          Json
 
   @@map("books")
+  @@index([zoomMeetingId])
+}
+
+/// 公開URLブック
+model PublicBook {
+  id            Int            @id @default(autoincrement())
+  /// ブック
+  book          Book           @relation(fields: [bookId], references: [id])
+  bookId        Int            @map("book_id")
+  /// ユーザー
+  user          User           @relation(fields: [userId], references: [id])
+  userId        Int            @map("user_id")
+  /// 許可ドメイン
+  domains       String[]
+  /// 期限日
+  expireAt      DateTime?      @map("expire_at")
+  /// アクセストークン
+  token         String         @unique
+
+  @@map("public_books")
 }
 
 /// セクション
@@ -234,10 +276,12 @@ model User {
   id               Int               @id @default(autoincrement())
   editableContents Authorship[]
   ltiResourceLinks LtiResourceLink[]
+  ltiMembers       LtiMember[]
   ltiConsumer      LtiConsumer       @relation(fields: [ltiConsumerId], references: [id])
   ltiConsumerId    String            @map("lti_consumer_id")
   ltiUserId        String            @map("lti_user_id")
   activities       Activity[]
+  publicBooks      PublicBook[]
   /// 氏名
   name             String
   /// メールアドレス ("" は無効値)
@@ -252,20 +296,23 @@ model User {
 
 /// 学習活動
 model Activity {
-  id          Int                 @id @default(autoincrement())
-  timeRanges  ActivityTimeRange[]
-  topic       Topic               @relation(fields: [topicId], references: [id])
-  topicId     Int                 @map("topic_id")
-  learner     User                @relation(fields: [learnerId], references: [id])
-  learnerId   Int                 @map("learner_id")
+  id            Int                 @id @default(autoincrement())
+  timeRanges    ActivityTimeRange[]
+  topic         Topic               @relation(fields: [topicId], references: [id])
+  topicId       Int                 @map("topic_id")
+  learner       User                @relation(fields: [learnerId], references: [id])
+  learnerId     Int                 @map("learner_id")
+  ltiContext    LtiContext          @relation(fields: [ltiConsumerId, ltiContextId], references: [consumerId, id])
+  ltiConsumerId String              @default("") @map("lti_consumer_id")
+  ltiContextId  String              @default("") @map("lti_context_id")
   /// 合計時間 (ms)
-  totalTimeMs Int                 @map("total_time_ms")
+  totalTimeMs   Int                 @map("total_time_ms")
   /// 作成日
-  createdAt   DateTime            @default(now()) @map("created_at")
+  createdAt     DateTime            @default(now()) @map("created_at")
   /// 更新日
-  updatedAt   DateTime            @default(now()) @map("updated_at")
+  updatedAt     DateTime            @default(now()) @map("updated_at")
 
-  @@unique([topicId, learnerId])
+  @@unique([topicId, learnerId, ltiConsumerId, ltiContextId])
   @@map("activities")
 }
 

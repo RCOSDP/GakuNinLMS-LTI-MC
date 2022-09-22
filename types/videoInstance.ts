@@ -9,6 +9,7 @@ export type VideoJsInstance = {
   element: HTMLElement;
   player: VideoJsPlayer;
   tracks?: videojs.TextTrackOptions[];
+  stopTimeOver: boolean;
 };
 
 export type VimeoInstance = {

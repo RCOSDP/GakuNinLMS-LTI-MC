@@ -2,7 +2,7 @@ import type { Prisma } from "@prisma/client";
 import type { AuthorFilter } from "$server/models/authorFilter";
 import type { SearchResultSchema } from "$server/models/search";
 import {
-  bookIncludingTopicsArg,
+  getBookIncludingArg,
   bookToBookSchema,
 } from "$server/utils/book/bookToBookSchema";
 import makeSortOrderQuery from "$server/utils/makeSortOrderQuery";
@@ -34,7 +34,9 @@ async function bookSearch(
   filter: AuthorFilter,
   sort: string,
   page: number,
-  perPage: number
+  perPage: number,
+  userId: number,
+  ip: string
 ): Promise<SearchResultSchema> {
   const insensitiveMode = { mode: "insensitive" as const };
   const where: Prisma.BookWhereInput = {
@@ -154,7 +156,7 @@ async function bookSearch(
 
   const totalCount = await prisma.book.count({ where });
   const books = await prisma.book.findMany({
-    ...bookIncludingTopicsArg,
+    ...getBookIncludingArg(userId),
     where,
     orderBy: makeSortOrderQuery(sort),
     skip: page * perPage,
@@ -162,7 +164,7 @@ async function bookSearch(
   });
 
   const contents = books
-    .map(bookToBookSchema)
+    .map((book) => bookToBookSchema(book, ip))
     .map((book) => ({ type: "book" as const, ...book }));
 
   return { totalCount, contents, page, perPage };

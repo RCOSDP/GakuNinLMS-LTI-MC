@@ -13,7 +13,7 @@ import type { TopicSchema } from "$server/models/topic";
 import type { Query as BookEditQuery } from "../edit";
 import { pagesPath } from "$utils/$path";
 import useDialogProps from "$utils/useDialogProps";
-import type { ContentAuthors } from "$types/content";
+import type { ContentAuthors } from "$server/models/content";
 
 export type Query = BookEditQuery;
 

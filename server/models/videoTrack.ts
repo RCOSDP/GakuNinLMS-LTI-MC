@@ -9,6 +9,7 @@ export type VideoTrackProps = Pick<
 
 export type VideoTrackSchema = Pick<Track, "id" | "kind" | "language"> & {
   url: string;
+  accessToken: string;
 };
 
 export const videoTrackPropsSchema = {
@@ -26,5 +27,6 @@ export const videoTrackSchema = {
     kind: { type: "string" },
     language: { type: "string" },
     url: { type: "string" },
+    accessToken: { type: "string" },
   },
 } as const;

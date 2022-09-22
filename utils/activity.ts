@@ -7,7 +7,10 @@ import { useBookAtom } from "$store/book";
 import { usePlayerTrackerAtom } from "$store/playerTracker";
 import type { PlayerTracker } from "./eventLogger/playerTracker";
 import { api } from "./api";
-import { NEXT_PUBLIC_ACTIVITY_SEND_INTERVAL } from "./env";
+import {
+  NEXT_PUBLIC_ACTIVITY_LTI_CONTEXT_ONLY,
+  NEXT_PUBLIC_ACTIVITY_SEND_INTERVAL,
+} from "./env";
 
 const secToMs = (sec: number) => Math.floor(sec * 1000);
 
@@ -20,23 +23,29 @@ const buildUpdateHandler =
         endMs: secToMs(high),
       })),
     };
-    await api.apiV2TopicTopicIdActivityPut({ topicId, body });
+    await api.apiV2TopicTopicIdActivityPut({
+      topicId,
+      currentLtiContextOnly: NEXT_PUBLIC_ACTIVITY_LTI_CONTEXT_ONLY,
+      body,
+    });
   };
 
 /** 学習活動のトラッキングの開始 (要: useBook()) */
 export function useActivityTracking() {
-  const { isInstructor } = useSessionAtom();
+  const { session, isInstructor } = useSessionAtom();
   const { itemIndex, itemExists } = useBookAtom();
+  const loggedin = Boolean(session?.user?.id);
   const topic = itemExists(itemIndex);
   const playerTracker = usePlayerTrackerAtom();
   const unchanged = playerTracker === usePrevious(playerTracker);
   const updateHandler = useMemo(() => {
+    if (!loggedin) return;
     if (isInstructor) return;
     if (unchanged) return;
     return (
       topic && playerTracker && buildUpdateHandler(topic.id, playerTracker)
     );
-  }, [isInstructor, unchanged, topic, playerTracker]);
+  }, [isInstructor, unchanged, topic, playerTracker, loggedin]);
   const throttled = useMemo(
     () =>
       updateHandler &&

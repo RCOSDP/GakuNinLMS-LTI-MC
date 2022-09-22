@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import usePrevious from "@rooks/use-previous";
 import clsx from "clsx";
 import { css } from "@emotion/css";
+import type { TopicSchema } from "$server/models/topic";
 import type { VideoResourceSchema } from "$server/models/videoResource";
 import VideoPlayer from "$organisms/Video/VideoPlayer";
 import VideoResource from "$organisms/Video/VideoResource";
@@ -34,11 +35,11 @@ const videoStyle = {
 type Props = {
   className?: string;
   sx?: SxProps;
-  resource: VideoResourceSchema;
+  topic: TopicSchema;
   onEnded?: () => void;
 };
 
-export default function Video({ className, sx, resource, onEnded }: Props) {
+export default function Video({ className, sx, topic, onEnded }: Props) {
   const { video, updateVideo } = useVideoAtom();
   const { book, itemIndex, itemExists } = useBookAtom();
   const prevItemIndex = usePrevious(itemIndex);
@@ -48,40 +49,101 @@ export default function Video({ className, sx, resource, onEnded }: Props) {
     return () => video.clear();
   }, [book, video, updateVideo]);
   useEffect(() => {
+    const topic = itemExists(itemIndex);
+    const startTime = topic?.startTime;
+    const stopTime = topic?.stopTime;
     if (prevItemIndex?.some((v, i) => v !== itemIndex[i])) {
-      video.get(itemExists(prevItemIndex)?.resource.url ?? "")?.player.pause();
+      video.get(String(itemExists(prevItemIndex)?.id))?.player.pause();
     }
-    const videoInstance = video.get(itemExists(itemIndex)?.resource.url ?? "");
+    const videoInstance = video.get(String(topic?.id));
     if (!videoInstance) return;
     if (videoInstance.type == "vimeo") {
-      void videoInstance.player.setCurrentTime(0);
-      void videoInstance.player.play();
-    } else {
-      videoInstance.player.ready(() => {
-        videoInstance.player.currentTime(0);
-        void videoInstance.player.play();
+      videoInstance.player.on("ended", () => onEnded?.());
+      videoInstance.player.on("timeupdate", async () => {
+        const currentTime = await videoInstance.player.getCurrentTime();
+        // eslint-disable-next-line tsc/config
+        if (Number.isFinite(stopTime) && currentTime > stopTime) {
+          void videoInstance.player.pause();
+          onEnded?.();
+        }
+        // eslint-disable-next-line tsc/config
+        if (Number.isFinite(startTime) && currentTime < startTime) {
+          void videoInstance.player.setCurrentTime(startTime || 0);
+        }
       });
+      void videoInstance.player.setCurrentTime(startTime || 0);
+      videoInstance.player.play().catch(() => {
+        // nop
+      });
+    } else {
+      const handleEnded = () => {
+        videoInstance.stopTimeOver = true;
+        videoInstance.player.pause();
+        onEnded?.();
+      };
+      const handleSeeked = () => {
+        const currentTime = videoInstance.player.currentTime();
+        // eslint-disable-next-line tsc/config
+        if (Number.isFinite(startTime) && currentTime < startTime) {
+          videoInstance.player.currentTime(startTime || 0);
+        }
+      };
+      const handleTimeUpdate = () => {
+        const currentTime = videoInstance.player.currentTime();
+        if (
+          !videoInstance.stopTimeOver &&
+          Number.isFinite(stopTime) &&
+          // eslint-disable-next-line tsc/config
+          currentTime > stopTime
+        ) {
+          handleEnded();
+        }
+      };
+      const handlePlay = () => {
+        // 終了位置より後ろにシークすると、意図せず再生が再開してしまうことがあるので、ユーザーの操作によらない再生開始を抑制する
+        if (videoInstance.stopTimeOver) videoInstance.player.pause();
+      };
+      const handleFirstPlay = () => {
+        if (Number.isFinite(startTime))
+          videoInstance.player.currentTime(startTime || 0);
+      };
+      const handleReady = () => {
+        if (videoInstance.stopTimeOver) {
+          if (Number.isFinite(startTime))
+            videoInstance.player.currentTime(startTime || 0);
+          videoInstance.stopTimeOver = false;
+        }
+        videoInstance.player.on("timeupdate", handleTimeUpdate);
+        videoInstance.player.on("seeked", handleSeeked);
+        videoInstance.player.play()?.catch(() => {
+          // nop
+        });
+      };
+
+      videoInstance.player.on("ended", handleEnded);
+      videoInstance.player.on("play", handlePlay);
+      videoInstance.player.on("firstplay", handleFirstPlay);
+      videoInstance.player.ready(handleReady);
     }
-  }, [video, itemExists, prevItemIndex, itemIndex]);
+  }, [video, itemExists, prevItemIndex, itemIndex, onEnded]);
   return (
     <>
-      {Array.from(video.values()).map((videoInstance) => (
+      {Array.from(video.entries()).map(([topicId, videoInstance]) => (
         <VideoPlayer
-          key={videoInstance.url}
+          key={topicId}
           className={clsx(className, {
-            [hidden]: resource.url != videoInstance.url,
+            [hidden]: String(topic.id) !== topicId,
           })}
           sx={{ ...videoStyle, ...sx }}
           videoInstance={videoInstance}
-          onEnded={onEnded}
         />
       ))}
       {video.size === 0 && (
         <VideoResource
           className={className}
           sx={{ ...videoStyle, ...sx }}
-          {...resource}
-          onEnded={onEnded}
+          {...(topic.resource as VideoResourceSchema)}
+          identifier={String(topic.id)}
           autoplay
         />
       )}

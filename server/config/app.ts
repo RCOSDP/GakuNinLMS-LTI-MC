@@ -40,6 +40,7 @@ async function app(fastify: FastifyInstance, options: Options) {
         styleSrc: ["'self'"].concat(fastify.swaggerCSP.style),
       },
     },
+    frameguard: false,
   });
 
   await Promise.all([

@@ -1,20 +1,27 @@
 import fs from "fs";
+import path from "path";
 import got from "got";
 import format from "date-fns/format";
 import utcToZoneTime from "date-fns-tz/utcToZonedTime";
 
 import prisma from "$server/utils/prisma";
-import type { Prisma, User } from "@prisma/client";
+import type { Prisma, User, Book, ZoomMeeting } from "@prisma/client";
 import type { UserSettingsProps } from "$server/models/userSettings";
 import { findUserByEmailAndLtiConsumerId } from "$server/utils/user";
 import keywordsConnectOrCreateInput from "$server/utils/keyword/keywordsConnectOrCreateInput";
-import { scpUpload } from "$server/utils/wowza/scpUpload";
+import { validateWowzaSettings } from "$server/utils/wowza/env";
+import { startWowzaUpload } from "$server/utils/wowza/upload";
+import type { WowzaUpload } from "$server/utils/wowza/upload";
 import { findZoomMeeting } from "$server/utils/zoom/findZoomMeeting";
+import upsertPublicBooks from "$server/utils/publicBook/upsertPublicBooks";
 import {
   API_BASE_PATH,
   ZOOM_IMPORT_CONSUMER_KEY,
   ZOOM_IMPORT_WOWZA_BASE_URL,
+  ZOOM_IMPORT_TO,
   ZOOM_IMPORT_AUTODELETE,
+  ZOOM_IMPORT_DISABLE_AUTOPUBLIC,
+  ZOOM_IMPORT_PUBLIC_DEFAULT_DOMAINS,
 } from "$server/utils/env";
 
 import type { ZoomResponse } from "$server/utils/zoom/api";
@@ -26,51 +33,80 @@ import {
 import { logger } from "$server/utils/zoom/env";
 
 export async function zoomImport() {
-  const users = await zoomListRequest("/users", "users", { page_size: 300 });
-  for (const user of users) {
-    await new ZoomImport(user.id, user.email, user.created_at).importTopics();
+  const uploadEnabled =
+    ZOOM_IMPORT_TO == "wowza" && validateWowzaSettings(false);
+  if (!uploadEnabled) return;
+
+  const zoomUsers = await zoomListRequest("/users", "users", {
+    page_size: 300,
+  });
+  for (const zoomUser of zoomUsers) {
+    const user = await findUserByEmailAndLtiConsumerId(
+      zoomUser.email,
+      ZOOM_IMPORT_CONSUMER_KEY
+    );
+    if (!user) continue;
+    const settings = user.settings as UserSettingsProps;
+    if (!settings?.zoomImportEnabled) continue;
+    const wowzaUpload = await startWowzaUpload(user.ltiConsumerId, user.id);
+    const tmpdir = await fs.promises.mkdtemp("/tmp/zoom-import-");
+    await new ZoomImport(
+      zoomUser.id,
+      zoomUser.created_at,
+      user,
+      wowzaUpload,
+      tmpdir,
+      getDefaultDomains()
+    ).importBooks();
+  }
+}
+
+function getDefaultDomains() {
+  return ZOOM_IMPORT_PUBLIC_DEFAULT_DOMAINS.split(",")
+    .map((domain) => getDomainFromInput(domain))
+    .filter((domain) => domain.length);
+}
+
+function getDomainFromInput(newDomain: string) {
+  const trimmed = newDomain.trim();
+  try {
+    const host = new URL(trimmed).host;
+    return host ? host : trimmed;
+  } catch (e) {
+    return trimmed;
   }
 }
 
 class ZoomImport {
-  userId: string;
-  email: string;
+  zoomUserId: string;
   createdAt: string;
-  tmpdir?: string;
-  uploadauthor?: string;
-  user?: User | null;
+  user: User;
+  wowzaUpload: WowzaUpload;
+  tmpdir: string;
+  provider: string;
+  publicBookDomains: string[];
 
-  constructor(userId: string, email: string, createdAt: string) {
-    this.userId = userId;
-    this.email = email;
+  constructor(
+    zoomUserId: string,
+    createdAt: string,
+    user: User,
+    wowzaUpload: WowzaUpload,
+    tmpdir: string,
+    publicBookDomains: string[]
+  ) {
+    this.zoomUserId = zoomUserId;
     this.createdAt = createdAt;
+    this.user = user;
+    this.wowzaUpload = wowzaUpload;
+    this.tmpdir = tmpdir;
+    this.publicBookDomains = publicBookDomains;
+    this.provider = ZOOM_IMPORT_TO == "wowza" ? "https://www.wowza.com/" : "";
   }
 
-  async importTopics() {
+  async importBooks() {
     try {
-      this.user = await findUserByEmailAndLtiConsumerId(
-        this.email,
-        ZOOM_IMPORT_CONSUMER_KEY
-      );
-      if (!this.user) return;
-      const settings = this.user.settings as UserSettingsProps;
-      if (!settings?.zoomImportEnabled) return;
-
-      this.tmpdir = await fs.promises.mkdtemp("/tmp/zoom-import-");
-      // recursive:true が利かない https://github.com/nodejs/node/issues/27293
-      const uploaddomain = await fs.promises.mkdir(
-        `${this.tmpdir}/${this.user.ltiConsumerId}`,
-        { recursive: true }
-      );
-      this.uploadauthor = await fs.promises.mkdir(
-        `${uploaddomain}/${this.user.id}`,
-        {
-          recursive: true,
-        }
-      );
-
       const meetings = await zoomListRequest(
-        `/users/${this.userId}/recordings`,
+        `/users/${this.zoomUserId}/recordings`,
         "meetings",
         { page_size: 300, from: this.fromDate() }
       );
@@ -79,9 +115,9 @@ class ZoomImport {
       const transactions = [];
       const deletemeetings = [];
       for (const meeting of meetings) {
-        const data = await this.getTopic(meeting);
-        if (data && data.topic && data.zoomMeeting) {
-          transactions.push(prisma.topic.create({ data: data.topic }));
+        const data = await this.getBook(meeting);
+        if (data && data.book && data.zoomMeeting) {
+          transactions.push(prisma.book.create({ data: data.book }));
           transactions.push(
             prisma.zoomMeeting.create({ data: data.zoomMeeting })
           );
@@ -90,8 +126,10 @@ class ZoomImport {
       }
       if (!transactions.length) return;
 
-      await scpUpload(this.tmpdir);
-      await prisma.$transaction(transactions);
+      await this.wowzaUpload.upload();
+      const results = await prisma.$transaction(transactions);
+      if (!ZOOM_IMPORT_DISABLE_AUTOPUBLIC)
+        await prisma.$transaction(this.getPublicBooks(results));
       for (const deletemeeting of deletemeetings) {
         await zoomRequest(
           `/meetings/${deletemeeting}/recordings`,
@@ -101,16 +139,56 @@ class ZoomImport {
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
-      logger("ERROR", `${e.toString()}: email:${this.email}`, e);
+      logger("ERROR", `${e.toString()}: email:${this.user.email}`, e);
     } finally {
       await this.cleanUp();
     }
   }
 
-  async getTopic(meeting: ZoomResponse) {
-    if (!this.user || !this.tmpdir || !this.uploadauthor) return;
+  async getBook(meeting: ZoomResponse) {
+    const data = await this.getTopic(meeting);
+    if (data && data.topic && data.zoomMeeting) {
+      const { topic, zoomMeeting } = data;
+      const topicSections = [{ order: 0, topic: { create: topic } }];
+      const sections = [{ order: 0, topicSections: { create: topicSections } }];
+      const book = {
+        name: topic.name,
+        description: topic.description,
+        timeRequired: topic.timeRequired,
+        shared: false,
+        zoomMeetingId: ZOOM_IMPORT_DISABLE_AUTOPUBLIC ? null : meeting.id,
+        authors: { create: { userId: this.user.id, roleId: 1 } },
+        sections: { create: sections },
+        details: {},
+        ltiResourceLinks: {},
+      };
+      return { book, zoomMeeting };
+    }
+    return;
+  }
 
-    let uploaddir;
+  getPublicBooks(results: (Book | ZoomMeeting)[]) {
+    const transactions = [];
+    for (const result of results) {
+      if ("id" in result) {
+        const { id: bookId } = result as Book;
+        const publicBook = {
+          id: 0,
+          bookId,
+          userId: this.user.id,
+          domains: this.publicBookDomains,
+          expireAt: null,
+          token: "",
+        };
+        transactions.push(
+          ...upsertPublicBooks(this.user.id, bookId, [publicBook])
+        );
+      }
+    }
+    return transactions;
+  }
+
+  async getTopic(meeting: ZoomResponse) {
     try {
       const importedResource = await findZoomMeeting(meeting.uuid);
       if (importedResource) return;
@@ -119,14 +197,8 @@ class ZoomImport {
       if (!downloadUrl || !fileId) return;
 
       const startTime = new Date(meeting.start_time);
-      uploaddir = await fs.promises.mkdtemp(
-        `${this.uploadauthor}/${format(
-          utcToZoneTime(startTime, meeting.timezone || "Asia/Tokyo"),
-          "yyyyMMdd-HHmm"
-        )}-`
-      );
-      const file = `${uploaddir}/${fileId}.mp4`;
-
+      const timezone = meeting.timezone || "Asia/Tokyo";
+      const file = path.join(this.tmpdir, `${fileId}.mp4`);
       const responsePromise = got(
         `${downloadUrl}?access_token=${zoomRequestToken()}`
       );
@@ -134,13 +206,16 @@ class ZoomImport {
 
       const video = {
         create: {
-          providerUrl: "https://www.wowza.com/",
+          providerUrl: this.provider,
         },
       };
 
-      const url = `${ZOOM_IMPORT_WOWZA_BASE_URL}${API_BASE_PATH}/wowza${file.substring(
-        this.tmpdir.length
-      )}`;
+      const uploadpath = await this.wowzaUpload.moveFileToUpload(
+        file,
+        startTime,
+        timezone
+      );
+      const url = `${ZOOM_IMPORT_WOWZA_BASE_URL}${API_BASE_PATH}/wowza${uploadpath}`;
       const resource = {
         connectOrCreate: {
           create: {
@@ -153,7 +228,7 @@ class ZoomImport {
       };
 
       const datetimeForTitle = format(
-        utcToZoneTime(startTime, meeting.timezone || "Asia/Tokyo"),
+        utcToZoneTime(startTime, timezone),
         "yyyy/MM/dd HH:mm"
       );
       const meetingDetail = await this.getMeetingDetail(meeting);
@@ -180,10 +255,11 @@ class ZoomImport {
     } catch (e: any) {
       logger(
         "ERROR",
-        `${e.toString()}: email:${this.email} meeting.uuid:${meeting.uuid}`,
+        `${e.toString()}: email:${this.user.email} meeting.uuid:${
+          meeting.uuid
+        }`,
         e
       );
-      if (uploaddir) await fs.promises.rmdir(uploaddir, { recursive: true });
       return;
     }
   }
@@ -235,8 +311,7 @@ class ZoomImport {
   }
 
   async cleanUp() {
-    if (this.tmpdir) {
-      await fs.promises.rmdir(this.tmpdir, { recursive: true });
-    }
+    if (this.wowzaUpload) await this.wowzaUpload.cleanUp();
+    await fs.promises.rmdir(this.tmpdir, { recursive: true });
   }
 }

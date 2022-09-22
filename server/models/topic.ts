@@ -6,10 +6,25 @@ import { KeywordPropSchema, KeywordSchema } from "./keyword";
 
 export type TopicProps = Pick<
   Prisma.TopicCreateInput,
-  "name" | "language" | "timeRequired" | "shared" | "license" | "description"
+  | "name"
+  | "language"
+  | "timeRequired"
+  | "startTime"
+  | "stopTime"
+  | "shared"
+  | "license"
+  | "description"
 > & {
   resource: ResourceProps;
   keywords?: KeywordPropSchema[];
+};
+
+export type TopicPropsWithUpload = {
+  topic: TopicProps;
+  provider: string;
+  wowzaBaseUrl: string;
+  fileName: string;
+  fileContent: string;
 };
 
 export type TopicSchema = Topic & {
@@ -18,12 +33,14 @@ export type TopicSchema = Topic & {
   resource: ResourceSchema;
 };
 
-export const topicPropsSchema = {
+const topicPropsSchema = {
   type: "object",
   properties: {
     name: { type: "string" },
     language: { type: "string", nullable: true },
     timeRequired: { type: "integer" },
+    startTime: { type: "number", nullable: true },
+    stopTime: { type: "number", nullable: true },
     shared: { type: "boolean", nullable: true },
     license: { type: "string", format: "license" },
     description: { type: "string" },
@@ -35,6 +52,17 @@ export const topicPropsSchema = {
   },
 } as const;
 
+export const topicPropsWithUploadSchema = {
+  type: "object",
+  properties: {
+    topic: topicPropsSchema,
+    provider: { type: "string" },
+    wowzaBaseUrl: { type: "string" },
+    fileName: { type: "string" },
+    fileContent: { type: "string" },
+  },
+} as const;
+
 export const topicSchema = {
   type: "object",
   properties: {
@@ -42,6 +70,8 @@ export const topicSchema = {
     name: { type: "string" },
     language: { type: "string" },
     timeRequired: { type: "integer" },
+    startTime: { type: "number", nullable: true },
+    stopTime: { type: "number", nullable: true },
     shared: { type: "boolean" },
     license: { type: "string" },
     description: { type: "string" },

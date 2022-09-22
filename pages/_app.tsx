@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type { ReactChild } from "react";
 import { Provider } from "jotai";
 import type { AppProps } from "next/app";
 import Head from "next/head";
@@ -24,12 +24,13 @@ import { pagesPath } from "$utils/$path";
 import "video.js/dist/video-js.css";
 import "videojs-seek-buttons/dist/videojs-seek-buttons.css";
 
-function Content({ children }: { children: ReactNode }) {
+function Content({ children }: { children: ReactChild }) {
   const router = useRouter();
   const { session, isInstructor, error } = useSessionInit();
   const trigger = useScrollTrigger();
 
-  if (error) {
+  if (!isInstructor && router.pathname === "/book") return <>{children}</>;
+  if (error || session?.user?.id === 0) {
     return (
       <Problem title="セッション情報が得られませんでした">
         LTIリンクからアクセスしてください
@@ -41,6 +42,7 @@ function Content({ children }: { children: ReactNode }) {
 
   const handleBooksClick = () => router.push(pagesPath.books.$url());
   const handleTopicsClick = () => router.push(pagesPath.topics.$url());
+  const handleDashboardClick = () => router.push(pagesPath.dashboard.$url());
   const handleBookClick = () => router.push(pagesPath.$url());
 
   return (
@@ -52,6 +54,7 @@ function Content({ children }: { children: ReactNode }) {
             session={session}
             onBooksClick={handleBooksClick}
             onTopicsClick={handleTopicsClick}
+            onDashboardClick={handleDashboardClick}
             onBookClick={handleBookClick}
           />
         </Slide>
@@ -61,7 +64,7 @@ function Content({ children }: { children: ReactNode }) {
   );
 }
 
-function ThemeProvider({ children }: { children: ReactNode }) {
+function ThemeProvider({ children }: { children: ReactChild }) {
   return (
     <>
       <Head>
