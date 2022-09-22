@@ -15,6 +15,7 @@ const toVideoTrackSchema = (
   kind: "subtitles",
   language,
   url: URL.createObjectURL(new Blob([content])),
+  accessToken: "",
 });
 
 const isVideoTrackProps = (

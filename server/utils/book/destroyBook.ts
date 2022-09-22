@@ -8,8 +8,8 @@ async function destroyBook(id: Book["id"]) {
       ...cleanupSections(id),
       prisma.ltiResourceLink.deleteMany({ where: { bookId: id } }),
       prisma.authorship.deleteMany({ where: { bookId: id } }),
+      prisma.publicBook.deleteMany({ where: { bookId: id } }),
       prisma.book.deleteMany({ where: { id } }),
-      prisma.keyword.deleteMany({ where: { books: { every: { id } } } }),
     ]);
   } catch {
     return;

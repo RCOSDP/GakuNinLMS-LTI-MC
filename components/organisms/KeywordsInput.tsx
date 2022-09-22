@@ -2,10 +2,10 @@ import { styled } from "@mui/material/styles";
 import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
 import LabelOutlinedIcon from "@mui/icons-material/LabelOutlined";
-import Chip from "@mui/material/Chip";
 import FormControl from "@mui/material/FormControl";
 import FormHelperText from "@mui/material/FormHelperText";
 import InputAdornment from "@mui/material/InputAdornment";
+import KeywordChip from "$atoms/KeywordChip";
 import IconButton from "$atoms/IconButton";
 import Input from "$atoms/Input";
 import InputLabel from "$atoms/InputLabel";
@@ -60,13 +60,10 @@ export default function KeywordsInput({
       </InputLabel>
       <Keywords>
         {keywords.map((keyword) => (
-          <Chip
+          <KeywordChip
             key={keyword.name}
-            variant="outlined"
-            color="primary"
-            label={keyword.name}
-            size="small"
-            sx={{ mr: 0.5, borderRadius: 1 }}
+            keyword={keyword}
+            sx={{ mr: 0.5 }}
             onDelete={handleKeywordRemove(keyword)}
           />
         ))}

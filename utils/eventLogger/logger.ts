@@ -1,6 +1,7 @@
 import type { EventType } from "$server/models/event";
 import { api } from "$utils/api";
 import type { PlayerEvent, PlayerEvents, PlayerTracker } from "./playerTracker";
+import { load as loadPlaybackRate } from "$utils/playbackRate";
 import { load } from "./loggerSessionPersister";
 import getFilePath from "./getFilePath";
 
@@ -73,7 +74,10 @@ function logger(tracker: PlayerTracker) {
   }
 
   tracker.on("playbackratechange", function (event) {
-    void send("ratechange", event, event.playbackRate.toString());
+    const persistentRate = loadPlaybackRate();
+    if (persistentRate !== event.playbackRate) {
+      void send("ratechange", event, event.playbackRate.toString());
+    }
   });
 
   tracker.on("nextvideo", function (event) {

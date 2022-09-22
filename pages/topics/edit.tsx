@@ -1,5 +1,6 @@
+import { useState } from "react";
 import { useRouter } from "next/router";
-import type { TopicProps, TopicSchema } from "$server/models/topic";
+import type { TopicPropsWithUpload, TopicSchema } from "$server/models/topic";
 import type {
   VideoTrackProps,
   VideoTrackSchema,
@@ -29,9 +30,21 @@ function Edit({ topicId, back }: EditProps) {
   const { handleAuthorsUpdate, handleAuthorSubmit } = useAuthorsHandler(
     topic && { type: "topic", ...topic }
   );
-  async function handleSubmit(props: TopicProps) {
-    await updateTopic({ id: topicId, ...props });
-    return back();
+  const [submitResult, setSubmitResult] = useState("");
+  async function handleSubmit(props: TopicPropsWithUpload) {
+    try {
+      await updateTopic({ id: topicId, ...props });
+      return back();
+    } catch (e) {
+      const response = e as Response;
+      const status = response.status;
+      const statusText = response.statusText;
+      try {
+        setSubmitResult((await response.json()).message);
+      } catch (e) {
+        setSubmitResult(`${status} ${statusText}`);
+      }
+    }
   }
   async function handleDelete(topic: TopicSchema) {
     await destroyTopic(topic.id);
@@ -62,7 +75,7 @@ function Edit({ topicId, back }: EditProps) {
 
   if (!topic) return <Placeholder />;
 
-  return <TopicEdit topic={topic} {...handlers} />;
+  return <TopicEdit topic={topic} submitResult={submitResult} {...handlers} />;
 }
 
 function Router() {

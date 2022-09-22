@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
 import type { ContentSchema } from "$server/models/content";
+import type { BookSchema } from "$server/models/book";
 import type {
   BooksImportParams,
   BooksImportResult,
@@ -12,6 +13,8 @@ import importBooks from "$utils/importBooks";
 import { pagesPath } from "$utils/$path";
 import useAuthorsHandler from "$utils/useAuthorsHandler";
 import useDialogProps from "$utils/useDialogProps";
+import { useBookAtom } from "$store/book";
+import { useVideoAtom } from "$store/video";
 
 export type Query = { context?: "books" };
 
@@ -23,8 +26,16 @@ function Import({ context }: Query) {
     data: previewContent,
     open,
     onClose,
-    dispatch: onContentPreviewClick,
+    dispatch,
   } = useDialogProps<ContentSchema>();
+  const { updateBook } = useBookAtom();
+  const { updateVideo } = useVideoAtom();
+  const onContentPreviewClick = (content: ContentSchema) => {
+    const book = content as BookSchema;
+    updateBook(book);
+    updateVideo(book.sections);
+    dispatch(content);
+  };
   const back = () => {
     switch (context) {
       case "books":

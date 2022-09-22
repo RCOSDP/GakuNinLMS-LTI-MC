@@ -12,6 +12,7 @@ import * as resources from "./resources";
 import * as resource from "./resource";
 import * as event from "./event";
 import * as wowza from "./wowza";
+import * as activity from "./activity";
 import session from "./session";
 
 const routers = [
@@ -28,6 +29,7 @@ const routers = [
   resource,
   event,
   wowza,
+  activity,
 ];
 
 async function routes(fastify: FastifyInstance) {

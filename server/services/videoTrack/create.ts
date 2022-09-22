@@ -36,7 +36,12 @@ export async function create(
   }>
 ) {
   const url = `${req.protocol}://${req.hostname}${req.url}`;
-  const created = await createVideoTrack(url, req.params.resource_id, req.body);
+  const created = await createVideoTrack(
+    url,
+    req.params.resource_id,
+    req.body,
+    req.ip
+  );
 
   return {
     status: created == null ? 400 : 201,

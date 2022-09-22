@@ -2,7 +2,10 @@ import type { FastifyInstance } from "fastify";
 import makeHooks from "$server/utils/makeHooks";
 import handler from "$server/utils/handler";
 import * as service from "$server/services/book";
+import * as activityService from "$server/services/book/activity";
 import * as authorsService from "$server/services/book/authors";
+import * as showPublicService from "$server/services/book/public";
+import * as showZoomService from "$server/services/book/zoom";
 
 const basePath = "/book";
 const pathWithParams = `${basePath}/:book_id`;
@@ -33,6 +36,16 @@ export async function book(fastify: FastifyInstance) {
   );
 }
 
+export async function bookActivity(fastify: FastifyInstance) {
+  const path = `${pathWithParams}/activity`;
+  const { method, index } = activityService;
+  const hooks = makeHooks(fastify, activityService.hooks);
+
+  fastify.get<{
+    Params: activityService.Params;
+    Querystring: activityService.Query;
+  }>(path, { schema: method.get, ...hooks.get }, handler(index));
+}
 export async function bookAuthors(fastify: FastifyInstance) {
   const path = `${pathWithParams}/authors`;
   const { method, update } = authorsService;
@@ -42,4 +55,26 @@ export async function bookAuthors(fastify: FastifyInstance) {
     Params: authorsService.Params;
     Body: authorsService.Props;
   }>(path, { schema: method.put, ...hooks.put }, handler(update));
+}
+
+export async function bookPublic(fastify: FastifyInstance) {
+  const path = `${basePath}/public/:token`;
+  const { schema, hook, method } = showPublicService;
+  const hooks = makeHooks(fastify, { get: hook });
+
+  fastify.get<{
+    Params: showPublicService.Params;
+    Headers: showPublicService.Headers;
+  }>(path, { schema, ...hooks.get }, handler(method));
+}
+export async function bookZoom(fastify: FastifyInstance) {
+  const path = `${basePath}/zoom/:meetingId`;
+  const { schema, hook, method } = showZoomService;
+  const hooks = makeHooks(fastify, { get: hook });
+
+  fastify.get<{ Params: showZoomService.Params }>(
+    path,
+    { schema, ...hooks.get },
+    handler(method)
+  );
 }

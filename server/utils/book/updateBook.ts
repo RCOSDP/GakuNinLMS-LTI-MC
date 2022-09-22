@@ -1,6 +1,7 @@
-import type { Book } from "@prisma/client";
+import type { Book, PrismaPromise } from "@prisma/client";
 import type { BookProps, BookSchema } from "$server/models/book";
 import type { SectionProps } from "$server/models/book/section";
+import type { PublicBookSchema } from "$server/models/book/public";
 import prisma from "$server/utils/prisma";
 import aggregateTimeRequired from "./aggregateTimeRequired";
 import findBook from "./findBook";
@@ -8,6 +9,7 @@ import sectionCreateInput from "./sectionCreateInput";
 import cleanupSections from "./cleanupSections";
 import keywordsConnectOrCreateInput from "$server/utils/keyword/keywordsConnectOrCreateInput";
 import keywordsDisconnectInput from "$server/utils/keyword/keywordsDisconnectInput";
+import upsertPublicBooks from "$server/utils/publicBook/upsertPublicBooks";
 
 function upsertSections(bookId: Book["id"], sections: SectionProps[]) {
   const sectionsCreateInput = sections.map(sectionCreateInput);
@@ -18,22 +20,28 @@ function upsertSections(bookId: Book["id"], sections: SectionProps[]) {
   });
 }
 
-async function updateBook({
-  id,
-  ...book
-}: Pick<Book, "id"> & BookProps): Promise<BookSchema | undefined> {
-  const timeRequired = await aggregateTimeRequired(book);
-  const cleanup = cleanupSections(id);
-  const { sections, ...other } = book;
-  const upsert = upsertSections(id, sections ?? []);
+async function updateBook(
+  userId: number,
+  { id, sections, publicBooks, ...book }: Pick<Book, "id"> & BookProps,
+  ip: string
+): Promise<BookSchema | undefined> {
+  const ops: Array<PrismaPromise<unknown>> = [];
+
+  if (sections != null) {
+    const cleanup = cleanupSections(id);
+    const upsert = upsertSections(id, sections);
+    ops.push(...cleanup, ...upsert);
+  }
+
+  const timeRequired = sections && (await aggregateTimeRequired({ sections }));
   const keywords = await prisma.keyword.findMany({
     where: { books: { every: { id } } },
   });
   const update = prisma.book.update({
     where: { id },
     data: {
-      ...other,
-      timeRequired,
+      ...book,
+      ...(timeRequired && { timeRequired }),
       keywords: {
         ...keywordsConnectOrCreateInput(book.keywords ?? []),
         ...keywordsDisconnectInput(keywords, book.keywords ?? []),
@@ -41,10 +49,32 @@ async function updateBook({
       updatedAt: new Date(),
     },
   });
+  ops.push(update);
 
-  await prisma.$transaction([...cleanup, ...upsert, update]);
+  ops.push(removePublicBooks(userId, id, publicBooks ?? []));
+  ops.push(...upsertPublicBooks(userId, id, publicBooks ?? []));
 
-  return findBook(id);
+  await prisma.$transaction(ops);
+
+  return await findBook(id, userId, ip);
+}
+
+function removePublicBooks(
+  userId: number,
+  bookId: Book["id"],
+  publicBooks: PublicBookSchema[]
+) {
+  if (publicBooks.length) {
+    return prisma.publicBook.deleteMany({
+      where: {
+        bookId,
+        userId,
+        id: { notIn: publicBooks.map((publicBook) => publicBook.id) },
+      },
+    });
+  } else {
+    return prisma.publicBook.deleteMany({ where: { bookId, userId } });
+  }
 }
 
 export default updateBook;

@@ -65,33 +65,38 @@ docker-compose down
 
 ## 環境変数
 
-| 名称                         | 説明                                                                                                                            |
-| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| `PORT`                       | ポート (デフォルト: `8080`)                                                                                                     |
-| `API_BASE_PATH`              | ベースとなるパス (デフォルト: `/api/v2` )                                                                                       |
-| `FRONTEND_ORIGIN`            | フロントエンドのオリジン (デフォルト: 無効 ""、例: `http://localhost:3000`)                                                     |
-| `FRONTEND_PATH`              | フロントエンドのパス (デフォルト: `/`)                                                                                          |
-| `SESSION_SECRET`             | セッションストアの秘密鍵                                                                                                        |
-| `DATABASE_URL`               | [PostgreSQL 接続 URL][database_connection_url]                                                                                  |
-| `HTTPS_CERT_PATH`            | HTTPS を使うための証明書のファイルパス (デフォルト: 無効)                                                                       |
-| `HTTPS_KEY_PATH`             | HTTPS を使うための証明書の秘密鍵のファイルパス (デフォルト: 無効)                                                               |
-| `WOWZA_BASE_URL`             | Wowza Content base URL (デフォルト: 無効)                                                                                       |
-| `WOWZA_SECURE_TOKEN`         | Wowza SecureToken Shared Secret (デフォルト: "")                                                                                |
-| `WOWZA_QUERY_PREFIX`         | Wowza SecureToken Hash Query Parameter Prefix (デフォルト: `wowzatoken`)                                                        |
-| `WOWZA_EXPIRES_IN`           | Wowza SecureToken lifetime (seconds) (デフォルト: いつまでも持続 `0`)                                                           |
-| `WOWZA_SCP_HOST`             | 一括登録時の動画ファイルのアップロード先 (デフォルト: `localhost`)                                                              |
-| `WOWZA_SCP_PORT`             | 一括登録時の動画ファイルのアップロード先 ssh ポート番号 (デフォルト: `22`)                                                      |
-| `WOWZA_SCP_USERNAME`         | 一括登録時の動画ファイルのアップロード先 ssh ユーザー名 (デフォルト: `www-data`)                                                |
-| `WOWZA_SCP_PRIVATE_KEY`      | 一括登録時の動画ファイルのアップロード先 ssh ユーザーの秘密鍵 (デフォルト: `/var/www/.ssh/id_rsa`)                              |
-| `WOWZA_SCP_PASS_PHRASE`      | 一括登録時の動画ファイルのアップロード先 ssh ユーザーの秘密鍵のパスワード (デフォルト: "")                                      |
-| `WOWZA_SCP_SERVER_PATH`      | 一括登録時の動画ファイルのアップロード先フォルダ (デフォルト: `/var/www/wowza-upload`)                                          |
-| `ZOOM_API_KEY`               | Zoom API アクセスキー                                                                                                           |
-| `ZOOM_API_SECRET`            | Zoom API シークレット                                                                                                           |
-| `ZOOM_IMPORT_CONSUMER_KEY`   | Zoom インポートのユーザー検索に用いるコンシューマーキー (デフォルト: 無効 ""、例: 設定値 `OAUTH_CONSUMER_KEY` と同じ値)         |
-| `ZOOM_IMPORT_INTERVAL`       | Zoom インポートの実行時間 (デフォルト: 無効 ""、例: 毎朝 6 時実行 `1 6 * * *`)                                                  |
-| `ZOOM_IMPORT_TO`             | Zoom からインポートした動画のアップロード先 (デフォルト: 無効 ""、例: `wowza`)                                                  |
-| `ZOOM_IMPORT_WOWZA_BASE_URL` | Zoom からインポートした動画の URL のルート (デフォルト: 無効 ""、例: フロント側の設定値の `NEXT_PUBLIC_API_BASE_PATH` と同じ値) |
-| `ZOOM_IMPORT_AUTODELETE`     | Zoom からインポートした動画の自動削除設定 (デフォルト: 無効 ""、例: `1`)                                                        |
+| 名称                                 | 説明                                                                                                                                                               |
+| ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `PORT`                               | ポート (デフォルト: `8080`)                                                                                                                                        |
+| `API_BASE_PATH`                      | ベースとなるパス (デフォルト: `/api/v2` )                                                                                                                          |
+| `FRONTEND_ORIGIN`                    | フロントエンドのオリジン (デフォルト: 無効 ""、例: `http://localhost:3000`)                                                                                        |
+| `FRONTEND_PATH`                      | フロントエンドのパス (デフォルト: `/`)                                                                                                                             |
+| `SESSION_SECRET`                     | セッションストアの秘密鍵                                                                                                                                           |
+| `DATABASE_URL`                       | [PostgreSQL 接続 URL][database_connection_url]                                                                                                                     |
+| `HTTPS_CERT_PATH`                    | HTTPS を使うための証明書のファイルパス (デフォルト: 無効)                                                                                                          |
+| `HTTPS_KEY_PATH`                     | HTTPS を使うための証明書の秘密鍵のファイルパス (デフォルト: 無効)                                                                                                  |
+| `WOWZA_BASE_URL`                     | Wowza Content base URL (デフォルト: 無効)                                                                                                                          |
+| `WOWZA_SECURE_TOKEN`                 | Wowza SecureToken Shared Secret (デフォルト: "")                                                                                                                   |
+| `WOWZA_QUERY_PREFIX`                 | Wowza SecureToken Hash Query Parameter Prefix (デフォルト: `wowzatoken`)                                                                                           |
+| `WOWZA_EXPIRES_IN`                   | Wowza SecureToken lifetime (seconds) (デフォルト: いつまでも持続 `0`)                                                                                              |
+| `WOWZA_SCP_HOST`                     | 一括登録時の動画ファイルのアップロード先 (デフォルト: "")                                                                                                          |
+| `WOWZA_SCP_PORT`                     | 一括登録時の動画ファイルのアップロード先 ssh ポート番号 (デフォルト: `22`)                                                                                         |
+| `WOWZA_SCP_USERNAME`                 | 一括登録時の動画ファイルのアップロード先 ssh ユーザー名 (デフォルト: "")                                                                                           |
+| `WOWZA_SCP_PRIVATE_KEY`              | 一括登録時の動画ファイルのアップロード先 ssh ユーザーの秘密鍵 (デフォルト: "")                                                                                     |
+| `WOWZA_SCP_PASS_PHRASE`              | 一括登録時の動画ファイルのアップロード先 ssh ユーザーの秘密鍵のパスワード (デフォルト: "")                                                                         |
+| `WOWZA_SCP_SERVER_PATH`              | 一括登録時の動画ファイルのアップロード先フォルダ (デフォルト: "")                                                                                                  |
+| `ZOOM_API_KEY`                       | Zoom API アクセスキー                                                                                                                                              |
+| `ZOOM_API_SECRET`                    | Zoom API シークレット                                                                                                                                              |
+| `ZOOM_IMPORT_CONSUMER_KEY`           | Zoom インポートのユーザー検索に用いるコンシューマーキー (デフォルト: 無効 ""、例: 設定値 `OAUTH_CONSUMER_KEY` と同じ値)                                            |
+| `ZOOM_IMPORT_INTERVAL`               | Zoom インポートの実行時間 (デフォルト: 無効 ""、例: 毎朝 6 時実行 `1 6 * * *`)                                                                                     |
+| `ZOOM_IMPORT_TO`                     | Zoom からインポートした動画のアップロード先 (デフォルト: 無効 ""、例: `wowza`)                                                                                     |
+| `ZOOM_IMPORT_WOWZA_BASE_URL`         | Zoom からインポートした動画の URL のルート (デフォルト: 無効 ""、例: フロント側の設定値の `NEXT_PUBLIC_API_BASE_PATH` と同じ値)                                    |
+| `ZOOM_IMPORT_AUTODELETE`             | Zoom からインポートした動画の自動削除設定 (デフォルト: 無効 ""、例: `1`)                                                                                           |
+| `ZOOM_IMPORT_DISABLE_AUTOPUBLIC`     | Zoom からインポートした動画に公開 URL を発行しない (デフォルト: 無効(自動で公開 URL を発行する) ""、例: `1`)                                                       |
+| `ZOOM_IMPORT_PUBLIC_DEFAULT_DOMAINS` | Zoom からインポートした動画の公開 URL に公開範囲ドメインを自動設定する。`,` で区切ると複数のドメインの指定が可能 (デフォルト: ""、例: `example.com`)               |
+| `PUBLIC_ACCESS_HASH_ALGORITHM`       | 公開 URL のトークン生成に利用するハッシュアルゴリズム (デフォルト: "sha256"、`openssl help` コマンドの "Message Digest commands" の項目に表示される値が利用可能)   |
+| `PUBLIC_ACCESS_CRYPTO_ALGORITHM`     | Wowza 動画と字幕のトークン生成に利用する暗号化アルゴリズム (デフォルト: "aes-256-cbc"、`openssl help` コマンドの "Cipher commands" の項目に表示される値が利用可能) |
+| `ACTIVITY_RATE_MIN`                  | 学習活動の完了とみなす最小の視聴時間の割合 (デフォルト:`0.9`)                                                                                                      |
 
 [database_connection_url]: https://www.prisma.io/docs/reference/database-connectors/connection-urls/
 

@@ -13,96 +13,37 @@
  */
 
 import { exists, mapValues } from '../runtime';
+import {
+    InlineResponse2001Topics,
+    InlineResponse2001TopicsFromJSON,
+    InlineResponse2001TopicsFromJSONTyped,
+    InlineResponse2001TopicsToJSON,
+} from './';
+
 /**
- * 
+ * 成功時
  * @export
  * @interface InlineResponse2008
  */
 export interface InlineResponse2008 {
     /**
      * 
-     * @type {string}
+     * @type {Array<InlineResponse2001Topics>}
      * @memberof InlineResponse2008
      */
-    type: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineResponse2008
-     */
-    version: InlineResponse2008VersionEnum;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineResponse2008
-     */
-    title?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineResponse2008
-     */
-    author_name?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineResponse2008
-     */
-    author_url?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineResponse2008
-     */
-    provider_name?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineResponse2008
-     */
-    provider_url?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineResponse2008
-     */
-    cache_age?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineResponse2008
-     */
-    thumbnail_url?: string;
+    topics?: Array<InlineResponse2001Topics>;
     /**
      * 
      * @type {number}
      * @memberof InlineResponse2008
      */
-    thumbnail_width?: number;
+    page?: number;
     /**
      * 
      * @type {number}
      * @memberof InlineResponse2008
      */
-    thumbnail_height?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineResponse2008
-     */
-    html?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof InlineResponse2008
-     */
-    width?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof InlineResponse2008
-     */
-    height?: number;
+    perPage?: number;
 }
 
 export function InlineResponse2008FromJSON(json: any): InlineResponse2008 {
@@ -115,20 +56,9 @@ export function InlineResponse2008FromJSONTyped(json: any, ignoreDiscriminator: 
     }
     return {
         
-        'type': json['type'],
-        'version': json['version'],
-        'title': !exists(json, 'title') ? undefined : json['title'],
-        'author_name': !exists(json, 'author_name') ? undefined : json['author_name'],
-        'author_url': !exists(json, 'author_url') ? undefined : json['author_url'],
-        'provider_name': !exists(json, 'provider_name') ? undefined : json['provider_name'],
-        'provider_url': !exists(json, 'provider_url') ? undefined : json['provider_url'],
-        'cache_age': !exists(json, 'cache_age') ? undefined : json['cache_age'],
-        'thumbnail_url': !exists(json, 'thumbnail_url') ? undefined : json['thumbnail_url'],
-        'thumbnail_width': !exists(json, 'thumbnail_width') ? undefined : json['thumbnail_width'],
-        'thumbnail_height': !exists(json, 'thumbnail_height') ? undefined : json['thumbnail_height'],
-        'html': !exists(json, 'html') ? undefined : json['html'],
-        'width': !exists(json, 'width') ? undefined : json['width'],
-        'height': !exists(json, 'height') ? undefined : json['height'],
+        'topics': !exists(json, 'topics') ? undefined : ((json['topics'] as Array<any>).map(InlineResponse2001TopicsFromJSON)),
+        'page': !exists(json, 'page') ? undefined : json['page'],
+        'perPage': !exists(json, 'perPage') ? undefined : json['perPage'],
     };
 }
 
@@ -141,29 +71,10 @@ export function InlineResponse2008ToJSON(value?: InlineResponse2008 | null): any
     }
     return {
         
-        'type': value.type,
-        'version': value.version,
-        'title': value.title,
-        'author_name': value.author_name,
-        'author_url': value.author_url,
-        'provider_name': value.provider_name,
-        'provider_url': value.provider_url,
-        'cache_age': value.cache_age,
-        'thumbnail_url': value.thumbnail_url,
-        'thumbnail_width': value.thumbnail_width,
-        'thumbnail_height': value.thumbnail_height,
-        'html': value.html,
-        'width': value.width,
-        'height': value.height,
+        'topics': value.topics === undefined ? undefined : ((value.topics as Array<any>).map(InlineResponse2001TopicsToJSON)),
+        'page': value.page,
+        'perPage': value.perPage,
     };
-}
-
-/**
-* @export
-* @enum {string}
-*/
-export enum InlineResponse2008VersionEnum {
-    _1_0 = '1.0'
 }
 
 

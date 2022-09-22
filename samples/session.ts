@@ -15,7 +15,7 @@ const session: SessionSchema = {
   },
   ltiResourceLink,
   user,
-  systemSettings: { zoomImportEnabled: false },
+  systemSettings: { zoomImportEnabled: false, wowzaUploadEnabled: false },
 };
 
 export default session;

@@ -1,6 +1,6 @@
 import groupBy from "lodash.groupby";
 import getLocaleListString from "$utils/getLocaleListString";
-import type { ContentAuthors } from "$types/content";
+import type { ContentAuthors } from "$server/models/content";
 import type DescriptionList from "$atoms/DescriptionList";
 
 type Value = Parameters<typeof DescriptionList>[0]["value"];

@@ -3,31 +3,52 @@ import useSWR, { mutate } from "swr";
 import { api } from "./api";
 import type { BookProps, BookSchema } from "$server/models/book";
 import type { TopicSchema } from "$server/models/topic";
-import type { IsContentEditable } from "$types/content";
+import type { IsContentEditable } from "$server/models/content";
 import { revalidateSession } from "./session";
 import type { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
 import getDisplayableBook from "./getDisplayableBook";
 
 const key = "/api/v2/book/{book_id}";
 
-async function fetchBook(_: typeof key, id: BookSchema["id"]) {
-  const res = await api.apiV2BookBookIdGet({ bookId: id });
-  return res as BookSchema;
+async function fetchBook(
+  _: typeof key,
+  bookId: BookSchema["id"],
+  token?: string
+) {
+  if (token) {
+    const res = await api.apiV2BookPublicTokenGet({
+      token,
+      originreferer: document.referrer,
+    });
+    return res as BookSchema;
+  } else {
+    const res = await api.apiV2BookBookIdGet({ bookId });
+    return res as BookSchema;
+  }
 }
 
 export function useBook(
-  id: BookSchema["id"] | undefined,
+  bookId: BookSchema["id"] | undefined,
   isContentEditable: IsContentEditable,
-  ltiResourceLink?: Pick<LtiResourceLinkSchema, "bookId" | "creatorId"> | null
+  ltiResourceLink?: Pick<LtiResourceLinkSchema, "bookId" | "creatorId"> | null,
+  token?: string
 ) {
   const { data, error } = useSWR<BookSchema>(
-    Number.isFinite(id) ? [key, id] : null,
+    Number.isFinite(bookId) || token ? [key, bookId, token] : null,
     fetchBook
+  );
+  const publicBook = data?.publicBooks?.find(
+    (publicBook) => publicBook.token === token
   );
   const displayable = useMemo(
     () =>
-      getDisplayableBook(data, isContentEditable, ltiResourceLink ?? undefined),
-    [data, isContentEditable, ltiResourceLink]
+      getDisplayableBook(
+        data,
+        isContentEditable,
+        ltiResourceLink ?? undefined,
+        publicBook
+      ),
+    [data, isContentEditable, ltiResourceLink, publicBook]
   );
 
   return {
@@ -39,7 +60,7 @@ export function useBook(
 export async function createBook(body: BookProps): Promise<BookSchema> {
   // @ts-expect-error NOTE: body.sections[].topics[].name のUnion型に null 含むか否か異なる
   const res = await api.apiV2BookPost({ body });
-  await mutate([key, res.id], res);
+  await mutate([key, res.id, undefined], res);
   return res as BookSchema;
 }
 
@@ -49,7 +70,7 @@ export async function updateBook({
 }: BookProps & { id: BookSchema["id"] }): Promise<BookSchema> {
   // @ts-expect-error NOTE: body.sections[].topics[].name のUnion型に null 含むか否か異なる
   const res = await api.apiV2BookBookIdPut({ bookId: id, body });
-  await mutate([key, res.id], res);
+  await mutate([key, res.id, undefined], res);
   return res as BookSchema;
 }
 
@@ -88,5 +109,9 @@ export function revalidateBook(
   id: BookSchema["id"],
   res?: BookSchema
 ): Promise<BookSchema> {
-  return mutate([key, id], res);
+  return mutate([key, id, undefined], res);
+}
+
+export async function getBookIdByZoom(meetingId: number) {
+  return await api.apiV2BookZoomMeetingIdGet({ meetingId });
 }

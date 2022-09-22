@@ -11,15 +11,32 @@ async function search(
   filter: AuthorFilter,
   sort: string,
   page: number,
-  perPage: number
+  perPage: number,
+  userId: number,
+  ip: string
 ): Promise<SearchResultSchema> {
   const query = parse(queryText);
   switch (type) {
     case "topic": {
-      return await topicSearch({ type, ...query }, filter, sort, page, perPage);
+      return await topicSearch(
+        { type, ...query },
+        filter,
+        sort,
+        page,
+        perPage,
+        ip
+      );
     }
     case "book": {
-      return await bookSearch({ type, ...query }, filter, sort, page, perPage);
+      return await bookSearch(
+        { type, ...query },
+        filter,
+        sort,
+        page,
+        perPage,
+        userId,
+        ip
+      );
     }
     default:
       return { totalCount: 0, contents: [], page, perPage };

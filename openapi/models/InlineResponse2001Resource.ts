@@ -40,6 +40,12 @@ export interface InlineResponse2001Resource {
     url?: string;
     /**
      * 
+     * @type {string}
+     * @memberof InlineResponse2001Resource
+     */
+    accessToken?: string;
+    /**
+     * 
      * @type {object}
      * @memberof InlineResponse2001Resource
      */
@@ -70,6 +76,7 @@ export function InlineResponse2001ResourceFromJSONTyped(json: any, ignoreDiscrim
         
         'id': !exists(json, 'id') ? undefined : json['id'],
         'url': !exists(json, 'url') ? undefined : json['url'],
+        'accessToken': !exists(json, 'accessToken') ? undefined : json['accessToken'],
         'details': !exists(json, 'details') ? undefined : json['details'],
         'providerUrl': !exists(json, 'providerUrl') ? undefined : json['providerUrl'],
         'tracks': !exists(json, 'tracks') ? undefined : ((json['tracks'] as Array<any>).map(InlineResponse2001ResourceTracksFromJSON)),
@@ -87,6 +94,7 @@ export function InlineResponse2001ResourceToJSON(value?: InlineResponse2001Resou
         
         'id': value.id,
         'url': value.url,
+        'accessToken': value.accessToken,
         'details': value.details,
         'providerUrl': value.providerUrl,
         'tracks': value.tracks === undefined ? undefined : ((value.tracks as Array<any>).map(InlineResponse2001ResourceTracksToJSON)),

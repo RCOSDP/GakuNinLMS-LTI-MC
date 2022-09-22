@@ -1,4 +1,3 @@
-import { Fragment } from "react";
 import clsx from "clsx";
 import Markdown from "react-markdown";
 import gfm from "remark-gfm";
@@ -8,14 +7,15 @@ import Card from "@mui/material/Card";
 import CardActionArea from "@mui/material/CardActionArea";
 import CardMedia from "@mui/material/CardMedia";
 import Checkbox from "@mui/material/Checkbox";
-import Chip from "@mui/material/Chip";
 import { styled } from "@mui/material/styles";
 import { grey } from "@mui/material/colors";
 import EditButton from "$atoms/EditButton";
+import LinkButton from "$atoms/LinkButton";
 import DescriptionList from "$atoms/DescriptionList";
 import License from "$atoms/License";
 import SharedIndicator from "$atoms/SharedIndicator";
 import CourseChip from "$atoms/CourseChip";
+import KeywordChip from "$atoms/KeywordChip";
 import LinkSwitch from "$atoms/LinkSwitch";
 import type { ContentSchema } from "$server/models/content";
 import type { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
@@ -149,8 +149,6 @@ export default function ContentPreview({
       : content.sections[0]?.topics[0]?.resource.id
   );
   const handleContentLinkClick = () => onContentLinkClick?.(content);
-  const handleKeywordClick = (keyword: Pick<KeywordSchema, "name">) => () =>
-    onKeywordClick(keyword);
   return (
     <Preview className={clsx({ selected: checked })}>
       <Header
@@ -161,6 +159,17 @@ export default function ContentPreview({
         title={content.name}
         sx={{ mx: 2, my: 1 }}
       >
+        {content.type === "book" &&
+          content.publicBooks &&
+          content.publicBooks.map((publicBook) => (
+            <LinkButton
+              key={publicBook.id}
+              url={`${location.origin}/book?token=${publicBook.token}`}
+              conditional={Boolean(
+                publicBook.expireAt || publicBook.domains.length
+              )}
+            />
+          ))}
         {content.shared && <SharedIndicator className="shared" />}
         {onContentEditClick && (
           <EditButton
@@ -209,46 +218,50 @@ export default function ContentPreview({
       </Box>
       <DescriptionList
         nowrap
-        sx={{ mx: 2, my: 1 }}
+        sx={{ mx: 2, mt: 1 }}
         value={[
           {
             key: "更新日",
             value: getLocaleDateString(content.updatedAt, "ja"),
           },
           ...authors(content),
-          ...(content.type === "book" && content.ltiResourceLinks.length > 0
-            ? [
-                {
-                  key: "リンク",
-                  value: (
-                    <Fragment>
-                      {content.ltiResourceLinks.map(
-                        (ltiResourceLink, index) => (
-                          <CourseChip
-                            key={index}
-                            ltiResourceLink={ltiResourceLink}
-                            onLtiResourceLinkClick={onLtiContextClick}
-                          />
-                        )
-                      )}
-                    </Fragment>
-                  ),
-                },
-              ]
-            : []),
         ]}
       />
+      {content.type === "book" && content.ltiResourceLinks.length > 0 && (
+        <DescriptionList
+          sx={{
+            mx: 2,
+            mb: 1,
+            // TODO: 深い階層に対するスタイルの上書きが不要なコンポーネントの整理
+            dt: { flexShrink: 0 },
+            dd: { overflow: "hidden" },
+          }}
+          value={[
+            {
+              key: "コース",
+              value: (
+                <>
+                  {content.ltiResourceLinks.map((ltiResourceLink, index) => (
+                    <CourseChip
+                      sx={{ mr: 0.5, my: 0.125 }}
+                      key={index}
+                      ltiResourceLink={ltiResourceLink}
+                      onLtiResourceLinkClick={onLtiContextClick}
+                    />
+                  ))}
+                </>
+              ),
+            },
+          ]}
+        />
+      )}
       <Box sx={{ mx: 2, my: 1 }}>
         {content.keywords.map((keyword) => (
-          <Chip
+          <KeywordChip
             key={keyword.id}
-            onClick={handleKeywordClick(keyword)}
-            clickable
-            variant="outlined"
-            color="primary"
-            label={keyword.name}
-            size="small"
-            sx={{ mr: 0.5, borderRadius: 1 }}
+            keyword={keyword}
+            onKeywordClick={onKeywordClick}
+            sx={{ mr: 0.5 }}
           />
         ))}
       </Box>
