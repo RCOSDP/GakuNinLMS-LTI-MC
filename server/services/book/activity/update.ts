@@ -9,6 +9,7 @@ import { show } from "./show";
 import { publishScore } from "$server/utils/ltiv1p3/grade";
 import findClient from "$server/utils/ltiv1p3/findClient";
 import findBook from "$server/utils/book/findBook";
+import { getDisplayableBook } from "$server/utils/displayableBook";
 
 type Params = BookParams;
 type Query = ActivityQuery;
@@ -61,7 +62,12 @@ export async function update(
   const book = await findBook(req.params.book_id, req.session.user.id, req.ip);
   if (book == null) return { status: 404 };
 
-  const topics = book.sections.flatMap((section) => section.topics.flat());
+  const topics =
+    getDisplayableBook(
+      book,
+      undefined,
+      req.session.ltiResourceLink ?? undefined
+    )?.sections.flatMap((section) => section.topics.flat()) ?? [];
   const completedSet = new Set(
     activity.filter((a) => a.completed).map((a) => a.topic.id)
   );
