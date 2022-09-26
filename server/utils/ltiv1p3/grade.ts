@@ -40,13 +40,13 @@ async function grant(client: Client): Promise<string> {
  * LTI-AGS 2.0 成績の反映
  * https://www.imsglobal.org/spec/lti-ags/v2p0/openapi/#/default/Scores.POST
  * @param client OpenID Connect Client
- * @param lineItemsUrl Assignment and Grade Service claim に含まれる行項目コンテナにアクセスするための URL
+ * @param lineItemUrl Assignment and Grade Service claim に含まれる行項目コンテナにアクセスするための URL
  * @param score 成績
  * @param retry リトライを行うか否か (デフォルト: true 行う)
  */
 export async function publishScore(
   client: Client,
-  lineItemsUrl: string,
+  lineItemUrl: string,
   score: Score,
   retry = true
 ) {
@@ -71,7 +71,9 @@ export async function publishScore(
     });
   }
 
-  const res = await client.requestResource(lineItemsUrl, accessToken, {
+  const url = new URL(lineItemUrl);
+  url.pathname = `${url.pathname}/scores`;
+  const res = await client.requestResource(url, accessToken, {
     method: "POST",
     headers: { "Content-Type": "application/vnd.ims.lis.v1.score+json" },
     body: JSON.stringify(score),
@@ -86,7 +88,7 @@ export async function publishScore(
     });
 
     if (retry) {
-      await publishScore(client, lineItemsUrl, score, false);
+      await publishScore(client, lineItemUrl, score, false);
       return;
     }
   }

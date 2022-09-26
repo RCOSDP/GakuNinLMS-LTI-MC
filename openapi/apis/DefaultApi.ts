@@ -122,6 +122,11 @@ export interface ApiV2BookBookIdActivityGetRequest {
     currentLtiContextOnly?: boolean;
 }
 
+export interface ApiV2BookBookIdActivityPutRequest {
+    bookId: number;
+    currentLtiContextOnly?: boolean;
+}
+
 export interface ApiV2BookBookIdAuthorsPutRequest {
     bookId: number;
     body?: InlineObject4;
@@ -400,6 +405,42 @@ export class DefaultApi extends runtime.BaseAPI {
      */
     async apiV2BookBookIdActivityGet(requestParameters: ApiV2BookBookIdActivityGetRequest): Promise<InlineResponse2008> {
         const response = await this.apiV2BookBookIdActivityGetRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * 現在のセッションの学習状況の詳細を更新します。 自身以外の学習者の学習状況を更新することはできません。 LTI v1.3 でなければなりません。
+     * 学習状況の更新
+     */
+    async apiV2BookBookIdActivityPutRaw(requestParameters: ApiV2BookBookIdActivityPutRequest): Promise<runtime.ApiResponse<InlineResponse2008>> {
+        if (requestParameters.bookId === null || requestParameters.bookId === undefined) {
+            throw new runtime.RequiredError('bookId','Required parameter requestParameters.bookId was null or undefined when calling apiV2BookBookIdActivityPut.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        if (requestParameters.currentLtiContextOnly !== undefined) {
+            queryParameters['current_lti_context_only'] = requestParameters.currentLtiContextOnly;
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/api/v2/book/{book_id}/activity`.replace(`{${"book_id"}}`, encodeURIComponent(String(requestParameters.bookId))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2008FromJSON(jsonValue));
+    }
+
+    /**
+     * 現在のセッションの学習状況の詳細を更新します。 自身以外の学習者の学習状況を更新することはできません。 LTI v1.3 でなければなりません。
+     * 学習状況の更新
+     */
+    async apiV2BookBookIdActivityPut(requestParameters: ApiV2BookBookIdActivityPutRequest): Promise<InlineResponse2008> {
+        const response = await this.apiV2BookBookIdActivityPutRaw(requestParameters);
         return await response.value();
     }
 
