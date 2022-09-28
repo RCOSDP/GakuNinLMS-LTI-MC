@@ -6,6 +6,7 @@ import authInstructor from "$server/auth/authInstructor";
 import { OembedSchema } from "$server/models/oembed";
 import findResource from "$server/utils/resource/findResource";
 import resourceToOEmbedProvider from "server/utils/oembed/resourceToOEmbedProvider";
+import resourceToWowzaProvider from "$server/utils/wowza/resourceToWowzaProvider";
 
 export type Params = OembedParams;
 
@@ -35,7 +36,11 @@ export async function index({
   const resource = await findResource(resourceId);
   if (!resource) return { status: 404 };
   const provider = resourceToOEmbedProvider(resource);
-  if (!provider) return { status: 404 };
+  // NOTE: providerがundefinedの場合、Wowzaとみなす
+  if (!provider) {
+    const oembed = resourceToWowzaProvider(resource);
+    return { status: 200, body: oembed };
+  }
   const params = new URLSearchParams();
   params.append("url", resource.url);
   const response = await fetch(provider + "?" + params.toString());

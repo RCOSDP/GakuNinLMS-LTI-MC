@@ -49,6 +49,8 @@ function getVideoInstance(
         ...getVideoJsPlayer({
           sources: [{ type: "application/vnd.apple.mpegurl", src: url }],
           autoplay,
+          // NOTE：ここに以下のようなURLを挿入するとトピック詳細などでOGPが作成される
+          // poster: "https://wz.cccties.org/tmb/EZfWmlVrnweRfYn/10/20220920-1518-F2N6AO/vuca_1.jpg"
         }),
         tracks: buildTracks(resource.tracks),
         stopTimeOver: false,
