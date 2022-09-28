@@ -17,7 +17,8 @@ const WOWZA_SECURE_TOKEN = process.env.WOWZA_SECURE_TOKEN ?? "";
 const WOWZA_QUERY_PREFIX = process.env.WOWZA_QUERY_PREFIX ?? "wowzatoken";
 const WOWZA_EXPIRES_IN = Number(process.env.WOWZA_EXPIRES_IN ?? "0");
 const WOWZA_THUMBNAIL_BASE_URL = process.env.WOWZA_THUMBNAIL_BASE_URL ?? "";
-const WOWZA_THUMBNAIL_EXTENSION = process.env.WOWZA_THUMBNAIL_EXTENSION ?? "jpg";
+const WOWZA_THUMBNAIL_EXTENSION =
+  process.env.WOWZA_THUMBNAIL_EXTENSION ?? "jpg";
 const ACTIVITY_RATE_MIN = Number(process.env.ACTIVITY_RATE_MIN ?? "0.9");
 const WOWZA_SCP_HOST = process.env.WOWZA_SCP_HOST ?? "";
 const WOWZA_SCP_PORT = Number(process.env.WOWZA_SCP_PORT ?? "22");

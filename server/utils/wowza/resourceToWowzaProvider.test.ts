@@ -1,5 +1,5 @@
-process.env.WOWZA_OGP_BASE_URL = "https://wz.cccties.org/tmb/";
-process.env.WOWZA_OGP_EXTENSION = "jpg";
+process.env.WOWZA_THUMBNAIL_BASE_URL = "https://wz.cccties.org/tmb/";
+process.env.WOWZA_THUMBNAIL_EXTENSION = "jpg";
 
 import resourceToWowzaProvider from "./resourceToWowzaProvider";
 
@@ -15,6 +15,8 @@ describe("resourceToWowzaProvider()：Wowzaのサムネイル画像変換", func
     const actual = resourceToWowzaProvider(resource);
 
     expect(actual).toStrictEqual({
+      version: "1.0",
+      type: "link",
       thumbnail_url:
         "https://wz.cccties.org/tmb/EZfWmlVrnweRfYn/10/20220920-1518-F2N6AO/vuca_1.jpg",
     });
