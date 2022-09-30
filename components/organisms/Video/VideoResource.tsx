@@ -16,6 +16,7 @@ type Props = Pick<
   onTimeUpdate?: (currentTime: number) => void;
   identifier: string; // トピック編集時はURL、それ以外の再生時はtopic.id
   autoplay?: boolean;
+  thumbnailUrl?: string;
 };
 
 export default function VideoResource({
@@ -25,14 +26,16 @@ export default function VideoResource({
   tracks: resourceTracks,
   identifier,
   autoplay = false,
+  thumbnailUrl,
   ...other
 }: Props) {
   const videoInstance = useMemo(() => {
     return getVideoInstance(
       { providerUrl, url, accessToken, tracks: resourceTracks },
-      autoplay
+      autoplay,
+      thumbnailUrl
     );
-  }, [providerUrl, url, accessToken, autoplay, resourceTracks]);
+  }, [providerUrl, url, accessToken, resourceTracks, autoplay, thumbnailUrl]);
 
   const { video } = useVideoAtom();
   useEffect(() => {

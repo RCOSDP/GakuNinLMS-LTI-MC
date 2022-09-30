@@ -7,6 +7,8 @@ import useTopics from "$utils/useTopics";
 import { destroyTopic, updateTopic } from "$utils/topic";
 import { useSearchAtom } from "$store/search";
 import { revalidateContents } from "$utils/useContents";
+import { useState } from "react";
+import type { OembedSchema } from "$server/models/oembed";
 
 const Topics = (
   props: Omit<
@@ -54,6 +56,14 @@ function Index() {
     }
     await revalidateContents(query);
   }
+  const [thumbnailUrl, setThumbnailUrl] = useState<
+    OembedSchema["thumbnail_url"] | undefined
+  >(undefined);
+  function handleSetThumbnailUrl(
+    thumbnailUrl: OembedSchema["thumbnail_url"] | undefined
+  ) {
+    setThumbnailUrl(thumbnailUrl);
+  }
   function onContentEditClick(topic: Pick<TopicSchema, "id" | "authors">) {
     const action = isContentEditable(topic) ? "edit" : "generate";
     return router.push(
@@ -69,9 +79,10 @@ function Index() {
     onTopicsDeleteClick: handleTopicsDeleteClick,
     onContentEditClick,
     onTopicNewClick: handleTopicNewClick,
+    handleSetThumbnailUrl,
   };
 
-  return <Topics {...handlers} />;
+  return <Topics {...handlers} thumbnailUrl={thumbnailUrl} />;
 }
 
 export default Index;

@@ -24,6 +24,7 @@ import { grey } from "@mui/material/colors";
 import useDialogProps from "$utils/useDialogProps";
 import { useSearchAtom } from "$store/search";
 import { useSessionAtom } from "$store/session";
+import type { OembedSchema } from "$server/models/oembed";
 
 type Props = {
   totalCount: number;
@@ -34,6 +35,10 @@ type Props = {
   onTopicsDeleteClick(topics: TopicSchema[]): void;
   onContentEditClick(content: ContentSchema): void;
   onTopicNewClick(): void;
+  handleSetThumbnailUrl(
+    thumbnailUrl: OembedSchema["thumbnail_url"] | undefined
+  ): void;
+  thumbnailUrl: OembedSchema["thumbnail_url"];
 };
 
 export default function Topics(props: Props) {
@@ -46,6 +51,8 @@ export default function Topics(props: Props) {
     onTopicsDeleteClick,
     onContentEditClick,
     onTopicNewClick,
+    handleSetThumbnailUrl,
+    thumbnailUrl,
   } = props;
   const searchProps = useSearchAtom();
   const { isAdministrator } = useSessionAtom();
@@ -162,6 +169,7 @@ export default function Topics(props: Props) {
             onContentPreviewClick={handlePreviewClick}
             onContentEditClick={onContentEditClick}
             onKeywordClick={searchProps.onKeywordClick}
+            handleSetThumbnailUrl={handleSetThumbnailUrl}
           />
         ))}
         {loading &&
@@ -214,7 +222,11 @@ export default function Topics(props: Props) {
         </ActionFooter>
       )}
       {previewContent?.type === "topic" && (
-        <TopicPreviewDialog {...dialogProps} topic={previewContent} />
+        <TopicPreviewDialog
+          {...dialogProps}
+          topic={previewContent}
+          thumbnailUrl={thumbnailUrl}
+        />
       )}
     </Container>
   );
