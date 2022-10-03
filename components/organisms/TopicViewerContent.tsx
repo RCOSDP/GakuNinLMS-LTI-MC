@@ -12,21 +12,14 @@ import { authors } from "$utils/descriptionList";
 import formatInterval from "$utils/formatInterval";
 import { isVideoResource } from "$utils/videoResource";
 import { gray } from "$theme/colors";
-import type { OembedSchema } from "$server/models/oembed";
 
 type Props = {
   topic: TopicSchema;
   onEnded?: () => void;
   offset?: string;
-  thumbnailUrl?: OembedSchema["thumbnail_url"];
 };
 
-export default function TopicViewerContent({
-  topic,
-  onEnded,
-  offset,
-  thumbnailUrl,
-}: Props) {
+export default function TopicViewerContent({ topic, onEnded, offset }: Props) {
   const theme = useTheme();
   const sticky = useSticky({
     offset: offset ?? theme.spacing(-2),
@@ -40,7 +33,6 @@ export default function TopicViewerContent({
           sx={{ mt: -2, mx: -3, mb: 2 }}
           topic={topic}
           onEnded={onEnded}
-          thumbnailUrl={thumbnailUrl}
         />
       )}
       <header>

@@ -27,7 +27,6 @@ import getLocaleDateString from "$utils/getLocaleDateString";
 import { authors } from "$utils/descriptionList";
 import useOembed from "$utils/useOembed";
 import { NEXT_PUBLIC_BASE_PATH } from "$utils/env";
-import type { OembedSchema } from "$server/models/oembed";
 
 type HeaderProps = Parameters<typeof Checkbox>[0] & {
   checkable: boolean;
@@ -122,7 +121,6 @@ type Props = Parameters<typeof Checkbox>[0] & {
   ): void;
   onKeywordClick(keyword: Pick<KeywordSchema, "name">): void;
   linked?: boolean;
-  handleSetThumbnailUrl(thumbnailUrl?: OembedSchema["thumbnail_url"]): void;
 };
 
 export default function ContentPreview({
@@ -134,7 +132,6 @@ export default function ContentPreview({
   onKeywordClick,
   linked = content.type === "book" ? false : undefined,
   checked,
-  handleSetThumbnailUrl,
   ...checkboxProps
 }: Props) {
   const lineClamp = useLineClampStyles({
@@ -143,15 +140,14 @@ export default function ContentPreview({
     lineHeight: 1.5,
   });
   const checkable = "onChange" in checkboxProps;
+  const handle = (handler: (content: ContentSchema) => void) => () => {
+    handler(content);
+  };
   const oembed = useOembed(
     content.type === "topic"
       ? content.resource.id
       : content.sections[0]?.topics[0]?.resource.id
   );
-  const handle = (handler: (content: ContentSchema) => void) => () => {
-    handler(content);
-    handleSetThumbnailUrl(oembed && oembed.thumbnail_url);
-  };
   const handleContentLinkClick = (_: unknown, checked: boolean) => {
     onContentLinkClick?.(content, checked);
   };

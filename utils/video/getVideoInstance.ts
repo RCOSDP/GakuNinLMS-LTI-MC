@@ -8,7 +8,6 @@ import getVimeoPlayer from "./getVimeoPlayer";
  * 動画プレイヤーのインスタンスを生成
  * @param resource VideoResourceSchema
  * @param autoplay インスタンス生成時に自動再生するか否か
- * @param thumbnailUrl wowzaのサムネイル作成用のurl
  * @returns プレイヤーのHTML要素、インスタンス、video.jsであれば字幕トラック
  */
 function getVideoInstance(
@@ -16,8 +15,7 @@ function getVideoInstance(
     VideoResourceSchema,
     "providerUrl" | "url" | "accessToken" | "tracks"
   >,
-  autoplay = false,
-  thumbnailUrl?: string
+  autoplay = false
 ): VideoInstance {
   switch (resource.providerUrl) {
     case "https://www.youtube.com/":
@@ -51,7 +49,8 @@ function getVideoInstance(
         ...getVideoJsPlayer({
           sources: [{ type: "application/vnd.apple.mpegurl", src: url }],
           autoplay,
-          poster: thumbnailUrl,
+          // NOTE：ここに以下のようなURLを挿入するとトピック詳細などでOGPが作成される
+          // poster: "https://wz.cccties.org/tmb/EZfWmlVrnweRfYn/10/20220920-1518-F2N6AO/vuca_1.jpg"
         }),
         tracks: buildTracks(resource.tracks),
         stopTimeOver: false,
