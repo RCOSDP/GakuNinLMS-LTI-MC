@@ -17,7 +17,7 @@ type Props = Pick<
   onTimeUpdate?: (currentTime: number) => void;
   identifier: string; // トピック編集時はURL、それ以外の再生時はtopic.id
   autoplay?: boolean;
-  thumbnailUrl?: OembedSchema["thumbnail_url"]
+  thumbnailUrl?: OembedSchema["thumbnail_url"];
 };
 
 export default function VideoResource({
