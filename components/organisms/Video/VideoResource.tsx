@@ -4,6 +4,7 @@ import type { VideoResourceSchema } from "$server/models/videoResource";
 import VideoPlayer from "./VideoPlayer";
 import getVideoInstance from "$utils/video/getVideoInstance";
 import { useVideoAtom } from "$store/video";
+import type { OembedSchema } from "$server/models/oembed";
 
 type Props = Pick<
   VideoResourceSchema,
@@ -16,6 +17,7 @@ type Props = Pick<
   onTimeUpdate?: (currentTime: number) => void;
   identifier: string; // トピック編集時はURL、それ以外の再生時はtopic.id
   autoplay?: boolean;
+  thumbnailUrl?: OembedSchema["thumbnail_url"]
 };
 
 export default function VideoResource({
@@ -25,14 +27,16 @@ export default function VideoResource({
   tracks: resourceTracks,
   identifier,
   autoplay = false,
+  thumbnailUrl,
   ...other
 }: Props) {
   const videoInstance = useMemo(() => {
     return getVideoInstance(
       { providerUrl, url, accessToken, tracks: resourceTracks },
-      autoplay
+      autoplay,
+      thumbnailUrl
     );
-  }, [providerUrl, url, accessToken, autoplay, resourceTracks]);
+  }, [providerUrl, url, accessToken, resourceTracks, autoplay, thumbnailUrl]);
 
   const { video } = useVideoAtom();
   useEffect(() => {

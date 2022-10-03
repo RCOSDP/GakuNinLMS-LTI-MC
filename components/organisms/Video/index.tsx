@@ -9,6 +9,7 @@ import VideoResource from "$organisms/Video/VideoResource";
 import { NEXT_PUBLIC_VIDEO_MAX_HEIGHT } from "$utils/env";
 import { useVideoAtom } from "$store/video";
 import { useBookAtom } from "$store/book";
+import useOembed from "$utils/useOembed";
 import type { SxProps } from "@mui/system";
 
 const hidden = css({
@@ -42,6 +43,7 @@ type Props = {
 export default function Video({ className, sx, topic, onEnded }: Props) {
   const { video } = useVideoAtom();
   const { itemIndex, itemExists } = useBookAtom();
+  const oembed = useOembed(topic.resource.id);
   const prevItemIndex = usePrevious(itemIndex);
   useEffect(() => {
     const topic = itemExists(itemIndex);
@@ -140,6 +142,7 @@ export default function Video({ className, sx, topic, onEnded }: Props) {
           {...(topic.resource as VideoResourceSchema)}
           identifier={String(topic.id)}
           autoplay
+          thumbnailUrl={oembed && oembed.thumbnail_url}
         />
       )}
     </>
