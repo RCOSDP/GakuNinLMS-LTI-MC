@@ -86,8 +86,8 @@ docker-compose down
 | `WOWZA_SCP_PRIVATE_KEY_PATH`         | 一括登録時の動画ファイルのアップロード先 ssh ユーザーの秘密鍵のパス (デフォルトまたは `WOWZA_SCP_PRIVATE_KEY` が有効の場合: 無効)                                  |
 | `WOWZA_SCP_PASS_PHRASE`              | 一括登録時の動画ファイルのアップロード先 ssh ユーザーの秘密鍵のパスワード (デフォルト: "")                                                                         |
 | `WOWZA_SCP_SERVER_PATH`              | 一括登録時の動画ファイルのアップロード先フォルダ (デフォルト: "")                                                                                                  |
-| `WOWZA_THUMBNAIL_BASE_URL`              | サムネイル画像のURL (デフォルト: "")                                                                                                  |
-| `WOWZA_THUMBNAIL_EXTENSION`              | 生成されるサムネイル画像の拡張子 (デフォルト: "jpg")                                                                                                  |
+| `WOWZA_THUMBNAIL_BASE_URL`           | サムネイル画像の URL (デフォルト: "")                                                                                                                              |
+| `WOWZA_THUMBNAIL_EXTENSION`          | 生成されるサムネイル画像の拡張子 (デフォルト: "jpg")                                                                                                               |
 | `ZOOM_API_KEY`                       | Zoom API アクセスキー                                                                                                                                              |
 | `ZOOM_API_SECRET`                    | Zoom API シークレット                                                                                                                                              |
 | `ZOOM_IMPORT_CONSUMER_KEY`           | Zoom インポートのユーザー検索に用いるコンシューマーキー (デフォルト: 無効 ""、例: 設定値 `OAUTH_CONSUMER_KEY` と同じ値)                                            |
