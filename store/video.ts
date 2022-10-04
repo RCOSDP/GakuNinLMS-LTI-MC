@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { atom, useAtom } from "jotai";
-import { RESET, atomWithReset } from "jotai/utils";
+import { RESET, atomWithReset, useUpdateAtom } from "jotai/utils";
 import type { SectionSchema } from "$server/models/book/section";
 import type { VideoInstance } from "$types/videoInstance";
 import { isVideoResource } from "$utils/videoResource";
@@ -12,7 +12,7 @@ const videoAtom = atomWithReset<{
   video: new Map(),
 });
 
-export const updateVideoAtom = atom(
+const updateVideoAtom = atom(
   null,
   (get, set, sections: Pick<SectionSchema, "topics">[]) => {
     const { video } = get(videoAtom);
@@ -29,6 +29,7 @@ export const updateVideoAtom = atom(
 
 export function useVideoAtom() {
   const [state, reset] = useAtom(videoAtom);
+  const updateVideo = useUpdateAtom(updateVideoAtom);
   useEffect(
     () => () => {
       state.video.forEach(({ player }) => player.pause());
@@ -36,5 +37,5 @@ export function useVideoAtom() {
     },
     [reset, state]
   );
-  return state;
+  return { ...state, updateVideo };
 }
