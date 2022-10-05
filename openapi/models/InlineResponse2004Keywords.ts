@@ -16,34 +16,28 @@ import { exists, mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface InlineResponse2007Topic
+ * @interface InlineResponse2004Keywords
  */
-export interface InlineResponse2007Topic {
+export interface InlineResponse2004Keywords {
     /**
      * 
      * @type {number}
-     * @memberof InlineResponse2007Topic
+     * @memberof InlineResponse2004Keywords
      */
     id: number;
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse2007Topic
+     * @memberof InlineResponse2004Keywords
      */
     name: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof InlineResponse2007Topic
-     */
-    timeRequired: number;
 }
 
-export function InlineResponse2007TopicFromJSON(json: any): InlineResponse2007Topic {
-    return InlineResponse2007TopicFromJSONTyped(json, false);
+export function InlineResponse2004KeywordsFromJSON(json: any): InlineResponse2004Keywords {
+    return InlineResponse2004KeywordsFromJSONTyped(json, false);
 }
 
-export function InlineResponse2007TopicFromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse2007Topic {
+export function InlineResponse2004KeywordsFromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse2004Keywords {
     if ((json === undefined) || (json === null)) {
         return json;
     }
@@ -51,11 +45,10 @@ export function InlineResponse2007TopicFromJSONTyped(json: any, ignoreDiscrimina
         
         'id': json['id'],
         'name': json['name'],
-        'timeRequired': json['timeRequired'],
     };
 }
 
-export function InlineResponse2007TopicToJSON(value?: InlineResponse2007Topic | null): any {
+export function InlineResponse2004KeywordsToJSON(value?: InlineResponse2004Keywords | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -66,7 +59,6 @@ export function InlineResponse2007TopicToJSON(value?: InlineResponse2007Topic | 
         
         'id': value.id,
         'name': value.name,
-        'timeRequired': value.timeRequired,
     };
 }
 

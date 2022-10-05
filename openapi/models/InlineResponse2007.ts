@@ -14,10 +14,10 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    InlineResponse2007Activity,
-    InlineResponse2007ActivityFromJSON,
-    InlineResponse2007ActivityFromJSONTyped,
-    InlineResponse2007ActivityToJSON,
+    InlineResponse2002BookSettings,
+    InlineResponse2002BookSettingsFromJSON,
+    InlineResponse2002BookSettingsFromJSONTyped,
+    InlineResponse2002BookSettingsToJSON,
 } from './';
 
 /**
@@ -28,10 +28,40 @@ import {
 export interface InlineResponse2007 {
     /**
      * 
-     * @type {Array<InlineResponse2007Activity>}
+     * @type {number}
      * @memberof InlineResponse2007
      */
-    activity: Array<InlineResponse2007Activity>;
+    id: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineResponse2007
+     */
+    ltiConsumerId: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineResponse2007
+     */
+    ltiUserId: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineResponse2007
+     */
+    name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineResponse2007
+     */
+    email?: string;
+    /**
+     * 
+     * @type {InlineResponse2002BookSettings}
+     * @memberof InlineResponse2007
+     */
+    settings?: InlineResponse2002BookSettings;
 }
 
 export function InlineResponse2007FromJSON(json: any): InlineResponse2007 {
@@ -44,7 +74,12 @@ export function InlineResponse2007FromJSONTyped(json: any, ignoreDiscriminator: 
     }
     return {
         
-        'activity': ((json['activity'] as Array<any>).map(InlineResponse2007ActivityFromJSON)),
+        'id': json['id'],
+        'ltiConsumerId': json['ltiConsumerId'],
+        'ltiUserId': json['ltiUserId'],
+        'name': json['name'],
+        'email': !exists(json, 'email') ? undefined : json['email'],
+        'settings': !exists(json, 'settings') ? undefined : InlineResponse2002BookSettingsFromJSON(json['settings']),
     };
 }
 
@@ -57,7 +92,12 @@ export function InlineResponse2007ToJSON(value?: InlineResponse2007 | null): any
     }
     return {
         
-        'activity': ((value.activity as Array<any>).map(InlineResponse2007ActivityToJSON)),
+        'id': value.id,
+        'ltiConsumerId': value.ltiConsumerId,
+        'ltiUserId': value.ltiUserId,
+        'name': value.name,
+        'email': value.email,
+        'settings': InlineResponse2002BookSettingsToJSON(value.settings),
     };
 }
 

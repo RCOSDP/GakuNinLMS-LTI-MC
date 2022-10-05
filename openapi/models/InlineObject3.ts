@@ -22,10 +22,10 @@ import {
     ApiV2BookBookIdSectionsFromJSON,
     ApiV2BookBookIdSectionsFromJSONTyped,
     ApiV2BookBookIdSectionsToJSON,
-    InlineResponse2003PublicBooks,
-    InlineResponse2003PublicBooksFromJSON,
-    InlineResponse2003PublicBooksFromJSONTyped,
-    InlineResponse2003PublicBooksToJSON,
+    InlineResponse2004PublicBooks,
+    InlineResponse2004PublicBooksFromJSON,
+    InlineResponse2004PublicBooksFromJSONTyped,
+    InlineResponse2004PublicBooksToJSON,
 } from './';
 
 /**
@@ -72,10 +72,10 @@ export interface InlineObject3 {
     keywords?: Array<ApiV2BookBookIdKeywords>;
     /**
      * 
-     * @type {Array<InlineResponse2003PublicBooks>}
+     * @type {Array<InlineResponse2004PublicBooks>}
      * @memberof InlineObject3
      */
-    publicBooks?: Array<InlineResponse2003PublicBooks>;
+    publicBooks?: Array<InlineResponse2004PublicBooks>;
 }
 
 export function InlineObject3FromJSON(json: any): InlineObject3 {
@@ -94,7 +94,7 @@ export function InlineObject3FromJSONTyped(json: any, ignoreDiscriminator: boole
         'shared': !exists(json, 'shared') ? undefined : json['shared'],
         'sections': !exists(json, 'sections') ? undefined : ((json['sections'] as Array<any>).map(ApiV2BookBookIdSectionsFromJSON)),
         'keywords': !exists(json, 'keywords') ? undefined : ((json['keywords'] as Array<any>).map(ApiV2BookBookIdKeywordsFromJSON)),
-        'publicBooks': !exists(json, 'publicBooks') ? undefined : ((json['publicBooks'] as Array<any>).map(InlineResponse2003PublicBooksFromJSON)),
+        'publicBooks': !exists(json, 'publicBooks') ? undefined : ((json['publicBooks'] as Array<any>).map(InlineResponse2004PublicBooksFromJSON)),
     };
 }
 
@@ -113,7 +113,7 @@ export function InlineObject3ToJSON(value?: InlineObject3 | null): any {
         'shared': value.shared,
         'sections': value.sections === undefined ? undefined : ((value.sections as Array<any>).map(ApiV2BookBookIdSectionsToJSON)),
         'keywords': value.keywords === undefined ? undefined : ((value.keywords as Array<any>).map(ApiV2BookBookIdKeywordsToJSON)),
-        'publicBooks': value.publicBooks === undefined ? undefined : ((value.publicBooks as Array<any>).map(InlineResponse2003PublicBooksToJSON)),
+        'publicBooks': value.publicBooks === undefined ? undefined : ((value.publicBooks as Array<any>).map(InlineResponse2004PublicBooksToJSON)),
     };
 }
 

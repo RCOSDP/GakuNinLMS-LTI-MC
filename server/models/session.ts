@@ -8,6 +8,7 @@ import { LtiRolesSchema } from "./ltiRoles";
 import { LtiResourceLinkRequestSchema } from "./ltiResourceLinkRequest";
 import { LtiContextSchema } from "./ltiContext";
 import { LtiLaunchPresentationSchema } from "./ltiLaunchPresentation";
+import { LtiAgsEndpointSchema } from "./ltiAgsEndpoint";
 import { SystemSettingsSchema } from "./systemSettings";
 
 /** セッション */
@@ -19,6 +20,7 @@ export type SessionSchema = {
   ltiResourceLinkRequest: LtiResourceLinkRequestSchema;
   ltiContext: LtiContextSchema;
   ltiLaunchPresentation?: LtiLaunchPresentationSchema;
+  ltiAgsEndpoint?: LtiAgsEndpointSchema;
   ltiResourceLink: null | LtiResourceLinkSchema;
   user: UserSchema;
   systemSettings: SystemSettingsSchema;
@@ -45,6 +47,7 @@ export const sessionSchema = {
     ltiResourceLinkRequest: LtiResourceLinkRequestSchema,
     ltiContext: LtiContextSchema,
     ltiLaunchPresentation: LtiLaunchPresentationSchema,
+    ltiAgsEndpoint: LtiAgsEndpointSchema,
     ltiResourceLink: {
       ...ltiResourceLinkSchema,
       nullable: true,

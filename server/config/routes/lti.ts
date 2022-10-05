@@ -5,6 +5,7 @@ import * as ltiLaunchService from "$server/services/ltiLaunch";
 import * as ltiLoginService from "$server/services/ltiLogin";
 import * as ltiCallbackService from "$server/services/ltiCallback";
 import * as ltiResourceLinkService from "$server/services/ltiResourceLink";
+import * as ltiKeys from "$server/services/ltiKeys";
 import * as ltiClients from "$server/services/ltiClients";
 import * as linkSearch from "$server/services/linkSearch";
 
@@ -57,6 +58,14 @@ export async function resourceLink(fastify: FastifyInstance) {
   fastify.delete<{
     Params: ltiResourceLinkService.Params;
   }>(path, { schema: method.delete, ...hooks.delete }, handler(destroy));
+}
+
+export async function keys(fastify: FastifyInstance) {
+  const path = "/lti/keys";
+  const { method, index } = ltiKeys;
+  const hooks = makeHooks(fastify, ltiKeys.hooks);
+
+  fastify.get(path, { schema: method.get, ...hooks.get }, handler(index));
 }
 
 export async function clients(fastify: FastifyInstance) {

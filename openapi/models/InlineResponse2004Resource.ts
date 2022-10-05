@@ -14,61 +14,61 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    InlineResponse2003ResourceTracks,
-    InlineResponse2003ResourceTracksFromJSON,
-    InlineResponse2003ResourceTracksFromJSONTyped,
-    InlineResponse2003ResourceTracksToJSON,
+    InlineResponse2004ResourceTracks,
+    InlineResponse2004ResourceTracksFromJSON,
+    InlineResponse2004ResourceTracksFromJSONTyped,
+    InlineResponse2004ResourceTracksToJSON,
 } from './';
 
 /**
  * 
  * @export
- * @interface InlineResponse2003Resource
+ * @interface InlineResponse2004Resource
  */
-export interface InlineResponse2003Resource {
+export interface InlineResponse2004Resource {
     /**
      * 
      * @type {number}
-     * @memberof InlineResponse2003Resource
+     * @memberof InlineResponse2004Resource
      */
     id?: number;
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse2003Resource
+     * @memberof InlineResponse2004Resource
      */
     url?: string;
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse2003Resource
+     * @memberof InlineResponse2004Resource
      */
     accessToken?: string;
     /**
      * 
      * @type {object}
-     * @memberof InlineResponse2003Resource
+     * @memberof InlineResponse2004Resource
      */
     details?: object;
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse2003Resource
+     * @memberof InlineResponse2004Resource
      */
     providerUrl?: string;
     /**
      * 
-     * @type {Array<InlineResponse2003ResourceTracks>}
-     * @memberof InlineResponse2003Resource
+     * @type {Array<InlineResponse2004ResourceTracks>}
+     * @memberof InlineResponse2004Resource
      */
-    tracks?: Array<InlineResponse2003ResourceTracks>;
+    tracks?: Array<InlineResponse2004ResourceTracks>;
 }
 
-export function InlineResponse2003ResourceFromJSON(json: any): InlineResponse2003Resource {
-    return InlineResponse2003ResourceFromJSONTyped(json, false);
+export function InlineResponse2004ResourceFromJSON(json: any): InlineResponse2004Resource {
+    return InlineResponse2004ResourceFromJSONTyped(json, false);
 }
 
-export function InlineResponse2003ResourceFromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse2003Resource {
+export function InlineResponse2004ResourceFromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse2004Resource {
     if ((json === undefined) || (json === null)) {
         return json;
     }
@@ -79,11 +79,11 @@ export function InlineResponse2003ResourceFromJSONTyped(json: any, ignoreDiscrim
         'accessToken': !exists(json, 'accessToken') ? undefined : json['accessToken'],
         'details': !exists(json, 'details') ? undefined : json['details'],
         'providerUrl': !exists(json, 'providerUrl') ? undefined : json['providerUrl'],
-        'tracks': !exists(json, 'tracks') ? undefined : ((json['tracks'] as Array<any>).map(InlineResponse2003ResourceTracksFromJSON)),
+        'tracks': !exists(json, 'tracks') ? undefined : ((json['tracks'] as Array<any>).map(InlineResponse2004ResourceTracksFromJSON)),
     };
 }
 
-export function InlineResponse2003ResourceToJSON(value?: InlineResponse2003Resource | null): any {
+export function InlineResponse2004ResourceToJSON(value?: InlineResponse2004Resource | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -97,7 +97,7 @@ export function InlineResponse2003ResourceToJSON(value?: InlineResponse2003Resou
         'accessToken': value.accessToken,
         'details': value.details,
         'providerUrl': value.providerUrl,
-        'tracks': value.tracks === undefined ? undefined : ((value.tracks as Array<any>).map(InlineResponse2003ResourceTracksToJSON)),
+        'tracks': value.tracks === undefined ? undefined : ((value.tracks as Array<any>).map(InlineResponse2004ResourceTracksToJSON)),
     };
 }
 

@@ -14,10 +14,10 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    InlineResponse2001Book,
-    InlineResponse2001BookFromJSON,
-    InlineResponse2001BookFromJSONTyped,
-    InlineResponse2001BookToJSON,
+    InlineResponse2002Book,
+    InlineResponse2002BookFromJSON,
+    InlineResponse2002BookFromJSONTyped,
+    InlineResponse2002BookToJSON,
     LTIContext,
     LTIContextFromJSON,
     LTIContextFromJSONTyped,
@@ -31,40 +31,40 @@ import {
 /**
  * 
  * @export
- * @interface InlineResponse2001Contents
+ * @interface InlineResponse2002Contents
  */
-export interface InlineResponse2001Contents {
+export interface InlineResponse2002Contents {
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse2001Contents
+     * @memberof InlineResponse2002Contents
      */
     oauthClientId: string;
     /**
      * 
      * @type {LTIContext}
-     * @memberof InlineResponse2001Contents
+     * @memberof InlineResponse2002Contents
      */
     ltiContext: LTIContext;
     /**
      * 
      * @type {LTIResourceLinkRequest}
-     * @memberof InlineResponse2001Contents
+     * @memberof InlineResponse2002Contents
      */
     ltiResourceLink: LTIResourceLinkRequest;
     /**
      * 
-     * @type {InlineResponse2001Book}
-     * @memberof InlineResponse2001Contents
+     * @type {InlineResponse2002Book}
+     * @memberof InlineResponse2002Contents
      */
-    book: InlineResponse2001Book;
+    book: InlineResponse2002Book;
 }
 
-export function InlineResponse2001ContentsFromJSON(json: any): InlineResponse2001Contents {
-    return InlineResponse2001ContentsFromJSONTyped(json, false);
+export function InlineResponse2002ContentsFromJSON(json: any): InlineResponse2002Contents {
+    return InlineResponse2002ContentsFromJSONTyped(json, false);
 }
 
-export function InlineResponse2001ContentsFromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse2001Contents {
+export function InlineResponse2002ContentsFromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse2002Contents {
     if ((json === undefined) || (json === null)) {
         return json;
     }
@@ -73,11 +73,11 @@ export function InlineResponse2001ContentsFromJSONTyped(json: any, ignoreDiscrim
         'oauthClientId': json['oauthClientId'],
         'ltiContext': LTIContextFromJSON(json['ltiContext']),
         'ltiResourceLink': LTIResourceLinkRequestFromJSON(json['ltiResourceLink']),
-        'book': InlineResponse2001BookFromJSON(json['book']),
+        'book': InlineResponse2002BookFromJSON(json['book']),
     };
 }
 
-export function InlineResponse2001ContentsToJSON(value?: InlineResponse2001Contents | null): any {
+export function InlineResponse2002ContentsToJSON(value?: InlineResponse2002Contents | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -89,7 +89,7 @@ export function InlineResponse2001ContentsToJSON(value?: InlineResponse2001Conte
         'oauthClientId': value.oauthClientId,
         'ltiContext': LTIContextToJSON(value.ltiContext),
         'ltiResourceLink': LTIResourceLinkRequestToJSON(value.ltiResourceLink),
-        'book': InlineResponse2001BookToJSON(value.book),
+        'book': InlineResponse2002BookToJSON(value.book),
     };
 }
 

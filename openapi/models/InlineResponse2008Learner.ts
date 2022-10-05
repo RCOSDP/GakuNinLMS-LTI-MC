@@ -16,28 +16,34 @@ import { exists, mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface InlineResponse2003Keywords
+ * @interface InlineResponse2008Learner
  */
-export interface InlineResponse2003Keywords {
+export interface InlineResponse2008Learner {
     /**
      * 
      * @type {number}
-     * @memberof InlineResponse2003Keywords
+     * @memberof InlineResponse2008Learner
      */
     id: number;
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse2003Keywords
+     * @memberof InlineResponse2008Learner
      */
     name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineResponse2008Learner
+     */
+    email: string;
 }
 
-export function InlineResponse2003KeywordsFromJSON(json: any): InlineResponse2003Keywords {
-    return InlineResponse2003KeywordsFromJSONTyped(json, false);
+export function InlineResponse2008LearnerFromJSON(json: any): InlineResponse2008Learner {
+    return InlineResponse2008LearnerFromJSONTyped(json, false);
 }
 
-export function InlineResponse2003KeywordsFromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse2003Keywords {
+export function InlineResponse2008LearnerFromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse2008Learner {
     if ((json === undefined) || (json === null)) {
         return json;
     }
@@ -45,10 +51,11 @@ export function InlineResponse2003KeywordsFromJSONTyped(json: any, ignoreDiscrim
         
         'id': json['id'],
         'name': json['name'],
+        'email': json['email'],
     };
 }
 
-export function InlineResponse2003KeywordsToJSON(value?: InlineResponse2003Keywords | null): any {
+export function InlineResponse2008LearnerToJSON(value?: InlineResponse2008Learner | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -59,6 +66,7 @@ export function InlineResponse2003KeywordsToJSON(value?: InlineResponse2003Keywo
         
         'id': value.id,
         'name': value.name,
+        'email': value.email,
     };
 }
 
