@@ -134,6 +134,8 @@ model LtiConsumer {
   /// LTI Platform (LTI v1.3 の場合: 必須)
   platform         LtiPlatform?      @relation(fields: [platformId], references: [issuer])
   platformId       String?           @map("platform_id")
+  /// Access Token ("" は無効)
+  accessToken      String            @default("") @map("access_token")
 
   @@map("lti_consumer")
 }

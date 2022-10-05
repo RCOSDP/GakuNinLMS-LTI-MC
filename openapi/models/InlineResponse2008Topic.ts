@@ -16,28 +16,34 @@ import { exists, mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface InlineResponse20013Book
+ * @interface InlineResponse2008Topic
  */
-export interface InlineResponse20013Book {
+export interface InlineResponse2008Topic {
     /**
      * 
      * @type {number}
-     * @memberof InlineResponse20013Book
+     * @memberof InlineResponse2008Topic
      */
     id: number;
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse20013Book
+     * @memberof InlineResponse2008Topic
      */
     name: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof InlineResponse2008Topic
+     */
+    timeRequired: number;
 }
 
-export function InlineResponse20013BookFromJSON(json: any): InlineResponse20013Book {
-    return InlineResponse20013BookFromJSONTyped(json, false);
+export function InlineResponse2008TopicFromJSON(json: any): InlineResponse2008Topic {
+    return InlineResponse2008TopicFromJSONTyped(json, false);
 }
 
-export function InlineResponse20013BookFromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse20013Book {
+export function InlineResponse2008TopicFromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse2008Topic {
     if ((json === undefined) || (json === null)) {
         return json;
     }
@@ -45,10 +51,11 @@ export function InlineResponse20013BookFromJSONTyped(json: any, ignoreDiscrimina
         
         'id': json['id'],
         'name': json['name'],
+        'timeRequired': json['timeRequired'],
     };
 }
 
-export function InlineResponse20013BookToJSON(value?: InlineResponse20013Book | null): any {
+export function InlineResponse2008TopicToJSON(value?: InlineResponse2008Topic | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -59,6 +66,7 @@ export function InlineResponse20013BookToJSON(value?: InlineResponse20013Book | 
         
         'id': value.id,
         'name': value.name,
+        'timeRequired': value.timeRequired,
     };
 }
 

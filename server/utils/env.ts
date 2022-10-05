@@ -8,6 +8,8 @@ const API_BASE_PATH = process.env.API_BASE_PATH ?? "/api/v2";
 const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN ?? "";
 const FRONTEND_PATH = process.env.FRONTEND_PATH || "/";
 const SESSION_SECRET = process.env.SESSION_SECRET ?? "";
+const OPENID_PRIVATE_KEY = process.env.OPENID_PRIVATE_KEY;
+const OPENID_PRIVATE_KEY_PATH = process.env.OPENID_PRIVATE_KEY_PATH ?? "";
 const OAUTH_CONSUMER_KEY = process.env.OAUTH_CONSUMER_KEY ?? "";
 const OAUTH_CONSUMER_SECRET = process.env.OAUTH_CONSUMER_SECRET ?? "";
 const HTTPS_CERT = fileExists(process.env.HTTPS_CERT_PATH ?? "");
@@ -50,6 +52,8 @@ export {
   FRONTEND_ORIGIN,
   FRONTEND_PATH,
   SESSION_SECRET,
+  OPENID_PRIVATE_KEY,
+  OPENID_PRIVATE_KEY_PATH,
   OAUTH_CONSUMER_KEY,
   OAUTH_CONSUMER_SECRET,
   HTTPS_CERT,
