@@ -3,7 +3,6 @@ import { atom } from "jotai";
 import { useUpdateAtom, useAtomValue } from "jotai/utils";
 import type { BookSchema } from "$server/models/book";
 import type { TopicSchema } from "$server/models/topic";
-import { updateVideoAtom } from "./video";
 
 type BookState = {
   book: BookSchema | undefined;
@@ -38,7 +37,6 @@ const updateBookAtom = atom<undefined, BookSchema>(
       itemExists: ([sectionIndex, topicIndex]) =>
         book.sections[sectionIndex]?.topics[topicIndex],
     });
-    set(updateVideoAtom, book.sections);
   }
 );
 

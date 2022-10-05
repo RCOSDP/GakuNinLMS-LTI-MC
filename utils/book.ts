@@ -1,5 +1,6 @@
 import { useMemo } from "react";
-import useSWR, { mutate } from "swr";
+import { mutate } from "swr";
+import useSWRImmutable from "swr/immutable";
 import { api } from "./api";
 import type { BookProps, BookSchema } from "$server/models/book";
 import type { TopicSchema } from "$server/models/topic";
@@ -33,7 +34,7 @@ export function useBook(
   ltiResourceLink?: Pick<LtiResourceLinkSchema, "bookId" | "creatorId"> | null,
   token?: string
 ) {
-  const { data, error } = useSWR<BookSchema>(
+  const { data, error } = useSWRImmutable<BookSchema>(
     Number.isFinite(bookId) || token ? [key, bookId, token] : null,
     fetchBook
   );
