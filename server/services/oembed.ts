@@ -7,6 +7,7 @@ import { OembedSchema } from "$server/models/oembed";
 import findResource from "$server/utils/resource/findResource";
 import resourceToOEmbedProvider from "server/utils/oembed/resourceToOEmbedProvider";
 import resourceToWowzaProvider from "$server/utils/wowza/resourceToWowzaProvider";
+import { WOWZA_THUMBNAIL_BASE_URL } from "$server/utils/env";
 
 export type Params = OembedParams;
 
@@ -37,6 +38,9 @@ export async function index({
   if (!resource) return { status: 404 };
   const provider = resourceToOEmbedProvider(resource);
   // NOTE: providerがundefinedの場合、Wowzaとみなす
+  if (!provider && !WOWZA_THUMBNAIL_BASE_URL) {
+    return { status: 404 };
+  }
   if (!provider) {
     const oembed = resourceToWowzaProvider(resource);
     return { status: 200, body: oembed };
