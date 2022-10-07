@@ -1,3 +1,4 @@
+import type { OembedSchema } from "$server/models/oembed";
 import type { VideoResourceSchema } from "$server/models/videoResource";
 import type { VideoInstance } from "$types/videoInstance";
 import buildTracks from "$utils/buildTracks";
@@ -15,7 +16,8 @@ function getVideoInstance(
     VideoResourceSchema,
     "providerUrl" | "url" | "accessToken" | "tracks"
   >,
-  autoplay = false
+  autoplay = false,
+  thumbnailUrl?: OembedSchema["thumbnail_url"]
 ): VideoInstance {
   switch (resource.providerUrl) {
     case "https://www.youtube.com/":
@@ -49,6 +51,7 @@ function getVideoInstance(
         ...getVideoJsPlayer({
           sources: [{ type: "application/vnd.apple.mpegurl", src: url }],
           autoplay,
+          poster: thumbnailUrl,
         }),
         tracks: buildTracks(resource.tracks),
         stopTimeOver: false,
