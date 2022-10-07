@@ -1,8 +1,24 @@
+import type { FromSchema } from "json-schema-to-ts";
 import type { Topic, Prisma } from "@prisma/client";
 import type { ResourceProps, ResourceSchema } from "./resource";
 import { resourcePropsSchema, resourceSchema } from "./resource";
 import { AuthorSchema } from "./author";
 import { KeywordPropSchema, KeywordSchema } from "./keyword";
+
+const RelatedBook = {
+  type: "object",
+  required: ["id", "name"],
+  properties: {
+    id: { type: "integer" },
+    name: { type: "string" },
+    description: { type: "string" },
+    language: { type: "string" },
+    shared: { type: "boolean" },
+  },
+  additionalProperties: false,
+} as const;
+
+type RelatedBook = FromSchema<typeof RelatedBook>;
 
 export type TopicProps = Pick<
   Prisma.TopicCreateInput,
@@ -30,6 +46,7 @@ export type TopicPropsWithUpload = {
 export type TopicSchema = Topic & {
   authors: AuthorSchema[];
   keywords: KeywordSchema[];
+  relatedBooks?: RelatedBook[];
   resource: ResourceSchema;
 };
 
@@ -37,11 +54,11 @@ const topicPropsSchema = {
   type: "object",
   properties: {
     name: { type: "string" },
-    language: { type: "string", nullable: true },
+    language: { type: "string" },
     timeRequired: { type: "integer" },
-    startTime: { type: "number", nullable: true },
-    stopTime: { type: "number", nullable: true },
-    shared: { type: "boolean", nullable: true },
+    startTime: { type: "number" },
+    stopTime: { type: "number" },
+    shared: { type: "boolean" },
     license: { type: "string", format: "license" },
     description: { type: "string" },
     resource: resourcePropsSchema,
@@ -70,8 +87,8 @@ export const topicSchema = {
     name: { type: "string" },
     language: { type: "string" },
     timeRequired: { type: "integer" },
-    startTime: { type: "number", nullable: true },
-    stopTime: { type: "number", nullable: true },
+    startTime: { type: "number" },
+    stopTime: { type: "number" },
     shared: { type: "boolean" },
     license: { type: "string" },
     description: { type: "string" },
@@ -80,6 +97,7 @@ export const topicSchema = {
     details: { type: "object" },
     authors: { type: "array", items: AuthorSchema },
     keywords: { type: "array", items: KeywordSchema },
+    relatedBooks: { type: "array", items: RelatedBook },
     resource: resourceSchema,
   },
 } as const;

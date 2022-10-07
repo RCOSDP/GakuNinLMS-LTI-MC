@@ -29,6 +29,7 @@ async function topicSearch(
     keyword,
     license,
     shared,
+    book,
   }: TopicSearchQuery,
   filter: AuthorFilter,
   sort: string,
@@ -93,6 +94,14 @@ async function topicSearch(
       ...shared.map((s) => ({
         shared: s,
       })),
+      // NOTE: book - 関連するブックのID
+      ...book.map((bookId) => ({
+        topicSection: {
+          some: {
+            section: { topicSections: { some: { section: { bookId } } } },
+          },
+        },
+      })),
     ],
   };
 
@@ -105,9 +114,33 @@ async function topicSearch(
     take: perPage,
   });
 
+  const relatedBooks = await prisma.book.findMany({
+    where: {
+      AND: [
+        ...createScopes({
+          type: "all",
+          admin: "admin" in filter && filter.admin,
+          by: filter.by,
+        }),
+        {
+          sections: {
+            some: {
+              topicSections: {
+                some: { topicId: { in: topics.map((t) => t.id) } },
+              },
+            },
+          },
+        },
+      ],
+    },
+  });
+  const relatedBooksMap = new Map(relatedBooks.map((book) => [book.id, book]));
   const contents = topics
-    .map((topic) => topicToTopicSchema(topic, ip))
-    .map((topic) => ({ type: "topic" as const, ...topic }));
+    .map((topic) => topicToTopicSchema(topic, ip, { relatedBooksMap }))
+    .map((topic) => ({
+      type: "topic" as const,
+      ...topic,
+    }));
 
   return { totalCount, contents, page, perPage };
 }

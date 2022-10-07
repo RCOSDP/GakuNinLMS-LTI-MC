@@ -10,13 +10,14 @@ const emptyQuery = {
   license: [],
   shared: [],
   link: [],
+  book: [],
 };
 
 describe("parse()", function () {
   test("検索クエリー文字列をパースできる", function () {
     expect(
       parse(
-        `name:a description:"b b" author:c partial-keyword:d keyword:e license:CC-BY-4.0 shared:true link:hoge:piyo foo bar baz`
+        `name:a description:"b b" author:c partial-keyword:d keyword:e license:CC-BY-4.0 shared:true link:hoge:piyo book:42 foo bar baz`
       )
     ).toEqual({
       text: ["foo", "bar", "baz"],
@@ -28,6 +29,7 @@ describe("parse()", function () {
       license: ["CC-BY-4.0"],
       shared: [true],
       link: [{ consumerId: "hoge", contextId: "piyo" }],
+      book: [42],
     });
   });
 
@@ -117,5 +119,13 @@ describe("stringify()", function () {
       shared: [true],
     };
     expect(stringify(query)).toBe("shared:true");
+  });
+
+  test("ブックIDを検索クエリー文字列に変換", () => {
+    const query = {
+      ...emptyQuery,
+      book: [42],
+    };
+    expect(stringify(query)).toBe("book:42");
   });
 });

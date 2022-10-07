@@ -38,6 +38,7 @@ export * from './InlineResponse2004';
 export * from './InlineResponse2004Contents';
 export * from './InlineResponse2004Keywords';
 export * from './InlineResponse2004PublicBooks';
+export * from './InlineResponse2004RelatedBooks';
 export * from './InlineResponse2004Resource';
 export * from './InlineResponse2004ResourceTracks';
 export * from './InlineResponse2004Sections';

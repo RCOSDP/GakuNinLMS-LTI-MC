@@ -19,6 +19,8 @@ export type SearchQueryBase = {
   shared: boolean[];
   /** トピックの場合: 無効、ブックの場合: 提供されているコース */
   link: Array<Pick<LtiResourceLinkSchema, "consumerId" | "contextId">>;
+  /** トピックの場合: 関連するブックのID、ブックの場合: ブックID */
+  book: number[];
 };
 
 export type TopicSearchQuery = SearchQueryBase & {

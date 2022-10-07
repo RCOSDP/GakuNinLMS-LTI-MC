@@ -30,6 +30,10 @@ import {
     InlineResponse2004PublicBooksFromJSON,
     InlineResponse2004PublicBooksFromJSONTyped,
     InlineResponse2004PublicBooksToJSON,
+    InlineResponse2004RelatedBooks,
+    InlineResponse2004RelatedBooksFromJSON,
+    InlineResponse2004RelatedBooksFromJSONTyped,
+    InlineResponse2004RelatedBooksToJSON,
     InlineResponse2004Resource,
     InlineResponse2004ResourceFromJSON,
     InlineResponse2004ResourceFromJSONTyped,
@@ -138,6 +142,12 @@ export interface InlineResponse2004Contents {
     keywords?: Array<InlineResponse2004Keywords>;
     /**
      * 
+     * @type {Array<InlineResponse2004RelatedBooks>}
+     * @memberof InlineResponse2004Contents
+     */
+    relatedBooks?: Array<InlineResponse2004RelatedBooks>;
+    /**
+     * 
      * @type {InlineResponse2004Resource}
      * @memberof InlineResponse2004Contents
      */
@@ -193,6 +203,7 @@ export function InlineResponse2004ContentsFromJSONTyped(json: any, ignoreDiscrim
         'details': !exists(json, 'details') ? undefined : json['details'],
         'authors': !exists(json, 'authors') ? undefined : ((json['authors'] as Array<any>).map(InlineResponse2002BookAuthorsFromJSON)),
         'keywords': !exists(json, 'keywords') ? undefined : ((json['keywords'] as Array<any>).map(InlineResponse2004KeywordsFromJSON)),
+        'relatedBooks': !exists(json, 'relatedBooks') ? undefined : ((json['relatedBooks'] as Array<any>).map(InlineResponse2004RelatedBooksFromJSON)),
         'resource': !exists(json, 'resource') ? undefined : InlineResponse2004ResourceFromJSON(json['resource']),
         'publishedAt': !exists(json, 'publishedAt') ? undefined : (new Date(json['publishedAt'])),
         'sections': !exists(json, 'sections') ? undefined : ((json['sections'] as Array<any>).map(InlineResponse2004SectionsFromJSON)),
@@ -225,6 +236,7 @@ export function InlineResponse2004ContentsToJSON(value?: InlineResponse2004Conte
         'details': value.details,
         'authors': value.authors === undefined ? undefined : ((value.authors as Array<any>).map(InlineResponse2002BookAuthorsToJSON)),
         'keywords': value.keywords === undefined ? undefined : ((value.keywords as Array<any>).map(InlineResponse2004KeywordsToJSON)),
+        'relatedBooks': value.relatedBooks === undefined ? undefined : ((value.relatedBooks as Array<any>).map(InlineResponse2004RelatedBooksToJSON)),
         'resource': InlineResponse2004ResourceToJSON(value.resource),
         'publishedAt': value.publishedAt === undefined ? undefined : (value.publishedAt.toISOString()),
         'sections': value.sections === undefined ? undefined : ((value.sections as Array<any>).map(InlineResponse2004SectionsToJSON)),
