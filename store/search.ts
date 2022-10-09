@@ -195,6 +195,16 @@ export function useSearchAtom() {
     [updateSearchQuery]
   );
 
+  const onRelatedBookClick: (id: number) => void = useCallback(
+    (id) => {
+      updateSearchQuery((searchQuery) => ({
+        ...searchQuery,
+        book: [...(searchQuery.book ?? []), id],
+      }));
+    },
+    [updateSearchQuery]
+  );
+
   return {
     query,
     searchQuery,
@@ -214,5 +224,6 @@ export function useSearchAtom() {
     onLtiContextDelete,
     onKeywordClick,
     onKeywordDelete,
+    onRelatedBookClick,
   };
 }
