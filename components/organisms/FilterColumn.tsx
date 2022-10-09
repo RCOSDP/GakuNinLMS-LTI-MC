@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import type { SxProps } from "@mui/system";
 import Box from "@mui/material/Box";
 import FormLabel from "@mui/material/FormLabel";
@@ -12,10 +13,16 @@ import TextField from "$atoms/TextField";
 import licenses from "$utils/licenses";
 import { useSearchAtom } from "$store/search";
 import type { SharedFilterType } from "$types/sharedFilter";
+import type { ContentSchema } from "$server/models/content";
+import BookChip from "$atoms/BookChip";
 
-type Props = { sx?: SxProps; variant: "book" | "topic" };
+type Props = {
+  sx?: SxProps;
+  variant: "book" | "topic";
+  contents: ContentSchema[];
+};
 
-export default function FilterColumn({ sx, variant }: Props) {
+export default function FilterColumn({ sx, variant, contents }: Props) {
   const {
     query,
     searchQuery,
@@ -25,6 +32,29 @@ export default function FilterColumn({ sx, variant }: Props) {
     onLtiContextDelete,
     onKeywordDelete,
   } = useSearchAtom();
+
+  const relatedBooks = useMemo(() => {
+    const relatedBooks = contents
+      .map((content) => {
+        if (content.type === "topic") {
+          return content.relatedBooks;
+        }
+
+        return [];
+      })
+      .flatMap((relatedBook) =>
+        relatedBook?.filter((relatedBook) => {
+          return searchQuery?.book?.some((id) => id === relatedBook.id);
+        })
+      );
+
+    const uniqueRelatedBooks = Array.from(
+      new Map(
+        relatedBooks.map((relatedBook) => [relatedBook?.id, relatedBook])
+      ).values()
+    );
+    return uniqueRelatedBooks;
+  }, [contents, searchQuery?.book]);
 
   return (
     <Box sx={sx}>
@@ -79,6 +109,28 @@ export default function FilterColumn({ sx, variant }: Props) {
               onDelete={() => onLtiContextDelete(ltiResourceLink)}
             />
           ))}
+        </FormControl>
+      )}
+      {variant === "topic" && (
+        <FormControl component="fieldset" sx={{ display: "block", mb: 2 }}>
+          <FormLabel component="legend" sx={{ mb: 1 }}>
+            ブック
+          </FormLabel>
+          {(searchQuery.book?.length ?? 0) === 0 && (
+            <Typography>なし</Typography>
+          )}
+          {relatedBooks?.map((relatedBook) => {
+            return (
+              relatedBook && (
+                <BookChip
+                  sx={{ mr: 0.5 }}
+                  key={relatedBook.id}
+                  relatedBook={relatedBook}
+                  // onDelete={() => onLtiContextDelete(ltiResourceLink)}
+                />
+              )
+            );
+          })}
         </FormControl>
       )}
       <FormControl component="fieldset" sx={{ display: "block" }}>

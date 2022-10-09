@@ -146,7 +146,11 @@ export default function Topics(props: Props) {
           onSearchTargetChange={searchProps.onSearchTargetChange}
         />
       </ActionHeader>
-      <FilterColumn sx={{ gridArea: "side" }} variant="topic" />
+      <FilterColumn
+        sx={{ gridArea: "side" }}
+        variant="topic"
+        contents={contents}
+      />
       <Box
         display="grid"
         gridTemplateColumns="repeat(auto-fill, 296px)"
