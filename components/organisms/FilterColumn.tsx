@@ -31,6 +31,7 @@ export default function FilterColumn({ sx, variant, contents }: Props) {
     onLicenseFilterChange,
     onLtiContextDelete,
     onKeywordDelete,
+    onRelatedBookDelete,
   } = useSearchAtom();
 
   const relatedBooks = useMemo(() => {
@@ -126,7 +127,7 @@ export default function FilterColumn({ sx, variant, contents }: Props) {
                   sx={{ mr: 0.5 }}
                   key={relatedBook.id}
                   relatedBook={relatedBook}
-                  // onDelete={() => onLtiContextDelete(ltiResourceLink)}
+                  onDelete={() => onRelatedBookDelete(relatedBook.id)}
                 />
               )
             );

@@ -204,6 +204,14 @@ export function useSearchAtom() {
     },
     [updateSearchQuery]
   );
+  const onRelatedBookDelete: (id: number) => void = useCallback(
+    (id) =>
+      updateSearchQuery((searchQuery) => ({
+        ...searchQuery,
+        book: (searchQuery.book ?? []).filter((book) => book != id),
+      })),
+    [updateSearchQuery]
+  );
 
   return {
     query,
@@ -225,5 +233,6 @@ export function useSearchAtom() {
     onKeywordClick,
     onKeywordDelete,
     onRelatedBookClick,
+    onRelatedBookDelete,
   };
 }
