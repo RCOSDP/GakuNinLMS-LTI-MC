@@ -102,7 +102,7 @@ export default function FilterColumn({ sx, variant }: Props) {
                   sx={{ mr: 0.5 }}
                   key={relatedBook.id}
                   relatedBook={relatedBook}
-                  onDelete={() => onRelatedBookDelete(relatedBook)}
+                  onRelatedBookDelete={onRelatedBookDelete}
                 />
               )
             );

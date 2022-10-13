@@ -12,23 +12,31 @@ const Chip = styled(MuiChip)({
 
 type Props = {
   relatedBook: RelatedBook;
-  onRelatedBookClick?(id: number): void;
+  onRelatedBookClick?: (relatedBook: RelatedBook) => void;
+  onRelatedBookDelete?: (relatedBook: RelatedBook) => void;
   sx?: SxProps;
-  onDelete?: () => void;
 };
 
 export default function BookChip({
   relatedBook,
   onRelatedBookClick,
   sx,
-  onDelete,
+  onRelatedBookDelete,
 }: Props) {
   const handleClick = useCallback(
     (event: MouseEvent<HTMLDivElement>) => {
       event.stopPropagation();
-      onRelatedBookClick?.(relatedBook.id);
+      onRelatedBookClick?.(relatedBook);
     },
-    [onRelatedBookClick, relatedBook.id]
+    [onRelatedBookClick, relatedBook]
+  );
+
+  const handleDelete = useCallback(
+    (event: MouseEvent<HTMLDivElement>) => {
+      event.stopPropagation();
+      onRelatedBookDelete?.(relatedBook);
+    },
+    [onRelatedBookDelete, relatedBook]
   );
 
   return (
@@ -44,7 +52,7 @@ export default function BookChip({
         color="primary"
         label={relatedBook.name}
         onClick={handleClick}
-        onDelete={onDelete}
+        onDelete={onRelatedBookDelete && handleDelete}
       />
     </Tooltip>
   );

@@ -220,7 +220,9 @@ export function useSearchAtom() {
     (relatedBook) => {
       updateSearchQuery((searchQuery) => ({
         ...searchQuery,
-        book: (searchQuery.book ?? []).filter((book) => book !== relatedBook.id),
+        book: (searchQuery.book ?? []).filter(
+          (book) => book !== relatedBook.id
+        ),
       }));
       updateRelatedBooks((prev) =>
         prev.filter((book) => book.id !== relatedBook.id)
