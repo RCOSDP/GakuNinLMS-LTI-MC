@@ -28,6 +28,7 @@ import { authors } from "$utils/descriptionList";
 import useOembed from "$utils/useOembed";
 import { NEXT_PUBLIC_BASE_PATH } from "$utils/env";
 import BookChip from "$atoms/BookChip";
+import type { RelatedBook } from "$server/models/topic";
 
 type HeaderProps = Parameters<typeof Checkbox>[0] & {
   checkable: boolean;
@@ -121,7 +122,7 @@ type Props = Parameters<typeof Checkbox>[0] & {
     ltiResourceLink: Pick<LtiResourceLinkSchema, "consumerId" | "contextId">
   ): void;
   onKeywordClick(keyword: Pick<KeywordSchema, "name">): void;
-  onRelatedBookClick(id: number): void;
+  onRelatedBookClick(id: RelatedBook): void;
   linked?: boolean;
 };
 
@@ -253,7 +254,9 @@ export default function ContentPreview({
                         key={index}
                         sx={{ mr: 0.5, my: 0.125 }}
                         relatedBook={relatedBook}
-                        onRelatedBookClick={onRelatedBookClick}
+                        onRelatedBookClick={() =>
+                          onRelatedBookClick(relatedBook)
+                        }
                       />
                     ))}
                   </>

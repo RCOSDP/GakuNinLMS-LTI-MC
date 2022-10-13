@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import type { SxProps } from "@mui/system";
 import Box from "@mui/material/Box";
 import FormLabel from "@mui/material/FormLabel";
@@ -13,19 +12,18 @@ import TextField from "$atoms/TextField";
 import licenses from "$utils/licenses";
 import { useSearchAtom } from "$store/search";
 import type { SharedFilterType } from "$types/sharedFilter";
-import type { ContentSchema } from "$server/models/content";
 import BookChip from "$atoms/BookChip";
 
 type Props = {
   sx?: SxProps;
   variant: "book" | "topic";
-  contents: ContentSchema[];
 };
 
-export default function FilterColumn({ sx, variant, contents }: Props) {
+export default function FilterColumn({ sx, variant }: Props) {
   const {
     query,
     searchQuery,
+    relatedBooks,
     onAuthorFilterChange,
     onSharedFilterChange,
     onLicenseFilterChange,
@@ -33,29 +31,6 @@ export default function FilterColumn({ sx, variant, contents }: Props) {
     onKeywordDelete,
     onRelatedBookDelete,
   } = useSearchAtom();
-
-  const relatedBooks = useMemo(() => {
-    const relatedBooks = contents
-      .map((content) => {
-        if (content.type === "topic") {
-          return content.relatedBooks;
-        }
-
-        return [];
-      })
-      .flatMap((relatedBook) =>
-        relatedBook?.filter((relatedBook) => {
-          return searchQuery?.book?.some((id) => id === relatedBook.id);
-        })
-      );
-
-    const uniqueRelatedBooks = Array.from(
-      new Map(
-        relatedBooks.map((relatedBook) => [relatedBook?.id, relatedBook])
-      ).values()
-    );
-    return uniqueRelatedBooks;
-  }, [contents, searchQuery?.book]);
 
   return (
     <Box sx={sx}>
@@ -127,7 +102,7 @@ export default function FilterColumn({ sx, variant, contents }: Props) {
                   sx={{ mr: 0.5 }}
                   key={relatedBook.id}
                   relatedBook={relatedBook}
-                  onDelete={() => onRelatedBookDelete(relatedBook.id)}
+                  onDelete={() => onRelatedBookDelete(relatedBook)}
                 />
               )
             );

@@ -11,6 +11,7 @@ import type { AuthorFilterType } from "$server/models/authorFilter";
 import type { SearchQueryBase } from "$server/models/searchQuery";
 import type { SharedFilterType } from "$types/sharedFilter";
 import type { SearchTarget } from "$types/searchTarget";
+import type { RelatedBook } from "$server/models/topic";
 
 const queryAtom = atom<{
   type: "none" | "book" | "topic";
@@ -38,6 +39,8 @@ const inputAtom = atom<string>("");
 
 const targetAtom = atom<SearchTarget>("all");
 
+const relatedBookAtom = atom<RelatedBook[]>([]);
+
 const getInputQuery = (input: string, target: SearchTarget) => {
   const query = parse(input, { alwaysArray: true, tokenize: true });
   switch (target) {
@@ -55,6 +58,7 @@ export function useSearchAtom() {
   const [searchQuery, updateSearchQuery] = useAtom(searchQueryAtom);
   const [input, updateInput] = useAtom(inputAtom);
   const [target, updateTarget] = useAtom(targetAtom);
+  const [relatedBooks, updateRelatedBooks] = useAtom(relatedBookAtom);
   useEffect(
     () =>
       updateQuery((query) => ({
@@ -195,22 +199,34 @@ export function useSearchAtom() {
     [updateSearchQuery]
   );
 
-  const onRelatedBookClick: (id: number) => void = useCallback(
-    (id) => {
+  const onRelatedBookClick: (relatedBook: RelatedBook) => void = useCallback(
+    (relatedBook) => {
       updateSearchQuery((searchQuery) => ({
         ...searchQuery,
-        book: [...(searchQuery.book ?? []), id],
+        book: [...(searchQuery.book ?? []), relatedBook.id],
       }));
+
+      if (relatedBooks.some((book) => book.id === relatedBook.id)) {
+        return;
+      }
+      updateRelatedBooks((prevRelatedBooks) => [
+        ...prevRelatedBooks,
+        relatedBook,
+      ]);
     },
-    [updateSearchQuery]
+    [relatedBooks, updateRelatedBooks, updateSearchQuery]
   );
-  const onRelatedBookDelete: (id: number) => void = useCallback(
-    (id) =>
+  const onRelatedBookDelete: (relatedBook: RelatedBook) => void = useCallback(
+    (relatedBook) => {
       updateSearchQuery((searchQuery) => ({
         ...searchQuery,
-        book: (searchQuery.book ?? []).filter((book) => book != id),
-      })),
-    [updateSearchQuery]
+        book: (searchQuery.book ?? []).filter((book) => book != relatedBook.id),
+      }));
+      updateRelatedBooks((prev) =>
+        prev.filter((book) => book.id !== relatedBook.id)
+      );
+    },
+    [updateRelatedBooks, updateSearchQuery]
   );
 
   return {
@@ -218,6 +234,7 @@ export function useSearchAtom() {
     searchQuery,
     input,
     target,
+    relatedBooks,
     setType,
     setPage,
     onSearchInput,
