@@ -22,7 +22,9 @@ jobs:
             git push origin HEAD
           fi
       - uses: ataylorme/eslint-annotate-action@v2
-        with: { repo-token: "${{ github.token }}" }
+        with:
+          repo-token: "${{ github.token }}"
+          only-pr-files: false
       - name: format
         run: yarn format
       - name: "commit format"
