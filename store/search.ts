@@ -201,14 +201,14 @@ export function useSearchAtom() {
 
   const onRelatedBookClick: (relatedBook: RelatedBook) => void = useCallback(
     (relatedBook) => {
+      if (relatedBooks.some((book) => book.id === relatedBook.id)) {
+        return;
+      }
       updateSearchQuery((searchQuery) => ({
         ...searchQuery,
         book: [...(searchQuery.book ?? []), relatedBook.id],
       }));
 
-      if (relatedBooks.some((book) => book.id === relatedBook.id)) {
-        return;
-      }
       updateRelatedBooks((prevRelatedBooks) => [
         ...prevRelatedBooks,
         relatedBook,
@@ -224,8 +224,8 @@ export function useSearchAtom() {
           (book) => book !== relatedBook.id
         ),
       }));
-      updateRelatedBooks((prev) =>
-        prev.filter((book) => book.id !== relatedBook.id)
+      updateRelatedBooks((prevRelatedBooks) =>
+        prevRelatedBooks.filter((book) => book.id !== relatedBook.id)
       );
     },
     [updateRelatedBooks, updateSearchQuery]
