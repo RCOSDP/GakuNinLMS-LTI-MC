@@ -18,7 +18,7 @@ const RelatedBook = {
   additionalProperties: false,
 } as const;
 
-type RelatedBook = FromSchema<typeof RelatedBook>;
+export type RelatedBook = FromSchema<typeof RelatedBook>;
 
 export type TopicProps = Pick<
   Prisma.TopicCreateInput,
