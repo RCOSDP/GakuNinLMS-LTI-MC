@@ -1,5 +1,6 @@
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
+import stream from "node:stream/promises";
 import got from "got";
 import format from "date-fns/format";
 import utcToZoneTime from "date-fns-tz/utcToZonedTime";
@@ -199,10 +200,10 @@ class ZoomImport {
       const startTime = new Date(meeting.start_time);
       const timezone = meeting.timezone || "Asia/Tokyo";
       const file = path.join(this.tmpdir, `${fileId}.mp4`);
-      const responsePromise = got(
-        `${downloadUrl}?access_token=${zoomRequestToken()}`
-      );
-      await fs.promises.writeFile(file, await responsePromise.buffer());
+      const fileStream = got
+        .stream(`${downloadUrl}?access_token=${zoomRequestToken()}`)
+        .pipe(fs.createWriteStream(file));
+      await stream.finished(fileStream);
 
       const video = {
         create: {
