@@ -1,4 +1,5 @@
 import { useCallback, useEffect } from "react";
+import { useUnmount } from "react-use";
 import { atom, useAtom } from "jotai";
 import { RESET, atomWithReset } from "jotai/utils";
 import yn from "yn";
@@ -230,6 +231,7 @@ export function useSearchAtom() {
     },
     [updateRelatedBooks, updateSearchQuery]
   );
+  useUnmount(() => updateRelatedBooks([]));
 
   return {
     query,
