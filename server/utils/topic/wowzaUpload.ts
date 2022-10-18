@@ -22,11 +22,7 @@ async function wowzaUpload(
     );
 
     wowzaUpload = await startWowzaUpload(ltiConsumerId, userId);
-    const uploadpath = await wowzaUpload.moveFileToUpload(
-      fullpath,
-      new Date(),
-      "Asia/Tokyo"
-    );
+    const uploadpath = await wowzaUpload.moveFileToUpload(fullpath, new Date());
     await wowzaUpload.upload();
     return `${wowzaBaseUrl}${uploadpath}`;
   } catch (e) {
