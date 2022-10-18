@@ -4,7 +4,6 @@ import Checkbox from "@mui/material/Checkbox";
 import PreviewButton from "$atoms/PreviewButton";
 import EditButton from "$atoms/EditButton";
 import SharedIndicator from "$atoms/SharedIndicator";
-import useTreeItemStyle from "$styles/treeItem";
 import type { IsContentEditable } from "$server/models/content";
 import type { LtiContextSchema } from "$server/models/ltiContext";
 import type { LinkSchema } from "$server/models/link/content";
@@ -12,6 +11,11 @@ import type { BookSchema } from "$server/models/book";
 import theme from "$theme";
 import { useSessionAtom } from "$store/session";
 import { isDisplayableBook } from "$utils/displayableBook";
+import Accordion from "./Accordion";
+import TreeView from "@mui/lab/TreeView";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import { Box } from "@mui/material";
 
 type Props = {
   oauthClientId: string;
@@ -63,70 +67,79 @@ function LinksTree({
           .join(":");
 
         return (
-          <TreeItem
+          <TreeView
             key={nodeId}
-            nodeId={nodeId}
-            onClick={(event) => {
-              event.stopPropagation();
-              (
-                event.currentTarget?.querySelector(
-                  `input[type="checkbox"]`
-                ) as HTMLInputElement | null
-              )?.click();
-            }}
-            label={
-              <>
-                {onTreeChange && (
-                  <Checkbox
-                    checked={selected.has(JSON.stringify(link))}
-                    color="primary"
-                    size="small"
-                    onClick={(event) => {
-                      event.stopPropagation();
-                    }}
-                    onChange={(event, checked) => {
-                      event.stopPropagation();
-                      select((selected) => {
-                        const json = JSON.stringify(link);
-                        if (checked) selected.add(json);
-                        else selected.delete(json);
-                        return new Set(selected);
-                      });
-                      onTreeChange(link, checked);
-                    }}
-                  />
-                )}
-                {link.ltiResourceLink.title &&
-                  `(${link.ltiResourceLink.title}) → `}
-                {link.book.name}
-                {link.book.shared && (
-                  <SharedIndicator sx={{ margin: theme.spacing(-0.5, 0.5) }} />
-                )}
-                {isDisplayableBook(
-                  link.book,
-                  isContentEditable,
-                  session?.ltiResourceLink ?? undefined
-                ) && (
-                  <PreviewButton
-                    variant="book"
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      onBookPreviewClick?.(link.book);
-                    }}
-                  />
-                )}
-                {isContentEditable?.(link.book) && (
-                  <EditButton
-                    variant="book"
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      onBookEditClick?.(link.book);
-                    }}
-                  />
-                )}
-              </>
-            }
-          />
+            defaultExpanded={[nodeId]}
+            defaultCollapseIcon={<ExpandMoreIcon />}
+            defaultExpandIcon={<ChevronRightIcon />}
+          >
+            <TreeItem
+              key={nodeId}
+              nodeId={nodeId}
+              onClick={(event) => {
+                event.stopPropagation();
+                (
+                  event.currentTarget?.querySelector(
+                    `input[type="checkbox"]`
+                  ) as HTMLInputElement | null
+                )?.click();
+              }}
+              label={
+                <>
+                  {onTreeChange && (
+                    <Checkbox
+                      checked={selected.has(JSON.stringify(link))}
+                      color="primary"
+                      size="small"
+                      onClick={(event) => {
+                        event.stopPropagation();
+                      }}
+                      onChange={(event, checked) => {
+                        event.stopPropagation();
+                        select((selected) => {
+                          const json = JSON.stringify(link);
+                          if (checked) selected.add(json);
+                          else selected.delete(json);
+                          return new Set(selected);
+                        });
+                        onTreeChange(link, checked);
+                      }}
+                    />
+                  )}
+                  {link.ltiResourceLink.title &&
+                    `(${link.ltiResourceLink.title}) → `}
+                  {link.book.name}
+                  {link.book.shared && (
+                    <SharedIndicator
+                      sx={{ margin: theme.spacing(-0.5, 0.5) }}
+                    />
+                  )}
+                  {isDisplayableBook(
+                    link.book,
+                    isContentEditable,
+                    session?.ltiResourceLink ?? undefined
+                  ) && (
+                    <PreviewButton
+                      variant="book"
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        onBookPreviewClick?.(link.book);
+                      }}
+                    />
+                  )}
+                  {isContentEditable?.(link.book) && (
+                    <EditButton
+                      variant="book"
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        onBookEditClick?.(link.book);
+                      }}
+                    />
+                  )}
+                </>
+              }
+            />
+          </TreeView>
         );
       })}
     </>
@@ -145,7 +158,6 @@ export default function CourseTree(props: Props) {
     onBookEditClick,
     isContentEditable,
   } = props;
-  const treeItemClasses = useTreeItemStyle();
   const nodeId = [oauthClientId, ltiContext.id]
     .map(encodeURIComponent)
     .join(":");
@@ -154,11 +166,17 @@ export default function CourseTree(props: Props) {
     !checked && links.some((link) => selected.has(JSON.stringify(link)));
 
   return (
-    <TreeItem
-      nodeId={nodeId}
-      classes={treeItemClasses}
-      label={
-        <>
+    <Accordion
+      key={nodeId}
+      summary={
+        <Box
+          style={{
+            display: "flex",
+            alignItems: "center",
+            flexWrap: "wrap",
+            lineHeight: 2.5,
+          }}
+        >
           {onTreeChange && (
             <Checkbox
               checked={checked}
@@ -184,18 +202,19 @@ export default function CourseTree(props: Props) {
             />
           )}
           {ltiContext.title}
-        </>
+        </Box>
       }
-    >
-      <LinksTree
-        links={links}
-        selected={selected}
-        select={select}
-        onTreeChange={onTreeChange}
-        onBookPreviewClick={onBookPreviewClick}
-        onBookEditClick={onBookEditClick}
-        isContentEditable={isContentEditable}
-      />
-    </TreeItem>
+      details={
+        <LinksTree
+          links={links}
+          selected={selected}
+          select={select}
+          onTreeChange={onTreeChange}
+          onBookPreviewClick={onBookPreviewClick}
+          onBookEditClick={onBookEditClick}
+          isContentEditable={isContentEditable}
+        />
+      }
+    />
   );
 }

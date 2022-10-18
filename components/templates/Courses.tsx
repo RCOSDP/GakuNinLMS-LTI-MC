@@ -3,9 +3,6 @@ import { useConfirm } from "material-ui-confirm";
 import Skeleton from "@mui/material/Skeleton";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import TreeView from "@mui/lab/TreeView";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import groupBy from "just-group-by";
 import ContentTypeIndicator from "$atoms/ContentTypeIndicator";
 import Container from "$atoms/Container";
@@ -13,7 +10,6 @@ import SortSelect from "$atoms/SortSelect";
 import CourseSearchTextField from "$molecules/CourseSearchTextField";
 import ActionHeader from "$organisms/ActionHeader";
 import ActionFooter from "$organisms/ActionFooter";
-import Accordion from "$organisms/Accordion";
 import CourseTree from "$organisms/CourseTree";
 import CourseFilterColumn from "$organisms/CourseFilterColumn";
 import { useLinkSearchAtom } from "$store/linkSearch";
@@ -93,41 +89,20 @@ export default function Courses({
       </ActionHeader>
       <CourseFilterColumn sx={{ gridArea: "side" }} clientIds={clientIds} />
       <Box gridArea="items">
-        {clients.map(([oauthClientId, links]) => {
-          const courses = Object.entries(
-            groupBy(links, (link) =>
-              [oauthClientId, link.ltiContext.id]
-                .map(encodeURIComponent)
-                .join(":")
-            )
-          );
+        {clients.map(([id, links]) => {
+          const [course] = links;
           return (
-            <Accordion
-              key={oauthClientId}
-              summary={oauthClientId ? <code>{oauthClientId}</code> : "その他"}
-              details={courses.map(([id, links]) => {
-                const [course] = links;
-                return (
-                  <TreeView
-                    key={id}
-                    defaultExpanded={[id]}
-                    defaultCollapseIcon={<ExpandMoreIcon />}
-                    defaultExpandIcon={<ChevronRightIcon />}
-                  >
-                    <CourseTree
-                      oauthClientId={course.oauthClientId}
-                      ltiContext={course.ltiContext}
-                      links={links}
-                      selected={selected}
-                      select={select}
-                      onTreeChange={onTreeChange}
-                      onBookPreviewClick={onBookPreviewClick}
-                      onBookEditClick={onBookEditClick}
-                      isContentEditable={isContentEditable}
-                    />
-                  </TreeView>
-                );
-              })}
+            <CourseTree
+              key={id}
+              oauthClientId={course.oauthClientId}
+              ltiContext={course.ltiContext}
+              links={links}
+              selected={selected}
+              select={select}
+              onTreeChange={onTreeChange}
+              onBookPreviewClick={onBookPreviewClick}
+              onBookEditClick={onBookEditClick}
+              isContentEditable={isContentEditable}
             />
           );
         })}
