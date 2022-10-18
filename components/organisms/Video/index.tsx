@@ -40,6 +40,20 @@ type Props = {
   onEnded?: () => void;
 };
 
+/**
+ * 再生終了時間が有効か否か
+ * @return 有効かつ再生終了: true、それ以外: false
+ */
+function isValidPlaybackEnd({
+  currentTime,
+  stopTime,
+}: {
+  currentTime: number;
+  stopTime: number | null | undefined;
+}): boolean {
+  return typeof stopTime === "number" && 0 < stopTime && stopTime < currentTime;
+}
+
 export default function Video({ className, sx, topic, onEnded }: Props) {
   const { video, updateVideo } = useVideoAtom();
   const { book, itemIndex, itemExists } = useBookAtom();
@@ -59,12 +73,11 @@ export default function Video({ className, sx, topic, onEnded }: Props) {
     }
     const videoInstance = video.get(String(topic?.id));
     if (!videoInstance) return;
-    if (videoInstance.type == "vimeo") {
+    if (videoInstance.type === "vimeo") {
       videoInstance.player.on("ended", () => onEnded?.());
       videoInstance.player.on("timeupdate", async () => {
         const currentTime = await videoInstance.player.getCurrentTime();
-        // @ts-expect-error stopTime is number
-        if (Number.isFinite(stopTime) && currentTime > stopTime) {
+        if (isValidPlaybackEnd({ currentTime, stopTime })) {
           void videoInstance.player.pause();
           onEnded?.();
         }
@@ -91,13 +104,9 @@ export default function Video({ className, sx, topic, onEnded }: Props) {
         }
       };
       const handleTimeUpdate = () => {
+        if (videoInstance.stopTimeOver) return;
         const currentTime = videoInstance.player.currentTime();
-        if (
-          !videoInstance.stopTimeOver &&
-          Number.isFinite(stopTime) &&
-          // @ts-expect-error stopTime is number
-          currentTime > stopTime
-        ) {
+        if (isValidPlaybackEnd({ currentTime, stopTime })) {
           handleEnded();
         }
       };
