@@ -59,6 +59,7 @@ export default function Video({ className, sx, topic, onEnded }: Props) {
   const { book, itemIndex, itemExists } = useBookAtom();
   useEffect(() => {
     if (!book) return;
+    // バックグラウンドで動画プレイヤーオブジェクトプールに読み込む
     updateVideo(book.sections);
     return () => video.forEach((v) => v.player.pause());
   }, [book, video, updateVideo]);
@@ -137,28 +138,33 @@ export default function Video({ className, sx, topic, onEnded }: Props) {
       videoInstance.player.ready(handleReady);
     }
   }, [video, itemExists, prevItemIndex, itemIndex, onEnded]);
+
+  // 動画プレイヤーオブジェクトプールに存在する場合
+  if (video.has(String(topic.id))) {
+    return (
+      <>
+        {Array.from(video.entries()).map(([id, videoInstance]) => (
+          <VideoPlayer
+            key={id}
+            className={clsx(className, {
+              [hidden]: String(topic.id) !== id,
+            })}
+            sx={{ ...videoStyle, ...sx }}
+            videoInstance={videoInstance}
+          />
+        ))}
+      </>
+    );
+  }
+
   return (
-    <>
-      {Array.from(video.entries()).map(([topicId, videoInstance]) => (
-        <VideoPlayer
-          key={topicId}
-          className={clsx(className, {
-            [hidden]: String(topic.id) !== topicId,
-          })}
-          sx={{ ...videoStyle, ...sx }}
-          videoInstance={videoInstance}
-        />
-      ))}
-      {video.size === 0 && (
-        <VideoResource
-          className={className}
-          sx={{ ...videoStyle, ...sx }}
-          {...(topic.resource as VideoResourceSchema)}
-          identifier={String(topic.id)}
-          autoplay
-          thumbnailUrl={oembed && oembed.thumbnail_url}
-        />
-      )}
-    </>
+    <VideoResource
+      className={className}
+      sx={{ ...videoStyle, ...sx }}
+      {...(topic.resource as VideoResourceSchema)}
+      identifier={String(topic.id)}
+      autoplay
+      thumbnailUrl={oembed && oembed.thumbnail_url}
+    />
   );
 }
