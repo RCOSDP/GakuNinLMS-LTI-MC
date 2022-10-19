@@ -37,8 +37,15 @@ export default function Courses({
   onBookEditClick,
 }: Props) {
   const linkSearchProps = useLinkSearchAtom();
-  const clients = useMemo(
-    () => Object.entries(groupBy(contents, (link) => link.oauthClientId)),
+  const courses = useMemo(
+    () =>
+      Object.entries(
+        groupBy(contents, (link) =>
+          [link.oauthClientId, link.ltiContext.id]
+            .map(encodeURIComponent)
+            .join(":")
+        )
+      ),
     [contents]
   );
   const [selected, select] = useState<Set<string>>(new Set());
@@ -89,7 +96,7 @@ export default function Courses({
       </ActionHeader>
       <CourseFilterColumn sx={{ gridArea: "side" }} clientIds={clientIds} />
       <Box gridArea="items">
-        {clients.map(([id, links]) => {
+        {courses.map(([id, links]) => {
           const [course] = links;
           return (
             <CourseTree
