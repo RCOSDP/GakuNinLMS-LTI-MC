@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useUnmount } from "react-use";
 import { atom, useAtom } from "jotai";
 import { RESET, atomWithReset, useUpdateAtom } from "jotai/utils";
 import type { SectionSchema } from "$server/models/book/section";
@@ -6,6 +6,7 @@ import type { VideoInstance } from "$types/videoInstance";
 import { isVideoResource } from "$utils/videoResource";
 import getVideoInstance from "$utils/video/getVideoInstance";
 
+/** 動画プレイヤーオブジェクトプール (トピックID(10進数文字列)または動画URLをキーとして使用) */
 const videoAtom = atomWithReset<{
   video: Map<string, VideoInstance>;
 }>({
@@ -30,12 +31,9 @@ const updateVideoAtom = atom(
 export function useVideoAtom() {
   const [state, reset] = useAtom(videoAtom);
   const updateVideo = useUpdateAtom(updateVideoAtom);
-  useEffect(
-    () => () => {
-      state.video.forEach(({ player }) => player.pause());
-      reset(RESET);
-    },
-    [reset, state]
-  );
+  useUnmount(() => {
+    state.video.forEach(({ player }) => player.pause());
+    reset(RESET);
+  });
   return { ...state, updateVideo };
 }
