@@ -8,7 +8,7 @@ import MenuBookOutlinedIcon from "@mui/icons-material/MenuBookOutlined";
 import LibraryBooksOutlinedIcon from "@mui/icons-material/LibraryBooksOutlined";
 import AssessmentOutlinedIcon from "@mui/icons-material/AssessmentOutlined";
 import LinkIcon from "@mui/icons-material/Link";
-import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
+import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import SettingsIcon from "@mui/icons-material/Settings";
 import makeStyles from "@mui/styles/makeStyles";
 import clsx from "clsx";

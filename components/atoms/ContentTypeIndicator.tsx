@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import MenuBookOutlinedIcon from "@mui/icons-material/MenuBookOutlined";
 import LibraryBooksOutlinedIcon from "@mui/icons-material/LibraryBooksOutlined";
-import LinkIcon from '@mui/icons-material/Link';
+import LinkIcon from "@mui/icons-material/Link";
 import { styled } from "@mui/material/styles";
 import { grey } from "@mui/material/colors";
 
