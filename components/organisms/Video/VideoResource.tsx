@@ -1,4 +1,4 @@
-import { useMemo, useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import type { SxProps } from "@mui/system";
 import type { VideoResourceSchema } from "$server/models/videoResource";
 import VideoPlayer from "./VideoPlayer";
@@ -41,7 +41,7 @@ export default function VideoResource({
   const { video } = useVideoAtom();
   useEffect(() => {
     video.set(identifier, videoInstance);
-    return () => video.clear();
+    return () => void videoInstance.player.pause();
   }, [video, identifier, videoInstance]);
 
   return <VideoPlayer videoInstance={videoInstance} {...other} />;
