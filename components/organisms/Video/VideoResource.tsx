@@ -24,7 +24,7 @@ export default function VideoResource({
   providerUrl,
   url,
   accessToken,
-  tracks: resourceTracks,
+  tracks,
   identifier,
   autoplay = false,
   thumbnailUrl,
@@ -32,17 +32,17 @@ export default function VideoResource({
 }: Props) {
   const videoInstance = useMemo(() => {
     return getVideoInstance(
-      { providerUrl, url, accessToken, tracks: resourceTracks },
-      autoplay,
+      { providerUrl, url, accessToken, tracks },
       thumbnailUrl
     );
-  }, [providerUrl, url, accessToken, resourceTracks, autoplay, thumbnailUrl]);
+  }, [providerUrl, url, accessToken, tracks, thumbnailUrl]);
 
   const { video } = useVideoAtom();
   useEffect(() => {
     video.set(identifier, videoInstance);
-    return () => void videoInstance.player.pause();
   }, [video, identifier, videoInstance]);
 
-  return <VideoPlayer videoInstance={videoInstance} {...other} />;
+  return (
+    <VideoPlayer videoInstance={videoInstance} autoplay={autoplay} {...other} />
+  );
 }
