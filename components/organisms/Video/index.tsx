@@ -61,7 +61,6 @@ export default function Video({ className, sx, topic, onEnded }: Props) {
     if (!book) return;
     // バックグラウンドで動画プレイヤーオブジェクトプールに読み込む
     updateVideo(book.sections);
-    return () => video.forEach((v) => v.player.pause());
   }, [book, video, updateVideo]);
   const oembed = useOembed(topic.resource.id);
   const prevItemIndex = usePrevious(itemIndex);
@@ -88,9 +87,6 @@ export default function Video({ className, sx, topic, onEnded }: Props) {
         }
       });
       void videoInstance.player.setCurrentTime(startTime || 0);
-      videoInstance.player.play().catch(() => {
-        // nop
-      });
     } else {
       const handleEnded = () => {
         videoInstance.stopTimeOver = true;
@@ -127,9 +123,6 @@ export default function Video({ className, sx, topic, onEnded }: Props) {
         }
         videoInstance.player.on("timeupdate", handleTimeUpdate);
         videoInstance.player.on("seeked", handleSeeked);
-        videoInstance.player.play()?.catch(() => {
-          // nop
-        });
       };
 
       videoInstance.player.on("ended", handleEnded);
@@ -151,6 +144,7 @@ export default function Video({ className, sx, topic, onEnded }: Props) {
             })}
             sx={{ ...videoStyle, ...sx }}
             videoInstance={videoInstance}
+            autoplay={String(topic.id) === id}
           />
         ))}
       </>

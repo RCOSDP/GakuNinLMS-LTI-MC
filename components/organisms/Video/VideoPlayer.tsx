@@ -12,6 +12,7 @@ type Props = {
   sx?: SxProps;
   className?: string;
   videoInstance: VideoInstance;
+  autoplay?: boolean;
   onEnded?: () => void;
   onDurationChange?: (duration: number) => void;
   onTimeUpdate?: (currentTime: number) => void;
@@ -19,6 +20,7 @@ type Props = {
 
 export default function VideoPlayer({
   videoInstance,
+  autoplay = false,
   onEnded,
   onDurationChange,
   onTimeUpdate,
@@ -42,15 +44,29 @@ export default function VideoPlayer({
     player.on("ended", handleEnded);
     player.on("durationchange", handleDurationChange);
     player.on("timeupdate", handleTimeUpdate);
-    if (videoInstance.type != "vimeo") {
+    if (videoInstance.type !== "vimeo") {
       videoJsDurationChangeShims(videoInstance.player, handleDurationChange);
+    }
+    if (autoplay) {
+      const play = async () => {
+        try {
+          await player.play();
+        } catch {
+          // nop
+        }
+      };
+      if (videoInstance.type === "vimeo") {
+        void videoInstance.player.ready().then(play);
+      } else {
+        void videoInstance.player.ready(play);
+      }
     }
     return () => {
       player.off("ended", handleEnded);
       player.off("durationchange", handleDurationChange);
       player.off("timeupdate", handleTimeUpdate);
     };
-  }, [videoInstance, onEnded, onDurationChange, onTimeUpdate]);
+  }, [videoInstance, autoplay, onEnded, onDurationChange, onTimeUpdate]);
 
   return (
     <Box {...other}>
