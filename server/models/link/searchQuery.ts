@@ -3,6 +3,6 @@ export type LinkSearchQuery = {
   type: "link";
   /** 検索文字列 (コース名) */
   text: string[];
-  /** 提供されているLMS */
+  /** 配信されているLMS */
   oauthClientId: string[];
 };
