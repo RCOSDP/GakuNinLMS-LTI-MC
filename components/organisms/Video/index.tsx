@@ -55,13 +55,13 @@ function isValidPlaybackEnd({
 }
 
 export default function Video({ className, sx, topic, onEnded }: Props) {
-  const { video, updateVideo } = useVideoAtom();
+  const { video, preloadVideo } = useVideoAtom();
   const { book, itemIndex, itemExists } = useBookAtom();
   useEffect(() => {
     if (!book) return;
     // バックグラウンドで動画プレイヤーオブジェクトプールに読み込む
-    updateVideo(book.sections);
-  }, [book, video, updateVideo]);
+    preloadVideo(book.sections);
+  }, [book, preloadVideo]);
   const oembed = useOembed(topic.resource.id);
   const prevItemIndex = usePrevious(itemIndex);
   useEffect(() => {
