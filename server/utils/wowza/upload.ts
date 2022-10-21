@@ -42,7 +42,7 @@ export class WowzaUpload {
   }
 
   async cleanUp() {
-    await fs.promises.rmdir(this.uploadroot, { recursive: true });
+    await fs.promises.rm(this.uploadroot, { recursive: true });
   }
 
   async moveFileToUpload(fullpath: string, date: Date) {

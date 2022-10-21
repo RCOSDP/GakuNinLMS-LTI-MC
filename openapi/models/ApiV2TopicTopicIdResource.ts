@@ -16,22 +16,22 @@ import { exists, mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface ApiV2TopicTopicIdTopicResource
+ * @interface ApiV2TopicTopicIdResource
  */
-export interface ApiV2TopicTopicIdTopicResource {
+export interface ApiV2TopicTopicIdResource {
     /**
      * 
      * @type {string}
-     * @memberof ApiV2TopicTopicIdTopicResource
+     * @memberof ApiV2TopicTopicIdResource
      */
     url?: string;
 }
 
-export function ApiV2TopicTopicIdTopicResourceFromJSON(json: any): ApiV2TopicTopicIdTopicResource {
-    return ApiV2TopicTopicIdTopicResourceFromJSONTyped(json, false);
+export function ApiV2TopicTopicIdResourceFromJSON(json: any): ApiV2TopicTopicIdResource {
+    return ApiV2TopicTopicIdResourceFromJSONTyped(json, false);
 }
 
-export function ApiV2TopicTopicIdTopicResourceFromJSONTyped(json: any, ignoreDiscriminator: boolean): ApiV2TopicTopicIdTopicResource {
+export function ApiV2TopicTopicIdResourceFromJSONTyped(json: any, ignoreDiscriminator: boolean): ApiV2TopicTopicIdResource {
     if ((json === undefined) || (json === null)) {
         return json;
     }
@@ -41,7 +41,7 @@ export function ApiV2TopicTopicIdTopicResourceFromJSONTyped(json: any, ignoreDis
     };
 }
 
-export function ApiV2TopicTopicIdTopicResourceToJSON(value?: ApiV2TopicTopicIdTopicResource | null): any {
+export function ApiV2TopicTopicIdResourceToJSON(value?: ApiV2TopicTopicIdResource | null): any {
     if (value === undefined) {
         return undefined;
     }

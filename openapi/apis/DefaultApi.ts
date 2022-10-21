@@ -111,6 +111,9 @@ import {
     InlineResponse201,
     InlineResponse201FromJSON,
     InlineResponse201ToJSON,
+    InlineResponse2011,
+    InlineResponse2011FromJSON,
+    InlineResponse2011ToJSON,
 } from '../models';
 
 export interface ApiV2ActivityGetRequest {
@@ -2026,6 +2029,34 @@ export class DefaultApi extends runtime.BaseAPI {
      */
     async apiV2UsersEmailGet(requestParameters: ApiV2UsersEmailGetRequest): Promise<Array<InlineResponse2007>> {
         const response = await this.apiV2UsersEmailGetRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * 動画ファイルを与えてアップロードします。 教員または管理者でなければなりません。
+     * Wowza Streaming Engine へのアップロードするためのエンドポイント
+     */
+    async apiV2WowzaPostRaw(): Promise<runtime.ApiResponse<InlineResponse2011>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/api/v2/wowza`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2011FromJSON(jsonValue));
+    }
+
+    /**
+     * 動画ファイルを与えてアップロードします。 教員または管理者でなければなりません。
+     * Wowza Streaming Engine へのアップロードするためのエンドポイント
+     */
+    async apiV2WowzaPost(): Promise<InlineResponse2011> {
+        const response = await this.apiV2WowzaPostRaw();
         return await response.value();
     }
 

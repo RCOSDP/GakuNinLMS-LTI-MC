@@ -1,14 +1,18 @@
-import fs from "fs";
-import path from "path";
-import { Buffer } from "buffer";
-
+import type { Stream } from "node:stream";
+import fs from "node:fs";
+import stream from "node:stream/promises";
+import path from "node:path";
 import { startWowzaUpload } from "$server/utils/wowza/upload";
 
+/**
+ * Wowzaサーバーへのアップロードの実行
+ * @return 成功時: アップロードされた動画URL
+ */
 async function wowzaUpload(
   ltiConsumerId: string,
   userId: number,
   fileName: string,
-  fileContent: string,
+  file: Stream,
   wowzaBaseUrl: string
 ) {
   let tmpdir;
@@ -16,11 +20,8 @@ async function wowzaUpload(
   try {
     tmpdir = await fs.promises.mkdtemp("/tmp/topic-wowza-upload-");
     const fullpath = `${tmpdir}/${path.basename(fileName)}`;
-    await fs.promises.writeFile(
-      fullpath,
-      Buffer.from(fileContent as string, "base64")
-    );
-
+    const fileStream = file.pipe(fs.createWriteStream(fullpath));
+    await stream.finished(fileStream);
     wowzaUpload = await startWowzaUpload(ltiConsumerId, userId);
     const uploadpath = await wowzaUpload.moveFileToUpload(fullpath, new Date());
     await wowzaUpload.upload();
@@ -29,7 +30,7 @@ async function wowzaUpload(
     throw new Error(`サーバーにアップロードできませんでした。\n${e}`);
   } finally {
     if (wowzaUpload) await wowzaUpload.cleanUp();
-    if (tmpdir) await fs.promises.rmdir(tmpdir, { recursive: true });
+    if (tmpdir) await fs.promises.rm(tmpdir, { recursive: true });
   }
 }
 

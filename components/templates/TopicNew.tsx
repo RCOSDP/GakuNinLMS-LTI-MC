@@ -7,7 +7,7 @@ import RequiredDot from "$atoms/RequiredDot";
 import BackButton from "$atoms/BackButton";
 import type { TopicSchema } from "$server/models/topic";
 import type { AuthorSchema } from "$server/models/author";
-import type { TopicPropsWithUploadAndAuthors } from "$types/topicPropsWithAuthors";
+import type { TopicSubmitValues } from "$types/topicSubmitValues";
 import type {
   VideoTrackProps,
   VideoTrackSchema,
@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
 type Props = {
   topic?: TopicSchema;
   submitResult: string;
-  onSubmit(topic: TopicPropsWithUploadAndAuthors): void;
+  onSubmit(topic: TopicSubmitValues): void;
   onSubtitleDelete(videoTrack: VideoTrackSchema): void;
   onSubtitleSubmit(videoTrack: VideoTrackProps): void;
   onCancel(): void;

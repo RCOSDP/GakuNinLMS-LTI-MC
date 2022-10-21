@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import type { TopicPropsWithUpload, TopicSchema } from "$server/models/topic";
+import type { TopicSubmitValues } from "$types/topicSubmitValues";
+import type { TopicSchema } from "$server/models/topic";
+import type { ResourceProps } from "$server/models/resource";
 import type {
   VideoTrackProps,
   VideoTrackSchema,
@@ -14,6 +16,7 @@ import { useVideoTrackAtom } from "$store/videoTrack";
 import { destroyTopic, updateTopic, useTopic } from "$utils/topic";
 import { destroyVideoTrack, uploadVideoTrack } from "$utils/videoTrack";
 import useAuthorsHandler from "$utils/useAuthorsHandler";
+import { useWowzaUpload } from "$utils/wowza/useWowzaUplooad";
 
 export type Query =
   | { topicId: TopicSchema["id"] }
@@ -31,9 +34,24 @@ function Edit({ topicId, back }: EditProps) {
     topic && { type: "topic", ...topic }
   );
   const [submitResult, setSubmitResult] = useState("");
-  async function handleSubmit(props: TopicPropsWithUpload) {
+  const { data: uploadResult, uploadFile } = useWowzaUpload();
+  useEffect(() => {
+    if (uploadResult instanceof Error) setSubmitResult(uploadResult.message);
+  }, [uploadResult, setSubmitResult]);
+  async function handleSubmit({ file, ...props }: TopicSubmitValues) {
+    let resource: ResourceProps | null = null;
+    if (file) {
+      const res = await uploadFile(file);
+      if (!res) return;
+      if (res instanceof Error) return;
+      resource = { url: res.url };
+    }
     try {
-      await updateTopic({ id: topicId, ...props });
+      await updateTopic({
+        id: topicId,
+        ...props,
+        resource: resource ?? props.resource,
+      });
       return back();
     } catch (e) {
       const response = e as Response;
