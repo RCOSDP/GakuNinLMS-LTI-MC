@@ -256,7 +256,7 @@ export default function BookForm({
                     </Typography>
                   </>
                 }
-                inputFormat="yyyy年MM月dd日 hh時mm分"
+                inputFormat="yyyy年MM月dd日 HH時mm分"
                 mask="____年__月__日 __時__分"
                 toolbarFormat="yyyy年MM月dd日"
                 value={expireAt}
