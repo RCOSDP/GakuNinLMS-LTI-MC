@@ -34,14 +34,7 @@ function Index() {
     for (const topic of topics) {
       if (isContentEditable(topic) && topic.shared != shared) {
         topic.shared = shared;
-        await updateTopic({
-          id: topic.id,
-          provider: "",
-          wowzaBaseUrl: "",
-          fileName: "",
-          fileContent: "",
-          topic,
-        });
+        await updateTopic(topic);
       }
     }
     await revalidateContents(query);

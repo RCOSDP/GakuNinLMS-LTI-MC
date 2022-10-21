@@ -27,6 +27,7 @@
   "dependencies": {
     "@fastify/swagger": "^7.4.1",
     "@prisma/client": "^4.1.1",
+    "hexoid": "^1.0.0",
     "node-ssh": "^13.0.0"
   },
   "devDependencies": {
@@ -35,6 +36,7 @@
     "@fastify/cors": "^8.1.0",
     "@fastify/formbody": "^7.0.1",
     "@fastify/helmet": "^9.1.0",
+    "@fastify/multipart": "^7.2.0",
     "@fastify/session": "^9.0.0",
     "@quixo3/prisma-session-store": "^3.1.8",
     "@types/jest": "^28.1.6",
