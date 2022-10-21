@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import VimeoPlayer from "@vimeo/player";
 import type { SxProps } from "@mui/system";
 import type { VideoInstance } from "$types/videoInstance";
 import Box from "@mui/material/Box";
@@ -29,6 +30,22 @@ export default function VideoPlayer({
   useVolume(videoInstance.player);
   usePlaybackRate(videoInstance.player);
   useEffect(() => {
+    if (!autoplay) return;
+    const player = videoInstance.player;
+    const play = async () => {
+      try {
+        await player.play();
+      } catch {
+        // nop
+      }
+    };
+    const ready =
+      player instanceof VimeoPlayer
+        ? player.ready()
+        : new Promise((resolve) => player.ready(() => resolve(undefined)));
+    void ready.then(play);
+  }, [videoInstance, autoplay]);
+  useEffect(() => {
     const { player } = videoInstance;
     const handleEnded = () => onEnded?.();
     const handleDurationChange = ({ duration }: { duration: number }) => {
@@ -47,26 +64,12 @@ export default function VideoPlayer({
     if (videoInstance.type !== "vimeo") {
       videoJsDurationChangeShims(videoInstance.player, handleDurationChange);
     }
-    if (autoplay) {
-      const play = async () => {
-        try {
-          await player.play();
-        } catch {
-          // nop
-        }
-      };
-      if (videoInstance.type === "vimeo") {
-        void videoInstance.player.ready().then(play);
-      } else {
-        void videoInstance.player.ready(play);
-      }
-    }
     return () => {
       player.off("ended", handleEnded);
       player.off("durationchange", handleDurationChange);
       player.off("timeupdate", handleTimeUpdate);
     };
-  }, [videoInstance, autoplay, onEnded, onDurationChange, onTimeUpdate]);
+  }, [videoInstance, onEnded, onDurationChange, onTimeUpdate]);
 
   return (
     <Box {...other}>
