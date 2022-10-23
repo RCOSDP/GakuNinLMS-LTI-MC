@@ -30,7 +30,6 @@ const ltiContext = {
 };
 
 Default.args = {
-  oauthClientId: ltiResourceLink.consumerId,
   ltiContext,
   links: [
     {
