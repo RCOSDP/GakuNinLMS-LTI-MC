@@ -101,7 +101,6 @@ export default function Courses({
           return (
             <CourseTree
               key={id}
-              oauthClientId={course.oauthClientId}
               ltiContext={course.ltiContext}
               links={links}
               selected={selected}

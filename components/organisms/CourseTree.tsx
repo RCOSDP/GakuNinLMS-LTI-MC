@@ -18,7 +18,6 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { Box } from "@mui/material";
 
 type Props = {
-  oauthClientId: string;
   ltiContext: LtiContextSchema;
   links: Array<LinkSchema>;
   selected: Set<string>;
@@ -74,7 +73,6 @@ function LinksTree({
             defaultExpandIcon={<ChevronRightIcon />}
           >
             <TreeItem
-              key={nodeId}
               nodeId={nodeId}
               onClick={(event) => {
                 event.stopPropagation();
@@ -148,7 +146,6 @@ function LinksTree({
 
 export default function CourseTree(props: Props) {
   const {
-    oauthClientId,
     ltiContext,
     links,
     selected,
@@ -158,16 +155,12 @@ export default function CourseTree(props: Props) {
     onBookEditClick,
     isContentEditable,
   } = props;
-  const nodeId = [oauthClientId, ltiContext.id]
-    .map(encodeURIComponent)
-    .join(":");
   const checked = links.every((link) => selected.has(JSON.stringify(link)));
   const indeterminate =
     !checked && links.some((link) => selected.has(JSON.stringify(link)));
 
   return (
     <Accordion
-      key={nodeId}
       summary={
         <Box
           style={{
