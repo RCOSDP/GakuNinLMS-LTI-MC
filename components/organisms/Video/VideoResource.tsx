@@ -1,4 +1,4 @@
-import { useMemo, useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import type { SxProps } from "@mui/system";
 import type { VideoResourceSchema } from "$server/models/videoResource";
 import VideoPlayer from "./VideoPlayer";
@@ -24,7 +24,7 @@ export default function VideoResource({
   providerUrl,
   url,
   accessToken,
-  tracks: resourceTracks,
+  tracks,
   identifier,
   autoplay = false,
   thumbnailUrl,
@@ -32,17 +32,17 @@ export default function VideoResource({
 }: Props) {
   const videoInstance = useMemo(() => {
     return getVideoInstance(
-      { providerUrl, url, accessToken, tracks: resourceTracks },
-      autoplay,
+      { providerUrl, url, accessToken, tracks },
       thumbnailUrl
     );
-  }, [providerUrl, url, accessToken, resourceTracks, autoplay, thumbnailUrl]);
+  }, [providerUrl, url, accessToken, tracks, thumbnailUrl]);
 
   const { video } = useVideoAtom();
   useEffect(() => {
     video.set(identifier, videoInstance);
-    return () => video.clear();
   }, [video, identifier, videoInstance]);
 
-  return <VideoPlayer videoInstance={videoInstance} {...other} />;
+  return (
+    <VideoPlayer videoInstance={videoInstance} autoplay={autoplay} {...other} />
+  );
 }

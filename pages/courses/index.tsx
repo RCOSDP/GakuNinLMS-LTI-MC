@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import CoursesTemplate from "$templates/Courses";
 import Book from "$templates/Book";
@@ -14,28 +13,35 @@ import useLinks, { revalidateLinks } from "$utils/courses/useLinks";
 import useDialogProps from "$utils/useDialogProps";
 import { pagesPath } from "$utils/$path";
 
-function Index() {
-  const clientIds = useClientIds();
-  const contents = useLinks();
-  const [previewBookId, setPreviewBookId] = useState<
-    BookSchema["id"] | undefined
-  >();
-  const linkSearchProps = useLinkSearchAtom();
+function PreviewDialog({
+  previewBookId,
+  ...dialogProps
+}: {
+  previewBookId: number | undefined;
+  open: boolean;
+  onClose: React.MouseEventHandler;
+}) {
   const { isContentEditable, session } = useSessionAtom();
   const { book } = useBook(
     previewBookId,
     isContentEditable,
     session?.ltiResourceLink
   );
-  const dialogProps = useDialogProps<BookSchema>();
-  const { setOpen, setData } = dialogProps;
-  useEffect(() => {
-    if (book) setData(book);
-  }, [setData, book]);
-  const onOpen = (id: number) => {
-    setPreviewBookId(id);
-    setOpen(true);
-  };
+
+  if (!book) return null;
+  return (
+    <BookPreviewDialog {...dialogProps} book={book}>
+      {Book}
+    </BookPreviewDialog>
+  );
+}
+
+function Index() {
+  const clientIds = useClientIds();
+  const contents = useLinks();
+  const linkSearchProps = useLinkSearchAtom();
+  const { isContentEditable } = useSessionAtom();
+  const dialogProps = useDialogProps<BookSchema["id"]>();
   const router = useRouter();
   const handlers = {
     async onLinksDeleteClick(
@@ -52,7 +58,7 @@ function Index() {
       await revalidateLinks(linkSearchProps.query);
     },
     onBookPreviewClick(book: Pick<BookSchema, "id">) {
-      onOpen(book.id);
+      dialogProps.dispatch(book.id);
     },
     onBookEditClick(book: Pick<BookSchema, "id" | "authors">) {
       const action = isContentEditable(book) ? "edit" : "generate";
@@ -67,10 +73,8 @@ function Index() {
   return (
     <>
       <CoursesTemplate clientIds={clientIds} {...contents} {...handlers} />
-      {dialogProps.data && (
-        <BookPreviewDialog {...dialogProps} book={dialogProps.data}>
-          {(props) => <Book {...props} />}
-        </BookPreviewDialog>
+      {dialogProps.data != null && (
+        <PreviewDialog previewBookId={dialogProps.data} {...dialogProps} />
       )}
     </>
   );

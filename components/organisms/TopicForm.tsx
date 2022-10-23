@@ -37,20 +37,19 @@ import SubtitleUploadDialog from "$organisms/SubtitleUploadDialog";
 import VideoResource from "$organisms/Video/VideoResource";
 import useCardStyles from "styles/card";
 import gray from "theme/colors/gray";
-import type { TopicPropsWithUpload, TopicSchema } from "$server/models/topic";
+import type { TopicProps, TopicSchema } from "$server/models/topic";
 import type {
   VideoTrackProps,
   VideoTrackSchema,
 } from "$server/models/videoTrack";
 import { useSessionAtom } from "$store/session";
-import { NEXT_PUBLIC_API_BASE_PATH } from "$utils/env";
 import languages from "$utils/languages";
 import licenses from "$utils/licenses";
 import providers from "$utils/providers";
 import useVideoResourceProps from "$utils/useVideoResourceProps";
 import usePaused from "$utils/video/usePaused";
 import type { AuthorSchema } from "$server/models/author";
-import type { TopicPropsWithUploadAndAuthors } from "$types/topicPropsWithAuthors";
+import type { TopicSubmitValues } from "$types/topicSubmitValues";
 import { useAuthorsAtom } from "store/authors";
 import { useVideoAtom } from "$store/video";
 import { useVideoTrackAtom } from "$store/videoTrack";
@@ -97,7 +96,7 @@ type Props = {
   submitResult: string;
   className?: string;
   variant?: "create" | "update";
-  onSubmit?(topic: TopicPropsWithUploadAndAuthors): void;
+  onSubmit?(topic: TopicSubmitValues): void;
   onSubtitleSubmit(videoTrack: VideoTrackProps): void;
   onSubtitleDelete(videoTrack: VideoTrackSchema): void;
   onAuthorsUpdate(authors: AuthorSchema[]): void;
@@ -155,7 +154,7 @@ export default function TopicForm(props: Props) {
   const { videoResource, setUrl } = useVideoResourceProps(topic?.resource);
   const handleResourceUrlChange = useDebouncedCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
-      setValue("topic.timeRequired", 0);
+      setValue("timeRequired", 0);
       setUrl(event.target.value);
     },
     500
@@ -163,7 +162,7 @@ export default function TopicForm(props: Props) {
   const handleFileChange = useDebouncedCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
       if (event?.target?.files?.length) {
-        setValue("topic.timeRequired", 0);
+        setValue("timeRequired", 0);
         const file = event.target.files[0] as unknown as File;
         setDataUrl(URL.createObjectURL(file));
       }
@@ -174,7 +173,7 @@ export default function TopicForm(props: Props) {
   const localVideo = React.createRef<HTMLVideoElement>();
   const { videoTracks } = useVideoTrackAtom();
   const [open, setOpen] = useState(false);
-  const [method, setMethod] = useState("url");
+  const [method, setMethod] = useState<"url" | "file">("url");
   const [dataUrl, setDataUrl] = useState("");
   const [duration, setDuration] = useState(0);
   const [inPreview, setInPreview] = useState(false);
@@ -200,33 +199,32 @@ export default function TopicForm(props: Props) {
   const { updateState: _updateState, ...authorsInputProps } = useAuthorsAtom();
   const keywordsInputProps = useKeywordsInput(topic?.keywords ?? []);
   const uploadProviders: { [key: string]: string } = {};
+  // TODO: wowza 以外のサービスのサポート
   if (session?.systemSettings?.wowzaUploadEnabled) {
     uploadProviders.wowza = "https://www.wowza.com/";
   }
   const defaultValues = {
-    topic: {
-      name: topic?.name,
-      description: topic?.description ?? "",
-      shared: Boolean(topic?.shared),
-      language: topic?.language ?? Object.getOwnPropertyNames(languages)[0],
-      license: topic?.license ?? "",
-      timeRequired: topic?.timeRequired,
-      startTime: topic?.startTime,
-      stopTime: topic?.stopTime,
-    },
+    name: topic?.name,
+    description: topic?.description ?? "",
+    shared: Boolean(topic?.shared),
+    language: topic?.language ?? Object.getOwnPropertyNames(languages)[0],
+    license: topic?.license ?? "",
+    timeRequired: topic?.timeRequired,
+    startTime: topic?.startTime,
+    stopTime: topic?.stopTime,
     provider: Object.values(uploadProviders)[0] ?? "",
-    wowzaBaseUrl: `${NEXT_PUBLIC_API_BASE_PATH}/api/v2/wowza`,
-    fileName: "",
-    fileContent: "",
   };
   const { handleSubmit, register, control, getValues, setValue } = useForm<
-    Omit<TopicPropsWithUpload, "resource">
+    Omit<TopicProps, "resource"> & {
+      provider: string;
+      files?: FileList;
+    }
   >({
     defaultValues,
   });
-  register("topic.timeRequired", { valueAsNumber: true });
+  register("timeRequired", { valueAsNumber: true });
   const setStartStopMinMax = useCallback(
-    (topic: TopicPropsWithUpload["topic"], duration: number) => {
+    (topic: Pick<TopicProps, "startTime" | "stopTime">, duration: number) => {
       const roundedDuration = Math.floor(duration * 1000) / 1000;
       setStopTimeMax(roundedDuration);
 
@@ -271,7 +269,7 @@ export default function TopicForm(props: Props) {
       const newDuration = changedDuration || (await getDuration());
 
       if (Number.isFinite(newDuration) && newDuration > 0) {
-        const { topic } = getValues();
+        const topic = getValues();
         setDuration(newDuration);
         setStartStopMinMax(topic, newDuration);
 
@@ -281,9 +279,9 @@ export default function TopicForm(props: Props) {
           topic.timeRequired <= 0
         ) {
           setVideoChanged(Boolean(topic.startTime || topic.stopTime));
-          setValue("topic.timeRequired", Math.floor(newDuration));
-          setValue("topic.startTime", NaN);
-          setValue("topic.stopTime", NaN);
+          setValue("timeRequired", Math.floor(newDuration));
+          setValue("startTime", NaN);
+          setValue("stopTime", NaN);
         }
       }
     },
@@ -296,7 +294,7 @@ export default function TopicForm(props: Props) {
   const [paused, onTogglePause] = usePaused(getPlayer);
   const handleTimeUpdate = useCallback(
     async (currentTime: number) => {
-      const { topic } = getValues();
+      const topic = getValues();
       if (inPreview && currentTime >= (topic.stopTime || duration)) {
         setInPreview(false);
         void getPlayer()?.pause();
@@ -331,14 +329,14 @@ export default function TopicForm(props: Props) {
   const handleSeekToStart = useCallback(async () => {
     const player = getPlayer();
     if (!player) return;
-    const { topic } = getValues();
+    const topic = getValues();
     const startTime: number = topic.startTime || 0;
     await setCurrentTime(startTime);
   }, [getPlayer, getValues, setCurrentTime]);
   const handleSeekToEnd = useCallback(async () => {
     const player = getPlayer();
     if (!player) return;
-    const { topic } = getValues();
+    const topic = getValues();
     const endTime: number = topic.stopTime || 0;
     if (endTime === 0) {
       const duration = await getDuration();
@@ -351,25 +349,19 @@ export default function TopicForm(props: Props) {
   }, [getPlayer, getValues, getDuration, setCurrentTime]);
   const handleStartTimeStopTimeChange = useCallback(async () => {
     setVideoChanged(false);
-    const { topic } = getValues();
+    const topic = getValues();
     setValue(
-      "topic.timeRequired",
+      "timeRequired",
       Math.floor((topic.stopTime || duration) - (topic.startTime || 0))
     );
     setStartStopMinMax(topic, duration);
   }, [duration, getValues, setValue, setStartStopMinMax]);
   const handleSetStartTime = useCallback(async () => {
-    setValue(
-      "topic.startTime",
-      Math.floor((await getCurrentTime()) * 1000) / 1000
-    );
+    setValue("startTime", Math.floor((await getCurrentTime()) * 1000) / 1000);
     void handleStartTimeStopTimeChange();
   }, [setValue, getCurrentTime, handleStartTimeStopTimeChange]);
   const handleSetStopTime = useCallback(async () => {
-    setValue(
-      "topic.stopTime",
-      Math.floor((await getCurrentTime()) * 1000) / 1000
-    );
+    setValue("stopTime", Math.floor((await getCurrentTime()) * 1000) / 1000);
     void handleStartTimeStopTimeChange();
   }, [setValue, getCurrentTime, handleStartTimeStopTimeChange]);
 
@@ -380,45 +372,13 @@ export default function TopicForm(props: Props) {
         className={clsx(classes.margin, className)}
         component="form"
         onSubmit={handleSubmit((values) => {
-          const resource = videoResource ?? { url: "" };
-          if (method == "file" && values?.fileContent?.length) {
-            const file = values.fileContent[0] as unknown as File;
-            const reader = new FileReader();
-            reader.addEventListener(
-              "load",
-              () => {
-                onSubmit({
-                  topic: {
-                    ...values.topic,
-                    resource,
-                    keywords: keywordsInputProps.keywords,
-                  },
-                  authors: authorsInputProps.authors,
-                  provider: values.provider,
-                  wowzaBaseUrl: values.wowzaBaseUrl,
-                  fileName: file.name,
-                  fileContent: Buffer.from(
-                    reader.result as ArrayBuffer
-                  ).toString("base64"),
-                });
-              },
-              false
-            );
-            reader.readAsArrayBuffer(file);
-          } else {
-            onSubmit({
-              topic: {
-                ...values.topic,
-                resource,
-                keywords: keywordsInputProps.keywords,
-              },
-              authors: authorsInputProps.authors,
-              provider: "",
-              wowzaBaseUrl: "",
-              fileName: "",
-              fileContent: "",
-            });
-          }
+          onSubmit({
+            ...values,
+            resource: videoResource ?? { url: "" },
+            file: (method === "file" && values.files?.item(0)) || undefined,
+            keywords: keywordsInputProps.keywords,
+            authors: authorsInputProps.authors,
+          });
         })}
       >
         <div>
@@ -437,13 +397,13 @@ export default function TopicForm(props: Props) {
           <Checkbox
             id="shared"
             name="shared"
-            onChange={(_, checked) => setValue("topic.shared", checked)}
-            defaultChecked={defaultValues.topic.shared}
+            onChange={(_, checked) => setValue("shared", checked)}
+            defaultChecked={defaultValues.shared}
             color="primary"
           />
         </div>
         <TextField
-          inputProps={register("topic.name")}
+          inputProps={register("name")}
           label="タイトル"
           required
           fullWidth
@@ -454,7 +414,7 @@ export default function TopicForm(props: Props) {
             <RadioGroup
               defaultValue="url"
               row
-              onChange={(event, value) => setMethod(value)}
+              onChange={(event, value) => setMethod(value as "url" | "file")}
             >
               <FormControlLabel value="url" control={<Radio />} label="URL" />
               <FormControlLabel
@@ -520,7 +480,7 @@ export default function TopicForm(props: Props) {
               label="動画ファイル"
               type="file"
               required
-              inputProps={register("fileContent")}
+              inputProps={register("files")}
               onChange={handleFileChange}
             />
             <TextField
@@ -570,10 +530,10 @@ export default function TopicForm(props: Props) {
                 onSeekToEnd={handleSeekToEnd}
                 onStartTimeStopTimeChange={handleStartTimeStopTimeChange}
                 onTogglePause={onTogglePause}
-                startTimeInputProps={register("topic.startTime", {
+                startTimeInputProps={register("startTime", {
                   valueAsNumber: true,
                 })}
-                stopTimeInputProps={register("topic.stopTime", {
+                stopTimeInputProps={register("stopTime", {
                   valueAsNumber: true,
                 })}
                 startTimeMax={startTimeMax}
@@ -612,7 +572,7 @@ export default function TopicForm(props: Props) {
         )}
         <TimeRequiredInputControl
           topic={topic}
-          name="topic.timeRequired"
+          name="timeRequired"
           control={control}
         />
         <AuthorsInput
@@ -625,7 +585,7 @@ export default function TopicForm(props: Props) {
           label="解説"
           fullWidth
           multiline
-          inputProps={register("topic.description")}
+          inputProps={register("description")}
         />
         <Typography
           className={classes.labelDescription}
@@ -650,8 +610,8 @@ export default function TopicForm(props: Props) {
             <TextField
               label="教材の主要な言語"
               select
-              defaultValue={defaultValues.topic.language}
-              inputProps={register("topic.language")}
+              defaultValue={defaultValues.language}
+              inputProps={register("language")}
             >
               {Object.entries(languages).map(([value, label]) => (
                 <MenuItem key={value} value={value}>
@@ -662,8 +622,8 @@ export default function TopicForm(props: Props) {
             <TextField
               label="ライセンス"
               select
-              defaultValue={defaultValues.topic.license}
-              inputProps={{ displayEmpty: true, ...register("topic.license") }}
+              defaultValue={defaultValues.license}
+              inputProps={{ displayEmpty: true, ...register("license") }}
             >
               <MenuItem value="">未設定</MenuItem>
               {Object.entries(licenses).map(([value, { name }]) => (

@@ -256,8 +256,7 @@ class ImportBooksUtil {
               filenames.push(filename);
               const uploadpath = await wowzaUpload.moveFileToUpload(
                 fullpath,
-                now,
-                "Asia/Tokyo"
+                now
               );
               sectionTopic.resource.providerUrl = this.params.provider;
               sectionTopic.resource.url = `${this.params.wowzaBaseUrl}${uploadpath}`;

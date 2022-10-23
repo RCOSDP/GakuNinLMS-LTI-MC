@@ -16,9 +16,8 @@ import type { AccordionDetailsProps } from "@mui/material/AccordionDetails";
 import MuiAccordionDetails from "@mui/material/AccordionDetails";
 import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
 import PublicIcon from "@mui/icons-material/Public";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import DateTimePicker from "@mui/lab/DateTimePicker";
+import { LocalizationProvider, DateTimePicker } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { styled } from "@mui/material/styles";
 import makeStyles from "@mui/styles/makeStyles";
 import { useForm } from "react-hook-form";
@@ -235,9 +234,13 @@ export default function BookForm({
               dateAdapter={AdapterDateFns}
               locale={ja}
               dateFormats={{ monthAndYear: "yyyy年MM月" }}
+              localeText={{
+                previousMonth: "前月を表示",
+                nextMonth: "次月を表示",
+              }}
             >
               <DateTimePicker
-                renderInput={(props: Parameters<typeof TextField>) => (
+                renderInput={(props) => (
                   <TextField {...props} fullWidth error={expireAtError} />
                 )}
                 label={
@@ -253,14 +256,9 @@ export default function BookForm({
                     </Typography>
                   </>
                 }
-                inputFormat="yyyy年MM月dd日 hh時mm分"
+                inputFormat="yyyy年MM月dd日 HH時mm分"
                 mask="____年__月__日 __時__分"
                 toolbarFormat="yyyy年MM月dd日"
-                leftArrowButtonText="前月を表示"
-                rightArrowButtonText="次月を表示"
-                toolbarTitle="日付選択"
-                okText="選択"
-                cancelText="キャンセル"
                 value={expireAt}
                 onChange={handleExpireAtChange}
               />

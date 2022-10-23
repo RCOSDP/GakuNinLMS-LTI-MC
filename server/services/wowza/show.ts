@@ -1,7 +1,6 @@
 import type { FastifyRequest } from "fastify";
 import { outdent } from "outdent";
 import getUnixTime from "date-fns/getUnixTime";
-import type { TopicResourceProps } from "$server/validators/topicResourceProps";
 import { topicResourcePropsSchema } from "$server/validators/topicResourceProps";
 import {
   WOWZA_BASE_URL,
@@ -11,29 +10,25 @@ import {
 } from "$server/utils/env";
 import { getWowzaQuery } from "$server/utils/wowza/token";
 import { checkWowzaAccessToken } from "$server/utils/topicResourceToken";
+import type { Params, Query } from "./params";
 
-export type Params = { "*": string };
-export type Query = TopicResourceProps;
-
-export const method = {
-  get: {
-    summary: "Wowza Streaming Engine にアクセスするためのエンドポイント",
-    description: outdent`
+export const showSchema = {
+  summary: "Wowza Streaming Engine にアクセスするためのエンドポイント",
+  description: outdent`
       Wowza Streaming Engine のコンテンツのパスを与えると、
       そのコンテンツの playlist.m3u8 ファイルにリダイレクトします。
       サーバー管理者によって無効化されている場合 404 を返します。`,
-    params: { type: "object", properties: { wildcard: { type: "string" } } },
-    querystring: topicResourcePropsSchema,
-    response: {
-      302: {},
-      403: {},
-      404: {},
-    },
+  params: { type: "object", properties: { wildcard: { type: "string" } } },
+  querystring: topicResourcePropsSchema,
+  response: {
+    302: {},
+    403: {},
+    404: {},
   },
 };
 
-export const hooks = {
-  get: { auth: [] },
+export const showHooks = {
+  auth: [],
 };
 
 export async function show({

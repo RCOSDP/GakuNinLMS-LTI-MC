@@ -40,14 +40,28 @@ type Props = {
   onEnded?: () => void;
 };
 
+/**
+ * 再生終了時間が有効か否か
+ * @return 有効かつ再生終了: true、それ以外: false
+ */
+function isValidPlaybackEnd({
+  currentTime,
+  stopTime,
+}: {
+  currentTime: number;
+  stopTime: number | null | undefined;
+}): boolean {
+  return typeof stopTime === "number" && 0 < stopTime && stopTime < currentTime;
+}
+
 export default function Video({ className, sx, topic, onEnded }: Props) {
-  const { video, updateVideo } = useVideoAtom();
+  const { video, preloadVideo } = useVideoAtom();
   const { book, itemIndex, itemExists } = useBookAtom();
   useEffect(() => {
     if (!book) return;
-    updateVideo(book.sections);
-    return () => video.forEach((v) => v.player.pause());
-  }, [book, video, updateVideo]);
+    // バックグラウンドで動画プレイヤーオブジェクトプールに読み込む
+    preloadVideo(book.sections);
+  }, [book, preloadVideo]);
   const oembed = useOembed(topic.resource.id);
   const prevItemIndex = usePrevious(itemIndex);
   useEffect(() => {
@@ -59,12 +73,11 @@ export default function Video({ className, sx, topic, onEnded }: Props) {
     }
     const videoInstance = video.get(String(topic?.id));
     if (!videoInstance) return;
-    if (videoInstance.type == "vimeo") {
+    if (videoInstance.type === "vimeo") {
       videoInstance.player.on("ended", () => onEnded?.());
       videoInstance.player.on("timeupdate", async () => {
         const currentTime = await videoInstance.player.getCurrentTime();
-        // @ts-expect-error stopTime is number
-        if (Number.isFinite(stopTime) && currentTime > stopTime) {
+        if (isValidPlaybackEnd({ currentTime, stopTime })) {
           void videoInstance.player.pause();
           onEnded?.();
         }
@@ -74,9 +87,6 @@ export default function Video({ className, sx, topic, onEnded }: Props) {
         }
       });
       void videoInstance.player.setCurrentTime(startTime || 0);
-      videoInstance.player.play().catch(() => {
-        // nop
-      });
     } else {
       const handleEnded = () => {
         videoInstance.stopTimeOver = true;
@@ -91,13 +101,9 @@ export default function Video({ className, sx, topic, onEnded }: Props) {
         }
       };
       const handleTimeUpdate = () => {
+        if (videoInstance.stopTimeOver) return;
         const currentTime = videoInstance.player.currentTime();
-        if (
-          !videoInstance.stopTimeOver &&
-          Number.isFinite(stopTime) &&
-          // @ts-expect-error stopTime is number
-          currentTime > stopTime
-        ) {
+        if (isValidPlaybackEnd({ currentTime, stopTime })) {
           handleEnded();
         }
       };
@@ -117,9 +123,6 @@ export default function Video({ className, sx, topic, onEnded }: Props) {
         }
         videoInstance.player.on("timeupdate", handleTimeUpdate);
         videoInstance.player.on("seeked", handleSeeked);
-        videoInstance.player.play()?.catch(() => {
-          // nop
-        });
       };
 
       videoInstance.player.on("ended", handleEnded);
@@ -128,28 +131,34 @@ export default function Video({ className, sx, topic, onEnded }: Props) {
       videoInstance.player.ready(handleReady);
     }
   }, [video, itemExists, prevItemIndex, itemIndex, onEnded]);
+
+  // 動画プレイヤーオブジェクトプールに存在する場合
+  if (video.has(String(topic.id))) {
+    return (
+      <>
+        {Array.from(video.entries()).map(([id, videoInstance]) => (
+          <VideoPlayer
+            key={id}
+            className={clsx(className, {
+              [hidden]: String(topic.id) !== id,
+            })}
+            sx={{ ...videoStyle, ...sx }}
+            videoInstance={videoInstance}
+            autoplay={String(topic.id) === id}
+          />
+        ))}
+      </>
+    );
+  }
+
   return (
-    <>
-      {Array.from(video.entries()).map(([topicId, videoInstance]) => (
-        <VideoPlayer
-          key={topicId}
-          className={clsx(className, {
-            [hidden]: String(topic.id) !== topicId,
-          })}
-          sx={{ ...videoStyle, ...sx }}
-          videoInstance={videoInstance}
-        />
-      ))}
-      {video.size === 0 && (
-        <VideoResource
-          className={className}
-          sx={{ ...videoStyle, ...sx }}
-          {...(topic.resource as VideoResourceSchema)}
-          identifier={String(topic.id)}
-          autoplay
-          thumbnailUrl={oembed && oembed.thumbnail_url}
-        />
-      )}
-    </>
+    <VideoResource
+      className={className}
+      sx={{ ...videoStyle, ...sx }}
+      {...(topic.resource as VideoResourceSchema)}
+      identifier={String(topic.id)}
+      autoplay
+      thumbnailUrl={oembed && oembed.thumbnail_url}
+    />
   );
 }
