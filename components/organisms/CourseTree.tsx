@@ -11,7 +11,7 @@ import type { BookSchema } from "$server/models/book";
 import theme from "$theme";
 import { useSessionAtom } from "$store/session";
 import { isDisplayableBook } from "$utils/displayableBook";
-import getLocaleDateString from "$utils/getLocaleDateString";
+import getLocaleDateStringUpToSecond from "$utils/getLocaleDateStringUpToSecond";
 import Accordion from "./Accordion";
 import TreeView from "@mui/lab/TreeView";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -143,7 +143,10 @@ function LinksTree({
                     value={[
                       {
                         key: "作成日",
-                        value: getLocaleDateString(link.createdAt, "ja"),
+                        value: getLocaleDateStringUpToSecond(
+                          link.createdAt,
+                          "ja"
+                        ),
                       },
                     ]}
                   />
