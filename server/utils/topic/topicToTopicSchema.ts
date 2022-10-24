@@ -40,10 +40,17 @@ export function topicToTopicSchema(
     ...topic,
     authors: topic.authors.map(authorToAuthorSchema),
     resource: resourceToResourceSchema(topic.resource, ip),
-    relatedBooks:
-      options &&
-      topicSection
-        .map((ts) => ts.section.book)
-        .filter((book) => options.relatedBooksMap.has(book.id)),
+    relatedBooks: options && [
+      ...topicSection
+        .reduce((books, ts) => {
+          const book = ts.section.book;
+          if (books.has(book.id)) return books;
+          if (options.relatedBooksMap.has(book.id)) {
+            books.set(book.id, book);
+          }
+          return books;
+        }, new Map() as Map<Book["id"], Book>)
+        .values(),
+    ],
   };
 }
