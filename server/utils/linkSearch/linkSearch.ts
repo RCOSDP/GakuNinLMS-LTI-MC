@@ -58,7 +58,7 @@ function linkToLinkSchema(
  * @param sort 並び順
  * @param page ページ番号
  * @param perPage 1ページあたりの表示件数
- * @param course.oauthClientId 提供されているLMS
+ * @param course.oauthClientId 配信されているLMS
  * @param course.ltiContextId LTI Context ID
  * @return リンク
  */
@@ -80,7 +80,7 @@ async function linkSearch(
           title: { contains: t, ...insensitiveMode },
         },
       })),
-      // NOTE: oauthClientId - 提供されているLMS
+      // NOTE: oauthClientId - 配信されているLMS
       ...query.oauthClientId.map((consumerId) => ({ consumerId })),
     ],
   };

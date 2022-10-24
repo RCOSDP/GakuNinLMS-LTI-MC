@@ -6,9 +6,9 @@ import Button from "@mui/material/Button";
 import Snackbar from "@mui/material/Snackbar";
 import MenuBookOutlinedIcon from "@mui/icons-material/MenuBookOutlined";
 import LibraryBooksOutlinedIcon from "@mui/icons-material/LibraryBooksOutlined";
-import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
 import AssessmentOutlinedIcon from "@mui/icons-material/AssessmentOutlined";
 import LinkIcon from "@mui/icons-material/Link";
+import CellTowerIcon from "@mui/icons-material/CellTower";
 import SettingsIcon from "@mui/icons-material/Settings";
 import makeStyles from "@mui/styles/makeStyles";
 import clsx from "clsx";
@@ -154,15 +154,15 @@ function AppBar(props: Props, ref: Ref<HTMLDivElement>) {
             />
             <AppBarNavButton
               color="inherit"
-              icon={<LocalLibraryIcon />}
-              label="コース"
+              icon={<LinkIcon />}
+              label="リンク"
               onClick={onCoursesClick}
               disabled={!onCoursesClick}
             />
             <AppBarNavButton
               color="inherit"
-              icon={<LinkIcon />}
-              label="提供中のブック"
+              icon={<CellTowerIcon />}
+              label="配信中のブック"
               onClick={onBookClick}
               disabled={
                 !onBookClick ||

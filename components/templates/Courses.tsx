@@ -53,7 +53,7 @@ export default function Courses({
   const handleLinksDeleteClick = useCallback(async () => {
     if (selected.size === 0) return;
     await confirm({
-      title: `${selected.size}件の提供を解除します。よろしいですか？`,
+      title: `${selected.size}件の配信を解除します。よろしいですか？`,
       cancellationText: "キャンセル",
       confirmationText: "OK",
     });
@@ -115,7 +115,7 @@ export default function Courses({
         {contents.length === 0 &&
           (loading
             ? [...Array(3)].map((_, i) => <Skeleton key={i} height={64} />)
-            : "提供中のブックは存在しません")}
+            : "配信中のブックは存在しません")}
         {selected.size > 0 && (
           <ActionFooter maxWidth="lg">
             <Button
@@ -124,7 +124,7 @@ export default function Courses({
               variant="contained"
               onClick={handleLinksDeleteClick}
             >
-              {selected.size}件の提供解除
+              {selected.size}件の配信解除
             </Button>
           </ActionFooter>
         )}

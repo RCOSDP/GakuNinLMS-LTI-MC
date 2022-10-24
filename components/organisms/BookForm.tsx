@@ -96,11 +96,11 @@ const AccordionDetails = styled((props: AccordionDetailsProps) => (
 const label = {
   create: {
     submit: "作成",
-    submitWithLink: "作成したブックを提供",
+    submitWithLink: "作成したブックを配信",
   },
   update: {
     submit: "更新",
-    submitWithLink: "更新したブックを提供",
+    submitWithLink: "更新したブックを配信",
   },
 } as const;
 
@@ -335,7 +335,7 @@ export default function BookForm({
       {!linked && (
         <FormControlLabel
           className={classes.marginLeft}
-          label="コースへ提供"
+          label="コースへ配信"
           control={
             <Checkbox
               id="submit-with-link"
