@@ -42,6 +42,12 @@ export interface InlineResponse2002Contents {
     oauthClientId: string;
     /**
      * 
+     * @type {Date}
+     * @memberof InlineResponse2002Contents
+     */
+    createdAt: Date;
+    /**
+     * 
      * @type {LTIContext}
      * @memberof InlineResponse2002Contents
      */
@@ -71,6 +77,7 @@ export function InlineResponse2002ContentsFromJSONTyped(json: any, ignoreDiscrim
     return {
         
         'oauthClientId': json['oauthClientId'],
+        'createdAt': (new Date(json['createdAt'])),
         'ltiContext': LTIContextFromJSON(json['ltiContext']),
         'ltiResourceLink': LTIResourceLinkRequestFromJSON(json['ltiResourceLink']),
         'book': InlineResponse2002BookFromJSON(json['book']),
@@ -87,6 +94,7 @@ export function InlineResponse2002ContentsToJSON(value?: InlineResponse2002Conte
     return {
         
         'oauthClientId': value.oauthClientId,
+        'createdAt': (value.createdAt.toISOString()),
         'ltiContext': LTIContextToJSON(value.ltiContext),
         'ltiResourceLink': LTIResourceLinkRequestToJSON(value.ltiResourceLink),
         'book': InlineResponse2002BookToJSON(value.book),
