@@ -22,6 +22,7 @@ const contents = [
   {
     type: "link",
     oauthClientId: ltiResourceLink.consumerId,
+    createdAt: new Date(),
     ltiContext: {
       id: ltiResourceLink.contextId,
       label: ltiResourceLink.contextLabel,
