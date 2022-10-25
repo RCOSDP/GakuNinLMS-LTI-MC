@@ -182,6 +182,8 @@ model LtiResourceLink {
   creatorId  Int         @map("creator_id")
   /// 作成日
   createdAt  DateTime    @default(now()) @map("created_at")
+  updatedAt  DateTime    @default(now()) @map("updated_at")
+
 
   @@id([consumerId, id])
   @@map("lti_resource_link")

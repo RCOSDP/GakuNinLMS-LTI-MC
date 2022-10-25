@@ -8,6 +8,7 @@ export const LinkSchema = {
   required: [
     "oauthClientId",
     "createdAt",
+    "updatedAt",
     "ltiContext",
     "ltiResourceLink",
     "book",
@@ -15,6 +16,7 @@ export const LinkSchema = {
   properties: {
     oauthClientId: { type: "string" },
     createdAt: { type: "string", format: "date-time" },
+    updatedAt: { type: "string", format: "date-time" },
     ltiContext: LtiContextSchema,
     ltiResourceLink: LtiResourceLinkRequestSchema,
     book: {

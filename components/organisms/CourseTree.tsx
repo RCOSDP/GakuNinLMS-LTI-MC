@@ -137,16 +137,35 @@ function LinksTree({
                       }}
                     />
                   )}
-                  <DescriptionList
-                    nowrap
-                    sx={{ mx: 5 }}
-                    value={[
-                      {
-                        key: "作成日",
-                        value: getLocaleDateTimeString(link.createdAt, "ja"),
-                      },
-                    ]}
-                  />
+                  <Box
+                    style={{
+                      display: "flex",
+                      alignItems: "left",
+                      flexWrap: "wrap",
+                      lineHeight: 2.5,
+                    }}
+                  >
+                    <DescriptionList
+                      nowrap
+                      sx={{ ml: 5 }}
+                      value={[
+                        {
+                          key: "作成日",
+                          value: getLocaleDateTimeString(link.createdAt, "ja"),
+                        },
+                      ]}
+                    />
+                    <DescriptionList
+                      nowrap
+                      sx={{ mx: 2 }}
+                      value={[
+                        {
+                          key: "更新日",
+                          value: getLocaleDateTimeString(link.updatedAt, "ja"),
+                        },
+                      ]}
+                    />
+                  </Box>
                 </>
               }
             />
