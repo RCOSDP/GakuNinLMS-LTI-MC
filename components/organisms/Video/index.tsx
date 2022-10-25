@@ -74,7 +74,6 @@ export default function Video({ className, sx, topic, onEnded }: Props) {
     const videoInstance = video.get(String(topic?.id));
     if (!videoInstance) return;
     if (videoInstance.type === "vimeo") {
-      videoInstance.player.on("ended", () => onEnded?.());
       videoInstance.player.on("timeupdate", async () => {
         const currentTime = await videoInstance.player.getCurrentTime();
         if (isValidPlaybackEnd({ currentTime, stopTime })) {
@@ -88,11 +87,6 @@ export default function Video({ className, sx, topic, onEnded }: Props) {
       });
       void videoInstance.player.setCurrentTime(startTime || 0);
     } else {
-      const handleEnded = () => {
-        videoInstance.stopTimeOver = true;
-        videoInstance.player.pause();
-        onEnded?.();
-      };
       const handleSeeked = () => {
         const currentTime = videoInstance.player.currentTime();
         // @ts-expect-error startTime is number
@@ -104,7 +98,9 @@ export default function Video({ className, sx, topic, onEnded }: Props) {
         if (videoInstance.stopTimeOver) return;
         const currentTime = videoInstance.player.currentTime();
         if (isValidPlaybackEnd({ currentTime, stopTime })) {
-          handleEnded();
+          videoInstance.stopTimeOver = true;
+          videoInstance.player.pause();
+          onEnded?.();
         }
       };
       const handlePlay = () => {
@@ -125,11 +121,11 @@ export default function Video({ className, sx, topic, onEnded }: Props) {
         videoInstance.player.on("seeked", handleSeeked);
       };
 
-      videoInstance.player.on("ended", handleEnded);
       videoInstance.player.on("play", handlePlay);
       videoInstance.player.on("firstplay", handleFirstPlay);
       videoInstance.player.ready(handleReady);
     }
+    // TODO: videoの内容の変更検知は機能しないので修正したい。Mapオブジェクトでの管理をやめるかMap.prototype.set()を使用しないようにするなど必要かもしれない。
   }, [video, itemExists, prevItemIndex, itemIndex, onEnded]);
 
   // 動画プレイヤーオブジェクトプールに存在する場合
@@ -145,6 +141,7 @@ export default function Video({ className, sx, topic, onEnded }: Props) {
             sx={{ ...videoStyle, ...sx }}
             videoInstance={videoInstance}
             autoplay={String(topic.id) === id}
+            onEnded={String(topic.id) === id ? onEnded : undefined}
           />
         ))}
       </>
@@ -158,6 +155,7 @@ export default function Video({ className, sx, topic, onEnded }: Props) {
       {...(topic.resource as VideoResourceSchema)}
       identifier={String(topic.id)}
       autoplay
+      onEnded={onEnded}
       thumbnailUrl={oembed && oembed.thumbnail_url}
     />
   );
