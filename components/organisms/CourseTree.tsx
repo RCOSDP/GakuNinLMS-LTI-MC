@@ -139,14 +139,11 @@ function LinksTree({
                   )}
                   <DescriptionList
                     nowrap
-                    sx={{  mx: 5 }}
+                    sx={{ mx: 5 }}
                     value={[
                       {
                         key: "作成日",
-                        value: getLocaleDateTimeString(
-                          link.createdAt,
-                          "ja"
-                        ),
+                        value: getLocaleDateTimeString(link.createdAt, "ja"),
                       },
                     ]}
                   />
