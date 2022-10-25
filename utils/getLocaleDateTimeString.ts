@@ -4,7 +4,7 @@
  * @param locales 言語 BCP 47
  */
 
-function getLocaleDateStringUpToSecond(
+function getLocaleDateTimeString(
   date: Date,
   locales: string | string[]
 ): string {
@@ -18,4 +18,4 @@ function getLocaleDateStringUpToSecond(
   });
 }
 
-export default getLocaleDateStringUpToSecond;
+export default getLocaleDateTimeString;
