@@ -61,7 +61,8 @@ export default function Video({ className, sx, topic, onEnded }: Props) {
     if (!book) return;
     // バックグラウンドで動画プレイヤーオブジェクトプールに読み込む
     preloadVideo(book.sections);
-  }, [book, preloadVideo]);
+    return () => video.clear();
+  }, [book, preloadVideo, video]);
   const oembed = useOembed(topic.resource.id);
   const prevItemIndex = usePrevious(itemIndex);
   useEffect(() => {

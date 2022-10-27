@@ -1,4 +1,3 @@
-import { useUnmount } from "react-use";
 import { atom, useAtomValue } from "jotai";
 import { useUpdateAtom } from "jotai/utils";
 import type { SectionSchema } from "$server/models/book/section";
@@ -33,6 +32,5 @@ const preloadVideoAtom = atom(
 export function useVideoAtom() {
   const state = useAtomValue(videoAtom);
   const preloadVideo = useUpdateAtom(preloadVideoAtom);
-  useUnmount(() => state.video.clear());
   return { ...state, preloadVideo };
 }
