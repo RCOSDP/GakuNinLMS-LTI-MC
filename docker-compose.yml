@@ -25,7 +25,7 @@ services:
       POSTGRES_PASSWORD: password
     ports: ["5432:5432"]
   app:
-    image: "node:16.16-alpine3.16"
+    image: "node:18.12-alpine3.16"
     environment:
       FRONTEND_ORIGIN: "http://localhost:3000"
       SESSION_SECRET: super_secret_characters_for_session

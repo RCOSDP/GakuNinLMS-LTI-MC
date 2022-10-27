@@ -32,10 +32,9 @@ API の接続先の情報を変更する場合 .env を適宜書き換える必�
 
 ### 前提条件
 
-2021-09-03 現在、以下の環境でビルドを確認。
+2022-10-27 現在、以下の環境でビルドを確認。
 
-- Node.js v16.8.0
-- Yarn 1.22.11
+- Node.js v18.12.0
 
 ### ビルド
 
@@ -44,6 +43,7 @@ API の接続先の情報を変更する場合 .env を適宜書き換える必�
 ```sh
 git clone https://github.com/npocccties/chibichilo.git
 cd chibichilo
+corepack enable yarn
 yarn
 yarn build
 ```
