@@ -44,7 +44,12 @@ export default function VideoPlayer({
         ? player.ready()
         : new Promise((resolve) => player.ready(() => resolve(undefined)));
     void ready.then(play);
-  }, [videoInstance, autoplay]);
+  }, [
+    videoInstance,
+    autoplay,
+    // NOTE: セクションが切り替わったことを検知する目的でonEndedの変更検知を利用している
+    onEnded,
+  ]);
   useEffect(() => {
     const { player } = videoInstance;
     const handleEnded = () => onEnded?.();
