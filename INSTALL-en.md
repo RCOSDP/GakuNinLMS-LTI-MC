@@ -22,16 +22,16 @@ When changing the information of the connection destination of API, .env must be
 
 ### Prerequisites
 
-As of 2021-09-03, confirm the build in the following environment.
+As of 2022-10-27, confirm the build in the following environment.
 
-- Node.js v16.8.0
-- Yarn 1.22.11
+- Node.js v18.12.0
 
 ### Build
 
 Execute the following command.
 
 ```sh
+corepack enable yarn
 yarn && yarn build
 ```
 

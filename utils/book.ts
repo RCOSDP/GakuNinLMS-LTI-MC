@@ -36,7 +36,8 @@ export function useBook(
 ) {
   const { data, error } = useSWRImmutable<BookSchema>(
     Number.isFinite(bookId) || token ? [key, bookId, token] : null,
-    fetchBook
+    fetchBook,
+    { revalidateOnMount: true }
   );
   const publicBook = data?.publicBooks?.find(
     (publicBook) => publicBook.token === token
