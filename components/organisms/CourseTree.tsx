@@ -11,11 +11,13 @@ import type { BookSchema } from "$server/models/book";
 import theme from "$theme";
 import { useSessionAtom } from "$store/session";
 import { isDisplayableBook } from "$utils/displayableBook";
+import getLocaleDateTimeString from "$utils/getLocaleDateTimeString";
 import Accordion from "./Accordion";
 import TreeView from "@mui/lab/TreeView";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { Box } from "@mui/material";
+import DescriptionList from "$atoms/DescriptionList";
 
 type Props = {
   ltiContext: LtiContextSchema;
@@ -54,6 +56,7 @@ function LinksTree({
   isContentEditable,
 }: LinksTreeProps) {
   const { session } = useSessionAtom();
+
   return (
     <>
       {links.map((link) => {
@@ -134,6 +137,35 @@ function LinksTree({
                       }}
                     />
                   )}
+                  <Box
+                    style={{
+                      display: "flex",
+                      alignItems: "left",
+                      flexWrap: "wrap",
+                      lineHeight: 2.5,
+                    }}
+                  >
+                    <DescriptionList
+                      nowrap
+                      sx={{ ml: 5 }}
+                      value={[
+                        {
+                          key: "作成日",
+                          value: getLocaleDateTimeString(link.createdAt, "ja"),
+                        },
+                      ]}
+                    />
+                    <DescriptionList
+                      nowrap
+                      sx={{ mx: 2 }}
+                      value={[
+                        {
+                          key: "更新日",
+                          value: getLocaleDateTimeString(link.updatedAt, "ja"),
+                        },
+                      ]}
+                    />
+                  </Box>
                 </>
               }
             />

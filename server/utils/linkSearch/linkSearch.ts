@@ -24,6 +24,8 @@ function linkToLinkSchema(
   }
 ): LinkSchema {
   const oauthClientId = link.consumerId;
+  const createdAt = link.createdAt;
+  const updatedAt = link.updatedAt;
   const ltiContext = {
     id: link.context.id,
     label: link.context.label,
@@ -48,7 +50,14 @@ function linkToLinkSchema(
         ] ?? role.roleName,
     })),
   };
-  return { oauthClientId, ltiContext, ltiResourceLink, book };
+  return {
+    oauthClientId,
+    createdAt,
+    updatedAt,
+    ltiContext,
+    ltiResourceLink,
+    book,
+  };
 }
 
 /**

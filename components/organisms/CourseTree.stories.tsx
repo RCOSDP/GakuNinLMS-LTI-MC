@@ -34,6 +34,8 @@ Default.args = {
   links: [
     {
       oauthClientId: ltiResourceLink.consumerId,
+      createdAt: new Date(),
+      updatedAt: new Date(),
       ltiContext,
       ltiResourceLink: {
         id: ltiResourceLink.id,
