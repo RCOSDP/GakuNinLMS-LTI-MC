@@ -90,7 +90,7 @@ export default function Courses({
           ]}
         />
         <CourseSearchTextField
-          label="コース名検索"
+          label="検索"
           onSearchSubmit={linkSearchProps.onSearchSubmit}
         />
       </ActionHeader>

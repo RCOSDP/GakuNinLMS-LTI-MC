@@ -7,6 +7,9 @@ type SortOrder = "created" | "reverse-created";
 
 const inputAtom = atomWithReset<string>("");
 const oauthClientIdAtom = atomWithReset<string>(""); // "": すべてのLMS
+const linkAtom = atomWithReset<string>(""); // "": すべてのリンク
+const bookAtom = atomWithReset<string>(""); // "": すべてのブック
+const topicAtom = atomWithReset<string>(""); // "": すべてのトピック
 const sortAtom = atomWithReset<SortOrder>("created");
 const queryAtom = atom<{
   type: "link";
@@ -20,6 +23,9 @@ const queryAtom = atom<{
     type: "link",
     text: [get(inputAtom)],
     oauthClientId: [get(oauthClientIdAtom) || []].flat(),
+    link: [get(linkAtom) || []].flat(),
+    book: [get(bookAtom) || []].flat(),
+    topic: [get(topicAtom) || []].flat(),
   }),
   sort: get(sortAtom),
   perPage: Number.MAX_SAFE_INTEGER,

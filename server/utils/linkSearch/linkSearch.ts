@@ -122,6 +122,36 @@ async function linkSearch(
       })),
       // NOTE: oauthClientId - 配信されているLMS
       ...query.oauthClientId.map((consumerId) => ({ consumerId })),
+      // NOTE: link - リンクのタイトル
+      ...query.link.map((l) => ({
+        context: {
+          resourceLinks: {
+            some: {
+              title: { contains: l, ...insensitiveMode },
+            },
+          },
+        },
+      })),
+      // NOTE: book - ブックのタイトル
+      ...query.book.map((t) => ({
+        book: {
+          name: { contains: t, ...insensitiveMode },
+        },
+      })),
+      // NOTE: topic - トピックのタイトル
+      ...query.topic.map((t) => ({
+        book: {
+          sections: {
+            some: {
+              topicSections: {
+                some: {
+                  topic: { name: { contains: t, ...insensitiveMode } },
+                },
+              },
+            },
+          },
+        },
+      })),
     ],
   };
 
