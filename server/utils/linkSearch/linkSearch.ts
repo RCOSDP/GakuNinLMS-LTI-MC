@@ -83,11 +83,42 @@ async function linkSearch(
   const where: Prisma.LtiResourceLinkWhereInput = {
     AND: [
       createLinkScope(filter, course),
-      // NOTE: text - 検索文字列 (コース名)
+      // NOTE: text - 検索文字列 (コース名、LTIリンク名、ブック名、トピック名)
       ...query.text.map((t) => ({
-        context: {
-          title: { contains: t, ...insensitiveMode },
-        },
+        OR: [
+          {
+            context: {
+              title: { contains: t, ...insensitiveMode },
+            },
+          },
+          {
+            context: {
+              resourceLinks: {
+                some: {
+                  title: { contains: t, ...insensitiveMode },
+                },
+              },
+            },
+          },
+          {
+            book: {
+              name: { contains: t, ...insensitiveMode },
+            },
+          },
+          {
+            book: {
+              sections: {
+                some: {
+                  topicSections: {
+                    some: {
+                      topic: { name: { contains: t, ...insensitiveMode } },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        ],
       })),
       // NOTE: oauthClientId - 配信されているLMS
       ...query.oauthClientId.map((consumerId) => ({ consumerId })),
