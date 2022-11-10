@@ -20,7 +20,7 @@ export function parse(query: string): LinkSearchQuery {
     oauthClientId: res.link?.map(decodeURIComponent) ?? [],
     linkTitle: res.linkTitle ?? [],
     bookName: res.bookName ?? [],
-    topicName: res.topicName ?? []
+    topicName: res.topicName ?? [],
   };
 }
 
