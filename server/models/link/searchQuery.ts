@@ -5,10 +5,10 @@ export type LinkSearchQuery = {
   text: string[];
   /** 配信されているLMS */
   oauthClientId: string[];
-  /** リンク（リンク名）*/
-  link: string[];
-  /** ブック（ブック名）*/
-  book: string[];
-  /** トピック（トピック名）*/
-  topic: string[];
+  /** LTIリンクタイトル */
+  linkTitle: string[];
+  /** ブック名 */
+  bookName: string[];
+  /** トピック名 */
+  topicName: string[];
 };

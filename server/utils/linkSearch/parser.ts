@@ -18,6 +18,9 @@ export function parse(query: string): LinkSearchQuery {
     type: "link",
     text: res.text ?? [],
     oauthClientId: res.link?.map(decodeURIComponent) ?? [],
+    linkTitle: res.linkTitle ?? [],
+    bookName: res.bookName ?? [],
+    topicName: res.topicName ?? []
   };
 }
 

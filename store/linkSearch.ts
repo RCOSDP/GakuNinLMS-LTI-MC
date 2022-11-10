@@ -7,9 +7,9 @@ type SortOrder = "created" | "reverse-created";
 
 const inputAtom = atomWithReset<string>("");
 const oauthClientIdAtom = atomWithReset<string>(""); // "": すべてのLMS
-const linkAtom = atomWithReset<string>(""); // "": すべてのリンク
-const bookAtom = atomWithReset<string>(""); // "": すべてのブック
-const topicAtom = atomWithReset<string>(""); // "": すべてのトピック
+const linkTitleAtom = atomWithReset<string>(""); // "": すべてのリンク
+const bookNameAtom = atomWithReset<string>(""); // "": すべてのブック
+const topicNameAtom = atomWithReset<string>(""); // "": すべてのトピック
 const sortAtom = atomWithReset<SortOrder>("created");
 const queryAtom = atom<{
   type: "link";
@@ -23,9 +23,9 @@ const queryAtom = atom<{
     type: "link",
     text: [get(inputAtom)],
     oauthClientId: [get(oauthClientIdAtom) || []].flat(),
-    link: [get(linkAtom) || []].flat(),
-    book: [get(bookAtom) || []].flat(),
-    topic: [get(topicAtom) || []].flat(),
+    linkTitle: [get(linkTitleAtom) || []].flat(),
+    bookName: [get(bookNameAtom) || []].flat(),
+    topicName: [get(topicNameAtom) || []].flat(),
   }),
   sort: get(sortAtom),
   perPage: Number.MAX_SAFE_INTEGER,
@@ -36,6 +36,9 @@ const resetAtom = atom<undefined, undefined>(
   (_, set) => {
     set(inputAtom, RESET);
     set(oauthClientIdAtom, RESET);
+    set(linkTitleAtom, RESET);
+    set(bookNameAtom, RESET);
+    set(topicNameAtom, RESET);
     set(sortAtom, RESET);
   }
 );

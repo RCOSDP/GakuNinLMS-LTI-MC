@@ -4,6 +4,9 @@ const emptyQuery = {
   type: "link" as const,
   text: [],
   oauthClientId: [],
+  linkTitle: [],
+  bookName: [],
+  topicName: [],
 };
 
 describe("parse()", function () {
