@@ -27,7 +27,7 @@ const queryAtom = atom<{
     type: "link",
     text: [get(inputAtom)],
     oauthClientId: [get(oauthClientIdAtom) || []].flat(),
-    linkTitle: [get(inputAtom) || []].flat(),
+    linkTitle: [get(linkTitleAtom) || []].flat(),
     bookName: [get(bookNameAtom) || []].flat(),
     topicName: [get(topicNameAtom) || []].flat(),
   }),
@@ -44,6 +44,7 @@ const resetAtom = atom<undefined, undefined>(
     set(linkTitleAtom, RESET);
     set(bookNameAtom, RESET);
     set(topicNameAtom, RESET);
+    set(targetAtom, RESET);
     set(sortAtom, RESET);
   }
 );
@@ -51,14 +52,32 @@ const resetAtom = atom<undefined, undefined>(
 export function useLinkSearchAtom() {
   const query = useAtomValue(queryAtom);
   const reset = useUpdateAtom(resetAtom);
+
+  // 入力
+  const input = useAtomValue(inputAtom);
   const onSearchSubmit = useUpdateAtom(inputAtom);
-  const onLtiClientClick = useUpdateAtom(oauthClientIdAtom);
-  const onSortChange = useUpdateAtom(sortAtom);
+
+  // フィルター
+  const updateLinkTile = useUpdateAtom(linkTitleAtom);
+  const updateBookName = useUpdateAtom(bookNameAtom);
+  const updateTopicName = useUpdateAtom(topicNameAtom);
   const [target, updateTarget] = useAtom(targetAtom);
   const onSearchTargetChange: (target: LinkSearchTarget) => void = useCallback(
     (target) => updateTarget(target),
     [updateTarget]
   );
+  useEffect(() => {
+    if (target === "linkTitle") {
+      updateLinkTile(input);
+    } else if (target === "bookName") {
+      updateBookName(input);
+    } else if (target === "topicName") {
+      updateTopicName(input);
+    }
+  }, [target, input, updateLinkTile, updateBookName, updateTopicName]);
+
+  const onLtiClientClick = useUpdateAtom(oauthClientIdAtom);
+  const onSortChange = useUpdateAtom(sortAtom);
 
   useEffect(() => {
     reset();
