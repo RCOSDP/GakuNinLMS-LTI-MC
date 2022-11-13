@@ -91,7 +91,9 @@ export default function Courses({
         />
         <CourseSearchTextField
           label="検索"
+          target={linkSearchProps.target}
           onSearchSubmit={linkSearchProps.onSearchSubmit}
+          onSearchTargetChange={linkSearchProps.onSearchTargetChange}
         />
       </ActionHeader>
       <CourseFilterColumn sx={{ gridArea: "side" }} clientIds={clientIds} />
