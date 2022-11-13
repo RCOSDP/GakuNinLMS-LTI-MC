@@ -69,10 +69,20 @@ export function useLinkSearchAtom() {
   useEffect(() => {
     if (target === "linkTitle") {
       updateLinkTile(input);
+      updateBookName("");
+      updateTopicName("");
     } else if (target === "bookName") {
       updateBookName(input);
+      updateLinkTile("");
+      updateTopicName("");
     } else if (target === "topicName") {
       updateTopicName(input);
+      updateLinkTile("");
+      updateBookName("");
+    } else {
+      updateTopicName("");
+      updateLinkTile("");
+      updateBookName("");
     }
   }, [target, input, updateLinkTile, updateBookName, updateTopicName]);
 
