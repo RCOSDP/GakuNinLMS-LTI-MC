@@ -19,10 +19,15 @@ const options: ReadonlyArray<{
 type Props = Omit<TextFieldProps, "variant" | "value"> & {
   target: LinkSearchTarget;
   onSearchSubmit(value: string): void;
-  onSearchTargetChange: (target: LinkSearchTarget) =>void;
+  onSearchTargetChange: (target: LinkSearchTarget) => void;
 };
 
-function CourseSearchTextField({ target, onSearchSubmit,onSearchTargetChange, ...props }: Props) {
+function CourseSearchTextField({
+  target,
+  onSearchSubmit,
+  onSearchTargetChange,
+  ...props
+}: Props) {
   const [value, setValue] = useState("");
   const reset = useCallback(() => {
     setValue("");
@@ -44,12 +49,7 @@ function CourseSearchTextField({ target, onSearchSubmit,onSearchTargetChange, ..
         onSearchInputReset={reset}
         onSearchSubmit={onSearchSubmit}
       />
-      <RadioGroup
-        id="search-type"
-        value={target}
-        onChange={handleChange}
-        row
-      >
+      <RadioGroup id="search-type" value={target} onChange={handleChange} row>
         {options.map(({ value, label }) => (
           <FormControlLabel
             key={value}
