@@ -1,19 +1,17 @@
 import { useCallback, useEffect } from "react";
 import { atom, useAtomValue, useAtom } from "jotai";
 import { RESET, atomWithReset, useUpdateAtom } from "jotai/utils";
+import { parse } from "search-query-parser";
 import { stringify } from "$utils/linkSearch/parser";
 import type { AuthorFilterType } from "$server/models/authorFilter";
 import type { LinkSearchTarget } from "$types/linkSearchTarget";
+import type { LinkSearchQuery } from "$server/models/link/searchQuery";
 
 type SortOrder = "created" | "reverse-created";
 
 const inputAtom = atomWithReset<string>("");
 const oauthClientIdAtom = atomWithReset<string>(""); // "": すべてのLMS
-const linkTitleAtom = atomWithReset<string>(""); // "": すべてのリンク
-const bookNameAtom = atomWithReset<string>(""); // "": すべてのブック
-const topicNameAtom = atomWithReset<string>(""); // "": すべてのトピック
 const targetAtom = atomWithReset<LinkSearchTarget>("all");
-const sortAtom = atomWithReset<SortOrder>("created");
 const queryAtom = atom<{
   type: "link";
   q: string;
@@ -21,73 +19,68 @@ const queryAtom = atom<{
   sort: SortOrder;
   perPage: number;
   page: number;
-}>((get) => ({
+}>({
   type: "link",
-  q: stringify({
-    type: "link",
-    text: [get(inputAtom)],
-    oauthClientId: [get(oauthClientIdAtom) || []].flat(),
-    linkTitle: [get(linkTitleAtom) || []].flat(),
-    bookName: [get(bookNameAtom) || []].flat(),
-    topicName: [get(topicNameAtom) || []].flat(),
-  }),
+  q: "",
   filter: "self",
-  sort: get(sortAtom),
+  sort: "created",
   perPage: Number.MAX_SAFE_INTEGER,
   page: 0,
-}));
+});
+const searchQueryAtom = atomWithReset<LinkSearchQuery>({
+  type: "link",
+  text: [],
+  oauthClientId: [],
+  linkTitle: [],
+  bookName: [],
+  topicName: [],
+});
 const resetAtom = atom<undefined, undefined>(
   () => undefined,
   (_, set) => {
     set(inputAtom, RESET);
     set(oauthClientIdAtom, RESET);
-    set(linkTitleAtom, RESET);
-    set(bookNameAtom, RESET);
-    set(topicNameAtom, RESET);
     set(targetAtom, RESET);
-    set(sortAtom, RESET);
   }
 );
 
+const getInputQuery = (input: string, target: LinkSearchTarget) => {
+  const query = parse(input, { alwaysArray: true, tokenize: true });
+  switch (target) {
+    case "all":
+      return query;
+    default:
+      return { [target]: query.text };
+  }
+};
+
 export function useLinkSearchAtom() {
-  const query = useAtomValue(queryAtom);
+  const [query, updateQuery] = useAtom(queryAtom);
+  const [target, updateTarget] = useAtom(targetAtom);
+  const searchQuery = useAtomValue(searchQueryAtom);
+  const input = useAtomValue(inputAtom);
   const reset = useUpdateAtom(resetAtom);
 
-  // 入力
-  const input = useAtomValue(inputAtom);
-  const onSearchSubmit = useUpdateAtom(inputAtom);
+  useEffect(
+    () =>
+      updateQuery((query) => ({
+        ...query,
+        q: stringify({ ...searchQuery, ...getInputQuery(input, target) }),
+        page: 0,
+      })),
+    [updateQuery, input, target, searchQuery]
+  );
 
-  // フィルター
-  const updateLinkTile = useUpdateAtom(linkTitleAtom);
-  const updateBookName = useUpdateAtom(bookNameAtom);
-  const updateTopicName = useUpdateAtom(topicNameAtom);
-  const [target, updateTarget] = useAtom(targetAtom);
+  const onSearchSubmit = useUpdateAtom(inputAtom);
   const onSearchTargetChange: (target: LinkSearchTarget) => void = useCallback(
     (target) => updateTarget(target),
     [updateTarget]
   );
-  useEffect(() => {
-    if (target === "linkTitle") {
-      updateLinkTile(input);
-      updateBookName("");
-      updateTopicName("");
-    } else if (target === "bookName") {
-      updateBookName(input);
-      updateLinkTile("");
-      updateTopicName("");
-    } else if (target === "topicName") {
-      updateTopicName(input);
-      updateLinkTile("");
-      updateBookName("");
-    } else {
-      updateTopicName("");
-      updateLinkTile("");
-      updateBookName("");
-    }
-  }, [target, input, updateLinkTile, updateBookName, updateTopicName]);
-
+  const onSortChange: (sort: SortOrder) => void = useCallback(
+    (sort) => updateQuery((query) => ({ ...query, sort, page: 0 })),
+    [updateQuery]
+  );
   const onLtiClientClick = useUpdateAtom(oauthClientIdAtom);
-  const onSortChange = useUpdateAtom(sortAtom);
 
   useEffect(() => {
     reset();
