@@ -78,7 +78,6 @@ export function useLinkSearchAtom() {
     (sort) => updateQuery((query) => ({ ...query, sort, page: 0 })),
     [updateQuery]
   );
-  // const onLtiClientClick = useUpdateAtom(oauthClientIdAtom);
   const onLtiClientClick: (value: string) => void = useCallback(
     (value: string) =>
       updateSearchQuery((searchQuery) => ({
