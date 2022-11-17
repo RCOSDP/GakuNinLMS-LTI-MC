@@ -82,10 +82,11 @@ export function useLinkSearchAtom() {
   );
   // const onLtiClientClick = useUpdateAtom(oauthClientIdAtom);
   const onLtiClientClick: (value: string) => void = useCallback(
-    (value:string) =>  updateSearchQuery((searchQuery) => ({
-      ...searchQuery,
-      oauthClientId: [value],
-    })),
+    (value: string) =>
+      updateSearchQuery((searchQuery) => ({
+        ...searchQuery,
+        oauthClientId: [value],
+      })),
     [updateSearchQuery]
   );
 
