@@ -10,7 +10,6 @@ import type { LinkSearchQuery } from "$server/models/link/searchQuery";
 type SortOrder = "created" | "reverse-created";
 
 const inputAtom = atomWithReset<string>("");
-const oauthClientIdAtom = atomWithReset<string>(""); // "": すべてのLMS
 const targetAtom = atomWithReset<LinkSearchTarget>("all");
 const queryAtom = atom<{
   type: "link";
@@ -39,7 +38,6 @@ const resetAtom = atom<undefined, undefined>(
   () => undefined,
   (_, set) => {
     set(inputAtom, RESET);
-    set(oauthClientIdAtom, RESET);
     set(targetAtom, RESET);
   }
 );
