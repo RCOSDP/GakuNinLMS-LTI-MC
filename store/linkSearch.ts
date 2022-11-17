@@ -57,7 +57,7 @@ const getInputQuery = (input: string, target: LinkSearchTarget) => {
 export function useLinkSearchAtom() {
   const [query, updateQuery] = useAtom(queryAtom);
   const [target, updateTarget] = useAtom(targetAtom);
-  const searchQuery = useAtomValue(searchQueryAtom);
+  const [searchQuery, updateSearchQuery] = useAtom(searchQueryAtom);
   const input = useAtomValue(inputAtom);
   const reset = useUpdateAtom(resetAtom);
 
@@ -80,7 +80,14 @@ export function useLinkSearchAtom() {
     (sort) => updateQuery((query) => ({ ...query, sort, page: 0 })),
     [updateQuery]
   );
-  const onLtiClientClick = useUpdateAtom(oauthClientIdAtom);
+  // const onLtiClientClick = useUpdateAtom(oauthClientIdAtom);
+  const onLtiClientClick: (value: string) => void = useCallback(
+    (value:string) =>  updateSearchQuery((searchQuery) => ({
+      ...searchQuery,
+      oauthClientId: [value],
+    })),
+    [updateSearchQuery]
+  );
 
   useEffect(() => {
     reset();
