@@ -2,14 +2,15 @@
 version: "3"
 services:
   mariadb:
-    image: "mariadb:10.8.3-jammy"
+    image: "mariadb:10.9.4-jammy"
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
       MYSQL_DATABASE: bitnami_moodle
-    # volumes:
-    #   - ./db.sql:/docker-entrypoint-initdb.d/db.sql # NOTE: SQLファイルによる投入例
+    volumes:
+      - mariadb_data_v10:/var/lib/mysql
   moodle:
-    image: "bitnami/moodle:4.0.2-debian-11-r7"
+    image: ghcr.io/npocccties/chibichilo-moodle
+    build: moodle
     ports: ["8081:8080"]
     environment:
       MOODLE_USERNAME: user
@@ -18,14 +19,19 @@ services:
       MOODLE_DATABASE_USER: root
       BITNAMI_DEBUG: "true"
     depends_on: [mariadb]
+    volumes:
+      - moodle_data_v4:/bitnami/moodle
+      - moodledata_data_v4:/bitnami/moodledata
   db:
-    image: "postgres:14.4-alpine3.16"
+    image: "postgres:15.1-alpine3.16"
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
     ports: ["5432:5432"]
+    volumes:
+      - postgres_data_v15:/var/lib/postgresql/data
   app:
-    image: "node:18.12-alpine3.16"
+    image: "node:18.12.1-alpine3.16"
     environment:
       FRONTEND_ORIGIN: "http://localhost:3000"
       SESSION_SECRET: super_secret_characters_for_session
@@ -40,3 +46,8 @@ services:
       - "5555:5555"
       - "8080:8080"
     depends_on: [moodle, db]
+volumes:
+  mariadb_data_v10:
+  moodle_data_v4:
+  moodledata_data_v4:
+  postgres_data_v15:
