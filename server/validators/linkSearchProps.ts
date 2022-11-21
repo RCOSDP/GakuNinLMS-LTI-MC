@@ -7,7 +7,14 @@ export const LinkSearchProps = {
     q: { type: "string" },
     sort: {
       type: "string",
-      enum: ["created", "reverse-created"],
+      enum: [
+        "created",
+        "reverse-created",
+        "updated",
+        "reverse-updated",
+        "title",
+        "reverse-title",
+      ],
     },
     page: { type: "number" },
     per_page: { type: "number" },

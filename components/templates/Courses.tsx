@@ -6,7 +6,7 @@ import Button from "@mui/material/Button";
 import groupBy from "just-group-by";
 import ContentTypeIndicator from "$atoms/ContentTypeIndicator";
 import Container from "$atoms/Container";
-import SortSelect from "$atoms/SortSelect";
+import SortLinkSelect from "$atoms/SortLinkSelect";
 import CourseSearchTextField from "$molecules/CourseSearchTextField";
 import ActionHeader from "$organisms/ActionHeader";
 import ActionFooter from "$organisms/ActionFooter";
@@ -76,19 +76,7 @@ export default function Courses({
     <Container twoColumns maxWidth="xl">
       <ActionHeader sx={{ gridArea: "action-header" }}>
         <ContentTypeIndicator type="course" />
-        <SortSelect<"created" | "reverse-created">
-          onSortChange={linkSearchProps.onSortChange}
-          options={[
-            {
-              value: "created",
-              label: "作成日順（新しい）",
-            },
-            {
-              value: "reverse-created",
-              label: "作成日順（古い）",
-            },
-          ]}
-        />
+        <SortLinkSelect onSortChange={linkSearchProps.onSortChange} />
         <CourseSearchTextField
           label="検索"
           target={linkSearchProps.target}
