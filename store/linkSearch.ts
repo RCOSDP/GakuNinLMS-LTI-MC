@@ -1,45 +1,91 @@
-import { useEffect } from "react";
-import { atom, useAtomValue } from "jotai";
+import { useCallback, useEffect } from "react";
+import { atom, useAtomValue, useAtom } from "jotai";
 import { RESET, atomWithReset, useUpdateAtom } from "jotai/utils";
+import { parse } from "search-query-parser";
 import { stringify } from "$utils/linkSearch/parser";
+import type { AuthorFilterType } from "$server/models/authorFilter";
+import type { LinkSearchTarget } from "$types/linkSearchTarget";
+import type { LinkSearchQuery } from "$server/models/link/searchQuery";
 
 type SortOrder = "created" | "reverse-created";
 
 const inputAtom = atomWithReset<string>("");
-const oauthClientIdAtom = atomWithReset<string>(""); // "": すべてのLMS
-const sortAtom = atomWithReset<SortOrder>("created");
+const targetAtom = atomWithReset<LinkSearchTarget>("all");
 const queryAtom = atom<{
   type: "link";
   q: string;
+  filter: AuthorFilterType;
   sort: SortOrder;
   perPage: number;
   page: number;
-}>((get) => ({
+}>({
   type: "link",
-  q: stringify({
-    type: "link",
-    text: [get(inputAtom)],
-    oauthClientId: [get(oauthClientIdAtom) || []].flat(),
-  }),
-  sort: get(sortAtom),
+  q: "",
+  filter: "self",
+  sort: "created",
   perPage: Number.MAX_SAFE_INTEGER,
   page: 0,
-}));
+});
+const searchQueryAtom = atomWithReset<LinkSearchQuery>({
+  type: "link",
+  text: [],
+  oauthClientId: [],
+  linkTitle: [],
+  bookName: [],
+  topicName: [],
+});
 const resetAtom = atom<undefined, undefined>(
   () => undefined,
   (_, set) => {
     set(inputAtom, RESET);
-    set(oauthClientIdAtom, RESET);
-    set(sortAtom, RESET);
+    set(targetAtom, RESET);
   }
 );
 
+const getInputQuery = (input: string, target: LinkSearchTarget) => {
+  const query = parse(input, { alwaysArray: true, tokenize: true });
+  switch (target) {
+    case "all":
+      return query;
+    default:
+      return { [target]: query.text };
+  }
+};
+
 export function useLinkSearchAtom() {
-  const query = useAtomValue(queryAtom);
+  const [query, updateQuery] = useAtom(queryAtom);
+  const [target, updateTarget] = useAtom(targetAtom);
+  const [searchQuery, updateSearchQuery] = useAtom(searchQueryAtom);
+  const input = useAtomValue(inputAtom);
   const reset = useUpdateAtom(resetAtom);
+
+  useEffect(
+    () =>
+      updateQuery((query) => ({
+        ...query,
+        q: stringify({ ...searchQuery, ...getInputQuery(input, target) }),
+        page: 0,
+      })),
+    [updateQuery, input, target, searchQuery]
+  );
+
   const onSearchSubmit = useUpdateAtom(inputAtom);
-  const onLtiClientClick = useUpdateAtom(oauthClientIdAtom);
-  const onSortChange = useUpdateAtom(sortAtom);
+  const onSearchTargetChange: (target: LinkSearchTarget) => void = useCallback(
+    (target) => updateTarget(target),
+    [updateTarget]
+  );
+  const onSortChange: (sort: SortOrder) => void = useCallback(
+    (sort) => updateQuery((query) => ({ ...query, sort, page: 0 })),
+    [updateQuery]
+  );
+  const onLtiClientClick: (value: string) => void = useCallback(
+    (value: string) =>
+      updateSearchQuery((searchQuery) => ({
+        ...searchQuery,
+        oauthClientId: [value],
+      })),
+    [updateSearchQuery]
+  );
 
   useEffect(() => {
     reset();
@@ -47,7 +93,9 @@ export function useLinkSearchAtom() {
 
   return {
     query,
+    target,
     onSearchSubmit,
+    onSearchTargetChange,
     onLtiClientClick,
     onSortChange,
   };

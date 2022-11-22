@@ -4,11 +4,15 @@ const emptyQuery = {
   type: "link" as const,
   text: [],
   oauthClientId: [],
+  linkTitle: [],
+  bookName: [],
+  topicName: [],
 };
 
 describe("parse()", function () {
   test("検索クエリー文字列をパースできる", function () {
     expect(parse(`link:hoge foo bar baz`)).toEqual({
+      ...emptyQuery,
       type: "link",
       text: ["foo", "bar", "baz"],
       oauthClientId: ["hoge"],
@@ -25,6 +29,16 @@ describe("parse()", function () {
       "hoge",
       "te:s,t",
     ]);
+  });
+
+  test("`linkTitle:` が含まれる文字列をパースできる", function () {
+    expect(parse("link:foo bar linkTitle:hoge")).toEqual({
+      ...emptyQuery,
+      type: "link",
+      text: ["bar"],
+      linkTitle: ["hoge"],
+      oauthClientId: ["foo"],
+    });
   });
 });
 

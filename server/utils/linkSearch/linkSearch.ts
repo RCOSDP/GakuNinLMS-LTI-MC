@@ -14,6 +14,7 @@ import type { AuthorFilter } from "$server/models/authorFilter";
 import { AuthorSchema } from "$server/models/author";
 import prisma from "$server/utils/prisma";
 import createLinkScope from "./createLinkScope";
+import createScopes from "../search/createScopes";
 
 function linkToLinkSchema(
   link: LtiResourceLink & {
@@ -83,14 +84,74 @@ async function linkSearch(
   const where: Prisma.LtiResourceLinkWhereInput = {
     AND: [
       createLinkScope(filter, course),
-      // NOTE: text - 検索文字列 (コース名)
+      // NOTE: text - 検索文字列 (コース名、LTIリンク名、ブック名、トピック名)
       ...query.text.map((t) => ({
-        context: {
-          title: { contains: t, ...insensitiveMode },
-        },
+        OR: [
+          {
+            context: {
+              title: { contains: t, ...insensitiveMode },
+            },
+          },
+          {
+            title: { contains: t, ...insensitiveMode },
+          },
+          {
+            book: {
+              AND: [
+                ...createScopes(filter),
+                {
+                  OR: [
+                    { name: { contains: t, ...insensitiveMode } },
+                    {
+                      sections: {
+                        some: {
+                          topicSections: {
+                            some: {
+                              topic: {
+                                name: { contains: t, ...insensitiveMode },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+          },
+        ],
       })),
       // NOTE: oauthClientId - 配信されているLMS
       ...query.oauthClientId.map((consumerId) => ({ consumerId })),
+      // NOTE: link - リンクのタイトル
+      ...query.linkTitle.map((t) => ({
+        title: { contains: t, ...insensitiveMode },
+      })),
+      // // NOTE: book - ブックのタイトル
+      ...query.bookName.map((t) => ({
+        book: {
+          AND: [
+            ...createScopes(filter),
+            { name: { contains: t, ...insensitiveMode } },
+          ],
+        },
+      })),
+      // // NOTE: topic - トピックのタイトル
+      ...query.topicName.map((t) => ({
+        book: {
+          ...createScopes(filter),
+          sections: {
+            some: {
+              topicSections: {
+                some: {
+                  topic: { name: { contains: t, ...insensitiveMode } },
+                },
+              },
+            },
+          },
+        },
+      })),
     ],
   };
 
