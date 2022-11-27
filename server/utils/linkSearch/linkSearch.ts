@@ -15,6 +15,7 @@ import { AuthorSchema } from "$server/models/author";
 import prisma from "$server/utils/prisma";
 import createLinkScope from "./createLinkScope";
 import createScopes from "../search/createScopes";
+import makeSortLinkOrderQuery from "../makeSortLinkOrderQuery";
 
 function linkToLinkSchema(
   link: LtiResourceLink & {
@@ -171,9 +172,7 @@ async function linkSearch(
         },
       },
     },
-    orderBy: {
-      createdAt: sort === "reverse-created" ? "asc" : "desc",
-    },
+    orderBy: makeSortLinkOrderQuery(sort),
     skip: page * perPage,
     take: perPage,
   });

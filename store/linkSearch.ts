@@ -6,8 +6,7 @@ import { stringify } from "$utils/linkSearch/parser";
 import type { AuthorFilterType } from "$server/models/authorFilter";
 import type { LinkSearchTarget } from "$types/linkSearchTarget";
 import type { LinkSearchQuery } from "$server/models/link/searchQuery";
-
-type SortOrder = "created" | "reverse-created";
+import type { SortLinkOrder } from "$server/models/sortLinkOrder";
 
 const inputAtom = atomWithReset<string>("");
 const targetAtom = atomWithReset<LinkSearchTarget>("all");
@@ -15,14 +14,14 @@ const queryAtom = atom<{
   type: "link";
   q: string;
   filter: AuthorFilterType;
-  sort: SortOrder;
+  sort: SortLinkOrder;
   perPage: number;
   page: number;
 }>({
   type: "link",
   q: "",
   filter: "self",
-  sort: "created",
+  sort: "updated",
   perPage: Number.MAX_SAFE_INTEGER,
   page: 0,
 });
@@ -74,7 +73,7 @@ export function useLinkSearchAtom() {
     (target) => updateTarget(target),
     [updateTarget]
   );
-  const onSortChange: (sort: SortOrder) => void = useCallback(
+  const onSortChange: (sort: SortLinkOrder) => void = useCallback(
     (sort) => updateQuery((query) => ({ ...query, sort, page: 0 })),
     [updateQuery]
   );

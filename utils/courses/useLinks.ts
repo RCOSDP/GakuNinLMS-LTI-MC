@@ -3,14 +3,13 @@ import type { ApiV2LtiSearchGetSortEnum } from "$openapi";
 import type { LinkSearchResultSchema } from "$server/models/link/search";
 import { useLinkSearchAtom } from "$store/linkSearch";
 import { api } from "$utils/api";
-
-type SortOrder = "created" | "reverse-created";
+import type { SortLinkOrder } from "$server/models/sortLinkOrder";
 
 const key = "/api/v2/lti/search";
 
 async function fetchLinks(
   _: typeof key,
-  query: { q: string; sort: SortOrder; perPage: number; page: number }
+  query: { q: string; sort: SortLinkOrder; perPage: number; page: number }
 ): Promise<LinkSearchResultSchema> {
   const res: LinkSearchResultSchema = (await api.apiV2LtiSearchGet({
     ...query,
@@ -32,7 +31,7 @@ export default useLinks;
 
 export function revalidateLinks(query: {
   q: string;
-  sort: SortOrder;
+  sort: SortLinkOrder;
   perPage: number;
   page: number;
 }): Promise<LinkSearchResultSchema> {
