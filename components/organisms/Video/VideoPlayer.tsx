@@ -39,11 +39,15 @@ export default function VideoPlayer({
         // nop
       }
     };
+    // NOTE: videojs-youtube において再生されない不具合があるので play イベントが発火されなければ再実行を試みる
+    const timeout = setTimeout(() => play(), 1_000);
+    player.on("play", () => clearTimeout(timeout));
     const ready =
       player instanceof VimeoPlayer
         ? player.ready()
         : new Promise((resolve) => player.ready(() => resolve(undefined)));
     void ready.then(play);
+    return () => clearTimeout(timeout);
   }, [
     videoInstance,
     autoplay,
