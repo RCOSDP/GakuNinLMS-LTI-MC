@@ -52,17 +52,23 @@ function VideoJs({ element, player, tracks }: Props) {
       current.removeChild(element);
     };
   }, [element, player, classes]);
-  const tracksRef = useRef<HTMLTrackElement[]>([]);
   useEffect(() => {
     if (!tracks || tracks.length === 0) return;
+    const trackElements: HTMLTrackElement[] = [];
     player.ready(() => {
-      tracksRef.current.forEach((track) => {
-        player.removeRemoteTextTrack(track);
-      });
-      tracksRef.current = (tracks
-        ?.map((track) => track && player.addRemoteTextTrack(track, false))
-        .filter(Boolean) ?? []) as HTMLTrackElement[];
+      (
+        (tracks ?? [])
+          .map((track) => track && player.addRemoteTextTrack(track, false))
+          .filter(Boolean) as HTMLTrackElement[]
+      ).forEach((track) => trackElements.push(track));
     });
+    return () => {
+      player.ready(() => {
+        trackElements.forEach((track) => {
+          player.removeRemoteTextTrack(track);
+        });
+      });
+    };
   }, [player, tracks]);
   return <div ref={ref} />;
 }
