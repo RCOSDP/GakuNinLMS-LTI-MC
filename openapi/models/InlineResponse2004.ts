@@ -14,10 +14,10 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    InlineResponse2001Settings,
-    InlineResponse2001SettingsFromJSON,
-    InlineResponse2001SettingsFromJSONTyped,
-    InlineResponse2001SettingsToJSON,
+    InlineResponse2004Contents,
+    InlineResponse2004ContentsFromJSON,
+    InlineResponse2004ContentsFromJSONTyped,
+    InlineResponse2004ContentsToJSON,
 } from './';
 
 /**
@@ -31,37 +31,25 @@ export interface InlineResponse2004 {
      * @type {number}
      * @memberof InlineResponse2004
      */
-    id: number;
+    totalCount: number;
     /**
      * 
-     * @type {string}
+     * @type {Array<InlineResponse2004Contents>}
      * @memberof InlineResponse2004
      */
-    ltiConsumerId: string;
+    contents: Array<InlineResponse2004Contents>;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof InlineResponse2004
      */
-    ltiUserId: string;
+    page: number;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof InlineResponse2004
      */
-    name: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineResponse2004
-     */
-    email?: string;
-    /**
-     * 
-     * @type {InlineResponse2001Settings}
-     * @memberof InlineResponse2004
-     */
-    settings?: InlineResponse2001Settings;
+    perPage: number;
 }
 
 export function InlineResponse2004FromJSON(json: any): InlineResponse2004 {
@@ -74,12 +62,10 @@ export function InlineResponse2004FromJSONTyped(json: any, ignoreDiscriminator: 
     }
     return {
         
-        'id': json['id'],
-        'ltiConsumerId': json['ltiConsumerId'],
-        'ltiUserId': json['ltiUserId'],
-        'name': json['name'],
-        'email': !exists(json, 'email') ? undefined : json['email'],
-        'settings': !exists(json, 'settings') ? undefined : InlineResponse2001SettingsFromJSON(json['settings']),
+        'totalCount': json['totalCount'],
+        'contents': ((json['contents'] as Array<any>).map(InlineResponse2004ContentsFromJSON)),
+        'page': json['page'],
+        'perPage': json['perPage'],
     };
 }
 
@@ -92,12 +78,10 @@ export function InlineResponse2004ToJSON(value?: InlineResponse2004 | null): any
     }
     return {
         
-        'id': value.id,
-        'ltiConsumerId': value.ltiConsumerId,
-        'ltiUserId': value.ltiUserId,
-        'name': value.name,
-        'email': value.email,
-        'settings': InlineResponse2001SettingsToJSON(value.settings),
+        'totalCount': value.totalCount,
+        'contents': ((value.contents as Array<any>).map(InlineResponse2004ContentsToJSON)),
+        'page': value.page,
+        'perPage': value.perPage,
     };
 }
 

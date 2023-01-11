@@ -48,17 +48,8 @@ function Show(query: Query) {
     query.token
   );
   useBookActivity(book?.id);
-  const {
-    book: bookAtom,
-    updateBook,
-    itemIndex,
-    nextItemIndex,
-    itemExists,
-    updateItemIndex,
-  } = useBookAtom();
-  useEffect(() => {
-    if (book && !bookAtom) updateBook(book);
-  }, [book, bookAtom, updateBook]);
+  const { itemIndex, nextItemIndex, itemExists, updateItemIndex } =
+    useBookAtom(book);
   useActivityTracking();
   const { video } = useVideoAtom();
   const tracking = usePlayerTrackingAtom();

@@ -1,12 +1,13 @@
 import { useMemo } from "react";
-import useSWR, { mutate } from "swr";
+import { mutate } from "swr";
+import useSWRImmutable from "swr/immutable";
 import { api } from "./api";
 import type { BookProps, BookSchema } from "$server/models/book";
 import type { TopicSchema } from "$server/models/topic";
 import type { IsContentEditable } from "$server/models/content";
 import { revalidateSession } from "./session";
 import type { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
-import getDisplayableBook from "./getDisplayableBook";
+import { getDisplayableBook } from "./displayableBook";
 
 const key = "/api/v2/book/{book_id}";
 
@@ -33,9 +34,10 @@ export function useBook(
   ltiResourceLink?: Pick<LtiResourceLinkSchema, "bookId" | "creatorId"> | null,
   token?: string
 ) {
-  const { data, error } = useSWR<BookSchema>(
+  const { data, error } = useSWRImmutable<BookSchema>(
     Number.isFinite(bookId) || token ? [key, bookId, token] : null,
-    fetchBook
+    fetchBook,
+    { revalidateOnMount: true }
   );
   const publicBook = data?.publicBooks?.find(
     (publicBook) => publicBook.token === token

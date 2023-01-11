@@ -9,6 +9,7 @@ import VideoResource from "$organisms/Video/VideoResource";
 import { NEXT_PUBLIC_VIDEO_MAX_HEIGHT } from "$utils/env";
 import { useVideoAtom } from "$store/video";
 import { useBookAtom } from "$store/book";
+import useOembed from "$utils/useOembed";
 import type { SxProps } from "@mui/system";
 
 const hidden = css({
@@ -39,64 +40,68 @@ type Props = {
   onEnded?: () => void;
 };
 
+/**
+ * 再生終了時間が有効か否か
+ * @return 有効かつ再生終了: true、それ以外: false
+ */
+function isValidPlaybackEnd({
+  currentTime,
+  stopTime,
+}: {
+  currentTime: number;
+  stopTime: number | null | undefined;
+}): boolean {
+  return typeof stopTime === "number" && 0 < stopTime && stopTime < currentTime;
+}
+
 export default function Video({ className, sx, topic, onEnded }: Props) {
-  const { video, updateVideo } = useVideoAtom();
+  const { video, preloadVideo } = useVideoAtom();
   const { book, itemIndex, itemExists } = useBookAtom();
-  const prevItemIndex = usePrevious(itemIndex);
   useEffect(() => {
     if (!book) return;
-    updateVideo(book.sections);
+    // バックグラウンドで動画プレイヤーオブジェクトプールに読み込む
+    preloadVideo(book.sections);
     return () => video.clear();
-  }, [book, video, updateVideo]);
+  }, [book, preloadVideo, video]);
+  const oembed = useOembed(topic.resource.id);
+  const prevItemIndex = usePrevious(itemIndex);
   useEffect(() => {
     const topic = itemExists(itemIndex);
     const startTime = topic?.startTime;
     const stopTime = topic?.stopTime;
     if (prevItemIndex?.some((v, i) => v !== itemIndex[i])) {
-      video.get(String(itemExists(prevItemIndex)?.id))?.player.pause();
+      void video.get(String(itemExists(prevItemIndex)?.id))?.player.pause();
     }
     const videoInstance = video.get(String(topic?.id));
     if (!videoInstance) return;
-    if (videoInstance.type == "vimeo") {
-      videoInstance.player.on("ended", () => onEnded?.());
+    if (videoInstance.type === "vimeo") {
       videoInstance.player.on("timeupdate", async () => {
         const currentTime = await videoInstance.player.getCurrentTime();
-        // eslint-disable-next-line tsc/config
-        if (Number.isFinite(stopTime) && currentTime > stopTime) {
+        if (isValidPlaybackEnd({ currentTime, stopTime })) {
           void videoInstance.player.pause();
           onEnded?.();
         }
-        // eslint-disable-next-line tsc/config
+        // @ts-expect-error startTime is number
         if (Number.isFinite(startTime) && currentTime < startTime) {
           void videoInstance.player.setCurrentTime(startTime || 0);
         }
       });
       void videoInstance.player.setCurrentTime(startTime || 0);
-      videoInstance.player.play().catch(() => {
-        // nop
-      });
     } else {
-      const handleEnded = () => {
-        videoInstance.stopTimeOver = true;
-        videoInstance.player.pause();
-        onEnded?.();
-      };
       const handleSeeked = () => {
         const currentTime = videoInstance.player.currentTime();
-        // eslint-disable-next-line tsc/config
+        // @ts-expect-error startTime is number
         if (Number.isFinite(startTime) && currentTime < startTime) {
           videoInstance.player.currentTime(startTime || 0);
         }
       };
       const handleTimeUpdate = () => {
+        if (videoInstance.stopTimeOver) return;
         const currentTime = videoInstance.player.currentTime();
-        if (
-          !videoInstance.stopTimeOver &&
-          Number.isFinite(stopTime) &&
-          // eslint-disable-next-line tsc/config
-          currentTime > stopTime
-        ) {
-          handleEnded();
+        if (isValidPlaybackEnd({ currentTime, stopTime })) {
+          videoInstance.stopTimeOver = true;
+          videoInstance.player.pause();
+          onEnded?.();
         }
       };
       const handlePlay = () => {
@@ -115,38 +120,44 @@ export default function Video({ className, sx, topic, onEnded }: Props) {
         }
         videoInstance.player.on("timeupdate", handleTimeUpdate);
         videoInstance.player.on("seeked", handleSeeked);
-        videoInstance.player.play()?.catch(() => {
-          // nop
-        });
       };
 
-      videoInstance.player.on("ended", handleEnded);
       videoInstance.player.on("play", handlePlay);
       videoInstance.player.on("firstplay", handleFirstPlay);
       videoInstance.player.ready(handleReady);
     }
+    // TODO: videoの内容の変更検知は機能しないので修正したい。Mapオブジェクトでの管理をやめるかMap.prototype.set()を使用しないようにするなど必要かもしれない。
   }, [video, itemExists, prevItemIndex, itemIndex, onEnded]);
+
+  // 動画プレイヤーオブジェクトプールに存在する場合
+  if (video.has(String(topic.id))) {
+    return (
+      <>
+        {Array.from(video.entries()).map(([id, videoInstance]) => (
+          <VideoPlayer
+            key={id}
+            className={clsx(className, {
+              [hidden]: String(topic.id) !== id,
+            })}
+            sx={{ ...videoStyle, ...sx }}
+            videoInstance={videoInstance}
+            autoplay={String(topic.id) === id}
+            onEnded={String(topic.id) === id ? onEnded : undefined}
+          />
+        ))}
+      </>
+    );
+  }
+
   return (
-    <>
-      {Array.from(video.entries()).map(([topicId, videoInstance]) => (
-        <VideoPlayer
-          key={topicId}
-          className={clsx(className, {
-            [hidden]: String(topic.id) !== topicId,
-          })}
-          sx={{ ...videoStyle, ...sx }}
-          videoInstance={videoInstance}
-        />
-      ))}
-      {video.size === 0 && (
-        <VideoResource
-          className={className}
-          sx={{ ...videoStyle, ...sx }}
-          {...(topic.resource as VideoResourceSchema)}
-          identifier={String(topic.id)}
-          autoplay
-        />
-      )}
-    </>
+    <VideoResource
+      className={className}
+      sx={{ ...videoStyle, ...sx }}
+      {...(topic.resource as VideoResourceSchema)}
+      identifier={String(topic.id)}
+      autoplay
+      onEnded={onEnded}
+      thumbnailUrl={oembed && oembed.thumbnail_url}
+    />
   );
 }

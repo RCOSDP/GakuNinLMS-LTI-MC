@@ -28,7 +28,7 @@ export async function update({
   session,
   body,
 }: FastifyRequest<{ Body: UserSettingsProps }>) {
-  Object.assign(session.user.settings, body);
+  session.user.settings = Object.assign(session.user.settings ?? {}, body);
   await updateUserSettings(session.user.id, session.user.settings ?? {});
 
   return {

@@ -12,13 +12,13 @@ import {
 const key = "/api/v2/book/{book_id}/activity";
 const initialActivity: [] = [];
 
-async function fetchBookActivity(
+async function updateBookActivity(
   _: typeof key,
   bookId: BookSchema["id"],
   loggedin: boolean
 ) {
   if (!bookId || !loggedin) return;
-  const res = await api.apiV2BookBookIdActivityGet({
+  const res = await api.apiV2BookBookIdActivityPut({
     bookId,
     currentLtiContextOnly: NEXT_PUBLIC_ACTIVITY_LTI_CONTEXT_ONLY,
   });
@@ -30,7 +30,7 @@ function useBookActivity(bookId: BookSchema["id"] | undefined) {
   const loggedin = Boolean(session?.user?.id);
   const { data } = useSWR(
     Number.isFinite(bookId) ? [key, bookId, loggedin] : null,
-    fetchBookActivity,
+    updateBookActivity,
     { refreshInterval: NEXT_PUBLIC_ACTIVITY_SEND_INTERVAL * 1_000 }
   );
   useActivityAtom(data ?? initialActivity);

@@ -12,18 +12,24 @@ import TextField from "$atoms/TextField";
 import licenses from "$utils/licenses";
 import { useSearchAtom } from "$store/search";
 import type { SharedFilterType } from "$types/sharedFilter";
+import BookChip from "$atoms/BookChip";
 
-type Props = { sx?: SxProps; variant: "book" | "topic" };
+type Props = {
+  sx?: SxProps;
+  variant: "book" | "topic";
+};
 
 export default function FilterColumn({ sx, variant }: Props) {
   const {
     query,
     searchQuery,
+    relatedBooks,
     onAuthorFilterChange,
     onSharedFilterChange,
     onLicenseFilterChange,
     onLtiContextDelete,
     onKeywordDelete,
+    onRelatedBookDelete,
   } = useSearchAtom();
 
   return (
@@ -79,6 +85,28 @@ export default function FilterColumn({ sx, variant }: Props) {
               onDelete={() => onLtiContextDelete(ltiResourceLink)}
             />
           ))}
+        </FormControl>
+      )}
+      {variant === "topic" && (
+        <FormControl component="fieldset" sx={{ display: "block", mb: 2 }}>
+          <FormLabel component="legend" sx={{ mb: 1 }}>
+            ブック
+          </FormLabel>
+          {(searchQuery.book?.length ?? 0) === 0 && (
+            <Typography>なし</Typography>
+          )}
+          {relatedBooks?.map((relatedBook) => {
+            return (
+              relatedBook && (
+                <BookChip
+                  sx={{ mr: 0.5 }}
+                  key={relatedBook.id}
+                  relatedBook={relatedBook}
+                  onRelatedBookDelete={onRelatedBookDelete}
+                />
+              )
+            );
+          })}
         </FormControl>
       )}
       <FormControl component="fieldset" sx={{ display: "block" }}>

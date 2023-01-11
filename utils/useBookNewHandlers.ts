@@ -9,7 +9,7 @@ import useAuthorsHandler from "$utils/useAuthorsHandler";
 import { updateBookAuthors } from "./bookAuthors";
 
 function useBookNewHandlers(
-  context: "books" | "topics" | undefined,
+  context: "books" | "topics" | "courses" | undefined,
   bookId?: BookSchema["id"]
 ) {
   const router = useRouter();

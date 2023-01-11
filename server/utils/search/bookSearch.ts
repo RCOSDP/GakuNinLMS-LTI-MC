@@ -30,6 +30,7 @@ async function bookSearch(
     license,
     shared,
     link,
+    book,
   }: BookSearchQuery,
   filter: AuthorFilter,
   sort: string,
@@ -147,9 +148,13 @@ async function bookSearch(
       ...shared.map((s) => ({
         shared: s,
       })),
-      // NOTE: link - 提供されているコース
+      // NOTE: link - 配信されているコース
       ...link.map((l) => ({
         ltiResourceLinks: { some: l },
+      })),
+      // NOTE: book - ブックID
+      ...book.map((id) => ({
+        id,
       })),
     ],
   };

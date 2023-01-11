@@ -3,6 +3,7 @@ import { outdent } from "outdent";
 import { validateOrReject } from "class-validator";
 import type { SessionSchema } from "$server/models/session";
 import type { LtiLaunchPresentationSchema } from "$server/models/ltiLaunchPresentation";
+import type { LtiAgsEndpointSchema } from "$server/models/ltiAgsEndpoint";
 import findClient from "$server/utils/ltiv1p3/findClient";
 import init from "./init";
 import { LtiCallbackBody } from "$server/validators/ltiCallbackBody";
@@ -32,7 +33,7 @@ export async function post(req: FastifyRequest<{ Body: Props }>) {
 
   if (!client) {
     req.log.error(`Client "${req.session.oauthClient.id}" が存在しません`);
-    await new Promise(req.destroySession.bind(req));
+    await req.session.destroy();
     return { status: 401 };
   }
 
@@ -71,17 +72,20 @@ export async function post(req: FastifyRequest<{ Body: Props }>) {
           ]?.return_url,
       };
     }
+    const ltiAgsEndpoint: undefined | LtiAgsEndpointSchema =
+      ltiClaims["https://purl.imsglobal.org/spec/lti-ags/claim/endpoint"];
 
     Object.assign(req.session, {
-      state: null,
+      state: undefined,
       ...session,
       ...(ltiLaunchPresentation && { ltiLaunchPresentation }),
+      ...(ltiAgsEndpoint && { ltiAgsEndpoint }),
     });
 
     return await init(req);
   } catch (error) {
     req.log.error(error);
-    await new Promise(req.destroySession.bind(req));
+    await req.session.destroy();
     return { status: 401 };
   }
 }

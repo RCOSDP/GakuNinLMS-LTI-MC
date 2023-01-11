@@ -3,14 +3,18 @@ import makeHooks from "$server/utils/makeHooks";
 import handler from "$server/utils/handler";
 import * as service from "$server/services/wowza";
 
-export default async function (fastify: FastifyInstance) {
-  const path = "/wowza/*";
-  const { method, show } = service;
+export async function wowza(fastify: FastifyInstance) {
   const hooks = makeHooks(fastify, service.hooks);
 
   fastify.get<{ Params: service.Params; Querystring: service.Query }>(
-    path,
-    { schema: method.get, ...hooks.get },
-    handler(show)
+    "/wowza/*",
+    { schema: service.method.get, ...hooks.get },
+    handler(service.show)
+  );
+
+  fastify.post(
+    "/wowza",
+    { schema: service.method.post, ...hooks.post },
+    handler(service.create)
   );
 }

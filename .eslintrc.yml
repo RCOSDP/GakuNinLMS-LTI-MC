@@ -16,6 +16,7 @@ extends:
   - plugin:@typescript-eslint/recommended
   - next
   - next/core-web-vitals
+  - plugin:storybook/recommended
   - prettier
 rules:
   "@typescript-eslint/explicit-module-boundary-types": "off"

@@ -1,6 +1,12 @@
 import { useEffect } from "react";
-import { atom, useAtom } from "jotai";
-import { RESET, atomWithReset, useUpdateAtom, useAtomValue } from "jotai/utils";
+import { useUnmount } from "react-use";
+import { atom } from "jotai";
+import {
+  useUpdateAtom,
+  useAtomValue,
+  atomWithReset,
+  useResetAtom,
+} from "jotai/utils";
 import type { BookSchema } from "$server/models/book";
 import type { TopicSchema } from "$server/models/topic";
 
@@ -50,16 +56,15 @@ const updateItemIndexAtom = atom<undefined, ItemIndex | undefined>(
   }
 );
 
-export function useBookAtom() {
-  const [state, reset] = useAtom(bookAtom);
+export function useBookAtom(book?: BookSchema) {
+  const state = useAtomValue(bookAtom);
+  const reset = useResetAtom(bookAtom);
   const nextItemIndex = useAtomValue(nextItemIndexAtom);
   const updateBook = useUpdateAtom(updateBookAtom);
   const updateItemIndex = useUpdateAtom(updateItemIndexAtom);
-  useEffect(
-    () => () => {
-      reset(RESET);
-    },
-    [reset]
-  );
-  return { ...state, updateBook, updateItemIndex, nextItemIndex };
+  useEffect(() => {
+    if (book && book !== state.book) updateBook(book);
+  }, [updateBook, book, state.book]);
+  useUnmount(reset);
+  return { ...state, updateItemIndex, nextItemIndex };
 }

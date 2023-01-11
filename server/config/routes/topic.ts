@@ -17,12 +17,12 @@ export async function topic(fastify: FastifyInstance) {
   }>(pathWithParams, { schema: method.get, ...hooks.get }, handler(show));
 
   fastify.post<{
-    Body: service.UploadProps;
+    Body: service.Props;
   }>(basePath, { schema: method.post, ...hooks.post }, handler(create));
 
   fastify.put<{
     Params: service.Params;
-    Body: service.UploadProps;
+    Body: service.Props;
   }>(pathWithParams, { schema: method.put, ...hooks.put }, handler(update));
 
   fastify.delete<{

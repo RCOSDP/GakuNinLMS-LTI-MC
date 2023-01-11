@@ -13,37 +13,60 @@
  */
 
 import { exists, mapValues } from '../runtime';
-import {
-    InlineResponse2001Topics,
-    InlineResponse2001TopicsFromJSON,
-    InlineResponse2001TopicsFromJSONTyped,
-    InlineResponse2001TopicsToJSON,
-} from './';
-
 /**
- * 作成したトピックの一覧
+ * 
  * @export
  * @interface InlineResponse2003
  */
 export interface InlineResponse2003 {
     /**
      * 
-     * @type {Array<InlineResponse2001Topics>}
+     * @type {string}
      * @memberof InlineResponse2003
      */
-    topics?: Array<InlineResponse2001Topics>;
+    consumerId: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineResponse2003
+     */
+    id: string;
     /**
      * 
      * @type {number}
      * @memberof InlineResponse2003
      */
-    page?: number;
+    creatorId: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineResponse2003
+     */
+    contextId: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineResponse2003
+     */
+    contextTitle: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineResponse2003
+     */
+    contextLabel: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineResponse2003
+     */
+    title: string;
     /**
      * 
      * @type {number}
      * @memberof InlineResponse2003
      */
-    perPage?: number;
+    bookId: number;
 }
 
 export function InlineResponse2003FromJSON(json: any): InlineResponse2003 {
@@ -56,9 +79,14 @@ export function InlineResponse2003FromJSONTyped(json: any, ignoreDiscriminator: 
     }
     return {
         
-        'topics': !exists(json, 'topics') ? undefined : ((json['topics'] as Array<any>).map(InlineResponse2001TopicsFromJSON)),
-        'page': !exists(json, 'page') ? undefined : json['page'],
-        'perPage': !exists(json, 'perPage') ? undefined : json['perPage'],
+        'consumerId': json['consumerId'],
+        'id': json['id'],
+        'creatorId': json['creatorId'],
+        'contextId': json['contextId'],
+        'contextTitle': json['contextTitle'],
+        'contextLabel': json['contextLabel'],
+        'title': json['title'],
+        'bookId': json['bookId'],
     };
 }
 
@@ -71,9 +99,14 @@ export function InlineResponse2003ToJSON(value?: InlineResponse2003 | null): any
     }
     return {
         
-        'topics': value.topics === undefined ? undefined : ((value.topics as Array<any>).map(InlineResponse2001TopicsToJSON)),
-        'page': value.page,
-        'perPage': value.perPage,
+        'consumerId': value.consumerId,
+        'id': value.id,
+        'creatorId': value.creatorId,
+        'contextId': value.contextId,
+        'contextTitle': value.contextTitle,
+        'contextLabel': value.contextLabel,
+        'title': value.title,
+        'bookId': value.bookId,
     };
 }
 

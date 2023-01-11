@@ -162,6 +162,7 @@ export default function Topics(props: Props) {
             onContentPreviewClick={handlePreviewClick}
             onContentEditClick={onContentEditClick}
             onKeywordClick={searchProps.onKeywordClick}
+            onRelatedBookClick={searchProps.onRelatedBookClick}
           />
         ))}
         {loading &&

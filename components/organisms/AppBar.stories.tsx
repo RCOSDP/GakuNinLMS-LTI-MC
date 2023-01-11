@@ -1,17 +1,15 @@
-export default { title: "organisms/AppBar" };
-
+import type { Story } from "@storybook/react";
 import AppBar from "./AppBar";
 import { session } from "$samples";
 
-export const Default = () => (
-  <AppBar
-    position="static"
-    session={session}
-    onBooksClick={console.log}
-    onTopicsClick={console.log}
-    onDashboardClick={console.log}
-    onBookClick={console.log}
-  />
+export default { title: "organisms/AppBar", component: AppBar };
+
+const Template: Story<Parameters<typeof AppBar>[0]> = (args) => (
+  <AppBar {...args} />
 );
 
-export const Empty = () => <AppBar position="static" session={session} />;
+export const Default = Template.bind({});
+Default.args = {
+  position: "static",
+  session,
+};

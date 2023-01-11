@@ -1,3 +1,4 @@
+import type { OembedSchema } from "$server/models/oembed";
 import type { VideoResourceSchema } from "$server/models/videoResource";
 import type { VideoInstance } from "$types/videoInstance";
 import buildTracks from "$utils/buildTracks";
@@ -7,7 +8,6 @@ import getVimeoPlayer from "./getVimeoPlayer";
 /**
  * 動画プレイヤーのインスタンスを生成
  * @param resource VideoResourceSchema
- * @param autoplay インスタンス生成時に自動再生するか否か
  * @returns プレイヤーのHTML要素、インスタンス、video.jsであれば字幕トラック
  */
 function getVideoInstance(
@@ -15,7 +15,7 @@ function getVideoInstance(
     VideoResourceSchema,
     "providerUrl" | "url" | "accessToken" | "tracks"
   >,
-  autoplay = false
+  thumbnailUrl?: OembedSchema["thumbnail_url"]
 ): VideoInstance {
   switch (resource.providerUrl) {
     case "https://www.youtube.com/":
@@ -30,7 +30,6 @@ function getVideoInstance(
               src: resource.url,
             },
           ],
-          autoplay,
         }),
         tracks: buildTracks(resource.tracks),
         stopTimeOver: false,
@@ -39,7 +38,7 @@ function getVideoInstance(
       return {
         type: "vimeo",
         url: resource.url,
-        ...getVimeoPlayer({ url: resource.url, autoplay }),
+        ...getVimeoPlayer({ url: resource.url }),
       };
     default: {
       const url = `${resource.url}?accessToken=${resource.accessToken}`;
@@ -48,7 +47,7 @@ function getVideoInstance(
         url,
         ...getVideoJsPlayer({
           sources: [{ type: "application/vnd.apple.mpegurl", src: url }],
-          autoplay,
+          poster: thumbnailUrl,
         }),
         tracks: buildTracks(resource.tracks),
         stopTimeOver: false,

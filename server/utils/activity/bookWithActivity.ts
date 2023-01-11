@@ -6,7 +6,7 @@ import type { CourseBookSchema } from "$server/models/courseBook";
 import type { ActivitySchema } from "$server/models/activity";
 import type { BookWithTopics } from "$server/utils/book/bookToBookSchema";
 import { bookToBookSchema } from "$server/utils/book/bookToBookSchema";
-import getDisplayableBook from "$server/utils/getDisplayableBook";
+import { getDisplayableBook } from "$server/utils/displayableBook";
 import contentBy from "$server/utils/contentBy";
 import isCompleted from "./isCompleted";
 
