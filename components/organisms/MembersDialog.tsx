@@ -28,15 +28,15 @@ type Props = {
   members: LtiNrpsContextMemberSchema[];
   open: boolean;
   onClose: React.MouseEventHandler;
-  handleUpdateLtiMembers: (userIds: string[]) => Promise<void>;
+  handleUpdateLtiMembers: (
+    members: LtiNrpsContextMemberSchema[]
+  ) => Promise<void>;
 };
 
 // TODO：storybook対応
 export default function MembersDialog(props: Props) {
   const { members, open, onClose, handleUpdateLtiMembers } = props;
   const classes = useStyles();
-
-  const ltiUserIds = members.map((member) => member.user_id);
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth>
@@ -62,7 +62,9 @@ export default function MembersDialog(props: Props) {
                       <ListItemText>ID: {member.user_id}</ListItemText>
                     </Grid>
                     <Grid item xs={5}>
-                      <ListItemText>名前: 未公開</ListItemText>
+                      <ListItemText>
+                        名前: {member?.name || "未公開"}
+                      </ListItemText>
                     </Grid>
                   </Grid>
                 </ListItem>
@@ -74,7 +76,7 @@ export default function MembersDialog(props: Props) {
       </DialogContent>
       <DialogActions>
         <Button
-          onClick={async () => await handleUpdateLtiMembers(ltiUserIds)}
+          onClick={async () => await handleUpdateLtiMembers(members)}
           color="primary"
           size="small"
         >

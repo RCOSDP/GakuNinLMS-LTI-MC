@@ -157,10 +157,9 @@ export default function Dashboard(props: Props) {
     members: LtiNrpsContextMemberSchema[];
   }>();
 
-  const ltiUserIds = newLtiMembers.map((member) => member.user_id);
   const handleUpdateLtiMembers = useCallback(
-    async (ltiUserIds: string[]) => {
-      await updateLtiMembers({ ltiUserIds });
+    async (members: LtiNrpsContextMemberSchema[]) => {
+      await updateLtiMembers({ members });
       membersDialogProps.onClose();
     },
     [membersDialogProps, updateLtiMembers]
@@ -211,7 +210,7 @@ export default function Dashboard(props: Props) {
           onClick={
             learnerActivities.length > 0
               ? handleMembershipClick(newLtiMembers)
-              : async () => await handleUpdateLtiMembers(ltiUserIds)
+              : async () => await handleUpdateLtiMembers(newLtiMembers)
           }
           color="primary"
           variant="contained"

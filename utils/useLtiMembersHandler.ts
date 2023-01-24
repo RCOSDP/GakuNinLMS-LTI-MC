@@ -1,3 +1,4 @@
+import type { LtiNrpsContextMemberSchema } from "$server/models/ltiNrpsContextMember";
 import { useCallback } from "react";
 import { mutate } from "swr";
 import { api } from "./api";
@@ -5,20 +6,20 @@ import { api } from "./api";
 const key = "/api/v2/ltiMember";
 
 export async function updateLtiMembers({
-  ltiUserIds,
+  members,
 }: {
-  ltiUserIds: string[];
+  members: LtiNrpsContextMemberSchema[];
 }) {
   const res = await api.apiV2LtiMembersPut({
-    body: { lti_user_ids: ltiUserIds },
+    body: { members },
   });
   return await mutate(key, res);
 }
 
 function useLtiMembersHandler() {
   const handler = useCallback(
-    async ({ ltiUserIds }: { ltiUserIds: string[] }) => {
-      return await updateLtiMembers({ ltiUserIds });
+    async ({ members }: { members: LtiNrpsContextMemberSchema[] }) => {
+      return await updateLtiMembers({ members });
     },
     []
   );

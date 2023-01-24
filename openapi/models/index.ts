@@ -55,5 +55,6 @@ export * from './InlineResponse201';
 export * from './InlineResponse2011';
 export * from './InlineResponse2012';
 export * from './LTIContext';
+export * from './LTINRPS20ContextMembershipsMembers';
 export * from './LTIResourceLinkRequest';
 export * from './LTIV13LtiMemberParams';

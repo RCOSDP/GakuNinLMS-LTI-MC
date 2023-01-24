@@ -5,26 +5,27 @@ import type { LtiNrpsContextMemberSchema } from "$server/models/ltiNrpsContextMe
 export async function upsertLtiMembers(
   consumerId: LtiResourceLinkSchema["consumerId"],
   contextId: LtiResourceLinkSchema["contextId"],
-  ltiUserIds: LtiNrpsContextMemberSchema["user_id"][]
+  members: LtiNrpsContextMemberSchema[]
 ) {
   const ltiMembers = [];
-  for (const userId of ltiUserIds) {
+  for (const member of members) {
     const [_, newLtiMembers] = await prisma.$transaction([
       prisma.user.upsert({
         where: {
           ltiConsumerId_ltiUserId: {
-            ltiUserId: userId,
+            ltiUserId: member.user_id,
             ltiConsumerId: consumerId,
           },
         },
         update: {
-          ltiUserId: userId,
+          ltiUserId: member.user_id,
           ltiConsumerId: consumerId,
         },
         create: {
-          ltiUserId: userId,
+          ltiUserId: member.user_id,
           ltiConsumerId: consumerId,
-          name: "",
+          name: member?.name || "",
+          email: member?.email || "",
         },
       }),
       prisma.ltiMember.upsert({
@@ -32,18 +33,18 @@ export async function upsertLtiMembers(
           consumerId_contextId_userId: {
             consumerId,
             contextId,
-            userId,
+            userId: member.user_id,
           },
         },
         update: {
           consumerId,
           contextId,
-          userId,
+          userId: member.user_id,
         },
         create: {
           consumerId,
           contextId,
-          userId,
+          userId: member.user_id,
         },
       }),
     ]);

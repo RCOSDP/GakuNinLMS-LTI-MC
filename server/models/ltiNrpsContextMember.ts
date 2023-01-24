@@ -7,6 +7,11 @@ export const LtiNrpsContextMemberSchema = {
   properties: {
     roles: { type: "array", items: { type: "string" } },
     user_id: { type: "string" },
+    lis_person_sourcedid: { type: "string" },
+    name: { type: "string" },
+    given_name: { type: "string" },
+    family_name: { type: "string" },
+    email: { type: "string" },
   },
 } as const;
 
