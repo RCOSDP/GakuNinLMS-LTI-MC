@@ -20,6 +20,8 @@ export async function upsertLtiMembers(
         update: {
           ltiUserId: member.user_id,
           ltiConsumerId: consumerId,
+          name: member?.name,
+          email: member?.email,
         },
         create: {
           ltiUserId: member.user_id,

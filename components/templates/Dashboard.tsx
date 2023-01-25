@@ -209,8 +209,9 @@ export default function Dashboard(props: Props) {
         <Button
           onClick={
             learnerActivities.length > 0
-              ? handleMembershipClick(newLtiMembers)
-              : async () => await handleUpdateLtiMembers(newLtiMembers)
+              ? handleMembershipClick(memberships?.members || [])
+              : async () =>
+                  await handleUpdateLtiMembers(memberships?.members || [])
           }
           color="primary"
           variant="contained"
@@ -281,6 +282,7 @@ export default function Dashboard(props: Props) {
       {membersData && (
         <MembersDialog
           members={membersData.members}
+          newLtiMembers={newLtiMembers}
           handleUpdateLtiMembers={handleUpdateLtiMembers}
           {...membersDialogProps}
         />

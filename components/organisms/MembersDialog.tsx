@@ -26,6 +26,7 @@ const useStyles = makeStyles((theme) => ({
 
 type Props = {
   members: LtiNrpsContextMemberSchema[];
+  newLtiMembers: LtiNrpsContextMemberSchema[];
   open: boolean;
   onClose: React.MouseEventHandler;
   handleUpdateLtiMembers: (
@@ -35,7 +36,8 @@ type Props = {
 
 // TODO：storybook対応
 export default function MembersDialog(props: Props) {
-  const { members, open, onClose, handleUpdateLtiMembers } = props;
+  const { members, newLtiMembers, open, onClose, handleUpdateLtiMembers } =
+    props;
   const classes = useStyles();
 
   return (
@@ -53,7 +55,7 @@ export default function MembersDialog(props: Props) {
       </DialogTitle>
       <DialogContent>
         <List disablePadding={false}>
-          {members.map((member) => {
+          {newLtiMembers.map((member) => {
             return (
               <>
                 <ListItem key={member.user_id} dense={true}>
