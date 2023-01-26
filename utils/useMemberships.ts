@@ -2,7 +2,7 @@ import type { LtiNrpsContextMembershipSchema } from "$server/models/ltiNrpsConte
 import useSWR from "swr";
 import { api } from "./api";
 
-const key = "/api/v2/memberships";
+const key = "/api/v2/lti/members";
 
 async function fetchMemberships(_: typeof key) {
   const memberships: unknown = await api.apiV2LtiMembersGet();

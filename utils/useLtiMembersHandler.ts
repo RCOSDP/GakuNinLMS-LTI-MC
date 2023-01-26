@@ -3,7 +3,7 @@ import { useCallback } from "react";
 import { mutate } from "swr";
 import { api } from "./api";
 
-const key = "/api/v2/ltiMember";
+const key = "/api/v2/lti/members";
 
 export async function updateLtiMembers({
   members,
