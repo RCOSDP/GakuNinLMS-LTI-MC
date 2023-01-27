@@ -15,6 +15,7 @@ import {
   ListItemText,
 } from "@mui/material";
 import type { LtiNrpsContextMemberSchema } from "$server/models/ltiNrpsContextMember";
+import React, { Fragment } from "react";
 
 const useStyles = makeStyles((theme) => ({
   closeButton: {
@@ -57,8 +58,8 @@ export default function MembersDialog(props: Props) {
         <List disablePadding={false}>
           {newLtiMembers.map((member) => {
             return (
-              <>
-                <ListItem key={member.user_id} dense={true}>
+              <Fragment key={member.user_id}>
+                <ListItem dense={true}>
                   <Grid container>
                     <Grid item xs={5}>
                       <ListItemText>ID: {member.user_id}</ListItemText>
@@ -71,7 +72,7 @@ export default function MembersDialog(props: Props) {
                   </Grid>
                 </ListItem>
                 <Divider />
-              </>
+              </Fragment>
             );
           })}
         </List>
