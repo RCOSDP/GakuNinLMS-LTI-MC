@@ -7,19 +7,28 @@ const key = "/api/v2/lti/members";
 
 export async function updateLtiMembers({
   members,
+  currentLtiContextOnly,
 }: {
   members: LtiNrpsContextMemberSchema[];
+  currentLtiContextOnly: boolean;
 }) {
-  const res = await api.apiV2LtiMembersPut({
+  await api.apiV2LtiMembersPut({
     body: { members },
   });
-  return await mutate(key, res);
+  await mutate(["/api/v2/activity", currentLtiContextOnly]);
+  return await mutate(key);
 }
 
 function useLtiMembersHandler() {
   const handler = useCallback(
-    async ({ members }: { members: LtiNrpsContextMemberSchema[] }) => {
-      return await updateLtiMembers({ members });
+    async ({
+      members,
+      currentLtiContextOnly,
+    }: {
+      members: LtiNrpsContextMemberSchema[];
+      currentLtiContextOnly: boolean;
+    }) => {
+      return await updateLtiMembers({ members, currentLtiContextOnly });
     },
     []
   );

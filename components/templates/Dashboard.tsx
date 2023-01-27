@@ -108,7 +108,7 @@ type Props = {
 };
 
 export default function Dashboard(props: Props) {
-  const { session, learners, courseBooks, bookActivities } = props;
+  const { session, learners, courseBooks, bookActivities, scope } = props;
   const { data: memberships } = useMemberships();
   const newLtiMembers = useMemo(() => {
     if (!memberships) {
@@ -159,10 +159,13 @@ export default function Dashboard(props: Props) {
 
   const handleUpdateLtiMembers = useCallback(
     async (members: LtiNrpsContextMemberSchema[]) => {
-      await updateLtiMembers({ members });
+      await updateLtiMembers({
+        members,
+        currentLtiContextOnly: scope === "current-lti-context-only",
+      });
       membersDialogProps.onClose();
     },
-    [membersDialogProps, updateLtiMembers]
+    [membersDialogProps, scope, updateLtiMembers]
   );
   const handleLearnerClick = useCallback(
     (book: Pick<BookSchema, "id">) => (learner: LearnerSchema) =>
