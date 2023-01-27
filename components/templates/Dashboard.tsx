@@ -219,7 +219,6 @@ export default function Dashboard(props: Props) {
           color="primary"
           variant="contained"
           size="small"
-          disabled={newLtiMembers.length === 0}
         >
           <GroupOutlinedIcon fontSize="small" />
           {learnerActivities.length > 0 ? "受講者の同期" : "受講者の登録"}
