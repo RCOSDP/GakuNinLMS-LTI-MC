@@ -2,14 +2,13 @@ import prisma from "$server/utils/prisma";
 import type { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
 import type { LtiNrpsContextMemberSchema } from "$server/models/ltiNrpsContextMember";
 
-export async function upsertLtiMembers(
+export async function updateLtiMembers(
   consumerId: LtiResourceLinkSchema["consumerId"],
   contextId: LtiResourceLinkSchema["contextId"],
   members: LtiNrpsContextMemberSchema[]
 ) {
-  const ltiMembers = [];
-  for (const member of members) {
-    const [_, newLtiMembers] = await prisma.$transaction([
+  await prisma.$transaction([
+    ...members.map((member) =>
       prisma.user.upsert({
         where: {
           ltiConsumerId_ltiUserId: {
@@ -29,28 +28,28 @@ export async function upsertLtiMembers(
           name: member?.name || "",
           email: member?.email || "",
         },
-      }),
-      prisma.ltiMember.upsert({
-        where: {
-          consumerId_contextId_userId: {
-            consumerId,
-            contextId,
-            userId: member.user_id,
-          },
-        },
-        update: {
-          consumerId,
-          contextId,
-          userId: member.user_id,
-        },
-        create: {
-          consumerId,
-          contextId,
-          userId: member.user_id,
-        },
-      }),
-    ]);
-    ltiMembers.push(newLtiMembers);
-  }
+      })
+    ),
+    prisma.ltiMember.deleteMany({
+      where: {
+        consumerId,
+        contextId,
+      },
+    }),
+    prisma.ltiMember.createMany({
+      data: members.map((member) => ({
+        consumerId,
+        contextId,
+        userId: member.user_id,
+      })),
+    }),
+  ]);
+
+  const ltiMembers = await prisma.ltiMember.findMany({
+    where: {
+      consumerId,
+      contextId,
+    },
+  });
   return ltiMembers;
 }

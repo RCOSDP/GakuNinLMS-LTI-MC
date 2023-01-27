@@ -3,8 +3,7 @@ import { outdent } from "outdent";
 import { LtiMemberBodySchema } from "$server/validators/ltiMemberParams";
 import authUser from "$server/auth/authUser";
 import authInstructor from "$server/auth/authInstructor";
-import { findLtiResourceLink } from "$server/utils/ltiResourceLink";
-import { upsertLtiMembers } from "$server/utils/ltiMembers";
+import { updateLtiMembers } from "$server/utils/ltiMembers";
 import { LtiMembersSchema } from "$server/models/ltiMembers";
 
 export const updateSchema: FastifySchema = {
@@ -31,20 +30,9 @@ export async function update(
     Body: Body;
   }>
 ) {
-  const ltiResourceLink = await findLtiResourceLink({
-    consumerId: req.session.oauthClient.id,
-    id: req.session.ltiResourceLinkRequest.id,
-  });
-
-  if (!ltiResourceLink) {
-    return {
-      status: 400,
-    };
-  }
-
-  const ltiMembers = await upsertLtiMembers(
-    ltiResourceLink.consumerId,
-    ltiResourceLink.contextId,
+  const ltiMembers = await updateLtiMembers(
+    req.session.oauthClient.id,
+    req.session.ltiContext.id,
     req.body.members
   );
 
