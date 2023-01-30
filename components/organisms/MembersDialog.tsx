@@ -57,7 +57,7 @@ export default function MembersDialog(props: Props) {
       <DialogContent>
         {newLtiMembers.length === 0 ? (
           <Typography variant="body1" component="p">
-            新規のメンバーは存在しません。既存メンバーの情報更新のみを行います。
+            新規の受講者は存在しません。既存受講者の同期のみを行います。
           </Typography>
         ) : (
           <List disablePadding={false}>
