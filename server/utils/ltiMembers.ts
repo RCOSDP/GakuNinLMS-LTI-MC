@@ -2,6 +2,18 @@ import prisma from "$server/utils/prisma";
 import type { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
 import type { LtiNrpsContextMemberSchema } from "$server/models/ltiNrpsContextMember";
 
+export async function getLtiMembers(
+  consumerId: LtiResourceLinkSchema["consumerId"],
+  contextId: LtiResourceLinkSchema["contextId"]
+) {
+  return await prisma.ltiMember.findMany({
+    where: {
+      consumerId,
+      contextId,
+    },
+  });
+}
+
 export async function updateLtiMembers(
   consumerId: LtiResourceLinkSchema["consumerId"],
   contextId: LtiResourceLinkSchema["contextId"],

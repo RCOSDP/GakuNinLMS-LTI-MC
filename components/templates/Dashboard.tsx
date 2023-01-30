@@ -114,10 +114,13 @@ export default function Dashboard(props: Props) {
     if (!memberships) {
       return [];
     }
-    return memberships.members.filter((member) => {
-      return learners.every((learner) => learner.id !== Number(member.user_id));
+    const { members, currentLtiMembers } = memberships;
+    return members.filter((member) => {
+      return currentLtiMembers?.every(
+        (learner) => learner.userId !== member.user_id
+      );
     });
-  }, [learners, memberships]);
+  }, [memberships]);
   const updateLtiMembers = useLtiMembersHandler();
   const classes = useStyles();
   const cardClasses = useCardStyles();
@@ -211,7 +214,8 @@ export default function Dashboard(props: Props) {
         </Button>
         <Button
           onClick={
-            learnerActivities.length > 0
+            memberships?.currentLtiMembers &&
+            memberships.currentLtiMembers.length > 0
               ? handleMembershipClick(memberships?.members || [])
               : async () =>
                   await handleUpdateLtiMembers(memberships?.members || [])
@@ -221,7 +225,10 @@ export default function Dashboard(props: Props) {
           size="small"
         >
           <GroupOutlinedIcon fontSize="small" />
-          {learnerActivities.length > 0 ? "受講者の同期" : "受講者の登録"}
+          {memberships?.currentLtiMembers &&
+          memberships.currentLtiMembers.length > 0
+            ? "受講者の同期"
+            : "受講者の登録"}
         </Button>
       </ActionHeader>
       <Card classes={cardClasses} className={classes.card}>

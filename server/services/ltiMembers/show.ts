@@ -5,6 +5,7 @@ import { getMemberships } from "$server/utils/ltiv1p3/services";
 import type { FastifyRequest, FastifySchema } from "fastify";
 import findClient from "$server/utils/ltiv1p3/findClient";
 import { LtiNrpsContextMembershipSchema } from "$server/models/ltiNrpsContextMembership";
+import { getLtiMembers } from "$server/utils/ltiMembers";
 
 export const showSchema: FastifySchema = {
   summary: "LTI-NRPS 受講者の取得",
@@ -33,14 +34,19 @@ export async function show({ session }: FastifyRequest) {
     client,
     session.ltiNrpsParameter?.context_memberships_url
   );
-  if (!membership) {
+  if (!membership || !session.ltiResourceLink) {
     return {
       status: 401,
     };
   }
 
+  const currentLtiMembers = await getLtiMembers(
+    session.ltiResourceLink.consumerId,
+    session.ltiResourceLink.contextId
+  );
+
   return {
     status: 200,
-    body: membership,
+    body: { ...membership, currentLtiMembers },
   };
 }

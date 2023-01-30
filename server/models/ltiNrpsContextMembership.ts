@@ -1,5 +1,6 @@
 import type { FromSchema } from "json-schema-to-ts";
 import { LtiContextSchema } from "./ltiContext";
+import { LtiMembersSchema } from "./ltiMembers";
 import { LtiNrpsContextMemberSchema } from "./ltiNrpsContextMember";
 
 export const LtiNrpsContextMembershipSchema = {
@@ -11,6 +12,7 @@ export const LtiNrpsContextMembershipSchema = {
     id: { title: "LMS memberships URL", type: "string" },
     context: LtiContextSchema,
     members: { type: "array", items: LtiNrpsContextMemberSchema },
+    currentLtiMembers: LtiMembersSchema,
   },
   additionalProperties: false,
 } as const;
