@@ -55,27 +55,33 @@ export default function MembersDialog(props: Props) {
         </Typography>
       </DialogTitle>
       <DialogContent>
-        <List disablePadding={false}>
-          {newLtiMembers.map((member) => {
-            return (
-              <Fragment key={member.user_id}>
-                <ListItem dense={true}>
-                  <Grid container>
-                    <Grid item xs={5}>
-                      <ListItemText>ID: {member.user_id}</ListItemText>
+        {newLtiMembers.length === 0 ? (
+          <Typography variant="body1" component="p">
+            新規のメンバーは存在しません。既存メンバーの情報更新のみを行います。
+          </Typography>
+        ) : (
+          <List disablePadding={false}>
+            {newLtiMembers.map((member) => {
+              return (
+                <Fragment key={member.user_id}>
+                  <ListItem dense={true}>
+                    <Grid container>
+                      <Grid item xs={5}>
+                        <ListItemText>ID: {member.user_id}</ListItemText>
+                      </Grid>
+                      <Grid item xs={5}>
+                        <ListItemText>
+                          名前: {member?.name || "未公開"}
+                        </ListItemText>
+                      </Grid>
                     </Grid>
-                    <Grid item xs={5}>
-                      <ListItemText>
-                        名前: {member?.name || "未公開"}
-                      </ListItemText>
-                    </Grid>
-                  </Grid>
-                </ListItem>
-                <Divider />
-              </Fragment>
-            );
-          })}
-        </List>
+                  </ListItem>
+                  <Divider />
+                </Fragment>
+              );
+            })}
+          </List>
+        )}
       </DialogContent>
       <DialogActions>
         <Button
