@@ -57,13 +57,16 @@ export default function MembersDialog(props: Props) {
       <DialogContent>
         {newLtiMembers.length === 0 ? (
           <Typography variant="body1" component="p">
-            新規の受講者は存在しません。既存受講者の同期のみを行います。
+            新規の受講者は存在しません。
           </Typography>
         ) : (
           <List disablePadding={false}>
             {newLtiMembers.map((member) => {
               return (
                 <Fragment key={member.user_id}>
+                  <Typography variant="body1" component="p">
+                    新規の受講者
+                  </Typography>
                   <ListItem dense={true}>
                     <Grid container>
                       <Grid item xs={5}>
