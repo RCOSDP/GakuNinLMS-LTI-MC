@@ -41,8 +41,8 @@ export async function show({ session }: FastifyRequest) {
   }
 
   const currentLtiMembers = await getLtiMembers(
-    session.ltiResourceLink.consumerId,
-    session.ltiResourceLink.contextId
+    session.oauthClient.id,
+    session.ltiContext.id
   );
 
   return {
