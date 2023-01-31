@@ -34,7 +34,7 @@ export async function show({ session }: FastifyRequest) {
     client,
     session.ltiNrpsParameter?.context_memberships_url
   );
-  if (!membership || !session.ltiResourceLink) {
+  if (!membership) {
     return {
       status: 401,
     };
