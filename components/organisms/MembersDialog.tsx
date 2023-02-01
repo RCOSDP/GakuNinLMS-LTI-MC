@@ -87,6 +87,9 @@ export default function MembersDialog(props: Props) {
         )}
       </DialogContent>
       <DialogActions>
+        <Button onClick={onClose} color="primary" size="small">
+          キャンセル
+        </Button>
         <Button
           onClick={async () => await handleUpdateLtiMembers(members)}
           color="primary"
