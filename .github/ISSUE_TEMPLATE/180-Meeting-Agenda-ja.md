@@ -3,7 +3,7 @@
 name: Agenda
 about: ミーティング・アジェンダ
 title: "xxxx年xx月xx日(xx) xx:xx 〜 ミーティング・アジェンダ"
-labels: Meeting Agenda
+labels: ""
 assignees: ""
 ---
 
