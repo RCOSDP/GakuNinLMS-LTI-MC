@@ -2,6 +2,7 @@ import type { Client } from "openid-client";
 import prisma from "$server/utils/prisma";
 import type { LtiNrpsContextMembershipSchema } from "$server/models/ltiNrpsContextMembership";
 import { createAccessToken } from "./accessToken";
+import { isInstructor } from "./roles";
 
 const successCode = [200, 201, 202, 204];
 const authFailureCode = [401];
@@ -59,7 +60,10 @@ export async function getMemberships(
   const learnerMemberships = {
     ...memberships,
     members: memberships.members.filter(
-      (member) => !member.roles.includes("Instructor")
+      (member) =>
+        !isInstructor(member.roles) &&
+        // NOTE: For Moodle
+        !member.roles.includes("Instructor")
     ),
   };
   return learnerMemberships;
