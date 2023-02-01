@@ -1,5 +1,6 @@
 import type { Client } from "openid-client";
 import prisma from "$server/utils/prisma";
+import { createAccessToken } from "./accessToken";
 
 type Score = {
   userId: string;
@@ -24,18 +25,6 @@ type Score = {
 const successCode = [200, 201, 202, 204];
 const authFailureCode = [401];
 
-async function grant(client: Client): Promise<string> {
-  try {
-    const tokens = await client.grant({
-      grant_type: "client_credentials",
-      scope: "https://purl.imsglobal.org/spec/lti-ags/scope/score",
-    });
-    return tokens.access_token ?? "";
-  } catch {
-    return "";
-  }
-}
-
 /**
  * LTI-AGS 2.0 成績の反映
  * https://www.imsglobal.org/spec/lti-ags/v2p0/openapi/#/default/Scores.POST
@@ -52,24 +41,7 @@ export async function publishScore(
 ) {
   const clientId = client.metadata.client_id;
 
-  let { accessToken } = await prisma.ltiConsumer.findUniqueOrThrow({
-    where: { id: clientId },
-  });
-
-  if (!accessToken) {
-    accessToken = await grant(client);
-
-    if (!accessToken) {
-      throw new Error(
-        `Failed to grant access token: client ${client.metadata.client_id}`
-      );
-    }
-
-    await prisma.ltiConsumer.update({
-      where: { id: clientId },
-      data: { accessToken },
-    });
-  }
+  const { accessToken } = await createAccessToken(client);
 
   const url = new URL(lineItemUrl);
   url.pathname = `${url.pathname}/scores`;

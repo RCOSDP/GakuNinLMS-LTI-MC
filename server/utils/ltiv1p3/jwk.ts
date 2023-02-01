@@ -1,4 +1,5 @@
 import type jose from "jose";
+import { calculateJwkThumbprint } from "jose";
 import fs from "node:fs/promises";
 import crypto from "node:crypto";
 import { OPENID_PRIVATE_KEY, OPENID_PRIVATE_KEY_PATH } from "$server/utils/env";
@@ -19,7 +20,9 @@ export async function createPrivateKey(): Promise<jose.JWK | null> {
   const key = await readKey();
   if (!key) return null;
 
-  return crypto.createPrivateKey(key).export({ format: "jwk" });
+  const jwk = crypto.createPrivateKey(key).export({ format: "jwk" });
+  const kid = await calculateJwkThumbprint(jwk);
+  return { ...jwk, kid };
 }
 
 /** Public Key 作成 */
@@ -27,5 +30,7 @@ export async function createPublicKey(): Promise<jose.JWK | null> {
   const key = await readKey();
   if (!key) return null;
 
-  return crypto.createPublicKey(key).export({ format: "jwk" });
+  const jwk = crypto.createPublicKey(key).export({ format: "jwk" });
+  const kid = await calculateJwkThumbprint(jwk);
+  return { ...jwk, kid };
 }

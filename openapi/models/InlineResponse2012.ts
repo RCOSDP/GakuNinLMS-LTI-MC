@@ -16,32 +16,32 @@ import { exists, mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface InlineResponse2008
+ * @interface InlineResponse2012
  */
-export interface InlineResponse2008 {
+export interface InlineResponse2012 {
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse2008
+     * @memberof InlineResponse2012
      */
-    publicToken: string;
+    url?: string;
 }
 
-export function InlineResponse2008FromJSON(json: any): InlineResponse2008 {
-    return InlineResponse2008FromJSONTyped(json, false);
+export function InlineResponse2012FromJSON(json: any): InlineResponse2012 {
+    return InlineResponse2012FromJSONTyped(json, false);
 }
 
-export function InlineResponse2008FromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse2008 {
+export function InlineResponse2012FromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse2012 {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
-        'publicToken': json['publicToken'],
+        'url': !exists(json, 'url') ? undefined : json['url'],
     };
 }
 
-export function InlineResponse2008ToJSON(value?: InlineResponse2008 | null): any {
+export function InlineResponse2012ToJSON(value?: InlineResponse2012 | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -50,7 +50,7 @@ export function InlineResponse2008ToJSON(value?: InlineResponse2008 | null): any
     }
     return {
         
-        'publicToken': value.publicToken,
+        'url': value.url,
     };
 }
 

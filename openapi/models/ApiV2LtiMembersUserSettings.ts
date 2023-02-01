@@ -16,32 +16,32 @@ import { exists, mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface InlineResponse2008
+ * @interface ApiV2LtiMembersUserSettings
  */
-export interface InlineResponse2008 {
+export interface ApiV2LtiMembersUserSettings {
     /**
      * 
-     * @type {string}
-     * @memberof InlineResponse2008
+     * @type {boolean}
+     * @memberof ApiV2LtiMembersUserSettings
      */
-    publicToken: string;
+    zoomImportEnabled?: boolean;
 }
 
-export function InlineResponse2008FromJSON(json: any): InlineResponse2008 {
-    return InlineResponse2008FromJSONTyped(json, false);
+export function ApiV2LtiMembersUserSettingsFromJSON(json: any): ApiV2LtiMembersUserSettings {
+    return ApiV2LtiMembersUserSettingsFromJSONTyped(json, false);
 }
 
-export function InlineResponse2008FromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse2008 {
+export function ApiV2LtiMembersUserSettingsFromJSONTyped(json: any, ignoreDiscriminator: boolean): ApiV2LtiMembersUserSettings {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
-        'publicToken': json['publicToken'],
+        'zoomImportEnabled': !exists(json, 'zoomImportEnabled') ? undefined : json['zoomImportEnabled'],
     };
 }
 
-export function InlineResponse2008ToJSON(value?: InlineResponse2008 | null): any {
+export function ApiV2LtiMembersUserSettingsToJSON(value?: ApiV2LtiMembersUserSettings | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -50,7 +50,7 @@ export function InlineResponse2008ToJSON(value?: InlineResponse2008 | null): any
     }
     return {
         
-        'publicToken': value.publicToken,
+        'zoomImportEnabled': value.zoomImportEnabled,
     };
 }
 
