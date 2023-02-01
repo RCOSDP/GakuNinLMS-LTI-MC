@@ -1,4 +1,3 @@
-
 ---
 name: Agenda
 about: ミーティング・アジェンダ
