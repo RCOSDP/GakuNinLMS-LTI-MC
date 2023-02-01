@@ -53,9 +53,6 @@ export async function getMemberships(
     res.body.toString()
   ) as LtiNrpsContextMembershipSchema;
 
-  // TODO: デバッグ用のためあとで削除すること
-  console.log(JSON.stringify({ memberships }, null, "  "));
-
   // 教師を除く、学習者のみのデータを返す
   const learnerMemberships = {
     ...memberships,
