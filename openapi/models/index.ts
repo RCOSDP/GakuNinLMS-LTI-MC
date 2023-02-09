@@ -28,6 +28,7 @@ export * from './InlineResponse20013Book';
 export * from './InlineResponse20013BookActivities';
 export * from './InlineResponse20013CourseBooks';
 export * from './InlineResponse20013Sections';
+export * from './InlineResponse20014';
 export * from './InlineResponse2002';
 export * from './InlineResponse2002Book';
 export * from './InlineResponse2002BookAuthors';

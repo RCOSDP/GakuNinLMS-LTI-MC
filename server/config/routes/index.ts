@@ -13,6 +13,7 @@ import * as resource from "./resource";
 import * as event from "./event";
 import * as wowza from "./wowza";
 import * as activity from "./activity";
+import * as activityTimeRange from "./activityTimeRange";
 import session from "./session";
 
 const routers = [
@@ -30,6 +31,7 @@ const routers = [
   event,
   wowza,
   activity,
+  activityTimeRange,
 ];
 
 async function routes(fastify: FastifyInstance) {

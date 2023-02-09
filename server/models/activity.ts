@@ -5,6 +5,7 @@ import { LearnerSchema } from "./learner";
 export const ActivitySchema = {
   type: "object",
   properties: {
+    id: { type: "integer" },
     learner: LearnerSchema,
     topic: {
       type: "object",
@@ -26,6 +27,7 @@ export const ActivitySchema = {
     updatedAt: { type: "string", format: "date-time" },
   },
   required: [
+    "id",
     "learner",
     "topic",
     "completed",
@@ -39,7 +41,7 @@ export const ActivitySchema = {
 /** 学習活動 */
 export type ActivitySchema = Pick<
   FromSchema<typeof ActivitySchema>,
-  "learner" | "topic" | "completed" | "totalTimeMs"
+  "id" | "learner" | "topic" | "completed" | "totalTimeMs"
 > & {
   /** 作成日時 */
   createdAt: Date;
