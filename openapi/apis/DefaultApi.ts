@@ -393,7 +393,7 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * 学習活動IDに紐づく、ビデオ視聴済の時間を返します。 受講者以外の学習活動は含みません。
+     * 学習活動IDに紐づく、ビデオ視聴済の時間を返します。
      * ビデオ視聴時間
      */
     async apiV2ActivityTimeRangeGetRaw(requestParameters: ApiV2ActivityTimeRangeGetRequest): Promise<runtime.ApiResponse<Array<InlineResponse20014>>> {
@@ -420,7 +420,7 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * 学習活動IDに紐づく、ビデオ視聴済の時間を返します。 受講者以外の学習活動は含みません。
+     * 学習活動IDに紐づく、ビデオ視聴済の時間を返します。
      * ビデオ視聴時間
      */
     async apiV2ActivityTimeRangeGet(requestParameters: ApiV2ActivityTimeRangeGetRequest): Promise<Array<InlineResponse20014>> {
