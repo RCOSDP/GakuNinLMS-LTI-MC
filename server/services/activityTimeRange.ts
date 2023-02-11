@@ -28,8 +28,14 @@ export const hooks = {
   get: { auth: [authUser] },
 };
 
-export async function index({ query }: FastifyRequest<{ Querystring: Query }>) {
-  const body = await fetchActivityTimeRange({ activityId: query.activityId });
+export async function index({
+  session,
+  query,
+}: FastifyRequest<{ Querystring: Query }>) {
+  const body = await fetchActivityTimeRange({
+    session,
+    activityId: query.activityId,
+  });
 
   return { status: 200, body };
 }

@@ -13,6 +13,13 @@
  */
 
 import { exists, mapValues } from '../runtime';
+import {
+    InlineResponse2007Activity,
+    InlineResponse2007ActivityFromJSON,
+    InlineResponse2007ActivityFromJSONTyped,
+    InlineResponse2007ActivityToJSON,
+} from './';
+
 /**
  * 
  * @export
@@ -37,6 +44,12 @@ export interface InlineResponse20014 {
      * @memberof InlineResponse20014
      */
     endMs?: number;
+    /**
+     * 
+     * @type {InlineResponse2007Activity}
+     * @memberof InlineResponse20014
+     */
+    activity?: InlineResponse2007Activity;
 }
 
 export function InlineResponse20014FromJSON(json: any): InlineResponse20014 {
@@ -52,6 +65,7 @@ export function InlineResponse20014FromJSONTyped(json: any, ignoreDiscriminator:
         'activityId': json['activityId'],
         'startMs': !exists(json, 'startMs') ? undefined : json['startMs'],
         'endMs': !exists(json, 'endMs') ? undefined : json['endMs'],
+        'activity': !exists(json, 'activity') ? undefined : InlineResponse2007ActivityFromJSON(json['activity']),
     };
 }
 
@@ -67,6 +81,7 @@ export function InlineResponse20014ToJSON(value?: InlineResponse20014 | null): a
         'activityId': value.activityId,
         'startMs': value.startMs,
         'endMs': value.endMs,
+        'activity': InlineResponse2007ActivityToJSON(value.activity),
     };
 }
 

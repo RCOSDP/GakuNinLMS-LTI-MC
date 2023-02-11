@@ -1,4 +1,5 @@
 import type { FromSchema } from "json-schema-to-ts";
+import { ActivitySchema } from "./activity";
 
 /** 学習活動のビデオ視聴時間 */
 export const ActivityTimeRangeSchema = {
@@ -8,6 +9,7 @@ export const ActivityTimeRangeSchema = {
     activityId: { type: "integer" },
     startMs: { type: "integer" },
     endMs: { type: "integer" },
+    activity: ActivitySchema,
   },
   additionalProperties: false,
 } as const;
