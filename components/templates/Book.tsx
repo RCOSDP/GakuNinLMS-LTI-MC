@@ -26,6 +26,7 @@ import getLocaleDateString from "$utils/getLocaleDateString";
 import { authors } from "$utils/descriptionList";
 import extractNumberFromPx from "$utils/extractNumberFromPx";
 import sumPixels from "$utils/sumPixels";
+import useActivity from "$utils/useActivity";
 
 const useStyles = makeStyles((theme) => ({
   header: {
@@ -127,7 +128,8 @@ export default function Book(props: Props) {
     considerAppBar = true,
   } = props;
   const topic = book?.sections[sectionIndex]?.topics[topicIndex];
-  const { isInstructor, isContentEditable } = useSessionAtom();
+  const { session, isInstructor, isContentEditable } = useSessionAtom();
+  const { data: activity } = useActivity(false);
   const [expanded, setExpanded] = useState(false);
   const handleLinkClick = () => setExpanded(!expanded);
   const theme = useTheme();
@@ -233,8 +235,14 @@ export default function Book(props: Props) {
         )}
       >
         <div className={clsx(classes.main, { [classes.desktop]: matches })}>
-          {topic && (
-            <TopicViewer topic={topic} onEnded={onTopicEnded} offset={offset} />
+          {topic && activity && session && (
+            <TopicViewer
+              topic={topic}
+              onEnded={onTopicEnded}
+              offset={offset}
+              bookActivities={activity.bookActivities}
+              userId={session.user.id}
+            />
           )}
         </div>
         <div
