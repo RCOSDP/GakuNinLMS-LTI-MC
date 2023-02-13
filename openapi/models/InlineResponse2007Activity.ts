@@ -18,6 +18,10 @@ import {
     InlineResponse2007LearnerFromJSON,
     InlineResponse2007LearnerFromJSONTyped,
     InlineResponse2007LearnerToJSON,
+    InlineResponse2007TimeRanges,
+    InlineResponse2007TimeRangesFromJSON,
+    InlineResponse2007TimeRangesFromJSONTyped,
+    InlineResponse2007TimeRangesToJSON,
     InlineResponse2007Topic,
     InlineResponse2007TopicFromJSON,
     InlineResponse2007TopicFromJSONTyped,
@@ -62,6 +66,12 @@ export interface InlineResponse2007Activity {
     totalTimeMs: number;
     /**
      * 
+     * @type {Array<InlineResponse2007TimeRanges>}
+     * @memberof InlineResponse2007Activity
+     */
+    timeRanges: Array<InlineResponse2007TimeRanges>;
+    /**
+     * 
      * @type {Date}
      * @memberof InlineResponse2007Activity
      */
@@ -89,6 +99,7 @@ export function InlineResponse2007ActivityFromJSONTyped(json: any, ignoreDiscrim
         'topic': InlineResponse2007TopicFromJSON(json['topic']),
         'completed': json['completed'],
         'totalTimeMs': json['totalTimeMs'],
+        'timeRanges': ((json['timeRanges'] as Array<any>).map(InlineResponse2007TimeRangesFromJSON)),
         'createdAt': (new Date(json['createdAt'])),
         'updatedAt': (new Date(json['updatedAt'])),
     };
@@ -108,6 +119,7 @@ export function InlineResponse2007ActivityToJSON(value?: InlineResponse2007Activ
         'topic': InlineResponse2007TopicToJSON(value.topic),
         'completed': value.completed,
         'totalTimeMs': value.totalTimeMs,
+        'timeRanges': ((value.timeRanges as Array<any>).map(InlineResponse2007TimeRangesToJSON)),
         'createdAt': (value.createdAt.toISOString()),
         'updatedAt': (value.updatedAt.toISOString()),
     };

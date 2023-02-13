@@ -25,7 +25,7 @@ export const ActivitySchema = {
     /** 学習活動のビデオ視聴範囲  */
     timeRanges: {
       type: "array",
-      items: ActivityTimeRangeSchema
+      items: ActivityTimeRangeSchema,
     },
     /** 作成日時 */
     createdAt: { type: "string", format: "date-time" },

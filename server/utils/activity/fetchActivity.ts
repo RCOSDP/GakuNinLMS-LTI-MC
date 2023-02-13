@@ -35,6 +35,10 @@ async function fetchActivity(
     },
   });
 
-  return activity.map((a) => ({ ...a, completed: isCompleted(a.topic, a), timeRanges: a.timeRanges }));
+  return activity.map((a) => ({
+    ...a,
+    completed: isCompleted(a.topic, a),
+    timeRanges: a.timeRanges,
+  }));
 }
 export default fetchActivity;
