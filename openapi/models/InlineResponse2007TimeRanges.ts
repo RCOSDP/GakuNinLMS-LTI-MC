@@ -13,50 +13,37 @@
  */
 
 import { exists, mapValues } from '../runtime';
-import {
-    InlineResponse2007Activity,
-    InlineResponse2007ActivityFromJSON,
-    InlineResponse2007ActivityFromJSONTyped,
-    InlineResponse2007ActivityToJSON,
-} from './';
-
 /**
  * 
  * @export
- * @interface InlineResponse20014
+ * @interface InlineResponse2007TimeRanges
  */
-export interface InlineResponse20014 {
+export interface InlineResponse2007TimeRanges {
     /**
      * 
      * @type {number}
-     * @memberof InlineResponse20014
+     * @memberof InlineResponse2007TimeRanges
      */
     activityId: number;
     /**
      * 
      * @type {number}
-     * @memberof InlineResponse20014
+     * @memberof InlineResponse2007TimeRanges
      */
     startMs?: number;
     /**
      * 
      * @type {number}
-     * @memberof InlineResponse20014
+     * @memberof InlineResponse2007TimeRanges
      */
     endMs?: number;
-    /**
-     * 
-     * @type {InlineResponse2007Activity}
-     * @memberof InlineResponse20014
-     */
-    activity?: InlineResponse2007Activity;
 }
 
-export function InlineResponse20014FromJSON(json: any): InlineResponse20014 {
-    return InlineResponse20014FromJSONTyped(json, false);
+export function InlineResponse2007TimeRangesFromJSON(json: any): InlineResponse2007TimeRanges {
+    return InlineResponse2007TimeRangesFromJSONTyped(json, false);
 }
 
-export function InlineResponse20014FromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse20014 {
+export function InlineResponse2007TimeRangesFromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse2007TimeRanges {
     if ((json === undefined) || (json === null)) {
         return json;
     }
@@ -65,11 +52,10 @@ export function InlineResponse20014FromJSONTyped(json: any, ignoreDiscriminator:
         'activityId': json['activityId'],
         'startMs': !exists(json, 'startMs') ? undefined : json['startMs'],
         'endMs': !exists(json, 'endMs') ? undefined : json['endMs'],
-        'activity': !exists(json, 'activity') ? undefined : InlineResponse2007ActivityFromJSON(json['activity']),
     };
 }
 
-export function InlineResponse20014ToJSON(value?: InlineResponse20014 | null): any {
+export function InlineResponse2007TimeRangesToJSON(value?: InlineResponse2007TimeRanges | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -81,7 +67,6 @@ export function InlineResponse20014ToJSON(value?: InlineResponse20014 | null): a
         'activityId': value.activityId,
         'startMs': value.startMs,
         'endMs': value.endMs,
-        'activity': InlineResponse2007ActivityToJSON(value.activity),
     };
 }
 

@@ -48,6 +48,7 @@ export * from './InlineResponse2006';
 export * from './InlineResponse2007';
 export * from './InlineResponse2007Activity';
 export * from './InlineResponse2007Learner';
+export * from './InlineResponse2007TimeRanges';
 export * from './InlineResponse2007Topic';
 export * from './InlineResponse2008';
 export * from './InlineResponse2009';
