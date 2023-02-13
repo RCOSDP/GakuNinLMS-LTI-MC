@@ -22,6 +22,10 @@ import {
     InlineResponse2007LearnerFromJSON,
     InlineResponse2007LearnerFromJSONTyped,
     InlineResponse2007LearnerToJSON,
+    InlineResponse2007TimeRanges,
+    InlineResponse2007TimeRangesFromJSON,
+    InlineResponse2007TimeRangesFromJSONTyped,
+    InlineResponse2007TimeRangesToJSON,
     InlineResponse2007Topic,
     InlineResponse2007TopicFromJSON,
     InlineResponse2007TopicFromJSONTyped,
@@ -66,6 +70,12 @@ export interface InlineResponse20013BookActivities {
     totalTimeMs?: number;
     /**
      * 
+     * @type {Array<InlineResponse2007TimeRanges>}
+     * @memberof InlineResponse20013BookActivities
+     */
+    timeRanges?: Array<InlineResponse2007TimeRanges>;
+    /**
+     * 
      * @type {Date}
      * @memberof InlineResponse20013BookActivities
      */
@@ -105,6 +115,7 @@ export function InlineResponse20013BookActivitiesFromJSONTyped(json: any, ignore
         'topic': InlineResponse2007TopicFromJSON(json['topic']),
         'completed': !exists(json, 'completed') ? undefined : json['completed'],
         'totalTimeMs': !exists(json, 'totalTimeMs') ? undefined : json['totalTimeMs'],
+        'timeRanges': !exists(json, 'timeRanges') ? undefined : ((json['timeRanges'] as Array<any>).map(InlineResponse2007TimeRangesFromJSON)),
         'createdAt': !exists(json, 'createdAt') ? undefined : (new Date(json['createdAt'])),
         'updatedAt': !exists(json, 'updatedAt') ? undefined : (new Date(json['updatedAt'])),
         'book': InlineResponse20013BookFromJSON(json['book']),
@@ -126,6 +137,7 @@ export function InlineResponse20013BookActivitiesToJSON(value?: InlineResponse20
         'topic': InlineResponse2007TopicToJSON(value.topic),
         'completed': value.completed,
         'totalTimeMs': value.totalTimeMs,
+        'timeRanges': value.timeRanges === undefined ? undefined : ((value.timeRanges as Array<any>).map(InlineResponse2007TimeRangesToJSON)),
         'createdAt': value.createdAt === undefined ? undefined : (value.createdAt.toISOString()),
         'updatedAt': value.updatedAt === undefined ? undefined : (value.updatedAt.toISOString()),
         'book': InlineResponse20013BookToJSON(value.book),
