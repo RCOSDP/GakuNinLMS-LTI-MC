@@ -26,6 +26,7 @@ async function fetchActivity(
     include: {
       learner: { select: { id: true, name: true, email: true } },
       topic: { select: { id: true, name: true, timeRequired: true } },
+      timeRanges: { select: { activityId: true, startMs: true, endMs: true } },
     },
     where: {
       learnerId,
@@ -34,7 +35,6 @@ async function fetchActivity(
     },
   });
 
-  return activity.map((a) => ({ ...a, completed: isCompleted(a.topic, a) }));
+  return activity.map((a) => ({ ...a, completed: isCompleted(a.topic, a), timeRanges: a.timeRanges }));
 }
-
 export default fetchActivity;

@@ -1,4 +1,5 @@
 import type { FromSchema } from "json-schema-to-ts";
+import { ActivityTimeRangeSchema } from "./activityTimeRange";
 import { LearnerSchema } from "./learner";
 
 /** 学習活動 */
@@ -21,6 +22,11 @@ export const ActivitySchema = {
     completed: { type: "boolean" },
     /** 合計学習時間 (ms) */
     totalTimeMs: { type: "integer" },
+    /** 学習活動のビデオ視聴範囲  */
+    timeRanges: {
+      type: "array",
+      items: ActivityTimeRangeSchema
+    },
     /** 作成日時 */
     createdAt: { type: "string", format: "date-time" },
     /** 更新日時 */
@@ -32,6 +38,7 @@ export const ActivitySchema = {
     "topic",
     "completed",
     "totalTimeMs",
+    "timeRanges",
     "createdAt",
     "updatedAt",
   ],
@@ -41,7 +48,7 @@ export const ActivitySchema = {
 /** 学習活動 */
 export type ActivitySchema = Pick<
   FromSchema<typeof ActivitySchema>,
-  "id" | "learner" | "topic" | "completed" | "totalTimeMs"
+  "id" | "learner" | "topic" | "completed" | "totalTimeMs" | "timeRanges"
 > & {
   /** 作成日時 */
   createdAt: Date;
