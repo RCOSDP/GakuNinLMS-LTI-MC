@@ -32,7 +32,6 @@ export default function TopicViewerContent({
     offset: offset ?? theme.spacing(-2),
     backgroundColor: gray[800],
   });
-  console.log(bookActivity);
   return (
     <>
       {isVideoResource(topic.resource) && (
@@ -40,6 +39,7 @@ export default function TopicViewerContent({
           className={sticky}
           sx={{ mt: -2, mx: -3, mb: 2 }}
           topic={topic}
+          bookActivity={bookActivity}
           onEnded={onEnded}
         />
       )}
