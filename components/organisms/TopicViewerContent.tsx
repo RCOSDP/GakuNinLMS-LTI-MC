@@ -12,19 +12,27 @@ import { authors } from "$utils/descriptionList";
 import formatInterval from "$utils/formatInterval";
 import { isVideoResource } from "$utils/videoResource";
 import { gray } from "$theme/colors";
+import type { ActivitySchema } from "$server/models/activity";
 
 type Props = {
   topic: TopicSchema;
+  bookActivity: ActivitySchema[];
   onEnded?: () => void;
   offset?: string;
 };
 
-export default function TopicViewerContent({ topic, onEnded, offset }: Props) {
+export default function TopicViewerContent({
+  topic,
+  bookActivity,
+  onEnded,
+  offset,
+}: Props) {
   const theme = useTheme();
   const sticky = useSticky({
     offset: offset ?? theme.spacing(-2),
     backgroundColor: gray[800],
   });
+  console.log(bookActivity);
   return (
     <>
       {isVideoResource(topic.resource) && (

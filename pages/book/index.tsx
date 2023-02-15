@@ -47,7 +47,7 @@ function Show(query: Query) {
     session?.ltiResourceLink,
     query.token
   );
-  useBookActivity(book?.id);
+  const { bookActivity } = useBookActivity(book?.id);
   const { itemIndex, nextItemIndex, itemExists, updateItemIndex } =
     useBookAtom(book);
   useActivityTracking();
@@ -114,8 +114,16 @@ function Show(query: Query) {
 
   if (error || redirectError || queryError) return <BookNotFoundProblem />;
   if (!book) return <Placeholder />;
+  if (!bookActivity) return <Placeholder />;
 
-  return <Book book={book} index={itemIndex} {...handlers} />;
+  return (
+    <Book
+      book={book}
+      bookActivity={bookActivity}
+      index={itemIndex}
+      {...handlers}
+    />
+  );
 }
 
 function Router() {

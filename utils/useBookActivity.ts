@@ -25,6 +25,15 @@ async function updateBookActivity(
   return res.activity as Array<ActivitySchema>;
 }
 
+async function getBookActivity(_: typeof key, bookId: BookSchema["id"]) {
+  if (!bookId) return;
+  const res = await api.apiV2BookBookIdActivityGet({
+    bookId,
+    currentLtiContextOnly: NEXT_PUBLIC_ACTIVITY_LTI_CONTEXT_ONLY,
+  });
+  return res.activity as Array<ActivitySchema>;
+}
+
 function useBookActivity(bookId: BookSchema["id"] | undefined) {
   const { session } = useSessionAtom();
   const loggedin = Boolean(session?.user?.id);
@@ -34,6 +43,10 @@ function useBookActivity(bookId: BookSchema["id"] | undefined) {
     { refreshInterval: NEXT_PUBLIC_ACTIVITY_SEND_INTERVAL * 1_000 }
   );
   useActivityAtom(data ?? initialActivity);
+
+  const { data: bookActivity } = useSWR([key, bookId], getBookActivity);
+
+  return { bookActivity };
 }
 
 export default useBookActivity;
