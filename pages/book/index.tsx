@@ -47,7 +47,7 @@ function Show(query: Query) {
     session?.ltiResourceLink,
     query.token
   );
-  const { bookActivity } = useBookActivity(book?.id);
+  const { data: bookActivity } = useBookActivity(book?.id);
   const { itemIndex, nextItemIndex, itemExists, updateItemIndex } =
     useBookAtom(book);
   useActivityTracking();
