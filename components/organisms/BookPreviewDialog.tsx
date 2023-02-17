@@ -1,5 +1,5 @@
 import type { ComponentProps } from "react";
-import { useCallback, useEffect, forwardRef } from "react";
+import { useCallback, forwardRef } from "react";
 import Dialog from "@mui/material/Dialog";
 import CloseIcon from "@mui/icons-material/Close";
 import makeStyles from "@mui/styles/makeStyles";
@@ -13,7 +13,7 @@ import type { BookSchema } from "$server/models/book";
 import { gray } from "$theme/colors";
 
 const Transition = forwardRef(function Transition(
-  props: TransitionProps & { children?: React.ReactElement },
+  props: TransitionProps & { children: React.ReactElement },
   ref: React.Ref<unknown>
 ) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -55,12 +55,9 @@ export default function BookPreviewDialog(props: Props) {
   const { book, open, onClose, children } = props;
   const dialogClasses = useDialogStyles();
   const classes = useStyles();
-  const { updateBook, itemIndex, nextItemIndex, itemExists, updateItemIndex } =
-    useBookAtom();
+  const { itemIndex, nextItemIndex, itemExists, updateItemIndex } =
+    useBookAtom(book);
   const { session } = useSessionAtom();
-  useEffect(() => {
-    updateBook(book);
-  }, [book, updateBook]);
   const handleTopicNext = useCallback(
     (index: ItemIndex = nextItemIndex) => {
       const topic = itemExists(index);

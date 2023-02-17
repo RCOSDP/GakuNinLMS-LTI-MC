@@ -8,6 +8,7 @@ import MenuBookOutlinedIcon from "@mui/icons-material/MenuBookOutlined";
 import LibraryBooksOutlinedIcon from "@mui/icons-material/LibraryBooksOutlined";
 import AssessmentOutlinedIcon from "@mui/icons-material/AssessmentOutlined";
 import LinkIcon from "@mui/icons-material/Link";
+import CellTowerIcon from "@mui/icons-material/CellTower";
 import SettingsIcon from "@mui/icons-material/Settings";
 import makeStyles from "@mui/styles/makeStyles";
 import clsx from "clsx";
@@ -66,6 +67,7 @@ type Props = ComponentProps<typeof MuiAppBar> & {
   session: SessionSchema;
   onBooksClick?(): void;
   onTopicsClick?(): void;
+  onCoursesClick?(): void;
   onBookClick?(): void;
   onDashboardClick?(): void;
 };
@@ -81,6 +83,7 @@ function AppBar(props: Props, ref: Ref<HTMLDivElement>) {
     session,
     onBooksClick,
     onTopicsClick,
+    onCoursesClick,
     onBookClick,
     onDashboardClick,
     ...others
@@ -152,7 +155,14 @@ function AppBar(props: Props, ref: Ref<HTMLDivElement>) {
             <AppBarNavButton
               color="inherit"
               icon={<LinkIcon />}
-              label="提供中のブック"
+              label="リンク"
+              onClick={onCoursesClick}
+              disabled={!onCoursesClick}
+            />
+            <AppBarNavButton
+              color="inherit"
+              icon={<CellTowerIcon />}
+              label="配信中のブック"
               onClick={onBookClick}
               disabled={
                 !onBookClick ||

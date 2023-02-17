@@ -5,6 +5,9 @@ import * as ltiLaunchService from "$server/services/ltiLaunch";
 import * as ltiLoginService from "$server/services/ltiLogin";
 import * as ltiCallbackService from "$server/services/ltiCallback";
 import * as ltiResourceLinkService from "$server/services/ltiResourceLink";
+import * as ltiKeys from "$server/services/ltiKeys";
+import * as ltiClients from "$server/services/ltiClients";
+import * as linkSearch from "$server/services/linkSearch";
 
 export async function launch(fastify: FastifyInstance) {
   const path = "/lti/launch";
@@ -55,4 +58,30 @@ export async function resourceLink(fastify: FastifyInstance) {
   fastify.delete<{
     Params: ltiResourceLinkService.Params;
   }>(path, { schema: method.delete, ...hooks.delete }, handler(destroy));
+}
+
+export async function keys(fastify: FastifyInstance) {
+  const path = "/lti/keys";
+  const { method, index } = ltiKeys;
+  const hooks = makeHooks(fastify, ltiKeys.hooks);
+
+  fastify.get(path, { schema: method.get, ...hooks.get }, handler(index));
+}
+
+export async function clients(fastify: FastifyInstance) {
+  const path = "/lti/clients";
+  const { method, index } = ltiClients;
+  const hooks = makeHooks(fastify, ltiClients.hooks);
+
+  fastify.get(path, { schema: method.get, ...hooks.get }, handler(index));
+}
+
+export async function ltiSearch(fastify: FastifyInstance) {
+  const path = "/lti/search";
+  const { method, index } = linkSearch;
+  const hooks = makeHooks(fastify, linkSearch.hooks);
+
+  fastify.get<{
+    Querystring: linkSearch.Query;
+  }>(path, { schema: method.get, ...hooks.get }, handler(index));
 }

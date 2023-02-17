@@ -1,18 +1,18 @@
-import { useEffect } from "react";
-import { atom, useAtom } from "jotai";
-import { RESET, atomWithReset, useUpdateAtom } from "jotai/utils";
+import { atom, useAtomValue } from "jotai";
+import { useUpdateAtom } from "jotai/utils";
 import type { SectionSchema } from "$server/models/book/section";
 import type { VideoInstance } from "$types/videoInstance";
 import { isVideoResource } from "$utils/videoResource";
 import getVideoInstance from "$utils/video/getVideoInstance";
 
-const videoAtom = atomWithReset<{
+/** 動画プレイヤーオブジェクトプール (トピックID(10進数文字列)または動画URLをキーとして使用) */
+const videoAtom = atom<{
   video: Map<string, VideoInstance>;
 }>({
   video: new Map(),
 });
 
-const updateVideoAtom = atom(
+const preloadVideoAtom = atom(
   null,
   (get, set, sections: Pick<SectionSchema, "topics">[]) => {
     const { video } = get(videoAtom);
@@ -21,20 +21,16 @@ const updateVideoAtom = atom(
         video.delete(String(topic.id));
         continue;
       }
-      video.set(String(topic.id), getVideoInstance(topic.resource));
+      if (!video.has(String(topic.id))) {
+        video.set(String(topic.id), getVideoInstance(topic.resource));
+      }
     }
     set(videoAtom, { video });
   }
 );
 
 export function useVideoAtom() {
-  const [state, reset] = useAtom(videoAtom);
-  const updateVideo = useUpdateAtom(updateVideoAtom);
-  useEffect(
-    () => () => {
-      reset(RESET);
-    },
-    [reset]
-  );
-  return { ...state, updateVideo };
+  const state = useAtomValue(videoAtom);
+  const preloadVideo = useUpdateAtom(preloadVideoAtom);
+  return { ...state, preloadVideo };
 }

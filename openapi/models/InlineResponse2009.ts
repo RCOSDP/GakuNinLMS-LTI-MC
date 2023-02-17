@@ -13,37 +13,18 @@
  */
 
 import { exists, mapValues } from '../runtime';
-import {
-    InlineResponse2001Resource,
-    InlineResponse2001ResourceFromJSON,
-    InlineResponse2001ResourceFromJSONTyped,
-    InlineResponse2001ResourceToJSON,
-} from './';
-
 /**
- * 成功時
+ * 
  * @export
  * @interface InlineResponse2009
  */
 export interface InlineResponse2009 {
     /**
      * 
-     * @type {Array<InlineResponse2001Resource>}
+     * @type {string}
      * @memberof InlineResponse2009
      */
-    resources?: Array<InlineResponse2001Resource>;
-    /**
-     * 
-     * @type {number}
-     * @memberof InlineResponse2009
-     */
-    page?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof InlineResponse2009
-     */
-    perPage?: number;
+    publicToken: string;
 }
 
 export function InlineResponse2009FromJSON(json: any): InlineResponse2009 {
@@ -56,9 +37,7 @@ export function InlineResponse2009FromJSONTyped(json: any, ignoreDiscriminator: 
     }
     return {
         
-        'resources': !exists(json, 'resources') ? undefined : ((json['resources'] as Array<any>).map(InlineResponse2001ResourceFromJSON)),
-        'page': !exists(json, 'page') ? undefined : json['page'],
-        'perPage': !exists(json, 'perPage') ? undefined : json['perPage'],
+        'publicToken': json['publicToken'],
     };
 }
 
@@ -71,9 +50,7 @@ export function InlineResponse2009ToJSON(value?: InlineResponse2009 | null): any
     }
     return {
         
-        'resources': value.resources === undefined ? undefined : ((value.resources as Array<any>).map(InlineResponse2001ResourceToJSON)),
-        'page': value.page,
-        'perPage': value.perPage,
+        'publicToken': value.publicToken,
     };
 }
 

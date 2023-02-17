@@ -14,18 +14,10 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    InlineResponse20011BookActivities,
-    InlineResponse20011BookActivitiesFromJSON,
-    InlineResponse20011BookActivitiesFromJSONTyped,
-    InlineResponse20011BookActivitiesToJSON,
-    InlineResponse20011CourseBooks,
-    InlineResponse20011CourseBooksFromJSON,
-    InlineResponse20011CourseBooksFromJSONTyped,
-    InlineResponse20011CourseBooksToJSON,
-    InlineResponse2005Learner,
-    InlineResponse2005LearnerFromJSON,
-    InlineResponse2005LearnerFromJSONTyped,
-    InlineResponse2005LearnerToJSON,
+    InlineResponse2004Topics,
+    InlineResponse2004TopicsFromJSON,
+    InlineResponse2004TopicsFromJSONTyped,
+    InlineResponse2004TopicsToJSON,
 } from './';
 
 /**
@@ -36,22 +28,22 @@ import {
 export interface InlineResponse20011 {
     /**
      * 
-     * @type {Array<InlineResponse2005Learner>}
+     * @type {Array<InlineResponse2004Topics>}
      * @memberof InlineResponse20011
      */
-    learners: Array<InlineResponse2005Learner>;
+    topics?: Array<InlineResponse2004Topics>;
     /**
      * 
-     * @type {Array<InlineResponse20011CourseBooks>}
+     * @type {number}
      * @memberof InlineResponse20011
      */
-    courseBooks: Array<InlineResponse20011CourseBooks>;
+    page?: number;
     /**
      * 
-     * @type {Array<InlineResponse20011BookActivities>}
+     * @type {number}
      * @memberof InlineResponse20011
      */
-    bookActivities: Array<InlineResponse20011BookActivities>;
+    perPage?: number;
 }
 
 export function InlineResponse20011FromJSON(json: any): InlineResponse20011 {
@@ -64,9 +56,9 @@ export function InlineResponse20011FromJSONTyped(json: any, ignoreDiscriminator:
     }
     return {
         
-        'learners': ((json['learners'] as Array<any>).map(InlineResponse2005LearnerFromJSON)),
-        'courseBooks': ((json['courseBooks'] as Array<any>).map(InlineResponse20011CourseBooksFromJSON)),
-        'bookActivities': ((json['bookActivities'] as Array<any>).map(InlineResponse20011BookActivitiesFromJSON)),
+        'topics': !exists(json, 'topics') ? undefined : ((json['topics'] as Array<any>).map(InlineResponse2004TopicsFromJSON)),
+        'page': !exists(json, 'page') ? undefined : json['page'],
+        'perPage': !exists(json, 'perPage') ? undefined : json['perPage'],
     };
 }
 
@@ -79,9 +71,9 @@ export function InlineResponse20011ToJSON(value?: InlineResponse20011 | null): a
     }
     return {
         
-        'learners': ((value.learners as Array<any>).map(InlineResponse2005LearnerToJSON)),
-        'courseBooks': ((value.courseBooks as Array<any>).map(InlineResponse20011CourseBooksToJSON)),
-        'bookActivities': ((value.bookActivities as Array<any>).map(InlineResponse20011BookActivitiesToJSON)),
+        'topics': value.topics === undefined ? undefined : ((value.topics as Array<any>).map(InlineResponse2004TopicsToJSON)),
+        'page': value.page,
+        'perPage': value.perPage,
     };
 }
 

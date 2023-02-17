@@ -46,9 +46,9 @@ async function getPlaybackRate(player: Player): Promise<PlaybackRate> {
 
 /** 再生速度の設定の保存と反映のためのカスタムフック */
 export function usePlaybackRate(player: Player) {
-  const { data: ready } = useSWRImmutable<boolean>(
+  const { data: ready } = useSWRImmutable(
     [key, player],
-    () =>
+    (): boolean =>
       ready ||
       player instanceof VimeoPlayer ||
       // NOTE: videojs-youtube はバッファリングが行われるまで誤った値が得られうるため待機

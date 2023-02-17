@@ -9,6 +9,7 @@ import {
   WOWZA_SCP_PORT,
   WOWZA_SCP_USERNAME,
   WOWZA_SCP_PRIVATE_KEY,
+  WOWZA_SCP_PRIVATE_KEY_PATH,
   WOWZA_SCP_PASS_PHRASE,
   WOWZA_SCP_SERVER_PATH,
 } from "$server/utils/env";
@@ -41,18 +42,19 @@ export class WowzaUpload {
   }
 
   async cleanUp() {
-    await fs.promises.rmdir(this.uploadroot, { recursive: true });
+    await fs.promises.rm(this.uploadroot, { recursive: true });
   }
 
-  async moveFileToUpload(fullpath: string, date: Date, timezone: string) {
-    const uploadpath = await this.mkdirUploadpath(date, timezone);
+  async moveFileToUpload(fullpath: string, date: Date) {
+    const uploadpath = await this.mkdirUploadpath(date);
     const filename = path.basename(fullpath);
     const movedpath = path.join(uploadpath, filename);
     await fs.promises.rename(fullpath, movedpath);
     return movedpath.substring(this.uploadroot.length);
   }
 
-  async mkdirUploadpath(date: Date, timezone: string) {
+  async mkdirUploadpath(date: Date) {
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     const uploadpath = path.join(
       this.uploaddir,
       format(utcToZoneTime(date, timezone), "yyyyMMdd-HHmm-")
@@ -70,7 +72,9 @@ export class WowzaUpload {
         host: WOWZA_SCP_HOST,
         port: WOWZA_SCP_PORT,
         username: WOWZA_SCP_USERNAME,
-        privateKey: WOWZA_SCP_PRIVATE_KEY,
+        ...(WOWZA_SCP_PRIVATE_KEY
+          ? { privateKey: WOWZA_SCP_PRIVATE_KEY }
+          : { privateKeyPath: WOWZA_SCP_PRIVATE_KEY_PATH }),
         passphrase: WOWZA_SCP_PASS_PHRASE,
       });
       let scpError;

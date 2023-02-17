@@ -25,7 +25,8 @@ const handler =
   ) => {
     const { status, headers, body } = await method(request);
     if (headers != null) void reply.headers(headers);
-    void reply.code(status).send(body);
+    void reply.code(status);
+    return body;
   };
 
 export default handler;

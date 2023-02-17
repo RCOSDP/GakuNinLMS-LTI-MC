@@ -189,7 +189,7 @@ export default function Book(props: Props) {
               onClick={handleOtherBookLinkClick}
             >
               <LinkIcon className={classes.icon} />
-              他のブックを提供
+              他のブックを配信
             </Button>
           )}
         </header>

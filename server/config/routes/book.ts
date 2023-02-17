@@ -38,13 +38,18 @@ export async function book(fastify: FastifyInstance) {
 
 export async function bookActivity(fastify: FastifyInstance) {
   const path = `${pathWithParams}/activity`;
-  const { method, index } = activityService;
+  const { method, show, update } = activityService;
   const hooks = makeHooks(fastify, activityService.hooks);
 
   fastify.get<{
     Params: activityService.Params;
     Querystring: activityService.Query;
-  }>(path, { schema: method.get, ...hooks.get }, handler(index));
+  }>(path, { schema: method.get, ...hooks.get }, handler(show));
+
+  fastify.put<{
+    Params: activityService.Params;
+    Querystring: activityService.Query;
+  }>(path, { schema: method.put, ...hooks.put }, handler(update));
 }
 export async function bookAuthors(fastify: FastifyInstance) {
   const path = `${pathWithParams}/authors`;

@@ -13,19 +13,19 @@ const options = {
     "license" as const,
     "shared" as const,
     "link" as const,
+    "book" as const,
   ],
   alwaysArray: true,
   tokenize: true,
 };
 
-type SearchParserResult = base.SearchParserResult &
-  {
-    // NOTE: keywords and `{ alwaysArray: true }`
-    [K in typeof options["keywords"][number]]?: string[];
-  } & {
-    // NOTE: `{ tokenize: true }`
-    text?: string[];
-  };
+type SearchParserResult = base.SearchParserResult & {
+  // NOTE: keywords and `{ alwaysArray: true }`
+  [K in typeof options["keywords"][number]]?: string[];
+} & {
+  // NOTE: `{ tokenize: true }`
+  text?: string[];
+};
 
 /**
  * 真偽値を表現する検索クエリー文字列のパース
@@ -65,6 +65,17 @@ function parseLink(
   return [{ consumerId, contextId }];
 }
 
+/**
+ * 検索クエリー文字列 `book:` キーワードのパース
+ * @param input `book:` 以降の文字列
+ * @return ブックID
+ */
+function parseBook(input: string): number[] {
+  const bookId = Number.parseInt(input);
+  if (Number.isNaN(bookId)) return [];
+  return [bookId];
+}
+
 export function parse(query: string): SearchQueryBase {
   const res = base.parse(query, options) as SearchParserResult;
   return {
@@ -77,6 +88,7 @@ export function parse(query: string): SearchQueryBase {
     license: res.license?.flatMap(parseLicense) ?? [],
     shared: res.shared?.flatMap(parseBoolean) ?? [],
     link: res.link?.flatMap(parseLink) ?? [],
+    book: res.book?.flatMap(parseBook) ?? [],
   };
 }
 
@@ -109,11 +121,12 @@ function stringifyLink(
 }
 
 export function stringify(query: SearchQueryBase): string {
-  const { license, shared, link, ...rest } = query;
+  const { license, shared, link, book, ...rest } = query;
   const token = {
     license: license.map(stringifyLicense).join(),
     shared: shared.map(String).join(),
     link: link.map(stringifyLink).join(),
+    book: book.map(String).join(),
   };
   return base.stringify({ ...rest, ...token }, options);
 }

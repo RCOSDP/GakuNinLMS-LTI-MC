@@ -1,4 +1,4 @@
-import type { User } from "@prisma/client";
+import type { Prisma, User } from "@prisma/client";
 import type { UserProps } from "$server/models/user";
 import type { BookSchema } from "$server/models/book";
 import type { TopicSchema } from "$server/models/topic";
@@ -38,7 +38,7 @@ export async function findUserByEmailAndLtiConsumerId(
 
 export async function updateUserSettings(
   id: User["id"],
-  settings: User["settings"]
+  settings: Prisma.JsonObject // NOTE: User["settings"] は null を含みうるがここでは期待しない
 ) {
   return await prisma.user.update({ where: { id }, data: { settings } });
 }

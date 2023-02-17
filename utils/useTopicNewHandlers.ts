@@ -1,19 +1,21 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import type { BookSchema } from "$server/models/book";
 import type { TopicSchema } from "$server/models/topic";
+import type { ResourceProps } from "$server/models/resource";
 import type { VideoTrackSchema } from "$server/models/videoTrack";
-import type { TopicPropsWithUploadAndAuthors } from "$types/topicPropsWithAuthors";
+import type { TopicSubmitValues } from "$types/topicSubmitValues";
 import { useVideoTrackAtom } from "$store/videoTrack";
 import { createTopic } from "./topic";
 import { uploadVideoTrack } from "./videoTrack";
 import { addTopicToBook, replaceTopicInBook } from "./book";
 import useAuthorsHandler from "$utils/useAuthorsHandler";
 import { updateTopicAuthors } from "./topicAuthors";
+import { useWowzaUpload } from "./wowza/useWowzaUplooad";
 
 /** TopicNew コンポーネントのためのハンドラー生成 (要 TopicNew, ./index.tsx, ./edit.tsx) */
 function useTopicNewHandlers(
-  context: "books" | "topics" | undefined,
+  context: "books" | "topics" | "courses" | undefined,
   book?: BookSchema,
   targetTopic?: TopicSchema
 ) {
@@ -40,10 +42,24 @@ function useTopicNewHandlers(
     [deleteVideoTrack]
   );
   const [submitResult, setSubmitResult] = useState("");
+  const { data: uploadResult, uploadFile } = useWowzaUpload();
+  useEffect(() => {
+    if (uploadResult instanceof Error) setSubmitResult(uploadResult.message);
+  }, [uploadResult, setSubmitResult]);
   const handleSubmit = useCallback(
-    async ({ authors, ...props }: TopicPropsWithUploadAndAuthors) => {
+    async ({ file, authors, ...props }: TopicSubmitValues) => {
+      let resource: ResourceProps | null = null;
+      if (file) {
+        const res = await uploadFile(file);
+        if (!res) return;
+        if (res instanceof Error) return;
+        resource = { url: res.url };
+      }
       try {
-        const topic = await createTopic(props);
+        const topic = await createTopic({
+          ...props,
+          resource: resource ?? props.resource,
+        });
         await updateTopicAuthors({
           id: topic.id,
           authors: [
@@ -86,6 +102,7 @@ function useTopicNewHandlers(
       bookEditQuery,
       videoTracksProps,
       back,
+      uploadFile,
       setSubmitResult,
     ]
   );

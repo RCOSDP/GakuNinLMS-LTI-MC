@@ -1,5 +1,6 @@
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
+import stream from "node:stream/promises";
 import got from "got";
 import format from "date-fns/format";
 import utcToZoneTime from "date-fns-tz/utcToZonedTime";
@@ -24,7 +25,11 @@ import {
   ZOOM_IMPORT_PUBLIC_DEFAULT_DOMAINS,
 } from "$server/utils/env";
 
-import type { ZoomResponse } from "$server/utils/zoom/api";
+import type {
+  ZoomMeetingResponse,
+  ZoomRecordingsListResponse,
+  ZoomUsersResponse,
+} from "$server/utils/zoom/api";
 import {
   zoomRequestToken,
   zoomRequest,
@@ -37,9 +42,9 @@ export async function zoomImport() {
     ZOOM_IMPORT_TO == "wowza" && validateWowzaSettings(false);
   if (!uploadEnabled) return;
 
-  const zoomUsers = await zoomListRequest("/users", "users", {
+  const zoomUsers = (await zoomListRequest("/users", "users", {
     page_size: 300,
-  });
+  })) as ZoomUsersResponse["users"];
   for (const zoomUser of zoomUsers) {
     const user = await findUserByEmailAndLtiConsumerId(
       zoomUser.email,
@@ -105,11 +110,11 @@ class ZoomImport {
 
   async importBooks() {
     try {
-      const meetings = await zoomListRequest(
+      const meetings = (await zoomListRequest(
         `/users/${this.zoomUserId}/recordings`,
         "meetings",
         { page_size: 300, from: this.fromDate() }
-      );
+      )) as ZoomRecordingsListResponse["meetings"];
       meetings.sort((a, b) => a.start_time.localeCompare(b.start_time));
 
       const transactions = [];
@@ -145,7 +150,7 @@ class ZoomImport {
     }
   }
 
-  async getBook(meeting: ZoomResponse) {
+  async getBook(meeting: ZoomRecordingsListResponse["meetings"][number]) {
     const data = await this.getTopic(meeting);
     if (data && data.topic && data.zoomMeeting) {
       const { topic, zoomMeeting } = data;
@@ -188,7 +193,7 @@ class ZoomImport {
     return transactions;
   }
 
-  async getTopic(meeting: ZoomResponse) {
+  async getTopic(meeting: ZoomRecordingsListResponse["meetings"][number]) {
     try {
       const importedResource = await findZoomMeeting(meeting.uuid);
       if (importedResource) return;
@@ -197,12 +202,11 @@ class ZoomImport {
       if (!downloadUrl || !fileId) return;
 
       const startTime = new Date(meeting.start_time);
-      const timezone = meeting.timezone || "Asia/Tokyo";
       const file = path.join(this.tmpdir, `${fileId}.mp4`);
-      const responsePromise = got(
-        `${downloadUrl}?access_token=${zoomRequestToken()}`
-      );
-      await fs.promises.writeFile(file, await responsePromise.buffer());
+      const fileStream = got
+        .stream(`${downloadUrl}?access_token=${zoomRequestToken()}`)
+        .pipe(fs.createWriteStream(file));
+      await stream.finished(fileStream);
 
       const video = {
         create: {
@@ -212,8 +216,7 @@ class ZoomImport {
 
       const uploadpath = await this.wowzaUpload.moveFileToUpload(
         file,
-        startTime,
-        timezone
+        startTime
       );
       const url = `${ZOOM_IMPORT_WOWZA_BASE_URL}${API_BASE_PATH}/wowza${uploadpath}`;
       const resource = {
@@ -227,6 +230,7 @@ class ZoomImport {
         },
       };
 
+      const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
       const datetimeForTitle = format(
         utcToZoneTime(startTime, timezone),
         "yyyy/MM/dd HH:mm"
@@ -264,8 +268,8 @@ class ZoomImport {
     }
   }
 
-  getDownloadUrl(meeting: ZoomResponse) {
-    const recordingFiles: ZoomResponse[] = meeting.recording_files;
+  getDownloadUrl(meeting: ZoomRecordingsListResponse["meetings"][number]) {
+    const recordingFiles = meeting.recording_files;
     const file =
       recordingFiles.find(
         (file) =>
@@ -297,9 +301,13 @@ class ZoomImport {
     return { downloadUrl: file?.download_url, fileId: file?.id };
   }
 
-  async getMeetingDetail(meeting: ZoomResponse) {
+  async getMeetingDetail(meeting: {
+    id: number;
+  }): Promise<ZoomMeetingResponse | { agenda: "" }> {
     try {
-      return await zoomRequest(`/meetings/${meeting.id}`);
+      return (await zoomRequest(
+        `/meetings/${meeting.id}`
+      )) as ZoomMeetingResponse;
     } catch (e) {
       return { agenda: "" };
     }
