@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import usePrevious from "@rooks/use-previous";
 import clsx from "clsx";
 import { css } from "@emotion/css";
@@ -21,6 +21,15 @@ const hidden = css({
   },
 });
 
+const wrapper = css({
+  display: "flex",
+  justifyContent: "center",
+  padding: "20px",
+  "> svg": {
+    border: "1px solid black",
+  },
+});
+
 const videoStyle = {
   "& > *": {
     /* NOTE: 各動画プレイヤーのレスポンシブ対応により、高さはpaddingTopによってwidthのpercentage分
@@ -38,7 +47,7 @@ type Props = {
   className?: string;
   sx?: SxProps;
   topic: TopicSchema;
-  bookActivity: ActivitySchema[];
+  timeRange: ActivitySchema["timeRanges"];
   onEnded?: () => void;
 };
 
@@ -56,16 +65,36 @@ function isValidPlaybackEnd({
   return typeof stopTime === "number" && 0 < stopTime && stopTime < currentTime;
 }
 
+const BAR_SIZE = 480;
+function generateTimeRangeBarValue({
+  timeRange,
+  timeRequired,
+}: {
+  timeRange: ActivitySchema["timeRanges"];
+  timeRequired: TopicSchema["timeRequired"];
+}): Array<{ id: string; positionX: number; width: number }> {
+  return timeRange.map((timeRange) => {
+    const id = self.crypto.randomUUID();
+    const startMs = timeRange?.startMs || 0;
+    const endMs = timeRange?.endMs || 0;
+    const timeRadio = (endMs - startMs) / timeRequired / 1000;
+    const width = BAR_SIZE * timeRadio;
+    const lengthRatio = BAR_SIZE / timeRequired;
+    const positionX = (lengthRatio * startMs) / 1000;
+
+    return { id, positionX, width };
+  });
+}
+
 export default function Video({
   className,
   sx,
   topic,
-  bookActivity,
+  timeRange,
   onEnded,
 }: Props) {
   const { video, preloadVideo } = useVideoAtom();
   const { book, itemIndex, itemExists } = useBookAtom();
-  console.log(bookActivity);
   useEffect(() => {
     if (!book) return;
     // バックグラウンドで動画プレイヤーオブジェクトプールに読み込む
@@ -154,6 +183,25 @@ export default function Video({
             onEnded={String(topic.id) === id ? onEnded : undefined}
           />
         ))}
+        <div className={wrapper}>
+          <svg height={20} width={BAR_SIZE} xmlns="http://www.w3.org/2000/svg">
+            {generateTimeRangeBarValue({
+              timeRange,
+              timeRequired: topic.timeRequired,
+            }).map((value) => {
+              return (
+                <React.Fragment key={value.id}>
+                  <rect
+                    x={value.positionX}
+                    width={value.width}
+                    height={20}
+                    fill="black"
+                  />
+                </React.Fragment>
+              );
+            })}
+          </svg>
+        </div>
       </>
     );
   }
