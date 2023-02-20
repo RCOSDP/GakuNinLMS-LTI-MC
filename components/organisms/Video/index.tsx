@@ -11,6 +11,7 @@ import { useVideoAtom } from "$store/video";
 import { useBookAtom } from "$store/book";
 import useOembed from "$utils/useOembed";
 import type { SxProps } from "@mui/system";
+import type { ActivitySchema } from "$server/models/activity";
 
 const hidden = css({
   m: 0,
@@ -37,6 +38,7 @@ type Props = {
   className?: string;
   sx?: SxProps;
   topic: TopicSchema;
+  bookActivity: ActivitySchema[];
   onEnded?: () => void;
 };
 
@@ -54,9 +56,16 @@ function isValidPlaybackEnd({
   return typeof stopTime === "number" && 0 < stopTime && stopTime < currentTime;
 }
 
-export default function Video({ className, sx, topic, onEnded }: Props) {
+export default function Video({
+  className,
+  sx,
+  topic,
+  bookActivity,
+  onEnded,
+}: Props) {
   const { video, preloadVideo } = useVideoAtom();
   const { book, itemIndex, itemExists } = useBookAtom();
+  console.log(bookActivity);
   useEffect(() => {
     if (!book) return;
     // バックグラウンドで動画プレイヤーオブジェクトプールに読み込む

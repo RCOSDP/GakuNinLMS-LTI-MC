@@ -26,6 +26,7 @@ import getLocaleDateString from "$utils/getLocaleDateString";
 import { authors } from "$utils/descriptionList";
 import extractNumberFromPx from "$utils/extractNumberFromPx";
 import sumPixels from "$utils/sumPixels";
+import type { ActivitySchema } from "$server/models/activity";
 
 const useStyles = makeStyles((theme) => ({
   header: {
@@ -105,6 +106,7 @@ const useStyles = makeStyles((theme) => ({
 type Props = {
   linked?: boolean;
   book: BookSchema | null;
+  bookActivity: ActivitySchema[];
   index: ItemIndex;
   onBookEditClick?(book: BookSchema): void;
   onOtherBookLinkClick?(): void;
@@ -118,6 +120,7 @@ export default function Book(props: Props) {
   const {
     linked,
     book,
+    bookActivity,
     index: [sectionIndex, topicIndex],
     onBookEditClick,
     onOtherBookLinkClick,
@@ -234,7 +237,12 @@ export default function Book(props: Props) {
       >
         <div className={clsx(classes.main, { [classes.desktop]: matches })}>
           {topic && (
-            <TopicViewer topic={topic} onEnded={onTopicEnded} offset={offset} />
+            <TopicViewer
+              topic={topic}
+              bookActivity={bookActivity}
+              onEnded={onTopicEnded}
+              offset={offset}
+            />
           )}
         </div>
         <div

@@ -34,6 +34,8 @@ function useBookActivity(bookId: BookSchema["id"] | undefined) {
     { refreshInterval: NEXT_PUBLIC_ACTIVITY_SEND_INTERVAL * 1_000 }
   );
   useActivityAtom(data ?? initialActivity);
+
+  return { data };
 }
 
 export default useBookActivity;
