@@ -114,7 +114,6 @@ function Show(query: Query) {
 
   if (error || redirectError || queryError) return <BookNotFoundProblem />;
   if (!book) return <Placeholder />;
-  if (!bookActivity) return <Placeholder />;
 
   return (
     <Book
