@@ -12,7 +12,7 @@ import { useBookAtom } from "$store/book";
 import useOembed from "$utils/useOembed";
 import type { SxProps } from "@mui/system";
 import type { ActivitySchema } from "$server/models/activity";
-import { isInstructor } from "$utils/session";
+import { isInstructor, isAdministrator } from "$utils/session";
 import { useSessionAtom } from "$store/session";
 
 const hidden = css({
@@ -183,7 +183,7 @@ export default function Video({
             onEnded={String(topic.id) === id ? onEnded : undefined}
           />
         ))}
-        {!isInstructor(session) && (
+        {session && !isInstructor(session) && !isAdministrator(session) && (
           <div className={wrapper}>
             <svg
               height={20}
