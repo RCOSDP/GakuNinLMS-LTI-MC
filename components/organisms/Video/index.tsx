@@ -25,9 +25,6 @@ const wrapper = css({
   display: "flex",
   justifyContent: "center",
   padding: "20px",
-  "> svg": {
-    border: "1px solid black",
-  },
 });
 
 const videoStyle = {
@@ -185,6 +182,14 @@ export default function Video({
         ))}
         <div className={wrapper}>
           <svg height={20} width={BAR_SIZE} xmlns="http://www.w3.org/2000/svg">
+            <rect
+              x={0}
+              y={0}
+              height={20}
+              width={BAR_SIZE}
+              stroke="black"
+              fill="transparent"
+            />
             {generateTimeRangeBarValue({
               timeRange,
               timeRequired: topic.timeRequired,
