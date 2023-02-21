@@ -2,6 +2,14 @@ import React, { useEffect } from "react";
 import usePrevious from "@rooks/use-previous";
 import clsx from "clsx";
 import { css } from "@emotion/css";
+import type { AccordionProps } from "@mui/material/Accordion";
+import MuiAccordion from "@mui/material/Accordion";
+import type { AccordionSummaryProps } from "@mui/material/AccordionSummary";
+import MuiAccordionSummary from "@mui/material/AccordionSummary";
+import type { AccordionDetailsProps } from "@mui/material/AccordionDetails";
+import MuiAccordionDetails from "@mui/material/AccordionDetails";
+import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
+
 import type { TopicSchema } from "$server/models/topic";
 import type { VideoResourceSchema } from "$server/models/videoResource";
 import VideoPlayer from "$organisms/Video/VideoPlayer";
@@ -23,12 +31,6 @@ const hidden = css({
   },
 });
 
-const wrapper = css({
-  display: "flex",
-  justifyContent: "center",
-  padding: "20px",
-});
-
 const videoStyle = {
   "& > *": {
     /* NOTE: 各動画プレイヤーのレスポンシブ対応により、高さはpaddingTopによってwidthのpercentage分
@@ -41,6 +43,49 @@ const videoStyle = {
     margin: "0 auto",
   },
 } as const;
+
+const accordion = css({
+  padding: 0,
+  boxShadow: "none",
+  "&:before": {
+    display: "none",
+  },
+});
+
+function Accordion(props: AccordionProps) {
+  return <MuiAccordion {...props} className={accordion} />;
+}
+
+const accordionSummary = css({
+  padding: 0,
+  flexDirection: "row-reverse",
+  "& .MuiAccordionSummary-expandIconWrapper": {
+    margin: "4px",
+  },
+  "& .MuiAccordionSummary-expandIconWrapper.Mui-expanded": {
+    transform: "rotate(90deg)",
+  },
+});
+
+function AccordionSummary(props: AccordionSummaryProps) {
+  return (
+    <MuiAccordionSummary
+      className={accordionSummary}
+      expandIcon={<ArrowForwardIosSharpIcon sx={{ fontSize: "0.9rem" }} />}
+      {...props}
+    />
+  );
+}
+
+const accordionDetails = css({
+  display: "flex",
+  justifyContent: "center",
+  padding: "0 8px 20px",
+});
+
+function AccordionDetails(props: AccordionDetailsProps) {
+  return <MuiAccordionDetails {...props} className={accordionDetails} />;
+}
 
 type Props = {
   className?: string;
@@ -184,37 +229,40 @@ export default function Video({
           />
         ))}
         {session && !isInstructor(session) && !isAdministrator(session) && (
-          <div className={wrapper}>
-            <svg
-              height={20}
-              width={BAR_SIZE}
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <rect
-                x={0}
-                y={0}
+          <Accordion>
+            <AccordionSummary>視聴時間詳細</AccordionSummary>
+            <AccordionDetails>
+              <svg
                 height={20}
                 width={BAR_SIZE}
-                stroke="black"
-                fill="transparent"
-              />
-              {generateTimeRangeBarValue({
-                timeRange,
-                timeRequired: topic.timeRequired,
-              }).map((value) => {
-                return (
-                  <React.Fragment key={value.id}>
-                    <rect
-                      x={value.positionX}
-                      width={value.width}
-                      height={20}
-                      fill="black"
-                    />
-                  </React.Fragment>
-                );
-              })}
-            </svg>
-          </div>
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <rect
+                  x={0}
+                  y={0}
+                  height={20}
+                  width={BAR_SIZE}
+                  stroke="black"
+                  fill="transparent"
+                />
+                {generateTimeRangeBarValue({
+                  timeRange,
+                  timeRequired: topic.timeRequired,
+                }).map((value) => {
+                  return (
+                    <React.Fragment key={value.id}>
+                      <rect
+                        x={value.positionX}
+                        width={value.width}
+                        height={20}
+                        fill="black"
+                      />
+                    </React.Fragment>
+                  );
+                })}
+              </svg>
+            </AccordionDetails>
+          </Accordion>
         )}
       </>
     );
