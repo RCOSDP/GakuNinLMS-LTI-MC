@@ -12,6 +12,8 @@ import { useBookAtom } from "$store/book";
 import useOembed from "$utils/useOembed";
 import type { SxProps } from "@mui/system";
 import type { ActivitySchema } from "$server/models/activity";
+import { isInstructor } from "$utils/session";
+import { useSessionAtom } from "$store/session";
 
 const hidden = css({
   m: 0,
@@ -92,6 +94,7 @@ export default function Video({
 }: Props) {
   const { video, preloadVideo } = useVideoAtom();
   const { book, itemIndex, itemExists } = useBookAtom();
+  const { session } = useSessionAtom();
   useEffect(() => {
     if (!book) return;
     // バックグラウンドで動画プレイヤーオブジェクトプールに読み込む
@@ -180,33 +183,39 @@ export default function Video({
             onEnded={String(topic.id) === id ? onEnded : undefined}
           />
         ))}
-        <div className={wrapper}>
-          <svg height={20} width={BAR_SIZE} xmlns="http://www.w3.org/2000/svg">
-            <rect
-              x={0}
-              y={0}
+        {!isInstructor(session) && (
+          <div className={wrapper}>
+            <svg
               height={20}
               width={BAR_SIZE}
-              stroke="black"
-              fill="transparent"
-            />
-            {generateTimeRangeBarValue({
-              timeRange,
-              timeRequired: topic.timeRequired,
-            }).map((value) => {
-              return (
-                <React.Fragment key={value.id}>
-                  <rect
-                    x={value.positionX}
-                    width={value.width}
-                    height={20}
-                    fill="black"
-                  />
-                </React.Fragment>
-              );
-            })}
-          </svg>
-        </div>
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect
+                x={0}
+                y={0}
+                height={20}
+                width={BAR_SIZE}
+                stroke="black"
+                fill="transparent"
+              />
+              {generateTimeRangeBarValue({
+                timeRange,
+                timeRequired: topic.timeRequired,
+              }).map((value) => {
+                return (
+                  <React.Fragment key={value.id}>
+                    <rect
+                      x={value.positionX}
+                      width={value.width}
+                      height={20}
+                      fill="black"
+                    />
+                  </React.Fragment>
+                );
+              })}
+            </svg>
+          </div>
+        )}
       </>
     );
   }
