@@ -74,7 +74,7 @@ function generateTimeRangeBarValue({
   timeRequired: TopicSchema["timeRequired"];
 }): Array<{ id: string; positionX: number; width: number }> {
   return timeRange.map((timeRange) => {
-    const id = self.crypto.randomUUID();
+    const id = [timeRange?.activityId, timeRange?.startMs].join();
     const startMs = timeRange?.startMs || 0;
     const endMs = timeRange?.endMs || 0;
     const timeRadio = (endMs - startMs) / timeRequired / 1000;
