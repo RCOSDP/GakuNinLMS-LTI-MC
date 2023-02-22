@@ -1,7 +1,15 @@
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import usePrevious from "@rooks/use-previous";
 import clsx from "clsx";
 import { css } from "@emotion/css";
+import type { AccordionProps } from "@mui/material/Accordion";
+import MuiAccordion from "@mui/material/Accordion";
+import type { AccordionSummaryProps } from "@mui/material/AccordionSummary";
+import MuiAccordionSummary from "@mui/material/AccordionSummary";
+import type { AccordionDetailsProps } from "@mui/material/AccordionDetails";
+import MuiAccordionDetails from "@mui/material/AccordionDetails";
+import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
+
 import type { TopicSchema } from "$server/models/topic";
 import type { VideoResourceSchema } from "$server/models/videoResource";
 import VideoPlayer from "$organisms/Video/VideoPlayer";
@@ -12,6 +20,8 @@ import { useBookAtom } from "$store/book";
 import useOembed from "$utils/useOembed";
 import type { SxProps } from "@mui/system";
 import type { ActivitySchema } from "$server/models/activity";
+import { isInstructor, isAdministrator } from "$utils/session";
+import { useSessionAtom } from "$store/session";
 
 const hidden = css({
   m: 0,
@@ -34,11 +44,54 @@ const videoStyle = {
   },
 } as const;
 
+const accordion = css({
+  padding: 0,
+  boxShadow: "none",
+  "&:before": {
+    display: "none",
+  },
+});
+
+function Accordion(props: AccordionProps) {
+  return <MuiAccordion {...props} className={accordion} />;
+}
+
+const accordionSummary = css({
+  padding: 0,
+  flexDirection: "row-reverse",
+  "& .MuiAccordionSummary-expandIconWrapper": {
+    margin: "4px",
+  },
+  "& .MuiAccordionSummary-expandIconWrapper.Mui-expanded": {
+    transform: "rotate(90deg)",
+  },
+});
+
+function AccordionSummary(props: AccordionSummaryProps) {
+  return (
+    <MuiAccordionSummary
+      className={accordionSummary}
+      expandIcon={<ArrowForwardIosSharpIcon sx={{ fontSize: "0.9rem" }} />}
+      {...props}
+    />
+  );
+}
+
+const accordionDetails = css({
+  display: "flex",
+  justifyContent: "center",
+  padding: "0 8px 20px",
+});
+
+function AccordionDetails(props: AccordionDetailsProps) {
+  return <MuiAccordionDetails {...props} className={accordionDetails} />;
+}
+
 type Props = {
   className?: string;
   sx?: SxProps;
   topic: TopicSchema;
-  bookActivity: ActivitySchema[];
+  timeRange: ActivitySchema["timeRanges"];
   onEnded?: () => void;
 };
 
@@ -56,16 +109,37 @@ function isValidPlaybackEnd({
   return typeof stopTime === "number" && 0 < stopTime && stopTime < currentTime;
 }
 
+const BAR_SIZE = 480;
+function generateTimeRangeBarValue({
+  timeRange,
+  timeRequired,
+}: {
+  timeRange: ActivitySchema["timeRanges"];
+  timeRequired: TopicSchema["timeRequired"];
+}): Array<{ id: string; positionX: number; width: number }> {
+  return timeRange.map((timeRange) => {
+    const id = [timeRange?.activityId, timeRange?.startMs].join();
+    const startMs = timeRange?.startMs || 0;
+    const endMs = timeRange?.endMs || 0;
+    const timeRadio = (endMs - startMs) / timeRequired / 1000;
+    const width = BAR_SIZE * timeRadio;
+    const lengthRatio = BAR_SIZE / timeRequired;
+    const positionX = (lengthRatio * startMs) / 1000;
+
+    return { id, positionX, width };
+  });
+}
+
 export default function Video({
   className,
   sx,
   topic,
-  bookActivity,
+  timeRange,
   onEnded,
 }: Props) {
   const { video, preloadVideo } = useVideoAtom();
   const { book, itemIndex, itemExists } = useBookAtom();
-  console.log(bookActivity);
+  const { session } = useSessionAtom();
   useEffect(() => {
     if (!book) return;
     // バックグラウンドで動画プレイヤーオブジェクトプールに読み込む
@@ -154,6 +228,42 @@ export default function Video({
             onEnded={String(topic.id) === id ? onEnded : undefined}
           />
         ))}
+        {session && !isInstructor(session) && !isAdministrator(session) && (
+          <Accordion>
+            <AccordionSummary>視聴時間詳細</AccordionSummary>
+            <AccordionDetails>
+              <svg
+                height={20}
+                width={BAR_SIZE}
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <rect
+                  x={0}
+                  y={0}
+                  height={20}
+                  width={BAR_SIZE}
+                  stroke="black"
+                  fill="transparent"
+                />
+                {generateTimeRangeBarValue({
+                  timeRange,
+                  timeRequired: topic.timeRequired,
+                }).map((value) => {
+                  return (
+                    <React.Fragment key={value.id}>
+                      <rect
+                        x={value.positionX}
+                        width={value.width}
+                        height={20}
+                        fill="black"
+                      />
+                    </React.Fragment>
+                  );
+                })}
+              </svg>
+            </AccordionDetails>
+          </Accordion>
+        )}
       </>
     );
   }
