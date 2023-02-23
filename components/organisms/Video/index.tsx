@@ -22,6 +22,8 @@ import type { SxProps } from "@mui/system";
 import type { ActivitySchema } from "$server/models/activity";
 import { isInstructor, isAdministrator } from "$utils/session";
 import { useSessionAtom } from "$store/session";
+import type { ButtonProps } from "@mui/material";
+import { Button } from "@mui/material";
 
 const hidden = css({
   m: 0,
@@ -80,11 +82,28 @@ function AccordionSummary(props: AccordionSummaryProps) {
 const accordionDetails = css({
   display: "flex",
   justifyContent: "center",
+  position: "relative",
   padding: "0 8px 20px",
 });
 
 function AccordionDetails(props: AccordionDetailsProps) {
   return <MuiAccordionDetails {...props} className={accordionDetails} />;
+}
+
+const skipButton = css({
+  whiteSpace: "nowrap",
+  fontSize: "8px",
+  position: "absolute",
+  top: 0,
+  left: "4px",
+});
+
+function SkipButton(props: ButtonProps) {
+  return (
+    <Button {...props} className={skipButton} size="small" color="secondary">
+      未視聴スキップ
+    </Button>
+  );
 }
 
 type Props = {
@@ -232,6 +251,7 @@ export default function Video({
           <Accordion>
             <AccordionSummary>視聴時間詳細</AccordionSummary>
             <AccordionDetails>
+              <SkipButton />
               <svg
                 height={20}
                 width={BAR_SIZE}
