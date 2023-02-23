@@ -239,14 +239,13 @@ export default function Video({
         // TODO:vimeo対応
       });
     } else {
-      const nextTimeRanges = timeRange.filter((timeRange) => {
+      const nextUnwatchedTime = timeRange.find((timeRange) => {
         return (
           (timeRange.endMs || 0) / 1000 > videoInstance.player.currentTime()
         );
       });
-      const nextUnwatchedTime = nextTimeRanges[0]?.endMs;
-      if (!nextUnwatchedTime) return;
-      void videoInstance.player.currentTime(nextUnwatchedTime / 1000);
+      if (!nextUnwatchedTime?.endMs) return;
+      void videoInstance.player.currentTime(nextUnwatchedTime.endMs / 1000);
     }
   }, [timeRange, topic?.id, video]);
 
