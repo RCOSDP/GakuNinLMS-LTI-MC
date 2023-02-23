@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import usePrevious from "@rooks/use-previous";
 import clsx from "clsx";
 import { css } from "@emotion/css";
@@ -231,6 +231,25 @@ export default function Video({
     // TODO: videoの内容の変更検知は機能しないので修正したい。Mapオブジェクトでの管理をやめるかMap.prototype.set()を使用しないようにするなど必要かもしれない。
   }, [video, itemExists, prevItemIndex, itemIndex, onEnded]);
 
+  const handleSkipWatch = useCallback(() => {
+    const videoInstance = video.get(String(topic?.id));
+    if (!videoInstance) return;
+    if (videoInstance.type === "vimeo") {
+      videoInstance.player.on("timeupdate", () => {
+        // TODO:vimeo対応
+      });
+    } else {
+      const nextTimeRanges = timeRange.filter((timeRange) => {
+        return (
+          (timeRange.endMs || 0) / 1000 > videoInstance.player.currentTime()
+        );
+      });
+      const nextUnwatchedTime = nextTimeRanges[0]?.endMs;
+      if (!nextUnwatchedTime) return;
+      void videoInstance.player.currentTime(nextUnwatchedTime / 1000);
+    }
+  }, [timeRange, topic?.id, video]);
+
   // 動画プレイヤーオブジェクトプールに存在する場合
   if (video.has(String(topic.id))) {
     return (
@@ -251,7 +270,7 @@ export default function Video({
           <Accordion>
             <AccordionSummary>視聴時間詳細</AccordionSummary>
             <AccordionDetails>
-              <SkipButton />
+              <SkipButton onClick={handleSkipWatch} />
               <svg
                 height={20}
                 width={BAR_SIZE}
