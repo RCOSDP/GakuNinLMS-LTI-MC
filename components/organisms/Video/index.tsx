@@ -229,13 +229,16 @@ export default function Video({
     // TODO: videoの内容の変更検知は機能しないので修正したい。Mapオブジェクトでの管理をやめるかMap.prototype.set()を使用しないようにするなど必要かもしれない。
   }, [video, itemExists, prevItemIndex, itemIndex, onEnded]);
 
-  const handleSkipWatch = useCallback(() => {
+  const handleSkipWatch = useCallback(async () => {
     const videoInstance = video.get(String(topic?.id));
     if (!videoInstance) return;
     if (videoInstance.type === "vimeo") {
-      videoInstance.player.on("timeupdate", () => {
-        // TODO:vimeo対応
+      const currentTime = await videoInstance.player.getCurrentTime();
+      const nextUnwatchedTime = timeRange.find((timeRange) => {
+        return (timeRange.endMs || 0) / 1000 > currentTime;
       });
+      if (!nextUnwatchedTime?.endMs) return;
+      void videoInstance.player.setCurrentTime(nextUnwatchedTime.endMs / 1000);
     } else {
       const nextUnwatchedTime = timeRange.find((timeRange) => {
         return (
