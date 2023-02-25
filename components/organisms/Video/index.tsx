@@ -101,7 +101,7 @@ const skipButton = css({
 function SkipButton(props: ButtonProps) {
   return (
     <Button {...props} className={skipButton} size="small" color="secondary">
-      未視聴スキップ
+      未視聴箇所へ
     </Button>
   );
 }
