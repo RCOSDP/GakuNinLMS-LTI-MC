@@ -82,7 +82,6 @@ function AccordionSummary(props: AccordionSummaryProps) {
 const accordionDetails = css({
   display: "flex",
   justifyContent: "center",
-  position: "relative",
   padding: "0 8px 20px",
 });
 
@@ -93,9 +92,8 @@ function AccordionDetails(props: AccordionDetailsProps) {
 const skipButton = css({
   whiteSpace: "nowrap",
   fontSize: "8px",
-  position: "absolute",
-  top: 0,
-  left: "4px",
+  marginRight: "8px",
+  lineHeight: 1,
 });
 
 function SkipButton(props: ButtonProps) {
