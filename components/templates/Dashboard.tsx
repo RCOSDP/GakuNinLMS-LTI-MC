@@ -213,22 +213,13 @@ export default function Dashboard(props: Props) {
           分析データをダウンロード
         </Button>
         <Button
-          onClick={
-            memberships?.currentLtiMembers &&
-            memberships.currentLtiMembers.length > 0
-              ? handleMembershipClick(memberships?.members || [])
-              : async () =>
-                  await handleUpdateLtiMembers(memberships?.members || [])
-          }
+          onClick={handleMembershipClick(memberships?.members || [])}
           color="primary"
           variant="contained"
           size="small"
         >
           <GroupOutlinedIcon fontSize="small" />
-          {memberships?.currentLtiMembers &&
-          memberships.currentLtiMembers.length > 0
-            ? "受講者の同期"
-            : "受講者の登録"}
+          受講者の同期
         </Button>
       </ActionHeader>
       <Card classes={cardClasses} className={classes.card}>
