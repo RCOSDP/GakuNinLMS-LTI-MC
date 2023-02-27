@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import usePrevious from "@rooks/use-previous";
 import clsx from "clsx";
 import { css } from "@emotion/css";
@@ -22,6 +22,8 @@ import type { SxProps } from "@mui/system";
 import type { ActivitySchema } from "$server/models/activity";
 import { isInstructor, isAdministrator } from "$utils/session";
 import { useSessionAtom } from "$store/session";
+import type { ButtonProps } from "@mui/material";
+import { Button } from "@mui/material";
 
 const hidden = css({
   m: 0,
@@ -85,6 +87,21 @@ const accordionDetails = css({
 
 function AccordionDetails(props: AccordionDetailsProps) {
   return <MuiAccordionDetails {...props} className={accordionDetails} />;
+}
+
+const skipButton = css({
+  whiteSpace: "nowrap",
+  fontSize: "8px",
+  marginRight: "8px",
+  lineHeight: 1,
+});
+
+function SkipButton(props: ButtonProps) {
+  return (
+    <Button {...props} className={skipButton} size="small" color="secondary">
+      未視聴箇所へ
+    </Button>
+  );
 }
 
 type Props = {
@@ -212,6 +229,27 @@ export default function Video({
     // TODO: videoの内容の変更検知は機能しないので修正したい。Mapオブジェクトでの管理をやめるかMap.prototype.set()を使用しないようにするなど必要かもしれない。
   }, [video, itemExists, prevItemIndex, itemIndex, onEnded]);
 
+  const handleSkipWatch = useCallback(async () => {
+    const videoInstance = video.get(String(topic?.id));
+    if (!videoInstance) return;
+    if (videoInstance.type === "vimeo") {
+      const currentTime = await videoInstance.player.getCurrentTime();
+      const nextUnwatchedTime = timeRange.find((timeRange) => {
+        return (timeRange.endMs || 0) / 1000 > currentTime;
+      });
+      if (!nextUnwatchedTime?.endMs) return;
+      void videoInstance.player.setCurrentTime(nextUnwatchedTime.endMs / 1000);
+    } else {
+      const nextUnwatchedTime = timeRange.find((timeRange) => {
+        return (
+          (timeRange.endMs || 0) / 1000 > videoInstance.player.currentTime()
+        );
+      });
+      if (!nextUnwatchedTime?.endMs) return;
+      void videoInstance.player.currentTime(nextUnwatchedTime.endMs / 1000);
+    }
+  }, [timeRange, topic?.id, video]);
+
   // 動画プレイヤーオブジェクトプールに存在する場合
   if (video.has(String(topic.id))) {
     return (
@@ -232,6 +270,7 @@ export default function Video({
           <Accordion>
             <AccordionSummary>視聴時間詳細</AccordionSummary>
             <AccordionDetails>
+              <SkipButton onClick={handleSkipWatch} />
               <svg
                 height={20}
                 width={BAR_SIZE}
