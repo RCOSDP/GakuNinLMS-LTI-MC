@@ -24,6 +24,8 @@ import { isInstructor, isAdministrator } from "$utils/session";
 import { useSessionAtom } from "$store/session";
 import type { ButtonProps } from "@mui/material";
 import { Button } from "@mui/material";
+import { learningStatus } from "$theme/colors";
+
 
 const hidden = css({
   m: 0,
@@ -294,7 +296,7 @@ export default function Video({
                         x={value.positionX}
                         width={value.width}
                         height={20}
-                        fill="#1B5E20"
+                        fill={learningStatus.completed}
                       />
                     </React.Fragment>
                   );
