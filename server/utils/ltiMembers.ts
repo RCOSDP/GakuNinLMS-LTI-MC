@@ -1,7 +1,7 @@
 import prisma from "$server/utils/prisma";
 import type { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
 import type { LtiNrpsContextMemberSchema } from "$server/models/ltiNrpsContextMember";
-import { findLtiResourceLink } from "./ltiResourceLink";
+import type { LtiContextSchema } from "$server/models/ltiContext";
 
 export async function getLtiMembers(
   consumerId: LtiResourceLinkSchema["consumerId"],
@@ -18,17 +18,14 @@ export async function getLtiMembers(
 export async function updateLtiMembers(
   consumerId: LtiResourceLinkSchema["consumerId"],
   contextId: LtiResourceLinkSchema["contextId"],
-  resourceLinkId: LtiResourceLinkSchema["id"],
+  contextTitle: LtiContextSchema["title"],
+  contextLabel: LtiContextSchema["label"],
   members: LtiNrpsContextMemberSchema[]
 ) {
-  const ltiResourceLink = await findLtiResourceLink({
-    consumerId,
-    id: resourceLinkId,
-  });
   const contextInput = {
     id: contextId,
-    title: ltiResourceLink?.title || "",
-    label: ltiResourceLink?.contextLabel || "",
+    title: contextTitle || "",
+    label: contextLabel || "",
     consumer: { connect: { id: consumerId } },
   };
 
