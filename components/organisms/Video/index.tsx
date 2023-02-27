@@ -294,7 +294,7 @@ export default function Video({
                         x={value.positionX}
                         width={value.width}
                         height={20}
-                        fill="black"
+                        fill="#1B5E20"
                       />
                     </React.Fragment>
                   );
