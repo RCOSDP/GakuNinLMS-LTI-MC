@@ -15,7 +15,7 @@ const useStyles = makeStyles({
 type Props = {
   className?: string;
   topic: TopicSchema;
-  bookActivity: ActivitySchema[];
+  bookActivity?: ActivitySchema[];
   onEnded?: () => void;
   offset?: string;
 };

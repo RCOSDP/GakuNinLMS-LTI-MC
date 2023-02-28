@@ -17,7 +17,7 @@ import type { ActivitySchema } from "$server/models/activity";
 
 type Props = {
   topic: TopicSchema;
-  bookActivity: ActivitySchema[];
+  bookActivity?: ActivitySchema[];
   onEnded?: () => void;
   offset?: string;
 };
@@ -34,6 +34,9 @@ export default function TopicViewerContent({
     backgroundColor: gray[800],
   });
   const timeRange = useMemo(() => {
+    if (!bookActivity) {
+      return [];
+    }
     const activity = bookActivity.find(
       (activity) => activity.topic.id === topic.id
     );
