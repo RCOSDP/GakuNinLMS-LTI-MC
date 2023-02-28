@@ -106,7 +106,7 @@ const useStyles = makeStyles((theme) => ({
 type Props = {
   linked?: boolean;
   book: BookSchema | null;
-  bookActivity: ActivitySchema[];
+  bookActivity?: ActivitySchema[];
   index: ItemIndex;
   onBookEditClick?(book: BookSchema): void;
   onOtherBookLinkClick?(): void;
