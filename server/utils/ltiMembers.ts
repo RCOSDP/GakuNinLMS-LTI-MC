@@ -1,6 +1,7 @@
 import prisma from "$server/utils/prisma";
 import type { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
 import type { LtiNrpsContextMemberSchema } from "$server/models/ltiNrpsContextMember";
+import type { LtiContextSchema } from "$server/models/ltiContext";
 
 export async function getLtiMembers(
   consumerId: LtiResourceLinkSchema["consumerId"],
@@ -17,8 +18,17 @@ export async function getLtiMembers(
 export async function updateLtiMembers(
   consumerId: LtiResourceLinkSchema["consumerId"],
   contextId: LtiResourceLinkSchema["contextId"],
+  contextTitle: LtiContextSchema["title"],
+  contextLabel: LtiContextSchema["label"],
   members: LtiNrpsContextMemberSchema[]
 ) {
+  const contextInput = {
+    id: contextId,
+    title: contextTitle || "",
+    label: contextLabel || "",
+    consumer: { connect: { id: consumerId } },
+  };
+
   await prisma.$transaction([
     ...members.map((member) =>
       prisma.user.upsert({
@@ -42,6 +52,11 @@ export async function updateLtiMembers(
         },
       })
     ),
+    prisma.ltiContext.upsert({
+      where: { consumerId_id: { consumerId, id: contextInput.id } },
+      create: contextInput,
+      update: contextInput,
+    }),
     prisma.ltiMember.deleteMany({
       where: {
         consumerId,

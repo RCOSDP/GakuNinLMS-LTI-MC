@@ -33,6 +33,8 @@ export async function update(
   const ltiMembers = await updateLtiMembers(
     req.session.oauthClient.id,
     req.session.ltiContext.id,
+    req.session.ltiContext.title,
+    req.session.ltiContext.label,
     req.body.members
   );
 
