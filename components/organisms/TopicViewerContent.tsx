@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import type { TopicSchema } from "$server/models/topic";
 import Typography from "@mui/material/Typography";
 import Chip from "@mui/material/Chip";
@@ -12,19 +13,39 @@ import { authors } from "$utils/descriptionList";
 import formatInterval from "$utils/formatInterval";
 import { isVideoResource } from "$utils/videoResource";
 import { gray } from "$theme/colors";
+import type { ActivitySchema } from "$server/models/activity";
 
 type Props = {
   topic: TopicSchema;
+  bookActivity?: ActivitySchema[];
   onEnded?: () => void;
   offset?: string;
 };
 
-export default function TopicViewerContent({ topic, onEnded, offset }: Props) {
+export default function TopicViewerContent({
+  topic,
+  bookActivity,
+  onEnded,
+  offset,
+}: Props) {
   const theme = useTheme();
   const sticky = useSticky({
     offset: offset ?? theme.spacing(-2),
     backgroundColor: gray[800],
   });
+  const timeRange = useMemo(() => {
+    if (!bookActivity) {
+      return [];
+    }
+    const activity = bookActivity.find(
+      (activity) => activity.topic.id === topic.id
+    );
+    if (!activity) {
+      return [];
+    }
+    return activity.timeRanges;
+  }, [bookActivity, topic.id]);
+
   return (
     <>
       {isVideoResource(topic.resource) && (
@@ -32,6 +53,7 @@ export default function TopicViewerContent({ topic, onEnded, offset }: Props) {
           className={sticky}
           sx={{ mt: -2, mx: -3, mb: 2 }}
           topic={topic}
+          timeRange={timeRange}
           onEnded={onEnded}
         />
       )}

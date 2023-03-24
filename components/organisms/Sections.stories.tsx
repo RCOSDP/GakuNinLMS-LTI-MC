@@ -12,6 +12,7 @@ const activityBySections = sections
     learner: user,
     completed: Math.floor(Math.random() * 2) === 0,
     totalTimeMs: 100_000,
+    timeRanges: [],
     createdAt: new Date(),
     updatedAt: new Date(),
   }));
