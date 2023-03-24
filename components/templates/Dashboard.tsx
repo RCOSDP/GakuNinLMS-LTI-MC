@@ -5,6 +5,7 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Button from "@mui/material/Button";
 import GetAppOutlinedIcon from "@mui/icons-material/GetAppOutlined";
+import GroupOutlinedIcon from "@mui/icons-material/GroupOutlined";
 import makeStyles from "@mui/styles/makeStyles";
 import Container from "$atoms/Container";
 import ActionHeader from "$organisms/ActionHeader";
@@ -26,6 +27,10 @@ import label from "$utils/learningStatusLabel";
 import getLearnerActivities from "$utils/getLearnerActivities";
 import getActivitiesByBooks from "$utils/getActivitiesByBooks";
 import useDialogProps from "$utils/useDialogProps";
+import useMemberships from "$utils/useMemberships";
+import MembersDialog from "$organisms/MembersDialog";
+import useLtiMembersHandler from "$utils/useLtiMembersHandler";
+import type { LtiNrpsContextMemberSchema } from "$server/models/ltiNrpsContextMember";
 
 type TabPanelProps = {
   className?: string;
@@ -103,7 +108,20 @@ type Props = {
 };
 
 export default function Dashboard(props: Props) {
-  const { session, learners, courseBooks, bookActivities } = props;
+  const { session, learners, courseBooks, bookActivities, scope } = props;
+  const { data: memberships } = useMemberships();
+  const newLtiMembers = useMemo(() => {
+    if (!memberships) {
+      return [];
+    }
+    const { members, currentLtiMembers } = memberships;
+    return members.filter((member) => {
+      return currentLtiMembers?.every(
+        (learner) => learner.userId !== member.user_id
+      );
+    });
+  }, [memberships]);
+  const updateLtiMembers = useLtiMembersHandler();
   const classes = useStyles();
   const cardClasses = useCardStyles();
   const [tabIndex, setTabIndex] = useState(0);
@@ -134,6 +152,24 @@ export default function Dashboard(props: Props) {
     learner: LearnerSchema;
     bookActivities: Array<BookActivitySchema>;
   }>();
+  const {
+    data: membersData,
+    dispatch: membersDispatch,
+    ...membersDialogProps
+  } = useDialogProps<{
+    members: LtiNrpsContextMemberSchema[];
+  }>();
+
+  const handleUpdateLtiMembers = useCallback(
+    async (members: LtiNrpsContextMemberSchema[]) => {
+      await updateLtiMembers({
+        members,
+        currentLtiContextOnly: scope === "current-lti-context-only",
+      });
+      membersDialogProps.onClose();
+    },
+    [membersDialogProps, scope, updateLtiMembers]
+  );
   const handleLearnerClick = useCallback(
     (book: Pick<BookSchema, "id">) => (learner: LearnerSchema) =>
       dispatch({
@@ -149,6 +185,11 @@ export default function Dashboard(props: Props) {
       dispatch({ learner, bookActivities }),
     [dispatch]
   );
+  const handleMembershipClick = useCallback(
+    (members: LtiNrpsContextMemberSchema[]) => () =>
+      membersDispatch({ members }),
+    [membersDispatch]
+  );
   return (
     <Container maxWidth="md">
       <Typography sx={{ mt: 5 }} variant="h4">
@@ -163,13 +204,22 @@ export default function Dashboard(props: Props) {
         />
         <Button
           onClick={handleDownloadClick}
-          color="primary"
+          color="secondary"
           variant="contained"
           size="small"
           disabled={bookActivities.length === 0}
         >
           <GetAppOutlinedIcon fontSize="small" />
           分析データをダウンロード
+        </Button>
+        <Button
+          onClick={handleMembershipClick(memberships?.members || [])}
+          color="primary"
+          variant="contained"
+          size="small"
+        >
+          <GroupOutlinedIcon fontSize="small" />
+          受講者の同期
         </Button>
       </ActionHeader>
       <Card classes={cardClasses} className={classes.card}>
@@ -227,6 +277,14 @@ export default function Dashboard(props: Props) {
           learner={data.learner}
           bookActivities={data.bookActivities}
           {...dialogProps}
+        />
+      )}
+      {membersData && (
+        <MembersDialog
+          members={membersData.members}
+          newLtiMembers={newLtiMembers}
+          handleUpdateLtiMembers={handleUpdateLtiMembers}
+          {...membersDialogProps}
         />
       )}
     </Container>

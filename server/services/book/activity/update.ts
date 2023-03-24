@@ -72,6 +72,7 @@ export async function update(
     activity.filter((a) => a.completed).map((a) => a.topic.id)
   );
   const completed = topics.filter((t) => completedSet.has(t.id));
+
   // https://www.imsglobal.org/sites/default/files/lti/ltiv2p1/model/mediatype/application/vnd/ims/lis/v1/score+json/index.html
   const score = {
     userId: req.session.user.ltiUserId,
