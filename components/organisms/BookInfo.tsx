@@ -1,11 +1,10 @@
 import Card from "@mui/material/Card";
-import { grey } from "@mui/material/colors";
-import DescriptionList from "$atoms/DescriptionList";
 import Markdown from "$atoms/Markdown";
-import useCardStyle from "$styles/card";
-import languages from "$utils/languages";
-import formatInterval from "$utils/formatInterval";
 import type { BookSchema } from "$server/models/book";
+import React from "react";
+import KeywordChip from "$atoms/KeywordChip";
+import makeStyles from "@mui/styles/makeStyles";
+import useCardStyle from "$styles/card";
 
 type Props = {
   className?: string;
@@ -13,25 +12,36 @@ type Props = {
   book: BookSchema;
 };
 
+const useStyles = makeStyles((theme) => ({
+  keywords: {
+    display: "flex",
+    listStyle: "none",
+    padding: 0,
+    margin: 0,
+    marginBottom: theme.spacing(0.75),
+    "& > *": {
+      marginRight: theme.spacing(0.5),
+    },
+  },
+}));
+
 export default function BookInfo({ className, id, book }: Props) {
+  const classes = useStyles();
   const cardClasses = useCardStyle();
 
   return (
     <Card className={className} classes={cardClasses} id={id}>
-      <DescriptionList
-        color={grey[900]}
-        sx={{ mb: 0.5 }}
-        value={[
-          {
-            key: "学習時間",
-            value: formatInterval(0, (book.timeRequired ?? 0) * 1000),
-          },
-          {
-            key: "教材の主要な言語",
-            value: languages[book.language],
-          },
-        ]}
-      />
+      {book.keywords && (
+        <ul className={classes.keywords}>
+          {book.keywords.map((keyword) => {
+            return (
+              <li key={keyword.id}>
+                <KeywordChip keyword={keyword} />
+              </li>
+            );
+          })}
+        </ul>
+      )}
       {book.description && <Markdown>{book.description}</Markdown>}
     </Card>
   );
