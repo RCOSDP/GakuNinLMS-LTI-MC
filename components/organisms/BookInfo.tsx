@@ -1,7 +1,6 @@
 import Card from "@mui/material/Card";
 import Markdown from "$atoms/Markdown";
 import type { BookSchema } from "$server/models/book";
-import React from "react";
 import KeywordChip from "$atoms/KeywordChip";
 import makeStyles from "@mui/styles/makeStyles";
 import useCardStyle from "$styles/card";
