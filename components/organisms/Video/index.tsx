@@ -22,9 +22,10 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import { gray, learningStatus } from "$theme/colors";
 import Markdown from "$atoms/Markdown";
-import formatInterval from "$utils/formatInterval";
+import KeywordChip from "$atoms/KeywordChip";
 import License from "$atoms/License";
 import DescriptionList from "$atoms/DescriptionList";
+import formatInterval from "$utils/formatInterval";
 import getLocaleDateString from "$utils/getLocaleDateString";
 import { authors } from "$utils/descriptionList";
 
@@ -58,6 +59,16 @@ const timeLineDetail = css({
   display: "flex",
   justifyContent: "center",
   marginTop: "12px",
+});
+
+const keywords = css({
+  display: "flex",
+  listStyle: "none",
+  padding: 0,
+  margin: 0,
+  "& > *": {
+    marginRight: "4px",
+  },
 });
 
 const skipButton = css({
@@ -365,6 +376,17 @@ export default function Video({
               ...authors(topic),
             ]}
           />
+          {topic.keywords && (
+            <ul className={keywords}>
+              {topic.keywords.map((keyword) => {
+                return (
+                  <li key={keyword.id}>
+                    <KeywordChip keyword={keyword} />
+                  </li>
+                );
+              })}
+            </ul>
+          )}
         </TabPanel>
       </>
     );
