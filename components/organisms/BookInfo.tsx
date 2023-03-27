@@ -17,7 +17,7 @@ export default function BookInfo({ className, id, book }: Props) {
   return (
     <Card className={className} classes={cardClasses} id={id}>
       {book.keywords && (
-        <Box sx={{ my: 1 }}>
+        <Box sx={{ mb: 1 }}>
           {book.keywords.map((keyword) => {
             return (
               <KeywordChip
