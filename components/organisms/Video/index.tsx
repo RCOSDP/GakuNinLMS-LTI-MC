@@ -117,9 +117,8 @@ function TabPanel({
     <div
       className={className}
       role="tabpanel"
-      hidden={value !== index}
       id={`tabpanel=${index}`}
-      aria-labelledby={`tab-${index}`}
+      aria-hidden={value !== index}
       {...other}
     >
       {value === index && children}
@@ -300,9 +299,19 @@ export default function Video({
           value={tabIndex}
           onChange={handleTabIndexChange}
         >
-          <Tab label="解説" />
-          {isStudent && <Tab label="視聴時間詳細" />}
-          <Tab label="トピックの詳細" />
+          <Tab label="解説" id="tabpanel-0" aria-controls="tabpanel-0" />
+          {isStudent && (
+            <Tab
+              label="視聴時間詳細"
+              id="tabpanel-1"
+              aria-controls="tabpanel-1"
+            />
+          )}
+          <Tab
+            label="トピックの詳細"
+            id={`tabpanel-${isStudent ? 2 : 1}`}
+            aria-controls={`tabpanel-${isStudent ? 2 : 1}`}
+          />
         </Tabs>
         <TabPanel value={tabIndex} index={0}>
           <article>
