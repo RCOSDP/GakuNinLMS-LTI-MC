@@ -16,6 +16,7 @@ import type { ActivitySchema } from "$server/models/activity";
 import { isInstructor, isAdministrator } from "$utils/session";
 import { useSessionAtom } from "$store/session";
 import type { ButtonProps } from "@mui/material";
+import { Box } from "@mui/material";
 import { Chip, Typography } from "@mui/material";
 import { Button } from "@mui/material";
 import Tabs from "@mui/material/Tabs";
@@ -59,16 +60,6 @@ const timeLineDetail = css({
   display: "flex",
   justifyContent: "center",
   marginTop: "12px",
-});
-
-const keywords = css({
-  display: "flex",
-  listStyle: "none",
-  padding: 0,
-  margin: 0,
-  "& > *": {
-    marginRight: "4px",
-  },
 });
 
 const skipButton = css({
@@ -386,15 +377,17 @@ export default function Video({
             ]}
           />
           {topic.keywords && (
-            <ul className={keywords}>
+            <Box sx={{ my: 1 }}>
               {topic.keywords.map((keyword) => {
                 return (
-                  <li key={keyword.id}>
-                    <KeywordChip keyword={keyword} />
-                  </li>
+                  <KeywordChip
+                    key={keyword.id}
+                    keyword={keyword}
+                    sx={{ mr: 0.5, maxWidth: "260px" }}
+                  />
                 );
               })}
-            </ul>
+            </Box>
           )}
         </TabPanel>
       </>
