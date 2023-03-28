@@ -294,11 +294,7 @@ export default function Video({
         >
           <Tab label="解説" id="tab-0" aria-controls="panel-0" />
           {isStudent && (
-            <Tab
-              label="視聴時間詳細"
-              id="tab-1"
-              aria-controls="panel-1"
-            />
+            <Tab label="視聴時間詳細" id="tab-1" aria-controls="panel-1" />
           )}
           <Tab
             label="トピックの詳細"
