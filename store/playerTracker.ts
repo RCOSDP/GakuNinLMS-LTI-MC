@@ -1,5 +1,5 @@
 import { atom, useAtom, useAtomValue, useSetAtom } from "jotai";
-import type { VideoJsPlayer } from "video.js";
+import type { VideoJsPlayer } from "$types/videoJsPlayer";
 import type VimeoPlayer from "@vimeo/player";
 import { PlayerTracker } from "$utils/eventLogger/playerTracker";
 

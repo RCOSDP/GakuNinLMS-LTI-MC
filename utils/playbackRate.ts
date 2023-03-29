@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from "react";
 import useSWRImmutable from "swr/immutable";
-import type { VideoJsPlayer } from "video.js";
+import type { VideoJsPlayer } from "$types/videoJsPlayer";
 import VimeoPlayer from "@vimeo/player";
 
 type Player = VideoJsPlayer | VimeoPlayer;
