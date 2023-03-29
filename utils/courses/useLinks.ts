@@ -7,10 +7,12 @@ import type { SortLinkOrder } from "$server/models/sortLinkOrder";
 
 const key = "/api/v2/lti/search";
 
-async function fetchLinks(
-  _: typeof key,
-  query: { q: string; sort: SortLinkOrder; perPage: number; page: number }
-): Promise<LinkSearchResultSchema> {
+async function fetchLinks({
+  query,
+}: {
+  key: typeof key;
+  query: { q: string; sort: SortLinkOrder; perPage: number; page: number };
+}): Promise<LinkSearchResultSchema> {
   const res: LinkSearchResultSchema = (await api.apiV2LtiSearchGet({
     ...query,
     sort: query.sort as ApiV2LtiSearchGetSortEnum,
@@ -20,7 +22,7 @@ async function fetchLinks(
 
 function useLinks() {
   const { query } = useLinkSearchAtom();
-  const { data, isValidating } = useSWR([key, query], fetchLinks);
+  const { data, isValidating } = useSWR({ key, query }, fetchLinks);
   const totalCount = data?.totalCount ?? 0;
   const contents = data?.contents ?? [];
   const loading = isValidating && data != null;
@@ -34,6 +36,6 @@ export function revalidateLinks(query: {
   sort: SortLinkOrder;
   perPage: number;
   page: number;
-}): Promise<LinkSearchResultSchema> {
-  return mutate([key, query]);
+}): Promise<LinkSearchResultSchema | void> {
+  return mutate({ key, query });
 }

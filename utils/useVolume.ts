@@ -64,7 +64,7 @@ async function getVolume(player: Player): Promise<Volume> {
 /** 音量の設定の保存と反映のためのカスタムフック */
 function useVolume(player: Player) {
   const { data: ready } = useSWRImmutable(
-    [key, player],
+    { key, player },
     (): boolean =>
       ready ||
       player instanceof VimeoPlayer ||

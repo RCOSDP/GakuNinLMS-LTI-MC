@@ -4,13 +4,18 @@ import { api } from "./api";
 
 const key = "/api/v2/topic/{topic_id}";
 
-async function fetchTopic(_: typeof key, id: TopicSchema["id"]) {
-  const res = await api.apiV2TopicTopicIdGet({ topicId: id });
+async function fetchTopic({
+  topicId,
+}: {
+  key: typeof key;
+  topicId: TopicSchema["id"];
+}) {
+  const res = await api.apiV2TopicTopicIdGet({ topicId });
   return res as TopicSchema;
 }
 
 export function useTopic(id: TopicSchema["id"]) {
-  const { data } = useSWR<TopicSchema>([key, id], fetchTopic);
+  const { data } = useSWR<TopicSchema>({ key, topicId: id }, fetchTopic);
   return data;
 }
 
@@ -41,6 +46,6 @@ export async function destroyTopic(id: TopicSchema["id"]) {
 export function revalidateTopic(
   id: TopicSchema["id"],
   res?: TopicSchema
-): Promise<TopicSchema> {
-  return mutate([key, id], res);
+): Promise<TopicSchema | void> {
+  return mutate({ key, topicId: id }, res);
 }
