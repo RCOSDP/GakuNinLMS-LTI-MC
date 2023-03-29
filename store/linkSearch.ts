@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from "react";
-import { atom, useAtomValue, useAtom } from "jotai";
-import { RESET, atomWithReset, useUpdateAtom } from "jotai/utils";
+import { atom, useAtom, useAtomValue, useSetAtom } from "jotai";
+import { RESET, atomWithReset } from "jotai/utils";
 import { parse } from "search-query-parser";
 import { stringify } from "$utils/linkSearch/parser";
 import type { AuthorFilterType } from "$server/models/authorFilter";
@@ -33,7 +33,7 @@ const searchQueryAtom = atomWithReset<LinkSearchQuery>({
   bookName: [],
   topicName: [],
 });
-const resetAtom = atom<undefined, undefined>(
+const resetAtom = atom<undefined, [], void>(
   () => undefined,
   (_, set) => {
     set(inputAtom, RESET);
@@ -56,7 +56,7 @@ export function useLinkSearchAtom() {
   const [target, updateTarget] = useAtom(targetAtom);
   const [searchQuery, updateSearchQuery] = useAtom(searchQueryAtom);
   const input = useAtomValue(inputAtom);
-  const reset = useUpdateAtom(resetAtom);
+  const reset = useSetAtom(resetAtom);
 
   useEffect(
     () =>
@@ -68,7 +68,7 @@ export function useLinkSearchAtom() {
     [updateQuery, input, target, searchQuery]
   );
 
-  const onSearchSubmit = useUpdateAtom(inputAtom);
+  const onSearchSubmit = useSetAtom(inputAtom);
   const onSearchTargetChange: (target: LinkSearchTarget) => void = useCallback(
     (target) => updateTarget(target),
     [updateTarget]

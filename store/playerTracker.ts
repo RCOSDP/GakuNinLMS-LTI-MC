@@ -1,5 +1,4 @@
-import { atom, useAtom } from "jotai";
-import { useAtomValue, useUpdateAtom } from "jotai/utils";
+import { atom, useAtom, useAtomValue, useSetAtom } from "jotai";
 import type { VideoJsPlayer } from "video.js";
 import type VimeoPlayer from "@vimeo/player";
 import { PlayerTracker } from "$utils/eventLogger/playerTracker";
@@ -7,7 +6,8 @@ import { PlayerTracker } from "$utils/eventLogger/playerTracker";
 const playerTrackerAtom = atom<PlayerTracker | undefined>(undefined);
 const playerTrackingAtom = atom<
   PlayerTracker | undefined,
-  { url?: string; player: VideoJsPlayer | VimeoPlayer | undefined }
+  [{ url?: string; player: VideoJsPlayer | VimeoPlayer | undefined }],
+  void
 >(
   (get) => get(playerTrackerAtom),
   (get, set, { player, url }) => {
@@ -24,5 +24,5 @@ export function usePlayerTrackerAtom() {
 
 export function usePlayerTrackingAtom() {
   useAtom(playerTrackerAtom);
-  return useUpdateAtom(playerTrackingAtom);
+  return useSetAtom(playerTrackingAtom);
 }
