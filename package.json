@@ -20,7 +20,7 @@
     "@mui/lab": "^5.0.0-alpha.93",
     "@mui/material": "^5.9.3",
     "@mui/styles": "^5.9.3",
-    "@mui/x-date-pickers": "^5.0.5",
+    "@mui/x-date-pickers": "^6.0.3",
     "@openapitools/openapi-generator-cli": "^2.5.1",
     "@rooks/use-previous": "^4.11.2",
     "@storybook/addon-a11y": "^6.5.17-alpha.0",

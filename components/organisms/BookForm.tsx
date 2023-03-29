@@ -240,13 +240,13 @@ export default function BookForm({
               }}
             >
               <DateTimePicker
-                renderInput={(props) => (
-                  <TextField {...props} fullWidth error={expireAtError} />
-                )}
+                slotProps={{
+                  textField: { fullWidth: true, error: expireAtError },
+                  toolbar: { toolbarFormat: "yyyy年MM月dd日" },
+                }}
                 label={
                   <>
                     公開期限
-                    <br />
                     <Typography
                       className={classes.labelDescription}
                       variant="caption"
@@ -256,9 +256,7 @@ export default function BookForm({
                     </Typography>
                   </>
                 }
-                inputFormat="yyyy年MM月dd日 HH時mm分"
-                mask="____年__月__日 __時__分"
-                toolbarFormat="yyyy年MM月dd日"
+                format="yyyy年MM月dd日 HH時mm分"
                 value={expireAt}
                 onChange={handleExpireAtChange}
               />
