@@ -1,8 +1,7 @@
 # NOTE: DON'T USE IT IN PRODUCTION. 本番環境で使用しないで。
-version: "3"
 services:
   mariadb:
-    image: "mariadb:10.9.4-jammy"
+    image: "mariadb:10.11.2-jammy"
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
       MYSQL_DATABASE: bitnami_moodle
