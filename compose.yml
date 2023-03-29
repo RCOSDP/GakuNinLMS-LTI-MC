@@ -23,7 +23,7 @@ services:
       - moodle_data_v4:/bitnami/moodle
       - moodledata_data_v4:/bitnami/moodledata
   db:
-    image: "postgres:15.1-alpine3.16"
+    image: "postgres:15.2-alpine3.17"
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password

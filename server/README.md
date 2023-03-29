@@ -6,8 +6,8 @@
 
 2023-03-29 現在、以下の環境で動作確認済み
 
-- Docker v20
-- Docker Compose v1.29
+- Docker v23
+- Docker Compose v2
 - Node.js LTS
 - Yarn v1.22
 
@@ -16,7 +16,7 @@
 データベースを構築します。開発環境は次のコマンドで構築します。
 
 ```sh
-docker-compose up -d
+docker compose up -d
 ```
 
 デフォルトでは URL `postgresql://postgres:password@localhost/postgres` で接続可能な PostgreSQL データベースが構築されます。
@@ -60,7 +60,7 @@ yarn prisma studio
 データベースを撤去します。**データベースの中身はすべて消去されます。**
 
 ```
-docker-compose down
+docker compose down
 ```
 
 ## 環境変数
