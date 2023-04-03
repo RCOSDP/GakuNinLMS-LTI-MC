@@ -31,6 +31,7 @@ import DomainsInput from "$organisms/DomainsInput";
 import useCardStyles from "styles/card";
 import gray from "theme/colors/gray";
 import type { BookSchema } from "$server/models/book";
+import type { TopicSchema } from "$server/models/topic";
 import type { PublicBookSchema } from "$server/models/book/public";
 import type { BookPropsWithSubmitOptions } from "$types/bookPropsWithSubmitOptions";
 import type { AuthorSchema } from "$server/models/author";
@@ -106,7 +107,7 @@ const label = {
 
 type Props = {
   book?: BookSchema;
-  topics?: number[];
+  topics?: TopicSchema[];
   id?: string;
   linked?: boolean;
   className?: string;
@@ -158,12 +159,12 @@ export default function BookForm({
     keywords: book?.keywords ?? [],
     publicBooks: book?.publicBooks ?? [],
     submitWithLink: false,
+    topics: topics?.map((topic) => topic.id),
   };
   const { handleSubmit, register, setValue } =
     useForm<BookPropsWithSubmitOptions>({
       defaultValues,
     });
-  setValue("topics", topics);
 
   return (
     <Card

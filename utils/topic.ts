@@ -19,6 +19,16 @@ export function useTopic(id: TopicSchema["id"]) {
   return data;
 }
 
+export function useTopics(ids: TopicSchema["id"][] = []) {
+  const { data } = useSWR<TopicSchema[]>({ key, topicIds: ids }, async () => {
+    const topics = await Promise.all(
+      ids.map((id) => fetchTopic({ key, topicId: id }))
+    );
+    return topics;
+  });
+  return data;
+}
+
 export async function createTopic(body: TopicProps): Promise<TopicSchema> {
   // @ts-expect-error Type 'null' is not assignable to type 'number | undefined'
   const res = (await api.apiV2TopicPost({ body })) as TopicSchema;
