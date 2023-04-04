@@ -7,6 +7,42 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// Version Management
+
+model Branch {
+  id               Int         @id @default(autoincrement())
+  // 作成者
+  creator          User        @relation(fields: [creatorId], references: [id])
+  creatorId        Int         @map("creator_id")
+  // オリジナルブランチ
+  rootBranch       Branch?     @relation("BranchTree", fields: [rootBranchId], references: [id])
+  rootBranchId     Int?        @unique @map("root_branch_id")
+  // 世代: 1,2,3...
+  generation       Int         @default(1)
+  // フォーク元リリース
+  baseRelease      Release?    @relation("Fork", fields: [baseReleaseId], references: [id])
+  baseReleaseId    Int?        @map("base_release_id")
+
+  books            Book[]
+  releases         Release[]
+  childBranches    Branch[]    @relation("BranchTree")
+  @@map("branches")
+}
+
+model Release {
+  id               Int         @id @default(autoincrement())
+  branch           Branch      @relation(fields: [branchId], references: [id])
+  branchId         Int         @map("branch_id")
+  version          String      @default("")
+  releasedAt       DateTime?   @default(now()) @map("released_at")
+  comment          String      @default("")
+  book             Book?
+
+  folkedBranches   Branch[]    @relation("Fork")
+  @@map("releases")
+}
+
+
 // Resource Objects
 
 /// Zoomインポート履歴
@@ -222,6 +258,13 @@ model Book {
   /// 詳細
   details          Json
 
+  // ブックが所属するブランチ
+  branch           Branch?     @relation(fields: [branchId], references: [id])
+  branchId         Int?        @map("branch_id")
+  // リリース
+  release          Release?    @relation(fields: [releaseId], references: [id])
+  releaseId        Int?        @unique @map("release_id")
+
   @@index([zoomMeetingId])
   @@map("books")
 }
@@ -293,6 +336,9 @@ model User {
   email            String            @default("")
   /// 詳細
   settings         Json              @default("{}")
+
+  /// 作成したブランチ
+  createdBranches  Branch[]
 
   @@unique([ltiConsumerId, ltiUserId])
   @@index([email])
