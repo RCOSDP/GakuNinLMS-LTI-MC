@@ -15256,10 +15256,10 @@ videojs-font@3.2.0:
   resolved "https://registry.yarnpkg.com/videojs-font/-/videojs-font-3.2.0.tgz#212c9d3f4e4ec3fa7345167d64316add35e92232"
   integrity sha512-g8vHMKK2/JGorSfqAZQUmYYNnXmfec4MLhwtEFS+mMs2IDY398GLysy6BH6K+aS1KMNu/xWZ8Sue/X/mdQPliA==
 
-videojs-seek-buttons@^3.0.1:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/videojs-seek-buttons/-/videojs-seek-buttons-3.0.1.tgz#cc2adc23a6372e8aa6c2e9fd0fe7e7831a46747f"
-  integrity sha512-scVWOqCMqHajlbwYZIzJ5nBYkDXTAhEpWjfcdCu8ykksA1barrKnEKdQvS84TtDWOx6UXDD/e/x0acYEZCDMEQ==
+videojs-seek-buttons@^4.0.2:
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/videojs-seek-buttons/-/videojs-seek-buttons-4.0.2.tgz#919257427f43b303eb05752400694e95a8acdb34"
+  integrity sha512-+4r7JCLSONrGkqqqkAqmr95a1L2gp3fO5QUcghxvk8FitF2HFeptRzNQ019XmVi21jCbq5to34pMfaMhbVMYDg==
   dependencies:
     global "^4.4.0"
 

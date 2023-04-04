@@ -89,7 +89,7 @@
     "typescript": "^5.0.2",
     "use-debounce": "^9.0.3",
     "video.js": "^8.0.4",
-    "videojs-seek-buttons": "^3.0.1",
+    "videojs-seek-buttons": "^4.0.2",
     "videojs-youtube": "^3.0.0",
     "yn": "^5.0.0"
   },
