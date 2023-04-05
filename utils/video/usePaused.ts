@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import type { VideoJsPlayer } from "video.js";
+import type { VideoJsPlayer } from "$types/videoJsPlayer";
 import VimeoPlayer from "@vimeo/player";
 
 /** メディア要素を一時停止しているかどうか */

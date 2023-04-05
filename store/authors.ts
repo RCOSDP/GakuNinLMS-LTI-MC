@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import { atom, useAtom } from "jotai";
-import { RESET, atomWithReset, useUpdateAtom } from "jotai/utils";
+import { atom, useAtom, useSetAtom } from "jotai";
+import { RESET, atomWithReset } from "jotai/utils";
 import type AuthorsInput from "$organisms/AuthorsInput";
 
 type AuthorsState = Pick<
@@ -13,7 +13,7 @@ const authorsAtom = atomWithReset<AuthorsState>({
   authors: [],
 });
 
-const updateStateAtom = atom<null, Partial<AuthorsState>>(
+const updateStateAtom = atom<null, [Partial<AuthorsState>], void>(
   null,
   (get, set, state) => {
     set(authorsAtom, { ...get(authorsAtom), ...state });
@@ -22,7 +22,7 @@ const updateStateAtom = atom<null, Partial<AuthorsState>>(
 
 export function useAuthorsAtom() {
   const [state, reset] = useAtom(authorsAtom);
-  const updateState = useUpdateAtom(updateStateAtom);
+  const updateState = useSetAtom(updateStateAtom);
   useEffect(
     () => () => {
       reset(RESET);

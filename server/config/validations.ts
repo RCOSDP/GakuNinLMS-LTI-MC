@@ -1,4 +1,5 @@
 import type {
+  FastifySchema,
   FastifyRouteSchemaDef,
   FastifyValidationResult,
 } from "fastify/types/schema";
@@ -18,7 +19,7 @@ export function buildValidatorCompiler() {
     })
   );
 
-  function validatorCompiler<T>({
+  function validatorCompiler<T extends FastifySchema>({
     schema,
   }: FastifyRouteSchemaDef<T>): FastifyValidationResult {
     return ajv.compile(schema);

@@ -22,9 +22,9 @@ When changing the information of the connection destination of API, .env must be
 
 ### Prerequisites
 
-As of 2022-10-27, confirm the build in the following environment.
+As of 2023-03-29, confirm the build in the following environment.
 
-- Node.js v18.12.0
+- Node.js LTS
 
 ### Build
 

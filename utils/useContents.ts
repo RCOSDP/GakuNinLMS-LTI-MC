@@ -13,15 +13,22 @@ import { revalidateTopic } from "./topic";
 
 const key = "/api/v2/search";
 
-async function fetchContents(
-  _: typeof key,
-  type: "book" | "topic",
-  q: string,
-  filter: AuthorFilterType,
-  sort: SortOrder,
-  perPage: number,
-  page: number
-): Promise<SearchResultSchema> {
+async function fetchContents({
+  type,
+  q,
+  filter,
+  sort,
+  perPage,
+  page,
+}: {
+  key: typeof key;
+  type: "book" | "topic";
+  q: string;
+  filter: AuthorFilterType;
+  sort: SortOrder;
+  perPage: number;
+  page: number;
+}): Promise<SearchResultSchema> {
   const res: SearchResultSchema = (await api.apiV2SearchGet({
     type: type as ApiV2SearchGetTypeEnum,
     q,
@@ -59,7 +66,7 @@ function useContents({
   page: number;
 }) {
   const { data, isValidating } = useSWR(
-    type === "none" ? null : [key, type, q, filter, sort, perPage, page],
+    type === "none" ? null : { key, type, q, filter, sort, perPage, page },
     fetchContents
   );
   const totalCount = data?.totalCount ?? 0;
@@ -84,6 +91,6 @@ export function revalidateContents({
   sort: SortOrder;
   perPage: number;
   page: number;
-}): Promise<SearchResultSchema> {
-  return mutate([key, type, q, filter, sort, perPage, page]);
+}): Promise<SearchResultSchema | void> {
+  return mutate({ key, type, q, filter, sort, perPage, page });
 }

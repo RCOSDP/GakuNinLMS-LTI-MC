@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from "react";
 import useSWRImmutable from "swr/immutable";
 import { useDebouncedCallback } from "use-debounce";
-import type { VideoJsPlayer } from "video.js";
+import type { VideoJsPlayer } from "$types/videoJsPlayer";
 import VimeoPlayer from "@vimeo/player";
 
 type Player = VideoJsPlayer | VimeoPlayer;
@@ -64,7 +64,7 @@ async function getVolume(player: Player): Promise<Volume> {
 /** 音量の設定の保存と反映のためのカスタムフック */
 function useVolume(player: Player) {
   const { data: ready } = useSWRImmutable(
-    [key, player],
+    { key, player },
     (): boolean =>
       ready ||
       player instanceof VimeoPlayer ||

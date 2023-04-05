@@ -11,6 +11,6 @@ export async function updateBookAuthors({
   ...body
 }: AuthorsProps & { id: BookSchema["id"] }): Promise<AuthorSchema[]> {
   const res = api.apiV2BookBookIdAuthorsPut({ bookId: id, body });
-  await mutate([key, id], res);
+  await mutate({ key, bookId: id }, res);
   return res;
 }

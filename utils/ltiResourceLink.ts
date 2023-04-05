@@ -9,11 +9,14 @@ import { revalidateSession } from "./session";
 const key =
   "/api/v2/lti/{lti_consumer_id}/resource_link/{lti_resource_link_id}";
 
-async function fetchLtiResourceLink(
-  _: typeof key,
-  consumerId: LtiResourceLinkSchema["consumerId"],
-  id: LtiResourceLinkSchema["id"]
-) {
+async function fetchLtiResourceLink({
+  consumerId,
+  id,
+}: {
+  key: typeof key;
+  consumerId: LtiResourceLinkSchema["consumerId"];
+  id: LtiResourceLinkSchema["id"];
+}) {
   const res = await api.apiV2LtiLtiConsumerIdResourceLinkLtiResourceLinkIdGet({
     ltiConsumerId: consumerId,
     ltiResourceLinkId: id,
@@ -27,7 +30,7 @@ export function useLtiResourceLink({
   id,
 }: Pick<LtiResourceLinkSchema, "consumerId" | "id">) {
   return useSWR<LtiResourceLinkSchema>(
-    [key, consumerId, id],
+    { key, consumerId, id },
     fetchLtiResourceLink
   );
 }
@@ -42,7 +45,7 @@ export async function updateLtiResourceLink({
     ltiResourceLinkId: id,
     body,
   });
-  await mutate([key, consumerId, id], res);
+  await mutate({ key, consumerId, id }, res);
   await revalidateSession();
 }
 
