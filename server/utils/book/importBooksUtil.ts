@@ -76,7 +76,7 @@ class ImportBooksUtil {
             data: {
               ...this.getBookProps(importBook),
               node: { create: {} },
-            }
+            },
           })
         );
       }
