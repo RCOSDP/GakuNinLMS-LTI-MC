@@ -3471,13 +3471,6 @@
   dependencies:
     "@types/lodash" "*"
 
-"@types/lodash.sortedindexof@^4.1.7":
-  version "4.1.7"
-  resolved "https://registry.yarnpkg.com/@types/lodash.sortedindexof/-/lodash.sortedindexof-4.1.7.tgz#722a4fbafef5936354bc777a2859cf0aff767a06"
-  integrity sha512-3j1bbR2HSHgHXIVOorbKz22wJ68YmnRhIhGLyCbx/waoENUaUDK7YQV4DbgH8d+pEpZUnUW5I4VTK+Yu/Vne6w==
-  dependencies:
-    "@types/lodash" "*"
-
 "@types/lodash.throttle@^4.1.7":
   version "4.1.7"
   resolved "https://registry.yarnpkg.com/@types/lodash.throttle/-/lodash.throttle-4.1.7.tgz#4ef379eb4f778068022310ef166625f420b6ba58"
@@ -10086,11 +10079,6 @@ lodash.sortby@^4.7.0:
   version "4.7.0"
   resolved "https://registry.yarnpkg.com/lodash.sortby/-/lodash.sortby-4.7.0.tgz#edd14c824e2cc9c1e0b0a1b42bb5210516a42438"
   integrity sha1-7dFMgk4sycHgsKG0K7UhBRakJDg=
-
-lodash.sortedindexof@^4.1.0:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/lodash.sortedindexof/-/lodash.sortedindexof-4.1.0.tgz#7b661d2f86f55668770802d56baa8f02d6620f3c"
-  integrity sha1-e2YdL4b1Vmh3CALVa6qPAtZiDzw=
 
 lodash.throttle@^4.1.1:
   version "4.1.1"
