@@ -127,7 +127,7 @@ class ZoomImport {
               data: {
                 ...data.book,
                 node: { create: {} },
-              }
+              },
             })
           );
           transactions.push(
