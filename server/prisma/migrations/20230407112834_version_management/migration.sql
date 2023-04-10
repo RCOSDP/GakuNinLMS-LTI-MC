@@ -29,5 +29,8 @@ ALTER TABLE "node" ADD CONSTRAINT "node_root_id_fkey" FOREIGN KEY ("root_id") RE
 -- Insert node to existing books
 INSERT INTO "node" ("id") SELECT "id" FROM "books";
 
+-- Set node id sequence value
+SELECT setval('node_id_seq', COALESCE((SELECT MAX(id)+1 FROM "books"), 1), false);
+
 -- AddForeignKey
 ALTER TABLE "books" ADD CONSTRAINT "books_id_fkey" FOREIGN KEY ("id") REFERENCES "node"("id") ON DELETE CASCADE ON UPDATE CASCADE;
