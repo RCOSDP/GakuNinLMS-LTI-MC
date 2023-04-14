@@ -6,6 +6,7 @@ import * as activityService from "$server/services/book/activity";
 import * as authorsService from "$server/services/book/authors";
 import * as showPublicService from "$server/services/book/public";
 import * as showZoomService from "$server/services/book/zoom";
+import * as releaseService from "$server/services/book/release";
 
 const basePath = "/book";
 const pathWithParams = `${basePath}/:book_id`;
@@ -82,4 +83,15 @@ export async function bookZoom(fastify: FastifyInstance) {
     { schema, ...hooks.get },
     handler(method)
   );
+}
+
+export async function bookRelease(fastify: FastifyInstance) {
+  const path = `${pathWithParams}/release`;
+  const { method, update } = releaseService;
+  const hooks = makeHooks(fastify, releaseService.hooks);
+
+  fastify.put<{
+    Params: releaseService.Params;
+    Body: releaseService.Props;
+  }>(path, { schema: method.put, ...hooks.put }, handler(update));
 }
