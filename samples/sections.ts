@@ -17,12 +17,6 @@ const sections = [
     name: null,
     topics: [topic],
   },
-  {
-    ...section,
-    id: 3,
-    name: "デジタルとアナログの相違点",
-    topics: [],
-  },
 ];
 
 export default sections;

@@ -1,0 +1,17 @@
+import type { StoryObj } from "@storybook/react";
+import ReleasedBook from "./ReleasedBook";
+import { book, release } from "$samples";
+
+export default {
+  component: ReleasedBook,
+  parameters: {
+    layout: "fullscreen",
+  },
+};
+
+export const Default: StoryObj<typeof ReleasedBook> = {
+  args: {
+    book,
+    release,
+  },
+};
