@@ -30,6 +30,9 @@ import {
     InlineObject11,
     InlineObject11FromJSON,
     InlineObject11ToJSON,
+    InlineObject12,
+    InlineObject12FromJSON,
+    InlineObject12ToJSON,
     InlineObject2,
     InlineObject2FromJSON,
     InlineObject2ToJSON,
@@ -154,6 +157,11 @@ export interface ApiV2BookBookIdPutRequest {
     body?: InlineObject2;
 }
 
+export interface ApiV2BookBookIdReleasePutRequest {
+    bookId: number;
+    body?: InlineObject5;
+}
+
 export interface ApiV2BookPostRequest {
     body?: InlineObject3;
 }
@@ -174,11 +182,11 @@ export interface ApiV2BooksGetRequest {
 }
 
 export interface ApiV2BooksImportPostRequest {
-    body?: InlineObject5;
+    body?: InlineObject6;
 }
 
 export interface ApiV2EventPostRequest {
-    body?: InlineObject11;
+    body?: InlineObject12;
 }
 
 export interface ApiV2LtiCallbackPostRequest {
@@ -258,7 +266,7 @@ export interface ApiV2ResourceResourceIdOembedGetRequest {
 
 export interface ApiV2ResourceResourceIdVideoTrackPostRequest {
     resourceId: number;
-    body?: InlineObject10;
+    body?: InlineObject11;
 }
 
 export interface ApiV2ResourceResourceIdVideoTrackVideoTrackIdDeleteRequest {
@@ -288,18 +296,18 @@ export interface ApiV2SearchGetRequest {
 }
 
 export interface ApiV2TopicPostRequest {
-    body?: InlineObject7;
+    body?: InlineObject8;
 }
 
 export interface ApiV2TopicTopicIdActivityPutRequest {
     topicId: number;
     currentLtiContextOnly?: boolean;
-    body?: InlineObject8;
+    body?: InlineObject9;
 }
 
 export interface ApiV2TopicTopicIdAuthorsPutRequest {
     topicId: number;
-    body?: InlineObject9;
+    body?: InlineObject10;
 }
 
 export interface ApiV2TopicTopicIdDeleteRequest {
@@ -312,7 +320,7 @@ export interface ApiV2TopicTopicIdGetRequest {
 
 export interface ApiV2TopicTopicIdPutRequest {
     topicId: number;
-    body?: InlineObject6;
+    body?: InlineObject7;
 }
 
 export interface ApiV2TopicsGetRequest {
@@ -591,6 +599,41 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
+     * ブックのリリースを作成・更新します。 教員または管理者でなければなりません。 教員は自身の著作のブックでなければなりません。
+     * ブックのリリースの作成・更新
+     */
+    async apiV2BookBookIdReleasePutRaw(requestParameters: ApiV2BookBookIdReleasePutRequest): Promise<runtime.ApiResponse<{ [key: string]: object; }>> {
+        if (requestParameters.bookId === null || requestParameters.bookId === undefined) {
+            throw new runtime.RequiredError('bookId','Required parameter requestParameters.bookId was null or undefined when calling apiV2BookBookIdReleasePut.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/api/v2/book/{book_id}/release`.replace(`{${"book_id"}}`, encodeURIComponent(String(requestParameters.bookId))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: InlineObject5ToJSON(requestParameters.body),
+        });
+
+        return new runtime.JSONApiResponse<any>(response);
+    }
+
+    /**
+     * ブックのリリースを作成・更新します。 教員または管理者でなければなりません。 教員は自身の著作のブックでなければなりません。
+     * ブックのリリースの作成・更新
+     */
+    async apiV2BookBookIdReleasePut(requestParameters: ApiV2BookBookIdReleasePutRequest): Promise<{ [key: string]: object; }> {
+        const response = await this.apiV2BookBookIdReleasePutRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
      * ブックを作成します。 教員または管理者でなければなりません。
      * ブックの作成
      */
@@ -745,7 +788,7 @@ export class DefaultApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: InlineObject5ToJSON(requestParameters.body),
+            body: InlineObject6ToJSON(requestParameters.body),
         });
 
         return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2011FromJSON(jsonValue));
@@ -776,7 +819,7 @@ export class DefaultApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: InlineObject11ToJSON(requestParameters.body),
+            body: InlineObject12ToJSON(requestParameters.body),
         });
 
         return new runtime.VoidApiResponse(response);
@@ -791,7 +834,7 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * LTIツールとして起動するためのエンドポイントです。 このエンドポイントをLMSのLTIツールのリダイレクトURIに指定して利用します。 成功時 http://localhost:3000/ にリダイレクトします。
+     * LTIツールとして起動するためのエンドポイントです。 このエンドポイントをLMSのLTIツールのリダイレクトURIに指定して利用します。 成功時 / にリダイレクトします。
      * LTI v1.3 リダイレクトURI
      */
     async apiV2LtiCallbackPostRaw(requestParameters: ApiV2LtiCallbackPostRequest): Promise<runtime.ApiResponse<void>> {
@@ -841,7 +884,7 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * LTIツールとして起動するためのエンドポイントです。 このエンドポイントをLMSのLTIツールのリダイレクトURIに指定して利用します。 成功時 http://localhost:3000/ にリダイレクトします。
+     * LTIツールとして起動するためのエンドポイントです。 このエンドポイントをLMSのLTIツールのリダイレクトURIに指定して利用します。 成功時 / にリダイレクトします。
      * LTI v1.3 リダイレクトURI
      */
     async apiV2LtiCallbackPost(requestParameters: ApiV2LtiCallbackPostRequest): Promise<void> {
@@ -905,7 +948,7 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * LTI v1.1 ツールとして起動するためのエンドポイントです。 このエンドポイントをLMSのLTIツールのURLに指定して利用します。 成功時 http://localhost:3000/ にリダイレクトします。
+     * LTI v1.1 ツールとして起動するためのエンドポイントです。 このエンドポイントをLMSのLTIツールのURLに指定して利用します。 成功時 / にリダイレクトします。
      * LTI v1.1 起動エンドポイント (非推奨)
      */
     async apiV2LtiLaunchPostRaw(requestParameters: ApiV2LtiLaunchPostRequest): Promise<runtime.ApiResponse<void>> {
@@ -1059,7 +1102,7 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * LTI v1.1 ツールとして起動するためのエンドポイントです。 このエンドポイントをLMSのLTIツールのURLに指定して利用します。 成功時 http://localhost:3000/ にリダイレクトします。
+     * LTI v1.1 ツールとして起動するためのエンドポイントです。 このエンドポイントをLMSのLTIツールのURLに指定して利用します。 成功時 / にリダイレクトします。
      * LTI v1.1 起動エンドポイント (非推奨)
      */
     async apiV2LtiLaunchPost(requestParameters: ApiV2LtiLaunchPostRequest): Promise<void> {
@@ -1485,7 +1528,7 @@ export class DefaultApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: InlineObject10ToJSON(requestParameters.body),
+            body: InlineObject11ToJSON(requestParameters.body),
         });
 
         return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2004ResourceTracksFromJSON(jsonValue));
@@ -1723,7 +1766,7 @@ export class DefaultApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: InlineObject7ToJSON(requestParameters.body),
+            body: InlineObject8ToJSON(requestParameters.body),
         });
 
         return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2004TopicsFromJSON(jsonValue));
@@ -1762,7 +1805,7 @@ export class DefaultApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: InlineObject8ToJSON(requestParameters.body),
+            body: InlineObject9ToJSON(requestParameters.body),
         });
 
         return new runtime.JSONApiResponse<any>(response);
@@ -1797,7 +1840,7 @@ export class DefaultApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: InlineObject9ToJSON(requestParameters.body),
+            body: InlineObject10ToJSON(requestParameters.body),
         });
 
         return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(InlineResponse2002BookAuthorsFromJSON));
@@ -1895,7 +1938,7 @@ export class DefaultApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: InlineObject6ToJSON(requestParameters.body),
+            body: InlineObject7ToJSON(requestParameters.body),
         });
 
         return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2004TopicsFromJSON(jsonValue));

@@ -9,7 +9,7 @@ import upsertPublicBooks from "$server/utils/publicBook/upsertPublicBooks";
 
 async function createBook(
   userId: UserSchema["id"],
-  { publicBooks, ...book }: BookProps,
+  { publicBooks, release: _, ...book }: BookProps,
   ip: string
 ): Promise<BookSchema | undefined> {
   const timeRequired = await aggregateTimeRequired(book);
