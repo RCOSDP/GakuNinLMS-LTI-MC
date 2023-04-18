@@ -3,8 +3,9 @@ import utcToZoneTime from "date-fns-tz/utcToZonedTime";
 import { validateWowzaSettings } from "$server/utils/wowza/env";
 
 import {
-  ZOOM_API_KEY,
-  ZOOM_API_SECRET,
+  ZOOM_ACCOUNT_ID,
+  ZOOM_CLIENT_ID,
+  ZOOM_CLIENT_SECRET,
   ZOOM_IMPORT_CONSUMER_KEY,
   ZOOM_IMPORT_INTERVAL,
   ZOOM_IMPORT_TO,
@@ -13,8 +14,9 @@ import {
 
 export function validateZoomSettings(logging = true) {
   if (
-    !ZOOM_API_KEY ||
-    !ZOOM_API_SECRET ||
+    !ZOOM_ACCOUNT_ID ||
+    !ZOOM_CLIENT_ID ||
+    !ZOOM_CLIENT_SECRET ||
     !ZOOM_IMPORT_CONSUMER_KEY ||
     !ZOOM_IMPORT_INTERVAL ||
     !ZOOM_IMPORT_TO
@@ -22,7 +24,7 @@ export function validateZoomSettings(logging = true) {
     if (logging)
       logger(
         "INFO",
-        `zoom import is disabled. ZOOM_API_KEY:${ZOOM_API_KEY} ZOOM_API_SECRET:${ZOOM_API_SECRET} ZOOM_IMPORT_CONSUMER_KEY:${ZOOM_IMPORT_CONSUMER_KEY} ZOOM_IMPORT_INTERVAL:${ZOOM_IMPORT_INTERVAL} ZOOM_IMPORT_TO:${ZOOM_IMPORT_TO}`
+        `zoom import is disabled. ZOOM_ACCOUNT_ID:${ZOOM_ACCOUNT_ID} ZOOM_CLIENT_ID:${ZOOM_CLIENT_ID} ZOOM_CLIENT_SECRET:${ZOOM_CLIENT_SECRET} ZOOM_IMPORT_CONSUMER_KEY:${ZOOM_IMPORT_CONSUMER_KEY} ZOOM_IMPORT_INTERVAL:${ZOOM_IMPORT_INTERVAL} ZOOM_IMPORT_TO:${ZOOM_IMPORT_TO}`
       );
     return false;
   }
