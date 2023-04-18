@@ -348,11 +348,11 @@ export type ZoomRecordingGetResponse = {
 };
 
 export type ZoomAuthResponse = {
-  access_token: string
-  token_type: string
-  expires_in: number
-  scope: string | string[]
-}
+  access_token: string;
+  token_type: string;
+  expires_in: number;
+  scope: string | string[];
+};
 
 const basenc = Buffer.from(ZOOM_CLIENT_ID + ":" + ZOOM_CLIENT_SECRET).toString(
   "base64"
