@@ -45,6 +45,7 @@ export async function zoomImport() {
   const zoomUsers = (await zoomListRequest("/users", "users", {
     page_size: 300,
   })) as ZoomUsersResponse["users"];
+  console.log("-------zoomUsers------", zoomUsers);
   for (const zoomUser of zoomUsers) {
     const user = await findUserByEmailAndLtiConsumerId(
       zoomUser.email,
@@ -115,12 +116,14 @@ class ZoomImport {
         "meetings",
         { page_size: 300, from: this.fromDate() }
       )) as ZoomRecordingsListResponse["meetings"];
+      console.log("------meetings-------", meetings);
       meetings.sort((a, b) => a.start_time.localeCompare(b.start_time));
 
       const transactions = [];
       const deletemeetings = [];
       for (const meeting of meetings) {
         const data = await this.getBook(meeting);
+        console.log("--------getBook--------", data);
         if (data && data.book && data.zoomMeeting) {
           transactions.push(prisma.book.create({ data: data.book }));
           transactions.push(
@@ -152,6 +155,7 @@ class ZoomImport {
 
   async getBook(meeting: ZoomRecordingsListResponse["meetings"][number]) {
     const data = await this.getTopic(meeting);
+    console.log("------getTopic---------", data);
     if (data && data.topic && data.zoomMeeting) {
       const { topic, zoomMeeting } = data;
       const topicSections = [{ order: 0, topic: { create: topic } }];
@@ -204,7 +208,7 @@ class ZoomImport {
       const startTime = new Date(meeting.start_time);
       const file = path.join(this.tmpdir, `${fileId}.mp4`);
       const fileStream = got
-        .stream(`${downloadUrl}?access_token=${zoomRequestToken()}`)
+        .stream(`${downloadUrl}?access_token=${await zoomRequestToken()}`)
         .pipe(fs.createWriteStream(file));
       await stream.finished(fileStream);
 
@@ -236,6 +240,7 @@ class ZoomImport {
         "yyyy/MM/dd HH:mm"
       );
       const meetingDetail = await this.getMeetingDetail(meeting);
+      console.log("----meetingDetail----", meetingDetail);
       const topic: Prisma.TopicCreateInput = {
         name: `📽 ${meeting.topic} ${datetimeForTitle}`,
         description: meetingDetail.agenda,
