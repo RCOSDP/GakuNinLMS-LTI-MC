@@ -90,9 +90,9 @@ docker compose down
 | `WOWZA_SCP_SERVER_PATH`              | 一括登録時の動画ファイルのアップロード先フォルダ (デフォルト: "")                                                                                                  |
 | `WOWZA_THUMBNAIL_BASE_URL`           | サムネイル画像の URL (デフォルト: "")                                                                                                                              |
 | `WOWZA_THUMBNAIL_EXTENSION`          | 生成されるサムネイル画像の拡張子 (デフォルト: "jpg")                                                                                                               |
-| `ZOOM_ACCOUNT_ID`                    | Zoom API アカウントID                                                                                                                                              |
-| `ZOOM_CLIENT_ID`                     | Zoom API クライアントID                                                                                                                                              |
-| `ZOOM_CLIENT_SECRET`                 | Zoom API シークレットキー                                                                                                                                              |
+| `ZOOM_ACCOUNT_ID`                    | Zoom API アカウント ID                                                                                                                                             |
+| `ZOOM_CLIENT_ID`                     | Zoom API クライアント ID                                                                                                                                           |
+| `ZOOM_CLIENT_SECRET`                 | Zoom API シークレットキー                                                                                                                                          |
 | `ZOOM_IMPORT_CONSUMER_KEY`           | Zoom インポートのユーザー検索に用いるコンシューマーキー (デフォルト: 無効 ""、例: 設定値 `OAUTH_CONSUMER_KEY` と同じ値)                                            |
 | `ZOOM_IMPORT_INTERVAL`               | Zoom インポートの実行時間 (デフォルト: 無効 ""、例: 毎朝 6 時実行 `1 6 * * *`)                                                                                     |
 | `ZOOM_IMPORT_TO`                     | Zoom からインポートした動画のアップロード先 (デフォルト: 無効 ""、例: `wowza`)                                                                                     |
