@@ -1,6 +1,6 @@
 import type { StoryObj } from "@storybook/react";
 import ReleasedBook from "./ReleasedBook";
-import { book, release } from "$samples";
+import { book } from "$samples";
 
 export default {
   component: ReleasedBook,
@@ -12,6 +12,5 @@ export default {
 export const Default: StoryObj<typeof ReleasedBook> = {
   args: {
     book,
-    release,
   },
 };

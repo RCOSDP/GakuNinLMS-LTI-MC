@@ -1,6 +1,7 @@
 import ltiResourceLink from "./ltiResourceLink";
 import user from "./user";
 import sections from "./sections";
+import release from "./release";
 
 const book = {
   id: 1,
@@ -20,6 +21,7 @@ const book = {
   updatedAt: new Date(),
   sections,
   details: {},
+  release,
 };
 
 export default book;

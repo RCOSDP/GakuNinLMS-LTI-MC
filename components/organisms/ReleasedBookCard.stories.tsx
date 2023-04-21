@@ -1,6 +1,6 @@
 import type { StoryObj } from "@storybook/react";
 import ReleasedBookCard from "./ReleasedBookCard";
-import { book, release } from "$samples";
+import { book } from "$samples";
 
 export default { component: ReleasedBookCard };
 
@@ -10,6 +10,5 @@ export const Default: StoryObj<typeof ReleasedBookCard> = {
       ...book,
       ltiResourceLinks: [],
     },
-    release,
   },
 };

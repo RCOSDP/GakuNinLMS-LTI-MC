@@ -2,7 +2,6 @@ import { useCallback, type ReactNode } from "react";
 import Typography from "@mui/material/Typography";
 import type { BookSchema } from "$server/models/book";
 import type { TopicSchema } from "$server/models/topic";
-import type { ReleaseProps } from "$server/models/book/release";
 import Card from "$atoms/Card";
 import DescriptionList from "$atoms/DescriptionList";
 import StripedMarkdown from "$atoms/StripedMarkdown";
@@ -12,15 +11,10 @@ import getLocaleDateString from "$utils/getLocaleDateString";
 
 export type ReleasedBookCardProps = {
   book: BookSchema;
-  release: ReleaseProps;
   onTopicPreview(topic: Pick<TopicSchema, "id">): void;
 };
 
-function ReleasedBookCard({
-  book,
-  release,
-  onTopicPreview,
-}: ReleasedBookCardProps) {
+function ReleasedBookCard({ book, onTopicPreview }: ReleasedBookCardProps) {
   const onItemPreviewClick = useCallback(
     ([sectionIndex, topicIndex]: [
       sectionIndex: number,
@@ -36,9 +30,20 @@ function ReleasedBookCard({
     <Card>
       <section>
         <Typography variant="h5" gutterBottom>
-          {release.version}
+          {book.release?.version}
         </Typography>
-        <Typography>{release.comment}</Typography>
+        <DescriptionList
+          sx={{ mb: 1 }}
+          value={
+            [
+              book.release?.releasedAt instanceof Date && {
+                key: "リリース日",
+                value: getLocaleDateString(book.release.releasedAt),
+              },
+            ].filter(Boolean) as Array<{ key: string; value: ReactNode }>
+          }
+        />
+        <Typography>{book.release?.comment}</Typography>
       </section>
       <section>
         <Typography variant="h5" gutterBottom>

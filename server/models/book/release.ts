@@ -21,4 +21,17 @@ export const releaseSchema = {
   additionalProperties: false,
 } as const;
 
-export type ReleaseSchema = FromSchema<typeof releasePropsSchema>;
+export type ReleaseSchema = FromSchema<
+  typeof releaseSchema,
+  {
+    deserialize: [
+      {
+        pattern: {
+          type: "string";
+          format: "date-time";
+        };
+        output: Date;
+      }
+    ];
+  }
+>;
