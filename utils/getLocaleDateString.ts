@@ -4,7 +4,10 @@
  * @param locales 言語 BCP 47
  */
 
-function getLocaleDateString(date: Date, locales: string | string[]): string {
+function getLocaleDateString(
+  date: Date,
+  locales: string | string[] = window.navigator.language
+): string {
   return date.toLocaleDateString(locales, {
     year: "numeric",
     month: "long",

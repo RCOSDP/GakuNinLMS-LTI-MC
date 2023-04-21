@@ -44,6 +44,7 @@
     "@vimeo/player": "^2.18.0",
     "clsx": "^1.2.1",
     "date-fns": "^2.29.3",
+    "defu": "^6.1.2",
     "eslint": "^8.37.0",
     "eslint-config-next": "^13.2.4",
     "eslint-config-prettier": "^8.8.0",
