@@ -1,5 +1,7 @@
 import { useCallback, type ReactNode } from "react";
 import Typography from "@mui/material/Typography";
+import InputLabel from "@mui/material/InputLabel";
+import Checkbox from "@mui/material/Checkbox";
 import type { BookSchema } from "$server/models/book";
 import type { TopicSchema } from "$server/models/topic";
 import Card from "$atoms/Card";
@@ -59,6 +61,17 @@ function ReleasedBookCard({ book, onTopicPreview }: ReleasedBookCardProps) {
         <Typography variant="h5" gutterBottom>
           基本情報
         </Typography>
+        <section>
+          <InputLabel htmlFor="shared">ブックのシェア</InputLabel>
+          {/* TODO: https://github.com/npocccties/chibichilo/issues/909 */}
+          <Checkbox
+            id="shared"
+            name="shared"
+            color="primary"
+            defaultChecked={book.shared}
+            disabled
+          />
+        </section>
         <DescriptionList
           value={
             [
