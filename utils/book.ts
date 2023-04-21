@@ -8,6 +8,7 @@ import type { IsContentEditable } from "$server/models/content";
 import { revalidateSession } from "./session";
 import type { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
 import { getDisplayableBook } from "./displayableBook";
+import type { ReleaseProps, ReleaseSchema } from "$server/models/book/release";
 
 const key = "/api/v2/book/{book_id}";
 
@@ -77,6 +78,15 @@ export async function updateBook({
   const res = await api.apiV2BookBookIdPut({ bookId: id, body });
   await mutate({ key, bookId: res.id }, res);
   return res as BookSchema;
+}
+
+export async function releaseBook({
+  id,
+  ...body
+}: ReleaseProps & { id: BookSchema["id"] }): Promise<ReleaseSchema> {
+  const res = await api.apiV2BookBookIdReleasePut({ bookId: id, body });
+  await mutate({ key, bookId: res.id }, res);
+  return res as ReleaseSchema;
 }
 
 export async function addTopicToBook(
