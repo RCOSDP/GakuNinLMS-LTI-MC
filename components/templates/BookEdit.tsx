@@ -54,6 +54,7 @@ type Props = {
   onBookImportClick(): void;
   onAuthorsUpdate(authors: AuthorSchema[]): void;
   onAuthorSubmit(author: Pick<AuthorSchema, "email">): void;
+  onReleaseButtonClick(): void;
   isContentEditable?: IsContentEditable;
   linked?: boolean;
 };
@@ -70,6 +71,7 @@ export default function BookEdit({
   onBookImportClick,
   onAuthorsUpdate,
   onAuthorSubmit,
+  onReleaseButtonClick,
   isContentEditable,
   linked = false,
 }: Props) {
@@ -126,6 +128,7 @@ export default function BookEdit({
         onSubmit={onSubmit}
         onAuthorsUpdate={onAuthorsUpdate}
         onAuthorSubmit={onAuthorSubmit}
+        onReleaseButtonClick={onReleaseButtonClick}
       />
       <Button size="small" color="primary" onClick={handleDeleteButtonClick}>
         <DeleteOutlinedIcon />
