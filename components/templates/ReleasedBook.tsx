@@ -76,7 +76,7 @@ function ReleasedBook(props: Props) {
         </Button>
         <Button size="small" color="primary" onClick={handlers.edit}>
           <PeopleOutlinedIcon />
-          編集
+          リリースの編集
         </Button>
         <Button size="small" color="primary" onClick={handlers.del}>
           <DeleteOutlinedIcon />
