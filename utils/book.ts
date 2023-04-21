@@ -85,7 +85,6 @@ export async function releaseBook({
   ...body
 }: ReleaseProps & { id: BookSchema["id"] }): Promise<ReleaseSchema> {
   const res = await api.apiV2BookBookIdReleasePut({ bookId: id, body });
-  await mutate({ key, bookId: res.id }, res);
   return res as ReleaseSchema;
 }
 
