@@ -115,6 +115,7 @@ type Props = {
   onSubmit?: (book: BookPropsWithSubmitOptions) => void;
   onAuthorsUpdate(authors: AuthorSchema[]): void;
   onAuthorSubmit(author: Pick<AuthorSchema, "email">): void;
+  onReleaseButtonClick?: () => void;
 };
 
 export default function BookForm({
@@ -127,6 +128,7 @@ export default function BookForm({
   onSubmit = () => undefined,
   onAuthorsUpdate,
   onAuthorSubmit,
+  onReleaseButtonClick,
 }: Props) {
   const cardClasses = useCardStyles();
   const classes = useStyles();
@@ -345,6 +347,15 @@ export default function BookForm({
             />
           }
         />
+      )}
+      {variant !== "create" && typeof onReleaseButtonClick !== "undefined" && (
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={onReleaseButtonClick}
+        >
+          リリース
+        </Button>
       )}
     </Card>
   );
