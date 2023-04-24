@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
+import LinkOutlinedIcon from "@mui/icons-material/LinkOutlined";
 import ForkOutlinedIcon from "@mui/icons-material/ForkRightOutlined";
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
@@ -13,6 +14,8 @@ import ReleasedBookCard, {
 } from "$organisms/ReleasedBookCard";
 
 type Props = ReleasedBookCardProps & {
+  linked?: boolean;
+  onLinkButtonClick(): void;
   onForkButtonClick(book: Pick<BookSchema, "id">): void;
   onReleaseEditButtonClick(book: Pick<BookSchema, "id">): void;
   onDeleteButtonClick(book: Pick<BookSchema, "id">): void;
@@ -21,6 +24,8 @@ type Props = ReleasedBookCardProps & {
 function ReleasedBook(props: Props) {
   const {
     book,
+    linked = false,
+    onLinkButtonClick: link,
     onForkButtonClick: fork,
     onReleaseEditButtonClick: edit,
     onDeleteButtonClick: del,
@@ -70,6 +75,10 @@ function ReleasedBook(props: Props) {
           gap: 2,
         }}
       >
+        <Button size="small" color="primary" onClick={link} disabled={linked}>
+          <LinkOutlinedIcon />
+          コースへ配信
+        </Button>
         <Button size="small" color="primary" onClick={handlers.fork}>
           <ForkOutlinedIcon />
           フォーク

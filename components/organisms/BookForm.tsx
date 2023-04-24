@@ -97,11 +97,9 @@ const AccordionDetails = styled((props: AccordionDetailsProps) => (
 const label = {
   create: {
     submit: "作成",
-    submitWithLink: "作成したブックを配信",
   },
   update: {
     submit: "更新",
-    submitWithLink: "更新したブックを配信",
   },
 } as const;
 
@@ -109,13 +107,11 @@ type Props = {
   book?: BookSchema;
   topics?: TopicSchema[];
   id?: string;
-  linked?: boolean;
   className?: string;
   variant?: "create" | "update";
   onSubmit?: (book: BookPropsWithSubmitOptions) => void;
   onAuthorsUpdate(authors: AuthorSchema[]): void;
   onAuthorSubmit(author: Pick<AuthorSchema, "email">): void;
-  onReleaseButtonClick?: () => void;
 };
 
 export default function BookForm({
@@ -123,12 +119,10 @@ export default function BookForm({
   topics,
   className,
   id,
-  linked = false,
   variant = "create",
   onSubmit = () => undefined,
   onAuthorsUpdate,
   onAuthorSubmit,
-  onReleaseButtonClick,
 }: Props) {
   const cardClasses = useCardStyles();
   const classes = useStyles();
@@ -333,7 +327,7 @@ export default function BookForm({
       <Button variant="contained" color="primary" type="submit">
         {label[variant].submit}
       </Button>
-      {!linked && (
+      {variant === "create" && (
         <FormControlLabel
           className={classes.marginLeft}
           label="コースへ配信"
@@ -347,15 +341,6 @@ export default function BookForm({
             />
           }
         />
-      )}
-      {variant !== "create" && typeof onReleaseButtonClick !== "undefined" && (
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={onReleaseButtonClick}
-        >
-          リリース
-        </Button>
       )}
     </Card>
   );
