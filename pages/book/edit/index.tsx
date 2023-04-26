@@ -41,12 +41,11 @@ function Edit({ bookId, context }: Query) {
     }
   };
   async function handleSubmit({
-    sections: _,
-    submitWithLink,
+    sections: _sections,
+    submitWithLink: _submitWithLink,
     ...props
   }: BookPropsWithSubmitOptions) {
     await updateBook({ id: bookId, ...props });
-    if (submitWithLink) await handleBookLink({ id: bookId });
     return back();
   }
   async function handleDelete({ id }: Pick<BookSchema, "id">) {
@@ -90,6 +89,9 @@ function Edit({ bookId, context }: Query) {
   async function handleReleaseButtonClick() {
     return router.push(pagesPath.book.release.$url({ query }));
   }
+  async function onLinkSwitchClick(checked: boolean) {
+    await handleBookLink({ id: bookId }, checked);
+  }
   const {
     data: previewTopic,
     dispatch: setPreviewTopic,
@@ -97,8 +99,9 @@ function Edit({ bookId, context }: Query) {
   } = useDialogProps<TopicSchema>();
   const handleTopicPreviewClick = (topic: TopicSchema) =>
     setPreviewTopic(topic);
+  const linked = bookId === session?.ltiResourceLink?.bookId;
   const handlers = {
-    linked: bookId === session?.ltiResourceLink?.bookId,
+    linked,
     onSubmit: handleSubmit,
     onDelete: handleDelete,
     onCancel: handleCancel,
@@ -109,6 +112,7 @@ function Edit({ bookId, context }: Query) {
     onTopicEditClick: handleTopicEditClick,
     onAuthorsUpdate: handleAuthorsUpdate,
     onAuthorSubmit: handleAuthorSubmit,
+    onLinkSwitchClick,
     onReleaseButtonClick: handleReleaseButtonClick,
     isContentEditable: () => true,
   };
@@ -119,6 +123,7 @@ function Edit({ bookId, context }: Query) {
   if (book.release) {
     const handlers_for_releasedbook = {
       onTopicPreview: handleTopicPreviewClick,
+      onLinkSwitchClick,
       onForkButtonClick: () => {
         console.log("fork button");
       },
@@ -127,7 +132,12 @@ function Edit({ bookId, context }: Query) {
     };
     return (
       <>
-        <ReleasedBook book={book} {...handlers_for_releasedbook} />;
+        <ReleasedBook
+          book={book}
+          linked={linked}
+          {...handlers_for_releasedbook}
+        />
+        ;
         {previewTopic && (
           <TopicPreviewDialog {...dialogProps} topic={previewTopic} />
         )}

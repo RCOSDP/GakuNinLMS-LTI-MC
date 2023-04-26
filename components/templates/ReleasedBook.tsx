@@ -6,6 +6,7 @@ import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import Box from "@mui/material/Box";
 import { useConfirm } from "material-ui-confirm";
+import LinkSwitch from "$atoms/LinkSwitch";
 import Container from "$atoms/Container";
 import type { BookSchema } from "$server/models/book";
 import ReleasedBookCard, {
@@ -13,6 +14,8 @@ import ReleasedBookCard, {
 } from "$organisms/ReleasedBookCard";
 
 type Props = ReleasedBookCardProps & {
+  linked?: boolean;
+  onLinkSwitchClick(checked: boolean): void;
   onForkButtonClick(book: Pick<BookSchema, "id">): void;
   onReleaseEditButtonClick(book: Pick<BookSchema, "id">): void;
   onDeleteButtonClick(book: Pick<BookSchema, "id">): void;
@@ -21,6 +24,8 @@ type Props = ReleasedBookCardProps & {
 function ReleasedBook(props: Props) {
   const {
     book,
+    linked = false,
+    onLinkSwitchClick: link,
     onForkButtonClick: fork,
     onReleaseEditButtonClick: edit,
     onDeleteButtonClick: del,
@@ -70,6 +75,13 @@ function ReleasedBook(props: Props) {
           gap: 2,
         }}
       >
+        <Typography component="label" variant="caption">
+          <LinkSwitch
+            defaultChecked={linked}
+            onChange={(_, checked) => link(checked)}
+          />
+          コースへ配信
+        </Typography>
         <Button size="small" color="primary" onClick={handlers.fork}>
           <ForkOutlinedIcon />
           フォーク
