@@ -1,10 +1,10 @@
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import LinkOutlinedIcon from "@mui/icons-material/LinkOutlined";
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import Box from "@mui/material/Box";
 import makeStyles from "@mui/styles/makeStyles";
+import LinkSwitch from "$atoms/LinkSwitch";
 import SectionsEdit from "$organisms/SectionsEdit";
 import BookForm from "$organisms/BookForm";
 import TopicPreviewDialog from "$organisms/TopicPreviewDialog";
@@ -57,7 +57,7 @@ type Props = {
   onBookImportClick(): void;
   onAuthorsUpdate(authors: AuthorSchema[]): void;
   onAuthorSubmit(author: Pick<AuthorSchema, "email">): void;
-  onLinkButtonClick(): void;
+  onLinkSwitchClick(checked: boolean): void;
   onReleaseButtonClick(): void;
   isContentEditable?: IsContentEditable;
   linked?: boolean;
@@ -75,10 +75,10 @@ export default function BookEdit({
   onBookImportClick,
   onAuthorsUpdate,
   onAuthorSubmit,
-  onLinkButtonClick,
+  onLinkSwitchClick,
   onReleaseButtonClick,
   isContentEditable,
-  linked = false,
+  linked,
 }: Props) {
   const classes = useStyles();
   const confirm = useConfirm();
@@ -140,15 +140,13 @@ export default function BookEdit({
           gap: 2,
         }}
       >
-        <Button
-          size="small"
-          color="primary"
-          onClick={onLinkButtonClick}
-          disabled={linked}
-        >
-          <LinkOutlinedIcon />
+        <Typography component="label" variant="caption">
+          <LinkSwitch
+            defaultChecked={linked}
+            onChange={(_, checked) => onLinkSwitchClick(checked)}
+          />
           コースへ配信
-        </Button>
+        </Typography>
         <Button size="small" color="primary" onClick={onReleaseButtonClick}>
           <PeopleOutlinedIcon />
           リリース

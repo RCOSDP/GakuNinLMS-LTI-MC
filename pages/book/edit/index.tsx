@@ -89,8 +89,8 @@ function Edit({ bookId, context }: Query) {
   async function handleReleaseButtonClick() {
     return router.push(pagesPath.book.release.$url({ query }));
   }
-  async function onLinkButtonClick() {
-    await handleBookLink({ id: bookId });
+  async function onLinkSwitchClick(checked: boolean) {
+    await handleBookLink({ id: bookId }, checked);
   }
   const {
     data: previewTopic,
@@ -112,7 +112,7 @@ function Edit({ bookId, context }: Query) {
     onTopicEditClick: handleTopicEditClick,
     onAuthorsUpdate: handleAuthorsUpdate,
     onAuthorSubmit: handleAuthorSubmit,
-    onLinkButtonClick,
+    onLinkSwitchClick,
     onReleaseButtonClick: handleReleaseButtonClick,
     isContentEditable: () => true,
   };
@@ -123,7 +123,7 @@ function Edit({ bookId, context }: Query) {
   if (book.release) {
     const handlers_for_releasedbook = {
       onTopicPreview: handleTopicPreviewClick,
-      onLinkButtonClick,
+      onLinkSwitchClick,
       onForkButtonClick: () => {
         console.log("fork button");
       },
