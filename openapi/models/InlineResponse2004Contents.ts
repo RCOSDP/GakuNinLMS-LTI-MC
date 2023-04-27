@@ -34,10 +34,6 @@ import {
     InlineResponse2004RelatedBooksFromJSON,
     InlineResponse2004RelatedBooksFromJSONTyped,
     InlineResponse2004RelatedBooksToJSON,
-    InlineResponse2004Release,
-    InlineResponse2004ReleaseFromJSON,
-    InlineResponse2004ReleaseFromJSONTyped,
-    InlineResponse2004ReleaseToJSON,
     InlineResponse2004Resource,
     InlineResponse2004ResourceFromJSON,
     InlineResponse2004ResourceFromJSONTyped,
@@ -180,12 +176,6 @@ export interface InlineResponse2004Contents {
      * @memberof InlineResponse2004Contents
      */
     publicBooks?: Array<InlineResponse2004PublicBooks>;
-    /**
-     * 
-     * @type {InlineResponse2004Release}
-     * @memberof InlineResponse2004Contents
-     */
-    release?: InlineResponse2004Release;
 }
 
 export function InlineResponse2004ContentsFromJSON(json: any): InlineResponse2004Contents {
@@ -219,7 +209,6 @@ export function InlineResponse2004ContentsFromJSONTyped(json: any, ignoreDiscrim
         'sections': !exists(json, 'sections') ? undefined : ((json['sections'] as Array<any>).map(InlineResponse2004SectionsFromJSON)),
         'ltiResourceLinks': !exists(json, 'ltiResourceLinks') ? undefined : ((json['ltiResourceLinks'] as Array<any>).map(InlineResponse2003FromJSON)),
         'publicBooks': !exists(json, 'publicBooks') ? undefined : ((json['publicBooks'] as Array<any>).map(InlineResponse2004PublicBooksFromJSON)),
-        'release': !exists(json, 'release') ? undefined : InlineResponse2004ReleaseFromJSON(json['release']),
     };
 }
 
@@ -253,7 +242,6 @@ export function InlineResponse2004ContentsToJSON(value?: InlineResponse2004Conte
         'sections': value.sections === undefined ? undefined : ((value.sections as Array<any>).map(InlineResponse2004SectionsToJSON)),
         'ltiResourceLinks': value.ltiResourceLinks === undefined ? undefined : ((value.ltiResourceLinks as Array<any>).map(InlineResponse2003ToJSON)),
         'publicBooks': value.publicBooks === undefined ? undefined : ((value.publicBooks as Array<any>).map(InlineResponse2004PublicBooksToJSON)),
-        'release': InlineResponse2004ReleaseToJSON(value.release),
     };
 }
 

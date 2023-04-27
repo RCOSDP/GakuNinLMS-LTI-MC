@@ -14,10 +14,14 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    ApiV2BookBookIdAuthorsAuthors,
-    ApiV2BookBookIdAuthorsAuthorsFromJSON,
-    ApiV2BookBookIdAuthorsAuthorsFromJSONTyped,
-    ApiV2BookBookIdAuthorsAuthorsToJSON,
+    ApiV2BookBookIdKeywords,
+    ApiV2BookBookIdKeywordsFromJSON,
+    ApiV2BookBookIdKeywordsFromJSONTyped,
+    ApiV2BookBookIdKeywordsToJSON,
+    ApiV2TopicTopicIdResource,
+    ApiV2TopicTopicIdResourceFromJSON,
+    ApiV2TopicTopicIdResourceFromJSONTyped,
+    ApiV2TopicTopicIdResourceToJSON,
 } from './';
 
 /**
@@ -28,34 +32,64 @@ import {
 export interface InlineObject6 {
     /**
      * 
-     * @type {Array<ApiV2BookBookIdAuthorsAuthors>}
+     * @type {string}
      * @memberof InlineObject6
      */
-    authors: Array<ApiV2BookBookIdAuthorsAuthors>;
+    name?: string;
     /**
      * 
      * @type {string}
      * @memberof InlineObject6
      */
-    provider: string;
+    language?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof InlineObject6
+     */
+    timeRequired?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof InlineObject6
+     */
+    startTime?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof InlineObject6
+     */
+    stopTime?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof InlineObject6
+     */
+    shared?: boolean;
     /**
      * 
      * @type {string}
      * @memberof InlineObject6
      */
-    wowzaBaseUrl: string;
+    license?: string;
     /**
      * 
      * @type {string}
      * @memberof InlineObject6
      */
-    json?: string;
+    description?: string;
     /**
      * 
-     * @type {string}
+     * @type {ApiV2TopicTopicIdResource}
      * @memberof InlineObject6
      */
-    file?: string;
+    resource?: ApiV2TopicTopicIdResource;
+    /**
+     * 
+     * @type {Array<ApiV2BookBookIdKeywords>}
+     * @memberof InlineObject6
+     */
+    keywords?: Array<ApiV2BookBookIdKeywords>;
 }
 
 export function InlineObject6FromJSON(json: any): InlineObject6 {
@@ -68,11 +102,16 @@ export function InlineObject6FromJSONTyped(json: any, ignoreDiscriminator: boole
     }
     return {
         
-        'authors': ((json['authors'] as Array<any>).map(ApiV2BookBookIdAuthorsAuthorsFromJSON)),
-        'provider': json['provider'],
-        'wowzaBaseUrl': json['wowzaBaseUrl'],
-        'json': !exists(json, 'json') ? undefined : json['json'],
-        'file': !exists(json, 'file') ? undefined : json['file'],
+        'name': !exists(json, 'name') ? undefined : json['name'],
+        'language': !exists(json, 'language') ? undefined : json['language'],
+        'timeRequired': !exists(json, 'timeRequired') ? undefined : json['timeRequired'],
+        'startTime': !exists(json, 'startTime') ? undefined : json['startTime'],
+        'stopTime': !exists(json, 'stopTime') ? undefined : json['stopTime'],
+        'shared': !exists(json, 'shared') ? undefined : json['shared'],
+        'license': !exists(json, 'license') ? undefined : json['license'],
+        'description': !exists(json, 'description') ? undefined : json['description'],
+        'resource': !exists(json, 'resource') ? undefined : ApiV2TopicTopicIdResourceFromJSON(json['resource']),
+        'keywords': !exists(json, 'keywords') ? undefined : ((json['keywords'] as Array<any>).map(ApiV2BookBookIdKeywordsFromJSON)),
     };
 }
 
@@ -85,11 +124,16 @@ export function InlineObject6ToJSON(value?: InlineObject6 | null): any {
     }
     return {
         
-        'authors': ((value.authors as Array<any>).map(ApiV2BookBookIdAuthorsAuthorsToJSON)),
-        'provider': value.provider,
-        'wowzaBaseUrl': value.wowzaBaseUrl,
-        'json': value.json,
-        'file': value.file,
+        'name': value.name,
+        'language': value.language,
+        'timeRequired': value.timeRequired,
+        'startTime': value.startTime,
+        'stopTime': value.stopTime,
+        'shared': value.shared,
+        'license': value.license,
+        'description': value.description,
+        'resource': ApiV2TopicTopicIdResourceToJSON(value.resource),
+        'keywords': value.keywords === undefined ? undefined : ((value.keywords as Array<any>).map(ApiV2BookBookIdKeywordsToJSON)),
     };
 }
 

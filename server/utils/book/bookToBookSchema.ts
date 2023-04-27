@@ -53,7 +53,6 @@ export const getBookIncludingArg = (userId: number) => {
           userId,
         },
       },
-      release: true,
     },
   } as const;
 };

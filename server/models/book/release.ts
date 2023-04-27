@@ -15,10 +15,9 @@ export type ReleaseProps = FromSchema<typeof releasePropsSchema>;
 export const releaseSchema = {
   type: "object",
   properties: {
+    bookId: { type: "integer" },
     releasedAt: { type: "string", format: "date-time" },
     ...releasePropsSchema.properties,
   },
   additionalProperties: false,
 } as const;
-
-export type ReleaseSchema = FromSchema<typeof releasePropsSchema>;
