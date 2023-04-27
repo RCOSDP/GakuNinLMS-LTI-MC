@@ -72,12 +72,7 @@ class ImportBooksUtil {
       const transactions = [];
       for (const importBook of importBooks.books) {
         transactions.push(
-          prisma.book.create({
-            data: {
-              ...this.getBookProps(importBook),
-              node: { create: {} },
-            },
-          })
+          prisma.book.create({ data: this.getBookProps(importBook) })
         );
       }
       if (this.errors.length) return;
