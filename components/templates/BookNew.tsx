@@ -68,13 +68,13 @@ export default function BookNew({
           は必須項目です
         </Typography>
       </Typography>
-      {forkFrom && forkFrom.length > 0 && (
+      {forkFrom && (
         <Alert className={classes.alert} severity="info">
           {forkFrom.map(({ name }) => `${name} さん`).join("、")}
           のブックをフォークしようとしています
         </Alert>
       )}
-      {topics && topics.length > 0 && (
+      {topics && (
         <Alert className={classes.alert} severity="info">
           以下のトピックを追加します
           <ul>
