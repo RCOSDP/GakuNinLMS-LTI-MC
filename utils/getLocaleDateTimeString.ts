@@ -6,7 +6,7 @@
 
 function getLocaleDateTimeString(
   date: Date,
-  locales: string | string[] = window.navigator.language
+  locales: string | string[]
 ): string {
   return date.toLocaleDateString(locales, {
     year: "numeric",

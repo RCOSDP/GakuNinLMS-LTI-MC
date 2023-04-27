@@ -70,7 +70,7 @@ function SectionTree({
   );
 }
 
-export type SectionsTreeProps = {
+type Props = {
   bookId?: number;
   sections: SectionSchema[];
   onItemClick?(index: ItemIndex): void;
@@ -81,7 +81,7 @@ export type SectionsTreeProps = {
   isContentEditable?: IsContentEditable;
 };
 
-export default function SectionsTree(props: SectionsTreeProps) {
+export default function SectionsTree(props: Props) {
   const {
     bookId = 0,
     sections,
