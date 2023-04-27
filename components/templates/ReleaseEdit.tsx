@@ -1,16 +1,15 @@
 import Typography from "@mui/material/Typography";
 import Container from "$atoms/Container";
 import type { BookSchema } from "$server/models/book";
-import ReleaseForm from "$organisms/ReleaseForm";
+import ReleaseForm, { type ReleaseFormProps } from "$organisms/ReleaseForm";
 import Card from "$atoms/Card";
 import DescriptionList from "$atoms/DescriptionList";
 import getLocaleDateString from "$utils/getLocaleDateString";
-import type { ReleaseProps } from "$server/models/book/release";
 
-type Props = {
-  book: BookSchema;
+type Props = ReleaseFormProps & {
+  book: Pick<BookSchema, "name" | "release">;
   parentBook?: Pick<BookSchema, "id" | "name" | "release">;
-  onSubmit(release: ReleaseProps): void;
+  onDeleteButtonClick(book: Pick<BookSchema, "id">): void;
 };
 
 type ParentBookProps = Partial<Props["parentBook"]>;
