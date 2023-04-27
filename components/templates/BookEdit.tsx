@@ -1,10 +1,7 @@
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
-import Box from "@mui/material/Box";
 import makeStyles from "@mui/styles/makeStyles";
-import LinkSwitch from "$atoms/LinkSwitch";
 import SectionsEdit from "$organisms/SectionsEdit";
 import BookForm from "$organisms/BookForm";
 import TopicPreviewDialog from "$organisms/TopicPreviewDialog";
@@ -57,8 +54,6 @@ type Props = {
   onBookImportClick(): void;
   onAuthorsUpdate(authors: AuthorSchema[]): void;
   onAuthorSubmit(author: Pick<AuthorSchema, "email">): void;
-  onLinkSwitchClick(checked: boolean): void;
-  onReleaseButtonClick(): void;
   isContentEditable?: IsContentEditable;
   linked?: boolean;
 };
@@ -75,10 +70,8 @@ export default function BookEdit({
   onBookImportClick,
   onAuthorsUpdate,
   onAuthorSubmit,
-  onLinkSwitchClick,
-  onReleaseButtonClick,
   isContentEditable,
-  linked,
+  linked = false,
 }: Props) {
   const classes = useStyles();
   const confirm = useConfirm();
@@ -128,34 +121,16 @@ export default function BookEdit({
       <BookForm
         className={classes.content}
         book={book}
+        linked={linked}
         variant="update"
         onSubmit={onSubmit}
         onAuthorsUpdate={onAuthorsUpdate}
         onAuthorSubmit={onAuthorSubmit}
       />
-      <Box
-        className="book-edit-row"
-        sx={{
-          display: "flex",
-          gap: 2,
-        }}
-      >
-        <Typography component="label" variant="caption">
-          <LinkSwitch
-            defaultChecked={linked}
-            onChange={(_, checked) => onLinkSwitchClick(checked)}
-          />
-          コースへ配信
-        </Typography>
-        <Button size="small" color="primary" onClick={onReleaseButtonClick}>
-          <PeopleOutlinedIcon />
-          リリース
-        </Button>
-        <Button size="small" color="primary" onClick={handleDeleteButtonClick}>
-          <DeleteOutlinedIcon />
-          ブックを削除
-        </Button>
-      </Box>
+      <Button size="small" color="primary" onClick={handleDeleteButtonClick}>
+        <DeleteOutlinedIcon />
+        ブックを削除
+      </Button>
       {previewTopic && (
         <TopicPreviewDialog {...dialogProps} topic={previewTopic} />
       )}

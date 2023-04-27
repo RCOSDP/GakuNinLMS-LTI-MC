@@ -12,9 +12,6 @@ import { destroyBook, updateBook, useBook } from "$utils/book";
 import { pagesPath } from "$utils/$path";
 import useBookLinkHandler from "$utils/useBookLinkHandler";
 import useAuthorsHandler from "$utils/useAuthorsHandler";
-import ReleasedBook from "$templates/ReleasedBook";
-import useDialogProps from "$utils/useDialogProps";
-import TopicPreviewDialog from "$organisms/TopicPreviewDialog";
 
 export type Query = {
   bookId: BookSchema["id"];
@@ -41,11 +38,12 @@ function Edit({ bookId, context }: Query) {
     }
   };
   async function handleSubmit({
-    sections: _sections,
-    submitWithLink: _submitWithLink,
+    sections: _,
+    submitWithLink,
     ...props
   }: BookPropsWithSubmitOptions) {
     await updateBook({ id: bookId, ...props });
+    if (submitWithLink) await handleBookLink({ id: bookId });
     return back();
   }
   async function handleDelete({ id }: Pick<BookSchema, "id">) {
@@ -86,22 +84,8 @@ function Edit({ bookId, context }: Query) {
   function handleTopicImportClick() {
     return router.push(pagesPath.book.topic.import.$url({ query }));
   }
-  async function handleReleaseButtonClick() {
-    return router.push(pagesPath.book.release.$url({ query }));
-  }
-  async function onLinkSwitchClick(checked: boolean) {
-    await handleBookLink({ id: bookId }, checked);
-  }
-  const {
-    data: previewTopic,
-    dispatch: setPreviewTopic,
-    ...dialogProps
-  } = useDialogProps<TopicSchema>();
-  const handleTopicPreviewClick = (topic: TopicSchema) =>
-    setPreviewTopic(topic);
-  const linked = bookId === session?.ltiResourceLink?.bookId;
   const handlers = {
-    linked,
+    linked: bookId === session?.ltiResourceLink?.bookId,
     onSubmit: handleSubmit,
     onDelete: handleDelete,
     onCancel: handleCancel,
@@ -112,38 +96,11 @@ function Edit({ bookId, context }: Query) {
     onTopicEditClick: handleTopicEditClick,
     onAuthorsUpdate: handleAuthorsUpdate,
     onAuthorSubmit: handleAuthorSubmit,
-    onLinkSwitchClick,
-    onReleaseButtonClick: handleReleaseButtonClick,
     isContentEditable: () => true,
   };
 
   if (error) return <BookNotFoundProblem />;
   if (!book) return <Placeholder />;
-
-  if (book.release) {
-    const handlers_for_releasedbook = {
-      onTopicPreview: handleTopicPreviewClick,
-      onLinkSwitchClick,
-      onForkButtonClick: () => {
-        console.log("fork button");
-      },
-      onReleaseEditButtonClick: handleReleaseButtonClick,
-      onDeleteButtonClick: handleDelete,
-    };
-    return (
-      <>
-        <ReleasedBook
-          book={book}
-          linked={linked}
-          {...handlers_for_releasedbook}
-        />
-        ;
-        {previewTopic && (
-          <TopicPreviewDialog {...dialogProps} topic={previewTopic} />
-        )}
-      </>
-    );
-  }
 
   return <BookEdit book={book} {...handlers} />;
 }

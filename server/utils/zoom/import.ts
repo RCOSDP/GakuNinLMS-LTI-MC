@@ -122,14 +122,7 @@ class ZoomImport {
       for (const meeting of meetings) {
         const data = await this.getBook(meeting);
         if (data && data.book && data.zoomMeeting) {
-          transactions.push(
-            prisma.book.create({
-              data: {
-                ...data.book,
-                node: { create: {} },
-              },
-            })
-          );
+          transactions.push(prisma.book.create({ data: data.book }));
           transactions.push(
             prisma.zoomMeeting.create({ data: data.zoomMeeting })
           );

@@ -1,23 +1,16 @@
 import { useCallback } from "react";
 import type { BookSchema } from "$server/models/book";
 import { useSessionAtom } from "$store/session";
-import {
-  destroyLtiResourceLink,
-  updateLtiResourceLink,
-} from "$utils/ltiResourceLink";
+import { updateLtiResourceLink } from "$utils/ltiResourceLink";
 import getLtiResourceLink from "$utils/getLtiResourceLink";
 
 function useBookLinkHandler() {
   const { session } = useSessionAtom();
   const handler = useCallback(
-    async ({ id: bookId }: Pick<BookSchema, "id">, checked: boolean) => {
+    async ({ id: bookId }: Pick<BookSchema, "id">) => {
       const ltiResourceLink = getLtiResourceLink(session);
       if (ltiResourceLink == null) return;
-      if (checked) {
-        await updateLtiResourceLink({ ...ltiResourceLink, bookId });
-      } else {
-        await destroyLtiResourceLink(ltiResourceLink);
-      }
+      await updateLtiResourceLink({ ...ltiResourceLink, bookId });
     },
     [session]
   );

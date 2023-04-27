@@ -13,13 +13,6 @@
  */
 
 import { exists, mapValues } from '../runtime';
-import {
-    ApiV2BookBookIdAuthorsAuthors,
-    ApiV2BookBookIdAuthorsAuthorsFromJSON,
-    ApiV2BookBookIdAuthorsAuthorsFromJSONTyped,
-    ApiV2BookBookIdAuthorsAuthorsToJSON,
-} from './';
-
 /**
  * 
  * @export
@@ -28,10 +21,16 @@ import {
 export interface InlineObject10 {
     /**
      * 
-     * @type {Array<ApiV2BookBookIdAuthorsAuthors>}
+     * @type {string}
      * @memberof InlineObject10
      */
-    authors: Array<ApiV2BookBookIdAuthorsAuthors>;
+    language?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineObject10
+     */
+    content?: string;
 }
 
 export function InlineObject10FromJSON(json: any): InlineObject10 {
@@ -44,7 +43,8 @@ export function InlineObject10FromJSONTyped(json: any, ignoreDiscriminator: bool
     }
     return {
         
-        'authors': ((json['authors'] as Array<any>).map(ApiV2BookBookIdAuthorsAuthorsFromJSON)),
+        'language': !exists(json, 'language') ? undefined : json['language'],
+        'content': !exists(json, 'content') ? undefined : json['content'],
     };
 }
 
@@ -57,7 +57,8 @@ export function InlineObject10ToJSON(value?: InlineObject10 | null): any {
     }
     return {
         
-        'authors': ((value.authors as Array<any>).map(ApiV2BookBookIdAuthorsAuthorsToJSON)),
+        'language': value.language,
+        'content': value.content,
     };
 }
 

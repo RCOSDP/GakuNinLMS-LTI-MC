@@ -14,10 +14,10 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    ApiV2TopicTopicIdActivityTimeRanges,
-    ApiV2TopicTopicIdActivityTimeRangesFromJSON,
-    ApiV2TopicTopicIdActivityTimeRangesFromJSONTyped,
-    ApiV2TopicTopicIdActivityTimeRangesToJSON,
+    ApiV2BookBookIdAuthorsAuthors,
+    ApiV2BookBookIdAuthorsAuthorsFromJSON,
+    ApiV2BookBookIdAuthorsAuthorsFromJSONTyped,
+    ApiV2BookBookIdAuthorsAuthorsToJSON,
 } from './';
 
 /**
@@ -28,10 +28,10 @@ import {
 export interface InlineObject9 {
     /**
      * 
-     * @type {Array<ApiV2TopicTopicIdActivityTimeRanges>}
+     * @type {Array<ApiV2BookBookIdAuthorsAuthors>}
      * @memberof InlineObject9
      */
-    timeRanges: Array<ApiV2TopicTopicIdActivityTimeRanges>;
+    authors: Array<ApiV2BookBookIdAuthorsAuthors>;
 }
 
 export function InlineObject9FromJSON(json: any): InlineObject9 {
@@ -44,7 +44,7 @@ export function InlineObject9FromJSONTyped(json: any, ignoreDiscriminator: boole
     }
     return {
         
-        'timeRanges': ((json['timeRanges'] as Array<any>).map(ApiV2TopicTopicIdActivityTimeRangesFromJSON)),
+        'authors': ((json['authors'] as Array<any>).map(ApiV2BookBookIdAuthorsAuthorsFromJSON)),
     };
 }
 
@@ -57,7 +57,7 @@ export function InlineObject9ToJSON(value?: InlineObject9 | null): any {
     }
     return {
         
-        'timeRanges': ((value.timeRanges as Array<any>).map(ApiV2TopicTopicIdActivityTimeRangesToJSON)),
+        'authors': ((value.authors as Array<any>).map(ApiV2BookBookIdAuthorsAuthorsToJSON)),
     };
 }
 
