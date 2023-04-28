@@ -1,5 +1,6 @@
 import ISO6391 from "iso-639-1";
 import type { VideoTrackSchema } from "$server/models/videoTrack";
+import type { VideoJsTextTrackList } from "$types/videoJsPlayer";
 import { NEXT_PUBLIC_API_BASE_PATH } from "$utils/env";
 
 function buildTrack({ url, language, accessToken }: VideoTrackSchema): {
@@ -19,7 +20,7 @@ function buildTrack({ url, language, accessToken }: VideoTrackSchema): {
 }
 
 function buildTracks(tracks: VideoTrackSchema[]) {
-  return tracks.map(buildTrack);
+  return tracks.map(buildTrack) as VideoJsTextTrackList;
 }
 
 export default buildTracks;

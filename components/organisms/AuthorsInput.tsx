@@ -73,7 +73,7 @@ export default function AuthorsInput({
         update(authors, index, {
           ...author,
           roleName: event.target
-            .value as typeof AuthorSchema._roleNames[keyof typeof AuthorSchema._roleNames],
+            .value as (typeof AuthorSchema._roleNames)[keyof typeof AuthorSchema._roleNames],
         })
       );
     };

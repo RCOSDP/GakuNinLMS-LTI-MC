@@ -22,7 +22,7 @@ export const keyOrder = [
   "updatedAt",
 ] as const;
 
-export const label: Readonly<{ [key in typeof keyOrder[number]]: string }> = {
+export const label: Readonly<{ [key in (typeof keyOrder)[number]]: string }> = {
   "learner.id": "ユーザID",
   "learner.name": "ユーザ名",
   "learner.email": "メールアドレス",
@@ -50,7 +50,7 @@ export function getLocaleEntries(
   session: SessionSchema
 ) {
   const flattenActivity: Record<
-    typeof keyOrder[number],
+    (typeof keyOrder)[number],
     string | number | Date | undefined
   > = flatten({
     ...activity,

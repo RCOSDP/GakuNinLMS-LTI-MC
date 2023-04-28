@@ -34,8 +34,8 @@ async function updateBook(
   }
 
   const timeRequired = sections && (await aggregateTimeRequired({ sections }));
-  const keywords = await prisma.keyword.findMany({
-    where: { books: { every: { id } } },
+  const keywordsBeforeUpdate = await prisma.keyword.findMany({
+    where: { books: { some: { id } } },
   });
   const update = prisma.book.update({
     where: { id },
@@ -44,7 +44,7 @@ async function updateBook(
       ...(timeRequired && { timeRequired }),
       keywords: {
         ...keywordsConnectOrCreateInput(book.keywords ?? []),
-        ...keywordsDisconnectInput(keywords, book.keywords ?? []),
+        ...keywordsDisconnectInput(keywordsBeforeUpdate, book.keywords ?? []),
       },
       updatedAt: new Date(),
     },

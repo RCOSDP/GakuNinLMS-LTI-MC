@@ -1,4 +1,4 @@
-import type { VideoJsPlayer } from "video.js";
+import type { VideoJsPlayer } from "$types/videoJsPlayer";
 
 /**
  * Vimeo相当のdurationchangeでのdurationの取得の再現
