@@ -116,6 +116,16 @@ docker compose down
 echo SESSION_SECRET=$(node -r crypto -pe 'crypto.randomBytes(32).toString("hex")') >> .env
 ```
 
+### ヒント: ZOOM API の設定
+
+Zoom Marketplace で、`Server-to-Server OAuth App` を作成
+https://developers.zoom.us/docs/internal-apps/create/
+
+Apps には、以下のスコープが必要です。
+
+- View and manage all user recordings /recording:write:admin
+- View all user information /user:read:admin
+
 ## 本番環境へのデプロイ
 
 ### ビルド
