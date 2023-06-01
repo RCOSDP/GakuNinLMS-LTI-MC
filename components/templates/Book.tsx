@@ -176,12 +176,13 @@ export default function Book(props: Props) {
           >
             {book?.name}
           </Typography>
-          {book?.timeRequired && (
-            <Chip
-              sx={{ mr: 1, mb: 0.5 }}
-              label={`学習時間 ${formatInterval(0, book.timeRequired * 1000)}`}
-            />
-          )}
+          <Chip
+            sx={{ mr: 1, mb: 0.5 }}
+            label={`学習時間 ${formatInterval(
+              0,
+              (book?.timeRequired ?? 0) * 1000
+            )}`}
+          />
           {book?.shared && <SharedIndicator />}
           {isInstructor &&
             book &&
