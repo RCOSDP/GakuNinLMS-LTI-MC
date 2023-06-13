@@ -90,8 +90,9 @@ docker compose down
 | `WOWZA_SCP_SERVER_PATH`              | 一括登録時の動画ファイルのアップロード先フォルダ (デフォルト: "")                                                                                                  |
 | `WOWZA_THUMBNAIL_BASE_URL`           | サムネイル画像の URL (デフォルト: "")                                                                                                                              |
 | `WOWZA_THUMBNAIL_EXTENSION`          | 生成されるサムネイル画像の拡張子 (デフォルト: "jpg")                                                                                                               |
-| `ZOOM_API_KEY`                       | Zoom API アクセスキー                                                                                                                                              |
-| `ZOOM_API_SECRET`                    | Zoom API シークレット                                                                                                                                              |
+| `ZOOM_ACCOUNT_ID`                    | Zoom API アカウント ID                                                                                                                                             |
+| `ZOOM_CLIENT_ID`                     | Zoom API クライアント ID                                                                                                                                           |
+| `ZOOM_CLIENT_SECRET`                 | Zoom API シークレットキー                                                                                                                                          |
 | `ZOOM_IMPORT_CONSUMER_KEY`           | Zoom インポートのユーザー検索に用いるコンシューマーキー (デフォルト: 無効 ""、例: 設定値 `OAUTH_CONSUMER_KEY` と同じ値)                                            |
 | `ZOOM_IMPORT_INTERVAL`               | Zoom インポートの実行時間 (デフォルト: 無効 ""、例: 毎朝 6 時実行 `1 6 * * *`)                                                                                     |
 | `ZOOM_IMPORT_TO`                     | Zoom からインポートした動画のアップロード先 (デフォルト: 無効 ""、例: `wowza`)                                                                                     |
@@ -115,6 +116,16 @@ docker compose down
 ```sh
 echo SESSION_SECRET=$(node -r crypto -pe 'crypto.randomBytes(32).toString("hex")') >> .env
 ```
+
+### ヒント: ZOOM API の設定
+
+Zoom Marketplace で、`Server-to-Server OAuth App` を作成
+https://developers.zoom.us/docs/internal-apps/create/
+
+Apps には、以下のスコープが必要です。
+
+- View and manage all user recordings /recording:write:admin
+- View all user information /user:read:admin
 
 ## 本番環境へのデプロイ
 

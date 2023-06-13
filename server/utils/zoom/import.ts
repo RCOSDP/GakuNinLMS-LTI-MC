@@ -204,7 +204,7 @@ class ZoomImport {
       const startTime = new Date(meeting.start_time);
       const file = path.join(this.tmpdir, `${fileId}.mp4`);
       const fileStream = got
-        .stream(`${downloadUrl}?access_token=${zoomRequestToken()}`)
+        .stream(`${downloadUrl}?access_token=${await zoomRequestToken()}`)
         .pipe(fs.createWriteStream(file));
       await stream.finished(fileStream);
 

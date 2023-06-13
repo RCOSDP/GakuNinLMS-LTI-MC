@@ -1,8 +1,11 @@
-import jwt from "jsonwebtoken";
 import got from "got";
 import type { Method } from "got";
 
-import { ZOOM_API_KEY, ZOOM_API_SECRET } from "$server/utils/env";
+import {
+  ZOOM_ACCOUNT_ID,
+  ZOOM_CLIENT_ID,
+  ZOOM_CLIENT_SECRET,
+} from "$server/utils/env";
 
 interface ZoomQuery {
   [key: string]: string | number | boolean;
@@ -344,11 +347,29 @@ export type ZoomRecordingGetResponse = {
   }>;
 };
 
-export function zoomRequestToken() {
-  return jwt.sign({}, ZOOM_API_SECRET, {
-    issuer: ZOOM_API_KEY,
-    expiresIn: "2s",
-  });
+export type ZoomAuthResponse = {
+  access_token: string;
+  token_type: string;
+  expires_in: number;
+  scope: string | string[];
+};
+
+const basenc = Buffer.from(ZOOM_CLIENT_ID + ":" + ZOOM_CLIENT_SECRET).toString(
+  "base64"
+);
+
+export async function zoomRequestToken() {
+  const result = await got(
+    `https://zoom.us/oauth/token?grant_type=account_credentials&account_id=${ZOOM_ACCOUNT_ID}`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: "Basic " + basenc,
+      },
+    }
+  );
+  const body = JSON.parse(result.body) as ZoomAuthResponse;
+  return body.access_token;
 }
 
 export async function zoomRequest(
@@ -356,12 +377,13 @@ export async function zoomRequest(
   searchParams: ZoomQuery = {},
   method: Method = "GET"
 ): Promise<ZoomResponse> {
+  const access_token = await zoomRequestToken();
   return await got("https://api.zoom.us/v2" + path, {
     searchParams,
     method,
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${zoomRequestToken()}`,
+      Authorization: `Bearer ${access_token}`,
     },
   }).json();
 }
