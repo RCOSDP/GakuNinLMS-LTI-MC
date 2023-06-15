@@ -39,9 +39,9 @@ export class LtiClaims {
     });
   }
   @IsIn(["LtiResourceLinkRequest", "LtiDeepLinkingRequest"])
-    "https://purl.imsglobal.org/spec/lti/claim/message_type"!:
-      | "LtiResourceLinkRequest"
-      | "LtiDeepLinkingRequest";
+  "https://purl.imsglobal.org/spec/lti/claim/message_type"!:
+    | "LtiResourceLinkRequest"
+    | "LtiDeepLinkingRequest";
   @Equals("1.3.0")
   "https://purl.imsglobal.org/spec/lti/claim/version"!: "1.3.0";
   @IsNotEmpty()

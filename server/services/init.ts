@@ -20,7 +20,6 @@ async function init({ session }: FastifyRequest) {
       })
     : null;
 
-
   if (ltiResourceLink) {
     await upsertLtiResourceLink({
       ...ltiResourceLink,
