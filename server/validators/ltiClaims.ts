@@ -3,6 +3,7 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
+  IsIn,
   MaxLength,
   ValidateNested,
 } from "class-validator";
@@ -37,8 +38,10 @@ export class LtiClaims {
         ),
     });
   }
-  @Equals("LtiResourceLinkRequest")
-  "https://purl.imsglobal.org/spec/lti/claim/message_type"!: "LtiResourceLinkRequest";
+  @IsIn(["LtiResourceLinkRequest", "LtiDeepLinkingRequest"])
+    "https://purl.imsglobal.org/spec/lti/claim/message_type"!:
+      | "LtiResourceLinkRequest"
+      | "LtiDeepLinkingRequest";
   @Equals("1.3.0")
   "https://purl.imsglobal.org/spec/lti/claim/version"!: "1.3.0";
   @IsNotEmpty()
@@ -46,9 +49,9 @@ export class LtiClaims {
   "https://purl.imsglobal.org/spec/lti/claim/deployment_id"!: string;
   @IsNotEmpty()
   "https://purl.imsglobal.org/spec/lti/claim/target_link_uri"!: string;
-  @IsNotEmpty()
+  @IsOptional()
   @ValidateNested()
-  "https://purl.imsglobal.org/spec/lti/claim/resource_link"!: ResourceLinkClaim;
+  "https://purl.imsglobal.org/spec/lti/claim/resource_link"?: ResourceLinkClaim;
   @IsNotEmpty()
   @IsString({ each: true })
   "https://purl.imsglobal.org/spec/lti/claim/roles"!: string[];
@@ -78,9 +81,9 @@ class ResourceLinkClaim {
   constructor(props?: Partial<ResourceLinkClaim>) {
     Object.assign(this, props);
   }
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  id!: string;
+  id?: string;
   @IsOptional()
   @IsString()
   title?: string;
