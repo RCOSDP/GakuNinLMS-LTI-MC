@@ -18,7 +18,7 @@ export type SessionSchema = {
   ltiVersion: LtiVersionSchema;
   ltiUser: LtiUserSchema;
   ltiRoles: LtiRolesSchema;
-  ltiResourceLinkRequest: LtiResourceLinkRequestSchema;
+  ltiResourceLinkRequest?: LtiResourceLinkRequestSchema;
   ltiContext: LtiContextSchema;
   ltiLaunchPresentation?: LtiLaunchPresentationSchema;
   ltiAgsEndpoint?: LtiAgsEndpointSchema;
@@ -36,7 +36,6 @@ export const sessionSchema = {
     "ltiVersion",
     "ltiUser",
     "ltiRoles",
-    "ltiResourceLinkRequest",
     "ltiContext",
     "user",
     "systemSettings",

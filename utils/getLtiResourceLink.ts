@@ -19,8 +19,8 @@ function getLtiResourceLink(
 
   const ltiResourceLink = {
     consumerId: session.oauthClient.id,
-    id: session.ltiResourceLinkRequest.id,
-    title: session.ltiResourceLinkRequest.title ?? "",
+    id: session?.ltiResourceLinkRequest?.id ?? "",
+    title: session?.ltiResourceLinkRequest?.title ?? "",
     contextId: session.ltiContext.id,
     contextTitle: session.ltiContext.title ?? "",
     contextLabel: session.ltiContext.label ?? "",
