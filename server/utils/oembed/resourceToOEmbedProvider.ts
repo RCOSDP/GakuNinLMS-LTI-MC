@@ -17,7 +17,7 @@ const oEmbedProviderMatchers = [
 
 const hostMatch =
   (url: URL) =>
-  (matcher: typeof oEmbedProviderMatchers[number]): boolean =>
+  (matcher: (typeof oEmbedProviderMatchers)[number]): boolean =>
     matcher.host.test(url.host);
 
 /** リソースからoEmbed Providerを得る */

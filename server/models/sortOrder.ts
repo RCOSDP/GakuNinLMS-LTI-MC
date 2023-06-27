@@ -7,6 +7,6 @@ const sortOrder = [
   "reverse-name",
 ] as const;
 
-export type SortOrder = typeof sortOrder[number];
+export type SortOrder = (typeof sortOrder)[number];
 
 export default sortOrder;

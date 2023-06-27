@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from "react";
 import useSWRImmutable from "swr/immutable";
-import type { VideoJsPlayer } from "video.js";
+import type { VideoJsPlayer } from "$types/videoJsPlayer";
 import VimeoPlayer from "@vimeo/player";
 
 type Player = VideoJsPlayer | VimeoPlayer;
@@ -47,7 +47,7 @@ async function getPlaybackRate(player: Player): Promise<PlaybackRate> {
 /** 再生速度の設定の保存と反映のためのカスタムフック */
 export function usePlaybackRate(player: Player) {
   const { data: ready } = useSWRImmutable(
-    [key, player],
+    { key, player },
     (): boolean =>
       ready ||
       player instanceof VimeoPlayer ||

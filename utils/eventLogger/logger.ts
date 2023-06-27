@@ -17,7 +17,7 @@ function send(eventType: EventType, event: PlayerEvent, detail?: string) {
     file: getFilePath(event),
     query: event.url.split("?")[1],
     current: event.currentTime.toString(),
-    rid: id(session.ltiResourceLinkRequest.id),
+    rid: id(session?.ltiResourceLinkRequest?.id || ""),
     uid: id(session.ltiUser.id),
     cid: id(session.ltiContext.id),
     nonce: session.oauthClient.nonce,
@@ -36,7 +36,7 @@ const buildSender = (event: EventType, tracker: PlayerTracker) => () =>
 /** ロギング開始 */
 function logger(tracker: PlayerTracker) {
   if (typeof window === "undefined") return;
-  // @ts-expect-error TODO: Window オブジェクトを介さない排他制御にしたい
+  // TODO: Window オブジェクトを介さない排他制御にしたい
   if ("__tracker" in window && tracker === window.__tracker) return;
 
   /* Record the start and end of seek time */

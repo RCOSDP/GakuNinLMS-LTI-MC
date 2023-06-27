@@ -8,10 +8,12 @@ export default { title: "organisms/Sections", component: Sections };
 const activityBySections = sections
   .flatMap(({ topics }) => topics)
   .map((topic) => ({
+    id: topic.id,
     topic,
     learner: user,
     completed: Math.floor(Math.random() * 2) === 0,
     totalTimeMs: 100_000,
+    timeRanges: [],
     createdAt: new Date(),
     updatedAt: new Date(),
   }));

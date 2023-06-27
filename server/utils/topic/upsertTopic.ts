@@ -30,14 +30,14 @@ async function upsertTopic(
   { id, ...topic }: TopicProps & Pick<Topic, "id">,
   ip: string
 ): Promise<TopicSchema | undefined> {
-  const keywords = await prisma.keyword.findMany({
-    where: { topics: { every: { id } } },
+  const keywordsBeforeUpdate = await prisma.keyword.findMany({
+    where: { topics: { some: { id } } },
   });
   const created = await prisma.topic.upsert({
     ...topicsWithResourcesArg,
     where: { id },
     create: topicCreateInput(authorId, topic),
-    update: topicUpdateInput(topic, keywords),
+    update: topicUpdateInput(topic, keywordsBeforeUpdate),
   });
 
   if (!created) return;

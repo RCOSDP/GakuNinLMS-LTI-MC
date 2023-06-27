@@ -14,7 +14,7 @@ const options = {
 
 type SearchParserResult = base.SearchParserResult & {
   // NOTE: keywords and `{ alwaysArray: true }`
-  [K in typeof options["keywords"][number]]?: string[];
+  [K in (typeof options)["keywords"][number]]?: string[];
 } & {
   // NOTE: `{ tokenize: true }`
   text?: string[];

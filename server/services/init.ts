@@ -5,24 +5,25 @@ import {
   findLtiResourceLink,
   upsertLtiResourceLink,
 } from "$server/utils/ltiResourceLink";
-import { isInstructor } from "$server/utils/session";
 import { getSystemSettings } from "$server/utils/systemSettings";
-import { upsertLtiMember } from "$server/utils/ltiMember";
 
 const frontendUrl = `${FRONTEND_ORIGIN}${FRONTEND_PATH}`;
 
 /** 起動時の初期化プロセス */
 async function init({ session }: FastifyRequest) {
   const systemSettings = getSystemSettings();
-  const ltiResourceLink = await findLtiResourceLink({
-    consumerId: session.oauthClient.id,
-    id: session.ltiResourceLinkRequest.id,
-  });
+
+  const ltiResourceLink = session.ltiResourceLinkRequest?.id
+    ? await findLtiResourceLink({
+        consumerId: session.oauthClient.id,
+        id: session.ltiResourceLinkRequest.id,
+      })
+    : null;
 
   if (ltiResourceLink) {
     await upsertLtiResourceLink({
       ...ltiResourceLink,
-      title: session.ltiResourceLinkRequest.title ?? ltiResourceLink.title,
+      title: session?.ltiResourceLinkRequest?.title ?? ltiResourceLink.title,
       contextTitle: session.ltiContext.title ?? ltiResourceLink.contextTitle,
       contextLabel: session.ltiContext.label ?? ltiResourceLink.contextLabel,
     });
@@ -34,14 +35,6 @@ async function init({ session }: FastifyRequest) {
     name: session.ltiUser.name ?? "",
     email: session.ltiUser.email ?? "",
   });
-
-  if (ltiResourceLink && !isInstructor(session)) {
-    await upsertLtiMember(
-      ltiResourceLink.consumerId,
-      ltiResourceLink.contextId,
-      user.ltiUserId
-    );
-  }
 
   Object.assign(session, { ltiResourceLink, user, systemSettings });
 

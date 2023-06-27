@@ -11,11 +11,14 @@ import { getDisplayableBook } from "./displayableBook";
 
 const key = "/api/v2/book/{book_id}";
 
-async function fetchBook(
-  _: typeof key,
-  bookId: BookSchema["id"],
-  token?: string
-) {
+async function fetchBook({
+  bookId,
+  token,
+}: {
+  key: typeof key;
+  bookId: BookSchema["id"];
+  token?: string;
+}) {
   if (token) {
     const res = await api.apiV2BookPublicTokenGet({
       token,
@@ -35,7 +38,7 @@ export function useBook(
   token?: string
 ) {
   const { data, error } = useSWRImmutable<BookSchema>(
-    Number.isFinite(bookId) || token ? [key, bookId, token] : null,
+    Number.isFinite(bookId) || token ? { key, bookId, token } : null,
     fetchBook,
     { revalidateOnMount: true }
   );
@@ -62,7 +65,7 @@ export function useBook(
 export async function createBook(body: BookProps): Promise<BookSchema> {
   // @ts-expect-error NOTE: body.sections[].topics[].name のUnion型に null 含むか否か異なる
   const res = await api.apiV2BookPost({ body });
-  await mutate([key, res.id, undefined], res);
+  await mutate({ key, bookId: res.id }, res);
   return res as BookSchema;
 }
 
@@ -72,7 +75,7 @@ export async function updateBook({
 }: BookProps & { id: BookSchema["id"] }): Promise<BookSchema> {
   // @ts-expect-error NOTE: body.sections[].topics[].name のUnion型に null 含むか否か異なる
   const res = await api.apiV2BookBookIdPut({ bookId: id, body });
-  await mutate([key, res.id, undefined], res);
+  await mutate({ key, bookId: res.id }, res);
   return res as BookSchema;
 }
 
@@ -110,8 +113,8 @@ export async function destroyBook(id: BookSchema["id"]) {
 export function revalidateBook(
   id: BookSchema["id"],
   res?: BookSchema
-): Promise<BookSchema> {
-  return mutate([key, id, undefined], res);
+): Promise<BookSchema | void> {
+  return mutate({ key, bookId: id }, res);
 }
 
 export async function getBookIdByZoom(meetingId: number) {

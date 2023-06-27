@@ -1,11 +1,9 @@
 import Card from "@mui/material/Card";
-import { grey } from "@mui/material/colors";
-import DescriptionList from "$atoms/DescriptionList";
 import Markdown from "$atoms/Markdown";
-import useCardStyle from "$styles/card";
-import languages from "$utils/languages";
-import formatInterval from "$utils/formatInterval";
 import type { BookSchema } from "$server/models/book";
+import KeywordChip from "$atoms/KeywordChip";
+import useCardStyle from "$styles/card";
+import { Box } from "@mui/material";
 
 type Props = {
   className?: string;
@@ -18,20 +16,19 @@ export default function BookInfo({ className, id, book }: Props) {
 
   return (
     <Card className={className} classes={cardClasses} id={id}>
-      <DescriptionList
-        color={grey[900]}
-        sx={{ mb: 0.5 }}
-        value={[
-          {
-            key: "学習時間",
-            value: formatInterval(0, (book.timeRequired ?? 0) * 1000),
-          },
-          {
-            key: "教材の主要な言語",
-            value: languages[book.language],
-          },
-        ]}
-      />
+      {book.keywords && (
+        <Box sx={{ mb: 1 }}>
+          {book.keywords.map((keyword) => {
+            return (
+              <KeywordChip
+                key={keyword.id}
+                keyword={keyword}
+                sx={{ mr: 0.5, maxWidth: "260px" }}
+              />
+            );
+          })}
+        </Box>
+      )}
       {book.description && <Markdown>{book.description}</Markdown>}
     </Card>
   );

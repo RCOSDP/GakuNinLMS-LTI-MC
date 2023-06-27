@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import { atom, useAtom } from "jotai";
-import { RESET, atomWithReset, useAtomValue, useUpdateAtom } from "jotai/utils";
+import { atom, useAtom, useAtomValue, useSetAtom } from "jotai";
+import { RESET, atomWithReset } from "jotai/utils";
 import type {
   VideoTrackProps,
   VideoTrackSchema,
@@ -31,18 +31,19 @@ const videoTracksAtom = atom<VideoTrackSchema[]>((get) => {
   else return get(videoTracksSchemaAtom);
 });
 
-const addVideoTrackAtom = atom<null, VideoTrackProps | VideoTrackSchema>(
+const addVideoTrackAtom = atom<
   null,
-  (get, set, videoTrack) => {
-    if (isVideoTrackProps(videoTrack)) {
-      set(videoTracksPropsAtom, [...get(videoTracksPropsAtom), videoTrack]);
-    } else {
-      set(videoTracksSchemaAtom, [...get(videoTracksSchemaAtom), videoTrack]);
-    }
+  [VideoTrackProps | VideoTrackSchema],
+  void
+>(null, (get, set, videoTrack) => {
+  if (isVideoTrackProps(videoTrack)) {
+    set(videoTracksPropsAtom, [...get(videoTracksPropsAtom), videoTrack]);
+  } else {
+    set(videoTracksSchemaAtom, [...get(videoTracksSchemaAtom), videoTrack]);
   }
-);
+});
 
-const deleteVideoTrackAtom = atom<null, VideoTrackSchema["id"]>(
+const deleteVideoTrackAtom = atom<null, [VideoTrackSchema["id"]], void>(
   null,
   (get, set, indexOrId) => {
     const videoTracksProps = get(videoTracksPropsAtom);
@@ -65,9 +66,9 @@ const deleteVideoTrackAtom = atom<null, VideoTrackSchema["id"]>(
 export function useVideoTrackAtom() {
   const [videoTracksProps, reset] = useAtom(videoTracksPropsAtom);
   const videoTracks = useAtomValue(videoTracksAtom);
-  const setVideoTracks = useUpdateAtom(videoTracksSchemaAtom);
-  const addVideoTrack = useUpdateAtom(addVideoTrackAtom);
-  const deleteVideoTrack = useUpdateAtom(deleteVideoTrackAtom);
+  const setVideoTracks = useSetAtom(videoTracksSchemaAtom);
+  const addVideoTrack = useSetAtom(addVideoTrackAtom);
+  const deleteVideoTrack = useSetAtom(deleteVideoTrackAtom);
   useEffect(
     () => () => {
       reset(RESET);

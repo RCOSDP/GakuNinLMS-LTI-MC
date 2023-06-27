@@ -7,7 +7,7 @@ import type { ContentAuthors } from "$server/models/content";
 import { useSessionAtom } from "$store/session";
 import BookEdit from "$templates/BookEdit";
 import Placeholder from "$templates/Placeholder";
-import BookNotFoundProblem from "$templates/TopicNotFoundProblem";
+import BookNotFoundProblem from "$templates/BookNotFoundProblem";
 import { destroyBook, updateBook, useBook } from "$utils/book";
 import { pagesPath } from "$utils/$path";
 import useBookLinkHandler from "$utils/useBookLinkHandler";

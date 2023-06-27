@@ -4,11 +4,11 @@
 
 ### 前提条件
 
-2021-09-03 現在、以下の環境で動作確認済み
+2023-03-29 現在、以下の環境で動作確認済み
 
-- Docker v20
-- Docker Compose v1.29
-- Node.js v16
+- Docker v23
+- Docker Compose v2
+- Node.js LTS
 - Yarn v1.22
 
 ### 手順
@@ -16,7 +16,7 @@
 データベースを構築します。開発環境は次のコマンドで構築します。
 
 ```sh
-docker-compose up -d
+docker compose up -d
 ```
 
 デフォルトでは URL `postgresql://postgres:password@localhost/postgres` で接続可能な PostgreSQL データベースが構築されます。
@@ -60,7 +60,7 @@ yarn prisma studio
 データベースを撤去します。**データベースの中身はすべて消去されます。**
 
 ```
-docker-compose down
+docker compose down
 ```
 
 ## 環境変数
@@ -90,8 +90,9 @@ docker-compose down
 | `WOWZA_SCP_SERVER_PATH`              | 一括登録時の動画ファイルのアップロード先フォルダ (デフォルト: "")                                                                                                  |
 | `WOWZA_THUMBNAIL_BASE_URL`           | サムネイル画像の URL (デフォルト: "")                                                                                                                              |
 | `WOWZA_THUMBNAIL_EXTENSION`          | 生成されるサムネイル画像の拡張子 (デフォルト: "jpg")                                                                                                               |
-| `ZOOM_API_KEY`                       | Zoom API アクセスキー                                                                                                                                              |
-| `ZOOM_API_SECRET`                    | Zoom API シークレット                                                                                                                                              |
+| `ZOOM_ACCOUNT_ID`                    | Zoom API アカウント ID                                                                                                                                             |
+| `ZOOM_CLIENT_ID`                     | Zoom API クライアント ID                                                                                                                                           |
+| `ZOOM_CLIENT_SECRET`                 | Zoom API シークレットキー                                                                                                                                          |
 | `ZOOM_IMPORT_CONSUMER_KEY`           | Zoom インポートのユーザー検索に用いるコンシューマーキー (デフォルト: 無効 ""、例: 設定値 `OAUTH_CONSUMER_KEY` と同じ値)                                            |
 | `ZOOM_IMPORT_INTERVAL`               | Zoom インポートの実行時間 (デフォルト: 無効 ""、例: 毎朝 6 時実行 `1 6 * * *`)                                                                                     |
 | `ZOOM_IMPORT_TO`                     | Zoom からインポートした動画のアップロード先 (デフォルト: 無効 ""、例: `wowza`)                                                                                     |
@@ -102,6 +103,7 @@ docker-compose down
 | `PUBLIC_ACCESS_HASH_ALGORITHM`       | 公開 URL のトークン生成に利用するハッシュアルゴリズム (デフォルト: "sha256"、`openssl help` コマンドの "Message Digest commands" の項目に表示される値が利用可能)   |
 | `PUBLIC_ACCESS_CRYPTO_ALGORITHM`     | Wowza 動画と字幕のトークン生成に利用する暗号化アルゴリズム (デフォルト: "aes-256-cbc"、`openssl help` コマンドの "Cipher commands" の項目に表示される値が利用可能) |
 | `ACTIVITY_RATE_MIN`                  | 学習活動の完了とみなす最小の視聴時間の割合 (デフォルト:`0.9`)                                                                                                      |
+| `VTT_ACCESS_TOKEN_EXPIRES_IN`        | 字幕を取得する際のアクセストークンの有効期限 (秒) (デフォルト: `5400`)                                                                                             |
 
 [database_connection_url]: https://www.prisma.io/docs/reference/database-connectors/connection-urls/
 
@@ -114,6 +116,16 @@ docker-compose down
 ```sh
 echo SESSION_SECRET=$(node -r crypto -pe 'crypto.randomBytes(32).toString("hex")') >> .env
 ```
+
+### ヒント: ZOOM API の設定
+
+Zoom Marketplace で、`Server-to-Server OAuth App` を作成
+https://developers.zoom.us/docs/internal-apps/create/
+
+Apps には、以下のスコープが必要です。
+
+- View and manage all user recordings /recording:write:admin
+- View all user information /user:read:admin
 
 ## 本番環境へのデプロイ
 
@@ -171,6 +183,7 @@ Platform ID が `https://example` (Moodle) の場合の例:
 | Initiate login URL                               | ログイン初期化エンドポイント (例: `https://chibichilo.example/api/v2/lti/login`) |
 | Redirection URI(s)                               | リダイレクト URI (例: `https://chibichilo.example/api/v2/lti/callback`)          |
 | Services > IMS LTI Assignment and Grade Services | "Use this service for grade sync"                                                |
+| Services > IMS LTI Names and Role Provisioning   | "Use this service to retrieve members' information as per privacy settings"      |
 
 Client ID はツール追加後に払い出されます。ツール追加後、[View configuration details] を参照してください。
 設定値に合わせて SQL を発行します。

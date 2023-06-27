@@ -1,7 +1,8 @@
-import { useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import usePrevious from "@rooks/use-previous";
 import clsx from "clsx";
 import { css } from "@emotion/css";
+
 import type { TopicSchema } from "$server/models/topic";
 import type { VideoResourceSchema } from "$server/models/videoResource";
 import VideoPlayer from "$organisms/Video/VideoPlayer";
@@ -11,10 +12,28 @@ import { useVideoAtom } from "$store/video";
 import { useBookAtom } from "$store/book";
 import useOembed from "$utils/useOembed";
 import type { SxProps } from "@mui/system";
+import type { ActivitySchema } from "$server/models/activity";
+import { isInstructor, isAdministrator } from "$utils/session";
+import { useSessionAtom } from "$store/session";
+import type { ButtonProps } from "@mui/material";
+import { Box } from "@mui/material";
+import { Chip, Typography } from "@mui/material";
+import { Button } from "@mui/material";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import { gray, learningStatus } from "$theme/colors";
+import Markdown from "$atoms/Markdown";
+import KeywordChip from "$atoms/KeywordChip";
+import License from "$atoms/License";
+import DescriptionList from "$atoms/DescriptionList";
+import formatInterval from "$utils/formatInterval";
+import getLocaleDateString from "$utils/getLocaleDateString";
+import { authors } from "$utils/descriptionList";
 
 const hidden = css({
   m: 0,
   width: 0,
+  height: 0,
   "& *": {
     visibility: "hidden",
   },
@@ -33,10 +52,79 @@ const videoStyle = {
   },
 } as const;
 
+const tabsStyle = css({
+  marginBottom: "12px",
+  borderBottom: `1px solid ${gray[300]}`,
+});
+
+const timeLineDetail = css({
+  display: "flex",
+  justifyContent: "center",
+  marginTop: "12px",
+});
+
+const skipButton = css({
+  whiteSpace: "nowrap",
+  fontSize: "8px",
+  marginRight: "8px",
+  lineHeight: 1,
+});
+
+function SkipButton(props: ButtonProps) {
+  return (
+    <Button {...props} className={skipButton} size="small" color="secondary">
+      未視聴箇所へ
+    </Button>
+  );
+}
+
+// TODO:atomにコンポーネント化する
+const useTabIndex = () => {
+  const [tabIndex, setTabIndex] = useState(0);
+  const handleTabIndexChange = (
+    _: React.ChangeEvent<unknown>,
+    value: number
+  ) => {
+    setTabIndex(value);
+  };
+
+  return { tabIndex, handleTabIndexChange };
+};
+
+type TabPanelProps = {
+  className?: string;
+  children?: React.ReactNode;
+  index: number;
+  value: number;
+};
+
+function TabPanel({
+  className,
+  children,
+  value,
+  index,
+  ...other
+}: TabPanelProps) {
+  return (
+    <div
+      className={className}
+      role="tabpanel"
+      id={`panel-${index}`}
+      aria-labelledby={`tab-${index}`}
+      aria-hidden={value !== index}
+      {...other}
+    >
+      {value === index && children}
+    </div>
+  );
+}
+// TODO:ここまで
+
 type Props = {
   className?: string;
   sx?: SxProps;
   topic: TopicSchema;
+  timeRange: ActivitySchema["timeRanges"];
   onEnded?: () => void;
 };
 
@@ -54,9 +142,37 @@ function isValidPlaybackEnd({
   return typeof stopTime === "number" && 0 < stopTime && stopTime < currentTime;
 }
 
-export default function Video({ className, sx, topic, onEnded }: Props) {
+const BAR_SIZE = 480;
+function generateTimeRangeBarValue({
+  timeRange,
+  timeRequired,
+}: {
+  timeRange: ActivitySchema["timeRanges"];
+  timeRequired: TopicSchema["timeRequired"];
+}): Array<{ id: string; positionX: number; width: number }> {
+  return timeRange.map((timeRange) => {
+    const id = [timeRange?.activityId, timeRange?.startMs].join();
+    const startMs = timeRange?.startMs || 0;
+    const endMs = timeRange?.endMs || 0;
+    const timeRadio = (endMs - startMs) / timeRequired / 1000;
+    const width = BAR_SIZE * timeRadio;
+    const lengthRatio = BAR_SIZE / timeRequired;
+    const positionX = (lengthRatio * startMs) / 1000;
+
+    return { id, positionX, width };
+  });
+}
+
+export default function Video({
+  className,
+  sx,
+  topic,
+  timeRange,
+  onEnded,
+}: Props) {
   const { video, preloadVideo } = useVideoAtom();
   const { book, itemIndex, itemExists } = useBookAtom();
+  const { session } = useSessionAtom();
   useEffect(() => {
     if (!book) return;
     // バックグラウンドで動画プレイヤーオブジェクトプールに読み込む
@@ -129,6 +245,31 @@ export default function Video({ className, sx, topic, onEnded }: Props) {
     // TODO: videoの内容の変更検知は機能しないので修正したい。Mapオブジェクトでの管理をやめるかMap.prototype.set()を使用しないようにするなど必要かもしれない。
   }, [video, itemExists, prevItemIndex, itemIndex, onEnded]);
 
+  const handleSkipWatch = useCallback(async () => {
+    const videoInstance = video.get(String(topic?.id));
+    if (!videoInstance) return;
+    if (videoInstance.type === "vimeo") {
+      const currentTime = await videoInstance.player.getCurrentTime();
+      const nextUnwatchedTime = timeRange.find((timeRange) => {
+        return (timeRange.endMs || 0) / 1000 > currentTime;
+      });
+      if (!nextUnwatchedTime?.endMs) return;
+      void videoInstance.player.setCurrentTime(nextUnwatchedTime.endMs / 1000);
+    } else {
+      const nextUnwatchedTime = timeRange.find((timeRange) => {
+        return (
+          (timeRange.endMs || 0) / 1000 > videoInstance.player.currentTime()
+        );
+      });
+      if (!nextUnwatchedTime?.endMs) return;
+      void videoInstance.player.currentTime(nextUnwatchedTime.endMs / 1000);
+    }
+  }, [timeRange, topic?.id, video]);
+
+  const { tabIndex, handleTabIndexChange } = useTabIndex();
+  const isStudent =
+    session && !isInstructor(session) && !isAdministrator(session);
+
   // 動画プレイヤーオブジェクトプールに存在する場合
   if (video.has(String(topic.id))) {
     return (
@@ -145,6 +286,109 @@ export default function Video({ className, sx, topic, onEnded }: Props) {
             onEnded={String(topic.id) === id ? onEnded : undefined}
           />
         ))}
+        <Tabs
+          aria-label="トピックビデオの詳細情報"
+          className={tabsStyle}
+          indicatorColor="primary"
+          value={tabIndex}
+          onChange={handleTabIndexChange}
+        >
+          <Tab label="解説" id="tab-0" aria-controls="panel-0" />
+          {isStudent && (
+            <Tab label="視聴時間詳細" id="tab-1" aria-controls="panel-1" />
+          )}
+          <Tab
+            label="トピックの詳細"
+            id={`tab-${isStudent ? 2 : 1}`}
+            aria-controls={`panel-${isStudent ? 2 : 1}`}
+          />
+        </Tabs>
+        <TabPanel value={tabIndex} index={0}>
+          <article>
+            <Markdown>{topic.description}</Markdown>
+          </article>
+        </TabPanel>
+        {isStudent && (
+          <TabPanel value={tabIndex} index={1} className={timeLineDetail}>
+            <SkipButton onClick={handleSkipWatch} />
+            <svg
+              height={20}
+              width={BAR_SIZE}
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect
+                x={0}
+                y={0}
+                height={20}
+                width={BAR_SIZE}
+                stroke="black"
+                fill="transparent"
+              />
+              {generateTimeRangeBarValue({
+                timeRange,
+                timeRequired: topic.timeRequired,
+              }).map((value) => {
+                return (
+                  <React.Fragment key={value.id}>
+                    <rect
+                      x={value.positionX}
+                      width={value.width}
+                      height={20}
+                      fill={learningStatus.completed}
+                    />
+                  </React.Fragment>
+                );
+              })}
+            </svg>
+          </TabPanel>
+        )}
+        <TabPanel value={tabIndex} index={isStudent ? 2 : 1}>
+          <Typography
+            sx={{
+              display: "inline-block",
+              verticalAlign: "middle",
+              mr: 1,
+              mb: 0.5,
+            }}
+            variant="h6"
+          >
+            {topic.name}
+          </Typography>
+          <Chip
+            sx={{ mr: 1, mb: 0.5 }}
+            label={`学習時間 ${formatInterval(0, topic.timeRequired * 1000)}`}
+          />
+          {topic.license && (
+            <License sx={{ mr: 1, mb: 0.5 }} license={topic.license} />
+          )}
+          <DescriptionList
+            inline
+            value={[
+              {
+                key: "作成日",
+                value: getLocaleDateString(topic.createdAt, "ja"),
+              },
+              {
+                key: "更新日",
+                value: getLocaleDateString(topic.updatedAt, "ja"),
+              },
+              ...authors(topic),
+            ]}
+          />
+          {topic.keywords && (
+            <Box sx={{ my: 1 }}>
+              {topic.keywords.map((keyword) => {
+                return (
+                  <KeywordChip
+                    key={keyword.id}
+                    keyword={keyword}
+                    sx={{ mr: 0.5, maxWidth: "260px" }}
+                  />
+                );
+              })}
+            </Box>
+          )}
+        </TabPanel>
       </>
     );
   }

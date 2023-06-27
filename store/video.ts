@@ -1,5 +1,4 @@
-import { atom, useAtomValue } from "jotai";
-import { useUpdateAtom } from "jotai/utils";
+import { atom, useAtomValue, useSetAtom } from "jotai";
 import type { SectionSchema } from "$server/models/book/section";
 import type { VideoInstance } from "$types/videoInstance";
 import { isVideoResource } from "$utils/videoResource";
@@ -31,6 +30,6 @@ const preloadVideoAtom = atom(
 
 export function useVideoAtom() {
   const state = useAtomValue(videoAtom);
-  const preloadVideo = useUpdateAtom(preloadVideoAtom);
+  const preloadVideo = useSetAtom(preloadVideoAtom);
   return { ...state, preloadVideo };
 }

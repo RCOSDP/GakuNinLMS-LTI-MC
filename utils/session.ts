@@ -24,6 +24,6 @@ export function useSessionInit() {
   return state;
 }
 
-export function revalidateSession(): Promise<SessionSchema> {
+export function revalidateSession(): Promise<SessionSchema | void> {
   return mutate(key);
 }

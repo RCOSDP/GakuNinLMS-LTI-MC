@@ -27,19 +27,8 @@ async function findLtiMembers(
       name: true,
       email: true,
       activities: {
-        where: activityScope,
-        include: {
-          learner: { select: { id: true, name: true, email: true } },
-          topic: {
-            select: { id: true, name: true, timeRequired: true },
-          },
-        },
-      },
-    },
-    where: {
-      ltiMembers: { some: { consumerId, contextId } },
-      activities: {
-        some: {
+        where: {
+          ...activityScope,
           topic: {
             topicSection: {
               some: {
@@ -57,7 +46,16 @@ async function findLtiMembers(
             },
           },
         },
+        include: {
+          learner: { select: { id: true, name: true, email: true } },
+          topic: {
+            select: { id: true, name: true, timeRequired: true },
+          },
+        },
       },
+    },
+    where: {
+      ltiMembers: { some: { consumerId, contextId } },
     },
   });
 
@@ -89,20 +87,14 @@ async function findAllActivity(
   const ltiResourceLinks = await prisma.ltiResourceLink.findMany({
     where: { consumerId, contextId },
     orderBy: { title: "asc" },
-    select: { bookId: true },
+    select: { book: bookIncludingTopicsArg },
   });
-  const books = await prisma.book.findMany({
-    ...bookIncludingTopicsArg,
-    where: {
-      ltiResourceLinks: { some: { consumerId, contextId } },
-    },
-  });
+  const books = ltiResourceLinks.map(({ book }) => book);
   const activities = ltiMembers.flatMap(({ activities }) => activities);
   const { courseBooks, bookActivities } = toSchema({
     user,
-    ltiResourceLinks,
-    activities,
     books,
+    activities,
     ip,
   });
 

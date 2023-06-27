@@ -4,6 +4,7 @@ import { api } from "./api";
 import type { ActivitySchema } from "$server/models/activity";
 import { useSessionAtom } from "$store/session";
 import { useActivityAtom } from "$store/activity";
+import { isInstructor } from "./session";
 import {
   NEXT_PUBLIC_ACTIVITY_LTI_CONTEXT_ONLY,
   NEXT_PUBLIC_ACTIVITY_SEND_INTERVAL,
@@ -12,12 +13,13 @@ import {
 const key = "/api/v2/book/{book_id}/activity";
 const initialActivity: [] = [];
 
-async function updateBookActivity(
-  _: typeof key,
-  bookId: BookSchema["id"],
-  loggedin: boolean
-) {
-  if (!bookId || !loggedin) return;
+async function updateBookActivity({
+  bookId,
+}: {
+  key: typeof key;
+  bookId: BookSchema["id"];
+}) {
+  if (!bookId) return;
   const res = await api.apiV2BookBookIdActivityPut({
     bookId,
     currentLtiContextOnly: NEXT_PUBLIC_ACTIVITY_LTI_CONTEXT_ONLY,
@@ -27,13 +29,15 @@ async function updateBookActivity(
 
 function useBookActivity(bookId: BookSchema["id"] | undefined) {
   const { session } = useSessionAtom();
-  const loggedin = Boolean(session?.user?.id);
-  const { data } = useSWR(
-    Number.isFinite(bookId) ? [key, bookId, loggedin] : null,
+  const isLeaner = session?.user?.id && !isInstructor(session);
+  const { data = initialActivity } = useSWR(
+    isLeaner && Number.isFinite(bookId) ? { key, bookId } : null,
     updateBookActivity,
     { refreshInterval: NEXT_PUBLIC_ACTIVITY_SEND_INTERVAL * 1_000 }
   );
-  useActivityAtom(data ?? initialActivity);
+  useActivityAtom(data);
+
+  return { data };
 }
 
 export default useBookActivity;
