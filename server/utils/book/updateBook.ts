@@ -22,8 +22,7 @@ function upsertSections(bookId: Book["id"], sections: SectionProps[]) {
 
 async function updateBook(
   userId: number,
-  { id, sections, publicBooks, ...book }: Pick<Book, "id"> & BookProps,
-  ip: string
+  { id, sections, publicBooks, ...book }: Pick<Book, "id"> & BookProps
 ): Promise<BookSchema | undefined> {
   const ops: Array<PrismaPromise<unknown>> = [];
 
@@ -56,7 +55,7 @@ async function updateBook(
 
   await prisma.$transaction(ops);
 
-  return await findBook(id, userId, ip);
+  return await findBook(id, userId);
 }
 
 function removePublicBooks(

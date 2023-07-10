@@ -25,13 +25,11 @@ export type TopicWithResource = Prisma.TopicGetPayload<
 /**
  * TopicSchemaへの変換
  * @param topicWithResource データベースで扱われるリソース含むTopic
- * @param ip req.ip
  * @param options オプション
  * @param options.relatedBooksMap トピックに関連するブックの集合
  */
 export function topicToTopicSchema(
   { topicSection, ...topic }: TopicWithResource,
-  ip: string,
   options?: {
     relatedBooksMap: Map<Book["id"], Book>;
   }
@@ -39,7 +37,7 @@ export function topicToTopicSchema(
   return {
     ...topic,
     authors: topic.authors.map(authorToAuthorSchema),
-    resource: resourceToResourceSchema(topic.resource, ip),
+    resource: resourceToResourceSchema(topic.resource),
     relatedBooks: options && [
       ...topicSection
         .reduce((books, ts) => {

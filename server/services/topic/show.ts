@@ -25,10 +25,9 @@ export const showHooks = {
 
 export async function show({
   params,
-  ip,
 }: FastifyRequest<{ Params: TopicParams }>) {
   const { topic_id: topicId } = params;
-  const topic = await findTopic(topicId, ip);
+  const topic = await findTopic(topicId);
 
   return {
     status: topic == null ? 404 : 200,

@@ -69,35 +69,29 @@ export type BookWithTopics = Prisma.BookGetPayload<
   typeof bookIncludingTopicsArg
 >;
 
-export function bookToBookSchema(book: BookWithTopics, ip: string): BookSchema {
+export function bookToBookSchema(book: BookWithTopics): BookSchema {
   return {
     ...book,
     authors: book.authors.map(authorToAuthorSchema),
     ltiResourceLinks: book.ltiResourceLinks.map(ltiResourceLinkToSchema),
-    sections: book.sections.map((section) =>
-      sectionToSectionSchema(section, ip)
-    ),
+    sections: book.sections.map((section) => sectionToSectionSchema(section)),
   };
 }
 
-function sectionToSectionSchema(
-  section: SectionWithTopics,
-  ip: string
-): SectionSchema {
+function sectionToSectionSchema(section: SectionWithTopics): SectionSchema {
   return {
     ...section,
     topics: section.topicSections.map((topicSection) =>
-      topicSectionToTopicSchema(topicSection, ip)
+      topicSectionToTopicSchema(topicSection)
     ),
   };
 }
 
 function topicSectionToTopicSchema(
-  topicSection: TopicSectionWithTopic,
-  ip: string
+  topicSection: TopicSectionWithTopic
 ): TopicSchema {
   return {
     ...topicSection,
-    ...topicToTopicSchema(topicSection.topic, ip),
+    ...topicToTopicSchema(topicSection.topic),
   };
 }

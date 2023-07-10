@@ -9,8 +9,7 @@ import {
 async function findBooks(
   sort = "updated",
   page: number,
-  perPage: number,
-  ip: string
+  perPage: number
 ): Promise<BookSchema[]> {
   const books = await prisma.book.findMany({
     ...bookIncludingTopicsArg,
@@ -19,7 +18,7 @@ async function findBooks(
     take: perPage,
   });
 
-  return books.map((book) => bookToBookSchema(book, ip));
+  return books.map((book) => bookToBookSchema(book));
 }
 
 export default findBooks;

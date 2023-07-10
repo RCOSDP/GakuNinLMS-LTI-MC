@@ -17,20 +17,15 @@ export const resourceWithVideoArg = {
 type ResourceWithVideo = Prisma.ResourceGetPayload<typeof resourceWithVideoArg>;
 
 export function resourceToResourceSchema(
-  resource: ResourceWithVideo,
-  ip: string
+  resource: ResourceWithVideo
 ): ResourceSchema {
   return {
-    accessToken: getWowzaAccessToken(
-      ip,
-      resource.url,
-      resource.video?.providerUrl
-    ),
+    accessToken: getWowzaAccessToken(resource.url, resource.video?.providerUrl),
     ...resource.video,
     tracks: resource.video?.tracks.map((track) => ({
       ...track,
       url: `${API_BASE_PATH}/resource/${resource.id}/video_track/${track.id}/vtt`,
-      accessToken: getVttAccessToken(ip, resource.id, track.id),
+      accessToken: getVttAccessToken(resource.id, track.id),
     })),
     ...resource,
   };
