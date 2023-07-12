@@ -1,4 +1,5 @@
 import { useCallback, useMemo } from "react";
+import { useRouter } from "next/router";
 import type { ContentSchema } from "$server/models/content";
 import type { BookSchema } from "$server/models/book";
 import type { SessionSchema } from "$server/models/session";
@@ -10,6 +11,7 @@ import {
   updateLtiResourceLink,
 } from "$utils/ltiResourceLink";
 import { revalidateContents } from "./useContents";
+import { pagesPath } from "./$path";
 
 /**
  * セッションのltiResourceLinkRequestからltiResourceLinkを作成
@@ -18,9 +20,9 @@ import { revalidateContents } from "./useContents";
  */
 function getLtiResourceLink(
   session?: SessionSchema
-): Omit<LtiResourceLinkSchema, "creatorId" | "bookId"> | null {
-  if (session == null) return null;
-  if (session.ltiResourceLinkRequest?.id == null) return null;
+): Omit<LtiResourceLinkSchema, "creatorId" | "bookId"> | undefined {
+  if (session == null) return;
+  if (session.ltiResourceLinkRequest?.id == null) return;
 
   const ltiResourceLink = {
     consumerId: session.oauthClient.id,
@@ -35,24 +37,55 @@ function getLtiResourceLink(
 }
 
 function useBookLinkingHandlers() {
+  const router = useRouter();
   const { session } = useSessionAtom();
   const ltiResourceLink = useMemo(() => getLtiResourceLink(session), [session]);
   const { query } = useSearchAtom();
+
+  const update = useCallback(
+    async (
+      bookId: BookSchema["id"],
+      ltiResourceLink?: Omit<LtiResourceLinkSchema, "creatorId" | "bookId">
+    ) => {
+      if (session?.ltiMessageType === "LtiDeepLinkingRequest") {
+        await router.push(pagesPath.book.linking.$url({ query: { bookId } }));
+        return;
+      }
+
+      if (ltiResourceLink) {
+        await updateLtiResourceLink({ ...ltiResourceLink, bookId });
+        return;
+      }
+    },
+    [router, session]
+  );
+
+  const destroy = useCallback(
+    async (
+      ltiResourceLink?: Omit<LtiResourceLinkSchema, "creatorId" | "bookId">
+    ) => {
+      if (ltiResourceLink == null) return;
+
+      await destroyLtiResourceLink(ltiResourceLink);
+    },
+    []
+  );
+
   const onBookLinking = useCallback(
     async (content: Pick<BookSchema, "id"> | ContentSchema, linking = true) => {
       if ("type" in content && content.type !== "book") return;
-      if (ltiResourceLink == null) return;
 
       if (linking) {
-        await updateLtiResourceLink({ ...ltiResourceLink, bookId: content.id });
+        await update(content.id, ltiResourceLink);
       } else {
-        await destroyLtiResourceLink(ltiResourceLink);
+        await destroy(ltiResourceLink);
       }
 
       await revalidateContents(query);
     },
-    [ltiResourceLink, query]
+    [update, destroy, ltiResourceLink, query]
   );
+
   return { onBookLinking };
 }
 
