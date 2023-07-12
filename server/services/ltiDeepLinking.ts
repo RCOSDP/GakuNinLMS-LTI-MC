@@ -3,7 +3,7 @@ import { outdent } from "outdent";
 import authUser from "$server/auth/authUser";
 import authInstructor from "$server/auth/authInstructor";
 import type { FromSchema, JSONSchema } from "json-schema-to-ts";
-import bookExists from "$server/utils/book/bookExists";
+import findBook from "$server/utils/book/findBook";
 import { FRONTEND_ORIGIN } from "$server/utils/env";
 import { createPrivateKey } from "$server/utils/ltiv1p3/jwk";
 import findClient from "$server/utils/ltiv1p3/findClient";
@@ -60,9 +60,9 @@ export async function index(req: FastifyRequest<{ Querystring: Query }>) {
 
   if (!privateKey) return { status: 403 };
 
-  const found = await bookExists(req.query.book_id);
+  const book = await findBook(req.query.book_id, req.session.user.id);
 
-  if (!found) return { status: 404 };
+  if (!book) return { status: 404 };
 
   const jwt = await getDlResponseJwt(client, {
     privateKey,
@@ -71,9 +71,10 @@ export async function index(req: FastifyRequest<{ Querystring: Query }>) {
     contentItems: [
       {
         type: "ltiResourceLink",
+        title: book.name,
         url: `${
           FRONTEND_ORIGIN || `${req.protocol}://${req.hostname}`
-        }/book?bookId=${found.id}`,
+        }/book?bookId=${book.id}`,
       },
     ],
   });
