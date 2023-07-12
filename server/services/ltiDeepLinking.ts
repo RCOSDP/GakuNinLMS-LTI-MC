@@ -72,6 +72,7 @@ export async function index(req: FastifyRequest<{ Querystring: Query }>) {
       {
         type: "ltiResourceLink",
         title: book.name,
+        text: book.description,
         url: `${
           FRONTEND_ORIGIN || `${req.protocol}://${req.hostname}`
         }/book?bookId=${book.id}`,
