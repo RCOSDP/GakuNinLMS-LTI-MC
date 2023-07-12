@@ -79,7 +79,7 @@ class ImportBooksUtil {
 
       const books = [];
       for (const book of await prisma.$transaction(transactions)) {
-        const res = await findBook(book.id, this.user.id, "");
+        const res = await findBook(book.id, this.user.id);
         if (res) books.push(res as BookSchema);
       }
 
@@ -101,7 +101,7 @@ class ImportBooksUtil {
       ]);
 
       for (const book of books) {
-        const res = await findBook(book.id, this.user.id, "");
+        const res = await findBook(book.id, this.user.id);
         if (res) this.books.push(res as BookSchema);
       }
     } catch (e) {

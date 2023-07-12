@@ -42,12 +42,10 @@ export const hooks = {
 export async function index({
   session,
   query,
-  ip,
 }: FastifyRequest<{ Querystring: Query }>) {
   const body = await findAllActivity(
     session,
-    Boolean(query.current_lti_context_only),
-    ip
+    Boolean(query.current_lti_context_only)
   );
 
   return { status: 200, body };
