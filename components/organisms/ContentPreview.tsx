@@ -124,6 +124,7 @@ type Props = Parameters<typeof Checkbox>[0] & {
   onKeywordClick(keyword: Pick<KeywordSchema, "name">): void;
   onRelatedBookClick?(id: RelatedBook): void;
   linked?: boolean;
+  isDeepLink?: boolean;
 };
 
 export default function ContentPreview({
@@ -135,11 +136,10 @@ export default function ContentPreview({
   onKeywordClick,
   onRelatedBookClick,
   linked = content.type === "book" ? false : undefined,
+  isDeepLink,
   checked,
   ...checkboxProps
 }: Props) {
-  const isDeepLink = true; // TODO:sessionに保存したDeepLinkのtarget_urlで判定する
-
   const lineClamp = useLineClampStyles({
     fontSize: "0.75rem",
     lineClamp: 2,
