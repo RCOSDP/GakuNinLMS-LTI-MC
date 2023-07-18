@@ -6,6 +6,7 @@ import {
   findLtiResourceLink,
   upsertLtiResourceLink,
 } from "$server/utils/ltiResourceLink";
+import { isInstructor } from "$server/utils/ltiv1p3/roles";
 import { getSystemSettings } from "$server/utils/systemSettings";
 import getValidUrl from "$server/utils/getValidUrl";
 
@@ -35,6 +36,7 @@ async function init({ session }: FastifyRequest) {
     ltiTargetLink.pathname === "/book" &&
     ltiTargetLink.searchParams.get("bookId");
   if (
+    isInstructor(session.ltiRoles) &&
     session.ltiMessageType === "LtiResourceLinkRequest" &&
     session.ltiResourceLinkRequest?.id &&
     typeof bookId === "string" &&
@@ -42,7 +44,7 @@ async function init({ session }: FastifyRequest) {
   ) {
     ltiResourceLink = {
       bookId: Number(bookId),
-      creatorId: session.user.id,
+      creatorId: ltiResourceLink?.creatorId ?? session.user.id,
       consumerId: session.oauthClient.id,
       contextId: session.ltiContext.id,
       id: session.ltiResourceLinkRequest.id,
