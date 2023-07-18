@@ -16,10 +16,12 @@ import type { ContentSchema } from "$server/models/content";
 import type { BookSchema } from "$server/models/book";
 import type { LinkedBook } from "$types/linkedBook";
 import { useSearchAtom } from "$store/search";
+import type { SessionSchema } from "$server/models/session";
 
 export type Props = {
   totalCount: number;
   contents: ContentSchema[];
+  session?: SessionSchema;
   linkedBook?: LinkedBook;
   loading?: boolean;
   onContentPreviewClick(content: ContentSchema): void;
@@ -31,11 +33,10 @@ export type Props = {
 };
 
 export default function Books(props: Props) {
-  const isDeepLink = true; // TODO:sessionに保存したDeepLinkのtarget_urlで判定する
-
   const {
     totalCount,
     contents,
+    session,
     linkedBook,
     loading = false,
     onContentPreviewClick,
@@ -45,6 +46,7 @@ export default function Books(props: Props) {
     onBookNewClick,
     onBooksImportClick,
   } = props;
+  const isDeepLink = !!session?.ltiDlSettings?.deep_link_return_url;
   const searchProps = useSearchAtom();
   const handleBookNewClick = () => onBookNewClick();
   const handleBooksImportClick = () => onBooksImportClick();
@@ -98,6 +100,7 @@ export default function Books(props: Props) {
             key={content.id}
             content={content}
             linked={content.id === linkedBook?.id}
+            isDeepLink={isDeepLink}
             onContentPreviewClick={onContentPreviewClick}
             onContentEditClick={onContentEditClick}
             onContentLinkClick={onContentLinkClick}
