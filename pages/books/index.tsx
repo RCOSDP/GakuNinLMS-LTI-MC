@@ -8,14 +8,8 @@ import BookPreviewDialog from "$organisms/BookPreviewDialog";
 import useBooks from "$utils/useBooks";
 import useLinkedBook from "$utils/useLinkedBook";
 import { pagesPath } from "$utils/$path";
-import {
-  updateLtiResourceLink,
-  destroyLtiResourceLink,
-} from "$utils/ltiResourceLink";
-import getLtiResourceLink from "$utils/getLtiResourceLink";
 import useDialogProps from "$utils/useDialogProps";
-import { useSearchAtom } from "$store/search";
-import { revalidateContents } from "utils/useContents";
+import useBookLinkingHandlers from "$utils/useBookLinkingHandlers";
 
 const Books = (
   props: Omit<
@@ -26,14 +20,13 @@ const Books = (
 
 function Index() {
   const router = useRouter();
-  const { session, isContentEditable } = useSessionAtom();
+  const { isContentEditable } = useSessionAtom();
   const { linkedBook } = useLinkedBook();
   const {
     data: previewContent,
     dispatch: onContentPreviewClick,
     ...dialogProps
   } = useDialogProps<ContentSchema>();
-  const { query } = useSearchAtom();
   const onContentEditClick = (book: Pick<ContentSchema, "id" | "authors">) => {
     const action = isContentEditable(book) ? "edit" : "generate";
     return router.push(
@@ -52,24 +45,7 @@ function Index() {
       pagesPath.books.import.$url({ query: { context: "books" } })
     );
   };
-  const onContentLinkClick = async (
-    content: ContentSchema,
-    checked: boolean
-  ) => {
-    const book = content as BookSchema;
-    const ltiResourceLink = getLtiResourceLink(session);
-    if (ltiResourceLink == null) return;
-    const bookId = book.id;
-    if (checked) {
-      await updateLtiResourceLink({ ...ltiResourceLink, bookId });
-    } else {
-      const link = book.ltiResourceLinks.find(
-        ({ consumerId }) => consumerId === session?.oauthClient.id
-      );
-      if (link) await destroyLtiResourceLink(link);
-    }
-    await revalidateContents(query);
-  };
+  const { onBookLinking: onContentLinkClick } = useBookLinkingHandlers();
   const handleLinkedBookClick = (book: Pick<BookSchema, "id">) =>
     router.push(pagesPath.book.$url({ query: { bookId: book.id } }));
   const handlers = {
