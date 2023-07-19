@@ -28,6 +28,7 @@ const useStyles = makeStyles((theme) => ({
   inner: {
     display: "flex",
     alignItems: "center",
+    justifyContent: "space-between",
     maxWidth: theme.breakpoints.values.lg,
     width: "100%",
     margin: "0 auto",
@@ -79,8 +80,6 @@ const role = (session: SessionSchema) => {
 };
 
 function AppBar(props: Props, ref: Ref<HTMLDivElement>) {
-  const isDeepLink = true; // TODO:sessionに保存したDeepLinkのtarget_urlで判定する
-
   const {
     session,
     onBooksClick,
@@ -90,6 +89,7 @@ function AppBar(props: Props, ref: Ref<HTMLDivElement>) {
     onDashboardClick,
     ...others
   } = props;
+  const isDeepLink = !!session.ltiDlSettings?.deep_link_return_url;
   const appBarClasses = useAppBarStyles();
   const classes = useStyles();
   const [open, setOpen] = useState(false);
@@ -190,22 +190,24 @@ function AppBar(props: Props, ref: Ref<HTMLDivElement>) {
               )}
             </div>
           )}
-          <div className={clsx(classes.user, classes.margin)}>
-            <p>{session.user.name}</p>
-            <p className={classes.roles}>{role(session)}</p>
+          <div>
+            <div className={clsx(classes.user, classes.margin)}>
+              <p>{session.user.name}</p>
+              <p className={classes.roles}>{role(session)}</p>
+            </div>
+            {session && (
+              <>
+                <Button variant="text" color="primary" onClick={handleClick}>
+                  LTI情報
+                </Button>
+                <LtiItemDialog
+                  open={open}
+                  onClose={handleClose}
+                  session={session}
+                />
+              </>
+            )}
           </div>
-          {session && (
-            <>
-              <Button variant="text" color="primary" onClick={handleClick}>
-                LTI情報
-              </Button>
-              <LtiItemDialog
-                open={open}
-                onClose={handleClose}
-                session={session}
-              />
-            </>
-          )}
         </div>
       </Toolbar>
       <Snackbar

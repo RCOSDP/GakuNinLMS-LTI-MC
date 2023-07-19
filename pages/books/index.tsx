@@ -20,7 +20,7 @@ const Books = (
 
 function Index() {
   const router = useRouter();
-  const { isContentEditable } = useSessionAtom();
+  const { session, isContentEditable } = useSessionAtom();
   const { linkedBook } = useLinkedBook();
   const {
     data: previewContent,
@@ -59,7 +59,7 @@ function Index() {
 
   return (
     <>
-      <Books linkedBook={linkedBook} {...handlers} />
+      <Books session={session} linkedBook={linkedBook} {...handlers} />
       {previewContent?.type === "book" && (
         <BookPreviewDialog {...dialogProps} book={previewContent}>
           {(props) => <Book {...props} />}
