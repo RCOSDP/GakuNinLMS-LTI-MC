@@ -35,8 +35,6 @@ export type PlayerEvents = {
   timeupdate: PlayerEvent;
   playbackratechange: PlayerEvent & { playbackRate: number };
   texttrackchange: PlayerEvent & { language?: string };
-  /** @deprecated */
-  firstplay: PlayerEvent;
 } & CustomEvents;
 
 const youtubeType = "video/youtube";
@@ -107,7 +105,6 @@ export class PlayerTracker extends (EventEmitter as {
       player.on(event, () => this.emit(event, this.stats));
     }
 
-    player.on("firstplay", () => this.emit("firstplay", this.stats));
     player.on("ratechange", () => {
       this.emit("playbackratechange", {
         ...this.stats,
