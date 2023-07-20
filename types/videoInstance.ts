@@ -9,6 +9,8 @@ export type VideoJsInstance = {
   player: VideoJsPlayer;
   tracks?: VideoJsTextTrackList;
   stopTimeOver: boolean;
+  /** 初回再生 */
+  firstPlay: boolean;
 };
 
 export type VimeoInstance = {
