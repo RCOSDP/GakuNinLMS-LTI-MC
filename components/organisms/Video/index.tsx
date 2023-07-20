@@ -225,8 +225,14 @@ export default function Video({
         if (videoInstance.stopTimeOver) videoInstance.player.pause();
       };
       const handleFirstPlay = () => {
-        if (Number.isFinite(startTime))
-          videoInstance.player.currentTime(startTime || 0);
+        if (!videoInstance.firstPlay) return;
+
+        // NOTE: 初回playイベントは再生位置を移動して再生する
+        if (startTime && Number.isFinite(startTime)) {
+          videoInstance.player.currentTime(startTime);
+        }
+
+        videoInstance.firstPlay = false;
       };
       const handleReady = () => {
         if (videoInstance.stopTimeOver) {
