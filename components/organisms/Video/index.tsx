@@ -239,7 +239,7 @@ export default function Video({
       };
 
       videoInstance.player.on("play", handlePlay);
-      videoInstance.player.on("firstplay", handleFirstPlay);
+      videoInstance.player.one("play", handleFirstPlay);
       videoInstance.player.ready(handleReady);
     }
     // TODO: videoの内容の変更検知は機能しないので修正したい。Mapオブジェクトでの管理をやめるかMap.prototype.set()を使用しないようにするなど必要かもしれない。
