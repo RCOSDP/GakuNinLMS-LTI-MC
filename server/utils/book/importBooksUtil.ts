@@ -40,7 +40,7 @@ class ImportBooksUtil {
   books: BookSchema[];
   errors: string[];
   timeRequired: number;
-  tmpdir?: string;
+  tmpdir: string;
   unzippedFiles: string[];
 
   constructor(user: UserSchema, params: BooksImportParams) {
@@ -49,6 +49,7 @@ class ImportBooksUtil {
     this.books = [];
     this.errors = [];
     this.timeRequired = 0;
+    this.tmpdir = "";
     this.unzippedFiles = [];
   }
 
@@ -177,7 +178,10 @@ class ImportBooksUtil {
 
     return new Promise((resolve) => {
       fs.createReadStream(file)
-        .pipe(unzipper.Extract({ path: this.tmpdir }))
+        .pipe(unzipper.Parse())
+        .on("entry", (entry) => {
+          entry.pipe(fs.createWriteStream(path.join(this.tmpdir, entry.path)));
+        })
         .on("close", () => {
           this.unzippedFiles = recursive(this.tmpdir);
           const jsonfiles: string[] = this.unzippedFiles.filter((filename) =>
