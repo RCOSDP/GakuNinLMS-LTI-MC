@@ -11,9 +11,7 @@ export default {
 const linkedBook = { ...book, editable: true };
 
 const Template: Story<Parameters<typeof DeepLinkBooks>[0]> = (args) => (
-  <>
-    <DeepLinkBooks {...args} />
-  </>
+  <DeepLinkBooks {...args} />
 );
 
 export const Default = Template.bind({});
