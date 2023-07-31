@@ -86,6 +86,14 @@ function useBookLinkingHandlers() {
     [update, destroy, ltiResourceLink, query]
   );
 
+  // LTI Resource Link Request かつ Target URI が設定済みの場合は変更禁止
+  if (
+    session?.ltiMessageType === "LtiResourceLinkRequest" &&
+    Boolean(session?.ltiTargetLinkUri)
+  ) {
+    return {};
+  }
+
   return { onBookLinking };
 }
 
