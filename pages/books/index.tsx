@@ -68,13 +68,20 @@ function Index() {
 
   if (isDeepLink) {
     return (
-      <DeepLinkBooks
-        linkedBook={linkedBook}
-        onContentPreviewClick={onContentPreviewClick}
-        onContentEditClick={onContentEditClick}
-        onContentLinkClick={onContentLinkClick}
-        isDeepLink={isDeepLink}
-      />
+      <>
+        <DeepLinkBooks
+          linkedBook={linkedBook}
+          onContentPreviewClick={onContentPreviewClick}
+          onContentEditClick={onContentEditClick}
+          onContentLinkClick={onContentLinkClick}
+          isDeepLink={isDeepLink}
+        />
+        {previewContent?.type === "book" && (
+          <BookPreviewDialog {...dialogProps} book={previewContent}>
+            {(props) => <Book {...props} />}
+          </BookPreviewDialog>
+        )}
+      </>
     );
   }
 
