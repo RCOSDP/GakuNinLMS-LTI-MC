@@ -3,6 +3,7 @@ import type { ContentSchema } from "$server/models/content";
 import type { BookSchema } from "$server/models/book";
 import { useSessionAtom } from "$store/session";
 import BooksTemplate from "$templates/Books";
+import DeepLinkBooksTemplate from "$templates/DeepLinkBooks";
 import Book from "$templates/Book";
 import BookPreviewDialog from "$organisms/BookPreviewDialog";
 import useBooks from "$utils/useBooks";
@@ -17,6 +18,13 @@ const Books = (
     keyof ReturnType<typeof useBooks>
   >
 ) => <BooksTemplate {...props} {...useBooks()} />;
+
+const DeepLinkBooks = (
+  props: Omit<
+    Parameters<typeof DeepLinkBooksTemplate>[0],
+    keyof ReturnType<typeof useBooks>
+  >
+) => <DeepLinkBooksTemplate {...props} {...useBooks()} />;
 
 function Index() {
   const router = useRouter();
@@ -56,10 +64,30 @@ function Index() {
     onContentLinkClick,
     onLinkedBookClick: handleLinkedBookClick,
   };
+  const isDeepLink = !!session?.ltiDlSettings?.deep_link_return_url;
+
+  if (isDeepLink) {
+    return (
+      <>
+        <DeepLinkBooks
+          linkedBook={linkedBook}
+          onContentPreviewClick={onContentPreviewClick}
+          onContentEditClick={onContentEditClick}
+          onContentLinkClick={onContentLinkClick}
+          isDeepLink={isDeepLink}
+        />
+        {previewContent?.type === "book" && (
+          <BookPreviewDialog {...dialogProps} book={previewContent}>
+            {(props) => <Book {...props} />}
+          </BookPreviewDialog>
+        )}
+      </>
+    );
+  }
 
   return (
     <>
-      <Books session={session} linkedBook={linkedBook} {...handlers} />
+      <Books linkedBook={linkedBook} {...handlers} />
       {previewContent?.type === "book" && (
         <BookPreviewDialog {...dialogProps} book={previewContent}>
           {(props) => <Book {...props} />}

@@ -16,12 +16,10 @@ import type { ContentSchema } from "$server/models/content";
 import type { BookSchema } from "$server/models/book";
 import type { LinkedBook } from "$types/linkedBook";
 import { useSearchAtom } from "$store/search";
-import type { SessionSchema } from "$server/models/session";
 
 export type Props = {
   totalCount: number;
   contents: ContentSchema[];
-  session?: SessionSchema;
   linkedBook?: LinkedBook;
   loading?: boolean;
   onContentPreviewClick(content: ContentSchema): void;
@@ -34,7 +32,6 @@ export type Props = {
 
 export default function Books(props: Props) {
   const {
-    session,
     totalCount,
     contents,
     linkedBook,
@@ -46,7 +43,6 @@ export default function Books(props: Props) {
     onBookNewClick,
     onBooksImportClick,
   } = props;
-  const isDeepLink = !!session?.ltiDlSettings?.deep_link_return_url;
   const searchProps = useSearchAtom();
   const handleBookNewClick = () => onBookNewClick();
   const handleBooksImportClick = () => onBooksImportClick();
@@ -55,26 +51,20 @@ export default function Books(props: Props) {
     <Container twoColumns maxWidth="xl">
       <Typography sx={{ mt: 5, gridArea: "title" }} variant="h4">
         ブック
-        {!isDeepLink && (
-          <Button size="small" color="primary" onClick={handleBookNewClick}>
-            <AddIcon sx={{ mr: 0.5 }} />
-            ブックの作成
-          </Button>
-        )}
-        {!isDeepLink && (
-          <Button size="small" color="primary" onClick={handleBooksImportClick}>
-            <AddIcon sx={{ mr: 0.5 }} />
-            一括登録
-          </Button>
-        )}
+        <Button size="small" color="primary" onClick={handleBookNewClick}>
+          <AddIcon sx={{ mr: 0.5 }} />
+          ブックの作成
+        </Button>
+        <Button size="small" color="primary" onClick={handleBooksImportClick}>
+          <AddIcon sx={{ mr: 0.5 }} />
+          一括登録
+        </Button>
       </Typography>
-      {!isDeepLink && (
-        <LinkInfo
-          sx={{ mt: 1, gridArea: "description" }}
-          book={linkedBook}
-          onLinkedBookClick={onLinkedBookClick}
-        />
-      )}
+      <LinkInfo
+        sx={{ mt: 1, gridArea: "description" }}
+        book={linkedBook}
+        onLinkedBookClick={onLinkedBookClick}
+      />
       <ActionHeader sx={{ gridArea: "action-header" }}>
         <ContentTypeIndicator type="book" />
         <SortSelect onSortChange={searchProps.onSortChange} />
@@ -100,7 +90,6 @@ export default function Books(props: Props) {
             key={content.id}
             content={content}
             linked={content.id === linkedBook?.id}
-            isDeepLink={isDeepLink}
             onContentPreviewClick={onContentPreviewClick}
             onContentEditClick={onContentEditClick}
             onContentLinkClick={onContentLinkClick}
