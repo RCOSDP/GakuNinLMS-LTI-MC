@@ -32,7 +32,7 @@ function useBookNewHandlers(
           ...authors,
         ],
       });
-      if (submitWithLink) await onBookLinking({ id: book.id });
+      if (submitWithLink) await onBookLinking?.({ id: book.id });
       await router.replace(
         pagesPath.book.edit.$url({
           query: {

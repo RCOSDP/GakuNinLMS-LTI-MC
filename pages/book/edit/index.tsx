@@ -43,7 +43,7 @@ function Edit({ bookId, context }: Query) {
     ...props
   }: BookPropsWithSubmitOptions) {
     await updateBook({ id: bookId, ...props });
-    if (submitWithLink) await onBookLinking({ id: bookId });
+    if (submitWithLink) await onBookLinking?.({ id: bookId });
     return back();
   }
   async function handleDelete({ id }: Pick<BookSchema, "id">) {

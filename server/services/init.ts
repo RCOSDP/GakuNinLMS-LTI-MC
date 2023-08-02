@@ -35,12 +35,18 @@ async function init({ session }: FastifyRequest) {
     ltiTargetLink &&
     ltiTargetLink.pathname === "/book" &&
     ltiTargetLink.searchParams.get("bookId");
+  // ただし `/book?bookId` 形式以外の場合は Target Link URI を無効値とする
+  const ltiTargetLinkUri =
+    ltiTargetLink &&
+    typeof bookId === "string" &&
+    Number.isInteger(Number(bookId))
+      ? ltiTargetLink.href
+      : undefined;
   if (
     isInstructor(session.ltiRoles) &&
     session.ltiMessageType === "LtiResourceLinkRequest" &&
     session.ltiResourceLinkRequest?.id &&
-    typeof bookId === "string" &&
-    Number.isInteger(Number(bookId))
+    Boolean(ltiTargetLinkUri)
   ) {
     ltiResourceLink = {
       bookId: Number(bookId),
@@ -73,7 +79,12 @@ async function init({ session }: FastifyRequest) {
     email: session.ltiUser.email ?? "",
   });
 
-  Object.assign(session, { ltiResourceLink, user, systemSettings });
+  Object.assign(session, {
+    ltiTargetLinkUri,
+    ltiResourceLink,
+    user,
+    systemSettings,
+  });
 
   return {
     status: 302,
