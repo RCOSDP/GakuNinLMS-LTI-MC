@@ -29,7 +29,7 @@ export type Props = {
   loading?: boolean;
   onContentPreviewClick(content: ContentSchema): void;
   onContentEditClick(content: ContentSchema): void;
-  onContentLinkClick(content: ContentSchema, checked: boolean): void;
+  onContentLinkClick?(content: ContentSchema, checked: boolean): void;
   isDeepLink: boolean;
 };
 
