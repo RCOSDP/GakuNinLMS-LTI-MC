@@ -8,9 +8,10 @@ import ContentImport from "$templates/ContentImport";
 import importBooks from "$utils/importBooks";
 import { pagesPath } from "$utils/$path";
 
-export type Query = { context?: "books" };
+export type Query = { context?: "books"; topicId?: number };
 
-function Import({ context }: Query) {
+function Import({ context, topicId }: Query) {
+  console.log("## topics/import topicId:", topicId);
   const router = useRouter();
   const [importResult, setImportResult] = useState<BooksImportResult>({});
   const back = () => {
@@ -47,7 +48,8 @@ function Import({ context }: Query) {
 function Router() {
   const router = useRouter();
   const { context }: Pick<Query, "context"> = router.query;
-  return <Import context={context} />;
+  const { topicId }: Pick<Query, "topicId"> = router.query;
+  return <Import context={context} topicId={topicId} />;
 }
 
 export default Router;
