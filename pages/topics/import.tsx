@@ -5,12 +5,11 @@ import type {
   BooksImportResult,
 } from "$server/models/booksImportParams";
 import ContentImport from "$templates/ContentImport";
-import importBooks from "$utils/importBooks";
+import importTopic from "$utils/importTopic";
 
 export type Query = { topicId?: number };
 
 function Import({ topicId }: Query) {
-  console.log("## topics/import topicId:", topicId);
   const router = useRouter();
   const [importResult, setImportResult] = useState<BooksImportResult>({});
   const back = () => {
@@ -18,7 +17,9 @@ function Import({ topicId }: Query) {
   };
   const handleSubmit = async (props: BooksImportParams) => {
     try {
-      setImportResult(await importBooks(props));
+      if (topicId) {
+        setImportResult(await importTopic(topicId, props));
+      }
     } catch (e) {
       // @ts-expect-error TODO: Object is of type 'unknown'
       setImportResult(await e.json());
