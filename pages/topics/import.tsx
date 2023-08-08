@@ -6,21 +6,15 @@ import type {
 } from "$server/models/booksImportParams";
 import ContentImport from "$templates/ContentImport";
 import importBooks from "$utils/importBooks";
-import { pagesPath } from "$utils/$path";
 
-export type Query = { context?: "books"; topicId?: number };
+export type Query = { topicId?: number };
 
-function Import({ context, topicId }: Query) {
+function Import({ topicId }: Query) {
   console.log("## topics/import topicId:", topicId);
   const router = useRouter();
   const [importResult, setImportResult] = useState<BooksImportResult>({});
   const back = () => {
-    switch (context) {
-      case "books":
-        return router.push(pagesPath[context].$url());
-      default:
-        return router.push(pagesPath.books.$url());
-    }
+    return router.back();
   };
   const handleSubmit = async (props: BooksImportParams) => {
     try {
@@ -47,9 +41,8 @@ function Import({ context, topicId }: Query) {
 
 function Router() {
   const router = useRouter();
-  const { context }: Pick<Query, "context"> = router.query;
   const { topicId }: Pick<Query, "topicId"> = router.query;
-  return <Import context={context} topicId={topicId} />;
+  return <Import topicId={topicId} />;
 }
 
 export default Router;
