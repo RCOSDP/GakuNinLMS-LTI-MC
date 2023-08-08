@@ -10,6 +10,8 @@ export * from './InlineObject';
 export * from './InlineObject1';
 export * from './InlineObject10';
 export * from './InlineObject11';
+export * from './InlineObject12';
+export * from './InlineObject13';
 export * from './InlineObject2';
 export * from './InlineObject3';
 export * from './InlineObject4';

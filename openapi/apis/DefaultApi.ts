@@ -30,6 +30,12 @@ import {
     InlineObject11,
     InlineObject11FromJSON,
     InlineObject11ToJSON,
+    InlineObject12,
+    InlineObject12FromJSON,
+    InlineObject12ToJSON,
+    InlineObject13,
+    InlineObject13FromJSON,
+    InlineObject13ToJSON,
     InlineObject2,
     InlineObject2FromJSON,
     InlineObject2ToJSON,
@@ -149,6 +155,11 @@ export interface ApiV2BookBookIdGetRequest {
     bookId: number;
 }
 
+export interface ApiV2BookBookIdImportPostRequest {
+    bookId: number;
+    body?: InlineObject5;
+}
+
 export interface ApiV2BookBookIdPutRequest {
     bookId: number;
     body?: InlineObject2;
@@ -174,11 +185,11 @@ export interface ApiV2BooksGetRequest {
 }
 
 export interface ApiV2BooksImportPostRequest {
-    body?: InlineObject5;
+    body?: InlineObject6;
 }
 
 export interface ApiV2EventPostRequest {
-    body?: InlineObject11;
+    body?: InlineObject13;
 }
 
 export interface ApiV2LtiCallbackPostRequest {
@@ -258,7 +269,7 @@ export interface ApiV2ResourceResourceIdOembedGetRequest {
 
 export interface ApiV2ResourceResourceIdVideoTrackPostRequest {
     resourceId: number;
-    body?: InlineObject10;
+    body?: InlineObject12;
 }
 
 export interface ApiV2ResourceResourceIdVideoTrackVideoTrackIdDeleteRequest {
@@ -288,18 +299,18 @@ export interface ApiV2SearchGetRequest {
 }
 
 export interface ApiV2TopicPostRequest {
-    body?: InlineObject7;
+    body?: InlineObject8;
 }
 
 export interface ApiV2TopicTopicIdActivityPutRequest {
     topicId: number;
     currentLtiContextOnly?: boolean;
-    body?: InlineObject8;
+    body?: InlineObject9;
 }
 
 export interface ApiV2TopicTopicIdAuthorsPutRequest {
     topicId: number;
-    body?: InlineObject9;
+    body?: InlineObject10;
 }
 
 export interface ApiV2TopicTopicIdDeleteRequest {
@@ -310,9 +321,14 @@ export interface ApiV2TopicTopicIdGetRequest {
     topicId: number;
 }
 
+export interface ApiV2TopicTopicIdImportPostRequest {
+    topicId: number;
+    body?: InlineObject11;
+}
+
 export interface ApiV2TopicTopicIdPutRequest {
     topicId: number;
-    body?: InlineObject6;
+    body?: InlineObject7;
 }
 
 export interface ApiV2TopicsGetRequest {
@@ -556,6 +572,41 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
+     * ブックを上書きインポートします。 教員または管理者でなければなりません。
+     * ブックの上書きインポート
+     */
+    async apiV2BookBookIdImportPostRaw(requestParameters: ApiV2BookBookIdImportPostRequest): Promise<runtime.ApiResponse<InlineResponse2011>> {
+        if (requestParameters.bookId === null || requestParameters.bookId === undefined) {
+            throw new runtime.RequiredError('bookId','Required parameter requestParameters.bookId was null or undefined when calling apiV2BookBookIdImportPost.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/api/v2/book/{book_id}/import`.replace(`{${"book_id"}}`, encodeURIComponent(String(requestParameters.bookId))),
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: InlineObject5ToJSON(requestParameters.body),
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2011FromJSON(jsonValue));
+    }
+
+    /**
+     * ブックを上書きインポートします。 教員または管理者でなければなりません。
+     * ブックの上書きインポート
+     */
+    async apiV2BookBookIdImportPost(requestParameters: ApiV2BookBookIdImportPostRequest): Promise<InlineResponse2011> {
+        const response = await this.apiV2BookBookIdImportPostRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
      * ブックを更新します。 教員または管理者でなければなりません。 教員は自身の著作のブックでなければなりません。
      * ブックの更新
      */
@@ -745,7 +796,7 @@ export class DefaultApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: InlineObject5ToJSON(requestParameters.body),
+            body: InlineObject6ToJSON(requestParameters.body),
         });
 
         return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2011FromJSON(jsonValue));
@@ -776,7 +827,7 @@ export class DefaultApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: InlineObject11ToJSON(requestParameters.body),
+            body: InlineObject13ToJSON(requestParameters.body),
         });
 
         return new runtime.VoidApiResponse(response);
@@ -1485,7 +1536,7 @@ export class DefaultApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: InlineObject10ToJSON(requestParameters.body),
+            body: InlineObject12ToJSON(requestParameters.body),
         });
 
         return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2004ResourceTracksFromJSON(jsonValue));
@@ -1723,7 +1774,7 @@ export class DefaultApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: InlineObject7ToJSON(requestParameters.body),
+            body: InlineObject8ToJSON(requestParameters.body),
         });
 
         return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2004TopicsFromJSON(jsonValue));
@@ -1762,7 +1813,7 @@ export class DefaultApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: InlineObject8ToJSON(requestParameters.body),
+            body: InlineObject9ToJSON(requestParameters.body),
         });
 
         return new runtime.JSONApiResponse<any>(response);
@@ -1797,7 +1848,7 @@ export class DefaultApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: InlineObject9ToJSON(requestParameters.body),
+            body: InlineObject10ToJSON(requestParameters.body),
         });
 
         return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(InlineResponse2002BookAuthorsFromJSON));
@@ -1876,6 +1927,41 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
+     * トピックを上書きインポートします。 教員または管理者でなければなりません。
+     * トピックの上書きインポート
+     */
+    async apiV2TopicTopicIdImportPostRaw(requestParameters: ApiV2TopicTopicIdImportPostRequest): Promise<runtime.ApiResponse<InlineResponse2011>> {
+        if (requestParameters.topicId === null || requestParameters.topicId === undefined) {
+            throw new runtime.RequiredError('topicId','Required parameter requestParameters.topicId was null or undefined when calling apiV2TopicTopicIdImportPost.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/api/v2/topic/{topic_id}/import`.replace(`{${"topic_id"}}`, encodeURIComponent(String(requestParameters.topicId))),
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: InlineObject11ToJSON(requestParameters.body),
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2011FromJSON(jsonValue));
+    }
+
+    /**
+     * トピックを上書きインポートします。 教員または管理者でなければなりません。
+     * トピックの上書きインポート
+     */
+    async apiV2TopicTopicIdImportPost(requestParameters: ApiV2TopicTopicIdImportPostRequest): Promise<InlineResponse2011> {
+        const response = await this.apiV2TopicTopicIdImportPostRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
      * トピックを更新します。 教員または管理者でなければなりません。 教員は自身の著作のトピックでなければなりません。
      * トピックの更新
      */
@@ -1895,7 +1981,7 @@ export class DefaultApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: InlineObject6ToJSON(requestParameters.body),
+            body: InlineObject7ToJSON(requestParameters.body),
         });
 
         return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse2004TopicsFromJSON(jsonValue));
