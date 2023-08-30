@@ -7,7 +7,7 @@ import {
 import type { SessionSchema } from "$server/models/session";
 import authUser from "$server/auth/authUser";
 import authInstructor from "$server/auth/authInstructor";
-import importBooksUtil from "$server/utils/book/importBooksUtil";
+import { importTopicUtil } from "$server/utils/book/importBooksUtil";
 import type { TopicParams } from "$server/validators/topicParams";
 import { topicParamsSchema } from "$server/validators/topicParams";
 
@@ -41,7 +41,7 @@ export async function importTopic({
 }) {
   // TODO
   console.log("### importTopic topic_id: ", params.topic_id);
-  const result = await importBooksUtil(session.user, body);
+  const result = await importTopicUtil(session.user, body, params.topic_id);
   return {
     status: result.errors && result.errors.length ? 400 : 201,
     body: result,

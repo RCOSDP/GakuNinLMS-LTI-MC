@@ -24,6 +24,9 @@ import { startWowzaUpload } from "$server/utils/wowza/upload";
 import { validateWowzaSettings } from "$server/utils/wowza/env";
 import findRoles from "$server/utils/author/findRoles";
 import insertAuthors from "$server/utils/author/insertAuthors";
+import type { Topic } from "@prisma/client";
+import findTopic from "$server/utils/topic/findTopic";
+import upsertTopic from "$server/utils/topic/upsertTopic";
 
 async function importBooksUtil(
   user: UserSchema,
@@ -31,6 +34,16 @@ async function importBooksUtil(
 ): Promise<BooksImportResult> {
   const util = new ImportBooksUtil(user, params);
   await util.importBooks();
+  return util.result();
+}
+
+export async function importTopicUtil(
+  user: UserSchema,
+  params: BooksImportParams,
+  topicId: Topic["id"]
+): Promise<BooksImportResult> {
+  const util = new ImportBooksUtil(user, params);
+  await util.importTopic(topicId);
   return util.result();
 }
 
@@ -105,6 +118,83 @@ class ImportBooksUtil {
         const res = await findBook(book.id, this.user.id);
         if (res) this.books.push(res as BookSchema);
       }
+    } catch (e) {
+      console.error(e);
+      this.errors.push(...(Array.isArray(e) ? e : [String(e)]));
+    } finally {
+      await this.cleanUp();
+    }
+  }
+
+  findTopicByName(importBook: ImportBook, name: string) {
+    const result: ImportTopic[] = [];
+    for (const bookSection of importBook.sections) {
+      for (const sectionTopic of bookSection.topics) {
+        if (sectionTopic.name === name) {
+          result.push(sectionTopic);
+        }
+      }
+    }
+    return result;
+  }
+
+  async importTopic(topicId: Topic["id"]) {
+    try {
+      const importBooks = ImportBooks.init(await this.parseJsonFromFile());
+      if (this.errors.length) return;
+
+      const results = await validate(importBooks, {
+        whitelist: true,
+        forbidNonWhitelisted: true,
+      });
+      this.parseError(results);
+      if (this.errors.length) return;
+
+      if (this.tmpdir) {
+        await this.uploadFiles(importBooks);
+      }
+      if (this.errors.length) return;
+
+      const orig = await findTopic(topicId);
+      if (orig === undefined) {
+        this.errors.push('トピックが見つかりません。\n');
+        return;
+      }
+
+      if (importBooks.books.length !== 1) {
+        this.errors.push('複数のブックが含まれています。\n');
+        return;
+      }
+
+      const importTopics = this.findTopicByName(importBooks.books[0], orig.name);
+      if (importTopics.length === 0) {
+        this.errors.push('同じタイトルのトピックが見つかりません。\n');
+        return;
+      } else if (importTopics.length !== 1) {
+        this.errors.push('同じタイトルの複数のトピックが含まれています。\n');
+        return;
+      }
+
+      const importTopic = importTopics[0];
+      const created = await upsertTopic(this.user.id, {
+        id: topicId,
+        name: importTopic.name,
+        description: importTopic.description,
+        language: importTopic.language,
+        timeRequired: orig.timeRequired,
+        shared: orig.shared,
+        license: importTopic.license,
+        startTime: orig.startTime,
+        stopTime: orig.stopTime,
+        resource: importTopic.resource,
+        keywords: importTopic.keywords,
+      });
+
+      if (!created) {
+        this.errors.push('トピックの上書きに失敗しました。\n');
+        return;
+      }
+
     } catch (e) {
       console.error(e);
       this.errors.push(...(Array.isArray(e) ? e : [String(e)]));
