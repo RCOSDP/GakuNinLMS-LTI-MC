@@ -157,21 +157,24 @@ class ImportBooksUtil {
 
       const orig = await findTopic(topicId);
       if (orig === undefined) {
-        this.errors.push('トピックが見つかりません。\n');
+        this.errors.push("トピックが見つかりません。\n");
         return;
       }
 
       if (importBooks.books.length !== 1) {
-        this.errors.push('複数のブックが含まれています。\n');
+        this.errors.push("複数のブックが含まれています。\n");
         return;
       }
 
-      const importTopics = this.findTopicByName(importBooks.books[0], orig.name);
+      const importTopics = this.findTopicByName(
+        importBooks.books[0],
+        orig.name
+      );
       if (importTopics.length === 0) {
-        this.errors.push('同じタイトルのトピックが見つかりません。\n');
+        this.errors.push("同じタイトルのトピックが見つかりません。\n");
         return;
       } else if (importTopics.length !== 1) {
-        this.errors.push('同じタイトルの複数のトピックが含まれています。\n');
+        this.errors.push("同じタイトルの複数のトピックが含まれています。\n");
         return;
       }
 
@@ -191,10 +194,9 @@ class ImportBooksUtil {
       });
 
       if (!created) {
-        this.errors.push('トピックの上書きに失敗しました。\n');
+        this.errors.push("トピックの上書きに失敗しました。\n");
         return;
       }
-
     } catch (e) {
       console.error(e);
       this.errors.push(...(Array.isArray(e) ? e : [String(e)]));
