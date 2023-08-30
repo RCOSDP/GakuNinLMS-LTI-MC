@@ -150,11 +150,6 @@ class ImportBooksUtil {
       this.parseError(results);
       if (this.errors.length) return;
 
-      if (this.tmpdir) {
-        await this.uploadFiles(importBooks);
-      }
-      if (this.errors.length) return;
-
       const orig = await findTopic(topicId);
       if (orig === undefined) {
         this.errors.push("トピックが見つかりません。\n");
@@ -177,6 +172,16 @@ class ImportBooksUtil {
         this.errors.push("同じタイトルの複数のトピックが含まれています。\n");
         return;
       }
+
+      // 処理するトピックのビデオファイルだけをアップロードする
+      importBooks.books[0].sections[0] = {
+        name: "",
+        topics: importTopics,
+      };
+      if (this.tmpdir) {
+        await this.uploadFiles(importBooks);
+      }
+      if (this.errors.length) return;
 
       const importTopic = importTopics[0];
       const created = await upsertTopic(this.user.id, {
