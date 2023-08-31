@@ -7,7 +7,7 @@ import {
 import type { SessionSchema } from "$server/models/session";
 import authUser from "$server/auth/authUser";
 import authInstructor from "$server/auth/authInstructor";
-import importBooksUtil from "$server/utils/book/importBooksUtil";
+import { importBookUtil } from "$server/utils/book/importBooksUtil";
 import type { BookParams } from "$server/validators/bookParams";
 import { bookParamsSchema } from "$server/validators/bookParams";
 
@@ -39,9 +39,7 @@ export async function importBook({
   params: BookParams;
   body: BooksImportParams;
 }) {
-  // TODO
-  console.log("### importBook book_id: ", params.book_id);
-  const result = await importBooksUtil(session.user, body);
+  const result = await importBookUtil(session.user, body, params.book_id);
   return {
     status: result.errors && result.errors.length ? 400 : 201,
     body: result,

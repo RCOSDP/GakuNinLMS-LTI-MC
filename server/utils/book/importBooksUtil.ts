@@ -24,7 +24,7 @@ import { startWowzaUpload } from "$server/utils/wowza/upload";
 import { validateWowzaSettings } from "$server/utils/wowza/env";
 import findRoles from "$server/utils/author/findRoles";
 import insertAuthors from "$server/utils/author/insertAuthors";
-import type { Topic } from "@prisma/client";
+import type { Book, Topic } from "@prisma/client";
 import findTopic from "$server/utils/topic/findTopic";
 import upsertTopic from "$server/utils/topic/upsertTopic";
 
@@ -44,6 +44,16 @@ export async function importTopicUtil(
 ): Promise<BooksImportResult> {
   const util = new ImportBooksUtil(user, params);
   await util.importTopic(topicId);
+  return util.result();
+}
+
+export async function importBookUtil(
+  user: UserSchema,
+  params: BooksImportParams,
+  bookId: Book["id"]
+): Promise<BooksImportResult> {
+  const util = new ImportBooksUtil(user, params);
+  await util.importBook(bookId);
   return util.result();
 }
 
@@ -197,6 +207,52 @@ class ImportBooksUtil {
         resource: importTopic.resource,
         keywords: importTopic.keywords,
       });
+
+      if (!created) {
+        this.errors.push("トピックの上書きに失敗しました。\n");
+        return;
+      }
+    } catch (e) {
+      console.error(e);
+      this.errors.push(...(Array.isArray(e) ? e : [String(e)]));
+    } finally {
+      await this.cleanUp();
+    }
+  }
+
+  async importBook(bookId: Book["id"]) {
+    try {
+      // TODO
+      console.log("importBook: ", bookId);
+      const importBooks = ImportBooks.init(await this.parseJsonFromFile());
+      if (this.errors.length) return;
+
+      const results = await validate(importBooks, {
+        whitelist: true,
+        forbidNonWhitelisted: true,
+      });
+      this.parseError(results);
+      if (this.errors.length) return;
+
+      // TODO: ブックを見つける
+
+      if (importBooks.books.length !== 1) {
+        this.errors.push("複数のブックが含まれています。\n");
+        return;
+      }
+
+      // TODO: インポートするトピックのリストを作成する
+
+      // 処理するトピックのビデオファイルだけをアップロードする
+      if (this.tmpdir) {
+        await this.uploadFiles(importBooks);
+      }
+      if (this.errors.length) return;
+
+      // TODO: トピックをインポートする
+      // TODO: ブック情報を上書きする
+
+      const created = false;
 
       if (!created) {
         this.errors.push("トピックの上書きに失敗しました。\n");

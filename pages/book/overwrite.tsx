@@ -5,7 +5,7 @@ import type {
   BooksImportResult,
 } from "$server/models/booksImportParams";
 import ContentImport from "$templates/ContentImport";
-import importTopic from "$utils/importTopic";
+import importBook from "$utils/importBook";
 
 export type Query = { bookId?: number };
 
@@ -19,8 +19,7 @@ function Import({ bookId }: Query) {
     try {
       setImportResult(undefined);
       if (bookId) {
-        // TODO call importBook
-        setImportResult(await importTopic(bookId, props));
+        setImportResult(await importBook(bookId, props));
       }
     } catch (e) {
       // @ts-expect-error TODO: Object is of type 'unknown'

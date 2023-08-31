@@ -39,8 +39,6 @@ export async function importTopic({
   params: TopicParams;
   body: BooksImportParams;
 }) {
-  // TODO
-  console.log("### importTopic topic_id: ", params.topic_id);
   const result = await importTopicUtil(session.user, body, params.topic_id);
   return {
     status: result.errors && result.errors.length ? 400 : 201,
