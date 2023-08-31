@@ -45,12 +45,14 @@ type Props = {
   importResult?: BooksImportResult;
   onSubmit(book: BooksImportParams): void;
   onCancel(): void;
+  title: string;
 };
 
 export default function ContentImport({
   importResult,
   onSubmit,
   onCancel,
+  title,
 }: Props) {
   const classes = useStyles();
 
@@ -62,7 +64,7 @@ export default function ContentImport({
     <Container className={classes.container} maxWidth="lg">
       <BackButton onClick={onCancel}>戻る</BackButton>
       <Typography className={classes.title} variant="h4">
-        トピックの上書きインポート
+        {title}
       </Typography>
       <ContentImportForm className={classes.form} onSubmit={onSubmit} />
       {showResult && (

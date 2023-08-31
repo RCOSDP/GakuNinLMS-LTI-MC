@@ -7,9 +7,9 @@ import type {
 import ContentImport from "$templates/ContentImport";
 import importTopic from "$utils/importTopic";
 
-export type Query = { topicId?: number };
+export type Query = { bookId?: number };
 
-function Import({ topicId }: Query) {
+function Import({ bookId }: Query) {
   const router = useRouter();
   const [importResult, setImportResult] = useState<BooksImportResult>();
   const back = () => {
@@ -18,8 +18,9 @@ function Import({ topicId }: Query) {
   const handleSubmit = async (props: BooksImportParams) => {
     try {
       setImportResult(undefined);
-      if (topicId) {
-        setImportResult(await importTopic(topicId, props));
+      if (bookId) {
+        // TODO call importBook
+        setImportResult(await importTopic(bookId, props));
       }
     } catch (e) {
       // @ts-expect-error TODO: Object is of type 'unknown'
@@ -37,7 +38,7 @@ function Import({ topicId }: Query) {
   return (
     <>
       <ContentImport
-        title={"トピックの上書きインポート"}
+        title={"ブックの上書きインポート"}
         importResult={importResult}
         {...handlers}
       />
@@ -47,8 +48,8 @@ function Import({ topicId }: Query) {
 
 function Router() {
   const router = useRouter();
-  const { topicId }: Pick<Query, "topicId"> = router.query;
-  return <Import topicId={topicId} />;
+  const { bookId }: Pick<Query, "bookId"> = router.query;
+  return <Import bookId={bookId} />;
 }
 
 export default Router;

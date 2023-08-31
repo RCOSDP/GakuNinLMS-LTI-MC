@@ -84,6 +84,9 @@ function Edit({ bookId, context }: Query) {
   function handleTopicImportClick() {
     return router.push(pagesPath.book.topic.import.$url({ query }));
   }
+  const handleOverwriteClick = () => {
+    return router.push(pagesPath.book.overwrite.$url({ query: { bookId } }));
+  };
   const handlers = {
     linked: bookId === session?.ltiResourceLink?.bookId,
     onSubmit: handleSubmit,
@@ -97,6 +100,7 @@ function Edit({ bookId, context }: Query) {
     onAuthorsUpdate: handleAuthorsUpdate,
     onAuthorSubmit: handleAuthorSubmit,
     isContentEditable: () => true,
+    onOverwriteClick: handleOverwriteClick,
   };
 
   if (error) return <BookNotFoundProblem />;

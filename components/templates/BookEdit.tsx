@@ -16,6 +16,7 @@ import type { AuthorSchema } from "$server/models/author";
 import type { IsContentEditable } from "$server/models/content";
 import { useConfirm } from "material-ui-confirm";
 import useDialogProps from "$utils/useDialogProps";
+import AddIcon from "@mui/icons-material/Add";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -56,6 +57,7 @@ type Props = {
   onAuthorSubmit(author: Pick<AuthorSchema, "email">): void;
   isContentEditable?: IsContentEditable;
   linked?: boolean;
+  onOverwriteClick(): void;
 };
 
 export default function BookEdit({
@@ -72,6 +74,7 @@ export default function BookEdit({
   onAuthorSubmit,
   isContentEditable,
   linked = false,
+  onOverwriteClick,
 }: Props) {
   const classes = useStyles();
   const confirm = useConfirm();
@@ -96,6 +99,10 @@ export default function BookEdit({
       <BackButton onClick={onCancel}>戻る</BackButton>
       <Typography className={classes.title} variant="h4">
         ブック「{book.name}」の編集
+        <Button size="small" color="primary" onClick={onOverwriteClick}>
+          <AddIcon sx={{ mr: 0.5 }} />
+          上書きインポート
+        </Button>
       </Typography>
       <Typography className={classes.subtitle} variant="h5">
         トピック
