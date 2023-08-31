@@ -54,7 +54,7 @@ export default function ContentImport({
 }: Props) {
   const classes = useStyles();
 
-  const showSuccess = importResult?.books && importResult.books.length > 0;
+  const showSuccess = importResult?.errors && importResult.errors.length === 0;
   const showErrors = importResult?.errors && importResult.errors.length > 0;
   const showResult = showSuccess || showErrors;
 

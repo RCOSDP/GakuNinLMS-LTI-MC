@@ -11,12 +11,13 @@ export type Query = { topicId?: number };
 
 function Import({ topicId }: Query) {
   const router = useRouter();
-  const [importResult, setImportResult] = useState<BooksImportResult>({});
+  const [importResult, setImportResult] = useState<BooksImportResult>();
   const back = () => {
     return router.back();
   };
   const handleSubmit = async (props: BooksImportParams) => {
     try {
+      setImportResult(undefined);
       if (topicId) {
         setImportResult(await importTopic(topicId, props));
       }
