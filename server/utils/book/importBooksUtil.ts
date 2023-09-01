@@ -161,7 +161,11 @@ class ImportBooksUtil {
     return result;
   }
 
-  async upsertTopic(topicId: Topic['id'], importTopic: ImportTopic, orig: TopicSchema) {
+  async upsertTopic(
+    topicId: Topic["id"],
+    importTopic: ImportTopic,
+    orig: TopicSchema
+  ) {
     const created = await upsertTopic(this.user.id, {
       id: topicId,
       name: importTopic.name,
@@ -268,30 +272,36 @@ class ImportBooksUtil {
 
       // インポートするトピックのリストを作成する
       const names: string[] = [];
-      const jobs: {import: ImportTopic, orig: TopicSchema}[] = [];
+      const jobs: { import: ImportTopic; orig: TopicSchema }[] = [];
       for (const section of importBooks.books[0].sections) {
         for (const topic of section.topics) {
           if (names.includes(topic.name)) {
-            this.errors.push(`jsonファイルのトピックタイトル ${topic.name} が重複しています。`)
+            this.errors.push(
+              `jsonファイルのトピックタイトル ${topic.name} が重複しています。`
+            );
             return;
           }
           names.push(topic.name);
           const origTopics = this.findTopicFromBook(orig, topic.name);
           if (origTopics.length === 0) {
-            this.errors.push(`指定されたタイトル ${topic.name} のトピックが見つかりません。`)
+            this.errors.push(
+              `指定されたタイトル ${topic.name} のトピックが見つかりません。`
+            );
             return;
           } else if (origTopics.length !== 1) {
-            this.errors.push(`指定されたタイトル ${topic.name} のトピックが複数見つかりました。`)
+            this.errors.push(
+              `指定されたタイトル ${topic.name} のトピックが複数見つかりました。`
+            );
             return;
           }
-          jobs.push({import: topic, orig: origTopics[0]});
+          jobs.push({ import: topic, orig: origTopics[0] });
         }
       }
 
       // 処理するトピックのビデオファイルだけをアップロードする
       importBooks.books[0].sections[0] = {
         name: "",
-        topics: jobs.map(job => job.import),
+        topics: jobs.map((job) => job.import),
       };
       if (this.tmpdir) {
         await this.uploadFiles(importBooks);
@@ -300,7 +310,11 @@ class ImportBooksUtil {
 
       // トピックをインポートする
       for (const job of jobs) {
-        const created = await this.upsertTopic(job.orig.id, job.import, job.orig);
+        const created = await this.upsertTopic(
+          job.orig.id,
+          job.import,
+          job.orig
+        );
         if (!created) {
           this.errors.push("トピックの上書きに失敗しました。\n");
           return;
@@ -308,7 +322,6 @@ class ImportBooksUtil {
       }
 
       // TODO: ブック情報を上書きする
-
     } catch (e) {
       console.error(e);
       this.errors.push(...(Array.isArray(e) ? e : [String(e)]));
