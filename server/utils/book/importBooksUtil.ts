@@ -222,8 +222,6 @@ class ImportBooksUtil {
 
   async importBook(bookId: Book["id"]) {
     try {
-      // TODO
-      console.log("importBook: ", bookId);
       const importBooks = ImportBooks.init(await this.parseJsonFromFile());
       if (this.errors.length) return;
 
@@ -234,10 +232,19 @@ class ImportBooksUtil {
       this.parseError(results);
       if (this.errors.length) return;
 
-      // TODO: ブックを見つける
+      const orig = await findBook(bookId, this.user.id);
+      if (orig === undefined) {
+        this.errors.push("ブックが見つかりません。\n");
+        return;
+      }
 
       if (importBooks.books.length !== 1) {
         this.errors.push("複数のブックが含まれています。\n");
+        return;
+      }
+
+      if (orig.name !== importBooks.books[0].name) {
+        this.errors.push("ブックタイトルが一致しません。\n");
         return;
       }
 
