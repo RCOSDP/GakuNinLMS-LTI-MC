@@ -27,6 +27,7 @@ import insertAuthors from "$server/utils/author/insertAuthors";
 import type { Book, Topic } from "@prisma/client";
 import findTopic from "$server/utils/topic/findTopic";
 import upsertTopic from "$server/utils/topic/upsertTopic";
+import type { TopicSchema } from "$server/models/topic";
 
 async function importBooksUtil(
   user: UserSchema,
@@ -136,7 +137,7 @@ class ImportBooksUtil {
     }
   }
 
-  findTopicByName(importBook: ImportBook, name: string) {
+  findTopicFromImportBook(importBook: ImportBook, name: string) {
     const result: ImportTopic[] = [];
     for (const bookSection of importBook.sections) {
       for (const sectionTopic of bookSection.topics) {
@@ -146,6 +147,35 @@ class ImportBooksUtil {
       }
     }
     return result;
+  }
+
+  findTopicFromBook(book: BookSchema, name: string) {
+    const result: TopicSchema[] = [];
+    for (const bookSection of book.sections) {
+      for (const sectionTopic of bookSection.topics) {
+        if (sectionTopic.name === name) {
+          result.push(sectionTopic);
+        }
+      }
+    }
+    return result;
+  }
+
+  async upsertTopic(topicId: Topic['id'], importTopic: ImportTopic, orig: TopicSchema) {
+    const created = await upsertTopic(this.user.id, {
+      id: topicId,
+      name: importTopic.name,
+      description: importTopic.description,
+      language: importTopic.language,
+      timeRequired: orig.timeRequired,
+      shared: orig.shared,
+      license: importTopic.license,
+      startTime: orig.startTime,
+      stopTime: orig.stopTime,
+      resource: importTopic.resource,
+      keywords: importTopic.keywords,
+    });
+    return created;
   }
 
   async importTopic(topicId: Topic["id"]) {
@@ -171,7 +201,7 @@ class ImportBooksUtil {
         return;
       }
 
-      const importTopics = this.findTopicByName(
+      const importTopics = this.findTopicFromImportBook(
         importBooks.books[0],
         orig.name
       );
@@ -193,21 +223,8 @@ class ImportBooksUtil {
       }
       if (this.errors.length) return;
 
-      const importTopic = importTopics[0];
-      const created = await upsertTopic(this.user.id, {
-        id: topicId,
-        name: importTopic.name,
-        description: importTopic.description,
-        language: importTopic.language,
-        timeRequired: orig.timeRequired,
-        shared: orig.shared,
-        license: importTopic.license,
-        startTime: orig.startTime,
-        stopTime: orig.stopTime,
-        resource: importTopic.resource,
-        keywords: importTopic.keywords,
-      });
-
+      // トピックを上書きする
+      const created = await this.upsertTopic(topicId, importTopics[0], orig);
       if (!created) {
         this.errors.push("トピックの上書きに失敗しました。\n");
         return;
@@ -232,6 +249,7 @@ class ImportBooksUtil {
       this.parseError(results);
       if (this.errors.length) return;
 
+      // ブックを探して条件を確認する
       const orig = await findBook(bookId, this.user.id);
       if (orig === undefined) {
         this.errors.push("ブックが見つかりません。\n");
@@ -239,32 +257,58 @@ class ImportBooksUtil {
       }
 
       if (importBooks.books.length !== 1) {
-        this.errors.push("複数のブックが含まれています。\n");
+        this.errors.push("jsonファイルに複数のブックが含まれています。\n");
         return;
       }
 
       if (orig.name !== importBooks.books[0].name) {
-        this.errors.push("ブックタイトルが一致しません。\n");
+        this.errors.push("jsonファイルとブックのタイトルが一致しません。\n");
         return;
       }
 
-      // TODO: インポートするトピックのリストを作成する
+      // インポートするトピックのリストを作成する
+      const names: string[] = [];
+      const jobs: {import: ImportTopic, orig: TopicSchema}[] = [];
+      for (const section of importBooks.books[0].sections) {
+        for (const topic of section.topics) {
+          if (names.includes(topic.name)) {
+            this.errors.push(`jsonファイルのトピックタイトル ${topic.name} が重複しています。`)
+            return;
+          }
+          names.push(topic.name);
+          const origTopics = this.findTopicFromBook(orig, topic.name);
+          if (origTopics.length === 0) {
+            this.errors.push(`指定されたタイトル ${topic.name} のトピックが見つかりません。`)
+            return;
+          } else if (origTopics.length !== 1) {
+            this.errors.push(`指定されたタイトル ${topic.name} のトピックが複数見つかりました。`)
+            return;
+          }
+          jobs.push({import: topic, orig: origTopics[0]});
+        }
+      }
 
       // 処理するトピックのビデオファイルだけをアップロードする
+      importBooks.books[0].sections[0] = {
+        name: "",
+        topics: jobs.map(job => job.import),
+      };
       if (this.tmpdir) {
         await this.uploadFiles(importBooks);
       }
       if (this.errors.length) return;
 
-      // TODO: トピックをインポートする
+      // トピックをインポートする
+      for (const job of jobs) {
+        const created = await this.upsertTopic(job.orig.id, job.import, job.orig);
+        if (!created) {
+          this.errors.push("トピックの上書きに失敗しました。\n");
+          return;
+        }
+      }
+
       // TODO: ブック情報を上書きする
 
-      const created = false;
-
-      if (!created) {
-        this.errors.push("トピックの上書きに失敗しました。\n");
-        return;
-      }
     } catch (e) {
       console.error(e);
       this.errors.push(...(Array.isArray(e) ? e : [String(e)]));
