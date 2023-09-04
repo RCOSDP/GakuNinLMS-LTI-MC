@@ -28,6 +28,7 @@ import type { Book, Topic } from "@prisma/client";
 import findTopic from "$server/utils/topic/findTopic";
 import upsertTopic from "$server/utils/topic/upsertTopic";
 import type { TopicSchema } from "$server/models/topic";
+import updateBook from "$server/utils/book/updateBook";
 
 async function importBooksUtil(
   user: UserSchema,
@@ -321,7 +322,20 @@ class ImportBooksUtil {
         }
       }
 
-      // TODO: ブック情報を上書きする
+      // ブック情報を上書きする
+      const { name, description, language, keywords} = importBooks.books[0];
+      const created = await updateBook(this.user.id, {
+        id: bookId,
+        name,
+        description,
+        language,
+        shared: orig.shared,
+        keywords,
+      });
+      if (!created) {
+        this.errors.push("ブック情報の上書きに失敗しました。\n");
+        return;
+      }
     } catch (e) {
       console.error(e);
       this.errors.push(...(Array.isArray(e) ? e : [String(e)]));
