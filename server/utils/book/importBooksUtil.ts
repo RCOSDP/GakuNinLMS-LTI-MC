@@ -178,7 +178,7 @@ class ImportBooksUtil {
       startTime: orig.startTime,
       stopTime: orig.stopTime,
       resource: importTopic.resource,
-      keywords: importTopic.keywords,
+      keywords: importTopic.keywords.map((str) => {return {name: str}}),
     });
     return created;
   }
@@ -330,7 +330,7 @@ class ImportBooksUtil {
         description,
         language,
         shared: orig.shared,
-        keywords,
+        keywords: keywords.map((str) => {return {name: str}}),
       });
       if (!created) {
         this.errors.push("ブック情報の上書きに失敗しました。\n");
