@@ -178,7 +178,9 @@ class ImportBooksUtil {
       startTime: orig.startTime,
       stopTime: orig.stopTime,
       resource: importTopic.resource,
-      keywords: importTopic.keywords.map((str) => {return {name: str}}),
+      keywords: importTopic.keywords.map((str) => {
+        return { name: str };
+      }),
     });
     return created;
   }
@@ -323,14 +325,16 @@ class ImportBooksUtil {
       }
 
       // ブック情報を上書きする
-      const { name, description, language, keywords} = importBooks.books[0];
+      const { name, description, language, keywords } = importBooks.books[0];
       const created = await updateBook(this.user.id, {
         id: bookId,
         name,
         description,
         language,
         shared: orig.shared,
-        keywords: keywords.map((str) => {return {name: str}}),
+        keywords: keywords.map((str) => {
+          return { name: str };
+        }),
       });
       if (!created) {
         this.errors.push("ブック情報の上書きに失敗しました。\n");
