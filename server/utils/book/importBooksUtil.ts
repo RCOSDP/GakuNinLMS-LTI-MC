@@ -8,7 +8,7 @@ import { Buffer } from "buffer";
 import type { ValidationError } from "class-validator";
 import { validate } from "class-validator";
 import type { UserSchema } from "$server/models/user";
-import type { BookSchema } from "$server/models/book";
+import type { BookProps, BookSchema } from "$server/models/book";
 import type {
   BooksImportParams,
   BooksImportResult,
@@ -28,7 +28,9 @@ import type { Book, Topic } from "@prisma/client";
 import findTopic from "$server/utils/topic/findTopic";
 import upsertTopic from "$server/utils/topic/upsertTopic";
 import type { TopicSchema } from "$server/models/topic";
-import updateBook from "$server/utils/book/updateBook";
+import aggregateTimeRequired from "./aggregateTimeRequired";
+import keywordsConnectOrCreateInput from "../keyword/keywordsConnectOrCreateInput";
+import keywordsDisconnectInput from "../keyword/keywordsDisconnectInput";
 
 async function importBooksUtil(
   user: UserSchema,
@@ -185,6 +187,29 @@ class ImportBooksUtil {
     return created;
   }
 
+  async updateBook(
+    userId: number,
+    { id, sections, publicBooks: _, ...book }: Pick<Book, "id"> & BookProps
+  ) {
+    const timeRequired =
+      sections && (await aggregateTimeRequired({ sections }));
+    const keywordsBeforeUpdate = await prisma.keyword.findMany({
+      where: { books: { some: { id } } },
+    });
+    return prisma.book.update({
+      where: { id },
+      data: {
+        ...book,
+        ...(timeRequired && { timeRequired }),
+        keywords: {
+          ...keywordsConnectOrCreateInput(book.keywords ?? []),
+          ...keywordsDisconnectInput(keywordsBeforeUpdate, book.keywords ?? []),
+        },
+        updatedAt: new Date(),
+      },
+    });
+  }
+
   async importTopic(topicId: Topic["id"]) {
     try {
       const importBooks = ImportBooks.init(await this.parseJsonFromFile());
@@ -326,7 +351,7 @@ class ImportBooksUtil {
 
       // ブック情報を上書きする
       const { name, description, language, keywords } = importBooks.books[0];
-      const created = await updateBook(this.user.id, {
+      const created = await this.updateBook(this.user.id, {
         id: bookId,
         name,
         description,
