@@ -26,11 +26,14 @@ import findRoles from "$server/utils/author/findRoles";
 import insertAuthors from "$server/utils/author/insertAuthors";
 import type { Book, Topic } from "@prisma/client";
 import findTopic from "$server/utils/topic/findTopic";
-import upsertTopic from "$server/utils/topic/upsertTopic";
-import type { TopicSchema } from "$server/models/topic";
+import type { TopicProps, TopicSchema } from "$server/models/topic";
 import aggregateTimeRequired from "./aggregateTimeRequired";
 import keywordsConnectOrCreateInput from "../keyword/keywordsConnectOrCreateInput";
 import keywordsDisconnectInput from "../keyword/keywordsDisconnectInput";
+import type { KeywordSchema } from "$server/models/keyword";
+import topicInput from "../topic/topicInput";
+import resourceConnectOrCreateInput from "../topic/resourceConnectOrCreateInput";
+import { topicsWithResourcesArg } from "../topic/topicToTopicSchema";
 
 async function importBooksUtil(
   user: UserSchema,
@@ -164,13 +167,25 @@ class ImportBooksUtil {
     return result;
   }
 
-  async upsertTopic(
+  topicUpdateInput(topic: TopicProps, keywords: KeywordSchema[]) {
+    const input = {
+      ...topicInput(topic),
+      resource: resourceConnectOrCreateInput(topic.resource),
+      keywords: {
+        ...keywordsConnectOrCreateInput(topic.keywords ?? []),
+        ...keywordsDisconnectInput(keywords, topic.keywords ?? []),
+      },
+    };
+
+    return input;
+  }
+
+  async updateTopic(
     topicId: Topic["id"],
     importTopic: ImportTopic,
     orig: TopicSchema
   ) {
-    const created = await upsertTopic(this.user.id, {
-      id: topicId,
+    const topic = {
       name: importTopic.name,
       description: importTopic.description,
       language: importTopic.language,
@@ -183,8 +198,15 @@ class ImportBooksUtil {
       keywords: importTopic.keywords.map((str) => {
         return { name: str };
       }),
+    };
+    const keywordsBeforeUpdate = await prisma.keyword.findMany({
+      where: { topics: { some: { id: topicId } } },
     });
-    return created;
+    return prisma.topic.update({
+      ...topicsWithResourcesArg,
+      where: { id: topicId },
+      data: this.topicUpdateInput(topic, keywordsBeforeUpdate),
+    });
   }
 
   async updateBook(
@@ -256,7 +278,7 @@ class ImportBooksUtil {
       if (this.errors.length) return;
 
       // トピックを上書きする
-      const created = await this.upsertTopic(topicId, importTopics[0], orig);
+      const created = await this.updateTopic(topicId, importTopics[0], orig);
       if (!created) {
         this.errors.push("トピックの上書きに失敗しました。\n");
         return;
@@ -338,7 +360,7 @@ class ImportBooksUtil {
 
       // トピックをインポートする
       for (const job of jobs) {
-        const created = await this.upsertTopic(
+        const created = await this.updateTopic(
           job.orig.id,
           job.import,
           job.orig
