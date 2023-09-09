@@ -202,11 +202,11 @@ class ImportBooksUtil {
     const keywordsBeforeUpdate = await prisma.keyword.findMany({
       where: { topics: { some: { id: topicId } } },
     });
-    return prisma.topic.update({
+    return {
       ...topicsWithResourcesArg,
       where: { id: topicId },
       data: this.topicUpdateInput(topic, keywordsBeforeUpdate),
-    });
+    };
   }
 
   async updateBook(
@@ -218,7 +218,7 @@ class ImportBooksUtil {
     const keywordsBeforeUpdate = await prisma.keyword.findMany({
       where: { books: { some: { id } } },
     });
-    return prisma.book.update({
+    return {
       where: { id },
       data: {
         ...book,
@@ -229,7 +229,7 @@ class ImportBooksUtil {
         },
         updatedAt: new Date(),
       },
-    });
+    };
   }
 
   async importTopic(topicId: Topic["id"]) {
@@ -278,7 +278,12 @@ class ImportBooksUtil {
       if (this.errors.length) return;
 
       // トピックを上書きする
-      const created = await this.updateTopic(topicId, importTopics[0], orig);
+      const updateInput = await this.updateTopic(
+        topicId,
+        importTopics[0],
+        orig
+      );
+      const created = await prisma.topic.update(updateInput);
       if (!created) {
         this.errors.push("トピックの上書きに失敗しました。\n");
         return;
@@ -358,22 +363,17 @@ class ImportBooksUtil {
       }
       if (this.errors.length) return;
 
-      // トピックをインポートする
+      // トピックの上書きデータ
+      const topicInputArray = [];
       for (const job of jobs) {
-        const created = await this.updateTopic(
-          job.orig.id,
-          job.import,
-          job.orig
+        topicInputArray.push(
+          await this.updateTopic(job.orig.id, job.import, job.orig)
         );
-        if (!created) {
-          this.errors.push("トピックの上書きに失敗しました。\n");
-          return;
-        }
       }
 
-      // ブック情報を上書きする
+      // ブックの上書きデータ
       const { name, description, language, keywords } = importBooks.books[0];
-      const created = await this.updateBook(this.user.id, {
+      const bookInput = await this.updateBook(this.user.id, {
         id: bookId,
         name,
         description,
@@ -383,8 +383,14 @@ class ImportBooksUtil {
           return { name: str };
         }),
       });
+
+      // DB更新
+      const created = await prisma.$transaction([
+        ...topicInputArray.map((topicInput) => prisma.topic.update(topicInput)),
+        prisma.book.update(bookInput),
+      ]);
       if (!created) {
-        this.errors.push("ブック情報の上書きに失敗しました。\n");
+        this.errors.push("ブックの上書きに失敗しました。\n");
         return;
       }
     } catch (e) {
