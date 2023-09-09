@@ -27,7 +27,6 @@ import insertAuthors from "$server/utils/author/insertAuthors";
 import type { Book, Topic } from "@prisma/client";
 import findTopic from "$server/utils/topic/findTopic";
 import type { TopicProps, TopicSchema } from "$server/models/topic";
-import aggregateTimeRequired from "./aggregateTimeRequired";
 import keywordsConnectOrCreateInput from "../keyword/keywordsConnectOrCreateInput";
 import keywordsDisconnectInput from "../keyword/keywordsDisconnectInput";
 import type { KeywordSchema } from "$server/models/keyword";
@@ -210,11 +209,9 @@ class ImportBooksUtil {
   }
 
   async updateBook(
-    userId: number,
-    { id, sections, publicBooks: _, ...book }: Pick<Book, "id"> & BookProps
+    id: number,
+    { sections: _sections, publicBooks: _publicBooks, ...book }: BookProps
   ) {
-    const timeRequired =
-      sections && (await aggregateTimeRequired({ sections }));
     const keywordsBeforeUpdate = await prisma.keyword.findMany({
       where: { books: { some: { id } } },
     });
@@ -222,7 +219,6 @@ class ImportBooksUtil {
       where: { id },
       data: {
         ...book,
-        ...(timeRequired && { timeRequired }),
         keywords: {
           ...keywordsConnectOrCreateInput(book.keywords ?? []),
           ...keywordsDisconnectInput(keywordsBeforeUpdate, book.keywords ?? []),
@@ -373,8 +369,7 @@ class ImportBooksUtil {
 
       // ブックの上書きデータ
       const { name, description, language, keywords } = importBooks.books[0];
-      const bookInput = await this.updateBook(this.user.id, {
-        id: bookId,
+      const bookInput = await this.updateBook(bookId, {
         name,
         description,
         language,
