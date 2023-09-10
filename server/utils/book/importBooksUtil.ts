@@ -33,6 +33,7 @@ import type { KeywordSchema } from "$server/models/keyword";
 import topicInput from "../topic/topicInput";
 import resourceConnectOrCreateInput from "../topic/resourceConnectOrCreateInput";
 import { topicsWithResourcesArg } from "../topic/topicToTopicSchema";
+import updateBookTimeRequired from "../topic/updateBookTimeRequired";
 
 async function importBooksUtil(
   user: UserSchema,
@@ -188,7 +189,10 @@ class ImportBooksUtil {
       name: importTopic.name,
       description: importTopic.description,
       language: importTopic.language,
-      timeRequired: orig.timeRequired,
+      timeRequired:
+        importTopic.timeRequired > 0
+          ? importTopic.timeRequired
+          : orig.timeRequired,
       shared: orig.shared,
       license: importTopic.license,
       startTime: orig.startTime,
@@ -284,6 +288,11 @@ class ImportBooksUtil {
         this.errors.push("トピックの上書きに失敗しました。\n");
         return;
       }
+
+      // ブックの timeRequired を調整する
+      if (importTopics[0].timeRequired > 0) {
+        await updateBookTimeRequired(topicId);
+      }
     } catch (e) {
       console.error(e);
       this.errors.push(...(Array.isArray(e) ? e : [String(e)]));
@@ -361,10 +370,14 @@ class ImportBooksUtil {
 
       // トピックの上書きデータ
       const topicInputArray = [];
+      const timeRequiredTopicIds = [];
       for (const job of jobs) {
         topicInputArray.push(
           await this.updateTopic(job.orig.id, job.import, job.orig)
         );
+        if (job.import.timeRequired > 0) {
+          timeRequiredTopicIds.push(job.orig.id);
+        }
       }
 
       // ブックの上書きデータ
@@ -387,6 +400,11 @@ class ImportBooksUtil {
       if (!created) {
         this.errors.push("ブックの上書きに失敗しました。\n");
         return;
+      }
+
+      // ブックの timeRequired を調整する
+      if (timeRequiredTopicIds.length > 0) {
+        await updateBookTimeRequired(timeRequiredTopicIds);
       }
     } catch (e) {
       console.error(e);
