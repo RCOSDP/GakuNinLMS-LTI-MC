@@ -6,6 +6,7 @@ import type {
 } from "$server/models/booksImportParams";
 import ContentImport from "$templates/ContentImport";
 import importBook from "$utils/importBook";
+import BookNotFoundProblem from "$templates/BookNotFoundProblem";
 
 export type Query = { bookId?: number };
 
@@ -47,7 +48,10 @@ function Import({ bookId }: Query) {
 
 function Router() {
   const router = useRouter();
-  const { bookId }: Pick<Query, "bookId"> = router.query;
+  const bookId = Number(router.query.bookId);
+
+  if (!Number.isFinite(bookId)) return <BookNotFoundProblem />;
+
   return <Import bookId={bookId} />;
 }
 
