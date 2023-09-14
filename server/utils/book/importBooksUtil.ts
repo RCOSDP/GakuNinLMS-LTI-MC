@@ -268,10 +268,12 @@ class ImportBooksUtil {
       }
 
       // 処理するトピックのビデオファイルだけをアップロードする
-      importBooks.books[0].sections[0] = {
-        name: "",
-        topics: importTopics,
-      };
+      importBooks.books[0].sections = [
+        {
+          name: "",
+          topics: importTopics,
+        },
+      ];
       if (this.tmpdir) {
         await this.uploadFiles(importBooks);
       }
@@ -359,10 +361,12 @@ class ImportBooksUtil {
       }
 
       // 処理するトピックのビデオファイルだけをアップロードする
-      importBooks.books[0].sections[0] = {
-        name: "",
-        topics: jobs.map((job) => job.import),
-      };
+      importBooks.books[0].sections = [
+        {
+          name: "",
+          topics: jobs.map((job) => job.import),
+        },
+      ];
       if (this.tmpdir) {
         await this.uploadFiles(importBooks);
       }
