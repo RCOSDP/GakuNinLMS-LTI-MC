@@ -15,6 +15,7 @@ import type { TopicSchema } from "$server/models/topic";
 import type { AuthorSchema } from "$server/models/author";
 import type { IsContentEditable } from "$server/models/content";
 import { useConfirm } from "material-ui-confirm";
+import { useSessionAtom } from "$store/session";
 import useDialogProps from "$utils/useDialogProps";
 
 const useStyles = makeStyles((theme) => ({
@@ -73,6 +74,7 @@ export default function BookEdit({
   isContentEditable,
   linked = false,
 }: Props) {
+  const { session } = useSessionAtom();
   const classes = useStyles();
   const confirm = useConfirm();
   const {
@@ -121,7 +123,7 @@ export default function BookEdit({
       <BookForm
         className={classes.content}
         book={book}
-        linked={linked}
+        linked={Boolean(session?.ltiTargetLinkUri || linked)}
         variant="update"
         onSubmit={onSubmit}
         onAuthorsUpdate={onAuthorsUpdate}
