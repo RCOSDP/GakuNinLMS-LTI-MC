@@ -123,7 +123,8 @@ export default function BookEdit({
       <BookForm
         className={classes.content}
         book={book}
-        linked={Boolean(session?.ltiTargetLinkUri || linked)}
+        linked={linked}
+        hasLtiTargetLinkUri={Boolean(session?.ltiTargetLinkUri)}
         variant="update"
         onSubmit={onSubmit}
         onAuthorsUpdate={onAuthorsUpdate}

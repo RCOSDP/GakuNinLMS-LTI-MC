@@ -87,7 +87,8 @@ export default function BookNew({
       <BookForm
         book={defaultBook}
         topics={topics}
-        linked={Boolean(session?.ltiTargetLinkUri)}
+        linked={false}
+        hasLtiTargetLinkUri={Boolean(session?.ltiTargetLinkUri)}
         variant="create"
         onSubmit={onSubmit}
         onAuthorsUpdate={onAuthorsUpdate}
