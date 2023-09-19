@@ -8,7 +8,7 @@ import { Buffer } from "buffer";
 import type { ValidationError } from "class-validator";
 import { validate } from "class-validator";
 import type { UserSchema } from "$server/models/user";
-import type { BookSchema } from "$server/models/book";
+import type { BookProps, BookSchema } from "$server/models/book";
 import type {
   BooksImportParams,
   BooksImportResult,
@@ -24,6 +24,16 @@ import { startWowzaUpload } from "$server/utils/wowza/upload";
 import { validateWowzaSettings } from "$server/utils/wowza/env";
 import findRoles from "$server/utils/author/findRoles";
 import insertAuthors from "$server/utils/author/insertAuthors";
+import type { Book, Topic } from "@prisma/client";
+import findTopic from "$server/utils/topic/findTopic";
+import type { TopicProps, TopicSchema } from "$server/models/topic";
+import keywordsConnectOrCreateInput from "../keyword/keywordsConnectOrCreateInput";
+import keywordsDisconnectInput from "../keyword/keywordsDisconnectInput";
+import type { KeywordSchema } from "$server/models/keyword";
+import topicInput from "../topic/topicInput";
+import resourceConnectOrCreateInput from "../topic/resourceConnectOrCreateInput";
+import { topicsWithResourcesArg } from "../topic/topicToTopicSchema";
+import updateBookTimeRequired from "../topic/updateBookTimeRequired";
 
 async function importBooksUtil(
   user: UserSchema,
@@ -31,6 +41,26 @@ async function importBooksUtil(
 ): Promise<BooksImportResult> {
   const util = new ImportBooksUtil(user, params);
   await util.importBooks();
+  return util.result();
+}
+
+export async function importTopicUtil(
+  user: UserSchema,
+  params: BooksImportParams,
+  topicId: Topic["id"]
+): Promise<BooksImportResult> {
+  const util = new ImportBooksUtil(user, params);
+  await util.importTopic(topicId);
+  return util.result();
+}
+
+export async function importBookUtil(
+  user: UserSchema,
+  params: BooksImportParams,
+  bookId: Book["id"]
+): Promise<BooksImportResult> {
+  const util = new ImportBooksUtil(user, params);
+  await util.importBook(bookId);
   return util.result();
 }
 
@@ -104,6 +134,281 @@ class ImportBooksUtil {
       for (const book of books) {
         const res = await findBook(book.id, this.user.id);
         if (res) this.books.push(res as BookSchema);
+      }
+    } catch (e) {
+      console.error(e);
+      this.errors.push(...(Array.isArray(e) ? e : [String(e)]));
+    } finally {
+      await this.cleanUp();
+    }
+  }
+
+  findTopicFromImportBook(importBook: ImportBook, name: string) {
+    const result: ImportTopic[] = [];
+    for (const bookSection of importBook.sections) {
+      for (const sectionTopic of bookSection.topics) {
+        if (sectionTopic.name === name) {
+          result.push(sectionTopic);
+        }
+      }
+    }
+    return result;
+  }
+
+  findTopicFromBook(book: BookSchema, name: string) {
+    const result: TopicSchema[] = [];
+    for (const bookSection of book.sections) {
+      for (const sectionTopic of bookSection.topics) {
+        if (sectionTopic.name === name) {
+          result.push(sectionTopic);
+        }
+      }
+    }
+    return result;
+  }
+
+  topicUpdateInput(topic: TopicProps, keywords: KeywordSchema[]) {
+    const input = {
+      ...topicInput(topic),
+      resource: resourceConnectOrCreateInput(topic.resource),
+      keywords: {
+        ...keywordsConnectOrCreateInput(topic.keywords ?? []),
+        ...keywordsDisconnectInput(keywords, topic.keywords ?? []),
+      },
+    };
+
+    return input;
+  }
+
+  async updateTopic(
+    topicId: Topic["id"],
+    importTopic: ImportTopic,
+    orig: TopicSchema
+  ) {
+    const topic = {
+      name: importTopic.name,
+      description: importTopic.description,
+      language: importTopic.language,
+      timeRequired:
+        importTopic.timeRequired > 0
+          ? importTopic.timeRequired
+          : orig.timeRequired,
+      shared: orig.shared,
+      license: importTopic.license,
+      startTime: orig.startTime,
+      stopTime: orig.stopTime,
+      resource: importTopic.resource,
+      keywords: importTopic.keywords.map((str) => {
+        return { name: str };
+      }),
+    };
+    const keywordsBeforeUpdate = await prisma.keyword.findMany({
+      where: { topics: { some: { id: topicId } } },
+    });
+    return {
+      ...topicsWithResourcesArg,
+      where: { id: topicId },
+      data: this.topicUpdateInput(topic, keywordsBeforeUpdate),
+    };
+  }
+
+  async updateBook(
+    id: number,
+    { sections: _sections, publicBooks: _publicBooks, ...book }: BookProps
+  ) {
+    const keywordsBeforeUpdate = await prisma.keyword.findMany({
+      where: { books: { some: { id } } },
+    });
+    return {
+      where: { id },
+      data: {
+        ...book,
+        keywords: {
+          ...keywordsConnectOrCreateInput(book.keywords ?? []),
+          ...keywordsDisconnectInput(keywordsBeforeUpdate, book.keywords ?? []),
+        },
+        updatedAt: new Date(),
+      },
+    };
+  }
+
+  async importTopic(topicId: Topic["id"]) {
+    try {
+      const importBooks = ImportBooks.init(await this.parseJsonFromFile());
+      if (this.errors.length) return;
+
+      const results = await validate(importBooks, {
+        whitelist: true,
+        forbidNonWhitelisted: true,
+      });
+      this.parseError(results);
+      if (this.errors.length) return;
+
+      const orig = await findTopic(topicId);
+      if (orig === undefined) {
+        this.errors.push("トピックが見つかりません。\n");
+        return;
+      }
+
+      if (importBooks.books.length !== 1) {
+        this.errors.push("複数のブックが含まれています。\n");
+        return;
+      }
+
+      const importTopics = this.findTopicFromImportBook(
+        importBooks.books[0],
+        orig.name
+      );
+      if (importTopics.length === 0) {
+        this.errors.push("同じタイトルのトピックが見つかりません。\n");
+        return;
+      } else if (importTopics.length !== 1) {
+        this.errors.push("同じタイトルの複数のトピックが含まれています。\n");
+        return;
+      }
+
+      // 処理するトピックのビデオファイルだけをアップロードする
+      importBooks.books[0].sections = [
+        {
+          name: "",
+          topics: importTopics,
+        },
+      ];
+      if (this.tmpdir) {
+        await this.uploadFiles(importBooks);
+      }
+      if (this.errors.length) return;
+
+      // トピックを上書きする
+      const updateInput = await this.updateTopic(
+        topicId,
+        importTopics[0],
+        orig
+      );
+      const created = await prisma.topic.update(updateInput);
+      if (!created) {
+        this.errors.push("トピックの上書きに失敗しました。\n");
+        return;
+      }
+
+      // ブックの timeRequired を調整する
+      if (importTopics[0].timeRequired > 0) {
+        await updateBookTimeRequired(topicId);
+      }
+    } catch (e) {
+      console.error(e);
+      this.errors.push(...(Array.isArray(e) ? e : [String(e)]));
+    } finally {
+      await this.cleanUp();
+    }
+  }
+
+  async importBook(bookId: Book["id"]) {
+    try {
+      const importBooks = ImportBooks.init(await this.parseJsonFromFile());
+      if (this.errors.length) return;
+
+      const results = await validate(importBooks, {
+        whitelist: true,
+        forbidNonWhitelisted: true,
+      });
+      this.parseError(results);
+      if (this.errors.length) return;
+
+      // ブックを探して条件を確認する
+      const orig = await findBook(bookId, this.user.id);
+      if (orig === undefined) {
+        this.errors.push("ブックが見つかりません。\n");
+        return;
+      }
+
+      if (importBooks.books.length !== 1) {
+        this.errors.push("jsonファイルに複数のブックが含まれています。\n");
+        return;
+      }
+
+      if (orig.name !== importBooks.books[0].name) {
+        this.errors.push("jsonファイルとブックのタイトルが一致しません。\n");
+        return;
+      }
+
+      // インポートするトピックのリストを作成する
+      const names: string[] = [];
+      const jobs: { import: ImportTopic; orig: TopicSchema }[] = [];
+      for (const section of importBooks.books[0].sections) {
+        for (const topic of section.topics) {
+          if (names.includes(topic.name)) {
+            this.errors.push(
+              `jsonファイルのトピックタイトル ${topic.name} が重複しています。`
+            );
+            return;
+          }
+          names.push(topic.name);
+          const origTopics = this.findTopicFromBook(orig, topic.name);
+          if (origTopics.length === 0) {
+            this.errors.push(
+              `指定されたタイトル ${topic.name} のトピックが見つかりません。`
+            );
+            return;
+          } else if (origTopics.length !== 1) {
+            this.errors.push(
+              `指定されたタイトル ${topic.name} のトピックが複数見つかりました。`
+            );
+            return;
+          }
+          jobs.push({ import: topic, orig: origTopics[0] });
+        }
+      }
+
+      // 処理するトピックのビデオファイルだけをアップロードする
+      importBooks.books[0].sections = [
+        {
+          name: "",
+          topics: jobs.map((job) => job.import),
+        },
+      ];
+      if (this.tmpdir) {
+        await this.uploadFiles(importBooks);
+      }
+      if (this.errors.length) return;
+
+      // トピックの上書きデータ
+      const topicInputArray = [];
+      const timeRequiredTopicIds = [];
+      for (const job of jobs) {
+        topicInputArray.push(
+          await this.updateTopic(job.orig.id, job.import, job.orig)
+        );
+        if (job.import.timeRequired > 0) {
+          timeRequiredTopicIds.push(job.orig.id);
+        }
+      }
+
+      // ブックの上書きデータ
+      const { name, description, language, keywords } = importBooks.books[0];
+      const bookInput = await this.updateBook(bookId, {
+        name,
+        description,
+        language,
+        shared: orig.shared,
+        keywords: keywords.map((str) => {
+          return { name: str };
+        }),
+      });
+
+      // DB更新
+      const created = await prisma.$transaction([
+        ...topicInputArray.map((topicInput) => prisma.topic.update(topicInput)),
+        prisma.book.update(bookInput),
+      ]);
+      if (!created) {
+        this.errors.push("ブックの上書きに失敗しました。\n");
+        return;
+      }
+
+      // ブックの timeRequired を調整する
+      if (timeRequiredTopicIds.length > 0) {
+        await updateBookTimeRequired(timeRequiredTopicIds);
       }
     } catch (e) {
       console.error(e);
