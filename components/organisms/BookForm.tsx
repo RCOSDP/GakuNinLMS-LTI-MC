@@ -31,6 +31,7 @@ import DomainsInput from "$organisms/DomainsInput";
 import useCardStyles from "styles/card";
 import gray from "theme/colors/gray";
 import type { BookSchema } from "$server/models/book";
+import type { TopicSchema } from "$server/models/topic";
 import type { PublicBookSchema } from "$server/models/book/public";
 import type { BookPropsWithSubmitOptions } from "$types/bookPropsWithSubmitOptions";
 import type { AuthorSchema } from "$server/models/author";
@@ -106,9 +107,10 @@ const label = {
 
 type Props = {
   book?: BookSchema;
-  topics?: number[];
+  topics?: TopicSchema[];
   id?: string;
   linked?: boolean;
+  hasLtiTargetLinkUri?: boolean;
   className?: string;
   variant?: "create" | "update";
   onSubmit?: (book: BookPropsWithSubmitOptions) => void;
@@ -122,6 +124,7 @@ export default function BookForm({
   className,
   id,
   linked = false,
+  hasLtiTargetLinkUri = false,
   variant = "create",
   onSubmit = () => undefined,
   onAuthorsUpdate,
@@ -157,13 +160,13 @@ export default function BookForm({
     authors: book?.authors ?? [],
     keywords: book?.keywords ?? [],
     publicBooks: book?.publicBooks ?? [],
-    submitWithLink: false,
+    submitWithLink: linked,
+    topics: topics?.map((topic) => topic.id),
   };
   const { handleSubmit, register, setValue } =
     useForm<BookPropsWithSubmitOptions>({
       defaultValues,
     });
-  setValue("topics", topics);
 
   return (
     <Card
@@ -240,13 +243,13 @@ export default function BookForm({
               }}
             >
               <DateTimePicker
-                renderInput={(props) => (
-                  <TextField {...props} fullWidth error={expireAtError} />
-                )}
+                slotProps={{
+                  textField: { fullWidth: true, error: expireAtError },
+                  toolbar: { toolbarFormat: "yyyy年MM月dd日" },
+                }}
                 label={
                   <>
                     公開期限
-                    <br />
                     <Typography
                       className={classes.labelDescription}
                       variant="caption"
@@ -256,9 +259,7 @@ export default function BookForm({
                     </Typography>
                   </>
                 }
-                inputFormat="yyyy年MM月dd日 HH時mm分"
-                mask="____年__月__日 __時__分"
-                toolbarFormat="yyyy年MM月dd日"
+                format="yyyy年MM月dd日 HH時mm分"
                 value={expireAt}
                 onChange={handleExpireAtChange}
               />
@@ -336,6 +337,12 @@ export default function BookForm({
         <FormControlLabel
           className={classes.marginLeft}
           label="コースへ配信"
+          title={
+            hasLtiTargetLinkUri
+              ? "ツールURLが指定されているため、リンクの切り替えはできません"
+              : "リンクを切り替える"
+          }
+          disabled={hasLtiTargetLinkUri}
           control={
             <Checkbox
               id="submit-with-link"

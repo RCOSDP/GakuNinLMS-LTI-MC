@@ -49,7 +49,9 @@ export default function LinkInfo({ sx, book, onLinkedBookClick }: Props) {
           {
             key: "リンク元",
             value:
-              session && session.ltiLaunchPresentation ? (
+              session &&
+              session.ltiLaunchPresentation &&
+              session?.ltiResourceLinkRequest ? (
                 <Link
                   href={session.ltiLaunchPresentation.returnUrl}
                   target="_blank"

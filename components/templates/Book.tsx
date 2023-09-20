@@ -27,11 +27,13 @@ import { authors } from "$utils/descriptionList";
 import extractNumberFromPx from "$utils/extractNumberFromPx";
 import sumPixels from "$utils/sumPixels";
 import type { ActivitySchema } from "$server/models/activity";
+import Chip from "@mui/material/Chip";
+import formatInterval from "$utils/formatInterval";
 
 const useStyles = makeStyles((theme) => ({
   header: {
     display: "flex",
-    alignItems: "baseline",
+    alignItems: "center",
     margin: 0,
     width: "100%",
     "& > *": {
@@ -174,6 +176,13 @@ export default function Book(props: Props) {
           >
             {book?.name}
           </Typography>
+          <Chip
+            sx={{ mr: 1, mb: 0.5 }}
+            label={`学習時間 ${formatInterval(
+              0,
+              (book?.timeRequired ?? 0) * 1000
+            )}`}
+          />
           {book?.shared && <SharedIndicator />}
           {isInstructor &&
             book &&

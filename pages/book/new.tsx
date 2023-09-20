@@ -1,16 +1,18 @@
 import { useRouter } from "next/router";
 import BookNew from "$templates/BookNew";
 import useBookNewHandlers from "$utils/useBookNewHandlers";
+import { useTopics } from "$utils/topic";
 
 export type Query = {
   context?: "books" | "topics";
   topics?: number | number[];
 };
 
-function New({ context, topics }: Query) {
+function New({ context, topics: topicIds }: Query) {
   const handlers = useBookNewHandlers(context);
+  const topics = useTopics(getTopicsIdArray(topicIds));
 
-  return <BookNew {...handlers} topics={getTopicsIdArray(topics)} />;
+  return <BookNew {...handlers} topics={topics} />;
 }
 
 function Router() {
@@ -22,7 +24,7 @@ function Router() {
 
 function getTopicsIdArray(topics: Query["topics"]): undefined | number[] {
   if (topics == null) return undefined;
-  if (Array.isArray(topics)) return topics;
+  if (Array.isArray(topics)) return topics.map((id) => Number(id));
   return [Number(topics)];
 }
 

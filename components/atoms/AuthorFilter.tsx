@@ -21,6 +21,7 @@ type Props = {
   sx?: SxProps;
   disabled?: boolean;
   onFilterChange?: (value: AuthorFilterType) => void;
+  row?: boolean | undefined;
 };
 
 function AuthorFilter({
@@ -28,6 +29,7 @@ function AuthorFilter({
   sx,
   disabled = false,
   onFilterChange,
+  row,
 }: Props) {
   const handleChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -38,7 +40,7 @@ function AuthorFilter({
   return (
     <FormControl component="fieldset" sx={sx}>
       <FormLabel component="legend">作成者</FormLabel>
-      <RadioGroup value={value} onChange={handleChange}>
+      <RadioGroup value={value} onChange={handleChange} row={row}>
         {options.map(({ value, label }) => (
           <FormControlLabel
             key={value}

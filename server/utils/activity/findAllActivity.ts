@@ -69,8 +69,7 @@ async function findLtiMembers(
  */
 async function findAllActivity(
   session: SessionSchema,
-  currentLtiContextOnly: boolean,
-  ip: string
+  currentLtiContextOnly: boolean
 ): Promise<{
   learners: Array<LearnerSchema>;
   courseBooks: Array<CourseBookSchema>;
@@ -87,21 +86,14 @@ async function findAllActivity(
   const ltiResourceLinks = await prisma.ltiResourceLink.findMany({
     where: { consumerId, contextId },
     orderBy: { title: "asc" },
-    select: { bookId: true },
+    select: { book: bookIncludingTopicsArg },
   });
-  const books = await prisma.book.findMany({
-    ...bookIncludingTopicsArg,
-    where: {
-      ltiResourceLinks: { some: { consumerId, contextId } },
-    },
-  });
+  const books = ltiResourceLinks.map(({ book }) => book);
   const activities = ltiMembers.flatMap(({ activities }) => activities);
   const { courseBooks, bookActivities } = toSchema({
     user,
-    ltiResourceLinks,
-    activities,
     books,
-    ip,
+    activities,
   });
 
   return { learners: ltiMembers, courseBooks, bookActivities };

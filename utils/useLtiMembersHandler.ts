@@ -15,7 +15,7 @@ export async function updateLtiMembers({
   await api.apiV2LtiMembersPut({
     body: { members },
   });
-  await mutate(["/api/v2/activity", currentLtiContextOnly]);
+  await mutate({ key: "/api/v2/activity", currentLtiContextOnly });
   return await mutate(key);
 }
 

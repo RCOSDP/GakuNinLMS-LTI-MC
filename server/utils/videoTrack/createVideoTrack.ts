@@ -9,8 +9,7 @@ import { getVttAccessToken } from "$server/utils/topicResourceToken";
 async function createVideoTrack(
   createRequestUrl: string,
   resourceId: Resource["id"],
-  { content, ...props }: VideoTrackProps,
-  ip: string
+  { content, ...props }: VideoTrackProps
 ): Promise<undefined | VideoTrackSchema> {
   const resource = await prisma.resource.findUnique({
     where: { id: resourceId },
@@ -35,7 +34,7 @@ async function createVideoTrack(
   return {
     ...created,
     url: `${createRequestUrl}/${created.id}/vtt`,
-    accessToken: getVttAccessToken(ip, resourceId, created.id),
+    accessToken: getVttAccessToken(resourceId, created.id),
   };
 }
 

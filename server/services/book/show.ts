@@ -27,7 +27,6 @@ export const showHooks = {
 export async function show({
   session,
   params,
-  ip,
 }: FastifyRequest<{ Params: BookParams }>) {
   const { book_id: bookId } = params;
 
@@ -35,7 +34,7 @@ export async function show({
     return { status: 403 };
   }
 
-  const book = await findBook(bookId, session.user.id, ip);
+  const book = await findBook(bookId, session.user.id);
 
   return {
     status: book == null ? 404 : 200,

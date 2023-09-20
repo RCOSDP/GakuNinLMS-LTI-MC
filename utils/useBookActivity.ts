@@ -13,7 +13,12 @@ import {
 const key = "/api/v2/book/{book_id}/activity";
 const initialActivity: [] = [];
 
-async function updateBookActivity(_: typeof key, bookId: BookSchema["id"]) {
+async function updateBookActivity({
+  bookId,
+}: {
+  key: typeof key;
+  bookId: BookSchema["id"];
+}) {
   if (!bookId) return;
   const res = await api.apiV2BookBookIdActivityPut({
     bookId,
@@ -26,7 +31,7 @@ function useBookActivity(bookId: BookSchema["id"] | undefined) {
   const { session } = useSessionAtom();
   const isLeaner = session?.user?.id && !isInstructor(session);
   const { data = initialActivity } = useSWR(
-    isLeaner && Number.isFinite(bookId) ? [key, bookId] : null,
+    isLeaner && Number.isFinite(bookId) ? { key, bookId } : null,
     updateBookActivity,
     { refreshInterval: NEXT_PUBLIC_ACTIVITY_SEND_INTERVAL * 1_000 }
   );

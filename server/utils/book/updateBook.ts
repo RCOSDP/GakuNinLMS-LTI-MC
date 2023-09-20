@@ -22,8 +22,7 @@ function upsertSections(bookId: Book["id"], sections: SectionProps[]) {
 
 async function updateBook(
   userId: number,
-  { id, sections, publicBooks, ...book }: Pick<Book, "id"> & BookProps,
-  ip: string
+  { id, sections, publicBooks, ...book }: Pick<Book, "id"> & BookProps
 ): Promise<BookSchema | undefined> {
   const ops: Array<PrismaPromise<unknown>> = [];
 
@@ -34,8 +33,8 @@ async function updateBook(
   }
 
   const timeRequired = sections && (await aggregateTimeRequired({ sections }));
-  const keywords = await prisma.keyword.findMany({
-    where: { books: { every: { id } } },
+  const keywordsBeforeUpdate = await prisma.keyword.findMany({
+    where: { books: { some: { id } } },
   });
   const update = prisma.book.update({
     where: { id },
@@ -44,7 +43,7 @@ async function updateBook(
       ...(timeRequired && { timeRequired }),
       keywords: {
         ...keywordsConnectOrCreateInput(book.keywords ?? []),
-        ...keywordsDisconnectInput(keywords, book.keywords ?? []),
+        ...keywordsDisconnectInput(keywordsBeforeUpdate, book.keywords ?? []),
       },
       updatedAt: new Date(),
     },
@@ -56,7 +55,7 @@ async function updateBook(
 
   await prisma.$transaction(ops);
 
-  return await findBook(id, userId, ip);
+  return await findBook(id, userId);
 }
 
 function removePublicBooks(

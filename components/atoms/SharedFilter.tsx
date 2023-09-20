@@ -21,6 +21,7 @@ type Props = {
   sx?: SxProps;
   disabled?: boolean;
   onFilterChange?: (value: SharedFilterType) => void;
+  row?: boolean | undefined;
 };
 
 function SharedFilter({
@@ -28,6 +29,7 @@ function SharedFilter({
   sx,
   disabled = false,
   onFilterChange,
+  row,
 }: Props) {
   const handleChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -38,7 +40,7 @@ function SharedFilter({
   return (
     <FormControl component="fieldset" sx={sx}>
       <FormLabel component="legend">共有</FormLabel>
-      <RadioGroup value={value} onChange={handleChange}>
+      <RadioGroup value={value} onChange={handleChange} row={row}>
         {options.map(({ value, label }) => (
           <FormControlLabel
             key={value}

@@ -25,9 +25,8 @@ export const createHooks = {
 export async function create({
   session,
   body,
-  ip,
 }: FastifyRequest<{ Body: BookProps }>) {
-  const created = await createBook(session.user.id, body, ip);
+  const created = await createBook(session.user.id, body);
 
   return {
     status: created == null ? 400 : 201,

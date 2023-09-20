@@ -1,8 +1,10 @@
 import type { FastifyInstance } from "fastify";
 import swagger from "@fastify/swagger";
+import swaggerUi from "@fastify/swagger-ui";
 import helmet from "@fastify/helmet";
 import cors from "@fastify/cors";
 import session from "@fastify/session";
+import type { SessionStore } from "@fastify/session";
 import cookie from "@fastify/cookie";
 import auth from "@fastify/auth";
 import formbody from "@fastify/formbody";
@@ -15,21 +17,22 @@ export type Options = {
   basePath: string;
   allowOrigin: string[];
   sessionSecret: string;
-  sessionStore: session.SessionStore;
+  sessionStore: SessionStore;
 };
 
 async function app(fastify: FastifyInstance, options: Options) {
   const { basePath, allowOrigin, sessionSecret, sessionStore } = options;
 
   await fastify.register(swagger, {
-    routePrefix: `${basePath}/swagger`,
     swagger: {
       info: {
         title: pkg.name,
         version: pkg.version,
       },
     },
-    exposeRoute: true,
+  });
+  await fastify.register(swaggerUi, {
+    routePrefix: `${basePath}/swagger`,
   });
 
   await fastify.register(helmet, {

@@ -7,6 +7,6 @@ const sortLinkOrder = [
   "reverse-title",
 ] as const;
 
-export type SortLinkOrder = typeof sortLinkOrder[number];
+export type SortLinkOrder = (typeof sortLinkOrder)[number];
 
 export default sortLinkOrder;

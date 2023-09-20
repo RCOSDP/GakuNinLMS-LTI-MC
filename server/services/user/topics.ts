@@ -34,12 +34,11 @@ export const hooks = {
 export async function index({
   query,
   params,
-  ip,
 }: FastifyRequest<{ Querystring: Query; Params: Params }>) {
   const page = query.page ?? 0;
   const perPage = query.per_page ?? 50;
   const { user_id: userId } = params;
-  const topics = await findTopicsBy(userId, query.sort, page, perPage, ip);
+  const topics = await findTopicsBy(userId, query.sort, page, perPage);
 
   return {
     status: 200,

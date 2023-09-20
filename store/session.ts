@@ -1,5 +1,4 @@
-import { atom } from "jotai";
-import { useAtomValue, useUpdateAtom } from "jotai/utils";
+import { atom, useAtomValue, useSetAtom } from "jotai";
 import type { SessionSchema } from "$server/models/session";
 import type { ContentAuthors, IsContentEditable } from "$server/models/content";
 import {
@@ -26,7 +25,8 @@ const sessionAtom = atom<SessionWithState>({
 
 const updateSessionAtom = atom<
   null,
-  { session: SessionSchema | undefined; error: boolean }
+  [{ session: SessionSchema | undefined; error: boolean }],
+  void
 >(null, (get, set, { session, error }) => {
   const isAdministrator = Boolean(session && isAdministratorSession(session));
   const isInstructor = Boolean(session && isInstructorSession(session));
@@ -47,7 +47,7 @@ export function useSessionAtom() {
 }
 
 export function useUpdateSessionAtom() {
-  return [useAtomValue(sessionAtom), useUpdateAtom(updateSessionAtom)] as const;
+  return [useAtomValue(sessionAtom), useSetAtom(updateSessionAtom)] as const;
 }
 
 export function useLmsUrl() {

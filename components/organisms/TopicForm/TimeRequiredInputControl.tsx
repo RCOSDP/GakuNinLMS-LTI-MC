@@ -1,17 +1,19 @@
-import type { Control, FieldPath } from "react-hook-form";
+import type { FieldValues, Control, FieldPath } from "react-hook-form";
 import { useController } from "react-hook-form";
 import { useToggle } from "react-use";
 import Alert from "@mui/material/Alert";
 import TextField from "$atoms/TextField";
 import type { TopicSchema } from "$server/models/topic";
 
-type Props<FieldValues> = {
+type Props<TFieldValues extends FieldValues> = {
   topic?: Pick<TopicSchema, "timeRequired">;
-  name: FieldPath<FieldValues>;
-  control: Control<FieldValues>;
+  name: FieldPath<TFieldValues>;
+  control: Control<TFieldValues>;
 };
 
-function TimeRequiredInputControl<FieldValues>(props: Props<FieldValues>) {
+function TimeRequiredInputControl<TFieldValues extends FieldValues>(
+  props: Props<TFieldValues>
+) {
   const { field } = useController(props);
   const modified =
     props.topic && field.value !== Number(props.topic.timeRequired);

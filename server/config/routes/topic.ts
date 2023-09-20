@@ -4,6 +4,7 @@ import handler from "$server/utils/handler";
 import * as service from "$server/services/topic";
 import * as activityService from "$server/services/topic/activity";
 import * as authorsService from "$server/services/topic/authors";
+import * as importService from "$server/services/topicImport";
 
 const basePath = "/topic";
 const pathWithParams = `${basePath}/:topic_id`;
@@ -55,4 +56,15 @@ export async function topicAuthors(fastify: FastifyInstance) {
     Params: authorsService.Params;
     Body: authorsService.Props;
   }>(path, { schema: method.put, ...hooks.put }, handler(update));
+}
+
+export async function topicImport(fastify: FastifyInstance) {
+  const path = `${pathWithParams}/import`;
+  const { importSchema, importHooks, importTopic } = importService;
+  const hooks = makeHooks(fastify, importHooks);
+
+  fastify.post<{
+    Params: service.Params;
+    Body: importService.Params;
+  }>(path, { schema: importSchema, ...hooks.post }, handler(importTopic));
 }

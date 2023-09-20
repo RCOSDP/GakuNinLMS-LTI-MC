@@ -1,4 +1,4 @@
-import type { VideoJsPlayer } from "video.js";
+import type { VideoJsPlayer } from "$types/videoJsPlayer";
 import { IntervalTree } from "./intervalTree";
 
 const youtubeType = "video/youtube";

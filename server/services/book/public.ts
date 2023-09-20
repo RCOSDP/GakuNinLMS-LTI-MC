@@ -32,7 +32,6 @@ export const hook = {
 export async function method({
   params,
   headers,
-  ip,
 }: FastifyRequest<{ Params: BookPublicParams; Headers: BookPublicHeaders }>) {
   const { token } = params;
   const { originreferer } = headers;
@@ -42,7 +41,7 @@ export async function method({
     return { status: 404 };
   }
 
-  const book = await findBook(publicBook.bookId, publicBook.userId, ip);
+  const book = await findBook(publicBook.bookId, publicBook.userId);
 
   return {
     status: book == null ? 404 : 200,
