@@ -69,6 +69,8 @@ model Topic {
   keywords     Keyword[]
   topicSection TopicSection[]
   activities   Activity[]
+  bookmarks    Bookmark[]
+
   /// トピック名称
   name         String
   /// 説明 (Markdown)
@@ -149,6 +151,7 @@ model LtiContext {
   resourceLinks LtiResourceLink[]
   members       LtiMember[]
   activities    Activity[]
+  bookmarks     Bookmark[]
   title         String
   label         String
 
@@ -287,6 +290,7 @@ model User {
   ltiUserId        String            @map("lti_user_id")
   activities       Activity[]
   publicBooks      PublicBook[]
+  bookmarks        Bookmark[]
   /// 氏名
   name             String
   /// メールアドレス ("" は無効値)
@@ -358,6 +362,46 @@ model ContentRole {
   authorships Authorship[]
 
   @@map("content_roles")
+}
+
+/// タグ種別
+enum TagLabel {
+  INTERESTING
+  DIFFICULT
+  LATER
+  IMPORTANT
+}
+
+/// タグ
+model Tag {
+  id    Int      @id @default(autoincrement())
+  label TagLabel @unique
+  color String
+
+  bookmarks Bookmark[]
+}
+
+/// ブックマーク
+model Bookmark {
+  id Int @id @default(autoincrement())
+
+  ltiContext   LtiContext @relation(fields: [ltiCosumerId, ltiContextId], references: [consumerId, id])
+  ltiCosumerId String     @map("lti_consumer_id")
+  ltiContextId String     @map("lti_context_id")
+
+  tagId Int @map("tag_id")
+  tag   Tag @relation(fields: [tagId], references: [id])
+
+  userId Int  @map("user_id")
+  user   User @relation(fields: [userId], references: [id])
+
+  topicId Int   @map("topic_id")
+  topic   Topic @relation(fields: [topicId], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([ltiCosumerId, ltiContextId, tagId, userId, topicId])
 }
 
 // Etc.
