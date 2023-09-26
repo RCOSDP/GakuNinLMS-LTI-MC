@@ -11,7 +11,7 @@ function getActivitiesEachCourseBooks({
   const activitiesEachCourseBooks: Array<
     [
       Pick<CourseBookSchema, "id" | "name">,
-      Array<Omit<BookActivitySchema, "learner" | "book">>
+      Array<Omit<BookActivitySchema, "learner" | "book">>,
     ]
   > = [];
   for (const book of courseBooks) {
