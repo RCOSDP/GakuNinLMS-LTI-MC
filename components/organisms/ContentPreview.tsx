@@ -113,7 +113,10 @@ const Preview = styled(Card)(({ theme }) => ({
   },
 }));
 
-type Props = Parameters<typeof Checkbox>[0] & {
+export type ContentPreviewProps = Omit<
+  Parameters<typeof Checkbox>[0],
+  "content"
+> & {
   content: ContentSchema;
   onContentPreviewClick(content: ContentSchema): void;
   onContentEditClick?(content: ContentSchema): void;
@@ -139,7 +142,7 @@ export default function ContentPreview({
   isDeepLink,
   checked,
   ...checkboxProps
-}: Props) {
+}: ContentPreviewProps) {
   const lineClamp = useLineClampStyles({
     fontSize: "0.75rem",
     lineClamp: 2,

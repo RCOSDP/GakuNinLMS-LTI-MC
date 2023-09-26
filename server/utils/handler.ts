@@ -14,8 +14,10 @@ const handler =
     K extends keyof Controller,
     RouteGeneric extends RouteGenericInterface = RouteGenericInterface,
     RawServer extends RawServerBase = RawServerDefault,
-    RawRequest extends RawRequestDefaultExpression<RawServer> = RawRequestDefaultExpression<RawServer>,
-    RawReply extends RawReplyDefaultExpression<RawServer> = RawReplyDefaultExpression<RawServer>
+    RawRequest extends
+      RawRequestDefaultExpression<RawServer> = RawRequestDefaultExpression<RawServer>,
+    RawReply extends
+      RawReplyDefaultExpression<RawServer> = RawReplyDefaultExpression<RawServer>,
   >(
     method: Required<Controller<RouteGeneric, RawServer, RawRequest>>[K]
   ) =>

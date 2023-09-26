@@ -99,7 +99,7 @@ export class PlayerTracker extends (EventEmitter as {
 
   private intoVideoJs(player: VideoJsPlayer) {
     player.on("timeupdate", () => {
-      this.currentTime = player.currentTime();
+      this.currentTime = player.currentTime() ?? NaN;
     });
 
     for (const event of basicEventsMap) {
@@ -113,7 +113,7 @@ export class PlayerTracker extends (EventEmitter as {
     player.on("ratechange", () => {
       this.emit("playbackratechange", {
         ...this.stats,
-        playbackRate: player.playbackRate(),
+        playbackRate: player.playbackRate() ?? NaN,
       });
     });
 

@@ -17,7 +17,7 @@ export function isDisplayableBook(
 }
 
 export function getDisplayableBook<
-  Book extends Pick<BookSchema, "id" | "shared" | "authors" | "sections">
+  Book extends Pick<BookSchema, "id" | "shared" | "authors" | "sections">,
 >(
   book: Book | undefined,
   isContentEditable: IsContentEditable | undefined,

@@ -46,7 +46,7 @@ function getLearnerActivities({
     `${BookSchema["id"]}-${TopicSchema["id"]}-${number}`,
     [
       Pick<BookSchema, "id" | "name">,
-      Pick<TopicSchema, "id" | "name" | "timeRequired">
+      Pick<TopicSchema, "id" | "name" | "timeRequired">,
     ]
   > = new Map();
   for (const book of courseBooks) {

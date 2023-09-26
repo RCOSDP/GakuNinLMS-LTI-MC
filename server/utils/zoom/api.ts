@@ -99,7 +99,7 @@ export type ZoomMeetingResponse = {
       occurrence_id: string;
       start_time: string;
       status: string;
-    }
+    },
   ];
   password: string;
   pmi: string;

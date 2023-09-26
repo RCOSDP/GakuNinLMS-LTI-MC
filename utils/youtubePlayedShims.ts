@@ -13,7 +13,7 @@ const youtubeType = "video/youtube";
  * @return 無効な速度で再生しているならば true、それ以外ならば false
  */
 function invalidSpeed(player: VideoJsPlayer, diff: number) {
-  return Math.abs(diff) > 0.5 * player.playbackRate();
+  return Math.abs(diff) > 0.5 * (player.playbackRate() ?? 1);
 }
 
 /** HTMLMediaElement.played に相当するAPIの再現 */
@@ -31,10 +31,10 @@ function youtubePlayedShims(player: VideoJsPlayer) {
     };
   }
 
-  let start = player.currentTime();
+  let start = player.currentTime() ?? 0;
   let prev = start;
   player.on("timeupdate", () => {
-    const end = player.currentTime();
+    const end = player.currentTime() ?? prev;
     const diff = end - prev;
     prev = end;
 
