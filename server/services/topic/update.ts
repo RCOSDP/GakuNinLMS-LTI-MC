@@ -38,7 +38,6 @@ export async function update({
   session,
   body,
   params,
-  ip,
 }: FastifyRequest<{
   Body: TopicProps;
   Params: TopicParams;
@@ -53,11 +52,10 @@ export async function update({
     return { status: 400 };
   }
 
-  const created = await upsertTopic(
-    session.user.id,
-    { ...body, id: params.topic_id },
-    ip
-  );
+  const created = await upsertTopic(session.user.id, {
+    ...body,
+    id: params.topic_id,
+  });
 
   if (created == null) return { status: 400 };
 

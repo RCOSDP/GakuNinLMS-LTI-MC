@@ -2,7 +2,6 @@ import type { StrictEventEmitter } from "strict-event-emitter-types";
 import { EventEmitter } from "events";
 import type { VideoJsPlayer } from "$types/videoJsPlayer";
 import VimeoPlayer from "@vimeo/player";
-import type { VideoResourceSchema } from "$server/models/videoResource";
 import youtubePlayedShims from "$utils/youtubePlayedShims";
 
 const basicEventsMap = [
@@ -14,29 +13,27 @@ const basicEventsMap = [
   "timeupdate",
 ] as const;
 
-export type PlayerEvent = Pick<VideoResourceSchema, "providerUrl" | "url"> & {
-  /** ビデオの経過時間 (秒) */
-  currentTime: number;
-};
+export type PlayerStats = Pick<
+  PlayerTracker,
+  "providerUrl" | "url" | "currentTime" | "firstPlay"
+>;
 
 type CustomEvents = {
-  nextvideo: PlayerEvent & { video: number };
-  forward: PlayerEvent;
-  back: PlayerEvent;
-  durationchange: PlayerEvent & { duration: number };
+  nextvideo: PlayerStats & { video: number };
+  forward: PlayerStats;
+  back: PlayerStats;
+  durationchange: PlayerStats & { duration: number };
 };
 
 export type PlayerEvents = {
-  ended: PlayerEvent;
-  pause: PlayerEvent;
-  play: PlayerEvent;
-  seeked: PlayerEvent;
-  seeking: PlayerEvent;
-  timeupdate: PlayerEvent;
-  playbackratechange: PlayerEvent & { playbackRate: number };
-  texttrackchange: PlayerEvent & { language?: string };
-  /** @deprecated */
-  firstplay: PlayerEvent;
+  ended: PlayerStats;
+  pause: PlayerStats;
+  play: PlayerStats;
+  seeked: PlayerStats;
+  seeking: PlayerStats;
+  timeupdate: PlayerStats;
+  playbackratechange: PlayerStats & { playbackRate: number };
+  texttrackchange: PlayerStats & { language?: string };
 } & CustomEvents;
 
 const youtubeType = "video/youtube";
@@ -53,6 +50,8 @@ export class PlayerTracker extends (EventEmitter as {
   readonly url: string;
   /** 現在再生時間 */
   currentTime = 0;
+  /** 初回再生 */
+  firstPlay = true;
   /** 再生した時間範囲の取得 */
   readonly getPlayed: () => Promise<[number, number][]>;
 
@@ -93,9 +92,9 @@ export class PlayerTracker extends (EventEmitter as {
     this.emit("nextvideo", { ...this.stats, video });
   }
 
-  get stats() {
-    const { providerUrl, url, currentTime } = this;
-    return { providerUrl, url, currentTime };
+  get stats(): PlayerStats {
+    const { providerUrl, url, currentTime, firstPlay } = this;
+    return { providerUrl, url, currentTime, firstPlay };
   }
 
   private intoVideoJs(player: VideoJsPlayer) {
@@ -107,7 +106,10 @@ export class PlayerTracker extends (EventEmitter as {
       player.on(event, () => this.emit(event, this.stats));
     }
 
-    player.on("firstplay", () => this.emit("firstplay", this.stats));
+    player.on("play", () => {
+      this.firstPlay = false;
+    });
+
     player.on("ratechange", () => {
       this.emit("playbackratechange", {
         ...this.stats,
@@ -140,6 +142,10 @@ export class PlayerTracker extends (EventEmitter as {
     for (const event of basicEventsMap) {
       player.on(event, () => this.emit(event, this.stats));
     }
+
+    player.on("play", () => {
+      this.firstPlay = false;
+    });
 
     player.on("playbackratechange", (data: { playbackRate: number }) => {
       this.emit("playbackratechange", {

@@ -4,7 +4,7 @@ import type { BookSchema } from "$server/models/book";
 import type { BookPropsWithSubmitOptions } from "$types/bookPropsWithSubmitOptions";
 import { pagesPath } from "./$path";
 import { createBook } from "./book";
-import useBookLinkHandler from "./useBookLinkHandler";
+import useBookLinkingHandlers from "./useBookLinkingHandlers";
 import useAuthorsHandler from "$utils/useAuthorsHandler";
 import { updateBookAuthors } from "./bookAuthors";
 
@@ -13,7 +13,7 @@ function useBookNewHandlers(
   bookId?: BookSchema["id"]
 ) {
   const router = useRouter();
-  const handleBookLink = useBookLinkHandler();
+  const { onBookLinking } = useBookLinkingHandlers();
   const { handleAuthorsUpdate, handleAuthorSubmit } = useAuthorsHandler();
   const handleSubmit = useCallback(
     async ({
@@ -32,7 +32,7 @@ function useBookNewHandlers(
           ...authors,
         ],
       });
-      if (submitWithLink) await handleBookLink({ id: book.id });
+      if (submitWithLink) await onBookLinking?.({ id: book.id });
       await router.replace(
         pagesPath.book.edit.$url({
           query: {
@@ -42,7 +42,7 @@ function useBookNewHandlers(
         })
       );
     },
-    [router, context, handleBookLink]
+    [router, context, onBookLinking]
   );
   const handleCancel = useCallback(() => {
     switch (context) {

@@ -1,12 +1,12 @@
 import type { EventType } from "$server/models/event";
 import { api } from "$utils/api";
-import type { PlayerEvent, PlayerEvents, PlayerTracker } from "./playerTracker";
+import type { PlayerStats, PlayerEvents, PlayerTracker } from "./playerTracker";
 import { load as loadPlaybackRate } from "$utils/playbackRate";
 import { load } from "./loggerSessionPersister";
 import getFilePath from "./getFilePath";
 
 /** v1のときのトラッキング用コードの移植 */
-function send(eventType: EventType, event: PlayerEvent, detail?: string) {
+function send(eventType: EventType, event: PlayerStats, detail?: string) {
   const session = load();
   if (!session) return;
   const idPrefix = session.oauthClient.id;
@@ -62,16 +62,13 @@ function logger(tracker: PlayerTracker) {
     void send("trackchange", event, event.language ?? "off");
   });
 
-  for (const event of [
-    "forward",
-    "back",
-    "firstplay",
-    "ended",
-    "pause",
-    "play",
-  ] as const) {
+  for (const event of ["forward", "back", "ended", "pause"] as const) {
     tracker.on(event, buildHandler(event));
   }
+
+  tracker.on("play", function (event) {
+    void send("play", event, event.firstPlay ? "first" : undefined);
+  });
 
   tracker.on("playbackratechange", function (event) {
     const persistentRate = loadPlaybackRate();

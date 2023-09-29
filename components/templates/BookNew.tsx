@@ -49,7 +49,7 @@ export default function BookNew({
   onAuthorsUpdate,
   onAuthorSubmit,
 }: Props) {
-  const { isContentEditable } = useSessionAtom();
+  const { session, isContentEditable } = useSessionAtom();
   const forkFrom =
     book && !isContentEditable(book) && book.authors.length > 0 && book.authors;
   const defaultBook = book && {
@@ -87,6 +87,8 @@ export default function BookNew({
       <BookForm
         book={defaultBook}
         topics={topics}
+        linked={false}
+        hasLtiTargetLinkUri={Boolean(session?.ltiTargetLinkUri)}
         variant="create"
         onSubmit={onSubmit}
         onAuthorsUpdate={onAuthorsUpdate}

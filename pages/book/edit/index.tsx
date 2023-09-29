@@ -10,7 +10,7 @@ import Placeholder from "$templates/Placeholder";
 import BookNotFoundProblem from "$templates/BookNotFoundProblem";
 import { destroyBook, updateBook, useBook } from "$utils/book";
 import { pagesPath } from "$utils/$path";
-import useBookLinkHandler from "$utils/useBookLinkHandler";
+import useBookLinkingHandlers from "$utils/useBookLinkingHandlers";
 import useAuthorsHandler from "$utils/useAuthorsHandler";
 
 export type Query = {
@@ -23,7 +23,7 @@ function Edit({ bookId, context }: Query) {
   const { session, isContentEditable } = useSessionAtom();
   const { book, error } = useBook(bookId, isContentEditable);
   const router = useRouter();
-  const handleBookLink = useBookLinkHandler();
+  const { onBookLinking } = useBookLinkingHandlers();
   const { handleAuthorsUpdate, handleAuthorSubmit } = useAuthorsHandler(
     book && { type: "book", ...book }
   );
@@ -43,7 +43,7 @@ function Edit({ bookId, context }: Query) {
     ...props
   }: BookPropsWithSubmitOptions) {
     await updateBook({ id: bookId, ...props });
-    if (submitWithLink) await handleBookLink({ id: bookId });
+    if (submitWithLink) await onBookLinking?.({ id: bookId });
     return back();
   }
   async function handleDelete({ id }: Pick<BookSchema, "id">) {
@@ -84,6 +84,9 @@ function Edit({ bookId, context }: Query) {
   function handleTopicImportClick() {
     return router.push(pagesPath.book.topic.import.$url({ query }));
   }
+  const handleOverwriteClick = () => {
+    return router.push(pagesPath.book.overwrite.$url({ query: { bookId } }));
+  };
   const handlers = {
     linked: bookId === session?.ltiResourceLink?.bookId,
     onSubmit: handleSubmit,
@@ -97,6 +100,7 @@ function Edit({ bookId, context }: Query) {
     onAuthorsUpdate: handleAuthorsUpdate,
     onAuthorSubmit: handleAuthorSubmit,
     isContentEditable: () => true,
+    onOverwriteClick: handleOverwriteClick,
   };
 
   if (error) return <BookNotFoundProblem />;

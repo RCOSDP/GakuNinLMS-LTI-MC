@@ -203,45 +203,63 @@ export default function Video({
         }
       });
       void videoInstance.player.setCurrentTime(startTime || 0);
-    } else {
-      const handleSeeked = () => {
-        const currentTime = videoInstance.player.currentTime();
-        // @ts-expect-error startTime is number
-        if (Number.isFinite(startTime) && currentTime < startTime) {
-          videoInstance.player.currentTime(startTime || 0);
-        }
-      };
-      const handleTimeUpdate = () => {
-        if (videoInstance.stopTimeOver) return;
-        const currentTime = videoInstance.player.currentTime();
-        if (isValidPlaybackEnd({ currentTime, stopTime })) {
-          videoInstance.stopTimeOver = true;
-          videoInstance.player.pause();
-          onEnded?.();
-        }
-      };
-      const handlePlay = () => {
-        // 終了位置より後ろにシークすると、意図せず再生が再開してしまうことがあるので、ユーザーの操作によらない再生開始を抑制する
-        if (videoInstance.stopTimeOver) videoInstance.player.pause();
-      };
-      const handleFirstPlay = () => {
+      return;
+    }
+
+    const handleSeeked = () => {
+      const currentTime = videoInstance.player.currentTime();
+      // @ts-expect-error startTime is number
+      if (Number.isFinite(startTime) && currentTime < startTime) {
+        videoInstance.player.currentTime(startTime || 0);
+      }
+    };
+
+    const handleTimeUpdate = () => {
+      if (videoInstance.stopTimeOver) return;
+      const currentTime = videoInstance.player.currentTime();
+      if (isValidPlaybackEnd({ currentTime, stopTime })) {
+        videoInstance.stopTimeOver = true;
+        videoInstance.player.pause();
+        onEnded?.();
+      }
+    };
+
+    const handlePlay = () => {
+      // 終了位置より後ろにシークすると、意図せず再生が再開してしまうことがあるので、ユーザーの操作によらない再生開始を抑制する
+      if (videoInstance.stopTimeOver) videoInstance.player.pause();
+    };
+
+    const handleFirstPlay = () => {
+      if (!videoInstance.firstPlay) return;
+
+      // NOTE: 初回playイベントは再生位置を移動して再生する
+      if (startTime && Number.isFinite(startTime)) {
+        videoInstance.player.currentTime(startTime);
+      }
+
+      videoInstance.firstPlay = false;
+    };
+
+    const handleReady = () => {
+      if (videoInstance.stopTimeOver) {
         if (Number.isFinite(startTime))
           videoInstance.player.currentTime(startTime || 0);
-      };
-      const handleReady = () => {
-        if (videoInstance.stopTimeOver) {
-          if (Number.isFinite(startTime))
-            videoInstance.player.currentTime(startTime || 0);
-          videoInstance.stopTimeOver = false;
-        }
-        videoInstance.player.on("timeupdate", handleTimeUpdate);
-        videoInstance.player.on("seeked", handleSeeked);
-      };
+        videoInstance.stopTimeOver = false;
+      }
+      videoInstance.player.on("timeupdate", handleTimeUpdate);
+      videoInstance.player.on("seeked", handleSeeked);
+    };
 
-      videoInstance.player.on("play", handlePlay);
-      videoInstance.player.on("firstplay", handleFirstPlay);
-      videoInstance.player.ready(handleReady);
-    }
+    videoInstance.player.on("play", handlePlay);
+    videoInstance.player.one("play", handleFirstPlay);
+    videoInstance.player.ready(handleReady);
+
+    return () => {
+      videoInstance.player.off("timeupdate", handleTimeUpdate);
+      videoInstance.player.off("seeked", handleSeeked);
+      videoInstance.player.off("play", handlePlay);
+      videoInstance.player.off("play", handleFirstPlay);
+    };
     // TODO: videoの内容の変更検知は機能しないので修正したい。Mapオブジェクトでの管理をやめるかMap.prototype.set()を使用しないようにするなど必要かもしれない。
   }, [video, itemExists, prevItemIndex, itemIndex, onEnded]);
 

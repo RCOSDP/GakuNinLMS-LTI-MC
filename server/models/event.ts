@@ -9,7 +9,6 @@ export type EventType =
   | "seeking"
   | "seeked"
   | "trackchange"
-  | "firstplay"
   | "play"
   | "pause"
   | "ratechange"

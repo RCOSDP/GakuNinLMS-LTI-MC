@@ -28,7 +28,6 @@ export async function create({
   hostname,
   session,
   body,
-  ip,
 }: FastifyRequest<{
   Body: TopicProps;
 }>) {
@@ -37,7 +36,7 @@ export async function create({
     return { status: 400 };
   }
 
-  const created = await createTopic(session.user.id, body, ip);
+  const created = await createTopic(session.user.id, body);
 
   return {
     status: created == null ? 400 : 201,

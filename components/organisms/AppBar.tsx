@@ -28,6 +28,7 @@ const useStyles = makeStyles((theme) => ({
   inner: {
     display: "flex",
     alignItems: "center",
+    justifyContent: "space-between",
     maxWidth: theme.breakpoints.values.lg,
     width: "100%",
     margin: "0 auto",
@@ -88,6 +89,7 @@ function AppBar(props: Props, ref: Ref<HTMLDivElement>) {
     onDashboardClick,
     ...others
   } = props;
+  const isDeepLink = !!session.ltiDlSettings?.deep_link_return_url;
   const appBarClasses = useAppBarStyles();
   const classes = useStyles();
   const [open, setOpen] = useState(false);
@@ -137,71 +139,75 @@ function AppBar(props: Props, ref: Ref<HTMLDivElement>) {
             alt="CHiBi-CHiLO"
             className={clsx(classes.margin, classes.logo)}
           />
-          <div className={classes.nav}>
-            <AppBarNavButton
-              color="inherit"
-              icon={<MenuBookOutlinedIcon />}
-              label="ブック"
-              onClick={onBooksClick}
-              disabled={!onBooksClick}
-            />
-            <AppBarNavButton
-              color="inherit"
-              icon={<LibraryBooksOutlinedIcon />}
-              label="トピック"
-              onClick={onTopicsClick}
-              disabled={!onTopicsClick}
-            />
-            <AppBarNavButton
-              color="inherit"
-              icon={<LinkIcon />}
-              label="リンク"
-              onClick={onCoursesClick}
-              disabled={!onCoursesClick}
-            />
-            <AppBarNavButton
-              color="inherit"
-              icon={<CellTowerIcon />}
-              label="配信中のブック"
-              onClick={onBookClick}
-              disabled={
-                !onBookClick ||
-                !Number.isFinite(session?.ltiResourceLink?.bookId)
-              }
-            />
-            {session?.systemSettings?.zoomImportEnabled && ( // TODO: zoomインポート以外の設定値が実装されたら常時表示する
+          {!isDeepLink && (
+            <div className={classes.nav}>
               <AppBarNavButton
                 color="inherit"
-                icon={<SettingsIcon />}
-                label="設定"
-                onClick={handleOpenUserSettings}
+                icon={<MenuBookOutlinedIcon />}
+                label="ブック"
+                onClick={onBooksClick}
+                disabled={!onBooksClick}
               />
-            )}
-            {onDashboardClick && (
               <AppBarNavButton
                 color="inherit"
-                icon={<AssessmentOutlinedIcon />}
-                label="学習分析"
-                onClick={onDashboardClick}
+                icon={<LibraryBooksOutlinedIcon />}
+                label="トピック"
+                onClick={onTopicsClick}
+                disabled={!onTopicsClick}
               />
-            )}
-          </div>
-          <div className={clsx(classes.user, classes.margin)}>
-            <p>{session.user.name}</p>
-            <p className={classes.roles}>{role(session)}</p>
-          </div>
-          {session && (
-            <>
-              <Button variant="text" color="primary" onClick={handleClick}>
-                LTI情報
-              </Button>
-              <LtiItemDialog
-                open={open}
-                onClose={handleClose}
-                session={session}
+              <AppBarNavButton
+                color="inherit"
+                icon={<LinkIcon />}
+                label="リンク"
+                onClick={onCoursesClick}
+                disabled={!onCoursesClick}
               />
-            </>
+              <AppBarNavButton
+                color="inherit"
+                icon={<CellTowerIcon />}
+                label="配信中のブック"
+                onClick={onBookClick}
+                disabled={
+                  !onBookClick ||
+                  !Number.isFinite(session?.ltiResourceLink?.bookId)
+                }
+              />
+              {session?.systemSettings?.zoomImportEnabled && ( // TODO: zoomインポート以外の設定値が実装されたら常時表示する
+                <AppBarNavButton
+                  color="inherit"
+                  icon={<SettingsIcon />}
+                  label="設定"
+                  onClick={handleOpenUserSettings}
+                />
+              )}
+              {onDashboardClick && (
+                <AppBarNavButton
+                  color="inherit"
+                  icon={<AssessmentOutlinedIcon />}
+                  label="学習分析"
+                  onClick={onDashboardClick}
+                />
+              )}
+            </div>
           )}
+          <div>
+            <div className={clsx(classes.user, classes.margin)}>
+              <p>{session.user.name}</p>
+              <p className={classes.roles}>{role(session)}</p>
+            </div>
+            {session && (
+              <>
+                <Button variant="text" color="primary" onClick={handleClick}>
+                  LTI情報
+                </Button>
+                <LtiItemDialog
+                  open={open}
+                  onClose={handleClose}
+                  session={session}
+                />
+              </>
+            )}
+          </div>
         </div>
       </Toolbar>
       <Snackbar

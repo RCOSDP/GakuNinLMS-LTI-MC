@@ -13,6 +13,7 @@ import type {
 } from "$server/models/videoTrack";
 import type { AuthorSchema } from "$server/models/author";
 import { useConfirm } from "material-ui-confirm";
+import AddIcon from "@mui/icons-material/Add";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -44,6 +45,7 @@ type Props = {
   onSubtitleSubmit(videoTrack: VideoTrackProps): void;
   onAuthorsUpdate(authors: AuthorSchema[]): void;
   onAuthorSubmit(author: Pick<AuthorSchema, "email">): void;
+  onImportClick(): void;
 };
 
 export default function TopicEdit(props: Props) {
@@ -57,6 +59,7 @@ export default function TopicEdit(props: Props) {
     onSubtitleSubmit,
     onAuthorsUpdate,
     onAuthorSubmit,
+    onImportClick,
   } = props;
   const classes = useStyles();
   const confirm = useConfirm();
@@ -74,6 +77,10 @@ export default function TopicEdit(props: Props) {
       <BackButton onClick={onCancel}>戻る</BackButton>
       <Typography className={classes.title} variant="h4">
         トピックの編集
+        <Button size="small" color="primary" onClick={onImportClick}>
+          <AddIcon sx={{ mr: 0.5 }} />
+          上書きインポート
+        </Button>
         <Typography variant="caption" component="span" aria-hidden="true">
           <RequiredDot />
           は必須項目です

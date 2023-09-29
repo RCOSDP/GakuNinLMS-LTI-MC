@@ -25,7 +25,6 @@ export const showHooks = {
 export async function show({
   params,
   query,
-  ip,
 }: FastifyRequest<{
   Params: VideoTrackParams;
   Querystring: TopicResourceProps;
@@ -33,7 +32,6 @@ export async function show({
   if (
     !checkVttAccessToken(
       query.accessToken,
-      ip,
       params.resource_id,
       params.video_track_id
     )

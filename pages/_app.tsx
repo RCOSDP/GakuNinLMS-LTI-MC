@@ -38,7 +38,10 @@ function Content({ children }: { children: ReactNode }) {
     );
   }
   if (!session) return <Placeholder />;
-  if (NEXT_PUBLIC_NO_EMBED && inIframe()) return <EmbedProblem />;
+  const isDeepLink = session?.ltiDlSettings?.deep_link_return_url !== undefined;
+  if (!isDeepLink && NEXT_PUBLIC_NO_EMBED && inIframe()) {
+    return <EmbedProblem />;
+  }
 
   const handleBooksClick = () => router.push(pagesPath.books.$url());
   const handleTopicsClick = () => router.push(pagesPath.topics.$url());

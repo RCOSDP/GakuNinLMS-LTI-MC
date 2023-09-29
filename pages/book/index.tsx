@@ -99,7 +99,9 @@ function Show(query: Query) {
     onTopicEnded: handleTopicNext,
     onItemClick: handleTopicNext,
     onBookEditClick: handleBookEditClick,
-    onOtherBookLinkClick: handleOtherBookLinkClick,
+    onOtherBookLinkClick: session?.ltiTargetLinkUri
+      ? undefined
+      : handleOtherBookLinkClick,
     onTopicEditClick: handleTopicEditClick,
   };
 
