@@ -1,8 +1,8 @@
 import type { JSONSchema } from "json-schema-to-ts";
 import { TagLabel } from "@prisma/client";
-import type { Bookmark, Prisma } from "@prisma/client";
+import type { Bookmark, Prisma, Tag } from "@prisma/client";
 import { UserSchema } from "./user";
-import { topicSchema } from "./topic";
+import { topicSchema, type TopicSchema } from "./topic";
 
 export const tagSchema = {
   type: "object",
@@ -20,9 +20,11 @@ export const tagSchema = {
   },
 } as const satisfies JSONSchema;
 
+export type TagSchema = Tag;
+
 export type BookMarkProps = Prisma.BookmarkCreateInput;
 
-export const bookMarkProps = {
+export const bookMarkPropsSchema = {
   type: "object",
   properties: {
     id: { type: "integer" },
@@ -33,4 +35,19 @@ export const bookMarkProps = {
   additionalProperties: false,
 } as const satisfies JSONSchema;
 
-export type BookSchema = Bookmark;
+export type BookMarkSchema = Bookmark & {
+  user: UserSchema;
+  topic: TopicSchema;
+  tag: TagSchema;
+};
+
+export const bookMarkSchema = {
+  type: "object",
+  properties: {
+    id: { type: "integer" },
+    user: UserSchema,
+    topic: topicSchema,
+    tag: tagSchema,
+  },
+  additionalProperties: false,
+} as const satisfies JSONSchema;

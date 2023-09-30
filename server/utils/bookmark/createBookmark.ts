@@ -6,9 +6,7 @@ async function createBookmark(
   bookmark: BookMarkProps
 ): Promise<Bookmark | undefined> {
   const created = await prisma.bookmark.create({
-    data: {
-      ...bookmark,
-    },
+    data: bookmark,
   });
 
   if (!created) {
