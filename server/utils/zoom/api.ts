@@ -1,26 +1,10 @@
-import got from "got";
-import type { Method } from "got";
-
 import {
   ZOOM_ACCOUNT_ID,
   ZOOM_CLIENT_ID,
   ZOOM_CLIENT_SECRET,
 } from "$server/utils/env";
-
-interface ZoomQuery {
-  [key: string]: string | number | boolean;
-}
-
-// zoom apiのレスポンスデータ全般を扱う型
-// apiによって内容は違うが、文字列のキー名と任意の型の値という形式は共通しており
-// これらの形式をtypescriptの警告やエラーを回避しつつ利用できるようにするため
-// any型を許容する。具体的な利用例は以下の通り
-// value = response[keyname];
-// next_page_token = response.next_page_token;
-interface ZoomResponse {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [key: string]: any;
-}
+import { fetch } from "undici";
+import { type Request, jsonFetcher } from "./fetcher";
 
 /**
  * List users
@@ -358,8 +342,8 @@ const basenc = Buffer.from(ZOOM_CLIENT_ID + ":" + ZOOM_CLIENT_SECRET).toString(
   "base64"
 );
 
-export async function zoomRequestToken() {
-  const result = await got(
+export async function zoomRequestToken(): Promise<string> {
+  const res = await fetch(
     `https://zoom.us/oauth/token?grant_type=account_credentials&account_id=${ZOOM_ACCOUNT_ID}`,
     {
       method: "POST",
@@ -368,40 +352,47 @@ export async function zoomRequestToken() {
       },
     }
   );
-  const body = JSON.parse(result.body) as ZoomAuthResponse;
+
+  if (!res.ok) {
+    throw new Error(`${res.status} ${res.statusText}`, { cause: res });
+  }
+
+  const body = (await res.json()) as ZoomAuthResponse;
+
   return body.access_token;
 }
 
-export async function zoomRequest(
+export async function zoomRequest<ZoomResponse extends Record<string, unknown>>(
   path: string,
-  searchParams: ZoomQuery = {},
-  method: Method = "GET"
+  searchParams: Request["searchParams"] = {},
+  method: Request["method"] = "GET"
 ): Promise<ZoomResponse> {
   const access_token = await zoomRequestToken();
-  return await got("https://api.zoom.us/v2" + path, {
+
+  return await jsonFetcher({
+    url: `https://api.zoom.us/v2${path}`,
+    token: access_token,
     searchParams,
     method,
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${access_token}`,
-    },
-  }).json();
+  });
 }
 
-export async function zoomListRequest(
+export async function zoomListRequest<
+  ZoomListResponse extends Array<Record<string, unknown>>,
+>(
   path: string,
   listName: string,
-  qs: ZoomQuery = {}
-): Promise<ZoomResponse[]> {
+  searchParams: Request["searchParams"] = {}
+): Promise<ZoomListResponse> {
   let next_page_token = "";
-  const list: ZoomResponse[] = [];
+  const list = [] as unknown as ZoomListResponse;
   do {
     const response = await zoomRequest(
       path,
-      next_page_token ? Object.assign(qs, { next_page_token }) : qs
+      next_page_token ? { ...searchParams, next_page_token } : searchParams
     );
-    list.push(...response[listName]);
-    next_page_token = response.next_page_token;
+    list.push(...(response[listName] as ZoomListResponse));
+    next_page_token = response.next_page_token as string;
   } while (next_page_token);
   return list;
 }
