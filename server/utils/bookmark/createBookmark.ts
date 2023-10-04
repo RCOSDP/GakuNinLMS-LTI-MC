@@ -1,23 +1,23 @@
 import type { BookmarkProps } from "$server/models/bookmark";
+import type { SessionSchema } from "$server/models/session";
 import prisma from "$server/utils/prisma";
 import type { Bookmark } from "@prisma/client";
 
 async function createBookmark({
-  userId,
-  ltiCosumerId,
-  ltiContextId,
+  session,
   bookmark,
 }: {
-  userId: number;
-  ltiCosumerId: string;
-  ltiContextId: string;
+  session: SessionSchema;
   bookmark: BookmarkProps;
 }): Promise<Bookmark | undefined> {
+  if (!session.ltiResourceLink?.consumerId) {
+    return;
+  }
   const created = await prisma.bookmark.create({
     data: {
-      userId,
-      ltiCosumerId,
-      ltiContextId,
+      userId: session.user.id,
+      ltiCosumerId: session.ltiResourceLink?.consumerId,
+      ltiContextId: session.ltiContext.id,
       ...bookmark,
     },
   });

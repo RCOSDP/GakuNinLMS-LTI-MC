@@ -25,16 +25,8 @@ export async function create({
   session,
   body,
 }: FastifyRequest<{ Body: BookmarkProps }>) {
-  if (!session.ltiResourceLink?.consumerId) {
-    return {
-      status: 400,
-    };
-  }
-
   const created = await createBookmark({
-    userId: session.user.id,
-    ltiCosumerId: session.ltiResourceLink.consumerId,
-    ltiContextId: session.ltiContext.id,
+    session,
     bookmark: body,
   });
 
