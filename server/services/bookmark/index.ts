@@ -1,7 +1,7 @@
-import type { BookMarkProps } from "$server/models/bookmark";
+import type { BookmarkProps } from "$server/models/bookmark";
 import { createSchema, createHooks, create } from "./create";
 
-export type Props = BookMarkProps;
+export type Props = BookmarkProps;
 
 export const method = {
   post: createSchema,

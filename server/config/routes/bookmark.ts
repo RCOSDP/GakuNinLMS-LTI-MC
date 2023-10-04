@@ -5,7 +5,7 @@ import * as service from "$server/services/bookmark";
 
 const basePath = "/bookmark";
 
-export async function bookMark(fastify: FastifyInstance) {
+export async function bookmark(fastify: FastifyInstance) {
   const { method, create } = service;
   const hooks = makeHooks(fastify, service.hooks);
 
