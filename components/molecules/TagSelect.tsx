@@ -168,6 +168,10 @@ const StyledOption = styled(Option)(
   &:hover:not(.${optionClasses.disabled}) {
     background-color: #F9FAFB;
   }
+
+  > span {
+    margin-left: 8px;
+  }
   `
 );
 
