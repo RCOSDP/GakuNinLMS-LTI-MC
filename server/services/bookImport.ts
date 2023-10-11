@@ -49,7 +49,7 @@ export async function importBook({
   if (!found) return { status: 404 };
   if (!isUsersOrAdmin(session, found.authors)) return { status: 403 };
 
-  const result = await importBookUtil(session.user, body, params.book_id);
+  const result = await importBookUtil(session, body, params.book_id);
   return {
     status: result.errors && result.errors.length ? 400 : 201,
     body: result,
