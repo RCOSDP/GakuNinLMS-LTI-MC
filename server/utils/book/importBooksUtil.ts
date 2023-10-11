@@ -485,7 +485,26 @@ class ImportBooksUtil {
       fs.createReadStream(file)
         .pipe(unzipper.Parse())
         .on("entry", (entry) => {
-          entry.pipe(fs.createWriteStream(path.join(this.tmpdir, entry.path)));
+          if (entry.type === "File") {
+            const filename = path.join(this.tmpdir, entry.path);
+            const dirname = path.dirname(filename);
+            try {
+              if (!fs.existsSync(dirname)) {
+                fs.mkdirSync(dirname, { recursive: true });
+              }
+              const ws = fs.createWriteStream(filename);
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              entry.pipe(ws).on("error", (e: any) => {
+                this.errors.push(
+                  `zip解凍中にファイルの書き込みに失敗しました。\n${e}`
+                );
+              });
+            } catch (e) {
+              this.errors.push(`zip解凍中に例外が発生しました。\n${e}`);
+            }
+          } else {
+            entry.autodrain();
+          }
         })
         .on("close", () => {
           this.unzippedFiles = recursive(this.tmpdir);
