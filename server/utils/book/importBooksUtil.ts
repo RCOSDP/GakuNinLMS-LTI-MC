@@ -34,6 +34,9 @@ import topicInput from "../topic/topicInput";
 import resourceConnectOrCreateInput from "../topic/resourceConnectOrCreateInput";
 import { topicsWithResourcesArg } from "../topic/topicToTopicSchema";
 import updateBookTimeRequired from "../topic/updateBookTimeRequired";
+import type { SessionSchema } from "$server/models/session";
+import topicExists from "../topic/topicExists";
+import { isUsersOrAdmin } from "../session";
 
 async function importBooksUtil(
   user: UserSchema,
@@ -55,12 +58,12 @@ export async function importTopicUtil(
 }
 
 export async function importBookUtil(
-  user: UserSchema,
+  session: SessionSchema,
   params: BooksImportParams,
   bookId: Book["id"]
 ): Promise<BooksImportResult> {
-  const util = new ImportBooksUtil(user, params);
-  await util.importBook(bookId);
+  const util = new ImportBooksUtil(session.user, params);
+  await util.importBook(session, bookId);
   return util.result();
 }
 
@@ -303,7 +306,7 @@ class ImportBooksUtil {
     }
   }
 
-  async importBook(bookId: Book["id"]) {
+  async importBook(session: SessionSchema, bookId: Book["id"]) {
     try {
       const importBooks = ImportBooks.init(await this.parseJsonFromFile());
       if (this.errors.length) return;
@@ -357,6 +360,19 @@ class ImportBooksUtil {
             return;
           }
           jobs.push({ import: topic, orig: origTopics[0] });
+        }
+      }
+
+      // 処理するトピックが自身の著作であることを確認する
+      for (const job of jobs) {
+        const found = await topicExists(job.orig.id);
+        if (!found) {
+          this.errors.push(`対象のトピックが見つかりませんでした。`);
+          return;
+        }
+        if (!isUsersOrAdmin(session, found.authors)) {
+          this.errors.push(`対象のトピックが自身の著作ではありません。`);
+          return;
         }
       }
 
