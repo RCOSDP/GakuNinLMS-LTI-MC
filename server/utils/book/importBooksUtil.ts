@@ -367,13 +367,22 @@ class ImportBooksUtil {
       for (const job of jobs) {
         const found = await topicExists(job.orig.id);
         if (!found) {
-          this.errors.push(`対象のトピックが見つかりませんでした。`);
-          return;
+          this.errors.push(
+            `対象のトピック ${job.import.name} が見つかりませんでした。`
+          );
+          continue;
         }
         if (!isUsersOrAdmin(session, found.authors)) {
-          this.errors.push(`対象のトピックが自身の著作ではありません。`);
-          return;
+          this.errors.push(
+            `対象のトピック ${job.import.name} が自身の著作ではありません。`
+          );
         }
+      }
+      if (this.errors.length) {
+        this.errors.push(
+          `自身の著作ではないトピックが指定されているため、ブックの上書きを行いませんでした。`
+        );
+        return;
       }
 
       // 処理するトピックのビデオファイルだけをアップロードする
