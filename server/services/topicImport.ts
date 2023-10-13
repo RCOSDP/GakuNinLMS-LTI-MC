@@ -10,6 +10,8 @@ import authInstructor from "$server/auth/authInstructor";
 import { importTopicUtil } from "$server/utils/book/importBooksUtil";
 import type { TopicParams } from "$server/validators/topicParams";
 import { topicParamsSchema } from "$server/validators/topicParams";
+import topicExists from "$server/utils/topic/topicExists";
+import { isUsersOrAdmin } from "$server/utils/session";
 
 export type Params = BooksImportParams;
 
@@ -17,12 +19,15 @@ export const importSchema: FastifySchema = {
   summary: "トピックの上書きインポート",
   description: outdent`
     トピックを上書きインポートします。
-    教員または管理者でなければなりません。`,
+    教員または管理者でなければなりません。
+    教員は自身の著作のトピックでなければなりません。`,
   params: topicParamsSchema,
   body: BooksImportParams,
   response: {
     201: booksImportResultSchema,
     400: booksImportResultSchema,
+    403: {},
+    404: {},
   },
 };
 
@@ -39,6 +44,11 @@ export async function importTopic({
   params: TopicParams;
   body: BooksImportParams;
 }) {
+  const found = await topicExists(params.topic_id);
+
+  if (!found) return { status: 404 };
+  if (!isUsersOrAdmin(session, found.authors)) return { status: 403 };
+
   const result = await importTopicUtil(session.user, body, params.topic_id);
   return {
     status: result.errors && result.errors.length ? 400 : 201,
