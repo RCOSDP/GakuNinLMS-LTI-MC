@@ -32,6 +32,7 @@ import type {
 import {
   zoomRequestToken,
   zoomRequest,
+  zoomRequestWithoutParse,
   zoomListRequest,
 } from "$server/utils/zoom/api";
 import { logger } from "$server/utils/zoom/env";
@@ -139,7 +140,7 @@ class ZoomImport {
       if (!ZOOM_IMPORT_DISABLE_AUTOPUBLIC)
         await prisma.$transaction(this.getPublicBooks(results));
       for (const deletemeeting of deletemeetings) {
-        await zoomRequest(
+        await zoomRequestWithoutParse(
           `/meetings/${deletemeeting}/recordings`,
           { action: "trash" },
           "DELETE"

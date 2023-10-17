@@ -17,7 +17,7 @@ export type Request = {
  * @param req リクエスト
  * @returns Response
  */
-async function fetcher(req: Request): Promise<Response> {
+export async function fetcher(req: Request): Promise<Response> {
   const url = req.url
     .concat(`?${new URLSearchParams(req.searchParams)}`)
     .replace(/\?$/, "");
