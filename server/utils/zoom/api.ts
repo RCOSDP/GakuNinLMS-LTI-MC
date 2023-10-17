@@ -4,7 +4,7 @@ import {
   ZOOM_CLIENT_SECRET,
 } from "$server/utils/env";
 import { fetch } from "undici";
-import { type Request, jsonFetcher } from "./fetcher";
+import { type Request, jsonFetcher, fetcher } from "./fetcher";
 
 /**
  * List users
@@ -370,6 +370,22 @@ export async function zoomRequest<ZoomResponse extends Record<string, unknown>>(
   const access_token = await zoomRequestToken();
 
   return await jsonFetcher({
+    url: `https://api.zoom.us/v2${path}`,
+    token: access_token,
+    searchParams,
+    method,
+  });
+}
+
+/** JSONのパースを行わないリクエスト */
+export async function zoomRequestWithoutParse(
+  path: string,
+  searchParams: Request["searchParams"] = {},
+  method: Request["method"] = "GET"
+): Promise<void> {
+  const access_token = await zoomRequestToken();
+
+  await fetcher({
     url: `https://api.zoom.us/v2${path}`,
     token: access_token,
     searchParams,
