@@ -188,6 +188,10 @@ export interface ApiV2BookmarkPostRequest {
     body?: InlineObject14;
 }
 
+export interface ApiV2BookmarksGetRequest {
+    topicId: number;
+}
+
 export interface ApiV2BooksGetRequest {
     sort?: string;
     page?: number;
@@ -782,6 +786,38 @@ export class DefaultApi extends runtime.BaseAPI {
      */
     async apiV2BookmarkPost(requestParameters: ApiV2BookmarkPostRequest): Promise<{ [key: string]: object; }> {
         const response = await this.apiV2BookmarkPostRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * ブックマークの一覧を取得します。
+     * ブックマーク一覧
+     */
+    async apiV2BookmarksGetRaw(requestParameters: ApiV2BookmarksGetRequest): Promise<runtime.ApiResponse<{ [key: string]: object; }>> {
+        if (requestParameters.topicId === null || requestParameters.topicId === undefined) {
+            throw new runtime.RequiredError('topicId','Required parameter requestParameters.topicId was null or undefined when calling apiV2BookmarksGet.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/api/v2/bookmarks`.replace(`{${"topic_id"}}`, encodeURIComponent(String(requestParameters.topicId))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse<any>(response);
+    }
+
+    /**
+     * ブックマークの一覧を取得します。
+     * ブックマーク一覧
+     */
+    async apiV2BookmarksGet(requestParameters: ApiV2BookmarksGetRequest): Promise<{ [key: string]: object; }> {
+        const response = await this.apiV2BookmarksGetRaw(requestParameters);
         return await response.value();
     }
 
