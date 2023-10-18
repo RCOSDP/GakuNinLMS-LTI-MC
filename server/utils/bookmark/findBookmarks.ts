@@ -5,7 +5,6 @@ async function findBookmarks(topicId: number): Promise<BookmarkSchema[]> {
   const bookmarks = await prisma.bookmark.findMany({
     where: { topicId },
     include: {
-      user: true,
       topic: true,
       tag: true,
     },

@@ -14,10 +14,6 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    ApiV2LtiMembersUser,
-    ApiV2LtiMembersUserFromJSON,
-    ApiV2LtiMembersUserFromJSONTyped,
-    ApiV2LtiMembersUserToJSON,
     InlineResponse20015Tag,
     InlineResponse20015TagFromJSON,
     InlineResponse20015TagFromJSONTyped,
@@ -40,12 +36,6 @@ export interface InlineResponse20015Bookmark {
      * @memberof InlineResponse20015Bookmark
      */
     id?: number;
-    /**
-     * 
-     * @type {ApiV2LtiMembersUser}
-     * @memberof InlineResponse20015Bookmark
-     */
-    user?: ApiV2LtiMembersUser;
     /**
      * 
      * @type {InlineResponse2005Topics}
@@ -71,7 +61,6 @@ export function InlineResponse20015BookmarkFromJSONTyped(json: any, ignoreDiscri
     return {
         
         'id': !exists(json, 'id') ? undefined : json['id'],
-        'user': !exists(json, 'user') ? undefined : ApiV2LtiMembersUserFromJSON(json['user']),
         'topic': !exists(json, 'topic') ? undefined : InlineResponse2005TopicsFromJSON(json['topic']),
         'tag': !exists(json, 'tag') ? undefined : InlineResponse20015TagFromJSON(json['tag']),
     };
@@ -87,7 +76,6 @@ export function InlineResponse20015BookmarkToJSON(value?: InlineResponse20015Boo
     return {
         
         'id': value.id,
-        'user': ApiV2LtiMembersUserToJSON(value.user),
         'topic': InlineResponse2005TopicsToJSON(value.topic),
         'tag': InlineResponse20015TagToJSON(value.tag),
     };
