@@ -36,6 +36,9 @@ import {
     InlineObject13,
     InlineObject13FromJSON,
     InlineObject13ToJSON,
+    InlineObject14,
+    InlineObject14FromJSON,
+    InlineObject14ToJSON,
     InlineObject2,
     InlineObject2FromJSON,
     InlineObject2ToJSON,
@@ -179,6 +182,10 @@ export interface ApiV2BookPublicTokenGetRequest {
 
 export interface ApiV2BookZoomMeetingIdGetRequest {
     meetingId: number;
+}
+
+export interface ApiV2BookmarkPostRequest {
+    body?: InlineObject14;
 }
 
 export interface ApiV2BooksGetRequest {
@@ -744,6 +751,37 @@ export class DefaultApi extends runtime.BaseAPI {
      */
     async apiV2BookZoomMeetingIdGet(requestParameters: ApiV2BookZoomMeetingIdGetRequest): Promise<InlineResponse2009> {
         const response = await this.apiV2BookZoomMeetingIdGetRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * ブックマークを作成します。
+     * ブックマークの作成
+     */
+    async apiV2BookmarkPostRaw(requestParameters: ApiV2BookmarkPostRequest): Promise<runtime.ApiResponse<{ [key: string]: object; }>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/api/v2/bookmark`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: InlineObject14ToJSON(requestParameters.body),
+        });
+
+        return new runtime.JSONApiResponse<any>(response);
+    }
+
+    /**
+     * ブックマークを作成します。
+     * ブックマークの作成
+     */
+    async apiV2BookmarkPost(requestParameters: ApiV2BookmarkPostRequest): Promise<{ [key: string]: object; }> {
+        const response = await this.apiV2BookmarkPostRaw(requestParameters);
         return await response.value();
     }
 
