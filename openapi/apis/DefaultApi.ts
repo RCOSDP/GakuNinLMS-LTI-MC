@@ -84,6 +84,9 @@ import {
     InlineResponse20014,
     InlineResponse20014FromJSON,
     InlineResponse20014ToJSON,
+    InlineResponse20015,
+    InlineResponse20015FromJSON,
+    InlineResponse20015ToJSON,
     InlineResponse2002,
     InlineResponse2002FromJSON,
     InlineResponse2002ToJSON,
@@ -793,30 +796,34 @@ export class DefaultApi extends runtime.BaseAPI {
      * ブックマークの一覧を取得します。
      * ブックマーク一覧
      */
-    async apiV2BookmarksGetRaw(requestParameters: ApiV2BookmarksGetRequest): Promise<runtime.ApiResponse<{ [key: string]: object; }>> {
+    async apiV2BookmarksGetRaw(requestParameters: ApiV2BookmarksGetRequest): Promise<runtime.ApiResponse<InlineResponse20015>> {
         if (requestParameters.topicId === null || requestParameters.topicId === undefined) {
             throw new runtime.RequiredError('topicId','Required parameter requestParameters.topicId was null or undefined when calling apiV2BookmarksGet.');
         }
 
         const queryParameters: runtime.HTTPQuery = {};
 
+        if (requestParameters.topicId !== undefined) {
+            queryParameters['topicId'] = requestParameters.topicId;
+        }
+
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/api/v2/bookmarks`.replace(`{${"topic_id"}}`, encodeURIComponent(String(requestParameters.topicId))),
+            path: `/api/v2/bookmarks`,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
         });
 
-        return new runtime.JSONApiResponse<any>(response);
+        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse20015FromJSON(jsonValue));
     }
 
     /**
      * ブックマークの一覧を取得します。
      * ブックマーク一覧
      */
-    async apiV2BookmarksGet(requestParameters: ApiV2BookmarksGetRequest): Promise<{ [key: string]: object; }> {
+    async apiV2BookmarksGet(requestParameters: ApiV2BookmarksGetRequest): Promise<InlineResponse20015> {
         const response = await this.apiV2BookmarksGetRaw(requestParameters);
         return await response.value();
     }

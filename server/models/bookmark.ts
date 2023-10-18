@@ -20,6 +20,8 @@ export const tagSchema = {
   },
 } as const satisfies JSONSchema;
 
+export type TagSchema = Tag;
+
 export type BookmarkProps = {
   tagId: Tag["id"];
   topicId: TopicSchema["id"];
