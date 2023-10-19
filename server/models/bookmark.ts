@@ -1,7 +1,6 @@
 import type { JSONSchema } from "json-schema-to-ts";
 import { TagLabel } from "@prisma/client";
-import type { Bookmark, Tag } from "@prisma/client";
-import { UserSchema } from "./user";
+import type { Bookmark, Tag, Topic } from "@prisma/client";
 import { topicSchema, type TopicSchema } from "./topic";
 
 export const tagSchema = {
@@ -23,7 +22,7 @@ export const tagSchema = {
 export type TagSchema = Tag;
 
 export type BookmarkProps = {
-  tagId: TagSchema["id"];
+  tagId: Tag["id"];
   topicId: TopicSchema["id"];
 };
 
@@ -37,16 +36,14 @@ export const bookmarkPropsSchema = {
 } as const satisfies JSONSchema;
 
 export type BookmarkSchema = Bookmark & {
-  user: UserSchema;
-  topic: TopicSchema;
-  tag: TagSchema;
+  topic: Topic;
+  tag: Tag;
 };
 
 export const bookmarkSchema = {
   type: "object",
   properties: {
     id: { type: "integer" },
-    user: UserSchema,
     topic: topicSchema,
     tag: tagSchema,
   },
