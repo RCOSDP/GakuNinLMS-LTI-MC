@@ -133,10 +133,10 @@ type Props = {
  * @return 有効かつ再生終了: true、それ以外: false
  */
 function isValidPlaybackEnd({
-  currentTime,
+  currentTime = 0,
   stopTime,
 }: {
-  currentTime: number;
+  currentTime: number | undefined;
   stopTime: number | null | undefined;
 }): boolean {
   return typeof stopTime === "number" && 0 < stopTime && stopTime < currentTime;
@@ -276,7 +276,8 @@ export default function Video({
     } else {
       const nextUnwatchedTime = timeRange.find((timeRange) => {
         return (
-          (timeRange.endMs || 0) / 1000 > videoInstance.player.currentTime()
+          (timeRange.endMs || 0) / 1000 >
+          (videoInstance.player.currentTime() ?? 0)
         );
       });
       if (!nextUnwatchedTime?.endMs) return;

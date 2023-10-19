@@ -4,9 +4,9 @@
 
 ### 前提条件
 
-2023-03-29 現在、以下の環境で動作確認済み
+2023-09-07 現在、以下の環境で動作確認済み
 
-- Docker v23
+- Docker v24
 - Docker Compose v2
 - Node.js LTS
 - Yarn v1.22
@@ -199,7 +199,7 @@ INSERT INTO "lti_platform" ("issuer", "metadata") VALUES ('https://example', '{
 INSERT INTO "lti_consumer" ("platform_id", "id") VALUES ('https://example', '***');
 ```
 
-ローカル環境で開発用サーバー [docker-compose.yml](../docker-compose.yml) を使うケース:
+ローカル環境で開発用サーバー [compose.yml](../compose.yml) を使うケース:
 
 ```sql
 INSERT INTO "lti_platform" ("issuer", "metadata") VALUES ('http://localhost:8081', '{

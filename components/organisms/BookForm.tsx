@@ -235,7 +235,7 @@ export default function BookForm({
           <div>
             <LocalizationProvider
               dateAdapter={AdapterDateFns}
-              locale={ja}
+              adapterLocale={ja}
               dateFormats={{ monthAndYear: "yyyy年MM月" }}
               localeText={{
                 previousMonth: "前月を表示",
