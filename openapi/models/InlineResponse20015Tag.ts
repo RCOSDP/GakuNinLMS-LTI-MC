@@ -27,10 +27,10 @@ export interface InlineResponse20015Tag {
     id?: number;
     /**
      * 
-     * @type {object}
+     * @type {string}
      * @memberof InlineResponse20015Tag
      */
-    label?: object;
+    label?: string;
     /**
      * 
      * @type {string}

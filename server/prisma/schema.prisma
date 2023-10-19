@@ -364,18 +364,10 @@ model ContentRole {
   @@map("content_roles")
 }
 
-/// タグ種別
-enum TagLabel {
-  INTERESTING
-  DIFFICULT
-  LATER
-  IMPORTANT
-}
-
 /// タグ
 model Tag {
   id    Int      @id @default(autoincrement())
-  label TagLabel @unique
+  label String @unique
   color String
 
   bookmarks Bookmark[]
