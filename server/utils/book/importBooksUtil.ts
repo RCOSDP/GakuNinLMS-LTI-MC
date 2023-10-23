@@ -34,6 +34,9 @@ import topicInput from "../topic/topicInput";
 import resourceConnectOrCreateInput from "../topic/resourceConnectOrCreateInput";
 import { topicsWithResourcesArg } from "../topic/topicToTopicSchema";
 import updateBookTimeRequired from "../topic/updateBookTimeRequired";
+import type { SessionSchema } from "$server/models/session";
+import topicExists from "../topic/topicExists";
+import { isUsersOrAdmin } from "../session";
 
 async function importBooksUtil(
   user: UserSchema,
@@ -55,12 +58,12 @@ export async function importTopicUtil(
 }
 
 export async function importBookUtil(
-  user: UserSchema,
+  session: SessionSchema,
   params: BooksImportParams,
   bookId: Book["id"]
 ): Promise<BooksImportResult> {
-  const util = new ImportBooksUtil(user, params);
-  await util.importBook(bookId);
+  const util = new ImportBooksUtil(session.user, params);
+  await util.importBook(session, bookId);
   return util.result();
 }
 
@@ -303,7 +306,7 @@ class ImportBooksUtil {
     }
   }
 
-  async importBook(bookId: Book["id"]) {
+  async importBook(session: SessionSchema, bookId: Book["id"]) {
     try {
       const importBooks = ImportBooks.init(await this.parseJsonFromFile());
       if (this.errors.length) return;
@@ -358,6 +361,28 @@ class ImportBooksUtil {
           }
           jobs.push({ import: topic, orig: origTopics[0] });
         }
+      }
+
+      // 処理するトピックが自身の著作であることを確認する
+      for (const job of jobs) {
+        const found = await topicExists(job.orig.id);
+        if (!found) {
+          this.errors.push(
+            `対象のトピック ${job.import.name} が見つかりませんでした。`
+          );
+          continue;
+        }
+        if (!isUsersOrAdmin(session, found.authors)) {
+          this.errors.push(
+            `対象のトピック ${job.import.name} が自身の著作ではありません。`
+          );
+        }
+      }
+      if (this.errors.length) {
+        this.errors.push(
+          `自身の著作ではないトピックが指定されているため、ブックの上書きを行いませんでした。`
+        );
+        return;
       }
 
       // 処理するトピックのビデオファイルだけをアップロードする
@@ -485,7 +510,26 @@ class ImportBooksUtil {
       fs.createReadStream(file)
         .pipe(unzipper.Parse())
         .on("entry", (entry) => {
-          entry.pipe(fs.createWriteStream(path.join(this.tmpdir, entry.path)));
+          if (entry.type === "File") {
+            const filename = path.join(this.tmpdir, entry.path);
+            const dirname = path.dirname(filename);
+            try {
+              if (!fs.existsSync(dirname)) {
+                fs.mkdirSync(dirname, { recursive: true });
+              }
+              const ws = fs.createWriteStream(filename);
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              entry.pipe(ws).on("error", (e: any) => {
+                this.errors.push(
+                  `zip解凍中にファイルの書き込みに失敗しました。\n${e}`
+                );
+              });
+            } catch (e) {
+              this.errors.push(`zip解凍中に例外が発生しました。\n${e}`);
+            }
+          } else {
+            entry.autodrain();
+          }
         })
         .on("close", () => {
           this.unzippedFiles = recursive(this.tmpdir);

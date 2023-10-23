@@ -93,7 +93,7 @@ export default function TagSelect({ topicId, onSubmitBookmark }: Props) {
 
 const CustomSelect = forwardRef(function CustomSelect<
   TValue extends Record<string, never>,
-  Multiple extends boolean
+  Multiple extends boolean,
 >(props: SelectProps<TValue, Multiple>, ref: ForwardedRef<HTMLButtonElement>) {
   const slots: SelectProps<TValue, Multiple>["slots"] = {
     root: StyledButton,

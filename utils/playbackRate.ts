@@ -40,7 +40,7 @@ function setPlaybackRate(player: Player, data: PlaybackRate): void {
 async function getPlaybackRate(player: Player): Promise<PlaybackRate> {
   const data = await (player instanceof VimeoPlayer
     ? player.getPlaybackRate()
-    : player.playbackRate());
+    : player.playbackRate() ?? 1);
   return data;
 }
 

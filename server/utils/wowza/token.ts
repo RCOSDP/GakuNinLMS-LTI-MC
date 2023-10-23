@@ -31,7 +31,7 @@ export function sign(
         ({
           "+": "-",
           "/": "_",
-        }[t as "+" | "/"])
+        })[t as "+" | "/"]
     );
   return signature;
 }

@@ -54,7 +54,7 @@ function Edit({ topicId, back }: EditProps) {
         ...props,
         resource: resource ?? props.resource,
       });
-      return back();
+      await back();
     } catch (e) {
       const response = e as Response;
       const status = response.status;
