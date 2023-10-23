@@ -29,6 +29,8 @@ import DescriptionList from "$atoms/DescriptionList";
 import formatInterval from "$utils/formatInterval";
 import getLocaleDateString from "$utils/getLocaleDateString";
 import { authors } from "$utils/descriptionList";
+import TagSelect from "$molecules/TagSelect";
+import useBookmarkHandler from "$utils/useBookmarkHandler";
 
 const hidden = css({
   m: 0,
@@ -289,6 +291,8 @@ export default function Video({
   const isStudent =
     session && !isInstructor(session) && !isAdministrator(session);
 
+  const handlers = useBookmarkHandler();
+
   // 動画プレイヤーオブジェクトプールに存在する場合
   if (video.has(String(topic.id))) {
     return (
@@ -305,6 +309,7 @@ export default function Video({
             onEnded={String(topic.id) === id ? onEnded : undefined}
           />
         ))}
+        <TagSelect topicId={topic.id} {...handlers} />
         <Tabs
           aria-label="トピックビデオの詳細情報"
           className={tabsStyle}
