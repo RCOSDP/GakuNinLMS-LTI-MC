@@ -1,5 +1,4 @@
 import type { JSONSchema } from "json-schema-to-ts";
-import { TagLabel } from "@prisma/client";
 import type { Bookmark, Tag, Topic } from "@prisma/client";
 import { topicSchema, type TopicSchema } from "./topic";
 
@@ -7,14 +6,7 @@ export const tagSchema = {
   type: "object",
   properties: {
     id: { type: "integer" },
-    label: {
-      enum: [
-        TagLabel.INTERESTING,
-        TagLabel.IMPORTANT,
-        TagLabel.DIFFICULT,
-        TagLabel.LATER,
-      ],
-    },
+    label: { type: "string" },
     color: { type: "string" },
   },
 } as const satisfies JSONSchema;

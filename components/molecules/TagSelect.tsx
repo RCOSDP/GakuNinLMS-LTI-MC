@@ -37,15 +37,12 @@ const tagClass = css({
   border: "solid 1px #F3F4F6",
 });
 
-type TagSelectProps = TagSchema & {
-  display: string;
-};
-
-const tagOptions: TagSelectProps[] = [
-  { id: 1, label: "INTERESTING", color: "red", display: "なるほど" },
-  { id: 2, label: "DIFFICULT", color: "green", display: "難しい" },
-  { id: 3, label: "LATER", color: "blue", display: "あとで見る" },
-  { id: 4, label: "IMPORTANT", color: "yellow", display: "重要" },
+// TODO: データベースから取得するように変更する
+const tagOptions: TagSchema[] = [
+  { id: 1, label: "なるほど", color: "red" },
+  { id: 2, label: "難しい", color: "green" },
+  { id: 3, label: "あとで見る", color: "blue" },
+  { id: 4, label: "重要", color: "yellow" },
 ];
 
 type Props = {
@@ -54,9 +51,9 @@ type Props = {
 };
 
 export default function TagSelect({ topicId, onSubmitBookmark }: Props) {
-  const [tagOption, setTagOption] = useState<TagSelectProps | null>(null);
+  const [tagOption, setTagOption] = useState<TagSchema | null>(null);
   const onClick = useCallback(
-    async (option: TagSelectProps) => {
+    async (option: TagSchema) => {
       setTagOption(option);
       await onSubmitBookmark({ topicId, tagId: option.id });
     },
@@ -68,7 +65,7 @@ export default function TagSelect({ topicId, onSubmitBookmark }: Props) {
       <div className={tagOptionClass}>
         <div className={tagClass}>
           <span style={{ background: tagOption.color }} className={circle} />
-          {tagOption.display}
+          {tagOption.label}
         </div>
       </div>
     );
@@ -84,7 +81,7 @@ export default function TagSelect({ topicId, onSubmitBookmark }: Props) {
           onClick={async () => await onClick(option)}
         >
           <span style={{ background: option.color }} className={circle} />
-          {option.display}
+          {option.label}
         </StyledOption>
       ))}
     </CustomSelect>
