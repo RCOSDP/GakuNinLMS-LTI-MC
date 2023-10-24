@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { css } from "@emotion/css";
 import { Dropdown } from "@mui/base/Dropdown";
-import { Menu } from "@mui/base/Menu";
+import { Menu as BaseMenu, menuClasses } from "@mui/base/Menu";
 import { MenuButton as BaseMenuButton } from "@mui/base/MenuButton";
 import { MenuItem as BaseMenuItem, menuItemClasses } from "@mui/base/MenuItem";
 import { styled } from "@mui/system";
@@ -84,12 +84,20 @@ const MenuButton = styled(BaseMenuButton)(
   `
 );
 
+const Menu = styled(BaseMenu)(
+  () => `
+  &.${menuClasses.root} {
+    margin-top: -12px !important;
+    margin-left: 20px !important;
+  }
+  `
+);
+
 const Listbox = styled("ul")(
   () => `
   font-size: 12px;
   box-sizing: border-box;
   padding: 6px;
-  margin: 14px 0;
   width: 145px;
   border-radius: 12px;
   overflow: auto;
