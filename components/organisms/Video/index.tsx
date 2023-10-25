@@ -29,8 +29,10 @@ import DescriptionList from "$atoms/DescriptionList";
 import formatInterval from "$utils/formatInterval";
 import getLocaleDateString from "$utils/getLocaleDateString";
 import { authors } from "$utils/descriptionList";
-import TagSelect from "$molecules/TagSelect";
+import Tag from "$molecules/Tag";
+import TagMenu from "$molecules/TagMenu";
 import useBookmarkHandler from "$utils/useBookmarkHandler";
+import type { TagSchema } from "$server/models/bookmark";
 
 const hidden = css({
   m: 0,
@@ -292,6 +294,10 @@ export default function Video({
     session && !isInstructor(session) && !isAdministrator(session);
 
   const handlers = useBookmarkHandler();
+  const [selectedTag, setSelectedTag] = useState<TagSchema[]>([]);
+  const handleTagChange = useCallback((tag: TagSchema) => {
+    setSelectedTag((prev) => [...prev, tag]);
+  }, []);
 
   // 動画プレイヤーオブジェクトプールに存在する場合
   if (video.has(String(topic.id))) {
@@ -309,7 +315,6 @@ export default function Video({
             onEnded={String(topic.id) === id ? onEnded : undefined}
           />
         ))}
-        <TagSelect topicId={topic.id} {...handlers} />
         <Tabs
           aria-label="トピックビデオの詳細情報"
           className={tabsStyle}
@@ -385,6 +390,31 @@ export default function Video({
           {topic.license && (
             <License sx={{ mr: 1, mb: 0.5 }} license={topic.license} />
           )}
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "flex-start",
+              alignItems: "center",
+              boxSizing: "border-box",
+              width: "100%",
+              margin: "4px 0px",
+              padding: "4px 8px",
+              borderRadius: "8px",
+              textAlign: "left",
+              background: "#F9FAFB",
+              border: "1px solid #F9FAFB",
+            }}
+          >
+            {selectedTag.map((tag) => {
+              return <Tag key={tag.id} tag={tag} />;
+            })}
+            <TagMenu
+              topicId={topic.id}
+              selectedTag={selectedTag}
+              handleTagChange={handleTagChange}
+              {...handlers}
+            />
+          </Box>
           <DescriptionList
             inline
             value={[
