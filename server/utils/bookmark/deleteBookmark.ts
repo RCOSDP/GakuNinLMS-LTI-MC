@@ -7,14 +7,14 @@ async function deleteBookmark({
 }: {
   id: BookmarkSchema["id"];
 }): Promise<Bookmark | undefined> {
-  const created = await prisma.bookmark.delete({
+  const deleted = await prisma.bookmark.delete({
     where: { id },
   });
 
-  if (!created) {
+  if (!deleted) {
     return;
   }
-  return created;
+  return deleted;
 }
 
 export default deleteBookmark;
