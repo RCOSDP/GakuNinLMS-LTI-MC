@@ -7,11 +7,12 @@ import { useCallback, useState } from "react";
 
 type Props = {
   topicId: number;
+  defaultTags: TagSchema[];
 };
 
-export default function TagList({ topicId }: Props) {
+export default function TagList({ topicId, defaultTags }: Props) {
   const handlers = useBookmarkHandler();
-  const [selectedTag, setSelectedTag] = useState<TagSchema[]>([]);
+  const [selectedTag, setSelectedTag] = useState<TagSchema[]>(defaultTags);
   const handleTagChange = useCallback((tag: TagSchema) => {
     setSelectedTag((prev) => [...prev, tag]);
   }, []);

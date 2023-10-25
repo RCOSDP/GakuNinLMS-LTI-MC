@@ -29,7 +29,7 @@ export const bookmarkPropsSchema = {
 
 export type BookmarkSchema = Bookmark & {
   topic: Topic;
-  tag: Tag;
+  tag: TagSchema;
 };
 
 export const bookmarkSchema = {

@@ -30,6 +30,7 @@ import formatInterval from "$utils/formatInterval";
 import getLocaleDateString from "$utils/getLocaleDateString";
 import { authors } from "$utils/descriptionList";
 import TagList from "$molecules/TagList";
+import useBookmarks from "$utils/useBookmarks";
 
 const hidden = css({
   m: 0,
@@ -290,6 +291,8 @@ export default function Video({
   const isStudent =
     session && !isInstructor(session) && !isAdministrator(session);
 
+  const { tags, isLoading } = useBookmarks({ topicId: topic.id });
+
   // 動画プレイヤーオブジェクトプールに存在する場合
   if (video.has(String(topic.id))) {
     return (
@@ -381,7 +384,9 @@ export default function Video({
           {topic.license && (
             <License sx={{ mr: 1, mb: 0.5 }} license={topic.license} />
           )}
-          <TagList topicId={topic.id} />
+          {!isLoading && (
+            <TagList key={topic.id} topicId={topic.id} defaultTags={tags} />
+          )}
           <DescriptionList
             inline
             value={[
