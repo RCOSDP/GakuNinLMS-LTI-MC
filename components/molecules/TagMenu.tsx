@@ -105,7 +105,6 @@ const Listbox = styled("ul")(
   background: #fff;
   border: #fff;
   box-shadow: 0px 4px 6px rgba(0,0,0, 0.05)
-  };
   `
 );
 
