@@ -8,7 +8,7 @@ const key = "/api/v2/bookmark";
 
 async function createBookmark(body: BookmarkProps): Promise<BookmarkSchema> {
   const res = await api.apiV2BookmarkPost({ body });
-  await mutate({ key, id: res.id }, res);
+  await mutate({ key, topicId: body.topicId }, res);
   return res as unknown as BookmarkSchema;
 }
 

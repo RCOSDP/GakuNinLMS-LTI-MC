@@ -18,7 +18,7 @@ async function fetchBookmarks({
 
 function useBookmarks({ topicId }: { topicId: number }) {
   const { data, isLoading } = useSWR({ key, topicId }, fetchBookmarks);
-  const tags = data?.bookmark.map((bookmark) => bookmark.tag) ?? [];
+  const tags = data?.bookmark?.map((bookmark) => bookmark.tag) ?? [];
 
   return { tags, isLoading };
 }
