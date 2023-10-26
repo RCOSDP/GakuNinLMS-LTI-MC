@@ -29,10 +29,8 @@ import DescriptionList from "$atoms/DescriptionList";
 import formatInterval from "$utils/formatInterval";
 import getLocaleDateString from "$utils/getLocaleDateString";
 import { authors } from "$utils/descriptionList";
-import Tag from "$molecules/Tag";
-import TagMenu from "$molecules/TagMenu";
-import useBookmarkHandler from "$utils/useBookmarkHandler";
-import type { TagSchema } from "$server/models/bookmark";
+import TagList from "$molecules/TagList";
+import useBookmarks from "$utils/useBookmarks";
 
 const hidden = css({
   m: 0,
@@ -293,11 +291,7 @@ export default function Video({
   const isStudent =
     session && !isInstructor(session) && !isAdministrator(session);
 
-  const handlers = useBookmarkHandler();
-  const [selectedTag, setSelectedTag] = useState<TagSchema[]>([]);
-  const handleTagChange = useCallback((tag: TagSchema) => {
-    setSelectedTag((prev) => [...prev, tag]);
-  }, []);
+  const { tags, isLoading } = useBookmarks({ topicId: topic.id });
 
   // 動画プレイヤーオブジェクトプールに存在する場合
   if (video.has(String(topic.id))) {
@@ -390,31 +384,9 @@ export default function Video({
           {topic.license && (
             <License sx={{ mr: 1, mb: 0.5 }} license={topic.license} />
           )}
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "flex-start",
-              alignItems: "center",
-              boxSizing: "border-box",
-              width: "100%",
-              margin: "4px 0px",
-              padding: "4px 8px",
-              borderRadius: "8px",
-              textAlign: "left",
-              background: "#F9FAFB",
-              border: "1px solid #F9FAFB",
-            }}
-          >
-            {selectedTag.map((tag) => {
-              return <Tag key={tag.id} tag={tag} />;
-            })}
-            <TagMenu
-              topicId={topic.id}
-              selectedTag={selectedTag}
-              handleTagChange={handleTagChange}
-              {...handlers}
-            />
-          </Box>
+          {!isLoading && (
+            <TagList key={topic.id} topicId={topic.id} defaultTags={tags} />
+          )}
           <DescriptionList
             inline
             value={[
