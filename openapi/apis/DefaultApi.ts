@@ -187,7 +187,7 @@ export interface ApiV2BookZoomMeetingIdGetRequest {
     meetingId: number;
 }
 
-export interface ApiV2BookmarkDeleteRequest {
+export interface ApiV2BookmarkIdDeleteRequest {
     id: number;
 }
 
@@ -769,9 +769,9 @@ export class DefaultApi extends runtime.BaseAPI {
      * ブックマークを削除します。
      * ブックマークの削除
      */
-    async apiV2BookmarkDeleteRaw(requestParameters: ApiV2BookmarkDeleteRequest): Promise<runtime.ApiResponse<void>> {
+    async apiV2BookmarkIdDeleteRaw(requestParameters: ApiV2BookmarkIdDeleteRequest): Promise<runtime.ApiResponse<void>> {
         if (requestParameters.id === null || requestParameters.id === undefined) {
-            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling apiV2BookmarkDelete.');
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling apiV2BookmarkIdDelete.');
         }
 
         const queryParameters: runtime.HTTPQuery = {};
@@ -779,7 +779,7 @@ export class DefaultApi extends runtime.BaseAPI {
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/api/v2/bookmark`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            path: `/api/v2/bookmark/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -792,8 +792,8 @@ export class DefaultApi extends runtime.BaseAPI {
      * ブックマークを削除します。
      * ブックマークの削除
      */
-    async apiV2BookmarkDelete(requestParameters: ApiV2BookmarkDeleteRequest): Promise<void> {
-        await this.apiV2BookmarkDeleteRaw(requestParameters);
+    async apiV2BookmarkIdDelete(requestParameters: ApiV2BookmarkIdDeleteRequest): Promise<void> {
+        await this.apiV2BookmarkIdDeleteRaw(requestParameters);
     }
 
     /**

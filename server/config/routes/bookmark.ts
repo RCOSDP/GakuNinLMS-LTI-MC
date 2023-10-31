@@ -4,6 +4,7 @@ import handler from "$server/utils/handler";
 import * as service from "$server/services/bookmark";
 
 const basePath = "/bookmark";
+const pathWithParams = `${basePath}/:id`;
 
 export async function bookmark(fastify: FastifyInstance) {
   const { method, create, destroy } = service;
@@ -15,5 +16,9 @@ export async function bookmark(fastify: FastifyInstance) {
 
   fastify.delete<{
     Params: service.Params;
-  }>(basePath, { schema: method.delete, ...hooks.delete }, handler(destroy));
+  }>(
+    pathWithParams,
+    { schema: method.delete, ...hooks.delete },
+    handler(destroy)
+  );
 }

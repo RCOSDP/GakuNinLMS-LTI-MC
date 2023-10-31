@@ -291,7 +291,7 @@ export default function Video({
   const isStudent =
     session && !isInstructor(session) && !isAdministrator(session);
 
-  const { tags, isLoading } = useBookmarks({ topicId: topic.id });
+  const { bookmarks, isLoading } = useBookmarks({ topicId: topic.id });
 
   // 動画プレイヤーオブジェクトプールに存在する場合
   if (video.has(String(topic.id))) {
@@ -385,7 +385,7 @@ export default function Video({
             <License sx={{ mr: 1, mb: 0.5 }} license={topic.license} />
           )}
           {!isLoading && (
-            <TagList key={topic.id} topicId={topic.id} defaultTags={tags} />
+            <TagList key={topic.id} topicId={topic.id} bookmarks={bookmarks} />
           )}
           <DescriptionList
             inline
