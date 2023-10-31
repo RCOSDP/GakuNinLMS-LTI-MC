@@ -30,10 +30,13 @@ export const hooks = {
   get: { auth: [authUser] },
 };
 
-export async function index({ query }: FastifyRequest<{ Querystring: Query }>) {
+export async function index({
+  query,
+  session,
+}: FastifyRequest<{ Querystring: Query }>) {
   const { topicId } = query;
 
-  const bookmark = await findBookmarks(topicId);
+  const bookmark = await findBookmarks(topicId, session.user.id);
 
   return {
     status: 200,
