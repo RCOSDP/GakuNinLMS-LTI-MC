@@ -303,3 +303,22 @@ yarn --cwd server prisma studio
 
 dist ディレクトリをサーバー上に配置し、各環境変数とともに `NODE_ENV=production node dist/index.js | logger -p daemon.info -t chibichilo-server` とコマンドを実行することでアプリケーションを起動できます。
 [プロセスマネージャ PM2 を使って本番環境のサーバー上で起動する](https://future-architect.github.io/typescript-guide/deploy.html#id3)などしましょう。
+
+### タグの設定
+
+ブックマークのタグの初期値:
+
+| id  | label      | color (形式: CSS \<color\> 値) |
+| --- | ---------- | ------------------------------ |
+| 1   | なるほど   | `#2980B9`                      |
+| 2   | 難しい     | `#C0392B`                      |
+| 3   | あとで見る | `#27AE60`                      |
+| 4   | 重要       | `#F39C12`                      |
+
+変更する場合は SQL を発行します。
+
+SQL:
+
+```sql
+UPDATE "Tag" SET "label" = 'なるほど', "color" = '#2980B9' WHERE "id" = 1;
+```

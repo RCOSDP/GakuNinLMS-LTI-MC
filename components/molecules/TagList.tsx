@@ -2,15 +2,20 @@ import { Box } from "@mui/material";
 import Tag from "$atoms/Tag";
 import TagMenu from "$atoms/TagMenu";
 import useBookmarkHandler from "$utils/useBookmarkHandler";
-import type { BookmarkSchema, TagSchema } from "$server/models/bookmark";
+import type {
+  BookmarkSchema,
+  BookmarkTagMenu,
+  TagSchema,
+} from "$server/models/bookmark";
 import { useCallback, useState } from "react";
 
 type Props = {
   topicId: number;
   bookmarks: BookmarkSchema[];
+  tagMenu: BookmarkTagMenu;
 };
 
-export default function TagList({ topicId, bookmarks }: Props) {
+export default function TagList({ topicId, bookmarks, tagMenu }: Props) {
   const handlers = useBookmarkHandler();
   const [selectedTag, setSelectedTag] = useState<TagSchema[]>(
     bookmarks.map((bookmark) => bookmark.tag)
@@ -54,6 +59,7 @@ export default function TagList({ topicId, bookmarks }: Props) {
       <TagMenu
         topicId={topicId}
         selectedTag={selectedTag}
+        tagMenu={tagMenu}
         handleTagChange={handleTagChange}
         {...handlers}
       />

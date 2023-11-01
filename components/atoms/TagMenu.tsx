@@ -5,7 +5,11 @@ import { Menu as BaseMenu, menuClasses } from "@mui/base/Menu";
 import { MenuButton as BaseMenuButton } from "@mui/base/MenuButton";
 import { MenuItem as BaseMenuItem, menuItemClasses } from "@mui/base/MenuItem";
 import { styled } from "@mui/system";
-import type { BookmarkProps, TagSchema } from "$server/models/bookmark";
+import type {
+  BookmarkProps,
+  BookmarkTagMenu,
+  TagSchema,
+} from "$server/models/bookmark";
 
 const circle = css({
   display: "inline-block",
@@ -15,17 +19,10 @@ const circle = css({
   marginRight: "8px",
 });
 
-// TODO: データベースから取得するように変更する
-const tagMenus: TagSchema[] = [
-  { id: 1, label: "なるほど", color: "red" },
-  { id: 2, label: "難しい", color: "green" },
-  { id: 3, label: "あとで見る", color: "blue" },
-  { id: 4, label: "重要", color: "yellow" },
-];
-
 type Props = {
   topicId: number;
   selectedTag: TagSchema[];
+  tagMenu: BookmarkTagMenu;
   handleTagChange: (tag: TagSchema) => void;
   onSubmitBookmark: (body: BookmarkProps) => Promise<void>;
 };
@@ -33,6 +30,7 @@ type Props = {
 export default function TagMenu({
   topicId,
   selectedTag,
+  tagMenu,
   handleTagChange,
   onSubmitBookmark,
 }: Props) {
@@ -44,7 +42,7 @@ export default function TagMenu({
     [handleTagChange, onSubmitBookmark, topicId]
   );
 
-  const filterTags = tagMenus.filter((tag) => {
+  const filterTags = tagMenu.filter((tag) => {
     return selectedTag.every((selected) => selected.id !== tag.id);
   });
 

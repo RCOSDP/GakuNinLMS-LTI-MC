@@ -16,34 +16,34 @@ import { exists, mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface InlineResponse20015Tag
+ * @interface InlineResponse20015BookmarkTagMenu
  */
-export interface InlineResponse20015Tag {
+export interface InlineResponse20015BookmarkTagMenu {
     /**
      * 
      * @type {number}
-     * @memberof InlineResponse20015Tag
+     * @memberof InlineResponse20015BookmarkTagMenu
      */
     id: number;
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse20015Tag
+     * @memberof InlineResponse20015BookmarkTagMenu
      */
     label: string;
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse20015Tag
+     * @memberof InlineResponse20015BookmarkTagMenu
      */
     color: string;
 }
 
-export function InlineResponse20015TagFromJSON(json: any): InlineResponse20015Tag {
-    return InlineResponse20015TagFromJSONTyped(json, false);
+export function InlineResponse20015BookmarkTagMenuFromJSON(json: any): InlineResponse20015BookmarkTagMenu {
+    return InlineResponse20015BookmarkTagMenuFromJSONTyped(json, false);
 }
 
-export function InlineResponse20015TagFromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse20015Tag {
+export function InlineResponse20015BookmarkTagMenuFromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse20015BookmarkTagMenu {
     if ((json === undefined) || (json === null)) {
         return json;
     }
@@ -55,7 +55,7 @@ export function InlineResponse20015TagFromJSONTyped(json: any, ignoreDiscriminat
     };
 }
 
-export function InlineResponse20015TagToJSON(value?: InlineResponse20015Tag | null): any {
+export function InlineResponse20015BookmarkTagMenuToJSON(value?: InlineResponse20015BookmarkTagMenu | null): any {
     if (value === undefined) {
         return undefined;
     }
