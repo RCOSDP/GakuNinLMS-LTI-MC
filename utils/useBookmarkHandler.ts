@@ -9,7 +9,7 @@ const key = "/api/v2/bookmark";
 
 async function createBookmark(body: BookmarkProps): Promise<BookmarkSchema> {
   const res = await api.apiV2BookmarkPost({ body });
-  await mutate({ key, topicId: body.topicId }, res);
+  await mutate({ key, topicId: body.topicId, isAllUsers: false }, res);
   return res as unknown as BookmarkSchema;
 }
 
@@ -18,7 +18,7 @@ async function deleteBookmark(
   topicId: BookmarkProps["topicId"]
 ): Promise<void> {
   const res = await api.apiV2BookmarkIdDelete({ id });
-  await mutate({ key, topicId }, res);
+  await mutate({ key, topicId, isAllUsers: false }, res);
 }
 
 function useBookmarkHandler() {
