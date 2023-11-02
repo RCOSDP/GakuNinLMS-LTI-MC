@@ -197,6 +197,7 @@ export interface ApiV2BookmarkPostRequest {
 
 export interface ApiV2BookmarksGetRequest {
     topicId: number;
+    isAllUsers: boolean;
 }
 
 export interface ApiV2BooksGetRequest {
@@ -828,7 +829,7 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * ブックマークの一覧を取得します。
+     * ブックマークの一覧を取得します。 isAllUsers が true の場合、全ユーザーのブックマークを取得します。 isAllUsers が false の場合、該当のユーザーのブックマークを取得します。
      * ブックマーク一覧
      */
     async apiV2BookmarksGetRaw(requestParameters: ApiV2BookmarksGetRequest): Promise<runtime.ApiResponse<InlineResponse20015>> {
@@ -836,10 +837,18 @@ export class DefaultApi extends runtime.BaseAPI {
             throw new runtime.RequiredError('topicId','Required parameter requestParameters.topicId was null or undefined when calling apiV2BookmarksGet.');
         }
 
+        if (requestParameters.isAllUsers === null || requestParameters.isAllUsers === undefined) {
+            throw new runtime.RequiredError('isAllUsers','Required parameter requestParameters.isAllUsers was null or undefined when calling apiV2BookmarksGet.');
+        }
+
         const queryParameters: runtime.HTTPQuery = {};
 
         if (requestParameters.topicId !== undefined) {
             queryParameters['topicId'] = requestParameters.topicId;
+        }
+
+        if (requestParameters.isAllUsers !== undefined) {
+            queryParameters['isAllUsers'] = requestParameters.isAllUsers;
         }
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -855,7 +864,7 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * ブックマークの一覧を取得します。
+     * ブックマークの一覧を取得します。 isAllUsers が true の場合、全ユーザーのブックマークを取得します。 isAllUsers が false の場合、該当のユーザーのブックマークを取得します。
      * ブックマーク一覧
      */
     async apiV2BookmarksGet(requestParameters: ApiV2BookmarksGetRequest): Promise<InlineResponse20015> {

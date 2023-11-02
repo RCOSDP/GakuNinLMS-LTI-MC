@@ -4,10 +4,15 @@ import type { User } from "@prisma/client";
 
 async function findBookmarks(
   topicId: number,
-  userId: User["id"]
+  userId?: User["id"]
 ): Promise<BookmarkSchema[]> {
+  const whereCondition = {
+    topicId,
+    ...(userId ? { userId } : {}),
+  };
+
   const bookmarks = await prisma.bookmark.findMany({
-    where: { topicId, userId },
+    where: whereCondition,
     include: {
       topic: true,
       tag: true,
