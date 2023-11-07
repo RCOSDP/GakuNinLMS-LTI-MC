@@ -71,7 +71,9 @@ function getLearnerActivities({
       const activity = activityByLearner.find(
         (a) => a.book.id === bookId && a.topic.id === topicId
       );
-      activities.push(activity || { learner, book, topic, status: "unopened" });
+      activities.push(
+        activity || { learner, bookmark: "", book, topic, status: "unopened" }
+      );
     }
     learnerActivities.push([learner, activities]);
   }

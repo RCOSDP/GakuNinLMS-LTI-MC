@@ -12,6 +12,7 @@ const activity = {
     name: topic.name,
     timeRequired: topic.timeRequired,
   },
+  bookmark: "なるほど",
   completed: true,
   totalTimeMs: 60000,
   createdAt: new Date(),

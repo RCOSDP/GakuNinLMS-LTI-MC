@@ -18,6 +18,8 @@ export const ActivitySchema = {
       required: ["id", "name", "timeRequired"],
       additionalProperties: false,
     },
+    /** ブックマークのタグ - " " 区切り, "" 空 */
+    bookmark: { type: "string" },
     /** 学習状況 - 完了: true, それ以外: false */
     completed: { type: "boolean" },
     /** 合計学習時間 (ms) */
@@ -36,6 +38,7 @@ export const ActivitySchema = {
     "id",
     "learner",
     "topic",
+    "bookmark",
     "completed",
     "totalTimeMs",
     "timeRanges",
@@ -46,12 +49,17 @@ export const ActivitySchema = {
 } as const;
 
 /** 学習活動 */
-export type ActivitySchema = Pick<
-  FromSchema<typeof ActivitySchema>,
-  "id" | "learner" | "topic" | "completed" | "totalTimeMs" | "timeRanges"
-> & {
-  /** 作成日時 */
-  createdAt: Date;
-  /** 更新日時 */
-  updatedAt: Date;
-};
+export type ActivitySchema = FromSchema<
+  typeof ActivitySchema,
+  {
+    deserialize: [
+      {
+        pattern: {
+          type: "string";
+          format: "date-time";
+        };
+        output: Date;
+      },
+    ];
+  }
+>;

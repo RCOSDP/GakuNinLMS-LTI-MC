@@ -20,6 +20,7 @@ export const keyOrder = [
   "completionRate",
   "createdAt",
   "updatedAt",
+  "bookmark",
 ] as const;
 
 export const label: Readonly<{ [key in (typeof keyOrder)[number]]: string }> = {
@@ -38,6 +39,7 @@ export const label: Readonly<{ [key in (typeof keyOrder)[number]]: string }> = {
   completionRate: "学習完了率",
   createdAt: "初回アクセス",
   updatedAt: "最終アクセス",
+  bookmark: "ブックマーク",
 };
 
 /**

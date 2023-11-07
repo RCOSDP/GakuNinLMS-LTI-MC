@@ -14,10 +14,13 @@ export const BookActivitySchema = {
     },
     status: LearningStatus,
   },
-  required: ["learner", "topic", "book", "status"],
+  required: ["learner", "topic", "bookmark", "book", "status"],
 } as const;
 
 /** ブックでの学習活動 */
-export type BookActivitySchema = Pick<ActivitySchema, "learner" | "topic"> &
+export type BookActivitySchema = Pick<
+  ActivitySchema,
+  "learner" | "topic" | "bookmark"
+> &
   Partial<Pick<ActivitySchema, "totalTimeMs" | "createdAt" | "updatedAt">> &
   Pick<FromSchema<typeof BookActivitySchema>, "book" | "status">;

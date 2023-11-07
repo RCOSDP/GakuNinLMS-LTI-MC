@@ -28,6 +28,7 @@ Default.args = {
   bookActivities: [...Array(1500)].map((_, i) => ({
     ...bookActivity,
     learner: learner(i % 50),
+    bookmark: ["なるほど", "難しい", "あとで見る", "重要"][i % 4],
     book: { ...bookActivity.book, id: Math.floor(Math.random() * 10) },
     topic: { ...bookActivity.topic, id: (i % 3) + 1 },
   })),

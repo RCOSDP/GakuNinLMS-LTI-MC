@@ -27,7 +27,12 @@ export function toSchema({
   activities: Array<
     Pick<
       ActivitySchema,
-      "learner" | "topic" | "totalTimeMs" | "createdAt" | "updatedAt"
+      | "learner"
+      | "topic"
+      | "bookmark"
+      | "totalTimeMs"
+      | "createdAt"
+      | "updatedAt"
     >
   >;
 }): {

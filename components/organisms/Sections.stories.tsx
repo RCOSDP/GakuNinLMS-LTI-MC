@@ -11,6 +11,7 @@ const activityBySections = sections
     id: topic.id,
     topic,
     learner: user,
+    bookmark: "",
     completed: Math.floor(Math.random() * 2) === 0,
     totalTimeMs: 100_000,
     timeRanges: [],

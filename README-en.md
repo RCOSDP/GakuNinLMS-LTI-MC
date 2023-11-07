@@ -34,6 +34,7 @@ The details of each column in the CSV file are as follows.
 | `Learning completion rate` | -                          | 学習完了率 - ユニーク視聴時間が動画の長さを占める割合 (パーセント)                          |
 | `First access`             | `activities.created_at`    | 学習活動 - 作成日                                                                           |
 | `Last access`              | `activities.updated_at`    | 学習活動 - 更新日                                                                           |
+| `ブックマーク`             | `"Bookmark"`               | ブックマークのタグの一覧 (" " 区切り, "": 空)                                               |
 
 ## Architecture
 

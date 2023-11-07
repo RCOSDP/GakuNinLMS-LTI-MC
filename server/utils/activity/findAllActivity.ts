@@ -89,7 +89,28 @@ async function findAllActivity(
     select: { book: bookIncludingTopicsArg },
   });
   const books = ltiResourceLinks.map(({ book }) => book);
-  const activities = ltiMembers.flatMap(({ activities }) => activities);
+  const bookmarks = await prisma.bookmark.findMany({
+    where: {
+      userId: { in: ltiMembers.map(({ id }) => id) },
+      ...(currentLtiContextOnly
+        ? { ltiCosumerId: consumerId, ltiContextId: contextId }
+        : {}),
+    },
+    include: { topic: true, tag: true },
+    orderBy: { tagId: "asc" },
+  });
+  const activities = ltiMembers
+    .flatMap(({ activities }) => activities)
+    .map((activity) => ({
+      bookmark: bookmarks
+        .flatMap((b) =>
+          b.topicId === activity.topicId && b.userId === activity.learnerId
+            ? [b.tag.label]
+            : []
+        )
+        .join(" "),
+      ...activity,
+    }));
   const { courseBooks, bookActivities } = toSchema({
     user,
     books,
