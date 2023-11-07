@@ -5,10 +5,12 @@ export const BookmarkQuery = {
   type: "object",
   properties: {
     topicId: { type: "number" },
+    tagId: { type: "number" },
     isAllUsers: { type: "boolean" },
   },
   additionalProperties: false,
-  required: ["topicId", "isAllUsers"],
+  oneOf: [{ required: ["topicId"] }, { required: ["tagId"] }],
+  required: ["isAllUsers"],
 } as const;
 
 /** ブックマーク取得のためのクエリー */

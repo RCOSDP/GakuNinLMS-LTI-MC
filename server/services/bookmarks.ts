@@ -39,15 +39,29 @@ export async function index({
   query,
   session,
 }: FastifyRequest<{ Querystring: Query }>) {
-  const { topicId, isAllUsers } = query;
+  const { topicId, tagId, isAllUsers } = query;
 
-  const bookmarks = await findBookmarks(
-    topicId,
-    isAllUsers ? undefined : session.user.id
-  );
+  if (topicId) {
+    const bookmarks = await findBookmarks({
+      topicId,
+      userId: isAllUsers ? undefined : session.user.id,
+    });
 
-  return {
-    status: 200,
-    body: bookmarks,
-  };
+    return {
+      status: 200,
+      body: bookmarks,
+    };
+  } else if (tagId) {
+    const bookmarks = await findBookmarks({
+      tagId,
+      userId: isAllUsers ? undefined : session.user.id,
+    });
+
+    return {
+      status: 200,
+      body: bookmarks,
+    };
+  } else {
+    return { status: 404 };
+  }
 }
