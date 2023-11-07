@@ -15,6 +15,8 @@ import { isNamedSection, getOutlineNumber } from "$utils/outline";
 import { useActivityAtom } from "$store/activity";
 import LearningStatusChip from "$atoms/LearningStatusChip";
 import formatInterval from "$utils/formatInterval";
+import TagCount from "$molecules/TagCount";
+import { Box } from "@mui/material";
 
 function SectionItem({
   section,
@@ -131,9 +133,22 @@ export default function Sections({
                 <span className={clsx(classes.topic, classes.ellipsis)}>
                   {topic.name}
                 </span>
-                <Typography component="span" variant="caption">
-                  {formatInterval(0, topic.timeRequired * 1000)}
-                </Typography>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "flex-start",
+                    alignItems: "center",
+                  }}
+                >
+                  <Typography
+                    component="span"
+                    variant="caption"
+                    sx={{ marginRight: "4px" }}
+                  >
+                    {formatInterval(0, topic.timeRequired * 1000)}
+                  </Typography>
+                  <TagCount topicId={topic.id} />
+                </Box>
               </ListItemText>
               {!isContentEditable(topic) && isCompleted(topic.id) && (
                 <LearningStatusChip type="completed" size="small" />

@@ -1,6 +1,6 @@
 import type { FastifyRequest } from "fastify";
 import { outdent } from "outdent";
-import { bookmarkSchema } from "$server/models/bookmark";
+import { BookmarkTagMenu, bookmarkSchema } from "$server/models/bookmark";
 import { BookmarkQuery } from "$server/validators/bookmarkQuery";
 import authUser from "$server/auth/authUser";
 import findBookmarks from "$server/utils/bookmark/findBookmarks";
@@ -8,7 +8,11 @@ import findBookmarks from "$server/utils/bookmark/findBookmarks";
 export const method = {
   get: {
     summary: "ブックマーク一覧",
-    description: outdent`ブックマークの一覧を取得します。`,
+    description: outdent`
+    ブックマークの一覧を取得します。
+    isAllUsers が true の場合、全ユーザーのブックマークを取得します。
+    isAllUsers が false の場合、該当のユーザーのブックマークを取得します。
+    `,
     querystring: BookmarkQuery,
     response: {
       200: {
@@ -16,6 +20,7 @@ export const method = {
         type: "object",
         properties: {
           bookmark: { type: "array", items: bookmarkSchema },
+          bookmarkTagMenu: BookmarkTagMenu,
         },
         required: ["bookmark"],
       },
@@ -34,14 +39,15 @@ export async function index({
   query,
   session,
 }: FastifyRequest<{ Querystring: Query }>) {
-  const { topicId } = query;
+  const { topicId, isAllUsers } = query;
 
-  const bookmark = await findBookmarks(topicId, session.user.id);
+  const bookmarks = await findBookmarks(
+    topicId,
+    isAllUsers ? undefined : session.user.id
+  );
 
   return {
     status: 200,
-    body: {
-      bookmark,
-    },
+    body: bookmarks,
   };
 }
