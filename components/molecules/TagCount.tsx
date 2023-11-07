@@ -1,5 +1,5 @@
 import type { BookmarkSchema } from "$server/models/bookmark";
-import useBookmarks from "$utils/useBookmarks";
+import useBookmarks from "$utils/useBookmarksByTopicId";
 import { css } from "@emotion/css";
 import { Box } from "@mui/material";
 import { useMemo } from "react";
