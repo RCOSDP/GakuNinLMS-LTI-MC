@@ -24,8 +24,8 @@ async function findBookmarks({
   bookmarkTagMenu: BookmarkTagMenu;
 }> {
   type WhereCondition = {
-    topicId?: number;
-    tagId?: number;
+    topicId?: BookmarkSchema["topicId"];
+    tagId?: BookmarkSchema["tagId"];
     userId?: number;
   };
 
