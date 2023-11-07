@@ -30,7 +30,7 @@ import formatInterval from "$utils/formatInterval";
 import getLocaleDateString from "$utils/getLocaleDateString";
 import { authors } from "$utils/descriptionList";
 import TagList from "$molecules/TagList";
-import useBookmarks from "$utils/useBookmarksByTopicId";
+import useBookmarks from "$utils/bookmark/useBookmarksByTopicId";
 
 const hidden = css({
   m: 0,

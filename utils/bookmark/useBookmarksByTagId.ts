@@ -1,4 +1,4 @@
-import { api } from "./api";
+import { api } from "../api";
 import useSWR from "swr";
 
 import type { BookmarkSchema, BookmarkTagMenu } from "$server/models/bookmark";
@@ -7,14 +7,12 @@ import type { BookmarkQuery } from "$server/validators/bookmarkQuery";
 const key = "/api/v2/bookmark";
 
 async function fetchBookmarks({
-  topicId,
-  isAllUsers,
+  tagId,
 }: {
   key: typeof key;
-  topicId: BookmarkQuery["topicId"];
-  isAllUsers: BookmarkQuery["isAllUsers"];
+  tagId: BookmarkQuery["tagId"];
 }) {
-  const res = await api.apiV2BookmarksGet({ topicId, isAllUsers });
+  const res = await api.apiV2BookmarksGet({ tagId, isAllUsers: false });
 
   return res as unknown as {
     bookmark: BookmarkSchema[];
@@ -22,21 +20,12 @@ async function fetchBookmarks({
   };
 }
 
-function useBookmarksByTopicId({
-  topicId,
-  isAllUsers = false,
-}: {
-  topicId: BookmarkQuery["topicId"];
-  isAllUsers?: BookmarkQuery["isAllUsers"];
-}) {
-  const { data, isLoading } = useSWR(
-    { key, topicId, isAllUsers },
-    fetchBookmarks
-  );
+function useBookmarksByTagId({ tagId }: { tagId: BookmarkQuery["tagId"] }) {
+  const { data, isLoading } = useSWR({ key, tagId }, fetchBookmarks);
 
   const bookmarkTagMenu: BookmarkTagMenu = data?.bookmarkTagMenu ?? [];
 
   return { bookmarks: data?.bookmark || [], bookmarkTagMenu, isLoading };
 }
 
-export default useBookmarksByTopicId;
+export default useBookmarksByTagId;
