@@ -7,12 +7,11 @@ import type { BookmarkQuery } from "$server/validators/bookmarkQuery";
 const key = "/api/v2/bookmark";
 
 async function fetchBookmarks({
-  tagId,
-}: {
+  ...query
+}: BookmarkQuery & {
   key: typeof key;
-  tagId: BookmarkQuery["tagId"];
 }) {
-  const res = await api.apiV2BookmarksGet({ tagId, isAllUsers: false });
+  const res = await api.apiV2BookmarksGet(query);
 
   return res as unknown as {
     bookmark: BookmarkSchema[];
