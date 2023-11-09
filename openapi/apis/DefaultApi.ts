@@ -196,8 +196,9 @@ export interface ApiV2BookmarkPostRequest {
 }
 
 export interface ApiV2BookmarksGetRequest {
-    topicId: number;
     isAllUsers: boolean;
+    topicId?: number;
+    tagId?: number;
 }
 
 export interface ApiV2BooksGetRequest {
@@ -833,10 +834,6 @@ export class DefaultApi extends runtime.BaseAPI {
      * ブックマーク一覧
      */
     async apiV2BookmarksGetRaw(requestParameters: ApiV2BookmarksGetRequest): Promise<runtime.ApiResponse<InlineResponse20015>> {
-        if (requestParameters.topicId === null || requestParameters.topicId === undefined) {
-            throw new runtime.RequiredError('topicId','Required parameter requestParameters.topicId was null or undefined when calling apiV2BookmarksGet.');
-        }
-
         if (requestParameters.isAllUsers === null || requestParameters.isAllUsers === undefined) {
             throw new runtime.RequiredError('isAllUsers','Required parameter requestParameters.isAllUsers was null or undefined when calling apiV2BookmarksGet.');
         }
@@ -845,6 +842,10 @@ export class DefaultApi extends runtime.BaseAPI {
 
         if (requestParameters.topicId !== undefined) {
             queryParameters['topicId'] = requestParameters.topicId;
+        }
+
+        if (requestParameters.tagId !== undefined) {
+            queryParameters['tagId'] = requestParameters.tagId;
         }
 
         if (requestParameters.isAllUsers !== undefined) {

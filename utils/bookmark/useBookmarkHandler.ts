@@ -1,6 +1,6 @@
 import { mutate } from "swr";
 
-import { api } from "./api";
+import { api } from "../api";
 import type { BookmarkProps, BookmarkSchema } from "$server/models/bookmark";
 import { useCallback } from "react";
 import type { BookmarkParams } from "$server/validators/bookmarkParams";

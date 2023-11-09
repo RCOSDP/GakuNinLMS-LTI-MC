@@ -2,17 +2,44 @@ import type { BookmarkSchema, BookmarkTagMenu } from "$server/models/bookmark";
 import prisma from "$server/utils/prisma";
 import type { User } from "@prisma/client";
 
-async function findBookmarks(
-  topicId: number,
-  userId?: User["id"]
-): Promise<{
+type TopicIdParam = {
+  topicId: BookmarkSchema["topicId"];
+  tagId?: BookmarkSchema["tagId"];
+};
+type TagIdParam = {
+  topicId?: BookmarkSchema["topicId"];
+  tagId: BookmarkSchema["tagId"];
+};
+
+type FindBookmarksParams = {
+  userId?: User["id"];
+} & (TopicIdParam | TagIdParam);
+
+async function findBookmarks({
+  topicId,
+  tagId,
+  userId,
+}: FindBookmarksParams): Promise<{
   bookmark: BookmarkSchema[];
   bookmarkTagMenu: BookmarkTagMenu;
 }> {
-  const whereCondition = {
-    topicId,
-    ...(userId ? { userId } : {}),
+  type WhereCondition = {
+    topicId?: BookmarkSchema["topicId"];
+    tagId?: BookmarkSchema["tagId"];
+    userId?: number;
   };
+
+  const whereCondition: WhereCondition = {};
+
+  if (topicId !== undefined) {
+    whereCondition.topicId = topicId;
+  } else if (tagId !== undefined) {
+    whereCondition.tagId = tagId;
+  }
+
+  if (userId) {
+    whereCondition.userId = userId;
+  }
 
   const bookmark = await prisma.bookmark.findMany({
     where: whereCondition,
