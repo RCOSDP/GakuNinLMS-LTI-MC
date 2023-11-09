@@ -1,5 +1,5 @@
 import type { BookmarkSchema } from "$server/models/bookmark";
-import useBookmarks from "$utils/bookmark/useBookmarksByTopicId";
+import { useBookmarksByTopicId } from "$utils/bookmark/useBookmarks";
 import { css } from "@emotion/css";
 import { Box } from "@mui/material";
 import { useMemo } from "react";
@@ -20,7 +20,7 @@ const text = css({
 });
 
 export default function TagCount({ topicId }: Props) {
-  const { bookmarks } = useBookmarks({ topicId, isAllUsers: true });
+  const { bookmarks } = useBookmarksByTopicId({ topicId, isAllUsers: true });
 
   const tagWithCounts = useMemo(() => {
     const tags = bookmarks.flatMap((bookmark) => bookmark.tag);
