@@ -30,7 +30,7 @@ import formatInterval from "$utils/formatInterval";
 import getLocaleDateString from "$utils/getLocaleDateString";
 import { authors } from "$utils/descriptionList";
 import TagList from "$molecules/TagList";
-import useBookmarks from "$utils/bookmark/useBookmarksByTopicId";
+import { useBookmarksByTopicId } from "$utils/bookmark/useBookmarks";
 
 const hidden = css({
   m: 0,
@@ -291,7 +291,7 @@ export default function Video({
   const isStudent =
     session && !isInstructor(session) && !isAdministrator(session);
 
-  const { bookmarks, bookmarkTagMenu, isLoading } = useBookmarks({
+  const { bookmarks, bookmarkTagMenu, isLoading } = useBookmarksByTopicId({
     topicId: topic.id,
   });
 
