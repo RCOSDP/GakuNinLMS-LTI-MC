@@ -294,6 +294,7 @@ export default function Video({
   const { bookmarks, bookmarkTagMenu, isLoading } = useBookmarks({
     topicId: topic.id,
   });
+  const isLtiResourceLinkBook = !!book && book.ltiResourceLinks.length > 0;
 
   // 動画プレイヤーオブジェクトプールに存在する場合
   if (video.has(String(topic.id))) {
@@ -386,7 +387,7 @@ export default function Video({
           {topic.license && (
             <License sx={{ mr: 1, mb: 0.5 }} license={topic.license} />
           )}
-          {!isLoading && (
+          {!isLoading && isLtiResourceLinkBook && (
             <TagList
               key={topic.id}
               topicId={topic.id}

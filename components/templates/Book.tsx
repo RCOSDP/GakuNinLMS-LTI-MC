@@ -267,6 +267,7 @@ export default function Book(props: Props) {
             onItemClick={handleItemClick}
             onItemEditClick={handleItemEditClick}
             isContentEditable={isContentEditable}
+            isLtiResourceLinkBook={!!book && book.ltiResourceLinks.length > 0}
           />
         </div>
       </div>
