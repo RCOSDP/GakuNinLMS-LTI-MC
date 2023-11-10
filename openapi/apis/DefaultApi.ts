@@ -87,6 +87,9 @@ import {
     InlineResponse20015,
     InlineResponse20015FromJSON,
     InlineResponse20015ToJSON,
+    InlineResponse20016,
+    InlineResponse20016FromJSON,
+    InlineResponse20016ToJSON,
     InlineResponse2002,
     InlineResponse2002FromJSON,
     InlineResponse2002ToJSON,
@@ -826,6 +829,34 @@ export class DefaultApi extends runtime.BaseAPI {
      */
     async apiV2BookmarkPost(requestParameters: ApiV2BookmarkPostRequest): Promise<{ [key: string]: object; }> {
         const response = await this.apiV2BookmarkPostRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * ブックマークメニュー（タグ）の一覧を取得します。
+     * ブックマークメニュー（タグ）一覧
+     */
+    async apiV2BookmarkTagMenuGetRaw(): Promise<runtime.ApiResponse<InlineResponse20016>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/api/v2/bookmarkTagMenu`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse20016FromJSON(jsonValue));
+    }
+
+    /**
+     * ブックマークメニュー（タグ）の一覧を取得します。
+     * ブックマークメニュー（タグ）一覧
+     */
+    async apiV2BookmarkTagMenuGet(): Promise<InlineResponse20016> {
+        const response = await this.apiV2BookmarkTagMenuGetRaw();
         return await response.value();
     }
 

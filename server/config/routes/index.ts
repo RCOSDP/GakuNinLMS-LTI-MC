@@ -16,6 +16,7 @@ import * as activity from "./activity";
 import session from "./session";
 import * as bookmark from "./bookmark";
 import * as bookmarks from "./bookmarks";
+import * as bookmarkTagMenu from "./bookmarkTagMenu";
 
 const routers = [
   lti,
@@ -34,6 +35,7 @@ const routers = [
   activity,
   bookmark,
   bookmarks,
+  bookmarkTagMenu,
 ];
 
 async function routes(fastify: FastifyInstance) {

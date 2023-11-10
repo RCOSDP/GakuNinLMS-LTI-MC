@@ -35,6 +35,7 @@ export * from './InlineResponse20014Sections';
 export * from './InlineResponse20015';
 export * from './InlineResponse20015Bookmark';
 export * from './InlineResponse20015Tag';
+export * from './InlineResponse20016';
 export * from './InlineResponse2002';
 export * from './InlineResponse2003';
 export * from './InlineResponse2003Book';
