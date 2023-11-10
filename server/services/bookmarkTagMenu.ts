@@ -17,7 +17,7 @@ export const method = {
         properties: {
           bookmarkTagMenu: BookmarkTagMenu,
         },
-        required: ["bookmark"],
+        required: ["bookmarkTagMenu"],
       },
       404: {},
     },
@@ -35,6 +35,8 @@ export async function index() {
 
   return {
     status: 200,
-    body: bookmarkTagMenu,
+    body: {
+      bookmarkTagMenu: bookmarkTagMenu,
+    },
   };
 }

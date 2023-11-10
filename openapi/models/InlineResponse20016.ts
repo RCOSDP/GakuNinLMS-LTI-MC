@@ -31,7 +31,7 @@ export interface InlineResponse20016 {
      * @type {Array<InlineResponse20015Tag>}
      * @memberof InlineResponse20016
      */
-    bookmarkTagMenu?: Array<InlineResponse20015Tag>;
+    bookmarkTagMenu: Array<InlineResponse20015Tag>;
 }
 
 export function InlineResponse20016FromJSON(json: any): InlineResponse20016 {
@@ -44,7 +44,7 @@ export function InlineResponse20016FromJSONTyped(json: any, ignoreDiscriminator:
     }
     return {
         
-        'bookmarkTagMenu': !exists(json, 'bookmarkTagMenu') ? undefined : ((json['bookmarkTagMenu'] as Array<any>).map(InlineResponse20015TagFromJSON)),
+        'bookmarkTagMenu': ((json['bookmarkTagMenu'] as Array<any>).map(InlineResponse20015TagFromJSON)),
     };
 }
 
@@ -57,7 +57,7 @@ export function InlineResponse20016ToJSON(value?: InlineResponse20016 | null): a
     }
     return {
         
-        'bookmarkTagMenu': value.bookmarkTagMenu === undefined ? undefined : ((value.bookmarkTagMenu as Array<any>).map(InlineResponse20015TagToJSON)),
+        'bookmarkTagMenu': ((value.bookmarkTagMenu as Array<any>).map(InlineResponse20015TagToJSON)),
     };
 }
 
