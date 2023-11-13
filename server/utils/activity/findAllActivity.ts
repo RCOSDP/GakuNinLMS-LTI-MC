@@ -93,7 +93,7 @@ async function findAllActivity(
     where: {
       userId: { in: ltiMembers.map(({ id }) => id) },
       ...(currentLtiContextOnly
-        ? { ltiCosumerId: consumerId, ltiContextId: contextId }
+        ? { ltiConsumerId: consumerId, ltiContextId: contextId }
         : {}),
     },
     include: { topic: true, tag: true },

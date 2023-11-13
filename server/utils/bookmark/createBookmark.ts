@@ -16,7 +16,7 @@ async function createBookmark({
   const created = await prisma.bookmark.create({
     data: {
       userId: session.user.id,
-      ltiCosumerId: session.ltiResourceLink?.consumerId,
+      ltiConsumerId: session.ltiResourceLink?.consumerId,
       ltiContextId: session.ltiContext.id,
       ...bookmark,
     },

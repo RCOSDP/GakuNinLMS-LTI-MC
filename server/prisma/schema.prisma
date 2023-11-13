@@ -76,23 +76,23 @@ model Topic {
   /// 説明 (Markdown)
   description  String
   /// 言語 ISO 639-1 code
-  language     String         @default("ja")
+  language     String       @default("ja")
   /// 学習所要時間 (秒)
-  timeRequired Int            @map("time_required")
+  timeRequired Int          @map("time_required")
   /// 再生開始時間 (秒)
-  startTime    Float?         @map("start_time")
+  startTime    Float?       @map("start_time")
   /// 再生終了時間 (秒, 0 は無効)
-  stopTime     Float?         @map("stop_time")
+  stopTime     Float?       @map("stop_time")
   /// 共有可否 (true: シェアする, それ以外: シェアしない)
-  shared       Boolean        @default(true)
+  shared       Boolean      @default(true)
   /// 著作者
   authors      Authorship[]
   /// ライセンス (https://spdx.org/licenses/ に準拠するもの, "" は無効)
-  license      String         @default("")
+  license      String       @default("")
   /// 作成日
-  createdAt    DateTime       @default(now()) @map("created_at")
+  createdAt    DateTime     @default(now()) @map("created_at")
   /// 更新日
-  updatedAt    DateTime       @default(now()) @map("updated_at")
+  updatedAt    DateTime     @default(now()) @map("updated_at")
   /// 詳細
   details      Json
 
@@ -187,7 +187,6 @@ model LtiResourceLink {
   createdAt  DateTime    @default(now()) @map("created_at")
   /// 更新日
   updatedAt  DateTime    @updatedAt @map("updated_at")
-
 
   @@id([consumerId, id])
   @@map("lti_resource_link")
@@ -366,7 +365,7 @@ model ContentRole {
 
 /// タグ
 model Tag {
-  id    Int      @id @default(autoincrement())
+  id    Int    @id @default(autoincrement())
   label String @unique
   color String
 
@@ -377,9 +376,9 @@ model Tag {
 model Bookmark {
   id Int @id @default(autoincrement())
 
-  ltiContext   LtiContext @relation(fields: [ltiCosumerId, ltiContextId], references: [consumerId, id])
-  ltiCosumerId String     @map("lti_consumer_id")
-  ltiContextId String     @map("lti_context_id")
+  ltiContext    LtiContext @relation(fields: [ltiConsumerId, ltiContextId], references: [consumerId, id])
+  ltiConsumerId String     @map("lti_consumer_id")
+  ltiContextId  String     @map("lti_context_id")
 
   tagId Int @map("tag_id")
   tag   Tag @relation(fields: [tagId], references: [id])
@@ -393,7 +392,7 @@ model Bookmark {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  @@unique([ltiCosumerId, ltiContextId, tagId, userId, topicId])
+  @@unique([ltiConsumerId, ltiContextId, tagId, userId, topicId])
 }
 
 // Etc.
