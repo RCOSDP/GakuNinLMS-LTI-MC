@@ -2,6 +2,7 @@ import type { EventType } from "$server/models/event";
 import { api } from "$utils/api";
 import type { PlayerStats, PlayerEvents, PlayerTracker } from "./playerTracker";
 import { load as loadPlaybackRate } from "$utils/playbackRate";
+import getVideoType from "$utils/video/getVideoType";
 import { load } from "./loggerSessionPersister";
 import getFilePath from "./getFilePath";
 
@@ -21,6 +22,7 @@ function send(eventType: EventType, event: PlayerStats, detail?: string) {
     uid: id(session.ltiUser.id),
     cid: id(session.ltiContext.id),
     nonce: session.oauthClient.nonce,
+    videoType: getVideoType(event.providerUrl),
     path: location.pathname,
   };
   return api.apiV2EventPost({ body });
