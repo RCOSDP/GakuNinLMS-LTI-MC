@@ -1,4 +1,4 @@
-import type { Event } from "$server/models/event";
+import type { EventSchema } from "$server/models/event";
 import format from "date-fns/format";
 import utcToZoneTime from "date-fns-tz/utcToZonedTime";
 
@@ -21,6 +21,8 @@ const eventFieldKeys = [
   "cid",
   "nonce",
   "keyword",
+  "videoType",
+  "path",
 ] as const;
 const keyword = "videoplayerlog";
 
@@ -33,7 +35,9 @@ function escape(str?: string): string {
 }
 
 /** ビデオプレイヤーのイベント情報を標準出力 (loggerコマンド/syslogに書き込む目的) */
-function eventLogger(event: { ip?: string; ua?: string } & Event) {
+function eventLogger(
+  event: { ip?: string; ua?: string; url?: string } & EventSchema
+) {
   // NOTE: JST (≒UTC+9) 固定
   const date = utcToZoneTime(new Date(), "Asia/Tokyo");
   const eventFields = {

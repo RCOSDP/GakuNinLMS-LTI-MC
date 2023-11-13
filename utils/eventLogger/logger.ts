@@ -21,6 +21,7 @@ function send(eventType: EventType, event: PlayerStats, detail?: string) {
     uid: id(session.ltiUser.id),
     cid: id(session.ltiContext.id),
     nonce: session.oauthClient.nonce,
+    path: location.pathname,
   };
   return api.apiV2EventPost({ body });
 }

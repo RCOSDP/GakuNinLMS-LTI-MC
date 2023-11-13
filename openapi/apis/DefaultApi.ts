@@ -36,9 +36,6 @@ import {
     InlineObject13,
     InlineObject13FromJSON,
     InlineObject13ToJSON,
-    InlineObject14,
-    InlineObject14FromJSON,
-    InlineObject14ToJSON,
     InlineObject2,
     InlineObject2FromJSON,
     InlineObject2ToJSON,
@@ -141,6 +138,9 @@ import {
     LTIV13LtiMemberParams,
     LTIV13LtiMemberParamsFromJSON,
     LTIV13LtiMemberParamsToJSON,
+    SyslogV1,
+    SyslogV1FromJSON,
+    SyslogV1ToJSON,
 } from '../models';
 
 export interface ApiV2ActivityGetRequest {
@@ -198,7 +198,7 @@ export interface ApiV2BookmarkIdDeleteRequest {
 }
 
 export interface ApiV2BookmarkPostRequest {
-    body?: InlineObject14;
+    body?: InlineObject13;
 }
 
 export interface ApiV2BookmarkStatsGetRequest {
@@ -222,7 +222,7 @@ export interface ApiV2BooksImportPostRequest {
 }
 
 export interface ApiV2EventPostRequest {
-    body?: InlineObject13;
+    body?: SyslogV1;
 }
 
 export interface ApiV2LtiCallbackPostRequest {
@@ -824,7 +824,7 @@ export class DefaultApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: InlineObject14ToJSON(requestParameters.body),
+            body: InlineObject13ToJSON(requestParameters.body),
         });
 
         return new runtime.JSONApiResponse<any>(response);
@@ -1028,7 +1028,7 @@ export class DefaultApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: InlineObject13ToJSON(requestParameters.body),
+            body: SyslogV1ToJSON(requestParameters.body),
         });
 
         return new runtime.VoidApiResponse(response);
