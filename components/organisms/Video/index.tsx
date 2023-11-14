@@ -128,6 +128,7 @@ type Props = {
   topic: TopicSchema;
   timeRange: ActivitySchema["timeRanges"];
   onEnded?: () => void;
+  isBookPage: boolean;
 };
 
 /**
@@ -171,6 +172,7 @@ export default function Video({
   topic,
   timeRange,
   onEnded,
+  isBookPage,
 }: Props) {
   const { video, preloadVideo } = useVideoAtom();
   const { book, itemIndex, itemExists } = useBookAtom();
@@ -294,7 +296,6 @@ export default function Video({
   const { bookmarks, bookmarkTagMenu, isLoading } = useBookmarks({
     topicId: topic.id,
   });
-  const isLtiResourceLinkBook = !!book && book.ltiResourceLinks.length > 0;
 
   // 動画プレイヤーオブジェクトプールに存在する場合
   if (video.has(String(topic.id))) {
@@ -387,7 +388,7 @@ export default function Video({
           {topic.license && (
             <License sx={{ mr: 1, mb: 0.5 }} license={topic.license} />
           )}
-          {!isLoading && isLtiResourceLinkBook && (
+          {!isLoading && isBookPage && (
             <TagList
               key={topic.id}
               topicId={topic.id}

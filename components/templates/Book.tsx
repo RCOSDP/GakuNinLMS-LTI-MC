@@ -110,6 +110,7 @@ type Props = {
   book: BookSchema | null;
   bookActivity?: ActivitySchema[];
   index: ItemIndex;
+  isBookPage: boolean;
   onBookEditClick?(book: BookSchema): void;
   onOtherBookLinkClick?(): void;
   onTopicEditClick?(topic: TopicSchema): void;
@@ -124,6 +125,7 @@ export default function Book(props: Props) {
     book,
     bookActivity,
     index: [sectionIndex, topicIndex],
+    isBookPage,
     onBookEditClick,
     onOtherBookLinkClick,
     onTopicEditClick,
@@ -251,6 +253,7 @@ export default function Book(props: Props) {
               bookActivity={bookActivity}
               onEnded={onTopicEnded}
               offset={offset}
+              isBookPage={isBookPage}
             />
           )}
         </div>
@@ -267,7 +270,7 @@ export default function Book(props: Props) {
             onItemClick={handleItemClick}
             onItemEditClick={handleItemEditClick}
             isContentEditable={isContentEditable}
-            isLtiResourceLinkBook={!!book && book.ltiResourceLinks.length > 0}
+            isBookPage={isBookPage}
           />
         </div>
       </div>
