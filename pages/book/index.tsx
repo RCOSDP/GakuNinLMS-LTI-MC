@@ -122,7 +122,7 @@ function Show(query: Query) {
       book={book}
       bookActivity={bookActivity}
       index={itemIndex}
-      isBookPage={query.bookId ? true : false}
+      isPrivateBook={query.token === undefined}
       {...handlers}
     />
   );

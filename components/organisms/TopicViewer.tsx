@@ -18,7 +18,7 @@ type Props = {
   bookActivity?: ActivitySchema[];
   onEnded?: () => void;
   offset?: string;
-  isBookPage: boolean;
+  isPrivateBook: boolean;
 };
 
 export default function TopicViewer({
@@ -27,7 +27,7 @@ export default function TopicViewer({
   bookActivity,
   onEnded,
   offset,
-  isBookPage,
+  isPrivateBook,
 }: Props) {
   const classes = useStyles();
   const cardClasses = useCardStyles();
@@ -38,7 +38,7 @@ export default function TopicViewer({
         bookActivity={bookActivity}
         onEnded={onEnded}
         offset={offset}
-        isBookPage={isBookPage}
+        isPrivateBook={isPrivateBook}
       />
     </Card>
   );

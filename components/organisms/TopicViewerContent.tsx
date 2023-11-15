@@ -12,7 +12,7 @@ type Props = {
   bookActivity?: ActivitySchema[];
   onEnded?: () => void;
   offset?: string;
-  isBookPage: boolean;
+  isPrivateBook: boolean;
 };
 
 export default function TopicViewerContent({
@@ -20,7 +20,7 @@ export default function TopicViewerContent({
   bookActivity,
   onEnded,
   offset,
-  isBookPage,
+  isPrivateBook,
 }: Props) {
   const theme = useTheme();
   const sticky = useSticky({
@@ -50,7 +50,7 @@ export default function TopicViewerContent({
           topic={topic}
           timeRange={timeRange}
           onEnded={onEnded}
-          isBookPage={isBookPage}
+          isPrivateBook={isPrivateBook}
         />
       )}
     </>

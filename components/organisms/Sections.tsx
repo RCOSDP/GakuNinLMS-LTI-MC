@@ -87,7 +87,7 @@ type Props = {
   sections: SectionSchema[];
   index: ItemIndex;
   isContentEditable(topic: ContentAuthors): boolean;
-  isBookPage: boolean;
+  isPrivateBook: boolean;
   onItemClick(index: ItemIndex): void;
   onItemEditClick?(index: ItemIndex): void;
 };
@@ -97,7 +97,7 @@ export default function Sections({
   sections,
   index: [sectionIndex, topicIndex],
   isContentEditable,
-  isBookPage,
+  isPrivateBook,
   onItemClick,
   onItemEditClick,
 }: Props) {
@@ -149,7 +149,7 @@ export default function Sections({
                   >
                     {formatInterval(0, topic.timeRequired * 1000)}
                   </Typography>
-                  {isBookPage && <TagCount topicId={topic.id} />}
+                  {isPrivateBook && <TagCount topicId={topic.id} />}
                 </Box>
               </ListItemText>
               {!isContentEditable(topic) && isCompleted(topic.id) && (
