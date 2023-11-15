@@ -1,6 +1,5 @@
 import { Box, Card, Container, Typography } from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
-import FilterListIcon from "@mui/icons-material/FilterList";
 import React from "react";
 import { css } from "@emotion/css";
 import gray from "theme/colors/gray";
@@ -70,7 +69,6 @@ export default function Bookmarks({ bookmarkTagMenu }: Props) {
       </Typography>
       <Card className={card}>
         <Box className={header}>
-          <FilterListIcon />
           <ul className={listWrap}>
             {bookmarkTagMenu.map((tag) => {
               return (
