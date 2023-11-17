@@ -25,7 +25,12 @@ export async function upsertUser({ ltiConsumerId, ...user }: UserProps) {
       ...user,
       ltiConsumer: { connect: { id: ltiConsumerId } },
     },
-    update: user,
+    update: {
+      ltiUserId: user.ltiUserId,
+      // NOTE: "" の場合 … 上書きしない https://www.prisma.io/docs/concepts/components/prisma-client/null-and-undefined
+      name: user.name || undefined,
+      email: user.email || undefined,
+    },
   });
 }
 
