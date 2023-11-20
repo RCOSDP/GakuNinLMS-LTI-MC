@@ -313,6 +313,14 @@ export default function Video({
             onEnded={String(topic.id) === id ? onEnded : undefined}
           />
         ))}
+        {!isLoading && isPrivateBook && (
+          <TagList
+            key={topic.id}
+            topicId={topic.id}
+            bookmarks={bookmarks}
+            tagMenu={bookmarkTagMenu}
+          />
+        )}
         <Tabs
           aria-label="トピックビデオの詳細情報"
           className={tabsStyle}
@@ -387,14 +395,6 @@ export default function Video({
           />
           {topic.license && (
             <License sx={{ mr: 1, mb: 0.5 }} license={topic.license} />
-          )}
-          {!isLoading && isPrivateBook && (
-            <TagList
-              key={topic.id}
-              topicId={topic.id}
-              bookmarks={bookmarks}
-              tagMenu={bookmarkTagMenu}
-            />
           )}
           <DescriptionList
             inline
