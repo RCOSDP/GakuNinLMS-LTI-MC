@@ -14,14 +14,10 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    InlineResponse20015Bookmark,
-    InlineResponse20015BookmarkFromJSON,
-    InlineResponse20015BookmarkFromJSONTyped,
-    InlineResponse20015BookmarkToJSON,
-    InlineResponse20015Tag,
-    InlineResponse20015TagFromJSON,
-    InlineResponse20015TagFromJSONTyped,
-    InlineResponse20015TagToJSON,
+    InlineResponse20015Stats,
+    InlineResponse20015StatsFromJSON,
+    InlineResponse20015StatsFromJSONTyped,
+    InlineResponse20015StatsToJSON,
 } from './';
 
 /**
@@ -32,16 +28,10 @@ import {
 export interface InlineResponse20015 {
     /**
      * 
-     * @type {Array<InlineResponse20015Bookmark>}
+     * @type {Array<InlineResponse20015Stats>}
      * @memberof InlineResponse20015
      */
-    bookmark: Array<InlineResponse20015Bookmark>;
-    /**
-     * 
-     * @type {Array<InlineResponse20015Tag>}
-     * @memberof InlineResponse20015
-     */
-    bookmarkTagMenu?: Array<InlineResponse20015Tag>;
+    stats?: Array<InlineResponse20015Stats>;
 }
 
 export function InlineResponse20015FromJSON(json: any): InlineResponse20015 {
@@ -54,8 +44,7 @@ export function InlineResponse20015FromJSONTyped(json: any, ignoreDiscriminator:
     }
     return {
         
-        'bookmark': ((json['bookmark'] as Array<any>).map(InlineResponse20015BookmarkFromJSON)),
-        'bookmarkTagMenu': !exists(json, 'bookmarkTagMenu') ? undefined : ((json['bookmarkTagMenu'] as Array<any>).map(InlineResponse20015TagFromJSON)),
+        'stats': !exists(json, 'stats') ? undefined : ((json['stats'] as Array<any>).map(InlineResponse20015StatsFromJSON)),
     };
 }
 
@@ -68,8 +57,7 @@ export function InlineResponse20015ToJSON(value?: InlineResponse20015 | null): a
     }
     return {
         
-        'bookmark': ((value.bookmark as Array<any>).map(InlineResponse20015BookmarkToJSON)),
-        'bookmarkTagMenu': value.bookmarkTagMenu === undefined ? undefined : ((value.bookmarkTagMenu as Array<any>).map(InlineResponse20015TagToJSON)),
+        'stats': value.stats === undefined ? undefined : ((value.stats as Array<any>).map(InlineResponse20015StatsToJSON)),
     };
 }
 

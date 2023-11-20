@@ -6,6 +6,7 @@ import useLineClampStyles from "$styles/lineClamp";
 import type { BookSchema } from "$server/models/book";
 import type { BookActivitySchema } from "$server/models/bookActivity";
 import type { LearnerSchema } from "$server/models/learner";
+import BookmarkStatsDialog from "$organisms/BookmarkStatsDialog";
 
 type LearningBargraphProps = {
   className?: string;
@@ -70,7 +71,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type Props = {
-  book: Pick<BookSchema, "name">;
+  book: Pick<BookSchema, "id" | "name">;
   learners: Array<LearnerSchema>;
   completedLearners: Map<LearnerSchema["id"], Array<BookActivitySchema>>;
   incompletedLearners: Map<LearnerSchema["id"], Array<BookActivitySchema>>;
@@ -98,7 +99,9 @@ export default function LearningActivityItem(props: Props) {
   return (
     <div className={classes.root}>
       <div className={clsx(classes.name, lineClamp.placeholder)}>
-        <span className={lineClamp.clamp}>{book.name}</span>
+        <span className={lineClamp.clamp}>
+          <BookmarkStatsDialog book={book} />
+        </span>
       </div>
       <div className={classes.graph}>
         <LearningBargraph

@@ -58,12 +58,6 @@ export interface InlineResponse20014BookActivities {
     topic: InlineResponse2008Topic;
     /**
      * 
-     * @type {string}
-     * @memberof InlineResponse20014BookActivities
-     */
-    bookmark: string;
-    /**
-     * 
      * @type {boolean}
      * @memberof InlineResponse20014BookActivities
      */
@@ -119,7 +113,6 @@ export function InlineResponse20014BookActivitiesFromJSONTyped(json: any, ignore
         'id': !exists(json, 'id') ? undefined : json['id'],
         'learner': InlineResponse2008LearnerFromJSON(json['learner']),
         'topic': InlineResponse2008TopicFromJSON(json['topic']),
-        'bookmark': json['bookmark'],
         'completed': !exists(json, 'completed') ? undefined : json['completed'],
         'totalTimeMs': !exists(json, 'totalTimeMs') ? undefined : json['totalTimeMs'],
         'timeRanges': !exists(json, 'timeRanges') ? undefined : ((json['timeRanges'] as Array<any>).map(InlineResponse2008TimeRangesFromJSON)),
@@ -142,7 +135,6 @@ export function InlineResponse20014BookActivitiesToJSON(value?: InlineResponse20
         'id': value.id,
         'learner': InlineResponse2008LearnerToJSON(value.learner),
         'topic': InlineResponse2008TopicToJSON(value.topic),
-        'bookmark': value.bookmark,
         'completed': value.completed,
         'totalTimeMs': value.totalTimeMs,
         'timeRanges': value.timeRanges === undefined ? undefined : ((value.timeRanges as Array<any>).map(InlineResponse2008TimeRangesToJSON)),

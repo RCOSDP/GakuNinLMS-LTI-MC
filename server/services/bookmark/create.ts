@@ -3,7 +3,7 @@ import authUser from "$server/auth/authUser";
 import createBookmark from "$server/utils/bookmark/createBookmark";
 import {
   bookmarkPropsSchema,
-  bookmarkSchema,
+  BookmarkSchema,
   type BookmarkProps,
 } from "$server/models/bookmark";
 
@@ -12,7 +12,7 @@ export const createSchema: FastifySchema = {
   description: `ブックマークを作成します。`,
   body: bookmarkPropsSchema,
   response: {
-    201: bookmarkSchema,
+    201: BookmarkSchema,
     400: {},
   },
 };

@@ -1,6 +1,6 @@
 import type { FromSchema, JSONSchema } from "json-schema-to-ts";
-import type { Bookmark, Tag, Topic } from "@prisma/client";
-import { topicSchema, type TopicSchema } from "./topic";
+import type { Tag } from "@prisma/client";
+import type { TopicSchema } from "./topic";
 
 export const TagSchema = {
   type: "object",
@@ -29,20 +29,19 @@ export const bookmarkPropsSchema = {
   additionalProperties: false,
 } as const satisfies JSONSchema;
 
-export type BookmarkSchema = Bookmark & {
-  topic: Topic;
-  tag: TagSchema;
-};
-
-export const bookmarkSchema = {
+export const BookmarkSchema = {
   type: "object",
+  required: ["id", "topicId", "tagId", "tag"],
   properties: {
     id: { type: "integer" },
-    topic: topicSchema,
+    topicId: { type: "integer" },
+    tagId: { type: "integer" },
     tag: TagSchema,
   },
   additionalProperties: false,
 } as const satisfies JSONSchema;
+
+export type BookmarkSchema = FromSchema<typeof BookmarkSchema>;
 
 export const BookmarkTagMenu = {
   title: "ブックマークのタグの選択肢",

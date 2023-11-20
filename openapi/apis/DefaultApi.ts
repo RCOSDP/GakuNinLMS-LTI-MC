@@ -90,6 +90,9 @@ import {
     InlineResponse20016,
     InlineResponse20016FromJSON,
     InlineResponse20016ToJSON,
+    InlineResponse20017,
+    InlineResponse20017FromJSON,
+    InlineResponse20017ToJSON,
     InlineResponse2002,
     InlineResponse2002FromJSON,
     InlineResponse2002ToJSON,
@@ -196,6 +199,10 @@ export interface ApiV2BookmarkIdDeleteRequest {
 
 export interface ApiV2BookmarkPostRequest {
     body?: InlineObject14;
+}
+
+export interface ApiV2BookmarkStatsGetRequest {
+    currentLtiContextOnly?: boolean;
 }
 
 export interface ApiV2BookmarksGetRequest {
@@ -833,10 +840,40 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
+     * 受講者のブックマークの統計情報を取得します。 教員または管理者でなければなりません。
+     */
+    async apiV2BookmarkStatsGetRaw(requestParameters: ApiV2BookmarkStatsGetRequest): Promise<runtime.ApiResponse<InlineResponse20015>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        if (requestParameters.currentLtiContextOnly !== undefined) {
+            queryParameters['current_lti_context_only'] = requestParameters.currentLtiContextOnly;
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/api/v2/bookmark_stats`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse20015FromJSON(jsonValue));
+    }
+
+    /**
+     * 受講者のブックマークの統計情報を取得します。 教員または管理者でなければなりません。
+     */
+    async apiV2BookmarkStatsGet(requestParameters: ApiV2BookmarkStatsGetRequest): Promise<InlineResponse20015> {
+        const response = await this.apiV2BookmarkStatsGetRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
      * ブックマークメニュー（タグ）の一覧を取得します。
      * ブックマークメニュー（タグ）一覧
      */
-    async apiV2BookmarkTagMenuGetRaw(): Promise<runtime.ApiResponse<InlineResponse20016>> {
+    async apiV2BookmarkTagMenuGetRaw(): Promise<runtime.ApiResponse<InlineResponse20017>> {
         const queryParameters: runtime.HTTPQuery = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -848,14 +885,14 @@ export class DefaultApi extends runtime.BaseAPI {
             query: queryParameters,
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse20016FromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse20017FromJSON(jsonValue));
     }
 
     /**
      * ブックマークメニュー（タグ）の一覧を取得します。
      * ブックマークメニュー（タグ）一覧
      */
-    async apiV2BookmarkTagMenuGet(): Promise<InlineResponse20016> {
+    async apiV2BookmarkTagMenuGet(): Promise<InlineResponse20017> {
         const response = await this.apiV2BookmarkTagMenuGetRaw();
         return await response.value();
     }
@@ -864,7 +901,7 @@ export class DefaultApi extends runtime.BaseAPI {
      * ブックマークの一覧を取得します。 isAllUsers が true の場合、全ユーザーのブックマークを取得します。 isAllUsers が false の場合、該当のユーザーのブックマークを取得します。
      * ブックマーク一覧
      */
-    async apiV2BookmarksGetRaw(requestParameters: ApiV2BookmarksGetRequest): Promise<runtime.ApiResponse<InlineResponse20015>> {
+    async apiV2BookmarksGetRaw(requestParameters: ApiV2BookmarksGetRequest): Promise<runtime.ApiResponse<InlineResponse20016>> {
         if (requestParameters.isAllUsers === null || requestParameters.isAllUsers === undefined) {
             throw new runtime.RequiredError('isAllUsers','Required parameter requestParameters.isAllUsers was null or undefined when calling apiV2BookmarksGet.');
         }
@@ -892,14 +929,14 @@ export class DefaultApi extends runtime.BaseAPI {
             query: queryParameters,
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse20015FromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => InlineResponse20016FromJSON(jsonValue));
     }
 
     /**
      * ブックマークの一覧を取得します。 isAllUsers が true の場合、全ユーザーのブックマークを取得します。 isAllUsers が false の場合、該当のユーザーのブックマークを取得します。
      * ブックマーク一覧
      */
-    async apiV2BookmarksGet(requestParameters: ApiV2BookmarksGetRequest): Promise<InlineResponse20015> {
+    async apiV2BookmarksGet(requestParameters: ApiV2BookmarksGetRequest): Promise<InlineResponse20016> {
         const response = await this.apiV2BookmarksGetRaw(requestParameters);
         return await response.value();
     }

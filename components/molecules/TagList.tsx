@@ -42,7 +42,7 @@ export default function TagList({ topicId, bookmarks, tagMenu }: Props) {
     >
       {selectedTag.map((tag) => {
         const bookmark = bookmarks.find(
-          (bookmark) => bookmark.tag.id === tag.id
+          (bookmark) => bookmark.tagId === tag.id
         );
         if (!bookmark) {
           return null;

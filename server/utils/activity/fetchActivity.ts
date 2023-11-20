@@ -37,7 +37,6 @@ async function fetchActivity(
 
   return activity.map((a) => ({
     ...a,
-    bookmark: "todo",
     completed: isCompleted(a.topic, a),
     timeRanges: a.timeRanges,
   }));

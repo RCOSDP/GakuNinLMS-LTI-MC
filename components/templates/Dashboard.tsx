@@ -22,7 +22,8 @@ import type { BookSchema } from "$server/models/book";
 import type { SessionSchema } from "$server/models/session";
 import type { LearnerSchema } from "$server/models/learner";
 import { gray } from "$theme/colors";
-import download from "$utils/bookLearningActivity/download";
+import downloadBookActivity from "$utils/bookLearningActivity/download";
+import downloadBookmarkStats from "$utils/bookmark/download";
 import label from "$utils/learningStatusLabel";
 import getLearnerActivities from "$utils/getLearnerActivities";
 import getActivitiesByBooks from "$utils/getActivitiesByBooks";
@@ -128,9 +129,15 @@ export default function Dashboard(props: Props) {
   const handleChange = (_: React.ChangeEvent<unknown>, value: number) => {
     setTabIndex(value);
   };
-  const handleDownloadClick = useCallback(() => {
-    void download(bookActivities, "分析データ.csv", session);
+  const handleBookActivityDownloadClick = useCallback(() => {
+    void downloadBookActivity(bookActivities, "視聴分析データ.csv", session);
   }, [bookActivities, session]);
+  const handleBookmarkStatsDownloadClick = useCallback(async () => {
+    await downloadBookmarkStats(
+      "ブックマークの統計情報.csv",
+      scope === "current-lti-context-only"
+    );
+  }, [scope]);
   const learnerActivities = useMemo(
     () =>
       getLearnerActivities({
@@ -203,14 +210,23 @@ export default function Dashboard(props: Props) {
           onActivityScopeChange={props.onScopeChange}
         />
         <Button
-          onClick={handleDownloadClick}
+          onClick={handleBookActivityDownloadClick}
           color="secondary"
           variant="contained"
           size="small"
           disabled={bookActivities.length === 0}
         >
           <GetAppOutlinedIcon fontSize="small" />
-          分析データをダウンロード
+          視聴分析データをダウンロード
+        </Button>
+        <Button
+          onClick={handleBookmarkStatsDownloadClick}
+          color="secondary"
+          variant="contained"
+          size="small"
+        >
+          <GetAppOutlinedIcon fontSize="small" />
+          ブックマークの統計情報をダウンロード
         </Button>
         <Button
           onClick={handleMembershipClick(memberships?.members || [])}
