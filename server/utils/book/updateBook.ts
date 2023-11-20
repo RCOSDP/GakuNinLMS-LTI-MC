@@ -68,7 +68,11 @@ function removePublicBooks(
       where: {
         bookId,
         userId,
-        id: { notIn: publicBooks.map((publicBook) => publicBook.id) },
+        id: {
+          notIn: publicBooks.flatMap((publicBook) =>
+            publicBook.id ? [publicBook.id] : []
+          ),
+        },
       },
     });
   } else {
