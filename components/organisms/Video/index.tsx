@@ -313,7 +313,7 @@ export default function Video({
             onEnded={String(topic.id) === id ? onEnded : undefined}
           />
         ))}
-        {!isLoading && isPrivateBook && (
+        {!isLoading && isPrivateBook && bookmarkTagMenu.length !== 0 && (
           <TagList
             key={topic.id}
             topicId={topic.id}
