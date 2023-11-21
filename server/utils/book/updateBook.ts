@@ -69,9 +69,9 @@ function removePublicBooks(
         bookId,
         userId,
         id: {
-          notIn: publicBooks.flatMap((publicBook) =>
-            publicBook.id ? [publicBook.id] : []
-          ),
+          notIn: publicBooks
+            .filter((publicBook) => publicBook.id != null)
+            .map((publicBook) => publicBook.id),
         },
       },
     });
