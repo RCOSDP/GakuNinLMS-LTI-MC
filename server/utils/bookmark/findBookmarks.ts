@@ -4,11 +4,11 @@ import type { User } from "@prisma/client";
 
 type TopicIdParam = {
   topicId: BookmarkSchema["topicId"];
-  tagId?: BookmarkSchema["tagId"];
+  tagIds?: BookmarkSchema["tagId"][];
 };
 type TagIdParam = {
   topicId?: BookmarkSchema["topicId"];
-  tagId: BookmarkSchema["tagId"];
+  tagIds: BookmarkSchema["tagId"][];
 };
 
 type FindBookmarksParams = {
@@ -17,43 +17,55 @@ type FindBookmarksParams = {
 
 async function findBookmarks({
   topicId,
-  tagId,
+  tagIds,
   userId,
 }: FindBookmarksParams): Promise<{
   bookmark: BookmarkSchema[];
   bookmarkTagMenu: BookmarkTagMenu;
 }> {
-  type WhereCondition = {
-    topicId?: BookmarkSchema["topicId"];
-    tagId?: BookmarkSchema["tagId"];
-    userId?: number;
-  };
-
-  const whereCondition: WhereCondition = {};
-
   if (topicId !== undefined) {
-    whereCondition.topicId = topicId;
-  } else if (tagId !== undefined) {
-    whereCondition.tagId = tagId;
+    const bookmark = await prisma.bookmark.findMany({
+      where: {
+        topicId: topicId,
+        userId: userId,
+      },
+      include: {
+        topic: true,
+        tag: true,
+      },
+    });
+
+    const bookmarkTagMenu = await prisma.tag.findMany();
+
+    return {
+      bookmark,
+      bookmarkTagMenu,
+    };
+  } else if (tagIds !== undefined) {
+    const bookmark = await prisma.bookmark.findMany({
+      where: {
+        OR: tagIds.map((tagId) => ({
+          tagId: tagId,
+        })),
+        userId: userId,
+      },
+      include: {
+        topic: true,
+        tag: true,
+      },
+    });
+
+    const bookmarkTagMenu = await prisma.tag.findMany();
+
+    return {
+      bookmark,
+      bookmarkTagMenu,
+    };
   }
-
-  if (userId) {
-    whereCondition.userId = userId;
-  }
-
-  const bookmark = await prisma.bookmark.findMany({
-    where: whereCondition,
-    include: {
-      topic: true,
-      tag: true,
-    },
-  });
-
-  const bookmarkTagMenu = await prisma.tag.findMany();
 
   return {
-    bookmark,
-    bookmarkTagMenu,
+    bookmark: [],
+    bookmarkTagMenu: [],
   };
 }
 

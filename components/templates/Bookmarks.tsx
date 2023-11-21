@@ -4,6 +4,7 @@ import React from "react";
 import { css } from "@emotion/css";
 import gray from "theme/colors/gray";
 import type { BookmarkTagMenu } from "$server/models/bookmark";
+import { useBookmarksByTagId } from "$utils/bookmark/useBookmarks";
 
 const title = css({
   fontSize: 32,
@@ -62,6 +63,11 @@ type Props = {
 };
 
 export default function Bookmarks({ bookmarkTagMenu }: Props) {
+  const data = useBookmarksByTagId({
+    tagIds: bookmarkTagMenu.map((tag) => `tagIds=${tag.id}`).join("&"),
+  });
+
+  console.log(data);
   return (
     <Container sx={{ mt: 5, gridArea: "title" }} maxWidth="md">
       <Typography variant="h4" className={title}>

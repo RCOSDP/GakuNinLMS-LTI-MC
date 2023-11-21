@@ -208,7 +208,7 @@ export interface ApiV2BookmarkStatsGetRequest {
 export interface ApiV2BookmarksGetRequest {
     isAllUsers: boolean;
     topicId?: number;
-    tagId?: number;
+    tagIds?: string;
 }
 
 export interface ApiV2BooksGetRequest {
@@ -912,8 +912,8 @@ export class DefaultApi extends runtime.BaseAPI {
             queryParameters['topicId'] = requestParameters.topicId;
         }
 
-        if (requestParameters.tagId !== undefined) {
-            queryParameters['tagId'] = requestParameters.tagId;
+        if (requestParameters.tagIds !== undefined) {
+            queryParameters['tagIds'] = requestParameters.tagIds;
         }
 
         if (requestParameters.isAllUsers !== undefined) {

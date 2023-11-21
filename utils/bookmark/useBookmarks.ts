@@ -27,11 +27,11 @@ function useBookmarks(query: BookmarkQuery) {
 }
 
 export function useBookmarksByTagId({
-  tagId,
+  tagIds,
 }: {
-  tagId: Extract<BookmarkQuery, { tagId: number }>["tagId"];
+  tagIds: Extract<BookmarkQuery, { tagIds: string }>["tagIds"];
 }) {
-  return useBookmarks({ tagId, isAllUsers: false });
+  return useBookmarks({ tagIds, isAllUsers: false });
 }
 
 export function useBookmarksByTopicId({
