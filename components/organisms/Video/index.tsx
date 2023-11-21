@@ -128,7 +128,7 @@ type Props = {
   topic: TopicSchema;
   timeRange: ActivitySchema["timeRanges"];
   onEnded?: () => void;
-  isPrivateBook: boolean;
+  isPrivateBook?: boolean;
 };
 
 /**
@@ -172,7 +172,7 @@ export default function Video({
   topic,
   timeRange,
   onEnded,
-  isPrivateBook,
+  isPrivateBook = false,
 }: Props) {
   const { video, preloadVideo } = useVideoAtom();
   const { book, itemIndex, itemExists } = useBookAtom();
