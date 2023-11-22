@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { css } from "@emotion/css";
 import { Dropdown } from "@mui/base/Dropdown";
 import { Menu as BaseMenu, menuClasses } from "@mui/base/Menu";
@@ -46,12 +46,31 @@ export default function TagMenu({
     return selectedTag.every((selected) => selected.id !== tag.id);
   });
 
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const toggleDropdown = () => {
+    setDropdownOpen(!dropdownOpen);
+    if (!dropdownOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+  };
+  useEffect(() => {
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, []);
+
   if (filterTags.length === 0) {
     return null;
   }
 
   return (
-    <Dropdown>
+    <Dropdown
+      onOpenChange={() => {
+        toggleDropdown();
+      }}
+    >
       <MenuButton>タグを追加...</MenuButton>
       <Menu slots={{ listbox: Listbox }}>
         {filterTags.map((option) => (
@@ -87,6 +106,7 @@ const Menu = styled(BaseMenu)(
   &.${menuClasses.root} {
     margin-top: -12px !important;
     margin-left: 20px !important;
+    z-index: 1;
   }
   `
 );
