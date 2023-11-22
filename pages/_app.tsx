@@ -51,21 +51,19 @@ function Content({ children }: { children: ReactNode }) {
 
   return (
     <>
-      {isInstructor && (
-        <Slide appear={false} direction="down" in={!trigger}>
-          <AppBar
-            isInstructor={isInstructor}
-            position="sticky"
-            session={session}
-            onBooksClick={handleBooksClick}
-            onTopicsClick={handleTopicsClick}
-            onCoursesClick={handleCoursesClick}
-            onDashboardClick={handleDashboardClick}
-            onBookClick={handleBookClick}
-            onBookmarksClick={handleBookmarksClick}
-          />
-        </Slide>
-      )}
+      <Slide appear={false} direction="down" in={!trigger}>
+        <AppBar
+          isInstructor={isInstructor}
+          position="sticky"
+          session={session}
+          onBooksClick={handleBooksClick}
+          onTopicsClick={handleTopicsClick}
+          onCoursesClick={handleCoursesClick}
+          onDashboardClick={handleDashboardClick}
+          onBookClick={handleBookClick}
+          onBookmarksClick={handleBookmarksClick}
+        />
+      </Slide>
       {children}
     </>
   );
