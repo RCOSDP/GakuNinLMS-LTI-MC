@@ -66,6 +66,7 @@ const useStyles = makeStyles((theme) => ({
 
 type Props = ComponentProps<typeof MuiAppBar> & {
   session: SessionSchema;
+  isInstructor: boolean;
   onBooksClick?(): void;
   onTopicsClick?(): void;
   onCoursesClick?(): void;
@@ -83,6 +84,7 @@ const role = (session: SessionSchema) => {
 function AppBar(props: Props, ref: Ref<HTMLDivElement>) {
   const {
     session,
+    isInstructor,
     onBooksClick,
     onTopicsClick,
     onCoursesClick,
@@ -143,27 +145,31 @@ function AppBar(props: Props, ref: Ref<HTMLDivElement>) {
           />
           {!isDeepLink && (
             <div className={classes.nav}>
-              <AppBarNavButton
-                color="inherit"
-                icon={<MenuBookOutlinedIcon />}
-                label="ブック"
-                onClick={onBooksClick}
-                disabled={!onBooksClick}
-              />
-              <AppBarNavButton
-                color="inherit"
-                icon={<LibraryBooksOutlinedIcon />}
-                label="トピック"
-                onClick={onTopicsClick}
-                disabled={!onTopicsClick}
-              />
-              <AppBarNavButton
-                color="inherit"
-                icon={<LinkIcon />}
-                label="リンク"
-                onClick={onCoursesClick}
-                disabled={!onCoursesClick}
-              />
+              {isInstructor && (
+                <>
+                  <AppBarNavButton
+                    color="inherit"
+                    icon={<MenuBookOutlinedIcon />}
+                    label="ブック"
+                    onClick={onBooksClick}
+                    disabled={!onBooksClick}
+                  />
+                  <AppBarNavButton
+                    color="inherit"
+                    icon={<LibraryBooksOutlinedIcon />}
+                    label="トピック"
+                    onClick={onTopicsClick}
+                    disabled={!onTopicsClick}
+                  />
+                  <AppBarNavButton
+                    color="inherit"
+                    icon={<LinkIcon />}
+                    label="リンク"
+                    onClick={onCoursesClick}
+                    disabled={!onCoursesClick}
+                  />
+                </>
+              )}
               <AppBarNavButton
                 color="inherit"
                 icon={<CellTowerIcon />}
@@ -174,15 +180,16 @@ function AppBar(props: Props, ref: Ref<HTMLDivElement>) {
                   !Number.isFinite(session?.ltiResourceLink?.bookId)
                 }
               />
-              {session?.systemSettings?.zoomImportEnabled && ( // TODO: zoomインポート以外の設定値が実装されたら常時表示する
-                <AppBarNavButton
-                  color="inherit"
-                  icon={<SettingsIcon />}
-                  label="設定"
-                  onClick={handleOpenUserSettings}
-                />
-              )}
-              {onDashboardClick && (
+              {session?.systemSettings?.zoomImportEnabled &&
+                isInstructor && ( // TODO: zoomインポート以外の設定値が実装されたら常時表示する
+                  <AppBarNavButton
+                    color="inherit"
+                    icon={<SettingsIcon />}
+                    label="設定"
+                    onClick={handleOpenUserSettings}
+                  />
+                )}
+              {onDashboardClick && isInstructor && (
                 <AppBarNavButton
                   color="inherit"
                   icon={<AssessmentOutlinedIcon />}
@@ -198,24 +205,26 @@ function AppBar(props: Props, ref: Ref<HTMLDivElement>) {
               />
             </div>
           )}
-          <div>
-            <div className={clsx(classes.user, classes.margin)}>
-              <p>{session.user.name}</p>
-              <p className={classes.roles}>{role(session)}</p>
+          {isInstructor && (
+            <div>
+              <div className={clsx(classes.user, classes.margin)}>
+                <p>{session.user.name}</p>
+                <p className={classes.roles}>{role(session)}</p>
+              </div>
+              {session && (
+                <>
+                  <Button variant="text" color="primary" onClick={handleClick}>
+                    LTI情報
+                  </Button>
+                  <LtiItemDialog
+                    open={open}
+                    onClose={handleClose}
+                    session={session}
+                  />
+                </>
+              )}
             </div>
-            {session && (
-              <>
-                <Button variant="text" color="primary" onClick={handleClick}>
-                  LTI情報
-                </Button>
-                <LtiItemDialog
-                  open={open}
-                  onClose={handleClose}
-                  session={session}
-                />
-              </>
-            )}
-          </div>
+          )}
         </div>
       </Toolbar>
       <Snackbar
