@@ -71,6 +71,7 @@ type Props = ComponentProps<typeof MuiAppBar> & {
   onCoursesClick?(): void;
   onBookClick?(): void;
   onDashboardClick?(): void;
+  onBookmarksClick?(): void;
 };
 
 const role = (session: SessionSchema) => {
@@ -87,6 +88,7 @@ function AppBar(props: Props, ref: Ref<HTMLDivElement>) {
     onCoursesClick,
     onBookClick,
     onDashboardClick,
+    onBookmarksClick,
     ...others
   } = props;
   const isDeepLink = !!session.ltiDlSettings?.deep_link_return_url;
@@ -188,6 +190,12 @@ function AppBar(props: Props, ref: Ref<HTMLDivElement>) {
                   onClick={onDashboardClick}
                 />
               )}
+              <AppBarNavButton
+                color="inherit"
+                icon={<AssessmentOutlinedIcon />}
+                label="タグ管理"
+                onClick={onBookmarksClick}
+              />
             </div>
           )}
           <div>

@@ -48,6 +48,7 @@ function Content({ children }: { children: ReactNode }) {
   const handleCoursesClick = () => router.push(pagesPath.courses.$url());
   const handleDashboardClick = () => router.push(pagesPath.dashboard.$url());
   const handleBookClick = () => router.push(pagesPath.$url());
+  const handleBookmarksClick = () => router.push(pagesPath.bookmarks.$url());
 
   return (
     <>
@@ -61,6 +62,7 @@ function Content({ children }: { children: ReactNode }) {
             onCoursesClick={handleCoursesClick}
             onDashboardClick={handleDashboardClick}
             onBookClick={handleBookClick}
+            onBookmarksClick={handleBookmarksClick}
           />
         </Slide>
       )}
