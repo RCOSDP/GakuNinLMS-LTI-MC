@@ -7,6 +7,7 @@ import Snackbar from "@mui/material/Snackbar";
 import MenuBookOutlinedIcon from "@mui/icons-material/MenuBookOutlined";
 import LibraryBooksOutlinedIcon from "@mui/icons-material/LibraryBooksOutlined";
 import AssessmentOutlinedIcon from "@mui/icons-material/AssessmentOutlined";
+import StyleIcon from "@mui/icons-material/Style";
 import LinkIcon from "@mui/icons-material/Link";
 import CellTowerIcon from "@mui/icons-material/CellTower";
 import SettingsIcon from "@mui/icons-material/Settings";
@@ -71,6 +72,7 @@ type Props = ComponentProps<typeof MuiAppBar> & {
   onCoursesClick?(): void;
   onBookClick?(): void;
   onDashboardClick?(): void;
+  onBookmarksClick?(): void;
 };
 
 const role = (session: SessionSchema) => {
@@ -87,6 +89,7 @@ function AppBar(props: Props, ref: Ref<HTMLDivElement>) {
     onCoursesClick,
     onBookClick,
     onDashboardClick,
+    onBookmarksClick,
     ...others
   } = props;
   const isDeepLink = !!session.ltiDlSettings?.deep_link_return_url;
@@ -188,6 +191,12 @@ function AppBar(props: Props, ref: Ref<HTMLDivElement>) {
                   onClick={onDashboardClick}
                 />
               )}
+              <AppBarNavButton
+                color="inherit"
+                icon={<StyleIcon />}
+                label="タグ管理"
+                onClick={onBookmarksClick}
+              />
             </div>
           )}
           <div>
