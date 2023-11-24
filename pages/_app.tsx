@@ -29,7 +29,6 @@ function Content({ children }: { children: ReactNode }) {
   const { session, isInstructor, error } = useSessionInit();
   const trigger = useScrollTrigger();
 
-  if (!isInstructor && router.pathname === "/book") return <>{children}</>;
   if (error || session?.user?.id === 0) {
     return (
       <Problem title="セッション情報が得られませんでした">
@@ -52,20 +51,19 @@ function Content({ children }: { children: ReactNode }) {
 
   return (
     <>
-      {isInstructor && (
-        <Slide appear={false} direction="down" in={!trigger}>
-          <AppBar
-            position="sticky"
-            session={session}
-            onBooksClick={handleBooksClick}
-            onTopicsClick={handleTopicsClick}
-            onCoursesClick={handleCoursesClick}
-            onDashboardClick={handleDashboardClick}
-            onBookClick={handleBookClick}
-            onBookmarksClick={handleBookmarksClick}
-          />
-        </Slide>
-      )}
+      <Slide appear={false} direction="down" in={!trigger}>
+        <AppBar
+          isInstructor={isInstructor}
+          position="sticky"
+          session={session}
+          onBooksClick={handleBooksClick}
+          onTopicsClick={handleTopicsClick}
+          onCoursesClick={handleCoursesClick}
+          onDashboardClick={handleDashboardClick}
+          onBookClick={handleBookClick}
+          onBookmarksClick={handleBookmarksClick}
+        />
+      </Slide>
       {children}
     </>
   );
