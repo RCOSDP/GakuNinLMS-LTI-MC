@@ -1,9 +1,11 @@
+import React, { useCallback, useState } from "react";
+import clsx from "clsx";
 import { Box, Card, Container, Typography } from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
-import React from "react";
+
 import { css } from "@emotion/css";
 import gray from "theme/colors/gray";
-import type { BookmarkTagMenu } from "$server/models/bookmark";
+import type { BookmarkTagMenu, TagSchema } from "$server/models/bookmark";
 import { useBookmarksByTagId } from "$utils/bookmark/useBookmarks";
 
 const title = css({
@@ -52,6 +54,12 @@ const button = css({
   height: "36px",
 });
 
+const disabledButton = css({
+  background: "#F7F7F7",
+  color: "#6B6B6B",
+  border: "1px solid #E6E6E6",
+});
+
 const checkIcon = css({
   fontSize: "12px",
   marginRight: 8,
@@ -62,12 +70,36 @@ type Props = {
   bookmarkTagMenu: BookmarkTagMenu;
 };
 
-export default function Bookmarks({ bookmarkTagMenu }: Props) {
-  const data = useBookmarksByTagId({
-    tagIds: bookmarkTagMenu.map((tag) => `tagIds=${tag.id}`).join("&"),
-  });
+function isSelectedTagMenu(
+  targetTagId: TagSchema["id"],
+  selectedTagMenu: BookmarkTagMenu
+) {
+  return selectedTagMenu.some((tag) => tag.id === targetTagId);
+}
 
+export default function Bookmarks({ bookmarkTagMenu }: Props) {
+  const [selectedTagMenu, setSelectedTagMenu] =
+    useState<BookmarkTagMenu>(bookmarkTagMenu);
+  const onClickTagMenu = useCallback(
+    (tag: TagSchema) => {
+      if (isSelectedTagMenu(tag.id, selectedTagMenu)) {
+        setSelectedTagMenu((prev) =>
+          prev.filter((selectedTag) => selectedTag.id !== tag.id)
+        );
+      } else {
+        setSelectedTagMenu((prev) => [...prev, tag]);
+      }
+    },
+    [selectedTagMenu]
+  );
+
+  const data = useBookmarksByTagId({
+    tagIds: (selectedTagMenu.length > 0 ? selectedTagMenu : bookmarkTagMenu)
+      .map((tag) => `tagIds=${tag.id}`)
+      .join("&"),
+  });
   console.log(data);
+
   return (
     <Container sx={{ mt: 5, gridArea: "title" }} maxWidth="md">
       <Typography variant="h4" className={title}>
@@ -79,7 +111,15 @@ export default function Bookmarks({ bookmarkTagMenu }: Props) {
             {bookmarkTagMenu.map((tag) => {
               return (
                 <li key={tag.id} className={list}>
-                  <button className={button}>
+                  <button
+                    className={clsx(button, {
+                      [disabledButton]: !isSelectedTagMenu(
+                        tag.id,
+                        selectedTagMenu
+                      ),
+                    })}
+                    onClick={() => onClickTagMenu(tag)}
+                  >
                     <CheckIcon className={checkIcon} />
                     {tag.label}
                   </button>
