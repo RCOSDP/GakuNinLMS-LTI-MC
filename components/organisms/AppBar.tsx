@@ -7,6 +7,7 @@ import Snackbar from "@mui/material/Snackbar";
 import MenuBookOutlinedIcon from "@mui/icons-material/MenuBookOutlined";
 import LibraryBooksOutlinedIcon from "@mui/icons-material/LibraryBooksOutlined";
 import AssessmentOutlinedIcon from "@mui/icons-material/AssessmentOutlined";
+import StyleIcon from "@mui/icons-material/Style";
 import LinkIcon from "@mui/icons-material/Link";
 import CellTowerIcon from "@mui/icons-material/CellTower";
 import SettingsIcon from "@mui/icons-material/Settings";
@@ -192,7 +193,7 @@ function AppBar(props: Props, ref: Ref<HTMLDivElement>) {
               )}
               <AppBarNavButton
                 color="inherit"
-                icon={<AssessmentOutlinedIcon />}
+                icon={<StyleIcon />}
                 label="タグ管理"
                 onClick={onBookmarksClick}
               />
