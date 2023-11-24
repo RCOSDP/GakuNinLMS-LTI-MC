@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback } from "react";
+import { useLockBodyScroll, useToggle } from "react-use";
 import { css } from "@emotion/css";
 import { Dropdown } from "@mui/base/Dropdown";
 import { Menu as BaseMenu, menuClasses } from "@mui/base/Menu";
@@ -46,20 +47,9 @@ export default function TagMenu({
     return selectedTag.every((selected) => selected.id !== tag.id);
   });
 
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const toggleDropdown = () => {
-    setDropdownOpen(!dropdownOpen);
-    if (!dropdownOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
-    }
-  };
-  useEffect(() => {
-    return () => {
-      document.body.style.overflow = "auto";
-    };
-  }, []);
+  const [locked, toggleLocked] = useToggle(false);
+
+  useLockBodyScroll(locked);
 
   if (filterTags.length === 0) {
     return null;
@@ -68,7 +58,7 @@ export default function TagMenu({
   return (
     <Dropdown
       onOpenChange={() => {
-        toggleDropdown();
+        toggleLocked();
       }}
     >
       <MenuButton>タグを追加...</MenuButton>
