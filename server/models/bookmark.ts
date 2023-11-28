@@ -1,6 +1,7 @@
 import type { FromSchema, JSONSchema } from "json-schema-to-ts";
 import type { Tag } from "@prisma/client";
-import type { TopicSchema } from "./topic";
+import { type TopicSchema } from "./topic";
+import { LtiContextSchema } from "./ltiContext";
 
 export const TagSchema = {
   type: "object",
@@ -37,6 +38,15 @@ export const BookmarkSchema = {
     topicId: { type: "integer" },
     tagId: { type: "integer" },
     tag: TagSchema,
+    topic: {
+      type: "object",
+      properties: {
+        id: { type: "integer" },
+        name: { type: "string" },
+        timeRequired: { type: "integer" },
+      },
+    },
+    ltiContext: LtiContextSchema,
   },
   additionalProperties: false,
 } as const satisfies JSONSchema;

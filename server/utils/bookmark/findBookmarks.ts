@@ -30,7 +30,6 @@ async function findBookmarks({
         userId: userId,
       },
       include: {
-        topic: true,
         tag: true,
       },
     });
@@ -50,8 +49,15 @@ async function findBookmarks({
         userId: userId,
       },
       include: {
-        topic: true,
         tag: true,
+        topic: {
+          select: {
+            id: true,
+            name: true,
+            timeRequired: true,
+          },
+        },
+        ltiContext: true,
       },
     });
 

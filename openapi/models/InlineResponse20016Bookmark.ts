@@ -18,6 +18,14 @@ import {
     InlineResponse20016TagFromJSON,
     InlineResponse20016TagFromJSONTyped,
     InlineResponse20016TagToJSON,
+    InlineResponse20016Topic,
+    InlineResponse20016TopicFromJSON,
+    InlineResponse20016TopicFromJSONTyped,
+    InlineResponse20016TopicToJSON,
+    LTIContext,
+    LTIContextFromJSON,
+    LTIContextFromJSONTyped,
+    LTIContextToJSON,
 } from './';
 
 /**
@@ -50,6 +58,18 @@ export interface InlineResponse20016Bookmark {
      * @memberof InlineResponse20016Bookmark
      */
     tag: InlineResponse20016Tag;
+    /**
+     * 
+     * @type {InlineResponse20016Topic}
+     * @memberof InlineResponse20016Bookmark
+     */
+    topic?: InlineResponse20016Topic;
+    /**
+     * 
+     * @type {LTIContext}
+     * @memberof InlineResponse20016Bookmark
+     */
+    ltiContext?: LTIContext;
 }
 
 export function InlineResponse20016BookmarkFromJSON(json: any): InlineResponse20016Bookmark {
@@ -66,6 +86,8 @@ export function InlineResponse20016BookmarkFromJSONTyped(json: any, ignoreDiscri
         'topicId': json['topicId'],
         'tagId': json['tagId'],
         'tag': InlineResponse20016TagFromJSON(json['tag']),
+        'topic': !exists(json, 'topic') ? undefined : InlineResponse20016TopicFromJSON(json['topic']),
+        'ltiContext': !exists(json, 'ltiContext') ? undefined : LTIContextFromJSON(json['ltiContext']),
     };
 }
 
@@ -82,6 +104,8 @@ export function InlineResponse20016BookmarkToJSON(value?: InlineResponse20016Boo
         'topicId': value.topicId,
         'tagId': value.tagId,
         'tag': InlineResponse20016TagToJSON(value.tag),
+        'topic': InlineResponse20016TopicToJSON(value.topic),
+        'ltiContext': LTIContextToJSON(value.ltiContext),
     };
 }
 
