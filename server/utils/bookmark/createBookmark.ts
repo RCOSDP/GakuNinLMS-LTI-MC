@@ -1,7 +1,6 @@
-import type { BookmarkProps } from "$server/models/bookmark";
+import type { BookmarkProps, BookmarkSchema } from "$server/models/bookmark";
 import type { SessionSchema } from "$server/models/session";
 import prisma from "$server/utils/prisma";
-import type { Bookmark } from "@prisma/client";
 
 async function createBookmark({
   session,
@@ -9,7 +8,7 @@ async function createBookmark({
 }: {
   session: SessionSchema;
   bookmark: BookmarkProps;
-}): Promise<Bookmark | undefined> {
+}): Promise<BookmarkSchema | undefined> {
   if (!session.ltiResourceLink?.consumerId) {
     return;
   }
@@ -19,6 +18,9 @@ async function createBookmark({
       ltiConsumerId: session.ltiResourceLink?.consumerId,
       ltiContextId: session.ltiContext.id,
       ...bookmark,
+    },
+    include: {
+      tag: true,
     },
   });
 

@@ -1,4 +1,5 @@
 import { useCallback } from "react";
+import { useLockBodyScroll, useToggle } from "react-use";
 import { css } from "@emotion/css";
 import { Dropdown } from "@mui/base/Dropdown";
 import { Menu as BaseMenu, menuClasses } from "@mui/base/Menu";
@@ -46,12 +47,20 @@ export default function TagMenu({
     return selectedTag.every((selected) => selected.id !== tag.id);
   });
 
+  const [locked, toggleLocked] = useToggle(false);
+
+  useLockBodyScroll(locked);
+
   if (filterTags.length === 0) {
     return null;
   }
 
   return (
-    <Dropdown>
+    <Dropdown
+      onOpenChange={() => {
+        toggleLocked();
+      }}
+    >
       <MenuButton>タグを追加...</MenuButton>
       <Menu slots={{ listbox: Listbox }}>
         {filterTags.map((option) => (
@@ -87,6 +96,7 @@ const Menu = styled(BaseMenu)(
   &.${menuClasses.root} {
     margin-top: -12px !important;
     margin-left: 20px !important;
+    z-index: 1;
   }
   `
 );
