@@ -5,11 +5,11 @@ export const BookmarkQuery = {
   type: "object",
   properties: {
     topicId: { type: "number" },
-    tagId: { type: "number" },
+    tagIds: { type: "string" },
     isAllUsers: { type: "boolean" },
   },
   additionalProperties: false,
-  oneOf: [{ required: ["topicId"] }, { required: ["tagId"] }],
+  oneOf: [{ required: ["topicId"] }, { required: ["tagIds"] }],
   required: ["isAllUsers"],
 } as const;
 

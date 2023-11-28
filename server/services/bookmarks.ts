@@ -39,9 +39,9 @@ export async function index({
   query,
   session,
 }: FastifyRequest<{ Querystring: Query }>) {
-  const { topicId, tagId, isAllUsers } = query;
+  const { topicId, tagIds, isAllUsers } = query;
 
-  if (topicId) {
+  if (topicId !== undefined) {
     const bookmarks = await findBookmarks({
       topicId,
       userId: isAllUsers ? undefined : session.user.id,
@@ -51,9 +51,12 @@ export async function index({
       status: 200,
       body: bookmarks,
     };
-  } else if (tagId) {
+  } else if (tagIds !== undefined) {
+    const params = new URLSearchParams(tagIds);
+    const ids = params.getAll("tagIds").map(Number);
+
     const bookmarks = await findBookmarks({
-      tagId,
+      tagIds: ids,
       userId: isAllUsers ? undefined : session.user.id,
     });
 
