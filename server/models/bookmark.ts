@@ -49,6 +49,8 @@ export const BookmarkSchema = {
           items: {
             type: "object",
             properties: {
+              id: { type: "integer" },
+              updatedAt: { type: "string" },
               tag: TagSchema,
             },
             additionalProperties: false,

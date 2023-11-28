@@ -134,9 +134,15 @@ export default function Bookmarks({ bookmarkTagMenu }: Props) {
         <Box className={body}>
           <ul>
             {data.bookmarks.map((bookmark) => {
+              const updatedAt = bookmark.topic?.bookmarks
+                ?.map((bookmark) => bookmark.updatedAt)
+                .sort(
+                  (a, b) => new Date(b).getTime() - new Date(a).getTime()
+                )[0];
+
               return (
                 <li key={bookmark.id}>
-                  <div>1:タグをつけた最終更新日時（？）</div>
+                  <div>1:タグをつけた最終更新日時{updatedAt}</div>
                   <div>
                     2:タグ
                     {bookmark.topic?.bookmarks?.map((bookmark) => (

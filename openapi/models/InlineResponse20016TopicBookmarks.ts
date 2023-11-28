@@ -28,6 +28,18 @@ import {
 export interface InlineResponse20016TopicBookmarks {
     /**
      * 
+     * @type {number}
+     * @memberof InlineResponse20016TopicBookmarks
+     */
+    id?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineResponse20016TopicBookmarks
+     */
+    updatedAt?: string;
+    /**
+     * 
      * @type {InlineResponse20016Tag}
      * @memberof InlineResponse20016TopicBookmarks
      */
@@ -44,6 +56,8 @@ export function InlineResponse20016TopicBookmarksFromJSONTyped(json: any, ignore
     }
     return {
         
+        'id': !exists(json, 'id') ? undefined : json['id'],
+        'updatedAt': !exists(json, 'updatedAt') ? undefined : json['updatedAt'],
         'tag': !exists(json, 'tag') ? undefined : InlineResponse20016TagFromJSON(json['tag']),
     };
 }
@@ -57,6 +71,8 @@ export function InlineResponse20016TopicBookmarksToJSON(value?: InlineResponse20
     }
     return {
         
+        'id': value.id,
+        'updatedAt': value.updatedAt,
         'tag': InlineResponse20016TagToJSON(value.tag),
     };
 }

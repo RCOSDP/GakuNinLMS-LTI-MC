@@ -57,6 +57,8 @@ async function findBookmarks({
             timeRequired: true,
             bookmarks: {
               select: {
+                id: true,
+                updatedAt: true,
                 tag: true,
               },
             },
