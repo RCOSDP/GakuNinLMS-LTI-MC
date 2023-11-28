@@ -4,7 +4,8 @@ import { Box, Card, Container, Typography } from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 
 import { css } from "@emotion/css";
-import gray from "theme/colors/gray";
+import { primary, gray } from "$theme/colors";
+
 import type { BookmarkTagMenu, TagSchema } from "$server/models/bookmark";
 import { useBookmarksByTagId } from "$utils/bookmark/useBookmarks";
 
@@ -47,17 +48,17 @@ const button = css({
   display: "inline-block",
   background: "none",
   cursor: "pointer",
-  border: "1px solid #339DFF",
-  color: "#339DFF",
+  border: `1px solid ${primary[400]}`,
+  color: primary[400],
   borderRadius: 4,
   padding: "8px 16px",
   height: "36px",
 });
 
 const disabledButton = css({
-  background: "#F7F7F7",
-  color: "#6B6B6B",
-  border: "1px solid #E6E6E6",
+  background: gray[100],
+  color: gray[700],
+  border: `1px solid ${gray[300]}`,
 });
 
 const checkIcon = css({
