@@ -94,9 +94,11 @@ export default function Bookmarks({ bookmarkTagMenu }: Props) {
   );
 
   const data = useBookmarksByTagId({
-    tagIds: (selectedTagMenu.length > 0 ? selectedTagMenu : bookmarkTagMenu)
-      .map((tag) => `tagIds=${tag.id}`)
-      .join("&"),
+    tagIds: String(
+      new URLSearchParams(
+        selectedTagMenu.map((tag) => ["tagIds", tag.id.toString()])
+      )
+    ),
   });
   console.log(data);
 
