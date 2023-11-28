@@ -44,6 +44,16 @@ export const BookmarkSchema = {
         id: { type: "integer" },
         name: { type: "string" },
         timeRequired: { type: "integer" },
+        bookmarks: {
+          type: "array",
+          items: {
+            type: "object",
+            properties: {
+              tag: TagSchema,
+            },
+            additionalProperties: false,
+          },
+        },
       },
     },
     ltiContext: LtiContextSchema,

@@ -131,7 +131,27 @@ export default function Bookmarks({ bookmarkTagMenu }: Props) {
             })}
           </ul>
         </Box>
-        <Box className={body}></Box>
+        <Box className={body}>
+          <ul>
+            {data.bookmarks.map((bookmark) => {
+              return (
+                <li key={bookmark.id}>
+                  <div>1:タグをつけた最終更新日時（？）</div>
+                  <div>
+                    2:タグ
+                    {bookmark.topic?.bookmarks?.map((bookmark) => (
+                      <div key={bookmark.tag?.id}>{bookmark.tag?.label}</div>
+                    ))}
+                  </div>
+                  <div>3:トピック名{bookmark.topic?.name}</div>
+                  <div>4:ブック名</div>
+                  <div>5:{bookmark.ltiContext?.title}</div>
+                  <div>6:{bookmark.topic?.timeRequired}</div>
+                </li>
+              );
+            })}
+          </ul>
+        </Box>
       </Card>
     </Container>
   );
