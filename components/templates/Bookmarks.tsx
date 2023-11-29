@@ -11,6 +11,7 @@ import { useBookmarksByTagId } from "$utils/bookmark/useBookmarks";
 import formatInterval from "$utils/formatInterval";
 import DescriptionList from "$atoms/DescriptionList";
 import getLocaleDateString from "$utils/getLocaleDateString";
+import Tag from "$atoms/Tag";
 
 const title = css({
   fontSize: 32,
@@ -70,24 +71,19 @@ const checkIcon = css({
 });
 
 const bookmarkWrap = css({
-  margin: "8px 16px",
+  margin: "8px 0",
   padding: 0,
 });
 
 const bookmarkList = css({
   listStyle: "none",
   borderBottom: `1px solid ${gray[300]}`,
-  padding: "8px 16px",
+  padding: "8px 32px",
 });
 
 const bookmarkTitle = css({
   margin: 0,
   fontSize: 16,
-});
-
-const bookmarkDescription = css({
-  display: "flex",
-  alignItems: "center",
 });
 
 type Props = {
@@ -165,7 +161,12 @@ export default function Bookmarks({ bookmarkTagMenu }: Props) {
               return (
                 <li key={bookmark.id} className={bookmarkList}>
                   <h5 className={bookmarkTitle}>{bookmark.topic?.name}</h5>
-                  <div className={bookmarkDescription}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
                     <DescriptionList
                       sx={{ mr: 1 }}
                       value={[
@@ -196,13 +197,12 @@ export default function Bookmarks({ bookmarkTagMenu }: Props) {
                         },
                       ]}
                     />
-                  </div>
-                  <div>
-                    2:タグ
-                    {bookmark.topic?.bookmarks?.map((bookmark) => (
-                      <div key={bookmark.tag?.id}>{bookmark.tag?.label}</div>
+                  </Box>
+                  <Box sx={{ display: "flex" }}>
+                    {bookmark.topic.bookmarks.map((bookmark) => (
+                      <Tag key={bookmark.tag.id} tag={bookmark.tag} />
                     ))}
-                  </div>
+                  </Box>
                 </li>
               );
             })}

@@ -1,12 +1,12 @@
 import { css } from "@emotion/css";
-import CloseIcon from "@mui/icons-material/Close";
-import type { BookmarkProps, BookmarkSchema } from "$server/models/bookmark";
+import type { TagSchema } from "$server/models/bookmark";
 
 const tagClass = css({
   display: "flex",
   alignItems: "center",
   justifyContent: "space-between",
   height: "26px",
+  width: "fit-content",
   boxSizing: "border-box",
   borderRadius: "999px",
   margin: "6px 8px 6px 0px",
@@ -29,39 +29,15 @@ const circle = css({
   marginRight: "8px",
 });
 
-const closeButton = css({
-  // buttonのデフォルトスタイルを無効化
-  border: "none",
-  background: "none",
-  padding: "0",
-  cursor: "pointer",
-  outline: "none",
-  color: "#9CA3AF",
-
-  lineHeight: "0.7",
-
-  "> svg": {
-    fontSize: "16px",
-  },
-});
-
 type Props = {
-  topicId: BookmarkProps["topicId"];
-  bookmark: BookmarkSchema;
-  onDeleteBookmark: (id: number, topicId: number) => Promise<void>;
+  tag: TagSchema;
 };
 
-export default function Tag({ topicId, bookmark, onDeleteBookmark }: Props) {
+export default function Tag({ tag }: Props) {
   return (
     <div className={tagClass}>
-      <span style={{ background: bookmark.tag.color }} className={circle} />
-      <p className={text}>{bookmark.tag.label}</p>
-      <button
-        className={closeButton}
-        onClick={async () => await onDeleteBookmark(bookmark.id, topicId)}
-      >
-        <CloseIcon />
-      </button>
+      <span style={{ background: tag.color }} className={circle} />
+      <p className={text}>{tag.label}</p>
     </div>
   );
 }

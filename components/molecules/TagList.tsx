@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import Tag from "$atoms/Tag";
+import TagWithDeleteButton from "$atoms/TagWithDeleteButton";
 import TagMenu from "$atoms/TagMenu";
 import useBookmarkHandler from "$utils/bookmark/useBookmarkHandler";
 import type {
@@ -48,7 +48,7 @@ export default function TagList({ topicId, bookmarks, tagMenu }: Props) {
           return null;
         }
         return (
-          <Tag
+          <TagWithDeleteButton
             key={tag.id}
             topicId={topicId}
             bookmark={bookmark}
