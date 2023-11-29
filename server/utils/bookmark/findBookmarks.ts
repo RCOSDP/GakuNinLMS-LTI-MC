@@ -15,6 +15,27 @@ type FindBookmarksParams = {
   userId?: User["id"];
 } & (TopicIdParam | TagIdParam);
 
+const includeQuery = {
+  include: {
+    tag: true,
+    topic: {
+      select: {
+        id: true,
+        name: true,
+        timeRequired: true,
+        bookmarks: {
+          select: {
+            id: true,
+            updatedAt: true,
+            tag: true,
+          },
+        },
+      },
+    },
+    ltiContext: true,
+  },
+};
+
 async function findBookmarks({
   topicId,
   tagIds,
@@ -29,9 +50,7 @@ async function findBookmarks({
         topicId: topicId,
         userId: userId,
       },
-      include: {
-        tag: true,
-      },
+      ...includeQuery,
     });
 
     const bookmarkTagMenu = await prisma.tag.findMany();
@@ -48,24 +67,7 @@ async function findBookmarks({
         })),
         userId: userId,
       },
-      include: {
-        tag: true,
-        topic: {
-          select: {
-            id: true,
-            name: true,
-            timeRequired: true,
-            bookmarks: {
-              select: {
-                id: true,
-                updatedAt: true,
-                tag: true,
-              },
-            },
-          },
-        },
-        ltiContext: true,
-      },
+      ...includeQuery,
     });
 
     const bookmarkTagMenu = await prisma.tag.findMany();

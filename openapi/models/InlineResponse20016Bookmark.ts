@@ -63,13 +63,13 @@ export interface InlineResponse20016Bookmark {
      * @type {InlineResponse20016Topic}
      * @memberof InlineResponse20016Bookmark
      */
-    topic?: InlineResponse20016Topic;
+    topic: InlineResponse20016Topic;
     /**
      * 
      * @type {LTIContext}
      * @memberof InlineResponse20016Bookmark
      */
-    ltiContext?: LTIContext;
+    ltiContext: LTIContext;
 }
 
 export function InlineResponse20016BookmarkFromJSON(json: any): InlineResponse20016Bookmark {
@@ -86,8 +86,8 @@ export function InlineResponse20016BookmarkFromJSONTyped(json: any, ignoreDiscri
         'topicId': json['topicId'],
         'tagId': json['tagId'],
         'tag': InlineResponse20016TagFromJSON(json['tag']),
-        'topic': !exists(json, 'topic') ? undefined : InlineResponse20016TopicFromJSON(json['topic']),
-        'ltiContext': !exists(json, 'ltiContext') ? undefined : LTIContextFromJSON(json['ltiContext']),
+        'topic': InlineResponse20016TopicFromJSON(json['topic']),
+        'ltiContext': LTIContextFromJSON(json['ltiContext']),
     };
 }
 
