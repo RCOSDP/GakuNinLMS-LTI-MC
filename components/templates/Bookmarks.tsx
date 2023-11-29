@@ -152,7 +152,8 @@ export default function Bookmarks({ bookmarkTagMenu }: Props) {
         <Box className={body}>
           <ul className={bookmarkWrap}>
             {data.bookmarks.map((bookmark) => {
-              const updatedAt = bookmark.topic.bookmarks
+              // 最新のタグ更新日時を取得
+              const latestUpdatedAt = bookmark.topic.bookmarks
                 ?.map((bookmark) => bookmark.updatedAt)
                 .sort((a, b) => {
                   return new Date(b).getTime() - new Date(a).getTime();
@@ -193,7 +194,10 @@ export default function Bookmarks({ bookmarkTagMenu }: Props) {
                       value={[
                         {
                           key: "タグ更新日時",
-                          value: getLocaleDateString(new Date(updatedAt), "ja"),
+                          value: getLocaleDateString(
+                            new Date(latestUpdatedAt),
+                            "ja"
+                          ),
                         },
                       ]}
                     />
