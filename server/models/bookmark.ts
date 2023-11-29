@@ -40,6 +40,7 @@ export const BookmarkSchema = {
     tag: TagSchema,
     topic: {
       type: "object",
+      required: ["id", "name", "timeRequired", "bookmarks"],
       properties: {
         id: { type: "integer" },
         name: { type: "string" },
@@ -48,6 +49,7 @@ export const BookmarkSchema = {
           type: "array",
           items: {
             type: "object",
+            required: ["id", "updatedAt", "tag"],
             properties: {
               id: { type: "integer" },
               updatedAt: { type: "string" },

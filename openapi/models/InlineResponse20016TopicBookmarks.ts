@@ -31,19 +31,19 @@ export interface InlineResponse20016TopicBookmarks {
      * @type {number}
      * @memberof InlineResponse20016TopicBookmarks
      */
-    id?: number;
+    id: number;
     /**
      * 
      * @type {string}
      * @memberof InlineResponse20016TopicBookmarks
      */
-    updatedAt?: string;
+    updatedAt: string;
     /**
      * 
      * @type {InlineResponse20016Tag}
      * @memberof InlineResponse20016TopicBookmarks
      */
-    tag?: InlineResponse20016Tag;
+    tag: InlineResponse20016Tag;
 }
 
 export function InlineResponse20016TopicBookmarksFromJSON(json: any): InlineResponse20016TopicBookmarks {
@@ -56,9 +56,9 @@ export function InlineResponse20016TopicBookmarksFromJSONTyped(json: any, ignore
     }
     return {
         
-        'id': !exists(json, 'id') ? undefined : json['id'],
-        'updatedAt': !exists(json, 'updatedAt') ? undefined : json['updatedAt'],
-        'tag': !exists(json, 'tag') ? undefined : InlineResponse20016TagFromJSON(json['tag']),
+        'id': json['id'],
+        'updatedAt': json['updatedAt'],
+        'tag': InlineResponse20016TagFromJSON(json['tag']),
     };
 }
 

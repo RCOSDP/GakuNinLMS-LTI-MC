@@ -31,25 +31,25 @@ export interface InlineResponse20016Topic {
      * @type {number}
      * @memberof InlineResponse20016Topic
      */
-    id?: number;
+    id: number;
     /**
      * 
      * @type {string}
      * @memberof InlineResponse20016Topic
      */
-    name?: string;
+    name: string;
     /**
      * 
      * @type {number}
      * @memberof InlineResponse20016Topic
      */
-    timeRequired?: number;
+    timeRequired: number;
     /**
      * 
      * @type {Array<InlineResponse20016TopicBookmarks>}
      * @memberof InlineResponse20016Topic
      */
-    bookmarks?: Array<InlineResponse20016TopicBookmarks>;
+    bookmarks: Array<InlineResponse20016TopicBookmarks>;
 }
 
 export function InlineResponse20016TopicFromJSON(json: any): InlineResponse20016Topic {
@@ -62,10 +62,10 @@ export function InlineResponse20016TopicFromJSONTyped(json: any, ignoreDiscrimin
     }
     return {
         
-        'id': !exists(json, 'id') ? undefined : json['id'],
-        'name': !exists(json, 'name') ? undefined : json['name'],
-        'timeRequired': !exists(json, 'timeRequired') ? undefined : json['timeRequired'],
-        'bookmarks': !exists(json, 'bookmarks') ? undefined : ((json['bookmarks'] as Array<any>).map(InlineResponse20016TopicBookmarksFromJSON)),
+        'id': json['id'],
+        'name': json['name'],
+        'timeRequired': json['timeRequired'],
+        'bookmarks': ((json['bookmarks'] as Array<any>).map(InlineResponse20016TopicBookmarksFromJSON)),
     };
 }
 
@@ -81,7 +81,7 @@ export function InlineResponse20016TopicToJSON(value?: InlineResponse20016Topic 
         'id': value.id,
         'name': value.name,
         'timeRequired': value.timeRequired,
-        'bookmarks': value.bookmarks === undefined ? undefined : ((value.bookmarks as Array<any>).map(InlineResponse20016TopicBookmarksToJSON)),
+        'bookmarks': ((value.bookmarks as Array<any>).map(InlineResponse20016TopicBookmarksToJSON)),
     };
 }
 

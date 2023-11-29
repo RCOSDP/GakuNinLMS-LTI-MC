@@ -8,6 +8,9 @@ import { primary, gray } from "$theme/colors";
 
 import type { BookmarkTagMenu, TagSchema } from "$server/models/bookmark";
 import { useBookmarksByTagId } from "$utils/bookmark/useBookmarks";
+import formatInterval from "$utils/formatInterval";
+import DescriptionList from "$atoms/DescriptionList";
+import getLocaleDateString from "$utils/getLocaleDateString";
 
 const title = css({
   fontSize: 32,
@@ -36,8 +39,7 @@ const listWrap = css({
 });
 
 const body = css({
-  padding: "16px",
-  backgroundColor: gray[50],
+  backgroundColor: "#FFF",
 });
 
 const list = css({
@@ -65,6 +67,27 @@ const checkIcon = css({
   fontSize: "12px",
   marginRight: 8,
   lineHeight: 1.1,
+});
+
+const bookmarkWrap = css({
+  margin: "8px 16px",
+  padding: 0,
+});
+
+const bookmarkList = css({
+  listStyle: "none",
+  borderBottom: `1px solid ${gray[300]}`,
+  padding: "8px 16px",
+});
+
+const bookmarkTitle = css({
+  margin: 0,
+  fontSize: 16,
+});
+
+const bookmarkDescription = css({
+  display: "flex",
+  alignItems: "center",
 });
 
 type Props = {
@@ -101,7 +124,6 @@ export default function Bookmarks({ bookmarkTagMenu }: Props) {
       )
     ),
   });
-  console.log(data);
 
   return (
     <Container sx={{ mt: 5, gridArea: "title" }} maxWidth="md">
@@ -132,27 +154,55 @@ export default function Bookmarks({ bookmarkTagMenu }: Props) {
           </ul>
         </Box>
         <Box className={body}>
-          <ul>
+          <ul className={bookmarkWrap}>
             {data.bookmarks.map((bookmark) => {
-              const updatedAt = bookmark.topic?.bookmarks
+              const updatedAt = bookmark.topic.bookmarks
                 ?.map((bookmark) => bookmark.updatedAt)
-                .sort(
-                  (a, b) => new Date(b).getTime() - new Date(a).getTime()
-                )[0];
+                .sort((a, b) => {
+                  return new Date(b).getTime() - new Date(a).getTime();
+                })[0];
 
               return (
-                <li key={bookmark.id}>
-                  <div>1:タグをつけた最終更新日時{updatedAt}</div>
+                <li key={bookmark.id} className={bookmarkList}>
+                  <h5 className={bookmarkTitle}>{bookmark.topic?.name}</h5>
+                  <div className={bookmarkDescription}>
+                    <DescriptionList
+                      sx={{ mr: 1 }}
+                      value={[
+                        {
+                          key: "学習時間",
+                          value: formatInterval(
+                            0,
+                            bookmark.topic.timeRequired * 1000
+                          ),
+                        },
+                      ]}
+                    />
+                    <DescriptionList
+                      sx={{ mr: 1 }}
+                      value={[
+                        {
+                          key: "コース",
+                          value: bookmark.ltiContext?.title,
+                        },
+                      ]}
+                    />
+                    <DescriptionList
+                      sx={{ mr: 1 }}
+                      value={[
+                        {
+                          key: "タグ更新日時",
+                          value: getLocaleDateString(new Date(updatedAt), "ja"),
+                        },
+                      ]}
+                    />
+                  </div>
                   <div>
                     2:タグ
                     {bookmark.topic?.bookmarks?.map((bookmark) => (
                       <div key={bookmark.tag?.id}>{bookmark.tag?.label}</div>
                     ))}
                   </div>
-                  <div>3:トピック名{bookmark.topic?.name}</div>
-                  <div>4:ブック名</div>
-                  <div>5:{bookmark.ltiContext?.title}</div>
-                  <div>6:{bookmark.topic?.timeRequired}</div>
                 </li>
               );
             })}
