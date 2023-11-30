@@ -8,10 +8,10 @@ import { primary, gray } from "$theme/colors";
 
 import type { BookmarkTagMenu, TagSchema } from "$server/models/bookmark";
 import { useBookmarksByTagId } from "$utils/bookmark/useBookmarks";
-import formatInterval from "$utils/formatInterval";
-import DescriptionList from "$atoms/DescriptionList";
-import getLocaleDateString from "$utils/getLocaleDateString";
-import Tag from "$atoms/Tag";
+// import useDialogProps from "$utils/useDialogProps";
+// import type { ContentSchema } from "$server/models/content";
+// import TopicPreviewDialog from "$organisms/TopicPreviewDialog";
+import BookmarkPreview from "$organisms/BookmarkPreview";
 
 const title = css({
   fontSize: 32,
@@ -78,12 +78,6 @@ const bookmarkWrap = css({
 const bookmarkList = css({
   listStyle: "none",
   borderBottom: `1px solid ${gray[300]}`,
-  padding: "8px 32px",
-});
-
-const bookmarkTitle = css({
-  margin: 0,
-  fontSize: 16,
 });
 
 type Props = {
@@ -121,6 +115,12 @@ export default function Bookmarks({ bookmarkTagMenu }: Props) {
     ),
   });
 
+  // const {
+  //   data: previewContent,
+  //   dispatch: handlePreviewClick,
+  //   ...dialogProps
+  // } = useDialogProps<ContentSchema>();
+
   return (
     <Container sx={{ mt: 5, gridArea: "title" }} maxWidth="md">
       <Typography variant="h4" className={title}>
@@ -152,67 +152,18 @@ export default function Bookmarks({ bookmarkTagMenu }: Props) {
         <Box className={body}>
           <ul className={bookmarkWrap}>
             {data.bookmarks.map((bookmark) => {
-              // 最新のタグ更新日時を取得
-              const latestUpdatedAt = bookmark.topic.bookmarks
-                ?.map((bookmark) => bookmark.updatedAt)
-                .sort((a, b) => {
-                  return new Date(b).getTime() - new Date(a).getTime();
-                })[0];
-
               return (
                 <li key={bookmark.id} className={bookmarkList}>
-                  <h5 className={bookmarkTitle}>{bookmark.topic?.name}</h5>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                    }}
-                  >
-                    <DescriptionList
-                      sx={{ mr: 1 }}
-                      value={[
-                        {
-                          key: "学習時間",
-                          value: formatInterval(
-                            0,
-                            bookmark.topic.timeRequired * 1000
-                          ),
-                        },
-                      ]}
-                    />
-                    <DescriptionList
-                      sx={{ mr: 1 }}
-                      value={[
-                        {
-                          key: "コース",
-                          value: bookmark.ltiContext?.title,
-                        },
-                      ]}
-                    />
-                    <DescriptionList
-                      sx={{ mr: 1 }}
-                      value={[
-                        {
-                          key: "タグ更新日時",
-                          value: getLocaleDateString(
-                            new Date(latestUpdatedAt),
-                            "ja"
-                          ),
-                        },
-                      ]}
-                    />
-                  </Box>
-                  <Box sx={{ display: "flex" }}>
-                    {bookmark.topic.bookmarks.map((bookmark) => (
-                      <Tag key={bookmark.tag.id} tag={bookmark.tag} />
-                    ))}
-                  </Box>
+                  <BookmarkPreview bookmark={bookmark} />
                 </li>
               );
             })}
           </ul>
         </Box>
       </Card>
+      {/* {previewContent?.type === "topic" && (
+        <TopicPreviewDialog {...dialogProps} topic={previewContent} />
+      )} */}
     </Container>
   );
 }
