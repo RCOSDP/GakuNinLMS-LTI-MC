@@ -8,6 +8,10 @@ import { primary, gray } from "$theme/colors";
 
 import type { BookmarkTagMenu, TagSchema } from "$server/models/bookmark";
 import { useBookmarksByTagId } from "$utils/bookmark/useBookmarks";
+// import useDialogProps from "$utils/useDialogProps";
+// import type { ContentSchema } from "$server/models/content";
+// import TopicPreviewDialog from "$organisms/TopicPreviewDialog";
+import BookmarkPreview from "$organisms/BookmarkPreview";
 
 const title = css({
   fontSize: 32,
@@ -36,8 +40,7 @@ const listWrap = css({
 });
 
 const body = css({
-  padding: "16px",
-  backgroundColor: gray[50],
+  backgroundColor: "#FFF",
 });
 
 const list = css({
@@ -65,6 +68,16 @@ const checkIcon = css({
   fontSize: "12px",
   marginRight: 8,
   lineHeight: 1.1,
+});
+
+const bookmarkWrap = css({
+  margin: "8px 0",
+  padding: 0,
+});
+
+const bookmarkList = css({
+  listStyle: "none",
+  borderBottom: `1px solid ${gray[300]}`,
 });
 
 type Props = {
@@ -101,7 +114,12 @@ export default function Bookmarks({ bookmarkTagMenu }: Props) {
       )
     ),
   });
-  console.log(data);
+
+  // const {
+  //   data: previewContent,
+  //   dispatch: handlePreviewClick,
+  //   ...dialogProps
+  // } = useDialogProps<ContentSchema>();
 
   return (
     <Container sx={{ mt: 5, gridArea: "title" }} maxWidth="md">
@@ -131,8 +149,21 @@ export default function Bookmarks({ bookmarkTagMenu }: Props) {
             })}
           </ul>
         </Box>
-        <Box className={body}></Box>
+        <Box className={body}>
+          <ul className={bookmarkWrap}>
+            {data.bookmarks.map((bookmark) => {
+              return (
+                <li key={bookmark.id} className={bookmarkList}>
+                  <BookmarkPreview bookmark={bookmark} />
+                </li>
+              );
+            })}
+          </ul>
+        </Box>
       </Card>
+      {/* {previewContent?.type === "topic" && (
+        <TopicPreviewDialog {...dialogProps} topic={previewContent} />
+      )} */}
     </Container>
   );
 }
