@@ -11,7 +11,7 @@ export const showSchema: FastifySchema = {
   summary: "トピックの取得",
   description: outdent`
     トピックの詳細を取得します。
-    教員または管理者でなければなりません。`,
+    自身のブックマークに含まれるトピックか、教員または管理者でなければなりません。`,
   params: topicParamsSchema,
   response: {
     200: topicSchema,
