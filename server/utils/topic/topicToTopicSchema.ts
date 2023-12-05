@@ -15,7 +15,6 @@ export const topicsWithResourcesArg = {
     resource: resourceWithVideoArg,
     keywords: true,
     topicSection: { include: { section: { include: { book: true } } } },
-    bookmarks: true,
   },
 } as const;
 
@@ -30,7 +29,7 @@ export type TopicWithResource = Prisma.TopicGetPayload<
  * @param options.relatedBooksMap トピックに関連するブックの集合
  */
 export function topicToTopicSchema(
-  { topicSection, bookmarks, ...topic }: TopicWithResource,
+  { topicSection, ...topic }: TopicWithResource,
   options?: {
     relatedBooksMap: Map<Book["id"], Book>;
   }
@@ -54,6 +53,5 @@ export function topicToTopicSchema(
         )
         .values(),
     ],
-    bookmarks: bookmarks,
   };
 }
