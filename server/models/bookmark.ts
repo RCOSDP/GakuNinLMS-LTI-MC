@@ -32,11 +32,12 @@ export const bookmarkPropsSchema = {
 
 export const BookmarkSchema = {
   type: "object",
-  required: ["id", "topicId", "tagId", "tag", "topic", "ltiContext"],
+  required: ["id", "topicId", "tagId", "userId", "tag", "topic", "ltiContext"],
   properties: {
     id: { type: "integer" },
     topicId: { type: "integer" },
     tagId: { type: "integer" },
+    userId: { type: "integer" },
     tag: TagSchema,
     topic: {
       type: "object",
