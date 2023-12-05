@@ -8,10 +8,10 @@ import { primary, gray } from "$theme/colors";
 
 import type { BookmarkTagMenu, TagSchema } from "$server/models/bookmark";
 import { useBookmarksByTagId } from "$utils/bookmark/useBookmarks";
-// import useDialogProps from "$utils/useDialogProps";
-// import type { ContentSchema } from "$server/models/content";
-// import TopicPreviewDialog from "$organisms/TopicPreviewDialog";
+import useDialogProps from "$utils/useDialogProps";
+import TopicPreviewDialog from "$organisms/TopicPreviewDialog";
 import BookmarkPreview from "$organisms/BookmarkPreview";
+import type { TopicSchema } from "$server/models/topic";
 
 const title = css({
   fontSize: 32,
@@ -115,11 +115,11 @@ export default function Bookmarks({ bookmarkTagMenu }: Props) {
     ),
   });
 
-  // const {
-  //   data: previewContent,
-  //   dispatch: handlePreviewClick,
-  //   ...dialogProps
-  // } = useDialogProps<ContentSchema>();
+  const {
+    data: previewContent,
+    dispatch: handlePreviewClick,
+    ...dialogProps
+  } = useDialogProps<TopicSchema>();
 
   return (
     <Container sx={{ mt: 5, gridArea: "title" }} maxWidth="md">
@@ -154,16 +154,23 @@ export default function Bookmarks({ bookmarkTagMenu }: Props) {
             {data.bookmarks.map((bookmark) => {
               return (
                 <li key={bookmark.id} className={bookmarkList}>
-                  <BookmarkPreview bookmark={bookmark} />
+                  <BookmarkPreview
+                    bookmark={bookmark}
+                    onBookmarkPreviewClick={handlePreviewClick}
+                  />
                 </li>
               );
             })}
           </ul>
         </Box>
       </Card>
-      {/* {previewContent?.type === "topic" && (
-        <TopicPreviewDialog {...dialogProps} topic={previewContent} />
-      )} */}
+      {previewContent?.id && (
+        <TopicPreviewDialog
+          {...dialogProps}
+          topic={previewContent}
+          isPrivateBook={true}
+        />
+      )}
     </Container>
   );
 }
