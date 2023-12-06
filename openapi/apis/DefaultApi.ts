@@ -2132,7 +2132,7 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * トピックの詳細を取得します。 教員または管理者でなければなりません。
+     * トピックの詳細を取得します。 自身のブックマークに含まれるトピックか、教員または管理者でなければなりません。
      * トピックの取得
      */
     async apiV2TopicTopicIdGetRaw(requestParameters: ApiV2TopicTopicIdGetRequest): Promise<runtime.ApiResponse<InlineResponse2005Topics>> {
@@ -2155,7 +2155,7 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * トピックの詳細を取得します。 教員または管理者でなければなりません。
+     * トピックの詳細を取得します。 自身のブックマークに含まれるトピックか、教員または管理者でなければなりません。
      * トピックの取得
      */
     async apiV2TopicTopicIdGet(requestParameters: ApiV2TopicTopicIdGetRequest): Promise<InlineResponse2005Topics> {

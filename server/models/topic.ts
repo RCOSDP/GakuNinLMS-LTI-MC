@@ -41,7 +41,7 @@ export type TopicSchema = Topic & {
   keywords: KeywordSchema[];
   relatedBooks?: RelatedBook[];
   resource: ResourceSchema;
-  bookmarks: BookmarkSchema[];
+  bookmarks?: BookmarkSchema[];
 };
 
 export const TopicProps = {

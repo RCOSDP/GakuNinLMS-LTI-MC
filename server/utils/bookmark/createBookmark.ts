@@ -1,6 +1,7 @@
 import type { BookmarkProps, BookmarkSchema } from "$server/models/bookmark";
 import type { SessionSchema } from "$server/models/session";
 import prisma from "$server/utils/prisma";
+import { bookmarkWithTopicQuery } from "$server/utils/bookmark/findBookmarks";
 
 async function createBookmark({
   session,
@@ -19,9 +20,7 @@ async function createBookmark({
       ltiContextId: session.ltiContext.id,
       ...bookmark,
     },
-    include: {
-      tag: true,
-    },
+    ...bookmarkWithTopicQuery,
   });
 
   if (!created) {
