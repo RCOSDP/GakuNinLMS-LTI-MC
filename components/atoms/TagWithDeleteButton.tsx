@@ -7,6 +7,7 @@ const tagClass = css({
   alignItems: "center",
   justifyContent: "space-between",
   height: "26px",
+  width: "fit-content",
   boxSizing: "border-box",
   borderRadius: "999px",
   margin: "6px 8px 6px 0px",

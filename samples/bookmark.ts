@@ -6,7 +6,7 @@ export const bookmark: BookmarkSchema = {
   tagId: 4,
   tag: {
     id: 4,
-    color: "COLOR",
+    color: "#2980B9",
     label: "お気に入り",
   },
   topicId: 1,
@@ -20,7 +20,7 @@ export const bookmark: BookmarkSchema = {
         updatedAt: "2021-01-01T00:00:00.000Z",
         tag: {
           id: 4,
-          color: "COLOR",
+          color: "#2980B9",
           label: "お気に入り",
         },
       },
