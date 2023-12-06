@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
 import usePrevious from "@rooks/use-previous";
-import clsx from "clsx";
 import { css } from "@emotion/css";
 
 import type { TopicSchema } from "$server/models/topic";
@@ -31,15 +30,6 @@ import getLocaleDateString from "$utils/getLocaleDateString";
 import { authors } from "$utils/descriptionList";
 import TagList from "$molecules/TagList";
 import { useBookmarksByTopicId } from "$utils/bookmark/useBookmarks";
-
-const hidden = css({
-  m: 0,
-  width: 0,
-  height: 0,
-  "& *": {
-    visibility: "hidden",
-  },
-});
 
 const videoStyle = {
   "& > *": {
@@ -179,12 +169,19 @@ export default function Video({
   const { video, preloadVideo } = useVideoAtom();
   const { book, itemIndex, itemExists } = useBookAtom();
   const { session } = useSessionAtom();
+
+  /** 動画プレイヤーオブジェクトプールに読み込まれているか否か */
+  const isLoadedVideoInstancePool = Boolean(
+    book && video.has(String(topic.id))
+  );
+
   useEffect(() => {
     if (!book) return;
     // バックグラウンドで動画プレイヤーオブジェクトプールに読み込む
     preloadVideo(book.sections);
     return () => video.clear();
   }, [book, preloadVideo, video]);
+
   const oembed = useOembed(topic.resource.id);
   const prevItemIndex = usePrevious(itemIndex);
   useEffect(() => {
@@ -299,19 +296,16 @@ export default function Video({
     topicId: topic.id,
   });
 
-  // 動画プレイヤーオブジェクトプールに存在する場合
   return (
     <>
-      {video.has(String(topic.id)) ? (
+      {isLoadedVideoInstancePool ? (
         Array.from(video.entries()).map(([id, videoInstance]) => (
           <VideoPlayer
             key={id}
-            className={clsx(className, {
-              [hidden]: String(topic.id) !== id,
-            })}
             sx={{ ...videoStyle, ...sx }}
             videoInstance={videoInstance}
             autoplay={String(topic.id) === id}
+            hidden={String(topic.id) !== id}
             onEnded={String(topic.id) === id ? onEnded : undefined}
           />
         ))

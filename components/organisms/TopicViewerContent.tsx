@@ -6,6 +6,7 @@ import useSticky from "$utils/useSticky";
 import { isVideoResource } from "$utils/videoResource";
 import { gray } from "$theme/colors";
 import type { ActivitySchema } from "$server/models/activity";
+import { useLoggerInit } from "$utils/eventLogger/logger";
 
 type Props = {
   topic: TopicSchema;
@@ -41,6 +42,8 @@ export default function TopicViewerContent({
     }
     return activity.timeRanges;
   }, [bookActivity, topic.id]);
+
+  useLoggerInit();
 
   return (
     <>
