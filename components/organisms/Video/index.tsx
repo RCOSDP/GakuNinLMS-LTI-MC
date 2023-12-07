@@ -31,7 +31,6 @@ import getLocaleDateString from "$utils/getLocaleDateString";
 import { authors } from "$utils/descriptionList";
 import TagList from "$molecules/TagList";
 import { useBookmarksByTopicId } from "$utils/bookmark/useBookmarks";
-import { useRouter } from "next/router";
 
 const hidden = css({
   m: 0,
@@ -130,6 +129,7 @@ type Props = {
   timeRange: ActivitySchema["timeRanges"];
   onEnded?: () => void;
   isPrivateBook?: boolean;
+  isBookPage?: boolean;
 };
 
 /**
@@ -174,8 +174,8 @@ export default function Video({
   timeRange,
   onEnded,
   isPrivateBook = false,
+  isBookPage = false,
 }: Props) {
-  const router = useRouter();
   const { video, preloadVideo } = useVideoAtom();
   const { book, itemIndex, itemExists } = useBookAtom();
   const { session } = useSessionAtom();
@@ -342,7 +342,7 @@ export default function Video({
         onChange={handleTabIndexChange}
       >
         <Tab label="解説" id="tab-0" aria-controls="panel-0" />
-        {isStudent && router.query?.bookId && (
+        {isStudent && isBookPage && (
           <Tab label="視聴時間詳細" id="tab-1" aria-controls="panel-1" />
         )}
         <Tab
@@ -356,7 +356,7 @@ export default function Video({
           <Markdown>{topic.description}</Markdown>
         </article>
       </TabPanel>
-      {isStudent && router.query?.bookId && (
+      {isStudent && isBookPage && (
         <TabPanel value={tabIndex} index={1} className={timeLineDetail}>
           <SkipButton onClick={handleSkipWatch} />
           <svg height={20} width={BAR_SIZE} xmlns="http://www.w3.org/2000/svg">
