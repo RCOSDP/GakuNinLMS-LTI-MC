@@ -1,6 +1,14 @@
-export default { title: "organisms/BookmarkPreview" };
+import type { Meta, StoryObj } from "@storybook/react";
 
 import BookmarkPreview from "./BookmarkPreview";
 import { bookmark } from "$samples";
 
-export const Default = () => <BookmarkPreview bookmark={bookmark} />;
+export default {
+  component: BookmarkPreview,
+} satisfies Meta<typeof BookmarkPreview>;
+
+type Story = StoryObj<typeof BookmarkPreview>;
+
+export const Default: Story = {
+  render: () => <BookmarkPreview bookmark={bookmark} />,
+};

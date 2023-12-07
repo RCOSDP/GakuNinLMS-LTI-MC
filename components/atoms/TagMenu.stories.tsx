@@ -1,14 +1,22 @@
-export default { title: "atoms/TagMenu" };
+import type { Meta, StoryObj } from "@storybook/react";
 
 import TagMenu from "./TagMenu";
 import { bookmark, bookmarkTagMenu } from "$samples";
 
-export const Default = () => (
-  <TagMenu
-    topicId={bookmark.topicId}
-    selectedTag={[bookmark.tag]}
-    tagMenu={bookmarkTagMenu}
-    handleTagChange={() => {}}
-    onSubmitBookmark={async () => {}}
-  />
-);
+export default {
+  component: TagMenu,
+} satisfies Meta<typeof TagMenu>;
+
+type Story = StoryObj<typeof TagMenu>;
+
+export const Default: Story = {
+  render: () => (
+    <TagMenu
+      topicId={bookmark.topicId}
+      selectedTag={[bookmark.tag]}
+      tagMenu={bookmarkTagMenu}
+      handleTagChange={() => {}}
+      onSubmitBookmark={async () => {}}
+    />
+  ),
+};

@@ -65,7 +65,7 @@ export default function TagWithDeleteButton({
         className={closeButton}
         onClick={async () => await onDeleteBookmark(bookmark.id, topicId)}
       >
-        <CloseIcon />
+        <CloseIcon titleAccess="削除" />
       </button>
     </div>
   );
