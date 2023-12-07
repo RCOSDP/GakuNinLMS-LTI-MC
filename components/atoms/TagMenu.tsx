@@ -96,7 +96,8 @@ const Menu = styled(BaseMenu)(
   &.${menuClasses.root} {
     margin-top: -12px !important;
     margin-left: 20px !important;
-    z-index: 1;
+    // Dialogよりも上に表示する
+    z-index: 1301;
   }
   `
 );

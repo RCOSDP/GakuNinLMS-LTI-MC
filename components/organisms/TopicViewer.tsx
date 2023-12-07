@@ -19,6 +19,7 @@ type Props = {
   onEnded?: () => void;
   offset?: string;
   isPrivateBook?: boolean;
+  isBookPage?: boolean;
 };
 
 export default function TopicViewer({
@@ -28,6 +29,7 @@ export default function TopicViewer({
   onEnded,
   offset,
   isPrivateBook = false,
+  isBookPage = false,
 }: Props) {
   const classes = useStyles();
   const cardClasses = useCardStyles();
@@ -39,6 +41,7 @@ export default function TopicViewer({
         onEnded={onEnded}
         offset={offset}
         isPrivateBook={isPrivateBook}
+        isBookPage={isBookPage}
       />
     </Card>
   );

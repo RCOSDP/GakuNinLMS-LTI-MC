@@ -129,6 +129,7 @@ type Props = {
   timeRange: ActivitySchema["timeRanges"];
   onEnded?: () => void;
   isPrivateBook?: boolean;
+  isBookPage?: boolean;
 };
 
 /**
@@ -173,6 +174,7 @@ export default function Video({
   timeRange,
   onEnded,
   isPrivateBook = false,
+  isBookPage = false,
 }: Props) {
   const { video, preloadVideo } = useVideoAtom();
   const { book, itemIndex, itemExists } = useBookAtom();
@@ -298,10 +300,10 @@ export default function Video({
   });
 
   // 動画プレイヤーオブジェクトプールに存在する場合
-  if (video.has(String(topic.id))) {
-    return (
-      <>
-        {Array.from(video.entries()).map(([id, videoInstance]) => (
+  return (
+    <>
+      {video.has(String(topic.id)) ? (
+        Array.from(video.entries()).map(([id, videoInstance]) => (
           <VideoPlayer
             key={id}
             className={clsx(className, {
@@ -312,131 +314,125 @@ export default function Video({
             autoplay={String(topic.id) === id}
             onEnded={String(topic.id) === id ? onEnded : undefined}
           />
-        ))}
-        {!isLoading && isPrivateBook && bookmarkTagMenu.length !== 0 && (
-          <TagList
-            key={topic.id}
-            topicId={topic.id}
-            bookmarks={bookmarks}
-            tagMenu={bookmarkTagMenu}
-          />
+        ))
+      ) : (
+        <VideoResource
+          className={className}
+          sx={{ ...videoStyle, ...sx }}
+          {...(topic.resource as VideoResourceSchema)}
+          identifier={String(topic.id)}
+          autoplay
+          onEnded={onEnded}
+          thumbnailUrl={oembed && oembed.thumbnail_url}
+        />
+      )}
+      {!isLoading && isPrivateBook && bookmarkTagMenu.length !== 0 && (
+        <TagList
+          key={topic.id}
+          topicId={topic.id}
+          bookmarks={bookmarks}
+          tagMenu={bookmarkTagMenu}
+        />
+      )}
+      <Tabs
+        aria-label="トピックビデオの詳細情報"
+        className={tabsStyle}
+        indicatorColor="primary"
+        value={tabIndex}
+        onChange={handleTabIndexChange}
+      >
+        <Tab label="解説" id="tab-0" aria-controls="panel-0" />
+        {isStudent && isBookPage && (
+          <Tab label="視聴時間詳細" id="tab-1" aria-controls="panel-1" />
         )}
-        <Tabs
-          aria-label="トピックビデオの詳細情報"
-          className={tabsStyle}
-          indicatorColor="primary"
-          value={tabIndex}
-          onChange={handleTabIndexChange}
-        >
-          <Tab label="解説" id="tab-0" aria-controls="panel-0" />
-          {isStudent && (
-            <Tab label="視聴時間詳細" id="tab-1" aria-controls="panel-1" />
-          )}
-          <Tab
-            label="トピックの詳細"
-            id={`tab-${isStudent ? 2 : 1}`}
-            aria-controls={`panel-${isStudent ? 2 : 1}`}
-          />
-        </Tabs>
-        <TabPanel value={tabIndex} index={0}>
-          <article>
-            <Markdown>{topic.description}</Markdown>
-          </article>
-        </TabPanel>
-        {isStudent && (
-          <TabPanel value={tabIndex} index={1} className={timeLineDetail}>
-            <SkipButton onClick={handleSkipWatch} />
-            <svg
+        <Tab
+          label="トピックの詳細"
+          id={`tab-${isStudent ? 2 : 1}`}
+          aria-controls={`panel-${isStudent ? 2 : 1}`}
+        />
+      </Tabs>
+      <TabPanel value={tabIndex} index={0}>
+        <article>
+          <Markdown>{topic.description}</Markdown>
+        </article>
+      </TabPanel>
+      {isStudent && isBookPage && (
+        <TabPanel value={tabIndex} index={1} className={timeLineDetail}>
+          <SkipButton onClick={handleSkipWatch} />
+          <svg height={20} width={BAR_SIZE} xmlns="http://www.w3.org/2000/svg">
+            <rect
+              x={0}
+              y={0}
               height={20}
               width={BAR_SIZE}
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <rect
-                x={0}
-                y={0}
-                height={20}
-                width={BAR_SIZE}
-                stroke="black"
-                fill="transparent"
-              />
-              {generateTimeRangeBarValue({
-                timeRange,
-                timeRequired: topic.timeRequired,
-              }).map((value) => {
-                return (
-                  <React.Fragment key={value.id}>
-                    <rect
-                      x={value.positionX}
-                      width={value.width}
-                      height={20}
-                      fill={learningStatus.completed}
-                    />
-                  </React.Fragment>
-                );
-              })}
-            </svg>
-          </TabPanel>
-        )}
-        <TabPanel value={tabIndex} index={isStudent ? 2 : 1}>
-          <Typography
-            sx={{
-              display: "inline-block",
-              verticalAlign: "middle",
-              mr: 1,
-              mb: 0.5,
-            }}
-            variant="h6"
-          >
-            {topic.name}
-          </Typography>
-          <Chip
-            sx={{ mr: 1, mb: 0.5 }}
-            label={`学習時間 ${formatInterval(0, topic.timeRequired * 1000)}`}
-          />
-          {topic.license && (
-            <License sx={{ mr: 1, mb: 0.5 }} license={topic.license} />
-          )}
-          <DescriptionList
-            inline
-            value={[
-              {
-                key: "作成日",
-                value: getLocaleDateString(topic.createdAt, "ja"),
-              },
-              {
-                key: "更新日",
-                value: getLocaleDateString(topic.updatedAt, "ja"),
-              },
-              ...authors(topic),
-            ]}
-          />
-          {topic.keywords && (
-            <Box sx={{ my: 1 }}>
-              {topic.keywords.map((keyword) => {
-                return (
-                  <KeywordChip
-                    key={keyword.id}
-                    keyword={keyword}
-                    sx={{ mr: 0.5, maxWidth: "260px" }}
+              stroke="black"
+              fill="transparent"
+            />
+            {generateTimeRangeBarValue({
+              timeRange,
+              timeRequired: topic.timeRequired,
+            }).map((value) => {
+              return (
+                <React.Fragment key={value.id}>
+                  <rect
+                    x={value.positionX}
+                    width={value.width}
+                    height={20}
+                    fill={learningStatus.completed}
                   />
-                );
-              })}
-            </Box>
-          )}
+                </React.Fragment>
+              );
+            })}
+          </svg>
         </TabPanel>
-      </>
-    );
-  }
-
-  return (
-    <VideoResource
-      className={className}
-      sx={{ ...videoStyle, ...sx }}
-      {...(topic.resource as VideoResourceSchema)}
-      identifier={String(topic.id)}
-      autoplay
-      onEnded={onEnded}
-      thumbnailUrl={oembed && oembed.thumbnail_url}
-    />
+      )}
+      <TabPanel value={tabIndex} index={isStudent ? 2 : 1}>
+        <Typography
+          sx={{
+            display: "inline-block",
+            verticalAlign: "middle",
+            mr: 1,
+            mb: 0.5,
+          }}
+          variant="h6"
+        >
+          {topic.name}
+        </Typography>
+        <Chip
+          sx={{ mr: 1, mb: 0.5 }}
+          label={`学習時間 ${formatInterval(0, topic.timeRequired * 1000)}`}
+        />
+        {topic.license && (
+          <License sx={{ mr: 1, mb: 0.5 }} license={topic.license} />
+        )}
+        <DescriptionList
+          inline
+          value={[
+            {
+              key: "作成日",
+              value: getLocaleDateString(topic.createdAt, "ja"),
+            },
+            {
+              key: "更新日",
+              value: getLocaleDateString(topic.updatedAt, "ja"),
+            },
+            ...authors(topic),
+          ]}
+        />
+        {topic.keywords && (
+          <Box sx={{ my: 1 }}>
+            {topic.keywords.map((keyword) => {
+              return (
+                <KeywordChip
+                  key={keyword.id}
+                  keyword={keyword}
+                  sx={{ mr: 0.5, maxWidth: "260px" }}
+                />
+              );
+            })}
+          </Box>
+        )}
+      </TabPanel>
+    </>
   );
 }

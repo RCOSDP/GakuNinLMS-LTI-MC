@@ -13,6 +13,7 @@ type Props = {
   onEnded?: () => void;
   offset?: string;
   isPrivateBook?: boolean;
+  isBookPage?: boolean;
 };
 
 export default function TopicViewerContent({
@@ -21,6 +22,7 @@ export default function TopicViewerContent({
   onEnded,
   offset,
   isPrivateBook = false,
+  isBookPage = false,
 }: Props) {
   const theme = useTheme();
   const sticky = useSticky({
@@ -51,6 +53,7 @@ export default function TopicViewerContent({
           timeRange={timeRange}
           onEnded={onEnded}
           isPrivateBook={isPrivateBook}
+          isBookPage={isBookPage}
         />
       )}
     </>
