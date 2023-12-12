@@ -7,6 +7,7 @@ const tagClass = css({
   alignItems: "center",
   justifyContent: "space-between",
   height: "26px",
+  width: "fit-content",
   boxSizing: "border-box",
   borderRadius: "999px",
   margin: "6px 8px 6px 0px",
@@ -64,7 +65,7 @@ export default function TagWithDeleteButton({
         className={closeButton}
         onClick={async () => await onDeleteBookmark(bookmark.id, topicId)}
       >
-        <CloseIcon />
+        <CloseIcon titleAccess="削除" />
       </button>
     </div>
   );
