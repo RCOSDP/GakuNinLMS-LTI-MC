@@ -36,6 +36,32 @@ export const bookmarkWithTopicQuery = {
   },
 };
 
+export const createIncludeQueryWithUserContext = (userId?: User["id"]) => {
+  return {
+    include: {
+      tag: true,
+      topic: {
+        select: {
+          id: true,
+          name: true,
+          timeRequired: true,
+          bookmarks: {
+            select: {
+              id: true,
+              updatedAt: true,
+              tag: true,
+            },
+            where: {
+              userId,
+            },
+          },
+        },
+      },
+      ltiContext: true,
+    },
+  };
+};
+
 async function findBookmarks({
   topicId,
   tagIds,
@@ -67,7 +93,8 @@ async function findBookmarks({
         })),
         userId: userId,
       },
-      ...bookmarkWithTopicQuery,
+
+      ...createIncludeQueryWithUserContext(userId),
     });
 
     const bookmarkTagMenu = await prisma.tag.findMany();
