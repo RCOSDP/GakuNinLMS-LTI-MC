@@ -93,7 +93,7 @@ async function findBookmarks({
         })),
         userId: userId,
       },
-
+      distinct: ["topicId"],
       ...createIncludeQueryWithUserContext(userId),
     });
 
