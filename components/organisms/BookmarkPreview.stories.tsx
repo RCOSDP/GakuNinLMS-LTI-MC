@@ -10,5 +10,7 @@ export default {
 type Story = StoryObj<typeof BookmarkPreview>;
 
 export const Default: Story = {
-  render: () => <BookmarkPreview bookmark={bookmark} />,
+  args: {
+    bookmark,
+  },
 };
