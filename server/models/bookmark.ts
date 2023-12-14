@@ -50,11 +50,12 @@ export const BookmarkSchema = {
           type: "array",
           items: {
             type: "object",
-            required: ["id", "updatedAt", "tag"],
+            required: ["id", "updatedAt", "tag", "ltiContext"],
             properties: {
               id: { type: "integer" },
               updatedAt: { type: "string" },
               tag: TagSchema,
+              ltiContext: LtiContextSchema,
             },
             additionalProperties: false,
           },

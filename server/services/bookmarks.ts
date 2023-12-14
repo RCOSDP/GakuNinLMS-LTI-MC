@@ -43,6 +43,7 @@ export async function index({
 
   if (topicId !== undefined) {
     const bookmarks = await findBookmarks({
+      ltiContextId: session.ltiContext.id,
       topicId,
       userId: isAllUsers ? undefined : session.user.id,
     });
@@ -56,6 +57,7 @@ export async function index({
     const ids = params.getAll("tagIds").map(Number);
 
     const bookmarks = await findBookmarks({
+      ltiContextId: session.ltiContext.id,
       tagIds: ids,
       userId: isAllUsers ? undefined : session.user.id,
     });

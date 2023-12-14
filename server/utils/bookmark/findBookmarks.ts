@@ -12,6 +12,7 @@ type TagIdParam = {
 };
 
 type FindBookmarksParams = {
+  ltiContextId: BookmarkSchema["ltiContext"]["id"];
   userId?: User["id"];
 } & (TopicIdParam | TagIdParam);
 
@@ -28,6 +29,7 @@ export const bookmarkWithTopicQuery = {
             id: true,
             updatedAt: true,
             tag: true,
+            ltiContext: true,
           },
         },
       },
@@ -50,6 +52,7 @@ export const createIncludeQueryWithUserContext = (userId?: User["id"]) => {
               id: true,
               updatedAt: true,
               tag: true,
+              ltiContext: true,
             },
             where: {
               userId,
@@ -63,6 +66,7 @@ export const createIncludeQueryWithUserContext = (userId?: User["id"]) => {
 };
 
 async function findBookmarks({
+  ltiContextId,
   topicId,
   tagIds,
   userId,
@@ -73,6 +77,7 @@ async function findBookmarks({
   if (topicId !== undefined) {
     const bookmark = await prisma.bookmark.findMany({
       where: {
+        ltiContextId: ltiContextId,
         topicId: topicId,
         userId: userId,
       },
@@ -93,14 +98,20 @@ async function findBookmarks({
         })),
         userId: userId,
       },
-      distinct: ["topicId"],
       ...createIncludeQueryWithUserContext(userId),
     });
+
+    // コースとトピックが一致するブックマークの重複を削除
+    const uniqueData = [
+      ...new Map(
+        bookmark.map((item) => [`${item.ltiContext.id}-${item.topicId}`, item])
+      ).values(),
+    ];
 
     const bookmarkTagMenu = await prisma.tag.findMany();
 
     return {
-      bookmark,
+      bookmark: uniqueData,
       bookmarkTagMenu,
     };
   }
