@@ -53,7 +53,7 @@ export interface InlineResponse20016TopicBookmarks {
      * @type {LTIContext}
      * @memberof InlineResponse20016TopicBookmarks
      */
-    ltiContext?: LTIContext;
+    ltiContext: LTIContext;
 }
 
 export function InlineResponse20016TopicBookmarksFromJSON(json: any): InlineResponse20016TopicBookmarks {
@@ -69,7 +69,7 @@ export function InlineResponse20016TopicBookmarksFromJSONTyped(json: any, ignore
         'id': json['id'],
         'updatedAt': json['updatedAt'],
         'tag': InlineResponse20016TagFromJSON(json['tag']),
-        'ltiContext': !exists(json, 'ltiContext') ? undefined : LTIContextFromJSON(json['ltiContext']),
+        'ltiContext': LTIContextFromJSON(json['ltiContext']),
     };
 }
 

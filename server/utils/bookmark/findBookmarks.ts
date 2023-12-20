@@ -12,6 +12,7 @@ type TagIdParam = {
 };
 
 type FindBookmarksParams = {
+  ltiConsumerId: BookmarkSchema["ltiConsumerId"];
   ltiContextId: BookmarkSchema["ltiContext"]["id"];
   userId?: User["id"];
 } & (TopicIdParam | TagIdParam);
@@ -67,6 +68,7 @@ export const createIncludeQueryWithUserContext = (userId?: User["id"]) => {
 
 async function findBookmarks({
   ltiContextId,
+  ltiConsumerId,
   topicId,
   tagIds,
   userId,
@@ -78,6 +80,7 @@ async function findBookmarks({
     const bookmark = await prisma.bookmark.findMany({
       where: {
         ltiContextId: ltiContextId,
+        ltiConsumerId: ltiConsumerId,
         topicId: topicId,
         userId: userId,
       },

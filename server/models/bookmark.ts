@@ -38,6 +38,8 @@ export const BookmarkSchema = {
     topicId: { type: "integer" },
     tagId: { type: "integer" },
     userId: { type: "integer" },
+    ltiContextId: { type: "string" },
+    ltiConsumerId: { type: "string" },
     tag: TagSchema,
     topic: {
       type: "object",
