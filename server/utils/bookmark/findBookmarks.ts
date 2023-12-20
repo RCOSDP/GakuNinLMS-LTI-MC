@@ -98,20 +98,14 @@ async function findBookmarks({
         })),
         userId: userId,
       },
+      distinct: ["ltiConsumerId", "ltiContextId", "topicId"],
       ...createIncludeQueryWithUserContext(userId),
     });
-
-    // コースとトピックが一致するブックマークの重複を削除
-    const uniqueData = [
-      ...new Map(
-        bookmark.map((item) => [`${item.ltiContext.id}-${item.topicId}`, item])
-      ).values(),
-    ];
 
     const bookmarkTagMenu = await prisma.tag.findMany();
 
     return {
-      bookmark: uniqueData,
+      bookmark,
       bookmarkTagMenu,
     };
   }
