@@ -12,6 +12,8 @@ type TagIdParam = {
 };
 
 type FindBookmarksParams = {
+  ltiConsumerId: BookmarkSchema["ltiConsumerId"];
+  ltiContextId: BookmarkSchema["ltiContext"]["id"];
   userId?: User["id"];
 } & (TopicIdParam | TagIdParam);
 
@@ -28,6 +30,7 @@ export const bookmarkWithTopicQuery = {
             id: true,
             updatedAt: true,
             tag: true,
+            ltiContext: true,
           },
         },
       },
@@ -50,6 +53,7 @@ export const createIncludeQueryWithUserContext = (userId?: User["id"]) => {
               id: true,
               updatedAt: true,
               tag: true,
+              ltiContext: true,
             },
             where: {
               userId,
@@ -63,6 +67,8 @@ export const createIncludeQueryWithUserContext = (userId?: User["id"]) => {
 };
 
 async function findBookmarks({
+  ltiContextId,
+  ltiConsumerId,
   topicId,
   tagIds,
   userId,
@@ -73,6 +79,8 @@ async function findBookmarks({
   if (topicId !== undefined) {
     const bookmark = await prisma.bookmark.findMany({
       where: {
+        ltiContextId: ltiContextId,
+        ltiConsumerId: ltiConsumerId,
         topicId: topicId,
         userId: userId,
       },
@@ -93,7 +101,7 @@ async function findBookmarks({
         })),
         userId: userId,
       },
-
+      distinct: ["ltiConsumerId", "ltiContextId", "topicId"],
       ...createIncludeQueryWithUserContext(userId),
     });
 

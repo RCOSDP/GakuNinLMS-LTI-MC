@@ -48,6 +48,10 @@ export default function BookmarkPreview({
     handler(topic);
   };
 
+  const courseBookmark = bookmark.topic.bookmarks.filter(
+    (item) => item.ltiContext.id === bookmark.ltiContext.id
+  );
+
   return (
     <button className={bookmarkButton} onClick={handle(onBookmarkPreviewClick)}>
       <h5 className={bookmarkTitle}>{bookmark.topic?.name}</h5>
@@ -86,7 +90,7 @@ export default function BookmarkPreview({
         />
       </Box>
       <Box sx={{ display: "flex" }}>
-        {bookmark.topic.bookmarks.map((bookmark) => (
+        {courseBookmark.map((bookmark) => (
           <Tag key={bookmark.tag.id} tag={bookmark.tag} />
         ))}
       </Box>

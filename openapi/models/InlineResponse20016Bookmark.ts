@@ -60,6 +60,18 @@ export interface InlineResponse20016Bookmark {
     userId: number;
     /**
      * 
+     * @type {string}
+     * @memberof InlineResponse20016Bookmark
+     */
+    ltiContextId?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineResponse20016Bookmark
+     */
+    ltiConsumerId?: string;
+    /**
+     * 
      * @type {InlineResponse20016Tag}
      * @memberof InlineResponse20016Bookmark
      */
@@ -92,6 +104,8 @@ export function InlineResponse20016BookmarkFromJSONTyped(json: any, ignoreDiscri
         'topicId': json['topicId'],
         'tagId': json['tagId'],
         'userId': json['userId'],
+        'ltiContextId': !exists(json, 'ltiContextId') ? undefined : json['ltiContextId'],
+        'ltiConsumerId': !exists(json, 'ltiConsumerId') ? undefined : json['ltiConsumerId'],
         'tag': InlineResponse20016TagFromJSON(json['tag']),
         'topic': InlineResponse20016TopicFromJSON(json['topic']),
         'ltiContext': LTIContextFromJSON(json['ltiContext']),
@@ -111,6 +125,8 @@ export function InlineResponse20016BookmarkToJSON(value?: InlineResponse20016Boo
         'topicId': value.topicId,
         'tagId': value.tagId,
         'userId': value.userId,
+        'ltiContextId': value.ltiContextId,
+        'ltiConsumerId': value.ltiConsumerId,
         'tag': InlineResponse20016TagToJSON(value.tag),
         'topic': InlineResponse20016TopicToJSON(value.topic),
         'ltiContext': LTIContextToJSON(value.ltiContext),

@@ -38,6 +38,8 @@ export const BookmarkSchema = {
     topicId: { type: "integer" },
     tagId: { type: "integer" },
     userId: { type: "integer" },
+    ltiContextId: { type: "string" },
+    ltiConsumerId: { type: "string" },
     tag: TagSchema,
     topic: {
       type: "object",
@@ -50,11 +52,12 @@ export const BookmarkSchema = {
           type: "array",
           items: {
             type: "object",
-            required: ["id", "updatedAt", "tag"],
+            required: ["id", "updatedAt", "tag", "ltiContext"],
             properties: {
               id: { type: "integer" },
               updatedAt: { type: "string" },
               tag: TagSchema,
+              ltiContext: LtiContextSchema,
             },
             additionalProperties: false,
           },
