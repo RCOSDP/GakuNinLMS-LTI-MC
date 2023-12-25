@@ -5,11 +5,11 @@ import { LtiContextSchema } from "./ltiContext";
 
 export const TagSchema = {
   type: "object",
-  required: ["id", "label", "color"],
+  required: ["id", "label", "emoji"],
   properties: {
     id: { type: "integer" },
     label: { type: "string" },
-    color: { title: "CSS <color> 値", type: "string" },
+    emoji: { type: "string" },
   },
   additionalProperties: false,
 } as const satisfies JSONSchema;

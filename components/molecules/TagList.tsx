@@ -30,6 +30,7 @@ export default function TagList({ topicId, bookmarks, tagMenu }: Props) {
         display: "flex",
         justifyContent: "flex-start",
         alignItems: "center",
+        flexWrap: "wrap",
         boxSizing: "border-box",
         width: "100%",
         margin: "4px 0px",

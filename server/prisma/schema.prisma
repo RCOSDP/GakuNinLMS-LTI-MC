@@ -367,7 +367,7 @@ model ContentRole {
 model Tag {
   id    Int    @id @default(autoincrement())
   label String @unique
-  color String
+  emoji String
 
   bookmarks Bookmark[]
 }

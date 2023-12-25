@@ -1,5 +1,6 @@
 import { css } from "@emotion/css";
 import type { TagSchema } from "$server/models/bookmark";
+import Emoji from "./Emoji";
 
 const tagClass = css({
   display: "flex",
@@ -13,20 +14,16 @@ const tagClass = css({
   padding: "4px 16px",
   background: "#FFF",
   border: "solid 1px #F3F4F6",
+  "> :first-child": {
+    marginRight: "8px",
+  },
 });
 
 const text = css({
   lineHeight: "1.1",
   fontSize: "12px",
   marginRight: "8px",
-});
-
-const circle = css({
-  display: "inline-block",
-  borderRadius: "50%",
-  width: "6px",
-  height: "6px",
-  marginRight: "8px",
+  whiteSpace: "nowrap",
 });
 
 type Props = {
@@ -36,7 +33,7 @@ type Props = {
 export default function Tag({ tag }: Props) {
   return (
     <div className={tagClass}>
-      <span style={{ background: tag.color }} className={circle} />
+      <Emoji emoji={tag.emoji} />
       <p className={text}>{tag.label}</p>
     </div>
   );

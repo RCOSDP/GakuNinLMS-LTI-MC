@@ -36,7 +36,7 @@ export interface InlineResponse20016Tag {
      * @type {string}
      * @memberof InlineResponse20016Tag
      */
-    color: string;
+    emoji: string;
 }
 
 export function InlineResponse20016TagFromJSON(json: any): InlineResponse20016Tag {
@@ -51,7 +51,7 @@ export function InlineResponse20016TagFromJSONTyped(json: any, ignoreDiscriminat
         
         'id': json['id'],
         'label': json['label'],
-        'color': json['color'],
+        'emoji': json['emoji'],
     };
 }
 
@@ -66,7 +66,7 @@ export function InlineResponse20016TagToJSON(value?: InlineResponse20016Tag | nu
         
         'id': value.id,
         'label': value.label,
-        'color': value.color,
+        'emoji': value.emoji,
     };
 }
 

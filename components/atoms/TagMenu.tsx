@@ -11,13 +11,12 @@ import type {
   BookmarkTagMenu,
   TagSchema,
 } from "$server/models/bookmark";
+import Emoji from "./Emoji";
 
-const circle = css({
-  display: "inline-block",
-  borderRadius: "50%",
-  width: "6px",
-  height: "6px",
-  marginRight: "8px",
+const menuItem = css({
+  "> :first-child": {
+    marginRight: "8px",
+  },
 });
 
 type Props = {
@@ -68,8 +67,9 @@ export default function TagMenu({
             key={option.id}
             value={option}
             onClick={async () => await onClick(option)}
+            className={menuItem}
           >
-            <span style={{ background: option.color }} className={circle} />
+            <Emoji emoji={option.emoji} />
             {option.label}
           </MenuItem>
         ))}

@@ -6,7 +6,7 @@ export const bookmark: BookmarkSchema = {
   tagId: 4,
   tag: {
     id: 4,
-    color: "#2980B9",
+    emoji: "💖",
     label: "お気に入り",
   },
   topicId: 1,
@@ -20,8 +20,13 @@ export const bookmark: BookmarkSchema = {
         updatedAt: "2021-01-01T00:00:00.000Z",
         tag: {
           id: 4,
-          color: "#2980B9",
+          emoji: "💖",
           label: "お気に入り",
+        },
+        ltiContext: {
+          title: "context-title",
+          label: "context-label",
+          id: "contextId",
         },
       },
     ],
@@ -34,13 +39,13 @@ export const bookmark: BookmarkSchema = {
 };
 
 export const bookmarkTagMenu: BookmarkTagMenu = [
-  "重要",
-  "難しい",
-  "後で見る",
-  "お気に入り",
-  "高評価",
-].map((label, i) => ({
+  { label: "後で見る", emoji: "👀" },
+  { label: "難しい", emoji: "💪" },
+  { label: "重要", emoji: "❗" },
+  { label: "お気に入り", emoji: "💖" },
+  { label: "高評価", emoji: "👍" },
+].map((value, i) => ({
   id: i + 1,
-  color: "COLOR",
-  label,
+  emoji: value.emoji,
+  label: value.label,
 }));

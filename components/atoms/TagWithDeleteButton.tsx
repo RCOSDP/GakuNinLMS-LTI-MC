@@ -1,6 +1,7 @@
 import { css } from "@emotion/css";
 import CloseIcon from "@mui/icons-material/Close";
 import type { BookmarkProps, BookmarkSchema } from "$server/models/bookmark";
+import Emoji from "./Emoji";
 
 const tagClass = css({
   display: "flex",
@@ -14,20 +15,16 @@ const tagClass = css({
   padding: "4px 16px",
   background: "#FFF",
   border: "solid 1px #F3F4F6",
+  "> :first-child": {
+    marginRight: "8px",
+  },
 });
 
 const text = css({
   lineHeight: "1.1",
   fontSize: "12px",
   marginRight: "8px",
-});
-
-const circle = css({
-  display: "inline-block",
-  borderRadius: "50%",
-  width: "6px",
-  height: "6px",
-  marginRight: "8px",
+  whiteSpace: "nowrap",
 });
 
 const closeButton = css({
@@ -59,7 +56,7 @@ export default function TagWithDeleteButton({
 }: Props) {
   return (
     <div className={tagClass}>
-      <span style={{ background: bookmark.tag.color }} className={circle} />
+      <Emoji emoji={bookmark.tag.emoji} />
       <p className={text}>{bookmark.tag.label}</p>
       <button
         className={closeButton}

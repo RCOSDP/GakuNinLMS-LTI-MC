@@ -1,3 +1,4 @@
+import Emoji from "$atoms/Emoji";
 import type { BookmarkSchema } from "$server/models/bookmark";
 import { useBookmarksByTopicId } from "$utils/bookmark/useBookmarks";
 import { css } from "@emotion/css";
@@ -8,15 +9,8 @@ type Props = {
   topicId: number;
 };
 
-const circle = css({
-  display: "inline-block",
-  borderRadius: "50%",
-  width: "12px",
-  height: "12px",
-});
-
 const text = css({
-  fontSize: "10px",
+  fontSize: "12px",
 });
 
 export default function TagCount({ topicId }: Props) {
@@ -44,6 +38,7 @@ export default function TagCount({ topicId }: Props) {
         display: "flex",
         justifyContent: "flex-start",
         alignItems: "center",
+        flexWrap: "wrap",
       }}
     >
       {tagWithCounts.map((tag) => (
@@ -53,11 +48,20 @@ export default function TagCount({ topicId }: Props) {
             display: "flex",
             justifyContent: "flex-start",
             alignItems: "center",
-            marginRight: "2px",
+            marginRight: "4px",
+            borderRadius: "999px",
+            border: "solid 1px #D1D5DB",
+            backgroundColor: "#FFF",
+            height: "24px",
+            padding: "8px 6px",
+            margin: "4px",
+            "> :first-child": {
+              marginRight: "4px",
+            },
           }}
         >
-          <span style={{ background: tag.color }} className={circle} />
-          {tag.count > 1 && <p className={text}>{"×" + `${tag.count}`}</p>}
+          <Emoji emoji={tag.emoji} />
+          <p className={text}>{tag.count}</p>
         </Box>
       ))}
     </Box>
