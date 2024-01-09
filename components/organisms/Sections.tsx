@@ -145,7 +145,10 @@ export default function Sections({
                   <Typography
                     component="span"
                     variant="caption"
-                    sx={{ marginRight: "4px" }}
+                    sx={{
+                      marginRight: "4px",
+                      whiteSpace: "nowrap",
+                    }}
                   >
                     {formatInterval(0, topic.timeRequired * 1000)}
                   </Typography>
