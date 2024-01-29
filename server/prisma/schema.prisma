@@ -372,6 +372,15 @@ model Tag {
   bookmarks Bookmark[]
 }
 
+// 自由記述タグ
+model Memo {
+  id    Int    @id @default(autoincrement())
+  label String @unique
+  emoji String
+
+  bookmarks Bookmark[]
+}
+
 /// ブックマーク
 model Bookmark {
   id Int @id @default(autoincrement())
@@ -383,6 +392,9 @@ model Bookmark {
   tagId Int @map("tag_id")
   tag   Tag @relation(fields: [tagId], references: [id])
 
+  memoId Int @map("memo_id")
+  memo   Memo @relation(fields: [memoId], references: [id])
+
   userId Int  @map("user_id")
   user   User @relation(fields: [userId], references: [id])
 
@@ -392,7 +404,7 @@ model Bookmark {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  @@unique([ltiConsumerId, ltiContextId, tagId, userId, topicId])
+  @@unique([ltiConsumerId, ltiContextId, tagId, memoId, userId, topicId])
 }
 
 // Etc.
