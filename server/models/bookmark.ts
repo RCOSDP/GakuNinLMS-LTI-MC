@@ -1,5 +1,5 @@
 import type { FromSchema, JSONSchema } from "json-schema-to-ts";
-import type { Tag } from "@prisma/client";
+import type { Tag, Memo } from "@prisma/client";
 import { type TopicSchema } from "./topic";
 import { LtiContextSchema } from "./ltiContext";
 
@@ -14,11 +14,25 @@ export const TagSchema = {
   additionalProperties: false,
 } as const satisfies JSONSchema;
 
+export const MemoSchema = {
+  type: "object",
+  required: ["id", "label", "emoji"],
+  properties: {
+    id: { type: "integer" },
+    label: { type: "string" },
+    emoji: { type: "string" },
+  },
+  additionalProperties: false,
+} as const satisfies JSONSchema;
+
 export type TagSchema = Tag;
+
+export type MemoSchema = Memo;
 
 export type BookmarkProps = {
   tagId: Tag["id"];
   topicId: TopicSchema["id"];
+  memoId: Memo["id"];
 };
 
 export const bookmarkPropsSchema = {
@@ -26,6 +40,7 @@ export const bookmarkPropsSchema = {
   properties: {
     tagId: { type: "integer" },
     topicId: { type: "integer" },
+    memoId: { type: "integer" },
   },
   additionalProperties: false,
 } as const satisfies JSONSchema;
@@ -37,10 +52,12 @@ export const BookmarkSchema = {
     id: { type: "integer" },
     topicId: { type: "integer" },
     tagId: { type: "integer" },
+    memoId: { type: "integer" },
     userId: { type: "integer" },
     ltiContextId: { type: "string" },
     ltiConsumerId: { type: "string" },
     tag: TagSchema,
+    memo: MemoSchema,
     topic: {
       type: "object",
       required: ["id", "name", "timeRequired", "bookmarks"],

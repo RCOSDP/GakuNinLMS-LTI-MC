@@ -57,6 +57,12 @@ export interface InlineResponse20016Bookmark {
      * @type {number}
      * @memberof InlineResponse20016Bookmark
      */
+    memoId?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof InlineResponse20016Bookmark
+     */
     userId: number;
     /**
      * 
@@ -76,6 +82,12 @@ export interface InlineResponse20016Bookmark {
      * @memberof InlineResponse20016Bookmark
      */
     tag: InlineResponse20016Tag;
+    /**
+     * 
+     * @type {InlineResponse20016Tag}
+     * @memberof InlineResponse20016Bookmark
+     */
+    memo?: InlineResponse20016Tag;
     /**
      * 
      * @type {InlineResponse20016Topic}
@@ -103,10 +115,12 @@ export function InlineResponse20016BookmarkFromJSONTyped(json: any, ignoreDiscri
         'id': json['id'],
         'topicId': json['topicId'],
         'tagId': json['tagId'],
+        'memoId': !exists(json, 'memoId') ? undefined : json['memoId'],
         'userId': json['userId'],
         'ltiContextId': !exists(json, 'ltiContextId') ? undefined : json['ltiContextId'],
         'ltiConsumerId': !exists(json, 'ltiConsumerId') ? undefined : json['ltiConsumerId'],
         'tag': InlineResponse20016TagFromJSON(json['tag']),
+        'memo': !exists(json, 'memo') ? undefined : InlineResponse20016TagFromJSON(json['memo']),
         'topic': InlineResponse20016TopicFromJSON(json['topic']),
         'ltiContext': LTIContextFromJSON(json['ltiContext']),
     };
@@ -124,10 +138,12 @@ export function InlineResponse20016BookmarkToJSON(value?: InlineResponse20016Boo
         'id': value.id,
         'topicId': value.topicId,
         'tagId': value.tagId,
+        'memoId': value.memoId,
         'userId': value.userId,
         'ltiContextId': value.ltiContextId,
         'ltiConsumerId': value.ltiConsumerId,
         'tag': InlineResponse20016TagToJSON(value.tag),
+        'memo': InlineResponse20016TagToJSON(value.memo),
         'topic': InlineResponse20016TopicToJSON(value.topic),
         'ltiContext': LTIContextToJSON(value.ltiContext),
     };
