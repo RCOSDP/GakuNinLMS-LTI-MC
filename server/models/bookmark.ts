@@ -32,7 +32,7 @@ export const bookmarkPropsSchema = {
 
 export const BookmarkSchema = {
   type: "object",
-  required: ["id", "topicId", "tagId", "userId", "tag", "topic", "ltiContext"],
+  required: ["id", "topicId", "userId", "topic", "ltiContext"],
   properties: {
     id: { type: "integer" },
     topicId: { type: "integer" },
@@ -53,11 +53,12 @@ export const BookmarkSchema = {
           type: "array",
           items: {
             type: "object",
-            required: ["id", "updatedAt", "tag", "ltiContext"],
+            required: ["id", "updatedAt", "ltiContext"],
             properties: {
               id: { type: "integer" },
               updatedAt: { type: "string" },
               tag: TagSchema,
+              memoContent: { type: "string" },
               ltiContext: LtiContextSchema,
             },
             additionalProperties: false,
