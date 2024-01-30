@@ -78,6 +78,12 @@ export interface InlineResponse20016Bookmark {
     tag: InlineResponse20016Tag;
     /**
      * 
+     * @type {string}
+     * @memberof InlineResponse20016Bookmark
+     */
+    memoContent?: string;
+    /**
+     * 
      * @type {InlineResponse20016Topic}
      * @memberof InlineResponse20016Bookmark
      */
@@ -107,6 +113,7 @@ export function InlineResponse20016BookmarkFromJSONTyped(json: any, ignoreDiscri
         'ltiContextId': !exists(json, 'ltiContextId') ? undefined : json['ltiContextId'],
         'ltiConsumerId': !exists(json, 'ltiConsumerId') ? undefined : json['ltiConsumerId'],
         'tag': InlineResponse20016TagFromJSON(json['tag']),
+        'memoContent': !exists(json, 'memoContent') ? undefined : json['memoContent'],
         'topic': InlineResponse20016TopicFromJSON(json['topic']),
         'ltiContext': LTIContextFromJSON(json['ltiContext']),
     };
@@ -128,6 +135,7 @@ export function InlineResponse20016BookmarkToJSON(value?: InlineResponse20016Boo
         'ltiContextId': value.ltiContextId,
         'ltiConsumerId': value.ltiConsumerId,
         'tag': InlineResponse20016TagToJSON(value.tag),
+        'memoContent': value.memoContent,
         'topic': InlineResponse20016TopicToJSON(value.topic),
         'ltiContext': LTIContextToJSON(value.ltiContext),
     };
