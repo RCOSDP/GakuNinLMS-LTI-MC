@@ -41,6 +41,7 @@ export const BookmarkSchema = {
     ltiContextId: { type: "string" },
     ltiConsumerId: { type: "string" },
     tag: TagSchema,
+    memoContent: { type: "string" },
     topic: {
       type: "object",
       required: ["id", "name", "timeRequired", "bookmarks"],
