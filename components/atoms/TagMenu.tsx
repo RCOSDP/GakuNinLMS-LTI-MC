@@ -5,6 +5,7 @@ import { Dropdown } from "@mui/base/Dropdown";
 import { Menu as BaseMenu, menuClasses } from "@mui/base/Menu";
 import { MenuButton as BaseMenuButton } from "@mui/base/MenuButton";
 import { MenuItem as BaseMenuItem, menuItemClasses } from "@mui/base/MenuItem";
+import AddReactionOutlinedIcon from "@mui/icons-material/AddReactionOutlined";
 import { styled } from "@mui/system";
 import type {
   BookmarkProps,
@@ -60,7 +61,15 @@ export default function TagMenu({
         toggleLocked();
       }}
     >
-      <MenuButton>タグを追加...</MenuButton>
+      <MenuButton>
+        <AddReactionOutlinedIcon
+          sx={{
+            fontSize: 16,
+            verticalAlign: "middle",
+          }}
+        />{" "}
+        タグを追加
+      </MenuButton>
       <Menu slots={{ listbox: Listbox }}>
         {filterTags.map((option) => (
           <MenuItem
