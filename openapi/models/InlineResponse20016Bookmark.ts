@@ -14,10 +14,6 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    InlineResponse20016Tag,
-    InlineResponse20016TagFromJSON,
-    InlineResponse20016TagFromJSONTyped,
-    InlineResponse20016TagToJSON,
     InlineResponse20016Topic,
     InlineResponse20016TopicFromJSON,
     InlineResponse20016TopicFromJSONTyped,
@@ -51,7 +47,7 @@ export interface InlineResponse20016Bookmark {
      * @type {number}
      * @memberof InlineResponse20016Bookmark
      */
-    tagId?: number;
+    tagId: number;
     /**
      * 
      * @type {number}
@@ -72,10 +68,10 @@ export interface InlineResponse20016Bookmark {
     ltiConsumerId?: string;
     /**
      * 
-     * @type {InlineResponse20016Tag}
+     * @type {object}
      * @memberof InlineResponse20016Bookmark
      */
-    tag?: InlineResponse20016Tag;
+    tag: object;
     /**
      * 
      * @type {string}
@@ -108,11 +104,11 @@ export function InlineResponse20016BookmarkFromJSONTyped(json: any, ignoreDiscri
         
         'id': json['id'],
         'topicId': json['topicId'],
-        'tagId': !exists(json, 'tagId') ? undefined : json['tagId'],
+        'tagId': json['tagId'],
         'userId': json['userId'],
         'ltiContextId': !exists(json, 'ltiContextId') ? undefined : json['ltiContextId'],
         'ltiConsumerId': !exists(json, 'ltiConsumerId') ? undefined : json['ltiConsumerId'],
-        'tag': !exists(json, 'tag') ? undefined : InlineResponse20016TagFromJSON(json['tag']),
+        'tag': json['tag'],
         'memoContent': !exists(json, 'memoContent') ? undefined : json['memoContent'],
         'topic': InlineResponse20016TopicFromJSON(json['topic']),
         'ltiContext': LTIContextFromJSON(json['ltiContext']),
@@ -134,7 +130,7 @@ export function InlineResponse20016BookmarkToJSON(value?: InlineResponse20016Boo
         'userId': value.userId,
         'ltiContextId': value.ltiContextId,
         'ltiConsumerId': value.ltiConsumerId,
-        'tag': InlineResponse20016TagToJSON(value.tag),
+        'tag': value.tag,
         'memoContent': value.memoContent,
         'topic': InlineResponse20016TopicToJSON(value.topic),
         'ltiContext': LTIContextToJSON(value.ltiContext),

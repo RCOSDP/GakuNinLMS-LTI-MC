@@ -54,6 +54,8 @@ export default function TagWithDeleteButton({
   bookmark,
   onDeleteBookmark,
 }: Props) {
+  if (!bookmark.tag) return null;
+
   return (
     <div className={tagClass}>
       <Emoji emoji={bookmark.tag.emoji} />

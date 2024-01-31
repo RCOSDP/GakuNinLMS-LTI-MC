@@ -1,6 +1,6 @@
-import type { BookmarkSchema, BookmarkTagMenu } from "$server/models/bookmark";
+import type { BookmarkTagMenu } from "$server/models/bookmark";
 
-export const bookmark: BookmarkSchema = {
+export const bookmark = {
   id: 42,
   userId: 1,
   tagId: 4,

@@ -36,7 +36,7 @@ export default async function findBookmarkStats(
   );
 
   const bookmarks = await prisma.bookmark.groupBy({
-    by: ["topicId", "tagId"],
+    by: ["topicId", "tagId", "memoContent"],
     _count: true,
     orderBy: {
       _max: {
@@ -57,7 +57,8 @@ export default async function findBookmarkStats(
 
   const stats: BookmarkStats = bookmarks.map((b) => ({
     topicId: b.topicId,
-    tagLabel: tagMenu.find((t) => t.id === b.tagId)?.label ?? "",
+    tagLabel:
+      tagMenu.find((t) => t && t.id === b.tagId)?.label ?? b.memoContent,
     totalCount: b._count,
   }));
 

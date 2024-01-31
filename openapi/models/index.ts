@@ -35,7 +35,7 @@ export * from './InlineResponse20015';
 export * from './InlineResponse20015Stats';
 export * from './InlineResponse20016';
 export * from './InlineResponse20016Bookmark';
-export * from './InlineResponse20016Tag';
+export * from './InlineResponse20016BookmarkTagMenu';
 export * from './InlineResponse20016Topic';
 export * from './InlineResponse20016TopicBookmarks';
 export * from './InlineResponse20017';

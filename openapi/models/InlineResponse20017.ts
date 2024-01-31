@@ -14,10 +14,10 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    InlineResponse20016Tag,
-    InlineResponse20016TagFromJSON,
-    InlineResponse20016TagFromJSONTyped,
-    InlineResponse20016TagToJSON,
+    InlineResponse20016BookmarkTagMenu,
+    InlineResponse20016BookmarkTagMenuFromJSON,
+    InlineResponse20016BookmarkTagMenuFromJSONTyped,
+    InlineResponse20016BookmarkTagMenuToJSON,
 } from './';
 
 /**
@@ -28,10 +28,10 @@ import {
 export interface InlineResponse20017 {
     /**
      * 
-     * @type {Array<InlineResponse20016Tag>}
+     * @type {Array<InlineResponse20016BookmarkTagMenu>}
      * @memberof InlineResponse20017
      */
-    bookmarkTagMenu: Array<InlineResponse20016Tag>;
+    bookmarkTagMenu: Array<InlineResponse20016BookmarkTagMenu>;
 }
 
 export function InlineResponse20017FromJSON(json: any): InlineResponse20017 {
@@ -44,7 +44,7 @@ export function InlineResponse20017FromJSONTyped(json: any, ignoreDiscriminator:
     }
     return {
         
-        'bookmarkTagMenu': ((json['bookmarkTagMenu'] as Array<any>).map(InlineResponse20016TagFromJSON)),
+        'bookmarkTagMenu': ((json['bookmarkTagMenu'] as Array<any>).map(InlineResponse20016BookmarkTagMenuFromJSON)),
     };
 }
 
@@ -57,7 +57,7 @@ export function InlineResponse20017ToJSON(value?: InlineResponse20017 | null): a
     }
     return {
         
-        'bookmarkTagMenu': ((value.bookmarkTagMenu as Array<any>).map(InlineResponse20016TagToJSON)),
+        'bookmarkTagMenu': ((value.bookmarkTagMenu as Array<any>).map(InlineResponse20016BookmarkTagMenuToJSON)),
     };
 }
 
