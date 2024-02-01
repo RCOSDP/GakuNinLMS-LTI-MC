@@ -380,8 +380,8 @@ model Bookmark {
   ltiConsumerId String     @map("lti_consumer_id")
   ltiContextId  String     @map("lti_context_id")
 
-  tagId Int @map("tag_id")
-  tag   Tag @relation(fields: [tagId], references: [id])
+  tagId Int? @map("tag_id")
+  tag   Tag? @relation(fields: [tagId], references: [id])
 
   userId Int  @map("user_id")
   user   User @relation(fields: [userId], references: [id])

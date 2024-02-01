@@ -36,6 +36,9 @@ import {
     InlineObject13,
     InlineObject13FromJSON,
     InlineObject13ToJSON,
+    InlineObject14,
+    InlineObject14FromJSON,
+    InlineObject14ToJSON,
     InlineObject2,
     InlineObject2FromJSON,
     InlineObject2ToJSON,
@@ -195,6 +198,10 @@ export interface ApiV2BookZoomMeetingIdGetRequest {
 
 export interface ApiV2BookmarkIdDeleteRequest {
     id: number;
+}
+
+export interface ApiV2BookmarkMemoContentPostRequest {
+    body?: InlineObject14;
 }
 
 export interface ApiV2BookmarkPostRequest {
@@ -806,6 +813,37 @@ export class DefaultApi extends runtime.BaseAPI {
      */
     async apiV2BookmarkIdDelete(requestParameters: ApiV2BookmarkIdDeleteRequest): Promise<void> {
         await this.apiV2BookmarkIdDeleteRaw(requestParameters);
+    }
+
+    /**
+     * 自由記述タグが付与されたブックマークを作成します。
+     * 自由記述タグ(memoContent)が付与されたブックマーク作成
+     */
+    async apiV2BookmarkMemoContentPostRaw(requestParameters: ApiV2BookmarkMemoContentPostRequest): Promise<runtime.ApiResponse<{ [key: string]: object; }>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/api/v2/bookmarkMemoContent`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: InlineObject14ToJSON(requestParameters.body),
+        });
+
+        return new runtime.JSONApiResponse<any>(response);
+    }
+
+    /**
+     * 自由記述タグが付与されたブックマークを作成します。
+     * 自由記述タグ(memoContent)が付与されたブックマーク作成
+     */
+    async apiV2BookmarkMemoContentPost(requestParameters: ApiV2BookmarkMemoContentPostRequest): Promise<{ [key: string]: object; }> {
+        const response = await this.apiV2BookmarkMemoContentPostRaw(requestParameters);
+        return await response.value();
     }
 
     /**

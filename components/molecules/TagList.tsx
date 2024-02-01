@@ -18,7 +18,9 @@ type Props = {
 export default function TagList({ topicId, bookmarks, tagMenu }: Props) {
   const handlers = useBookmarkHandler();
   const [selectedTag, setSelectedTag] = useState<TagSchema[]>(
-    bookmarks.map((bookmark) => bookmark.tag)
+    bookmarks
+      .map((bookmark) => bookmark.tag)
+      .filter((tag) => tag !== null) as TagSchema[]
   );
   const handleTagChange = useCallback((tag: TagSchema) => {
     setSelectedTag((prev) => [...prev, tag]);

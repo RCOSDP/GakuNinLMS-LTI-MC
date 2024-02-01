@@ -22,6 +22,9 @@ export default function TagCount({ topicId }: Props) {
     const countItems = tags.reduce<
       Record<number, BookmarkSchema["tag"] & { count: number }>
     >((acc, item) => {
+      if (!item) {
+        return acc;
+      }
       if (!acc[item.id]) {
         acc[item.id] = { ...item, count: 0 };
       }

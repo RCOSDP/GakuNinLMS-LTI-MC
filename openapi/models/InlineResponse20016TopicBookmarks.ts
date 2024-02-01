@@ -14,10 +14,6 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    InlineResponse20016Tag,
-    InlineResponse20016TagFromJSON,
-    InlineResponse20016TagFromJSONTyped,
-    InlineResponse20016TagToJSON,
     LTIContext,
     LTIContextFromJSON,
     LTIContextFromJSONTyped,
@@ -44,10 +40,16 @@ export interface InlineResponse20016TopicBookmarks {
     updatedAt: string;
     /**
      * 
-     * @type {InlineResponse20016Tag}
+     * @type {object}
      * @memberof InlineResponse20016TopicBookmarks
      */
-    tag: InlineResponse20016Tag;
+    tag?: object;
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineResponse20016TopicBookmarks
+     */
+    memoContent?: string;
     /**
      * 
      * @type {LTIContext}
@@ -68,7 +70,8 @@ export function InlineResponse20016TopicBookmarksFromJSONTyped(json: any, ignore
         
         'id': json['id'],
         'updatedAt': json['updatedAt'],
-        'tag': InlineResponse20016TagFromJSON(json['tag']),
+        'tag': !exists(json, 'tag') ? undefined : json['tag'],
+        'memoContent': !exists(json, 'memoContent') ? undefined : json['memoContent'],
         'ltiContext': LTIContextFromJSON(json['ltiContext']),
     };
 }
@@ -84,7 +87,8 @@ export function InlineResponse20016TopicBookmarksToJSON(value?: InlineResponse20
         
         'id': value.id,
         'updatedAt': value.updatedAt,
-        'tag': InlineResponse20016TagToJSON(value.tag),
+        'tag': value.tag,
+        'memoContent': value.memoContent,
         'ltiContext': LTIContextToJSON(value.ltiContext),
     };
 }

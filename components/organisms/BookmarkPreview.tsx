@@ -90,9 +90,10 @@ export default function BookmarkPreview({
         />
       </Box>
       <Box sx={{ display: "flex", flexWrap: "wrap" }}>
-        {courseBookmark.map((bookmark) => (
-          <Tag key={bookmark.tag.id} tag={bookmark.tag} />
-        ))}
+        {courseBookmark.map(
+          (bookmark) =>
+            bookmark?.tag && <Tag key={bookmark.tag.id} tag={bookmark.tag} />
+        )}
       </Box>
     </button>
   );

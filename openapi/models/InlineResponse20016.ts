@@ -18,10 +18,10 @@ import {
     InlineResponse20016BookmarkFromJSON,
     InlineResponse20016BookmarkFromJSONTyped,
     InlineResponse20016BookmarkToJSON,
-    InlineResponse20016Tag,
-    InlineResponse20016TagFromJSON,
-    InlineResponse20016TagFromJSONTyped,
-    InlineResponse20016TagToJSON,
+    InlineResponse20016BookmarkTagMenu,
+    InlineResponse20016BookmarkTagMenuFromJSON,
+    InlineResponse20016BookmarkTagMenuFromJSONTyped,
+    InlineResponse20016BookmarkTagMenuToJSON,
 } from './';
 
 /**
@@ -38,10 +38,10 @@ export interface InlineResponse20016 {
     bookmark: Array<InlineResponse20016Bookmark>;
     /**
      * 
-     * @type {Array<InlineResponse20016Tag>}
+     * @type {Array<InlineResponse20016BookmarkTagMenu>}
      * @memberof InlineResponse20016
      */
-    bookmarkTagMenu?: Array<InlineResponse20016Tag>;
+    bookmarkTagMenu?: Array<InlineResponse20016BookmarkTagMenu>;
 }
 
 export function InlineResponse20016FromJSON(json: any): InlineResponse20016 {
@@ -55,7 +55,7 @@ export function InlineResponse20016FromJSONTyped(json: any, ignoreDiscriminator:
     return {
         
         'bookmark': ((json['bookmark'] as Array<any>).map(InlineResponse20016BookmarkFromJSON)),
-        'bookmarkTagMenu': !exists(json, 'bookmarkTagMenu') ? undefined : ((json['bookmarkTagMenu'] as Array<any>).map(InlineResponse20016TagFromJSON)),
+        'bookmarkTagMenu': !exists(json, 'bookmarkTagMenu') ? undefined : ((json['bookmarkTagMenu'] as Array<any>).map(InlineResponse20016BookmarkTagMenuFromJSON)),
     };
 }
 
@@ -69,7 +69,7 @@ export function InlineResponse20016ToJSON(value?: InlineResponse20016 | null): a
     return {
         
         'bookmark': ((value.bookmark as Array<any>).map(InlineResponse20016BookmarkToJSON)),
-        'bookmarkTagMenu': value.bookmarkTagMenu === undefined ? undefined : ((value.bookmarkTagMenu as Array<any>).map(InlineResponse20016TagToJSON)),
+        'bookmarkTagMenu': value.bookmarkTagMenu === undefined ? undefined : ((value.bookmarkTagMenu as Array<any>).map(InlineResponse20016BookmarkTagMenuToJSON)),
     };
 }
 
