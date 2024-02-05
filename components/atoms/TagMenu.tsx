@@ -71,7 +71,7 @@ export default function TagMenu({
     defaultValues,
   });
 
-  if (filterTags.length === 0) {
+  if (filterTags.length === 0 && isBookmarkMemoContent) {
     return null;
   }
 
