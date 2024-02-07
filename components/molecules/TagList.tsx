@@ -8,6 +8,8 @@ import type {
   TagSchema,
 } from "$server/models/bookmark";
 import { useCallback, useState } from "react";
+import IconButton from "$atoms/IconButton";
+import QuestionMarkIcon from "@mui/icons-material/QuestionMark";
 
 type Props = {
   topicId: number;
@@ -25,6 +27,10 @@ export default function TagList({ topicId, bookmarks, tagMenu }: Props) {
   const handleTagChange = useCallback((tag: TagSchema) => {
     setSelectedTag((prev) => [...prev, tag]);
   }, []);
+
+  const isBookmarkMemoContent = bookmarks.some(
+    (bookmark) => bookmark.tag === null
+  );
 
   return (
     <Box
@@ -59,13 +65,41 @@ export default function TagList({ topicId, bookmarks, tagMenu }: Props) {
           />
         );
       })}
+      {bookmarks
+        .filter((bookmark) => {
+          // bookmark.memoContentが存在する場合(自由記述タグ)は末尾に別途表示する
+          return bookmark.tag === null;
+        })
+        .map((bookmark) => {
+          return (
+            <TagWithDeleteButton
+              key={bookmark.id}
+              topicId={topicId}
+              bookmark={bookmark}
+              {...handlers}
+            />
+          );
+        })}
       <TagMenu
         topicId={topicId}
         selectedTag={selectedTag}
         tagMenu={tagMenu}
         handleTagChange={handleTagChange}
+        isBookmarkMemoContent={isBookmarkMemoContent}
         {...handlers}
       />
+      <IconButton
+        tooltipProps={{
+          title: "自由記述タグはデータ利用されます。",
+        }}
+      >
+        <QuestionMarkIcon
+          sx={{
+            fontSize: 16,
+            verticalAlign: "middle",
+          }}
+        />
+      </IconButton>
     </Box>
   );
 }

@@ -4,6 +4,7 @@ import { api } from "../api";
 import type { BookmarkProps, BookmarkSchema } from "$server/models/bookmark";
 import { useCallback } from "react";
 import type { BookmarkParams } from "$server/validators/bookmarkParams";
+import type { BookmarkMemoContentProps } from "$server/models/bookmarkMemoContent";
 
 const key = "/api/v2/bookmark";
 
@@ -21,6 +22,14 @@ async function deleteBookmark(
   await mutate({ key, topicId, isAllUsers: false }, res);
 }
 
+async function createBookmarkMemoContent(
+  body: BookmarkMemoContentProps
+): Promise<BookmarkSchema> {
+  const res = await api.apiV2BookmarkMemoContentPost({ body });
+  await mutate({ key, topicId: body.topicId, isAllUsers: false }, res);
+  return res as unknown as BookmarkSchema;
+}
+
 function useBookmarkHandler() {
   const onSubmitBookmark = useCallback(async (body: BookmarkProps) => {
     await createBookmark(body);
@@ -33,9 +42,17 @@ function useBookmarkHandler() {
     []
   );
 
+  const onSubmitBookmarkMemoContent = useCallback(
+    async (body: BookmarkMemoContentProps) => {
+      await createBookmarkMemoContent(body);
+    },
+    []
+  );
+
   const handlers = {
     onSubmitBookmark,
     onDeleteBookmark,
+    onSubmitBookmarkMemoContent,
   };
 
   return handlers;

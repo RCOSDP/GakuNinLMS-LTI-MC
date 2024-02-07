@@ -16,7 +16,9 @@ export const Default: Story = {
       selectedTag={[bookmark.tag]}
       tagMenu={bookmarkTagMenu}
       handleTagChange={() => {}}
+      isBookmarkMemoContent={false}
       onSubmitBookmark={async () => {}}
+      onSubmitBookmarkMemoContent={async () => {}}
     />
   ),
 };

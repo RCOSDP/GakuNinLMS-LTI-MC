@@ -96,9 +96,10 @@ async function findBookmarks({
   } else if (tagIds !== undefined) {
     const bookmark = await prisma.bookmark.findMany({
       where: {
-        OR: tagIds.map((tagId) => ({
-          tagId: tagId,
-        })),
+        OR:
+          tagIds.map((tagId) => ({
+            tagId: tagId,
+          })) || null,
         userId: userId,
       },
       distinct: ["ltiConsumerId", "ltiContextId", "topicId"],
