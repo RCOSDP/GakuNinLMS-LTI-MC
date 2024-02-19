@@ -3,6 +3,7 @@ import TagWithDeleteButton from "$atoms/TagWithDeleteButton";
 import TagMenu from "$atoms/TagMenu";
 import useBookmarkHandler from "$utils/bookmark/useBookmarkHandler";
 import type {
+  BookmarkProps,
   BookmarkSchema,
   BookmarkTagMenu,
   TagSchema,
@@ -10,6 +11,9 @@ import type {
 import { useCallback, useState } from "react";
 import IconButton from "$atoms/IconButton";
 import QuestionMarkIcon from "@mui/icons-material/QuestionMark";
+import useDialogProps from "$utils/useDialogProps";
+import type { BookmarkParams } from "$server/validators/bookmarkParams";
+import BookmarkDialog from "$organisms/BookmarkDialog";
 
 type Props = {
   topicId: number;
@@ -30,6 +34,20 @@ export default function TagList({ topicId, bookmarks, tagMenu }: Props) {
 
   const isBookmarkMemoContent = bookmarks.some(
     (bookmark) => bookmark.tag === null
+  );
+  const {
+    data: bookmarkData,
+    dispatch: bookmarkDispatch,
+    ...bookmarkDialogProps
+  } = useDialogProps<{
+    id: BookmarkParams["id"];
+    topicId: BookmarkProps["topicId"];
+  }>();
+
+  const handleBookmarkDeleteClick = useCallback(
+    (id: BookmarkParams["id"], topicId: BookmarkProps["topicId"]) =>
+      bookmarkDispatch({ id, topicId }),
+    [bookmarkDispatch]
   );
 
   return (
@@ -76,7 +94,7 @@ export default function TagList({ topicId, bookmarks, tagMenu }: Props) {
               key={bookmark.id}
               topicId={topicId}
               bookmark={bookmark}
-              {...handlers}
+              onDeleteBookmark={handleBookmarkDeleteClick}
             />
           );
         })}
@@ -100,6 +118,13 @@ export default function TagList({ topicId, bookmarks, tagMenu }: Props) {
           }}
         />
       </IconButton>
+      {bookmarkData && (
+        <BookmarkDialog
+          bookmarkdata={bookmarkData}
+          onDeleteBookmark={handlers.onDeleteBookmark}
+          {...bookmarkDialogProps}
+        />
+      )}
     </Box>
   );
 }

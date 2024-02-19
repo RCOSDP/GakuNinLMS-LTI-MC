@@ -46,7 +46,7 @@ const closeButton = css({
 type Props = {
   topicId: BookmarkProps["topicId"];
   bookmark: BookmarkSchema;
-  onDeleteBookmark: (id: number, topicId: number) => Promise<void>;
+  onDeleteBookmark: (id: number, topicId: number) => Promise<void> | void;
 };
 
 export default function TagWithDeleteButton({
