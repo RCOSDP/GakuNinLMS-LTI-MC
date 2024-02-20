@@ -3,6 +3,7 @@ import TagWithDeleteButton from "$atoms/TagWithDeleteButton";
 import TagMenu from "$atoms/TagMenu";
 import useBookmarkHandler from "$utils/bookmark/useBookmarkHandler";
 import type {
+  BookmarkProps,
   BookmarkSchema,
   BookmarkTagMenu,
   TagSchema,
@@ -10,6 +11,8 @@ import type {
 import { useCallback, useState } from "react";
 import IconButton from "$atoms/IconButton";
 import QuestionMarkIcon from "@mui/icons-material/QuestionMark";
+import { useConfirm } from "material-ui-confirm";
+import type { BookmarkParams } from "$server/validators/bookmarkParams";
 
 type Props = {
   topicId: number;
@@ -31,6 +34,19 @@ export default function TagList({ topicId, bookmarks, tagMenu }: Props) {
   const isBookmarkMemoContent = bookmarks.some(
     (bookmark) => bookmark.tag === null
   );
+
+  const confirm = useConfirm();
+  const handleBookmarkDeleteClick = async (
+    id: BookmarkParams["id"],
+    topicId: BookmarkProps["topicId"]
+  ) => {
+    await confirm({
+      title: `メモを削除します。よろしいですか？`,
+      cancellationText: "キャンセル",
+      confirmationText: "OK",
+    });
+    await handlers.onDeleteBookmark(id, topicId);
+  };
 
   return (
     <Box
@@ -76,7 +92,7 @@ export default function TagList({ topicId, bookmarks, tagMenu }: Props) {
               key={bookmark.id}
               topicId={topicId}
               bookmark={bookmark}
-              {...handlers}
+              onDeleteBookmark={handleBookmarkDeleteClick}
             />
           );
         })}
