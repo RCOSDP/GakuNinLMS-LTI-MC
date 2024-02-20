@@ -11,9 +11,8 @@ import type {
 import { useCallback, useState } from "react";
 import IconButton from "$atoms/IconButton";
 import QuestionMarkIcon from "@mui/icons-material/QuestionMark";
-import useDialogProps from "$utils/useDialogProps";
+import { useConfirm } from "material-ui-confirm";
 import type { BookmarkParams } from "$server/validators/bookmarkParams";
-import BookmarkDialog from "$organisms/BookmarkDialog";
 
 type Props = {
   topicId: number;
@@ -35,20 +34,19 @@ export default function TagList({ topicId, bookmarks, tagMenu }: Props) {
   const isBookmarkMemoContent = bookmarks.some(
     (bookmark) => bookmark.tag === null
   );
-  const {
-    data: bookmarkData,
-    dispatch: bookmarkDispatch,
-    ...bookmarkDialogProps
-  } = useDialogProps<{
-    id: BookmarkParams["id"];
-    topicId: BookmarkProps["topicId"];
-  }>();
 
-  const handleBookmarkDeleteClick = useCallback(
-    (id: BookmarkParams["id"], topicId: BookmarkProps["topicId"]) =>
-      bookmarkDispatch({ id, topicId }),
-    [bookmarkDispatch]
-  );
+  const confirm = useConfirm();
+  const handleBookmarkDeleteClick = async (
+    id: BookmarkParams["id"],
+    topicId: BookmarkProps["topicId"]
+  ) => {
+    await confirm({
+      title: `メモを削除します。よろしいですか？`,
+      cancellationText: "キャンセル",
+      confirmationText: "OK",
+    });
+    await handlers.onDeleteBookmark(id, topicId);
+  };
 
   return (
     <Box
@@ -118,13 +116,6 @@ export default function TagList({ topicId, bookmarks, tagMenu }: Props) {
           }}
         />
       </IconButton>
-      {bookmarkData && (
-        <BookmarkDialog
-          bookmarkdata={bookmarkData}
-          onDeleteBookmark={handlers.onDeleteBookmark}
-          {...bookmarkDialogProps}
-        />
-      )}
     </Box>
   );
 }
