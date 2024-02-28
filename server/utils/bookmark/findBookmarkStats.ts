@@ -36,7 +36,7 @@ export default async function findBookmarkStats(
   );
 
   const bookmarks = await prisma.bookmark.groupBy({
-    by: ["topicId", "tagId", "memoContent"],
+    by: ["topicId", "tagId"],
     _count: true,
     orderBy: {
       _max: {
@@ -55,12 +55,14 @@ export default async function findBookmarkStats(
         },
   });
 
-  const stats: BookmarkStats = bookmarks.map((b) => ({
-    topicId: b.topicId,
-    tagLabel:
-      tagMenu.find((t) => t && t.id === b.tagId)?.label ?? b.memoContent,
-    totalCount: b._count,
-  }));
+  // 自由記述のタグは別途ワードクラウドで表示するため、タグが存在しないブックマークは除外する
+  const stats: BookmarkStats = bookmarks
+    .filter((bookmark) => bookmark.tagId !== null)
+    .map((b) => ({
+      topicId: b.topicId,
+      tagLabel: tagMenu.find((t) => t && t.id === b.tagId)?.label ?? "",
+      totalCount: b._count,
+    }));
 
   return stats;
 }
