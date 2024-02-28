@@ -39,7 +39,7 @@ export async function index({
   query,
   session,
 }: FastifyRequest<{ Querystring: Query }>) {
-  const { topicId, tagIds, isAllUsers } = query;
+  const { topicId, tagIds, isExistMemoContent, isAllUsers } = query;
 
   if (topicId !== undefined) {
     const bookmarks = await findBookmarks({
@@ -53,7 +53,7 @@ export async function index({
       status: 200,
       body: bookmarks,
     };
-  } else if (tagIds !== undefined) {
+  } else if (tagIds !== undefined || isExistMemoContent) {
     const params = new URLSearchParams(tagIds);
     const ids = params.getAll("tagIds").map(Number);
 
@@ -61,6 +61,7 @@ export async function index({
       ltiContextId: session.ltiContext.id,
       ltiConsumerId: session.oauthClient.id,
       tagIds: ids,
+      isExistMemoContent,
       userId: isAllUsers ? undefined : session.user.id,
     });
 

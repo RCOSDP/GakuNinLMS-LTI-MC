@@ -26,19 +26,21 @@ function useBookmarks(query: BookmarkQuery) {
   return { bookmarks, bookmarkTagMenu, isLoading };
 }
 
-export function useBookmarksByTagId({
+export function useFilterBookmarks({
   tagIds,
+  isExistMemoContent = false,
 }: {
-  tagIds: Extract<BookmarkQuery, { tagIds: string }>["tagIds"];
+  tagIds?: BookmarkQuery["tagIds"];
+  isExistMemoContent?: BookmarkQuery["isExistMemoContent"];
 }) {
-  return useBookmarks({ tagIds, isAllUsers: false });
+  return useBookmarks({ tagIds, isExistMemoContent, isAllUsers: false });
 }
 
 export function useBookmarksByTopicId({
   topicId,
   isAllUsers = false,
 }: {
-  topicId: Extract<BookmarkQuery, { topicId: number }>["topicId"];
+  topicId: BookmarkQuery["topicId"];
   isAllUsers?: BookmarkQuery["isAllUsers"];
 }) {
   return useBookmarks({ topicId, isAllUsers });

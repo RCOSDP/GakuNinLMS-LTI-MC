@@ -1,17 +1,15 @@
 import React, { useCallback, useState } from "react";
-import clsx from "clsx";
 import { Box, Card, Container, Typography } from "@mui/material";
-import CheckIcon from "@mui/icons-material/Check";
-
 import { css } from "@emotion/css";
-import { primary, gray } from "$theme/colors";
+import { gray } from "$theme/colors";
 
 import type { BookmarkTagMenu, TagSchema } from "$server/models/bookmark";
-import { useBookmarksByTagId } from "$utils/bookmark/useBookmarks";
+import { useFilterBookmarks } from "$utils/bookmark/useBookmarks";
 import useDialogProps from "$utils/useDialogProps";
 import TopicPreviewDialog from "$organisms/TopicPreviewDialog";
 import BookmarkPreview from "$organisms/BookmarkPreview";
 import type { TopicSchema } from "$server/models/topic";
+import BookmarkMultiSelect from "$molecules/BookmarkMultiSelect";
 
 const title = css({
   fontSize: 32,
@@ -32,42 +30,8 @@ const header = css({
   gap: 16,
 });
 
-const listWrap = css({
-  margin: 0,
-  padding: 0,
-  display: "flex",
-  gap: 8,
-});
-
 const body = css({
   backgroundColor: "#FFF",
-});
-
-const list = css({
-  listStyle: "none",
-});
-
-const button = css({
-  display: "inline-block",
-  background: "none",
-  cursor: "pointer",
-  border: `1px solid ${primary[400]}`,
-  color: primary[400],
-  borderRadius: 4,
-  padding: "8px 16px",
-  height: "36px",
-});
-
-const disabledButton = css({
-  background: gray[100],
-  color: gray[700],
-  border: `1px solid ${gray[300]}`,
-});
-
-const checkIcon = css({
-  fontSize: "12px",
-  marginRight: 8,
-  lineHeight: 1.1,
 });
 
 const bookmarkWrap = css({
@@ -80,39 +44,48 @@ const bookmarkList = css({
   borderBottom: `1px solid ${gray[300]}`,
 });
 
+const empty = css({
+  padding: "16px",
+  textAlign: "center",
+});
+
 type Props = {
   bookmarkTagMenu: BookmarkTagMenu;
 };
 
 function isSelectedTagMenu(
-  targetTagId: TagSchema["id"],
-  selectedTagMenu: BookmarkTagMenu
+  targetTagIds: TagSchema["id"][],
+  selectedTagIds: TagSchema["id"][]
 ) {
-  return selectedTagMenu.some((tag) => tag.id === targetTagId);
+  return targetTagIds.every((id) => selectedTagIds.includes(id));
 }
 
 export default function Bookmarks({ bookmarkTagMenu }: Props) {
-  const [selectedTagMenu, setSelectedTagMenu] =
-    useState<BookmarkTagMenu>(bookmarkTagMenu);
+  const [selectedTagIds, setSelectedTagIds] = useState<TagSchema["id"][]>([
+    bookmarkTagMenu[0].id,
+  ]);
+  const [isExistMemoContent, setIsBookmarkMemoContent] = useState(false);
+
   const onClickTagMenu = useCallback(
-    (tag: TagSchema) => {
-      if (isSelectedTagMenu(tag.id, selectedTagMenu)) {
-        setSelectedTagMenu((prev) =>
-          prev.filter((selectedTag) => selectedTag.id !== tag.id)
-        );
+    (tagIds: TagSchema["id"][]) => {
+      if (isSelectedTagMenu(tagIds, selectedTagIds)) {
+        setSelectedTagIds((prev) => prev.filter((id) => tagIds.includes(id)));
       } else {
-        setSelectedTagMenu((prev) => [...prev, tag]);
+        setSelectedTagIds(tagIds);
       }
     },
-    [selectedTagMenu]
+    [selectedTagIds]
   );
 
-  const data = useBookmarksByTagId({
+  const onClickMemoContent = useCallback(() => {
+    setIsBookmarkMemoContent((prev) => !prev);
+  }, []);
+
+  const data = useFilterBookmarks({
     tagIds: String(
-      new URLSearchParams(
-        selectedTagMenu.map((tag) => ["tagIds", tag.id.toString()])
-      )
+      new URLSearchParams(selectedTagIds.map((id) => ["tagIds", id.toString()]))
     ),
+    isExistMemoContent,
   });
 
   const {
@@ -128,40 +101,31 @@ export default function Bookmarks({ bookmarkTagMenu }: Props) {
       </Typography>
       <Card className={card}>
         <Box className={header}>
-          <ul className={listWrap}>
-            {bookmarkTagMenu.map((tag) => {
-              return (
-                <li key={tag.id} className={list}>
-                  <button
-                    className={clsx(button, {
-                      [disabledButton]: !isSelectedTagMenu(
-                        tag.id,
-                        selectedTagMenu
-                      ),
-                    })}
-                    onClick={() => onClickTagMenu(tag)}
-                  >
-                    <CheckIcon className={checkIcon} />
-                    {tag.label}
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
+          <BookmarkMultiSelect
+            tags={bookmarkTagMenu}
+            onTagSelect={onClickTagMenu}
+            onClickMemoContent={onClickMemoContent}
+          />
         </Box>
         <Box className={body}>
-          <ul className={bookmarkWrap}>
-            {data.bookmarks.map((bookmark) => {
-              return (
-                <li key={bookmark.id} className={bookmarkList}>
-                  <BookmarkPreview
-                    bookmark={bookmark}
-                    onBookmarkPreviewClick={handlePreviewClick}
-                  />
-                </li>
-              );
-            })}
-          </ul>
+          {!data.bookmarks.length ? (
+            <div className={empty}>
+              <p>ブックマークが存在しません</p>
+            </div>
+          ) : (
+            <ul className={bookmarkWrap}>
+              {data.bookmarks.map((bookmark) => {
+                return (
+                  <li key={bookmark.id} className={bookmarkList}>
+                    <BookmarkPreview
+                      bookmark={bookmark}
+                      onBookmarkPreviewClick={handlePreviewClick}
+                    />
+                  </li>
+                );
+              })}
+            </ul>
+          )}
         </Box>
       </Card>
       {previewContent?.id && (

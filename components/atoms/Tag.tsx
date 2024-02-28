@@ -1,5 +1,5 @@
 import { css } from "@emotion/css";
-import type { TagSchema } from "$server/models/bookmark";
+import type { BookmarkSchema, TagSchema } from "$server/models/bookmark";
 import Emoji from "./Emoji";
 
 const tagClass = css({
@@ -27,14 +27,17 @@ const text = css({
 });
 
 type Props = {
-  tag: TagSchema;
+  tag?: TagSchema;
+  memoContent?: BookmarkSchema["memoContent"];
 };
 
-export default function Tag({ tag }: Props) {
+export default function Tag({ tag, memoContent }: Props) {
+  if (!tag && !memoContent) return null;
+
   return (
     <div className={tagClass}>
-      <Emoji emoji={tag.emoji} />
-      <p className={text}>{tag.label}</p>
+      <Emoji emoji={tag?.emoji || "📔"} />
+      <p className={text}>{tag?.label || memoContent}</p>
     </div>
   );
 }

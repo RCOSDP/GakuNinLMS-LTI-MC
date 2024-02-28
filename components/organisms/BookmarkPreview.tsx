@@ -90,10 +90,16 @@ export default function BookmarkPreview({
         />
       </Box>
       <Box sx={{ display: "flex", flexWrap: "wrap" }}>
-        {courseBookmark.map(
-          (bookmark) =>
-            bookmark?.tag && <Tag key={bookmark.tag.id} tag={bookmark.tag} />
-        )}
+        {courseBookmark.map((bookmark) => {
+          if (bookmark.tag) {
+            return <Tag key={bookmark.id} tag={bookmark.tag} />;
+          }
+          if (bookmark.memoContent) {
+            return <Tag key={bookmark.id} memoContent={bookmark.memoContent} />;
+          }
+
+          return null;
+        })}
       </Box>
     </button>
   );

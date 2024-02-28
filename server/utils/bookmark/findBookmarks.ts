@@ -1,14 +1,17 @@
 import type { BookmarkSchema, BookmarkTagMenu } from "$server/models/bookmark";
 import prisma from "$server/utils/prisma";
+import type { BookmarkQuery } from "$server/validators/bookmarkQuery";
 import type { User } from "@prisma/client";
 
 type TopicIdParam = {
   topicId: BookmarkSchema["topicId"];
   tagIds?: BookmarkSchema["tagId"][];
+  isExistMemoContent?: BookmarkQuery["isExistMemoContent"];
 };
 type TagIdParam = {
   topicId?: BookmarkSchema["topicId"];
   tagIds: BookmarkSchema["tagId"][];
+  isExistMemoContent?: BookmarkQuery["isExistMemoContent"];
 };
 
 type FindBookmarksParams = {
@@ -53,6 +56,7 @@ export const createIncludeQueryWithUserContext = (userId?: User["id"]) => {
               id: true,
               updatedAt: true,
               tag: true,
+              memoContent: true,
               ltiContext: true,
             },
             where: {
@@ -71,6 +75,7 @@ async function findBookmarks({
   ltiConsumerId,
   topicId,
   tagIds,
+  isExistMemoContent = false,
   userId,
 }: FindBookmarksParams): Promise<{
   bookmark: BookmarkSchema[];
@@ -94,12 +99,15 @@ async function findBookmarks({
       bookmarkTagMenu,
     };
   } else if (tagIds !== undefined) {
+    const query = isExistMemoContent ? { memoContent: { not: "" } } : undefined;
+
     const bookmark = await prisma.bookmark.findMany({
       where: {
         OR:
           tagIds.map((tagId) => ({
             tagId: tagId,
           })) || null,
+        ...query,
         userId: userId,
       },
       distinct: ["ltiConsumerId", "ltiContextId", "topicId"],
