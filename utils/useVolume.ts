@@ -28,7 +28,7 @@ const defaultValues: Volume = { volume: 1, muted: false };
 
 /** Storage への保存処理 */
 function save({ volume, muted }: Volume) {
-  localStorage.setItem(key, volume.toString());
+  if (Number.isFinite(volume)) localStorage.setItem(key, volume.toString());
   if (muted) localStorage.setItem(muteKey, mutedState);
   else localStorage.removeItem(muteKey);
 }
@@ -55,8 +55,8 @@ function setVolume(player: Player, data: Volume): void {
 /** 動画プレイヤーからの音量の取得処理 */
 async function getVolume(player: Player): Promise<Volume> {
   const [volume, muted] = await Promise.all([
-    player instanceof VimeoPlayer ? player.getVolume() : player.volume(),
-    player instanceof VimeoPlayer ? player.getMuted() : player.muted(),
+    player instanceof VimeoPlayer ? player.getVolume() : player.volume() ?? NaN,
+    player instanceof VimeoPlayer ? player.getMuted() : player.muted() ?? false,
   ]);
   return { volume, muted };
 }

@@ -71,8 +71,8 @@ export async function index(req: FastifyRequest<{ Querystring: Query }>) {
     contentItems: [
       {
         type: "ltiResourceLink",
-        title: book.name,
-        text: book.description,
+        title: req.session.ltiDlSettings?.title || "",
+        text: req.session.ltiDlSettings?.text || "",
         url: `${
           FRONTEND_ORIGIN || `${req.protocol}://${req.hostname}`
         }/book?bookId=${book.id}`,

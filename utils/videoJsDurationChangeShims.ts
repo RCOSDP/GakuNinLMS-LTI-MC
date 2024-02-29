@@ -15,8 +15,10 @@ function videoJsDurationChangeShims(
     // NOTE: wowza(hlsjs)の場合、play直後は再生時間が取れないため、ほんの少し待機する
     const intervalID = setInterval(() => {
       const duration = player.duration();
-      handler({ duration });
-      if (duration) clearInterval(intervalID);
+      if (duration) {
+        handler({ duration });
+        clearInterval(intervalID);
+      }
     });
     setTimeout(() => {
       clearInterval(intervalID);

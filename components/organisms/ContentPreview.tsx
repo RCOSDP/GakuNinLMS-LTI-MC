@@ -113,7 +113,10 @@ const Preview = styled(Card)(({ theme }) => ({
   },
 }));
 
-type Props = Parameters<typeof Checkbox>[0] & {
+export type ContentPreviewProps = Omit<
+  Parameters<typeof Checkbox>[0],
+  "content"
+> & {
   content: ContentSchema;
   onContentPreviewClick(content: ContentSchema): void;
   onContentEditClick?(content: ContentSchema): void;
@@ -124,7 +127,6 @@ type Props = Parameters<typeof Checkbox>[0] & {
   onKeywordClick(keyword: Pick<KeywordSchema, "name">): void;
   onRelatedBookClick?(id: RelatedBook): void;
   linked?: boolean;
-  isDeepLink?: boolean;
 };
 
 export default function ContentPreview({
@@ -136,10 +138,9 @@ export default function ContentPreview({
   onKeywordClick,
   onRelatedBookClick,
   linked = content.type === "book" ? false : undefined,
-  isDeepLink,
   checked,
   ...checkboxProps
-}: Props) {
+}: ContentPreviewProps) {
   const lineClamp = useLineClampStyles({
     fontSize: "0.75rem",
     lineClamp: 2,
@@ -179,7 +180,7 @@ export default function ContentPreview({
             />
           ))}
         {content.shared && <SharedIndicator className="shared" />}
-        {!isDeepLink && onContentEditClick && (
+        {onContentEditClick && (
           <EditButton
             className="edit-button"
             variant={content.type}

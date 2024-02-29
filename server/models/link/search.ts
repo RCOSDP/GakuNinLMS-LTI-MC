@@ -25,7 +25,7 @@ export type LinkSearchResultSchema = FromSchema<
           format: "date-time";
         };
         output: Date;
-      }
+      },
     ];
   }
 >;

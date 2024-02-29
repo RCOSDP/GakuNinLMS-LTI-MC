@@ -1,7 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
 import stream from "node:stream/promises";
-import got from "got";
 import format from "date-fns/format";
 import utcToZoneTime from "date-fns-tz/utcToZonedTime";
 
@@ -33,18 +32,22 @@ import type {
 import {
   zoomRequestToken,
   zoomRequest,
+  zoomRequestWithoutParse,
   zoomListRequest,
 } from "$server/utils/zoom/api";
 import { logger } from "$server/utils/zoom/env";
+import { streamFetcher } from "./fetcher";
 
 export async function zoomImport() {
   const uploadEnabled =
     ZOOM_IMPORT_TO == "wowza" && validateWowzaSettings(false);
   if (!uploadEnabled) return;
 
-  const zoomUsers = (await zoomListRequest("/users", "users", {
-    page_size: 300,
-  })) as ZoomUsersResponse["users"];
+  const zoomUsers = await zoomListRequest<ZoomUsersResponse["users"]>(
+    "/users",
+    "users",
+    { page_size: "300" }
+  );
   for (const zoomUser of zoomUsers) {
     const user = await findUserByEmailAndLtiConsumerId(
       zoomUser.email,
@@ -110,11 +113,12 @@ class ZoomImport {
 
   async importBooks() {
     try {
-      const meetings = (await zoomListRequest(
-        `/users/${this.zoomUserId}/recordings`,
-        "meetings",
-        { page_size: 300, from: this.fromDate() }
-      )) as ZoomRecordingsListResponse["meetings"];
+      const meetings = await zoomListRequest<
+        ZoomRecordingsListResponse["meetings"]
+      >(`/users/${this.zoomUserId}/recordings`, "meetings", {
+        page_size: "300",
+        from: this.fromDate(),
+      });
       meetings.sort((a, b) => a.start_time.localeCompare(b.start_time));
 
       const transactions = [];
@@ -136,7 +140,7 @@ class ZoomImport {
       if (!ZOOM_IMPORT_DISABLE_AUTOPUBLIC)
         await prisma.$transaction(this.getPublicBooks(results));
       for (const deletemeeting of deletemeetings) {
-        await zoomRequest(
+        await zoomRequestWithoutParse(
           `/meetings/${deletemeeting}/recordings`,
           { action: "trash" },
           "DELETE"
@@ -203,9 +207,13 @@ class ZoomImport {
 
       const startTime = new Date(meeting.start_time);
       const file = path.join(this.tmpdir, `${fileId}.mp4`);
-      const fileStream = got
-        .stream(`${downloadUrl}?access_token=${await zoomRequestToken()}`)
-        .pipe(fs.createWriteStream(file));
+
+      const fileStream = await streamFetcher({
+        url: `${downloadUrl}?access_token=${await zoomRequestToken()}`,
+      });
+
+      fileStream.pipe(fs.createWriteStream(file));
+
       await stream.finished(fileStream);
 
       const video = {
@@ -305,9 +313,7 @@ class ZoomImport {
     id: number;
   }): Promise<ZoomMeetingResponse | { agenda: "" }> {
     try {
-      return (await zoomRequest(
-        `/meetings/${meeting.id}`
-      )) as ZoomMeetingResponse;
+      return await zoomRequest<ZoomMeetingResponse>(`/meetings/${meeting.id}`);
     } catch (e) {
       return { agenda: "" };
     }

@@ -1,7 +1,12 @@
-const { basename, resolve } = require("path");
-const { sync: glob } = require("glob");
+import { StorybookConfig } from "@storybook/nextjs";
+import { basename, dirname, join, resolve } from "path";
+import { sync as glob } from "glob";
 
-module.exports = {
+function getAbsolutePath(value) {
+  return dirname(require.resolve(join(value, "package.json")));
+}
+
+const config: StorybookConfig = {
   webpackFinal: async (config) => {
     glob(`../*/`, { cwd: __dirname })
       .map((path) => basename(path))
@@ -21,7 +26,21 @@ module.exports = {
       });
     return config;
   },
+
   stories: ["../components/**/*.stories.tsx"],
-  addons: ["@storybook/addon-a11y", "@storybook/addon-essentials"],
-  core: { builder: "webpack5" },
+  addons: [
+    getAbsolutePath("@storybook/addon-a11y"),
+    getAbsolutePath("@storybook/addon-essentials"),
+  ],
+
+  framework: {
+    name: getAbsolutePath("@storybook/nextjs"),
+    options: {},
+  },
+
+  docs: {
+    autodocs: true,
+  },
 };
+
+export default config;
