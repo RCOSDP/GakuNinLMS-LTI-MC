@@ -403,6 +403,10 @@ export interface ApiV2UsersEmailGetRequest {
     email: string;
 }
 
+export interface ApiV2WordCloudBookIdGetRequest {
+    bookId: string;
+}
+
 export interface ApiV2WowzaWildcardGetRequest {
     accessToken: string;
     wildcard: string;
@@ -2459,6 +2463,38 @@ export class DefaultApi extends runtime.BaseAPI {
      */
     async apiV2UsersEmailGet(requestParameters: ApiV2UsersEmailGetRequest): Promise<Array<ApiV2LtiMembersUser>> {
         const response = await this.apiV2UsersEmailGetRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * ワードクラウドに関するデータを取得します。 教員または管理者でなければなりません。
+     * ワードクラウド
+     */
+    async apiV2WordCloudBookIdGetRaw(requestParameters: ApiV2WordCloudBookIdGetRequest): Promise<runtime.ApiResponse<Array<Array<object>>>> {
+        if (requestParameters.bookId === null || requestParameters.bookId === undefined) {
+            throw new runtime.RequiredError('bookId','Required parameter requestParameters.bookId was null or undefined when calling apiV2WordCloudBookIdGet.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/api/v2/wordCloud/{bookId}`.replace(`{${"bookId"}}`, encodeURIComponent(String(requestParameters.bookId))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse<any>(response);
+    }
+
+    /**
+     * ワードクラウドに関するデータを取得します。 教員または管理者でなければなりません。
+     * ワードクラウド
+     */
+    async apiV2WordCloudBookIdGet(requestParameters: ApiV2WordCloudBookIdGetRequest): Promise<Array<Array<object>>> {
+        const response = await this.apiV2WordCloudBookIdGetRaw(requestParameters);
         return await response.value();
     }
 

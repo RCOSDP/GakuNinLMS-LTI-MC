@@ -18,6 +18,7 @@ import * as bookmark from "./bookmark";
 import * as bookmarks from "./bookmarks";
 import * as bookmarkTagMenu from "./bookmarkTagMenu";
 import * as bookmarkMemoContent from "./bookmarkMemoContent";
+import * as wordCloud from "./wordCloud";
 
 const routers = [
   lti,
@@ -38,6 +39,7 @@ const routers = [
   bookmarks,
   bookmarkTagMenu,
   bookmarkMemoContent,
+  wordCloud,
 ];
 
 async function routes(fastify: FastifyInstance) {
