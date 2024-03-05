@@ -93,6 +93,9 @@ import {
     InlineResponse20017,
     InlineResponse20017FromJSON,
     InlineResponse20017ToJSON,
+    InlineResponse20018,
+    InlineResponse20018FromJSON,
+    InlineResponse20018ToJSON,
     InlineResponse2002,
     InlineResponse2002FromJSON,
     InlineResponse2002ToJSON,
@@ -2470,7 +2473,7 @@ export class DefaultApi extends runtime.BaseAPI {
      * ワードクラウドに関するデータを取得します。 教員または管理者でなければなりません。
      * ワードクラウド
      */
-    async apiV2WordCloudBookIdGetRaw(requestParameters: ApiV2WordCloudBookIdGetRequest): Promise<runtime.ApiResponse<Array<Array<object>>>> {
+    async apiV2WordCloudBookIdGetRaw(requestParameters: ApiV2WordCloudBookIdGetRequest): Promise<runtime.ApiResponse<Array<InlineResponse20018>>> {
         if (requestParameters.bookId === null || requestParameters.bookId === undefined) {
             throw new runtime.RequiredError('bookId','Required parameter requestParameters.bookId was null or undefined when calling apiV2WordCloudBookIdGet.');
         }
@@ -2486,14 +2489,14 @@ export class DefaultApi extends runtime.BaseAPI {
             query: queryParameters,
         });
 
-        return new runtime.JSONApiResponse<any>(response);
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(InlineResponse20018FromJSON));
     }
 
     /**
      * ワードクラウドに関するデータを取得します。 教員または管理者でなければなりません。
      * ワードクラウド
      */
-    async apiV2WordCloudBookIdGet(requestParameters: ApiV2WordCloudBookIdGetRequest): Promise<Array<Array<object>>> {
+    async apiV2WordCloudBookIdGet(requestParameters: ApiV2WordCloudBookIdGetRequest): Promise<Array<InlineResponse20018>> {
         const response = await this.apiV2WordCloudBookIdGetRaw(requestParameters);
         return await response.value();
     }

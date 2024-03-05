@@ -40,6 +40,7 @@ export * from './InlineResponse20016BookmarkTagMenu';
 export * from './InlineResponse20016Topic';
 export * from './InlineResponse20016TopicBookmarks';
 export * from './InlineResponse20017';
+export * from './InlineResponse20018';
 export * from './InlineResponse2002';
 export * from './InlineResponse2003';
 export * from './InlineResponse2003Book';

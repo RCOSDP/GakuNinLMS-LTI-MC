@@ -16,7 +16,7 @@ export const method = {
       教員または管理者でなければなりません。`,
     params: WordCloudParams,
     response: {
-      200: { type: "array", items: WordCloudSchema },
+      200: WordCloudSchema,
     },
   },
 } as const;
