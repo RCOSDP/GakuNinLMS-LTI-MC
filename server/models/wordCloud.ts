@@ -9,6 +9,7 @@ export const WordCloudSchema = {
       text: { title: "Consumer ID", type: "string" },
       count: { title: "Context ID", type: "number" },
     },
+    required: ["text", "count"],
     additionalProperties: false,
   },
 } as const;

@@ -404,7 +404,7 @@ export interface ApiV2UsersEmailGetRequest {
 }
 
 export interface ApiV2WordCloudBookIdGetRequest {
-    bookId: string;
+    bookId: number;
 }
 
 export interface ApiV2WowzaWildcardGetRequest {

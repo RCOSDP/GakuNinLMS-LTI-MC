@@ -26,10 +26,16 @@ export const hooks = {
 };
 
 export async function index({
+  session,
   params,
 }: FastifyRequest<{ Params: WordCloudParams }>) {
   const { bookId } = params;
-  const wordCloud = findWordCloud(bookId);
+  const wordCloud = await findWordCloud(
+    bookId,
+    session.user.id,
+    session.ltiContext.id,
+    session.oauthClient.id
+  );
 
   return {
     status: 200,

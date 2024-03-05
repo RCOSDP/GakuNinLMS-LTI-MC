@@ -4,7 +4,7 @@ import type { FromSchema } from "json-schema-to-ts";
 export const WordCloudParams = {
   type: "object",
   properties: {
-    bookId: { type: "string" },
+    bookId: { type: "number" },
   },
   additionalProperties: false,
   required: ["bookId"],
