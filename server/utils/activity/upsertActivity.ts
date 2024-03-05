@@ -80,43 +80,31 @@ function merge_and_push(
   self: ActivityTimeRangeLogProps[],
   other: ActivityTimeRangeProps[]
 ): ActivityTimeRangeProps[] {
-  let tmpTimeRanges = [];
-
-  self.forEach((range) => tmpTimeRanges.push(toInterval(range)));
-  tmpTimeRanges = tmpTimeRanges.filter(
+  // データベースから取り出した視聴記録を重複がない状態にする
+  let timeRanges = self.filter(
     (element, index, exist) =>
       exist.findIndex(
-        (e) => e.low === element.low && e.high && element.high
+        (e) => e.startMs === element.startMs && e.endMs && element.endMs
       ) === index
   );
 
   //直近のものを重複排除しつつ、継続視聴の場合は mergeして追記をしないといけない
   other.forEach((range) => {
-    const interval = toInterval(range);
-
-    // 重複してたら飛ばす
-    let duplicatedTimeRanges = tmpTimeRanges.find(
-      (exist) => exist.low == interval.low && exist.high == interval.high
-    );
-    if (duplicatedTimeRanges) {
+    // クライアント側から送信されたデータと重複してたら飛ばす
+    if (
+      timeRanges.find(
+        (exist) => exist.startMs == range.startMs && exist.endMs == range.endMs
+      )
+    ) {
       return;
     }
 
     // startMsが同じでかつ、DB上のレコードのendMsが新しく渡されたデータのendMsより小さい場合、視聴中を表すレコードとしてDB上のレコードを省く
-    tmpTimeRanges = tmpTimeRanges.filter(
-      (exist) => !(exist.low == interval.low && exist.high < interval.high)
+    timeRanges = timeRanges.filter(
+      (exist) => !(exist.startMs == range.startMs && exist.endMs < range.endMs)
     );
-    tmpTimeRanges.push(interval);
+    timeRanges.push(range);
   });
-
-  const timeRanges = tmpTimeRanges.map(
-    ({ low, high, created_at, updated_at }) => ({
-      startMs: low,
-      endMs: high,
-      createdAt: created_at,
-      updatedAt: updated_at,
-    })
-  );
 
   return timeRanges;
 }
