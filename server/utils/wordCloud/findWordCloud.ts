@@ -9,7 +9,7 @@ function buildTokenizer() {
   return new Promise<kuromoji.Tokenizer<kuromoji.IpadicFeatures>>(
     (resolve, reject) => {
       kuromoji
-        .builder({ dicPath: "node_modules/kuromoji/dict" })
+        .builder({ dicPath: "./utils/wordCloud/dict" })
         .build((err, tokenizer) => {
           if (err) {
             reject(err);
@@ -27,6 +27,26 @@ const tokenize = async (text: string) => {
   return tokenizer.tokenize(text);
 };
 
+const TARGET_POS = ["名詞", "動詞", "形容詞"];
+
+const convertToWordCloud = (
+  tokens: kuromoji.IpadicFeatures[]
+): WordCloudSchema => {
+  const wordCountMap = new Map<string, number>();
+  for (const token of tokens) {
+    if (TARGET_POS.includes(token.pos)) {
+      const word = token.surface_form;
+      const count = wordCountMap.get(word) || 0;
+      wordCountMap.set(word, count + 1);
+    }
+  }
+  const wordCloud = Array.from(wordCountMap.entries()).map(([text, count]) => ({
+    text,
+    count,
+  }));
+  return wordCloud;
+};
+
 async function findWordCloud(
   bookId: WordCloudParams["bookId"],
   userId: number,
@@ -42,8 +62,7 @@ async function findWordCloud(
     (section) => section.topicSections || []
   );
 
-  const bookmarkMemoContents = [];
-
+  let tokens: kuromoji.IpadicFeatures[] = [];
   for (const topicSection of topicSections || []) {
     const bookmarks = await findBookmarks({
       ltiContextId,
@@ -54,13 +73,11 @@ async function findWordCloud(
       if (!bookmark.memoContent) {
         continue;
       }
-      bookmarkMemoContents.push(bookmark.memoContent);
       const res = await tokenize(bookmark.memoContent);
-      console.log(res);
+      tokens = tokens.concat(res);
     }
   }
-  console.log(bookmarkMemoContents);
-  return [{ text: "test", count: 1 }];
+  return convertToWordCloud(tokens);
 }
 
 export default findWordCloud;
