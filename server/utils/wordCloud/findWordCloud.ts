@@ -36,13 +36,13 @@ const convertToWordCloud = (
   for (const token of tokens) {
     if (TARGET_POS.includes(token.pos)) {
       const word = token.surface_form;
-      const count = wordCountMap.get(word) || 0;
-      wordCountMap.set(word, count + 1);
+      const value = wordCountMap.get(word) || 0;
+      wordCountMap.set(word, value + 1);
     }
   }
-  const wordCloud = Array.from(wordCountMap.entries()).map(([text, count]) => ({
+  const wordCloud = Array.from(wordCountMap.entries()).map(([text, value]) => ({
     text,
-    count,
+    value,
   }));
   return wordCloud;
 };

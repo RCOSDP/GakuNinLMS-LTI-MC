@@ -30,7 +30,7 @@ export interface InlineResponse20018 {
      * @type {number}
      * @memberof InlineResponse20018
      */
-    count: number;
+    value: number;
 }
 
 export function InlineResponse20018FromJSON(json: any): InlineResponse20018 {
@@ -44,7 +44,7 @@ export function InlineResponse20018FromJSONTyped(json: any, ignoreDiscriminator:
     return {
         
         'text': json['text'],
-        'count': json['count'],
+        'value': json['value'],
     };
 }
 
@@ -58,7 +58,7 @@ export function InlineResponse20018ToJSON(value?: InlineResponse20018 | null): a
     return {
         
         'text': value.text,
-        'count': value.count,
+        'value': value.value,
     };
 }
 
