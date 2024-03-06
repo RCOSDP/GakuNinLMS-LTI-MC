@@ -84,7 +84,7 @@ function merge_and_push(
   let timeRanges = self.filter(
     (element, index, exist) =>
       exist.findIndex(
-        (e) => e.startMs === element.startMs && e.endMs && element.endMs
+        (e) => e.startMs === element.startMs && e.endMs === element.endMs
       ) === index
   );
 
@@ -106,7 +106,14 @@ function merge_and_push(
     timeRanges.push(range);
   });
 
-  return timeRanges;
+  return timeRanges.map(
+    ({ startMs, endMs, created_at, updated_at }) => ({
+      startMs: startMs,
+      endMs: endMs,
+      createdAt: created_at,
+      updatedAt: updated_at,
+    })
+  );
 }
 
 function cleanup(activityId: Activity["id"]) {
