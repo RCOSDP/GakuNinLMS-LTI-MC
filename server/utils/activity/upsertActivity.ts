@@ -40,10 +40,9 @@ function findActivity({
 }
 
 function findRecentActivityTimeRangeLog(activityId: Activity["id"]) {
-  const date = new Date();
-  date.setSeconds(
-    date.getSeconds() - NEXT_PUBLIC_ACTIVITY_SEND_INTERVAL2 * 1.5
-  );
+  const now = new Date();
+  const date = new Date(now.getTime() - NEXT_PUBLIC_ACTIVITY_SEND_INTERVAL2 * 1.5 * 1000);
+
   return prisma.activityTimeRangeLog.findMany({
     where: {
       activityId: activityId,
@@ -54,6 +53,7 @@ function findRecentActivityTimeRangeLog(activityId: Activity["id"]) {
     orderBy: { createdAt: "desc" },
   });
 }
+
 
 function toInterval({ startMs, endMs }: ActivityTimeRangeProps) {
   return { low: startMs, high: endMs };
@@ -107,11 +107,11 @@ function merge_and_push(
   });
 
   return timeRanges.map(
-    ({ startMs, endMs, created_at, updated_at }) => ({
+    ({ startMs, endMs, createdAt, updatedAt }) => ({
       startMs: startMs,
       endMs: endMs,
-      createdAt: created_at,
-      updatedAt: updated_at,
+      createdAt: createdAt,
+      updatedAt: updatedAt,
     })
   );
 }
