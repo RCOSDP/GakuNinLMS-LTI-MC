@@ -46,11 +46,11 @@ function findRecentActivityTimeRangeLog(activityId: Activity["id"]) {
   return prisma.activityTimeRangeLog.findMany({
     where: {
       activityId: activityId,
-      createdAt: {
+      updatedAt: {
         gte: date,
       },
     },
-    orderBy: { createdAt: "desc" },
+    orderBy: { updatedAt: "desc" },
   });
 }
 
@@ -80,33 +80,35 @@ function merge_and_push(
   self: ActivityTimeRangeLogProps[],
   other: ActivityTimeRangeProps[]
 ): ActivityTimeRangeProps[] {
-  // データベースから取り出した視聴記録を重複がない状態にする
-  let timeRanges = self.filter(
-    (element, index, exist) =>
-      exist.findIndex(
-        (e) => e.startMs === element.startMs && e.endMs === element.endMs
-      ) === index
-  );
+  let existTimeRanges = [];
+  let newTimeRanges = [];
 
   //直近のものを重複排除しつつ、継続視聴の場合は mergeして追記をしないといけない
   other.forEach((range) => {
-    // クライアント側から送信されたデータと重複してたら飛ばす
-    if (
-      timeRanges.find(
-        (exist) => exist.startMs == range.startMs && exist.endMs == range.endMs
-      )
-    ) {
+    const updatedAt = new Date();
+    // 重複データ: クライアント側から、既存データと同じ startMsとendMsのものが送られてきた
+    let existTimeRange = self.find((exist) => exist.startMs == range.startMs && exist.endMs == range.endMs);
+    if (existTimeRange) {
+      existTimeRange.updatedAt = updatedAt;
+      existTimeRanges.push(existTimeRange);
       return;
     }
 
-    // startMsが同じでかつ、DB上のレコードのendMsが新しく渡されたデータのendMsより小さい場合、視聴中を表すレコードとしてDB上のレコードを省く
-    timeRanges = timeRanges.filter(
-      (exist) => !(exist.startMs == range.startMs && exist.endMs < range.endMs)
-    );
-    timeRanges.push(range);
+    // 視聴中を表すデータ: クライアント側から、既存データとstartMsが同じでかつendMsが大きいものが送られてきた
+    existTimeRange = self.find((exist) => exist.startMs == range.startMs && exist.endMs < range.endMs);
+    if (existTimeRange) {
+      existTimeRange.endMs = range.endMs;
+      existTimeRange.updatedAt = updatedAt;
+      existTimeRanges.push(existTimeRange);
+      return;
+    }
+
+    // 新規データ
+    const newTimeRange: ActivityTimeRangeLogProps = {startMs: range.startMs, endMs: range.endMs, createdAt: updatedAt, updatedAt: updatedAt};
+    newTimeRanges.push(newTimeRange);
   });
 
-  return timeRanges.map(
+  return (existTimeRanges.concat(newTimeRanges)).map(
     ({ startMs, endMs, createdAt, updatedAt }) => ({
       startMs: startMs,
       endMs: endMs,
