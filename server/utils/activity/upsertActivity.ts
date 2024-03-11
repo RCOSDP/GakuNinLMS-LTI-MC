@@ -11,7 +11,7 @@ import type { ActivityTimeRangeProps } from "$server/validators/activityTimeRang
 import type { ActivityTimeRangeLogProps } from "$server/validators/activityTimeRangeLog";
 import prisma from "$server/utils/prisma";
 
-var NEXT_PUBLIC_ACTIVITY_SEND_INTERVAL2 = Number(
+const NEXT_PUBLIC_ACTIVITY_SEND_INTERVAL2 = Number(
   process.env.NEXT_PUBLIC_ACTIVITY_SEND_INTERVAL ?? 10
 );
 
@@ -41,7 +41,9 @@ function findActivity({
 
 function findRecentActivityTimeRangeLog(activityId: Activity["id"]) {
   const now = new Date();
-  const date = new Date(now.getTime() - NEXT_PUBLIC_ACTIVITY_SEND_INTERVAL2 * 1.5 * 1000);
+  const date = new Date(
+    now.getTime() - NEXT_PUBLIC_ACTIVITY_SEND_INTERVAL2 * 1.5 * 1000
+  );
 
   return prisma.activityTimeRangeLog.findMany({
     where: {
@@ -53,7 +55,6 @@ function findRecentActivityTimeRangeLog(activityId: Activity["id"]) {
     orderBy: { updatedAt: "desc" },
   });
 }
-
 
 function toInterval({ startMs, endMs }: ActivityTimeRangeProps) {
   return { low: startMs, high: endMs };
@@ -80,14 +81,16 @@ function merge_and_push(
   self: ActivityTimeRangeLogProps[],
   other: ActivityTimeRangeProps[]
 ): ActivityTimeRangeProps[] {
-  let existTimeRanges = [];
-  let newTimeRanges = [];
+  const existTimeRanges: ActivityTimeRangeLogProps[] = [];
+  const newTimeRanges: ActivityTimeRangeLogProps[] = [];
 
   //直近のものを重複排除しつつ、継続視聴の場合は mergeして追記をしないといけない
   other.forEach((range) => {
     const updatedAt = new Date();
     // 重複データ: クライアント側から、既存データと同じ startMsとendMsのものが送られてきた
-    let existTimeRange = self.find((exist) => exist.startMs == range.startMs && exist.endMs == range.endMs);
+    let existTimeRange = self.find(
+      (exist) => exist.startMs == range.startMs && exist.endMs == range.endMs
+    );
     if (existTimeRange) {
       existTimeRange.updatedAt = updatedAt;
       existTimeRanges.push(existTimeRange);
@@ -95,7 +98,9 @@ function merge_and_push(
     }
 
     // 視聴中を表すデータ: クライアント側から、既存データとstartMsが同じでかつendMsが大きいものが送られてきた
-    existTimeRange = self.find((exist) => exist.startMs == range.startMs && exist.endMs < range.endMs);
+    existTimeRange = self.find(
+      (exist) => exist.startMs == range.startMs && exist.endMs < range.endMs
+    );
     if (existTimeRange) {
       existTimeRange.endMs = range.endMs;
       existTimeRange.updatedAt = updatedAt;
@@ -104,18 +109,23 @@ function merge_and_push(
     }
 
     // 新規データ
-    const newTimeRange: ActivityTimeRangeLogProps = {startMs: range.startMs, endMs: range.endMs, createdAt: updatedAt, updatedAt: updatedAt};
+    const newTimeRange: ActivityTimeRangeLogProps = {
+      startMs: range.startMs,
+      endMs: range.endMs,
+      createdAt: updatedAt,
+      updatedAt: updatedAt,
+    };
     newTimeRanges.push(newTimeRange);
   });
 
-  return (existTimeRanges.concat(newTimeRanges)).map(
-    ({ startMs, endMs, createdAt, updatedAt }) => ({
+  return existTimeRanges
+    .concat(newTimeRanges)
+    .map(({ startMs, endMs, createdAt, updatedAt }) => ({
       startMs: startMs,
       endMs: endMs,
       createdAt: createdAt,
       updatedAt: updatedAt,
-    })
-  );
+    }));
 }
 
 function cleanup(activityId: Activity["id"]) {
@@ -125,7 +135,7 @@ function cleanup(activityId: Activity["id"]) {
 function cleanupRecentTimeRangeLogs(
   timeRangeLogs: ActivityTimeRangeLogProps[]
 ) {
-  const ids = timeRangeLogs.map((log) => {
+  const ids = timeRangeLogs.map((log: ActivityTimeRangeLogProps) => {
     return log.id;
   });
   return prisma.activityTimeRangeLog.deleteMany({ where: { id: { in: ids } } });
