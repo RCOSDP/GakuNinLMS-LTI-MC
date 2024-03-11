@@ -87,19 +87,11 @@ function merge_and_push(
   //直近のものを重複排除しつつ、継続視聴の場合は mergeして追記をしないといけない
   other.forEach((range) => {
     const updatedAt = new Date();
-    // 重複データ: クライアント側から、既存データと同じ startMsとendMsのものが送られてきた
-    let existTimeRange = self.find(
-      (exist) => exist.startMs == range.startMs && exist.endMs == range.endMs
-    );
-    if (existTimeRange) {
-      existTimeRange.updatedAt = updatedAt;
-      existTimeRanges.push(existTimeRange);
-      return;
-    }
 
+    // 重複データ: クライアント側から、既存データと同じ startMsとendMsのものが送られてきた
     // 視聴中を表すデータ: クライアント側から、既存データとstartMsが同じでかつendMsが大きいものが送られてきた
-    existTimeRange = self.find(
-      (exist) => exist.startMs == range.startMs && exist.endMs < range.endMs
+    let existTimeRange = self.find(
+      (exist) => exist.startMs == range.startMs && exist.endMs <= range.endMs
     );
     if (existTimeRange) {
       existTimeRange.endMs = range.endMs;
