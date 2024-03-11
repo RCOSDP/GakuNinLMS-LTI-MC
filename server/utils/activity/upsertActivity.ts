@@ -90,7 +90,7 @@ function merge_and_push(
 
     // 重複データ: クライアント側から、既存データと同じ startMsとendMsのものが送られてきた
     // 視聴中を表すデータ: クライアント側から、既存データとstartMsが同じでかつendMsが大きいものが送られてきた
-    let existTimeRange = self.find(
+    const existTimeRange = self.find(
       (exist) => exist.startMs == range.startMs && exist.endMs <= range.endMs
     );
     if (existTimeRange) {
@@ -127,9 +127,13 @@ function cleanup(activityId: Activity["id"]) {
 function cleanupRecentTimeRangeLogs(
   timeRangeLogs: ActivityTimeRangeLogProps[]
 ) {
-  const ids = timeRangeLogs.map((log: ActivityTimeRangeLogProps) => {
-    return log.id;
-  });
+  const ids = timeRangeLogs
+    .map((log: ActivityTimeRangeLogProps) => {
+      return log.id;
+    })
+    .filter((id): id is Exclude<typeof id, undefined> => {
+      return id !== undefined;
+    });
   return prisma.activityTimeRangeLog.deleteMany({ where: { id: { in: ids } } });
 }
 
@@ -200,7 +204,10 @@ async function upsertActivity({
     ltiContextId,
   });
 
-  const recentTimeRangeLogs = await findRecentActivityTimeRangeLog(exists?.id);
+  let recentTimeRangeLogs: ActivityTimeRangeLogProps[] = [];
+  if (exists?.id) {
+    recentTimeRangeLogs = await findRecentActivityTimeRangeLog(exists.id);
+  }
 
   const timeRanges = merge(exists?.timeRanges ?? [], activity.timeRanges);
   const timeRangeLogs = merge_and_push(
