@@ -13,12 +13,6 @@ import type {
   TagSchema,
 } from "$server/models/bookmark";
 import Emoji from "./Emoji";
-import Input from "./Input";
-import { Box } from "@mui/material";
-import IconButton from "./IconButton";
-import AddIcon from "@mui/icons-material/Add";
-import type { BookmarkMemoContentProps } from "$server/models/bookmarkMemoContent";
-import { useForm } from "react-hook-form";
 
 const menuItem = css({
   "> :first-child": {
@@ -33,9 +27,6 @@ type Props = {
   handleTagChange: (tag: TagSchema) => void;
   isBookmarkMemoContent: boolean;
   onSubmitBookmark: (body: BookmarkProps) => Promise<void>;
-  onSubmitBookmarkMemoContent: (
-    body: BookmarkMemoContentProps
-  ) => Promise<void>;
 };
 
 export default function TagMenu({
@@ -45,7 +36,6 @@ export default function TagMenu({
   handleTagChange,
   isBookmarkMemoContent,
   onSubmitBookmark,
-  onSubmitBookmarkMemoContent,
 }: Props) {
   const onClick = useCallback(
     async (option: TagSchema) => {
@@ -62,14 +52,6 @@ export default function TagMenu({
   const [locked, toggleLocked] = useToggle(false);
 
   useLockBodyScroll(locked);
-
-  const defaultValues: BookmarkMemoContentProps = {
-    memoContent: "",
-    topicId,
-  };
-  const { handleSubmit, register } = useForm<BookmarkMemoContentProps>({
-    defaultValues,
-  });
 
   if (filterTags.length === 0 && isBookmarkMemoContent) {
     return null;
@@ -102,39 +84,6 @@ export default function TagMenu({
             {option.label}
           </MenuItem>
         ))}
-        {/* 自由記述タグを追加できるのは1件までとする */}
-        {!isBookmarkMemoContent && (
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              padding: "4px",
-              flexGap: "4px",
-              height: "32px",
-            }}
-            component="form"
-            onSubmit={handleSubmit(async (values) => {
-              await onSubmitBookmarkMemoContent(values);
-            })}
-          >
-            <Input
-              placeholder="自由記述"
-              style={{
-                width: "100%",
-                height: "100%",
-                fontSize: "12px",
-              }}
-              inputProps={register("memoContent")}
-            />
-            <IconButton
-              tooltipProps={{ title: "追加" }}
-              size="small"
-              type="submit"
-            >
-              <AddIcon />
-            </IconButton>
-          </Box>
-        )}
       </Menu>
     </Dropdown>
   );
