@@ -11,6 +11,7 @@ import type {
 import { useCallback, useState } from "react";
 import Tooltip from "@mui/material/Tooltip";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
+import ChatBubbleIcon from "@mui/icons-material/ChatBubble";
 import { useConfirm } from "material-ui-confirm";
 import type { BookmarkParams } from "$server/validators/bookmarkParams";
 
@@ -133,21 +134,6 @@ export default function TagList({ topicId, bookmarks, tagMenu }: Props) {
           />
         );
       })}
-      {bookmarks
-        .filter((bookmark) => {
-          // bookmark.memoContentが存在する場合(自由記述タグ)は末尾に別途表示する
-          return bookmark.tag === null;
-        })
-        .map((bookmark) => {
-          return (
-            <TagWithDeleteButton
-              key={bookmark.id}
-              topicId={topicId}
-              bookmark={bookmark}
-              onDeleteBookmark={handleBookmarkDeleteClick}
-            />
-          );
-        })}
       <TagMenu
         topicId={topicId}
         selectedTag={selectedTag}
@@ -178,12 +164,21 @@ export default function TagList({ topicId, bookmarks, tagMenu }: Props) {
           }}
           onClick={() => setOpen(true)}
         >
-          <ChatBubbleOutlineIcon
-            sx={{
-              fontSize: 16,
-              margin: "0 2px 0 0 !important",
-            }}
-          />
+          {isBookmarkMemoContent ? (
+            <ChatBubbleIcon
+              sx={{
+                fontSize: 16,
+                margin: "0 2px 0 0 !important",
+              }}
+            />
+          ) : (
+            <ChatBubbleOutlineIcon
+              sx={{
+                fontSize: 16,
+                margin: "0 2px 0 0 !important",
+              }}
+            />
+          )}
           <p className={text}>コメント</p>
         </Button>
       </Tooltip>
