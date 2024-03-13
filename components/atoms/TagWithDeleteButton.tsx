@@ -54,13 +54,12 @@ export default function TagWithDeleteButton({
   bookmark,
   onDeleteBookmark,
 }: Props) {
+  if (!bookmark?.tag) return null;
+
   return (
     <div className={tagClass}>
-      {/* タグが存在しない場合は、自由記述タグ(memoContent)とみなす */}
-      <Emoji emoji={bookmark?.tag?.emoji || "📔"} />
-      <p className={text}>
-        {bookmark?.tag?.label || `${bookmark?.memoContent?.slice(0, 5)}...`}
-      </p>
+      <Emoji emoji={bookmark.tag.emoji} />
+      <p className={text}>{bookmark.tag.label}</p>
       <button
         className={closeButton}
         onClick={async () => await onDeleteBookmark(bookmark.id, topicId)}
