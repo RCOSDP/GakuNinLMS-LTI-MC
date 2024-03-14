@@ -215,6 +215,7 @@ export default function Dashboard(props: Props) {
           variant="contained"
           size="small"
           disabled={bookActivities.length === 0}
+          title="事前に[受講者の同期]ボタンを押してからダウンロードしてください"
         >
           <GetAppOutlinedIcon fontSize="small" />
           視聴分析データをダウンロード
