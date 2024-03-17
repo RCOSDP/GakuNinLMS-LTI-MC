@@ -8,7 +8,12 @@ import type {
 } from "@prisma/client";
 import type { ActivityProps } from "$server/validators/activityProps";
 import type { ActivityTimeRangeProps } from "$server/validators/activityTimeRange";
+import type { ActivityTimeRangeLogProps } from "$server/validators/activityTimeRangeLog";
 import prisma from "$server/utils/prisma";
+
+const NEXT_PUBLIC_ACTIVITY_SEND_INTERVAL2 = Number(
+  process.env.NEXT_PUBLIC_ACTIVITY_SEND_INTERVAL ?? 10
+);
 
 function findActivity({
   learnerId,
@@ -34,6 +39,23 @@ function findActivity({
   });
 }
 
+function findRecentActivityTimeRangeLog(activityId: Activity["id"]) {
+  const now = new Date();
+  const date = new Date(
+    now.getTime() - NEXT_PUBLIC_ACTIVITY_SEND_INTERVAL2 * 1.5 * 1000
+  );
+
+  return prisma.activityTimeRangeLog.findMany({
+    where: {
+      activityId: activityId,
+      updatedAt: {
+        gte: date,
+      },
+    },
+    orderBy: { updatedAt: "desc" },
+  });
+}
+
 function toInterval({ startMs, endMs }: ActivityTimeRangeProps) {
   return { low: startMs, high: endMs };
 }
@@ -55,8 +77,64 @@ function merge(
   return timeRanges;
 }
 
+function merge_and_push(
+  self: ActivityTimeRangeLogProps[],
+  other: ActivityTimeRangeProps[]
+): ActivityTimeRangeProps[] {
+  const existTimeRanges: ActivityTimeRangeLogProps[] = [];
+  const newTimeRanges: ActivityTimeRangeLogProps[] = [];
+
+  //直近のものを重複排除しつつ、継続視聴の場合は mergeして追記をしないといけない
+  other.forEach((range) => {
+    const updatedAt = new Date();
+
+    // 重複データ: クライアント側から、既存データと同じ startMsとendMsのものが送られてきた
+    // 視聴中を表すデータ: クライアント側から、既存データとstartMsが同じでかつendMsが大きいものが送られてきた
+    const existTimeRange = self.find(
+      (exist) => exist.startMs == range.startMs && exist.endMs <= range.endMs
+    );
+    if (existTimeRange) {
+      existTimeRange.endMs = range.endMs;
+      existTimeRange.updatedAt = updatedAt;
+      existTimeRanges.push(existTimeRange);
+      return;
+    }
+
+    // 新規データ
+    const newTimeRange: ActivityTimeRangeLogProps = {
+      startMs: range.startMs,
+      endMs: range.endMs,
+      createdAt: updatedAt,
+      updatedAt: updatedAt,
+    };
+    newTimeRanges.push(newTimeRange);
+  });
+
+  return existTimeRanges
+    .concat(newTimeRanges)
+    .map(({ startMs, endMs, createdAt, updatedAt }) => ({
+      startMs: startMs,
+      endMs: endMs,
+      createdAt: createdAt,
+      updatedAt: updatedAt,
+    }));
+}
+
 function cleanup(activityId: Activity["id"]) {
   return prisma.activityTimeRange.deleteMany({ where: { activityId } });
+}
+
+function cleanupRecentTimeRangeLogs(
+  timeRangeLogs: ActivityTimeRangeLogProps[]
+) {
+  const ids = timeRangeLogs
+    .map((log: ActivityTimeRangeLogProps) => {
+      return log.id;
+    })
+    .filter((id): id is Exclude<typeof id, undefined> => {
+      return id !== undefined;
+    });
+  return prisma.activityTimeRangeLog.deleteMany({ where: { id: { in: ids } } });
 }
 
 function upsert({
@@ -65,12 +143,14 @@ function upsert({
   ltiConsumerId,
   ltiContextId,
   timeRanges,
+  timeRangeLogs,
 }: {
   learnerId: User["id"];
   topicId: Topic["id"];
   ltiConsumerId: LtiConsumer["id"];
   ltiContextId: LtiContext["id"];
   timeRanges: ActivityTimeRangeProps[];
+  timeRangeLogs: ActivityTimeRangeLogProps[];
 }) {
   const totalTimeMs = timeRanges.reduce(
     (a, { startMs, endMs }) => a + endMs - startMs,
@@ -79,6 +159,7 @@ function upsert({
   const input = {
     totalTimeMs,
     timeRanges: { create: timeRanges },
+    timeRangeLogs: { create: timeRangeLogs },
   };
   return prisma.activity.upsert({
     where: {
@@ -122,11 +203,29 @@ async function upsertActivity({
     ltiConsumerId,
     ltiContextId,
   });
+
+  let recentTimeRangeLogs: ActivityTimeRangeLogProps[] = [];
+  if (exists?.id) {
+    recentTimeRangeLogs = await findRecentActivityTimeRangeLog(exists.id);
+  }
+
   const timeRanges = merge(exists?.timeRanges ?? [], activity.timeRanges);
+  const timeRangeLogs = merge_and_push(
+    recentTimeRangeLogs,
+    activity.timeRanges
+  );
 
   await prisma.$transaction([
+    ...(exists ? [cleanupRecentTimeRangeLogs(recentTimeRangeLogs)] : []),
     ...(exists ? [cleanup(exists.id)] : []),
-    upsert({ learnerId, topicId, ltiConsumerId, ltiContextId, timeRanges }),
+    upsert({
+      learnerId,
+      topicId,
+      ltiConsumerId,
+      ltiContextId,
+      timeRanges,
+      timeRangeLogs,
+    }),
   ]);
 
   return { timeRanges };
