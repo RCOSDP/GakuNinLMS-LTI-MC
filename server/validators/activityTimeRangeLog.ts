@@ -7,12 +7,23 @@ export const ActivityTimeRangeLogProps = {
     id: { type: "number" },
     startMs: { type: "integer" },
     endMs: { type: "integer" },
-    createdAt,
-    updatedAt,
+    createdAt: { type: "string", format: "date-time" },
+    updatedAt: { type: "string", format: "date-time" },
   },
   additionalProperties: false,
 } as const;
 
 export type ActivityTimeRangeLogProps = FromSchema<
-  typeof ActivityTimeRangeLogProps
+  typeof ActivityTimeRangeLogProps,
+  {
+    deserialize: [
+      {
+        pattern: {
+          type: "string";
+          format: "date-time";
+        };
+        output: Date;
+      },
+    ];
+  }
 >;
