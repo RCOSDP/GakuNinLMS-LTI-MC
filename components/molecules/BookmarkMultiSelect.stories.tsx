@@ -12,6 +12,8 @@ export const Default: Story = {
   render: () => (
     <BookmarkMultiSelect
       tags={bookmarkTagMenu}
+      selectedTagIds={[1, 2]}
+      isExistMemoContent={true}
       onTagSelect={(bookmarkTagMenu) =>
         console.log("select tag", bookmarkTagMenu)
       }
