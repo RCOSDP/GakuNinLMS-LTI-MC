@@ -30,7 +30,7 @@ export function useFilterBookmarks({
   tagIds,
   isExistMemoContent = false,
 }: {
-  tagIds?: BookmarkQuery["tagIds"];
+  tagIds: string;
   isExistMemoContent?: BookmarkQuery["isExistMemoContent"];
 }) {
   return useBookmarks({ tagIds, isExistMemoContent, isAllUsers: false });
@@ -40,7 +40,7 @@ export function useBookmarksByTopicId({
   topicId,
   isAllUsers = false,
 }: {
-  topicId: BookmarkQuery["topicId"];
+  topicId: number;
   isAllUsers?: BookmarkQuery["isAllUsers"];
 }) {
   return useBookmarks({ topicId, isAllUsers });
