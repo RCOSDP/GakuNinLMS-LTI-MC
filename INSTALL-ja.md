@@ -25,6 +25,7 @@ API の接続先の情報を変更する場合 .env を適宜書き換える必�
 | `NEXT_PUBLIC_BASE_PATH`                 | 静的コンテンツの URL のベースとなるパス (デフォルト: "")                                                                  |
 | `NEXT_PUBLIC_ACTIVITY_LTI_CONTEXT_ONLY` | 学習活動の LTI Context ごとでの取得 (フォーマット: [YAML 1.1 真偽値](https://yaml.org/type/bool.html)) (デフォルト: 無効) |
 | `NEXT_PUBLIC_ACTIVITY_SEND_INTERVAL`    | 学習活動の送信間隔 (秒) (デフォルト:`10`)                                                                                 |
+| `NEXT_PUBLIC_ACTIVITY_COUNT_INTERVAL`   | 実視聴回数を記録する際の区間の長さ (秒) (デフォルト:`1`)                                                                  |
 | `NEXT_PUBLIC_VIDEO_MAX_HEIGHT`          | スクロール追従する動画プレイヤーの max-height (デフォルト: `40vh`)                                                        |
 | `NEXT_PUBLIC_NO_EMBED`                  | 埋め込みを許可しない (フォーマット: [YAML 1.1 真偽値](https://yaml.org/type/bool.html)) (デフォルト: 無効)                |
 
