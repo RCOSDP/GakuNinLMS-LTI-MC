@@ -77,8 +77,8 @@ export default function Bookmarks({ bookmarkTagMenu }: Props) {
     [selectedTagIds]
   );
 
-  const onClickMemoContent = useCallback(() => {
-    setIsBookmarkMemoContent((prev) => !prev);
+  const onClickMemoContent = useCallback((bool: boolean) => {
+    setIsBookmarkMemoContent(bool);
   }, []);
 
   const data = useFilterBookmarks({
@@ -103,6 +103,8 @@ export default function Bookmarks({ bookmarkTagMenu }: Props) {
         <Box className={header}>
           <BookmarkMultiSelect
             tags={bookmarkTagMenu}
+            selectedTagIds={selectedTagIds}
+            isExistMemoContent={isExistMemoContent}
             onTagSelect={onClickTagMenu}
             onClickMemoContent={onClickMemoContent}
           />

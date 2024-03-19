@@ -99,15 +99,12 @@ async function findBookmarks({
       bookmarkTagMenu,
     };
   } else if (tagIds !== undefined) {
-    const query = isExistMemoContent ? { memoContent: { not: "" } } : undefined;
-
     const bookmark = await prisma.bookmark.findMany({
       where: {
-        OR:
-          tagIds.map((tagId) => ({
-            tagId: tagId,
-          })) || null,
-        ...query,
+        OR: [
+          ...tagIds.map((tagId) => ({ tagId })),
+          ...(isExistMemoContent ? [{ memoContent: { not: "" } }] : []),
+        ],
         userId: userId,
       },
       distinct: ["ltiConsumerId", "ltiContextId", "topicId"],
