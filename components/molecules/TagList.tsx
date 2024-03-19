@@ -92,6 +92,7 @@ export default function TagList({ topicId, bookmarks, tagMenu }: Props) {
     handleSubmit,
     register,
     reset,
+    watch,
     formState: { errors },
   } = useForm<BookmarkMemoContentProps>({
     defaultValues,
@@ -202,6 +203,13 @@ export default function TagList({ topicId, bookmarks, tagMenu }: Props) {
           <Box
             component="form"
             onSubmit={handleSubmit(async (values) => {
+              if (bookmarkMemoContent) {
+                await handlers.onUpdateBookmarkMemoContent(
+                  bookmarkMemoContent.id,
+                  values
+                );
+                return;
+              }
               await handlers.onSubmitBookmarkMemoContent(values);
             })}
             sx={{ marginTop: "20px" }}
@@ -252,7 +260,7 @@ export default function TagList({ topicId, bookmarks, tagMenu }: Props) {
                 variant="contained"
                 color="primary"
                 type="submit"
-                disabled={isBookmarkMemoContent}
+                disabled={watch("memoContent") === defaultValues.memoContent}
               >
                 保存
               </MuiButton>
