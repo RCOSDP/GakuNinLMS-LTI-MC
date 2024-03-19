@@ -307,6 +307,7 @@ model Activity {
   id            Int                 @id @default(autoincrement())
   timeRanges    ActivityTimeRange[]
   timeRangeLogs    ActivityTimeRangeLog[]
+  timeRangeCounts    ActivityTimeRangeCount[]
   topic         Topic               @relation(fields: [topicId], references: [id])
   topicId       Int                 @map("topic_id")
   learner       User                @relation(fields: [learnerId], references: [id])
@@ -353,6 +354,21 @@ model ActivityTimeRangeLog {
   updatedAt     DateTime            @default(now()) @map("updated_at")
 
   @@map("activities_time_range_logs")
+}
+
+// 学習活動の時間範囲の実視聴回数
+model ActivityTimeRangeCount {
+  activity   Activity @relation(fields: [activityId], references: [id])
+  activityId Int      @map("activity_id")
+  /// 開始時間 (ms)
+  startMs    Int      @map("start_ms")
+  /// 終了時間 (ms)
+  endMs      Int      @map("end_ms")
+  /// カウント
+  count      Int      @default(0) @map("count")
+
+  @@id([activityId, startMs, endMs])
+  @@map("activities_time_range_counts")
 }
 
 // 著作

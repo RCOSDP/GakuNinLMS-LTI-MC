@@ -9,11 +9,19 @@ import type {
 import type { ActivityProps } from "$server/validators/activityProps";
 import type { ActivityTimeRangeProps } from "$server/validators/activityTimeRange";
 import type { ActivityTimeRangeLogProps } from "$server/validators/activityTimeRangeLog";
+import type { ActivityTimeRangeCountProps } from "$server/validators/activityTimeRangeCount";
 import prisma from "$server/utils/prisma";
 
 const NEXT_PUBLIC_ACTIVITY_SEND_INTERVAL2 = Number(
   process.env.NEXT_PUBLIC_ACTIVITY_SEND_INTERVAL ?? 10
 );
+
+const ACTIVITY_COUNT_INTERVAL2 = Number(
+  process.env.ACTIVITY_COUNT_INTERVAL ?? 1
+);
+
+const ACTIVITY_COUNT_INTERVAL_THRESHOLD_MS =
+  (ACTIVITY_COUNT_INTERVAL2 * 1000) / 2.0;
 
 function findActivity({
   learnerId,
@@ -35,7 +43,19 @@ function findActivity({
         ltiContextId,
       },
     },
-    select: { id: true, timeRanges: { orderBy: { startMs: "asc" } } },
+    select: {
+      id: true,
+      timeRanges: { orderBy: { startMs: "asc" } },
+      timeRangeCounts: { orderBy: { startMs: "asc" } },
+    },
+  });
+}
+
+function findTopic(topicId: Topic["id"]) {
+  return prisma.topic.findUnique({
+    where: {
+      id: topicId,
+    },
   });
 }
 
@@ -54,6 +74,39 @@ function findRecentActivityTimeRangeLog(activityId: Activity["id"]) {
     },
     orderBy: { updatedAt: "desc" },
   });
+}
+
+function findActivityTimeRangeCount(activityId: Activity["id"]) {
+  return prisma.activityTimeRangeCount.findMany({
+    where: {
+      activityId: activityId,
+    },
+    orderBy: { startMs: "asc" },
+  });
+}
+
+async function initActivityTimeRangeCount(topicId: Topic["id"]) {
+  const timeRangeCounts: ActivityTimeRangeCountProps[] = [];
+  const topic = await findTopic(topicId);
+  if (!topic) {
+    return timeRangeCounts;
+  }
+  const startTime = topic.startTime ?? 0;
+  const stopTime = topic.stopTime ?? topic.timeRequired;
+
+  for (
+    let t = startTime;
+    t < stopTime;
+    t += ACTIVITY_COUNT_INTERVAL2
+  ) {
+    timeRangeCounts.push({
+      startMs: t * 1000,
+      endMs: (t + ACTIVITY_COUNT_INTERVAL2) * 1000,
+      count: 0,
+    });
+  }
+
+  return timeRangeCounts;
 }
 
 function toInterval({ startMs, endMs }: ActivityTimeRangeProps) {
@@ -94,9 +147,12 @@ function merge_and_push(
       (exist) => exist.startMs == range.startMs && exist.endMs <= range.endMs
     );
     if (existTimeRange) {
-      existTimeRange.endMs = range.endMs;
-      existTimeRange.updatedAt = updatedAt;
-      existTimeRanges.push(existTimeRange);
+      existTimeRanges.push({
+        startMs: existTimeRange.startMs,
+        endMs: range.endMs,
+        createdAt: existTimeRange.createdAt,
+        updatedAt: updatedAt,
+      });
       return;
     }
 
@@ -120,8 +176,88 @@ function merge_and_push(
     }));
 }
 
+function purge(
+  self: ActivityTimeRangeLogProps[],
+  other: ActivityTimeRangeProps[]
+): ActivityTimeRangeLogProps[] {
+  const purgedTimeRanges: ActivityTimeRangeLogProps[] = [];
+  const updatedAt = new Date();
+
+  // 過去にカウント済みのものは省く
+  other.forEach((range) => {
+    // 重複データは省く
+    let existTimeRange = self.find(
+      (exist) => exist.startMs == range.startMs && exist.endMs == range.endMs
+    );
+    if (existTimeRange) {
+      return;
+    }
+
+    // 視聴中を表すデータは、前回までに視聴した区間からの差分のみ取得する
+    existTimeRange = self.find(
+      (exist) => exist.startMs == range.startMs && exist.endMs < range.endMs
+    );
+    if (existTimeRange) {
+      purgedTimeRanges.push({
+        startMs: existTimeRange.endMs,
+        endMs: range.endMs,
+        createdAt: existTimeRange.createdAt,
+        updatedAt: existTimeRange.updatedAt,
+      });
+      return;
+    }
+
+    // 新規データ
+    const newTimeRange: ActivityTimeRangeLogProps = {
+      startMs: range.startMs,
+      endMs: range.endMs,
+      createdAt: updatedAt,
+      updatedAt: updatedAt,
+    };
+    purgedTimeRanges.push(newTimeRange);
+  });
+
+  return purgedTimeRanges.map(({ startMs, endMs, createdAt, updatedAt }) => ({
+    startMs: startMs,
+    endMs: endMs,
+    createdAt: createdAt,
+    updatedAt: updatedAt,
+  }));
+}
+
+function countTimeRange(
+  timeRangeCounts: ActivityTimeRangeCountProps[],
+  timeRangeLogs: ActivityTimeRangeLogProps[]
+): ActivityTimeRangeCountProps[] {
+  timeRangeCounts.forEach((range) => {
+    timeRangeLogs.forEach((log) => {
+      if (
+        (log.startMs <= range.startMs && range.endMs <= log.endMs) ||
+        (range.startMs < log.startMs &&
+          range.endMs < log.endMs &&
+          range.endMs - log.startMs > ACTIVITY_COUNT_INTERVAL_THRESHOLD_MS) ||
+        (log.startMs < range.startMs &&
+          log.endMs < range.endMs &&
+          log.endMs - range.startMs > ACTIVITY_COUNT_INTERVAL_THRESHOLD_MS)
+      ) {
+        range.count += 1;
+      }
+    });
+  });
+
+  return timeRangeCounts.map(({ startMs, endMs, count }) => ({
+    startMs: startMs,
+    endMs: endMs,
+    count: count,
+  }));
+}
+
 function cleanup(activityId: Activity["id"]) {
   return prisma.activityTimeRange.deleteMany({ where: { activityId } });
+}
+
+function cleanupTimeRangeCounts(activityId: Activity["id"]) {
+  return prisma.activityTimeRangeCount.deleteMany({ where: { activityId } });
 }
 
 function cleanupRecentTimeRangeLogs(
@@ -144,6 +280,7 @@ function upsert({
   ltiContextId,
   timeRanges,
   timeRangeLogs,
+  timeRangeCounts,
 }: {
   learnerId: User["id"];
   topicId: Topic["id"];
@@ -151,6 +288,7 @@ function upsert({
   ltiContextId: LtiContext["id"];
   timeRanges: ActivityTimeRangeProps[];
   timeRangeLogs: ActivityTimeRangeLogProps[];
+  timeRangeCounts: ActivityTimeRangeCountProps[];
 }) {
   const totalTimeMs = timeRanges.reduce(
     (a, { startMs, endMs }) => a + endMs - startMs,
@@ -160,6 +298,7 @@ function upsert({
     totalTimeMs,
     timeRanges: { create: timeRanges },
     timeRangeLogs: { create: timeRangeLogs },
+    timeRangeCounts: { create: timeRangeCounts },
   };
   return prisma.activity.upsert({
     where: {
@@ -205,8 +344,14 @@ async function upsertActivity({
   });
 
   let recentTimeRangeLogs: ActivityTimeRangeLogProps[] = [];
+  let timeRangeCounts: ActivityTimeRangeCountProps[] = [];
   if (exists?.id) {
     recentTimeRangeLogs = await findRecentActivityTimeRangeLog(exists.id);
+    timeRangeCounts = await findActivityTimeRangeCount(exists.id);
+  }
+
+  if (!timeRangeCounts.length) {
+    timeRangeCounts = await initActivityTimeRangeCount(topicId);
   }
 
   const timeRanges = merge(exists?.timeRanges ?? [], activity.timeRanges);
@@ -215,7 +360,12 @@ async function upsertActivity({
     activity.timeRanges
   );
 
+  const purgedTimeRangeLogs = purge(recentTimeRangeLogs, activity.timeRanges);
+
+  timeRangeCounts = countTimeRange(timeRangeCounts, purgedTimeRangeLogs);
+
   await prisma.$transaction([
+    ...(exists ? [cleanupTimeRangeCounts(exists.id)] : []),
     ...(exists ? [cleanupRecentTimeRangeLogs(recentTimeRangeLogs)] : []),
     ...(exists ? [cleanup(exists.id)] : []),
     upsert({
@@ -225,6 +375,7 @@ async function upsertActivity({
       ltiContextId,
       timeRanges,
       timeRangeLogs,
+      timeRangeCounts,
     }),
   ]);
 
