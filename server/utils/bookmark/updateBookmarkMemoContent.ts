@@ -18,13 +18,16 @@ async function updateBookmarkMemoContent({
     return;
   }
   const updated = await prisma.bookmark.update({
-    where: { id },
-    data: {
+    where: {
+      id,
       userId: session.user.id,
       tagId: null,
       ltiConsumerId: session.ltiResourceLink?.consumerId,
       ltiContextId: session.ltiContext.id,
-      ...bookmark,
+      topicId: bookmark.topicId,
+    },
+    data: {
+      memoContent: bookmark.memoContent,
     },
     ...bookmarkWithTopicQuery,
   });
