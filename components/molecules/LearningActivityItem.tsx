@@ -6,7 +6,6 @@ import useLineClampStyles from "$styles/lineClamp";
 import type { BookSchema } from "$server/models/book";
 import type { BookActivitySchema } from "$server/models/bookActivity";
 import type { LearnerSchema } from "$server/models/learner";
-import BookmarkStatsDialog from "$organisms/BookmarkStatsDialog";
 
 type LearningBargraphProps = {
   className?: string;
@@ -99,9 +98,7 @@ export default function LearningActivityItem(props: Props) {
   return (
     <div className={classes.root}>
       <div className={clsx(classes.name, lineClamp.placeholder)}>
-        <span className={lineClamp.clamp}>
-          <BookmarkStatsDialog book={book} />
-        </span>
+        <span className={lineClamp.clamp}>{book.name}</span>
       </div>
       <div className={classes.graph}>
         <LearningBargraph

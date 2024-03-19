@@ -34,7 +34,15 @@ export default function BookmarkStatsDialog(props: Props) {
   const data = useWordCloud({ bookId: props.book.id });
 
   return (
-    <>
+    <Box
+      sx={{
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        display: "-webkit-box",
+        WebkitLineClamp: "2",
+        WebkitBoxOrient: "vertical",
+      }}
+    >
       <Button variant="text" onClick={() => setOpen(true)}>
         {props.book.name}
       </Button>
@@ -90,6 +98,6 @@ export default function BookmarkStatsDialog(props: Props) {
           </Box>
         )}
       </Dialog>
-    </>
+    </Box>
   );
 }

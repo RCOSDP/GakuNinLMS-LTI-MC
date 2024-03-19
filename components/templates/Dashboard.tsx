@@ -30,6 +30,7 @@ import getActivitiesByBooks from "$utils/getActivitiesByBooks";
 import useDialogProps from "$utils/useDialogProps";
 import useMemberships from "$utils/useMemberships";
 import MembersDialog from "$organisms/MembersDialog";
+import BookmarkStatsDialog from "$organisms/BookmarkStatsDialog";
 import useLtiMembersHandler from "$utils/useLtiMembersHandler";
 import type { LtiNrpsContextMemberSchema } from "$server/models/ltiNrpsContextMember";
 
@@ -248,6 +249,7 @@ export default function Dashboard(props: Props) {
         >
           <Tab label="ブック" />
           <Tab label="学習者" />
+          <Tab label="タグ" />
         </Tabs>
         <TabPanel className={classes.items} value={tabIndex} index={0}>
           {activitiesByBooks.map((activitiesByBook, index) => (
@@ -284,6 +286,11 @@ export default function Dashboard(props: Props) {
               onActivityClick={handleActivityClick(learner, activities)}
               session={session}
             />
+          ))}
+        </TabPanel>
+        <TabPanel className={classes.items} value={tabIndex} index={2}>
+          {activitiesByBooks.map((book, index) => (
+            <BookmarkStatsDialog key={index} book={book} />
           ))}
         </TabPanel>
       </Card>
