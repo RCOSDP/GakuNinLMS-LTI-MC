@@ -16,12 +16,12 @@ const NEXT_PUBLIC_ACTIVITY_SEND_INTERVAL2 = Number(
   process.env.NEXT_PUBLIC_ACTIVITY_SEND_INTERVAL ?? 10
 );
 
-const NEXT_PUBLIC_ACTIVITY_COUNT_INTERVAL2 = Number(
-  process.env.NEXT_PUBLIC_ACTIVITY_COUNT_INTERVAL ?? 1
+const ACTIVITY_COUNT_INTERVAL2 = Number(
+  process.env.ACTIVITY_COUNT_INTERVAL ?? 1
 );
 
 const ACTIVITY_COUNT_INTERVAL_THRESHOLD_MS =
-  (NEXT_PUBLIC_ACTIVITY_COUNT_INTERVAL2 * 1000) / 2.0;
+  (ACTIVITY_COUNT_INTERVAL2 * 1000) / 2.0;
 
 function findActivity({
   learnerId,
@@ -97,11 +97,11 @@ async function initActivityTimeRangeCount(topicId: Topic["id"]) {
   for (
     let t = startTime;
     t < stopTime;
-    t += NEXT_PUBLIC_ACTIVITY_COUNT_INTERVAL2
+    t += ACTIVITY_COUNT_INTERVAL2
   ) {
     timeRangeCounts.push({
       startMs: t * 1000,
-      endMs: (t + NEXT_PUBLIC_ACTIVITY_COUNT_INTERVAL2) * 1000,
+      endMs: (t + ACTIVITY_COUNT_INTERVAL2) * 1000,
       count: 0,
     });
   }
