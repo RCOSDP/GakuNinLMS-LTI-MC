@@ -136,7 +136,7 @@ function merge_and_push(
 ): ActivityTimeRangeProps[] {
   const existTimeRanges: ActivityTimeRangeLogProps[] = [];
   const newTimeRanges: ActivityTimeRangeLogProps[] = [];
-  const updatedAt = new Date();
+  const now = new Date();
 
   //直近のものを重複排除しつつ、継続視聴の場合は mergeして追記をしないといけない
   other.forEach((range) => {
@@ -150,7 +150,7 @@ function merge_and_push(
         startMs: existTimeRange.startMs,
         endMs: range.endMs,
         createdAt: existTimeRange.createdAt,
-        updatedAt: updatedAt,
+        updatedAt: now,
       });
       return;
     }
@@ -159,8 +159,8 @@ function merge_and_push(
     const newTimeRange: ActivityTimeRangeLogProps = {
       startMs: range.startMs,
       endMs: range.endMs,
-      createdAt: updatedAt,
-      updatedAt: updatedAt,
+      createdAt: now,
+      updatedAt: now,
     };
     newTimeRanges.push(newTimeRange);
   });
@@ -180,7 +180,7 @@ function purge(
   other: ActivityTimeRangeProps[]
 ): ActivityTimeRangeLogProps[] {
   const purgedTimeRanges: ActivityTimeRangeLogProps[] = [];
-  const updatedAt = new Date();
+  const now = new Date();
 
   // 過去にカウント済みのものは省く
   other.forEach((range) => {
@@ -210,8 +210,8 @@ function purge(
     const newTimeRange: ActivityTimeRangeLogProps = {
       startMs: range.startMs,
       endMs: range.endMs,
-      createdAt: updatedAt,
-      updatedAt: updatedAt,
+      createdAt: now,
+      updatedAt: now,
     };
     purgedTimeRanges.push(newTimeRange);
   });
