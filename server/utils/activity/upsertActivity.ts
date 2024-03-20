@@ -136,11 +136,10 @@ function merge_and_push(
 ): ActivityTimeRangeProps[] {
   const existTimeRanges: ActivityTimeRangeLogProps[] = [];
   const newTimeRanges: ActivityTimeRangeLogProps[] = [];
+  const updatedAt = new Date();
 
   //直近のものを重複排除しつつ、継続視聴の場合は mergeして追記をしないといけない
   other.forEach((range) => {
-    const updatedAt = new Date();
-
     // 重複データ: クライアント側から、既存データと同じ startMsとendMsのものが送られてきた
     // 視聴中を表すデータ: クライアント側から、既存データとstartMsが同じでかつendMsが大きいものが送られてきた
     const existTimeRange = self.find(
