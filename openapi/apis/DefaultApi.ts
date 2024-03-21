@@ -39,6 +39,9 @@ import {
     InlineObject14,
     InlineObject14FromJSON,
     InlineObject14ToJSON,
+    InlineObject15,
+    InlineObject15FromJSON,
+    InlineObject15ToJSON,
     InlineObject2,
     InlineObject2FromJSON,
     InlineObject2ToJSON,
@@ -201,6 +204,11 @@ export interface ApiV2BookZoomMeetingIdGetRequest {
 
 export interface ApiV2BookmarkIdDeleteRequest {
     id: number;
+}
+
+export interface ApiV2BookmarkMemoContentIdPutRequest {
+    id: number;
+    body?: InlineObject15;
 }
 
 export interface ApiV2BookmarkMemoContentPostRequest {
@@ -821,6 +829,41 @@ export class DefaultApi extends runtime.BaseAPI {
      */
     async apiV2BookmarkIdDelete(requestParameters: ApiV2BookmarkIdDeleteRequest): Promise<void> {
         await this.apiV2BookmarkIdDeleteRaw(requestParameters);
+    }
+
+    /**
+     * 自由記述タグが付与されたブックマークを更新します。
+     * 自由記述タグ(memoContent)が付与されたブックマークの更新
+     */
+    async apiV2BookmarkMemoContentIdPutRaw(requestParameters: ApiV2BookmarkMemoContentIdPutRequest): Promise<runtime.ApiResponse<{ [key: string]: object; }>> {
+        if (requestParameters.id === null || requestParameters.id === undefined) {
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling apiV2BookmarkMemoContentIdPut.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/api/v2/bookmarkMemoContent/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: InlineObject15ToJSON(requestParameters.body),
+        });
+
+        return new runtime.JSONApiResponse<any>(response);
+    }
+
+    /**
+     * 自由記述タグが付与されたブックマークを更新します。
+     * 自由記述タグ(memoContent)が付与されたブックマークの更新
+     */
+    async apiV2BookmarkMemoContentIdPut(requestParameters: ApiV2BookmarkMemoContentIdPutRequest): Promise<{ [key: string]: object; }> {
+        const response = await this.apiV2BookmarkMemoContentIdPutRaw(requestParameters);
+        return await response.value();
     }
 
     /**

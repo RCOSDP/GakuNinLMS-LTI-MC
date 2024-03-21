@@ -30,6 +30,14 @@ async function createBookmarkMemoContent(
   return res as unknown as BookmarkSchema;
 }
 
+async function updateBookmarkMemoContent(
+  id: BookmarkParams["id"],
+  body: BookmarkMemoContentProps
+): Promise<void> {
+  const res = await api.apiV2BookmarkMemoContentIdPut({ id, body });
+  await mutate({ key, topicId: body.topicId, isAllUsers: false }, res);
+}
+
 function useBookmarkHandler() {
   const onSubmitBookmark = useCallback(async (body: BookmarkProps) => {
     await createBookmark(body);
@@ -49,10 +57,18 @@ function useBookmarkHandler() {
     []
   );
 
+  const onUpdateBookmarkMemoContent = useCallback(
+    async (id: BookmarkParams["id"], body: BookmarkMemoContentProps) => {
+      await updateBookmarkMemoContent(id, body);
+    },
+    []
+  );
+
   const handlers = {
     onSubmitBookmark,
     onDeleteBookmark,
     onSubmitBookmarkMemoContent,
+    onUpdateBookmarkMemoContent,
   };
 
   return handlers;
