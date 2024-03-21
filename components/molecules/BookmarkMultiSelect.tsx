@@ -23,17 +23,20 @@ function BookmarkMultiSelect(props: Props) {
     tags,
     ...other
   } = props;
-  const defaultValue = tags[0].id;
+  const defaultValue = [
+    ...selectedTagIds,
+    ...(isExistMemoContent ? ["コメント"] : []),
+  ];
   const handleChange = useCallback(
     (event: SelectChangeEvent<unknown>) => {
       if (!Array.isArray(event.target.value)) {
         return;
       }
 
-      onClickMemoContent(event.target.value.includes("メモ"));
+      onClickMemoContent(event.target.value.includes("コメント"));
       onTagSelect(
         event.target.value.filter(
-          (value) => value !== "メモ"
+          (value) => value !== "コメント"
         ) as TagSchema["id"][]
       );
     },
@@ -44,7 +47,7 @@ function BookmarkMultiSelect(props: Props) {
     <Select
       style={{ width: "200px" }}
       onChange={handleChange}
-      defaultValue={[defaultValue]}
+      defaultValue={defaultValue}
       {...other}
       multiple
       renderValue={(selected) => {
@@ -59,7 +62,7 @@ function BookmarkMultiSelect(props: Props) {
           .join(", ");
 
         if (isExistMemoContent) {
-          renderValue = renderValue ? renderValue + ", メモ" : "メモ";
+          renderValue = renderValue ? renderValue + ", コメント" : "コメント";
         }
         return renderValue;
       }}
@@ -70,9 +73,9 @@ function BookmarkMultiSelect(props: Props) {
           <ListItemText primary={tag.label} />
         </MenuItem>
       ))}
-      <MenuItem value={"メモ"}>
+      <MenuItem value="コメント">
         <Checkbox checked={isExistMemoContent} />
-        <ListItemText primary={"メモ"} />
+        <ListItemText primary="コメント" />
       </MenuItem>
     </Select>
   );

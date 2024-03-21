@@ -36,7 +36,7 @@ export default function Tag({ tag, memoContent }: Props) {
 
   return (
     <div className={tagClass}>
-      <Emoji emoji={tag?.emoji || "📔"} />
+      <Emoji emoji={tag?.emoji || "💬"} />
       <p className={text}>{tag?.label || memoContent}</p>
     </div>
   );

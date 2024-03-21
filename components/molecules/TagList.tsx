@@ -77,7 +77,7 @@ export default function TagList({ topicId, bookmarks, tagMenu }: Props) {
     topicId: BookmarkProps["topicId"]
   ) => {
     await confirm({
-      title: `メモを削除します。よろしいですか？`,
+      title: "コメントを削除します。よろしいですか？",
       cancellationText: "キャンセル",
       confirmationText: "OK",
     });

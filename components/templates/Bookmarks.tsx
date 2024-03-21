@@ -53,21 +53,21 @@ type Props = {
   bookmarkTagMenu: BookmarkTagMenu;
 };
 
-function isSelectedTagMenu(
-  targetTagIds: TagSchema["id"][],
-  selectedTagIds: TagSchema["id"][]
-) {
+type TagId = TagSchema["id"];
+type TagIdList = Array<TagId>;
+
+function isSelectedTagMenu(targetTagIds: TagIdList, selectedTagIds: TagIdList) {
   return targetTagIds.every((id) => selectedTagIds.includes(id));
 }
 
 export default function Bookmarks({ bookmarkTagMenu }: Props) {
-  const [selectedTagIds, setSelectedTagIds] = useState<TagSchema["id"][]>([
-    bookmarkTagMenu[0].id,
-  ]);
-  const [isExistMemoContent, setIsBookmarkMemoContent] = useState(false);
+  const [selectedTagIds, setSelectedTagIds] = useState<TagIdList>(
+    bookmarkTagMenu.map((t) => t.id)
+  );
+  const [isExistMemoContent, setIsBookmarkMemoContent] = useState(true);
 
   const onClickTagMenu = useCallback(
-    (tagIds: TagSchema["id"][]) => {
+    (tagIds: TagIdList) => {
       if (isSelectedTagMenu(tagIds, selectedTagIds)) {
         setSelectedTagIds((prev) => prev.filter((id) => tagIds.includes(id)));
       } else {

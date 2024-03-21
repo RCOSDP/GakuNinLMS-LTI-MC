@@ -18,7 +18,6 @@ export const Default: Story = {
       handleTagChange={() => {}}
       isBookmarkMemoContent={false}
       onSubmitBookmark={async () => {}}
-      onSubmitBookmarkMemoContent={async () => {}}
     />
   ),
 };
