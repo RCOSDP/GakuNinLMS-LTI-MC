@@ -94,11 +94,7 @@ async function initActivityTimeRangeCount(topicId: Topic["id"]) {
   const startTime = topic.startTime ?? 0;
   const stopTime = topic.stopTime ?? topic.timeRequired;
 
-  for (
-    let t = startTime;
-    t < stopTime;
-    t += ACTIVITY_COUNT_INTERVAL2
-  ) {
+  for (let t = startTime; t < stopTime; t += ACTIVITY_COUNT_INTERVAL2) {
     timeRangeCounts.push({
       startMs: t * 1000,
       endMs: (t + ACTIVITY_COUNT_INTERVAL2) * 1000,
@@ -130,7 +126,7 @@ function merge(
   return timeRanges;
 }
 
-function merge_and_push(
+function concatenate(
   self: ActivityTimeRangeLogProps[],
   other: ActivityTimeRangeProps[]
 ): ActivityTimeRangeProps[] {
@@ -354,11 +350,7 @@ async function upsertActivity({
   }
 
   const timeRanges = merge(exists?.timeRanges ?? [], activity.timeRanges);
-  const timeRangeLogs = merge_and_push(
-    recentTimeRangeLogs,
-    activity.timeRanges
-  );
-
+  const timeRangeLogs = concatenate(recentTimeRangeLogs, activity.timeRanges);
   const purgedTimeRangeLogs = purge(recentTimeRangeLogs, activity.timeRanges);
 
   timeRangeCounts = countTimeRange(timeRangeCounts, purgedTimeRangeLogs);
