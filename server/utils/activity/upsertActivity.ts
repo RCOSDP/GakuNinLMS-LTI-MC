@@ -126,7 +126,7 @@ function merge(
   return timeRanges;
 }
 
-function concatenate(
+function concatAndMerge(
   self: ActivityTimeRangeLogProps[],
   other: ActivityTimeRangeProps[]
 ): ActivityTimeRangeProps[] {
@@ -350,7 +350,7 @@ async function upsertActivity({
   }
 
   const timeRanges = merge(exists?.timeRanges ?? [], activity.timeRanges);
-  const timeRangeLogs = concatenate(recentTimeRangeLogs, activity.timeRanges);
+  const timeRangeLogs = concatAndMerge(recentTimeRangeLogs, activity.timeRanges);
   const purgedTimeRangeLogs = purge(recentTimeRangeLogs, activity.timeRanges);
 
   timeRangeCounts = countTimeRange(timeRangeCounts, purgedTimeRangeLogs);
