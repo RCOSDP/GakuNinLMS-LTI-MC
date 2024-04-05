@@ -34,21 +34,16 @@ export async function update({
   session,
   body,
   params,
-  ip,
 }: FastifyRequest<{ Body: BookProps; Params: BookParams }>) {
   const found = await bookExists(params.book_id);
 
   if (!found) return { status: 404 };
   if (!isUsersOrAdmin(session, found.authors)) return { status: 403 };
 
-  const created = await updateBook(
-    session.user.id,
-    {
-      ...body,
-      id: params.book_id,
-    },
-    ip
-  );
+  const created = await updateBook(session.user.id, {
+    ...body,
+    id: params.book_id,
+  });
 
   return {
     status: created == null ? 400 : 201,

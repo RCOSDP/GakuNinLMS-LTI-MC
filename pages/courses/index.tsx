@@ -48,12 +48,15 @@ function Index() {
       links: Array<Pick<LinkSchema, "oauthClientId" | "ltiResourceLink">>
     ) {
       await Promise.all(
-        links.map((link) =>
-          destroyLtiResourceLink({
+        links.map((link) => {
+          if (!link?.ltiResourceLink?.id) {
+            return;
+          }
+          return destroyLtiResourceLink({
             consumerId: link.oauthClientId,
             id: link.ltiResourceLink.id,
-          })
-        )
+          });
+        })
       );
       await revalidateLinks(linkSearchProps.query);
     },

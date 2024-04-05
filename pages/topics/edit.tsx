@@ -10,13 +10,14 @@ import type {
 import type { Query as BookEditQuery } from "$pages/book/edit";
 import Placeholder from "$templates/Placeholder";
 import TopicEdit from "$templates/TopicEdit";
-import TopicNotFoundProblem from "$templates/BookNotFoundProblem";
-import BookNotFoundProblem from "$templates/TopicNotFoundProblem";
+import TopicNotFoundProblem from "$templates/TopicNotFoundProblem";
+import BookNotFoundProblem from "$templates/BookNotFoundProblem";
 import { useVideoTrackAtom } from "$store/videoTrack";
 import { destroyTopic, updateTopic, useTopic } from "$utils/topic";
 import { destroyVideoTrack, uploadVideoTrack } from "$utils/videoTrack";
 import useAuthorsHandler from "$utils/useAuthorsHandler";
 import { useWowzaUpload } from "$utils/wowza/useWowzaUplooad";
+import { pagesPath } from "$utils/$path";
 
 export type Query =
   | { topicId: TopicSchema["id"] }
@@ -28,6 +29,7 @@ type EditProps = {
 };
 
 function Edit({ topicId, back }: EditProps) {
+  const router = useRouter();
   const topic = useTopic(topicId);
   const { addVideoTrack, deleteVideoTrack } = useVideoTrackAtom();
   const { handleAuthorsUpdate, handleAuthorSubmit } = useAuthorsHandler(
@@ -52,7 +54,7 @@ function Edit({ topicId, back }: EditProps) {
         ...props,
         resource: resource ?? props.resource,
       });
-      return back();
+      await back();
     } catch (e) {
       const response = e as Response;
       const status = response.status;
@@ -81,6 +83,9 @@ function Edit({ topicId, back }: EditProps) {
   function handleCancel() {
     return back();
   }
+  const handleImportClick = () => {
+    return router.push(pagesPath.topics.import.$url({ query: { topicId } }));
+  };
   const handlers = {
     onSubmit: handleSubmit,
     onDelete: handleDelete,
@@ -89,6 +94,7 @@ function Edit({ topicId, back }: EditProps) {
     onSubtitleDelete: handleSubtitleDelete,
     onAuthorsUpdate: handleAuthorsUpdate,
     onAuthorSubmit: handleAuthorSubmit,
+    onImportClick: handleImportClick,
   };
 
   if (!topic) return <Placeholder />;

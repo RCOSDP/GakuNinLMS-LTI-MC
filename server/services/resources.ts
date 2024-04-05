@@ -38,13 +38,10 @@ export const hooks = {
   get: { auth: [authUser, authInstructor] },
 };
 
-export async function index({
-  query,
-  ip,
-}: FastifyRequest<{ Querystring: Query }>) {
+export async function index({ query }: FastifyRequest<{ Querystring: Query }>) {
   const page = query.page ?? 0;
   const perPage = query.per_page ?? 50;
-  const resources = await findResources(query.sort, page, perPage, ip);
+  const resources = await findResources(query.sort, page, perPage);
 
   return {
     status: 200,

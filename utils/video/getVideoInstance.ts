@@ -3,6 +3,7 @@ import type { VideoResourceSchema } from "$server/models/videoResource";
 import type { VideoInstance } from "$types/videoInstance";
 import buildTracks from "$utils/buildTracks";
 import getVideoJsPlayer from "./getVideoJsPlayer";
+import getVideoType from "./getVideoType";
 import getVimeoPlayer from "./getVimeoPlayer";
 
 /**
@@ -17,8 +18,8 @@ function getVideoInstance(
   >,
   thumbnailUrl?: OembedSchema["thumbnail_url"]
 ): VideoInstance {
-  switch (resource.providerUrl) {
-    case "https://www.youtube.com/":
+  switch (getVideoType(resource.providerUrl)) {
+    case "youtube":
       return {
         type: "youtube",
         url: resource.url,
@@ -33,8 +34,9 @@ function getVideoInstance(
         }),
         tracks: buildTracks(resource.tracks),
         stopTimeOver: false,
+        firstPlay: true,
       };
-    case "https://vimeo.com/":
+    case "vimeo":
       return {
         type: "vimeo",
         url: resource.url,
@@ -51,6 +53,7 @@ function getVideoInstance(
         }),
         tracks: buildTracks(resource.tracks),
         stopTimeOver: false,
+        firstPlay: true,
       };
     }
   }

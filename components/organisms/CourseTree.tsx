@@ -63,7 +63,7 @@ function LinksTree({
         const nodeId = [
           link.oauthClientId,
           link.ltiContext.id,
-          link.ltiResourceLink.id,
+          link.ltiResourceLink?.id || "",
         ]
           .map(encodeURIComponent)
           .join(":");

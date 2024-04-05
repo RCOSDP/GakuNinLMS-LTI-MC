@@ -9,8 +9,7 @@ import topicCreateInput from "./topicCreateInput";
 
 async function createTopic(
   authorId: User["id"],
-  topic: TopicProps,
-  ip: string
+  topic: TopicProps
 ): Promise<TopicSchema | undefined> {
   const created = await prisma.topic.create({
     data: topicCreateInput(authorId, topic),
@@ -25,7 +24,7 @@ async function createTopic(
 
   if (!found) return;
 
-  return topicToTopicSchema(found, ip);
+  return topicToTopicSchema(found);
 }
 
 export default createTopic;

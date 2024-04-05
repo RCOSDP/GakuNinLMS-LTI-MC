@@ -56,11 +56,17 @@ function VideoJs({ element, player, tracks }: Props) {
     if (!tracks || tracks.length === 0) return;
     const trackElements: HTMLTrackElement[] = [];
     player.ready(() => {
-      (
-        (tracks ?? [])
-          .map((track) => track && player.addRemoteTextTrack(track, false))
-          .filter(Boolean) as HTMLTrackElement[]
-      ).forEach((track) => trackElements.push(track));
+      (tracks ?? [])
+        .map(
+          (track) =>
+            track &&
+            (player.addRemoteTextTrack(
+              track,
+              false
+            ) as unknown as HTMLTrackElement)
+        )
+        .filter(Boolean)
+        .forEach((track) => trackElements.push(track));
     });
     return () => {
       player.ready(() => {

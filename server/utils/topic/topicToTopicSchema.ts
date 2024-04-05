@@ -15,6 +15,7 @@ export const topicsWithResourcesArg = {
     resource: resourceWithVideoArg,
     keywords: true,
     topicSection: { include: { section: { include: { book: true } } } },
+    bookmarks: true,
   },
 } as const;
 
@@ -25,13 +26,11 @@ export type TopicWithResource = Prisma.TopicGetPayload<
 /**
  * TopicSchemaへの変換
  * @param topicWithResource データベースで扱われるリソース含むTopic
- * @param ip req.ip
  * @param options オプション
  * @param options.relatedBooksMap トピックに関連するブックの集合
  */
 export function topicToTopicSchema(
   { topicSection, ...topic }: TopicWithResource,
-  ip: string,
   options?: {
     relatedBooksMap: Map<Book["id"], Book>;
   }
@@ -39,17 +38,20 @@ export function topicToTopicSchema(
   return {
     ...topic,
     authors: topic.authors.map(authorToAuthorSchema),
-    resource: resourceToResourceSchema(topic.resource, ip),
+    resource: resourceToResourceSchema(topic.resource),
     relatedBooks: options && [
       ...topicSection
-        .reduce((books, ts) => {
-          const book = ts.section.book;
-          if (books.has(book.id)) return books;
-          if (options.relatedBooksMap.has(book.id)) {
-            books.set(book.id, book);
-          }
-          return books;
-        }, new Map() as Map<Book["id"], Book>)
+        .reduce(
+          (books, ts) => {
+            const book = ts.section.book;
+            if (books.has(book.id)) return books;
+            if (options.relatedBooksMap.has(book.id)) {
+              books.set(book.id, book);
+            }
+            return books;
+          },
+          new Map() as Map<Book["id"], Book>
+        )
         .values(),
     ],
   };

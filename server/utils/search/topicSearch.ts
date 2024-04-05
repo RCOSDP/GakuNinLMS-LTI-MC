@@ -34,8 +34,7 @@ async function topicSearch(
   filter: AuthorFilter,
   sort: string,
   page: number,
-  perPage: number,
-  ip: string
+  perPage: number
 ): Promise<SearchResultSchema> {
   const insensitiveMode = { mode: "insensitive" as const };
   const where: Prisma.TopicWhereInput = {
@@ -136,7 +135,7 @@ async function topicSearch(
   });
   const relatedBooksMap = new Map(relatedBooks.map((book) => [book.id, book]));
   const contents = topics
-    .map((topic) => topicToTopicSchema(topic, ip, { relatedBooksMap }))
+    .map((topic) => topicToTopicSchema(topic, { relatedBooksMap }))
     .map((topic) => ({
       type: "topic" as const,
       ...topic,

@@ -113,7 +113,10 @@ const Preview = styled(Card)(({ theme }) => ({
   },
 }));
 
-type Props = Parameters<typeof Checkbox>[0] & {
+export type ContentPreviewProps = Omit<
+  Parameters<typeof Checkbox>[0],
+  "content"
+> & {
   content: ContentSchema;
   onContentPreviewClick(content: ContentSchema): void;
   onContentEditClick?(content: ContentSchema): void;
@@ -124,6 +127,7 @@ type Props = Parameters<typeof Checkbox>[0] & {
   onKeywordClick(keyword: Pick<KeywordSchema, "name">): void;
   onRelatedBookClick?(id: RelatedBook): void;
   linked?: boolean;
+  isDeepLink?: boolean;
 };
 
 export default function ContentPreview({
@@ -135,9 +139,10 @@ export default function ContentPreview({
   onKeywordClick,
   onRelatedBookClick,
   linked = content.type === "book" ? false : undefined,
+  isDeepLink,
   checked,
   ...checkboxProps
-}: Props) {
+}: ContentPreviewProps) {
   const lineClamp = useLineClampStyles({
     fontSize: "0.75rem",
     lineClamp: 2,
@@ -177,7 +182,7 @@ export default function ContentPreview({
             />
           ))}
         {content.shared && <SharedIndicator className="shared" />}
-        {onContentEditClick && (
+        {!isDeepLink && onContentEditClick && (
           <EditButton
             className="edit-button"
             variant={content.type}
@@ -198,17 +203,27 @@ export default function ContentPreview({
         />
       </CardActionArea>
       <Box position="relative">
-        {linked !== undefined && onContentLinkClick && (
-          <LinkSwitch
-            sx={{
-              position: "absolute",
-              bottom: 0,
-              right: 0,
-              transform: "translateY(50%)",
-            }}
-            checked={linked}
-            onChange={handleContentLinkClick}
-          />
+        {content.type === "book" && linked !== undefined && (
+          <label
+            title={
+              onContentLinkClick
+                ? "リンクを切り替える"
+                : "ツールURLが指定されているため、リンクの切り替えはできません"
+            }
+          >
+            <LinkSwitch
+              sx={{
+                position: "absolute",
+                bottom: 0,
+                right: 0,
+                transform: "translateY(50%)",
+                filter: onContentLinkClick ? "none" : "grayscale(1)",
+              }}
+              disabled={!onContentLinkClick}
+              checked={linked}
+              onChange={handleContentLinkClick}
+            />
+          </label>
         )}
         {content.license && (
           <License

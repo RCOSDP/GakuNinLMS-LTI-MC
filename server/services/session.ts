@@ -1,6 +1,6 @@
 import type { FastifyRequest } from "fastify";
 import type Method from "$server/types/method";
-import { sessionSchema } from "$server/models/session";
+import { type SessionSchema, sessionSchema } from "$server/models/session";
 import { getSystemSettings } from "$server/utils/systemSettings";
 
 export const method: Method = {
@@ -17,12 +17,14 @@ export const hooks = {
   get: { auth: [] },
 };
 
-const nullSession = {
+const nullSession: SessionSchema = {
   oauthClient: {
     id: "",
     nonce: "",
   },
-  ltiVersion: "",
+  ltiMessageType: "LtiResourceLinkRequest",
+  ltiVersion: "1.3.0",
+  ltiDeploymentId: "",
   ltiUser: {
     id: "",
     name: "",
@@ -31,6 +33,7 @@ const nullSession = {
   ltiRoles: [],
   ltiResourceLinkRequest: { id: "", title: "" },
   ltiContext: { id: "", label: "", title: "" },
+  ltiResourceLink: null,
   user: {
     id: 0,
     ltiConsumerId: "",

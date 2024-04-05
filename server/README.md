@@ -4,9 +4,9 @@
 
 ### 前提条件
 
-2023-03-29 現在、以下の環境で動作確認済み
+2023-09-07 現在、以下の環境で動作確認済み
 
-- Docker v23
+- Docker v24
 - Docker Compose v2
 - Node.js LTS
 - Yarn v1.22
@@ -90,8 +90,9 @@ docker compose down
 | `WOWZA_SCP_SERVER_PATH`              | 一括登録時の動画ファイルのアップロード先フォルダ (デフォルト: "")                                                                                                  |
 | `WOWZA_THUMBNAIL_BASE_URL`           | サムネイル画像の URL (デフォルト: "")                                                                                                                              |
 | `WOWZA_THUMBNAIL_EXTENSION`          | 生成されるサムネイル画像の拡張子 (デフォルト: "jpg")                                                                                                               |
-| `ZOOM_API_KEY`                       | Zoom API アクセスキー                                                                                                                                              |
-| `ZOOM_API_SECRET`                    | Zoom API シークレット                                                                                                                                              |
+| `ZOOM_ACCOUNT_ID`                    | Zoom API アカウント ID                                                                                                                                             |
+| `ZOOM_CLIENT_ID`                     | Zoom API クライアント ID                                                                                                                                           |
+| `ZOOM_CLIENT_SECRET`                 | Zoom API シークレットキー                                                                                                                                          |
 | `ZOOM_IMPORT_CONSUMER_KEY`           | Zoom インポートのユーザー検索に用いるコンシューマーキー (デフォルト: 無効 ""、例: 設定値 `OAUTH_CONSUMER_KEY` と同じ値)                                            |
 | `ZOOM_IMPORT_INTERVAL`               | Zoom インポートの実行時間 (デフォルト: 無効 ""、例: 毎朝 6 時実行 `1 6 * * *`)                                                                                     |
 | `ZOOM_IMPORT_TO`                     | Zoom からインポートした動画のアップロード先 (デフォルト: 無効 ""、例: `wowza`)                                                                                     |
@@ -102,6 +103,8 @@ docker compose down
 | `PUBLIC_ACCESS_HASH_ALGORITHM`       | 公開 URL のトークン生成に利用するハッシュアルゴリズム (デフォルト: "sha256"、`openssl help` コマンドの "Message Digest commands" の項目に表示される値が利用可能)   |
 | `PUBLIC_ACCESS_CRYPTO_ALGORITHM`     | Wowza 動画と字幕のトークン生成に利用する暗号化アルゴリズム (デフォルト: "aes-256-cbc"、`openssl help` コマンドの "Cipher commands" の項目に表示される値が利用可能) |
 | `ACTIVITY_RATE_MIN`                  | 学習活動の完了とみなす最小の視聴時間の割合 (デフォルト:`0.9`)                                                                                                      |
+| `VTT_ACCESS_TOKEN_EXPIRES_IN`        | 字幕を取得する際のアクセストークンの有効期限 (秒) (デフォルト: `5400`)                                                                                             |
+| `ACTIVITY_COUNT_INTERVAL`            | 実視聴回数を記録する際の区間の長さ (秒) (デフォルト:`1`)                                                                                                           |
 
 [database_connection_url]: https://www.prisma.io/docs/reference/database-connectors/connection-urls/
 
@@ -114,6 +117,16 @@ docker compose down
 ```sh
 echo SESSION_SECRET=$(node -r crypto -pe 'crypto.randomBytes(32).toString("hex")') >> .env
 ```
+
+### ヒント: ZOOM API の設定
+
+Zoom Marketplace で、`Server-to-Server OAuth App` を作成
+https://developers.zoom.us/docs/internal-apps/create/
+
+Apps には、以下のスコープが必要です。
+
+- View and manage all user recordings /recording:write:admin
+- View all user information /user:read:admin
 
 ## 本番環境へのデプロイ
 
@@ -187,7 +200,7 @@ INSERT INTO "lti_platform" ("issuer", "metadata") VALUES ('https://example', '{
 INSERT INTO "lti_consumer" ("platform_id", "id") VALUES ('https://example', '***');
 ```
 
-ローカル環境で開発用サーバー [docker-compose.yml](../docker-compose.yml) を使うケース:
+ローカル環境で開発用サーバー [compose.yml](../compose.yml) を使うケース:
 
 ```sql
 INSERT INTO "lti_platform" ("issuer", "metadata") VALUES ('http://localhost:8081', '{
@@ -291,3 +304,24 @@ yarn --cwd server prisma studio
 
 dist ディレクトリをサーバー上に配置し、各環境変数とともに `NODE_ENV=production node dist/index.js | logger -p daemon.info -t chibichilo-server` とコマンドを実行することでアプリケーションを起動できます。
 [プロセスマネージャ PM2 を使って本番環境のサーバー上で起動する](https://future-architect.github.io/typescript-guide/deploy.html#id3)などしましょう。
+
+### タグの設定
+
+ブックマークのタグの初期値:
+
+| id  | label      | emoji |
+| --- | ---------- | ----- |
+| 1   | 後で見る   | 👀    |
+| 2   | 難しい     | 💪    |
+| 3   | 重要       | ❗    |
+| 4   | お気に入り | 💖    |
+| 5   | 高評価     | 👍    |
+
+変更する場合は SQL を発行します。
+※ 使用できる絵文字は、[twimoji](https://twemoji.twitter.com/)に準拠します。
+
+SQL:
+
+```sql
+UPDATE "Tag" SET "label" = '後で見る', "emoji" = '👀' WHERE "id" = 1;
+```
