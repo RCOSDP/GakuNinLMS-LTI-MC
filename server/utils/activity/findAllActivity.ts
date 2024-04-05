@@ -69,8 +69,7 @@ async function findLtiMembers(
  */
 async function findAllActivity(
   session: SessionSchema,
-  currentLtiContextOnly: boolean,
-  ip: string
+  currentLtiContextOnly: boolean
 ): Promise<{
   learners: Array<LearnerSchema>;
   courseBooks: Array<CourseBookSchema>;
@@ -95,7 +94,6 @@ async function findAllActivity(
     user,
     books,
     activities,
-    ip,
   });
 
   return { learners: ltiMembers, courseBooks, bookActivities };

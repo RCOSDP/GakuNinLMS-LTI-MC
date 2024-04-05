@@ -27,8 +27,7 @@ function topicUpdateInput(topic: TopicProps, keywords: KeywordSchema[]) {
 
 async function upsertTopic(
   authorId: User["id"],
-  { id, ...topic }: TopicProps & Pick<Topic, "id">,
-  ip: string
+  { id, ...topic }: TopicProps & Pick<Topic, "id">
 ): Promise<TopicSchema | undefined> {
   const keywordsBeforeUpdate = await prisma.keyword.findMany({
     where: { topics: { some: { id } } },
@@ -42,7 +41,7 @@ async function upsertTopic(
 
   if (!created) return;
 
-  return topicToTopicSchema(created, ip);
+  return topicToTopicSchema(created);
 }
 
 export default upsertTopic;

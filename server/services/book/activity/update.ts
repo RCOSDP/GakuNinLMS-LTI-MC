@@ -59,7 +59,7 @@ export async function update(
   const client = await findClient(req.session.oauthClient.id);
   if (client == null) return { status: 401 };
 
-  const book = await findBook(req.params.book_id, req.session.user.id, req.ip);
+  const book = await findBook(req.params.book_id, req.session.user.id);
   if (book == null) return { status: 404 };
 
   const topics =

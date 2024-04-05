@@ -29,7 +29,6 @@ function Content({ children }: { children: ReactNode }) {
   const { session, isInstructor, error } = useSessionInit();
   const trigger = useScrollTrigger();
 
-  if (!isInstructor && router.pathname === "/book") return <>{children}</>;
   if (error || session?.user?.id === 0) {
     return (
       <Problem title="セッション情報が得られませんでした">
@@ -38,29 +37,33 @@ function Content({ children }: { children: ReactNode }) {
     );
   }
   if (!session) return <Placeholder />;
-  if (NEXT_PUBLIC_NO_EMBED && inIframe()) return <EmbedProblem />;
+  const isDeepLink = session?.ltiDlSettings?.deep_link_return_url !== undefined;
+  if (!isDeepLink && NEXT_PUBLIC_NO_EMBED && inIframe()) {
+    return <EmbedProblem />;
+  }
 
   const handleBooksClick = () => router.push(pagesPath.books.$url());
   const handleTopicsClick = () => router.push(pagesPath.topics.$url());
   const handleCoursesClick = () => router.push(pagesPath.courses.$url());
   const handleDashboardClick = () => router.push(pagesPath.dashboard.$url());
   const handleBookClick = () => router.push(pagesPath.$url());
+  const handleBookmarksClick = () => router.push(pagesPath.bookmarks.$url());
 
   return (
     <>
-      {isInstructor && (
-        <Slide appear={false} direction="down" in={!trigger}>
-          <AppBar
-            position="sticky"
-            session={session}
-            onBooksClick={handleBooksClick}
-            onTopicsClick={handleTopicsClick}
-            onCoursesClick={handleCoursesClick}
-            onDashboardClick={handleDashboardClick}
-            onBookClick={handleBookClick}
-          />
-        </Slide>
-      )}
+      <Slide appear={false} direction="down" in={!trigger}>
+        <AppBar
+          isInstructor={isInstructor}
+          position="sticky"
+          session={session}
+          onBooksClick={handleBooksClick}
+          onTopicsClick={handleTopicsClick}
+          onCoursesClick={handleCoursesClick}
+          onDashboardClick={handleDashboardClick}
+          onBookClick={handleBookClick}
+          onBookmarksClick={handleBookmarksClick}
+        />
+      </Slide>
       {children}
     </>
   );

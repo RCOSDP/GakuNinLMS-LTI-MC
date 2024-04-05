@@ -25,7 +25,12 @@ export async function upsertUser({ ltiConsumerId, ...user }: UserProps) {
       ...user,
       ltiConsumer: { connect: { id: ltiConsumerId } },
     },
-    update: user,
+    update: {
+      ltiUserId: user.ltiUserId,
+      // NOTE: "" の場合 … 上書きしない https://www.prisma.io/docs/concepts/components/prisma-client/null-and-undefined
+      name: user.name || undefined,
+      email: user.email || undefined,
+    },
   });
 }
 
@@ -51,8 +56,7 @@ export async function findBooksBy(
   by: User["id"],
   sort = "updated",
   page: number,
-  perPage: number,
-  ip: string
+  perPage: number
 ): Promise<BookSchema[]> {
   const authorship = await prisma.authorship.findMany({
     where: { userId: by },
@@ -67,7 +71,7 @@ export async function findBooksBy(
   });
 
   return authorship.flatMap(({ book }) =>
-    book == null ? [] : [bookToBookSchema(book, ip)]
+    book == null ? [] : [bookToBookSchema(book)]
   );
 }
 
@@ -75,8 +79,7 @@ export async function findTopicsBy(
   by: User["id"],
   sort = "updated",
   page: number,
-  perPage: number,
-  ip: string
+  perPage: number
 ): Promise<TopicSchema[]> {
   const authorship = await prisma.authorship.findMany({
     where: { userId: by },
@@ -91,6 +94,6 @@ export async function findTopicsBy(
   });
 
   return authorship.flatMap(({ topic }) =>
-    topic == null ? [] : [topicToTopicSchema(topic, ip)]
+    topic == null ? [] : [topicToTopicSchema(topic)]
   );
 }

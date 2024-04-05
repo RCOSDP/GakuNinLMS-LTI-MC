@@ -3,7 +3,6 @@ import type { FromSchema } from "json-schema-to-ts";
 export const LtiResourceLinkRequestSchema = {
   title: "LTI Resource Link Request",
   type: "object",
-  required: ["id"],
   properties: {
     id: { title: "LTI Resource Link ID", type: "string" },
     title: { title: "Title", type: "string" },

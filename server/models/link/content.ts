@@ -44,7 +44,7 @@ export type LinkSchema = FromSchema<
           format: "date-time";
         };
         output: Date;
-      }
+      },
     ];
   }
 >;

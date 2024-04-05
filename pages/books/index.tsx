@@ -3,19 +3,14 @@ import type { ContentSchema } from "$server/models/content";
 import type { BookSchema } from "$server/models/book";
 import { useSessionAtom } from "$store/session";
 import BooksTemplate from "$templates/Books";
+import DeepLinkBooksTemplate from "$templates/DeepLinkBooks";
 import Book from "$templates/Book";
 import BookPreviewDialog from "$organisms/BookPreviewDialog";
 import useBooks from "$utils/useBooks";
 import useLinkedBook from "$utils/useLinkedBook";
 import { pagesPath } from "$utils/$path";
-import {
-  updateLtiResourceLink,
-  destroyLtiResourceLink,
-} from "$utils/ltiResourceLink";
-import getLtiResourceLink from "$utils/getLtiResourceLink";
 import useDialogProps from "$utils/useDialogProps";
-import { useSearchAtom } from "$store/search";
-import { revalidateContents } from "utils/useContents";
+import useBookLinkingHandlers from "$utils/useBookLinkingHandlers";
 
 const Books = (
   props: Omit<
@@ -23,6 +18,13 @@ const Books = (
     keyof ReturnType<typeof useBooks>
   >
 ) => <BooksTemplate {...props} {...useBooks()} />;
+
+const DeepLinkBooks = (
+  props: Omit<
+    Parameters<typeof DeepLinkBooksTemplate>[0],
+    keyof ReturnType<typeof useBooks>
+  >
+) => <DeepLinkBooksTemplate {...props} {...useBooks()} />;
 
 function Index() {
   const router = useRouter();
@@ -33,7 +35,6 @@ function Index() {
     dispatch: onContentPreviewClick,
     ...dialogProps
   } = useDialogProps<ContentSchema>();
-  const { query } = useSearchAtom();
   const onContentEditClick = (book: Pick<ContentSchema, "id" | "authors">) => {
     const action = isContentEditable(book) ? "edit" : "generate";
     return router.push(
@@ -52,24 +53,7 @@ function Index() {
       pagesPath.books.import.$url({ query: { context: "books" } })
     );
   };
-  const onContentLinkClick = async (
-    content: ContentSchema,
-    checked: boolean
-  ) => {
-    const book = content as BookSchema;
-    const ltiResourceLink = getLtiResourceLink(session);
-    if (ltiResourceLink == null) return;
-    const bookId = book.id;
-    if (checked) {
-      await updateLtiResourceLink({ ...ltiResourceLink, bookId });
-    } else {
-      const link = book.ltiResourceLinks.find(
-        ({ consumerId }) => consumerId === session?.oauthClient.id
-      );
-      if (link) await destroyLtiResourceLink(link);
-    }
-    await revalidateContents(query);
-  };
+  const { onBookLinking: onContentLinkClick } = useBookLinkingHandlers();
   const handleLinkedBookClick = (book: Pick<BookSchema, "id">) =>
     router.push(pagesPath.book.$url({ query: { bookId: book.id } }));
   const handlers = {
@@ -80,6 +64,26 @@ function Index() {
     onContentLinkClick,
     onLinkedBookClick: handleLinkedBookClick,
   };
+  const isDeepLink = !!session?.ltiDlSettings?.deep_link_return_url;
+
+  if (isDeepLink) {
+    return (
+      <>
+        <DeepLinkBooks
+          linkedBook={linkedBook}
+          onContentPreviewClick={onContentPreviewClick}
+          onContentEditClick={onContentEditClick}
+          onContentLinkClick={onContentLinkClick}
+          isDeepLink={isDeepLink}
+        />
+        {previewContent?.type === "book" && (
+          <BookPreviewDialog {...dialogProps} book={previewContent}>
+            {(props) => <Book {...props} />}
+          </BookPreviewDialog>
+        )}
+      </>
+    );
+  }
 
   return (
     <>

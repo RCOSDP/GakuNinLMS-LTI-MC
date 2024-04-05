@@ -110,6 +110,7 @@ type Props = {
   topics?: TopicSchema[];
   id?: string;
   linked?: boolean;
+  hasLtiTargetLinkUri?: boolean;
   className?: string;
   variant?: "create" | "update";
   onSubmit?: (book: BookPropsWithSubmitOptions) => void;
@@ -123,6 +124,7 @@ export default function BookForm({
   className,
   id,
   linked = false,
+  hasLtiTargetLinkUri = false,
   variant = "create",
   onSubmit = () => undefined,
   onAuthorsUpdate,
@@ -158,7 +160,7 @@ export default function BookForm({
     authors: book?.authors ?? [],
     keywords: book?.keywords ?? [],
     publicBooks: book?.publicBooks ?? [],
-    submitWithLink: false,
+    submitWithLink: linked,
     topics: topics?.map((topic) => topic.id),
   };
   const { handleSubmit, register, setValue } =
@@ -233,7 +235,7 @@ export default function BookForm({
           <div>
             <LocalizationProvider
               dateAdapter={AdapterDateFns}
-              locale={ja}
+              adapterLocale={ja}
               dateFormats={{ monthAndYear: "yyyy年MM月" }}
               localeText={{
                 previousMonth: "前月を表示",
@@ -335,6 +337,12 @@ export default function BookForm({
         <FormControlLabel
           className={classes.marginLeft}
           label="コースへ配信"
+          title={
+            hasLtiTargetLinkUri
+              ? "ツールURLが指定されているため、リンクの切り替えはできません"
+              : "リンクを切り替える"
+          }
+          disabled={hasLtiTargetLinkUri}
           control={
             <Checkbox
               id="submit-with-link"

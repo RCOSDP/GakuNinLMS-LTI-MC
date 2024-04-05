@@ -34,13 +34,11 @@ export const showHooks = {
 export async function show({
   params,
   query,
-  ip,
 }: FastifyRequest<{ Params: Params; Querystring: Query }>) {
   const path = params["*"];
 
   if (disabled(path)) return { status: 404 };
-  if (!checkWowzaAccessToken(query.accessToken, ip, path))
-    return { status: 403 };
+  if (!checkWowzaAccessToken(query.accessToken, path)) return { status: 403 };
 
   const expires: Record<string, string> =
     WOWZA_EXPIRES_IN > 0

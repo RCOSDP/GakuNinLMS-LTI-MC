@@ -3,7 +3,6 @@ import { createHash } from "crypto";
 /**
  * Wowza Streaming Engine のクライアントのための署名の作成
  * パラメータ名にアルファベットA-Za-z以外を含めると正しい署名の得られない可能性があるので注意
- * @todo "Include client IP address in hash generation" 未対応
  * @param contentPath コンテンツのパス
  * @param params パラメーター
  * @param prefix SecureToken prefix
@@ -32,7 +31,7 @@ export function sign(
         ({
           "+": "-",
           "/": "_",
-        }[t as "+" | "/"])
+        })[t as "+" | "/"]
     );
   return signature;
 }
@@ -40,7 +39,6 @@ export function sign(
 /**
  * Wowza Streaming Engine のクライアントのためのURLクエリの生成
  * パラメータ名にアルファベットA-Za-z以外を含めると正しい署名の得られない可能性があるので注意
- * @todo "Include client IP address in hash generation" 未対応
  * @param contentPath コンテンツのパス
  * @param params パラメーター
  * @param secret 共通鍵

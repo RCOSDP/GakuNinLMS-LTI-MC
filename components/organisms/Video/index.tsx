@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
 import usePrevious from "@rooks/use-previous";
-import clsx from "clsx";
 import { css } from "@emotion/css";
 
 import type { TopicSchema } from "$server/models/topic";
@@ -29,15 +28,8 @@ import DescriptionList from "$atoms/DescriptionList";
 import formatInterval from "$utils/formatInterval";
 import getLocaleDateString from "$utils/getLocaleDateString";
 import { authors } from "$utils/descriptionList";
-
-const hidden = css({
-  m: 0,
-  width: 0,
-  height: 0,
-  "& *": {
-    visibility: "hidden",
-  },
-});
+import TagList from "$molecules/TagList";
+import { useBookmarksByTopicId } from "$utils/bookmark/useBookmarks";
 
 const videoStyle = {
   "& > *": {
@@ -126,6 +118,8 @@ type Props = {
   topic: TopicSchema;
   timeRange: ActivitySchema["timeRanges"];
   onEnded?: () => void;
+  isPrivateBook?: boolean;
+  isBookPage?: boolean;
 };
 
 /**
@@ -133,10 +127,10 @@ type Props = {
  * @return 有効かつ再生終了: true、それ以外: false
  */
 function isValidPlaybackEnd({
-  currentTime,
+  currentTime = 0,
   stopTime,
 }: {
-  currentTime: number;
+  currentTime: number | undefined;
   stopTime: number | null | undefined;
 }): boolean {
   return typeof stopTime === "number" && 0 < stopTime && stopTime < currentTime;
@@ -169,16 +163,25 @@ export default function Video({
   topic,
   timeRange,
   onEnded,
+  isPrivateBook = false,
+  isBookPage = false,
 }: Props) {
   const { video, preloadVideo } = useVideoAtom();
   const { book, itemIndex, itemExists } = useBookAtom();
   const { session } = useSessionAtom();
+
+  /** 動画プレイヤーオブジェクトプールに読み込まれているか否か */
+  const isLoadedVideoInstancePool = Boolean(
+    book && video.has(String(topic.id))
+  );
+
   useEffect(() => {
     if (!book) return;
     // バックグラウンドで動画プレイヤーオブジェクトプールに読み込む
     preloadVideo(book.sections);
     return () => video.clear();
   }, [book, preloadVideo, video]);
+
   const oembed = useOembed(topic.resource.id);
   const prevItemIndex = usePrevious(itemIndex);
   useEffect(() => {
@@ -203,45 +206,63 @@ export default function Video({
         }
       });
       void videoInstance.player.setCurrentTime(startTime || 0);
-    } else {
-      const handleSeeked = () => {
-        const currentTime = videoInstance.player.currentTime();
-        // @ts-expect-error startTime is number
-        if (Number.isFinite(startTime) && currentTime < startTime) {
-          videoInstance.player.currentTime(startTime || 0);
-        }
-      };
-      const handleTimeUpdate = () => {
-        if (videoInstance.stopTimeOver) return;
-        const currentTime = videoInstance.player.currentTime();
-        if (isValidPlaybackEnd({ currentTime, stopTime })) {
-          videoInstance.stopTimeOver = true;
-          videoInstance.player.pause();
-          onEnded?.();
-        }
-      };
-      const handlePlay = () => {
-        // 終了位置より後ろにシークすると、意図せず再生が再開してしまうことがあるので、ユーザーの操作によらない再生開始を抑制する
-        if (videoInstance.stopTimeOver) videoInstance.player.pause();
-      };
-      const handleFirstPlay = () => {
+      return;
+    }
+
+    const handleSeeked = () => {
+      const currentTime = videoInstance.player.currentTime();
+      // @ts-expect-error startTime is number
+      if (Number.isFinite(startTime) && currentTime < startTime) {
+        videoInstance.player.currentTime(startTime || 0);
+      }
+    };
+
+    const handleTimeUpdate = () => {
+      if (videoInstance.stopTimeOver) return;
+      const currentTime = videoInstance.player.currentTime();
+      if (isValidPlaybackEnd({ currentTime, stopTime })) {
+        videoInstance.stopTimeOver = true;
+        videoInstance.player.pause();
+        onEnded?.();
+      }
+    };
+
+    const handlePlay = () => {
+      // 終了位置より後ろにシークすると、意図せず再生が再開してしまうことがあるので、ユーザーの操作によらない再生開始を抑制する
+      if (videoInstance.stopTimeOver) videoInstance.player.pause();
+    };
+
+    const handleFirstPlay = () => {
+      if (!videoInstance.firstPlay) return;
+
+      // NOTE: 初回playイベントは再生位置を移動して再生する
+      if (startTime && Number.isFinite(startTime)) {
+        videoInstance.player.currentTime(startTime);
+      }
+
+      videoInstance.firstPlay = false;
+    };
+
+    const handleReady = () => {
+      if (videoInstance.stopTimeOver) {
         if (Number.isFinite(startTime))
           videoInstance.player.currentTime(startTime || 0);
-      };
-      const handleReady = () => {
-        if (videoInstance.stopTimeOver) {
-          if (Number.isFinite(startTime))
-            videoInstance.player.currentTime(startTime || 0);
-          videoInstance.stopTimeOver = false;
-        }
-        videoInstance.player.on("timeupdate", handleTimeUpdate);
-        videoInstance.player.on("seeked", handleSeeked);
-      };
+        videoInstance.stopTimeOver = false;
+      }
+      videoInstance.player.on("timeupdate", handleTimeUpdate);
+      videoInstance.player.on("seeked", handleSeeked);
+    };
 
-      videoInstance.player.on("play", handlePlay);
-      videoInstance.player.on("firstplay", handleFirstPlay);
-      videoInstance.player.ready(handleReady);
-    }
+    videoInstance.player.on("play", handlePlay);
+    videoInstance.player.one("play", handleFirstPlay);
+    videoInstance.player.ready(handleReady);
+
+    return () => {
+      videoInstance.player.off("timeupdate", handleTimeUpdate);
+      videoInstance.player.off("seeked", handleSeeked);
+      videoInstance.player.off("play", handlePlay);
+      videoInstance.player.off("play", handleFirstPlay);
+    };
     // TODO: videoの内容の変更検知は機能しないので修正したい。Mapオブジェクトでの管理をやめるかMap.prototype.set()を使用しないようにするなど必要かもしれない。
   }, [video, itemExists, prevItemIndex, itemIndex, onEnded]);
 
@@ -258,7 +279,8 @@ export default function Video({
     } else {
       const nextUnwatchedTime = timeRange.find((timeRange) => {
         return (
-          (timeRange.endMs || 0) / 1000 > videoInstance.player.currentTime()
+          (timeRange.endMs || 0) / 1000 >
+          (videoInstance.player.currentTime() ?? 0)
         );
       });
       if (!nextUnwatchedTime?.endMs) return;
@@ -270,138 +292,141 @@ export default function Video({
   const isStudent =
     session && !isInstructor(session) && !isAdministrator(session);
 
-  // 動画プレイヤーオブジェクトプールに存在する場合
-  if (video.has(String(topic.id))) {
-    return (
-      <>
-        {Array.from(video.entries()).map(([id, videoInstance]) => (
+  const { bookmarks, bookmarkTagMenu, isLoading } = useBookmarksByTopicId({
+    topicId: topic.id,
+  });
+
+  return (
+    <>
+      {isLoadedVideoInstancePool ? (
+        Array.from(video.entries()).map(([id, videoInstance]) => (
           <VideoPlayer
             key={id}
-            className={clsx(className, {
-              [hidden]: String(topic.id) !== id,
-            })}
             sx={{ ...videoStyle, ...sx }}
             videoInstance={videoInstance}
             autoplay={String(topic.id) === id}
+            hidden={String(topic.id) !== id}
             onEnded={String(topic.id) === id ? onEnded : undefined}
           />
-        ))}
-        <Tabs
-          aria-label="トピックビデオの詳細情報"
-          className={tabsStyle}
-          indicatorColor="primary"
-          value={tabIndex}
-          onChange={handleTabIndexChange}
-        >
-          <Tab label="解説" id="tab-0" aria-controls="panel-0" />
-          {isStudent && (
-            <Tab label="視聴時間詳細" id="tab-1" aria-controls="panel-1" />
-          )}
-          <Tab
-            label="トピックの詳細"
-            id={`tab-${isStudent ? 2 : 1}`}
-            aria-controls={`panel-${isStudent ? 2 : 1}`}
-          />
-        </Tabs>
-        <TabPanel value={tabIndex} index={0}>
-          <article>
-            <Markdown>{topic.description}</Markdown>
-          </article>
-        </TabPanel>
-        {isStudent && (
-          <TabPanel value={tabIndex} index={1} className={timeLineDetail}>
-            <SkipButton onClick={handleSkipWatch} />
-            <svg
+        ))
+      ) : (
+        <VideoResource
+          className={className}
+          sx={{ ...videoStyle, ...sx }}
+          {...(topic.resource as VideoResourceSchema)}
+          identifier={String(topic.id)}
+          autoplay
+          onEnded={onEnded}
+          thumbnailUrl={oembed && oembed.thumbnail_url}
+        />
+      )}
+      {!isLoading && isPrivateBook && bookmarkTagMenu.length !== 0 && (
+        <TagList
+          key={topic.id}
+          topicId={topic.id}
+          bookmarks={bookmarks}
+          tagMenu={bookmarkTagMenu}
+        />
+      )}
+      <Tabs
+        aria-label="トピックビデオの詳細情報"
+        className={tabsStyle}
+        indicatorColor="primary"
+        value={tabIndex}
+        onChange={handleTabIndexChange}
+      >
+        <Tab label="解説" id="tab-0" aria-controls="panel-0" />
+        {isStudent && isBookPage && (
+          <Tab label="視聴時間詳細" id="tab-1" aria-controls="panel-1" />
+        )}
+        <Tab
+          label="トピックの詳細"
+          id={`tab-${isStudent ? 2 : 1}`}
+          aria-controls={`panel-${isStudent ? 2 : 1}`}
+        />
+      </Tabs>
+      <TabPanel value={tabIndex} index={0}>
+        <article>
+          <Markdown>{topic.description}</Markdown>
+        </article>
+      </TabPanel>
+      {isStudent && isBookPage && (
+        <TabPanel value={tabIndex} index={1} className={timeLineDetail}>
+          <SkipButton onClick={handleSkipWatch} />
+          <svg height={20} width={BAR_SIZE} xmlns="http://www.w3.org/2000/svg">
+            <rect
+              x={0}
+              y={0}
               height={20}
               width={BAR_SIZE}
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <rect
-                x={0}
-                y={0}
-                height={20}
-                width={BAR_SIZE}
-                stroke="black"
-                fill="transparent"
-              />
-              {generateTimeRangeBarValue({
-                timeRange,
-                timeRequired: topic.timeRequired,
-              }).map((value) => {
-                return (
-                  <React.Fragment key={value.id}>
-                    <rect
-                      x={value.positionX}
-                      width={value.width}
-                      height={20}
-                      fill={learningStatus.completed}
-                    />
-                  </React.Fragment>
-                );
-              })}
-            </svg>
-          </TabPanel>
-        )}
-        <TabPanel value={tabIndex} index={isStudent ? 2 : 1}>
-          <Typography
-            sx={{
-              display: "inline-block",
-              verticalAlign: "middle",
-              mr: 1,
-              mb: 0.5,
-            }}
-            variant="h6"
-          >
-            {topic.name}
-          </Typography>
-          <Chip
-            sx={{ mr: 1, mb: 0.5 }}
-            label={`学習時間 ${formatInterval(0, topic.timeRequired * 1000)}`}
-          />
-          {topic.license && (
-            <License sx={{ mr: 1, mb: 0.5 }} license={topic.license} />
-          )}
-          <DescriptionList
-            inline
-            value={[
-              {
-                key: "作成日",
-                value: getLocaleDateString(topic.createdAt, "ja"),
-              },
-              {
-                key: "更新日",
-                value: getLocaleDateString(topic.updatedAt, "ja"),
-              },
-              ...authors(topic),
-            ]}
-          />
-          {topic.keywords && (
-            <Box sx={{ my: 1 }}>
-              {topic.keywords.map((keyword) => {
-                return (
-                  <KeywordChip
-                    key={keyword.id}
-                    keyword={keyword}
-                    sx={{ mr: 0.5, maxWidth: "260px" }}
+              stroke="black"
+              fill="transparent"
+            />
+            {generateTimeRangeBarValue({
+              timeRange,
+              timeRequired: topic.timeRequired,
+            }).map((value) => {
+              return (
+                <React.Fragment key={value.id}>
+                  <rect
+                    x={value.positionX}
+                    width={value.width}
+                    height={20}
+                    fill={learningStatus.completed}
                   />
-                );
-              })}
-            </Box>
-          )}
+                </React.Fragment>
+              );
+            })}
+          </svg>
         </TabPanel>
-      </>
-    );
-  }
-
-  return (
-    <VideoResource
-      className={className}
-      sx={{ ...videoStyle, ...sx }}
-      {...(topic.resource as VideoResourceSchema)}
-      identifier={String(topic.id)}
-      autoplay
-      onEnded={onEnded}
-      thumbnailUrl={oembed && oembed.thumbnail_url}
-    />
+      )}
+      <TabPanel value={tabIndex} index={isStudent ? 2 : 1}>
+        <Typography
+          sx={{
+            display: "inline-block",
+            verticalAlign: "middle",
+            mr: 1,
+            mb: 0.5,
+          }}
+          variant="h6"
+        >
+          {topic.name}
+        </Typography>
+        <Chip
+          sx={{ mr: 1, mb: 0.5 }}
+          label={`学習時間 ${formatInterval(0, topic.timeRequired * 1000)}`}
+        />
+        {topic.license && (
+          <License sx={{ mr: 1, mb: 0.5 }} license={topic.license} />
+        )}
+        <DescriptionList
+          inline
+          value={[
+            {
+              key: "作成日",
+              value: getLocaleDateString(topic.createdAt, "ja"),
+            },
+            {
+              key: "更新日",
+              value: getLocaleDateString(topic.updatedAt, "ja"),
+            },
+            ...authors(topic),
+          ]}
+        />
+        {topic.keywords && (
+          <Box sx={{ my: 1 }}>
+            {topic.keywords.map((keyword) => {
+              return (
+                <KeywordChip
+                  key={keyword.id}
+                  keyword={keyword}
+                  sx={{ mr: 0.5, maxWidth: "260px" }}
+                />
+              );
+            })}
+          </Box>
+        )}
+      </TabPanel>
+    </>
   );
 }

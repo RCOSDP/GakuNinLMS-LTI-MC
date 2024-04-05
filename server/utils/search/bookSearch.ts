@@ -36,8 +36,7 @@ async function bookSearch(
   sort: string,
   page: number,
   perPage: number,
-  userId: number,
-  ip: string
+  userId: number
 ): Promise<SearchResultSchema> {
   const insensitiveMode = { mode: "insensitive" as const };
   const where: Prisma.BookWhereInput = {
@@ -169,7 +168,7 @@ async function bookSearch(
   });
 
   const contents = books
-    .map((book) => bookToBookSchema(book, ip))
+    .map((book) => bookToBookSchema(book))
     .map((book) => ({ type: "book" as const, ...book }));
 
   return { totalCount, contents, page, perPage };
