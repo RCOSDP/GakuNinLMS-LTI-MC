@@ -4,8 +4,7 @@ import type { SxProps } from "@mui/system";
 import type { VideoInstance } from "$types/videoInstance";
 import { usePlayerTrackingAtom } from "$store/playerTracker";
 import Box from "@mui/material/Box";
-import useVolume from "$utils/useVolume";
-import { usePlaybackRate } from "$utils/playbackRate";
+import { usePlayerState } from "$store/player";
 import Vimeo from "./Vimeo";
 import VideoJs from "./VideoJs";
 import videoJsDurationChangeShims from "$utils/videoJsDurationChangeShims";
@@ -30,8 +29,8 @@ export default function VideoPlayer({
   onTimeUpdate,
   ...other
 }: Props) {
-  useVolume(videoInstance.player);
-  usePlaybackRate(videoInstance.player);
+  usePlayerState(videoInstance.player);
+
   useEffect(() => {
     if (!autoplay) return;
     const player = videoInstance.player;
