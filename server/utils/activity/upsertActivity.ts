@@ -94,11 +94,7 @@ async function initActivityTimeRangeCount(topicId: Topic["id"]) {
   const startTime = topic.startTime ?? 0;
   const stopTime = topic.stopTime ?? topic.timeRequired;
 
-  for (
-    let t = startTime;
-    t < stopTime;
-    t += ACTIVITY_COUNT_INTERVAL2
-  ) {
+  for (let t = startTime; t < stopTime; t += ACTIVITY_COUNT_INTERVAL2) {
     timeRangeCounts.push({
       startMs: t * 1000,
       endMs: (t + ACTIVITY_COUNT_INTERVAL2) * 1000,
@@ -130,17 +126,16 @@ function merge(
   return timeRanges;
 }
 
-function merge_and_push(
+function concatAndMerge(
   self: ActivityTimeRangeLogProps[],
   other: ActivityTimeRangeProps[]
 ): ActivityTimeRangeProps[] {
   const existTimeRanges: ActivityTimeRangeLogProps[] = [];
   const newTimeRanges: ActivityTimeRangeLogProps[] = [];
+  const now = new Date();
 
   //直近のものを重複排除しつつ、継続視聴の場合は mergeして追記をしないといけない
   other.forEach((range) => {
-    const updatedAt = new Date();
-
     // 重複データ: クライアント側から、既存データと同じ startMsとendMsのものが送られてきた
     // 視聴中を表すデータ: クライアント側から、既存データとstartMsが同じでかつendMsが大きいものが送られてきた
     const existTimeRange = self.find(
@@ -151,7 +146,7 @@ function merge_and_push(
         startMs: existTimeRange.startMs,
         endMs: range.endMs,
         createdAt: existTimeRange.createdAt,
-        updatedAt: updatedAt,
+        updatedAt: now,
       });
       return;
     }
@@ -160,8 +155,8 @@ function merge_and_push(
     const newTimeRange: ActivityTimeRangeLogProps = {
       startMs: range.startMs,
       endMs: range.endMs,
-      createdAt: updatedAt,
-      updatedAt: updatedAt,
+      createdAt: now,
+      updatedAt: now,
     };
     newTimeRanges.push(newTimeRange);
   });
@@ -181,7 +176,7 @@ function purge(
   other: ActivityTimeRangeProps[]
 ): ActivityTimeRangeLogProps[] {
   const purgedTimeRanges: ActivityTimeRangeLogProps[] = [];
-  const updatedAt = new Date();
+  const now = new Date();
 
   // 過去にカウント済みのものは省く
   other.forEach((range) => {
@@ -211,8 +206,8 @@ function purge(
     const newTimeRange: ActivityTimeRangeLogProps = {
       startMs: range.startMs,
       endMs: range.endMs,
-      createdAt: updatedAt,
-      updatedAt: updatedAt,
+      createdAt: now,
+      updatedAt: now,
     };
     purgedTimeRanges.push(newTimeRange);
   });
@@ -355,11 +350,7 @@ async function upsertActivity({
   }
 
   const timeRanges = merge(exists?.timeRanges ?? [], activity.timeRanges);
-  const timeRangeLogs = merge_and_push(
-    recentTimeRangeLogs,
-    activity.timeRanges
-  );
-
+  const timeRangeLogs = concatAndMerge(recentTimeRangeLogs, activity.timeRanges);
   const purgedTimeRangeLogs = purge(recentTimeRangeLogs, activity.timeRanges);
 
   timeRangeCounts = countTimeRange(timeRangeCounts, purgedTimeRangeLogs);
