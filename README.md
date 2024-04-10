@@ -1,4 +1,4 @@
-# GakuNinLMS-LTI-MC
+# LTI-MC
 
 [English](README-en.md) | [日本語](README-ja.md)
 
