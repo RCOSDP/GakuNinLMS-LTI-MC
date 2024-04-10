@@ -2,9 +2,9 @@ import { useEffect } from "react";
 import VimeoPlayer from "@vimeo/player";
 import type { SxProps } from "@mui/system";
 import type { VideoInstance } from "$types/videoInstance";
+import { usePlayerTrackingAtom } from "$store/playerTracker";
 import Box from "@mui/material/Box";
-import useVolume from "$utils/useVolume";
-import { usePlaybackRate } from "$utils/playbackRate";
+import { usePlayerState } from "$store/player";
 import Vimeo from "./Vimeo";
 import VideoJs from "./VideoJs";
 import videoJsDurationChangeShims from "$utils/videoJsDurationChangeShims";
@@ -14,6 +14,7 @@ type Props = {
   className?: string;
   videoInstance: VideoInstance;
   autoplay?: boolean;
+  hidden?: boolean;
   onEnded?: () => void;
   onDurationChange?: (duration: number) => void;
   onTimeUpdate?: (currentTime: number) => void;
@@ -22,13 +23,14 @@ type Props = {
 export default function VideoPlayer({
   videoInstance,
   autoplay = false,
+  hidden = false,
   onEnded,
   onDurationChange,
   onTimeUpdate,
   ...other
 }: Props) {
-  useVolume(videoInstance.player);
-  usePlaybackRate(videoInstance.player);
+  usePlayerState(videoInstance.player);
+
   useEffect(() => {
     if (!autoplay) return;
     const player = videoInstance.player;
@@ -80,8 +82,23 @@ export default function VideoPlayer({
     };
   }, [videoInstance, onEnded, onDurationChange, onTimeUpdate]);
 
+  const playerTracking = usePlayerTrackingAtom();
+
+  useEffect(() => {
+    if (!hidden) {
+      const { player } = videoInstance;
+      const ready =
+        player instanceof VimeoPlayer
+          ? player.ready()
+          : new Promise((resolve) => player.ready(() => resolve(undefined)));
+      void ready.then(() => {
+        playerTracking(videoInstance);
+      });
+    }
+  }, [videoInstance, hidden, playerTracking]);
+
   return (
-    <Box {...other}>
+    <Box {...other} hidden={hidden}>
       {videoInstance.type === "vimeo" && <Vimeo {...videoInstance} />}
       {videoInstance.type === "youtube" && <VideoJs {...videoInstance} />}
       {videoInstance.type === "wowza" && <VideoJs {...videoInstance} />}

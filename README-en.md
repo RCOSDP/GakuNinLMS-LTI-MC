@@ -10,7 +10,7 @@ CHiBi-CHiLO is an open-source program for analyzing video viewing logs. This pro
 
 ## How to Use CHiBi-CHiLO
 
-Please read the [installation guide](INSTALL-en.md).
+Please read the installation guide (INSTALL-ja.md).
 
 ### Learning Analytics
 
