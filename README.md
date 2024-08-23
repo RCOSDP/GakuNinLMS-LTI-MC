@@ -9,6 +9,6 @@ LMS と外部接続する[LTI ツールプロバイダー](https://www.imsglobal
 This project is released under the MIT License. The full text can be found in the [LICENSE file](LICENSE).
 
 ## Contributors
-We appreciate contributions to this project. A list of all contributors can be found in the [CONTRIBUTORS file](CONTRIBUTORS).
+We appreciate contributions to this project. A list of all contributors can be found in the [CONTRIBUTORS file](CONTRIBUTORS.md).
 
 These documents serve to ensure transparency and equality among all participants in the project, accurately reflecting each member's involvement and the collective nature of the project.
