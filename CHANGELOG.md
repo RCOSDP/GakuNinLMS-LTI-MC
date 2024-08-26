@@ -6,18 +6,18 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 - Version management feature (NII)
-- Tag/note registration (OsakaU)
-- Word cloud (OsakaU)
-- View count recording (OsakaU)
+- Tag/note registration (OU)
+- Word cloud (OU)
+- View count recording (OU)
 - Subtitle display memory
 
 ## [2023]
 
 ### Added
 - Video thumbnail display
-- Viewing status timeline (OsakaU)
-- Names and Role Provisioning Services support (OsakaU)
-- Synchronization with LMS course participants (OsakaU)
+- Viewing status timeline (OU)
+- Names and Role Provisioning Services support (OU)
+- Synchronization with LMS course participants (OU)
 - Separation of video material display information
 - Zoom video integration with OAuth authentication
 - Deep Linking support
@@ -35,8 +35,8 @@ All notable changes to this project will be documented in this file.
 - Public access to video materials
 - Video upload
 - Video trimming
-- Course-specific viewing history (OsakaU)
-- Student email address recording (OsakaU)
+- Course-specific viewing history (OU)
+- Student email address recording (OU)
 - Playback speed memory (NII)
 - LMS course integration management
 - Assignment and Grade Services support
@@ -45,10 +45,10 @@ All notable changes to this project will be documented in this file.
 ## [2021]
 
 ### Added
-- LTI 1.1 authentication from Blackboard (OsakaU)
-- Viewing history (OsakaU)
-- Learning analytics (OsakaU)
-- Separate window display from embed (OsakaU)
+- LTI 1.1 authentication from Blackboard (OU)
+- Viewing history (OU)
+- Learning analytics (OU)
+- Separate window display from embed (OU)
 - Mobile device support
 - YouTube integration
 - Vimeo integration
@@ -58,7 +58,7 @@ All notable changes to this project will be documented in this file.
 - Video material import (NII)
 - LTI 1.3 authentication from Moodle (NII)
 - Zoom video integration
-- LTI 1.3 authentication from Blackboard (OsakaU)
+- LTI 1.3 authentication from Blackboard (OU)
 
 ## [2020]
 
@@ -81,4 +81,4 @@ All notable changes to this project will be documented in this file.
 
 ## Organization Abbreviations
 - NII: National Institute of Informatics
-- OsakaU: Osaka University
+- OU: Osaka University
