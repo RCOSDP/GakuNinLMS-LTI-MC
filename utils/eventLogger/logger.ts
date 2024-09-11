@@ -4,7 +4,7 @@ import { useSessionAtom } from "$store/session";
 import { usePlayerTrackerAtom } from "$store/playerTracker";
 import { api } from "$utils/api";
 import type { PlayerStats, PlayerEvents, PlayerTracker } from "./playerTracker";
-import { load as loadPlaybackRate } from "$utils/playbackRate";
+import { loadPlaybackRate } from "$store/player";
 import getVideoType from "$utils/video/getVideoType";
 import { load, useLoggerSessionInit } from "./loggerSessionPersister";
 import getFilePath from "./getFilePath";
