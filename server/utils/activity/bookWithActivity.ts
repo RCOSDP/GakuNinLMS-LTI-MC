@@ -1,4 +1,4 @@
-import type { UserSchema } from "$server/models/user";
+import type { SessionSchema } from "$server/models/session";
 import type { BookActivitySchema } from "$server/models/bookActivity";
 import type { CourseBookSchema } from "$server/models/courseBook";
 import type { ActivitySchema } from "$server/models/activity";
@@ -7,10 +7,14 @@ import { bookToBookSchema } from "$server/utils/book/bookToBookSchema";
 import { getDisplayableBook } from "$server/utils/displayableBook";
 import contentBy from "$server/utils/contentBy";
 import isCompleted from "./isCompleted";
+import { isInstructor } from "$server/utils/session";
 
-function bookToCourseBook(user: Pick<UserSchema, "id">, book: BookWithTopics) {
+function bookToCourseBook(session: SessionSchema, book: BookWithTopics) {
   const courseBook = getDisplayableBook(bookToBookSchema(book), (content) =>
-    contentBy(content, user)
+    contentBy(content, session.user),
+    undefined,
+    undefined,
+    isInstructor(session)
   );
 
   return courseBook;
@@ -18,11 +22,11 @@ function bookToCourseBook(user: Pick<UserSchema, "id">, book: BookWithTopics) {
 
 /** BookActivitySchema への変換 */
 export function toSchema({
-  user,
+  session,
   books,
   activities,
 }: {
-  user: Pick<UserSchema, "id">;
+  session: SessionSchema;
   books: Array<BookWithTopics>;
   activities: Array<
     Pick<
@@ -35,15 +39,16 @@ export function toSchema({
   bookActivities: Array<BookActivitySchema>;
 } {
   const courseBooks = books.flatMap((book) => {
-    const courseBook = bookToCourseBook(user, book);
+    const courseBook = bookToCourseBook(session, book);
     return courseBook ? [courseBook] : [];
   });
   const bookActivities = courseBooks.flatMap((book) =>
     book.sections.flatMap(({ topics }) =>
       topics.flatMap((topic) =>
         activities.flatMap((activity) => {
-          if (activity.topic.id !== topic.id) return [];
-
+	  if (!isInstructor(session)) {
+            if (activity.topic.id !== topic.id) return [];
+	  }
           return [
             {
               ...activity,
