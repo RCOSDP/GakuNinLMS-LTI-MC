@@ -1,16 +1,16 @@
 import type { SessionSchema } from "$server/models/session";
 import type { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
-import type { UserSchema } from "$server/models/user";
 import type { LearnerSchema } from "$server/models/learner";
 import type { CourseBookSchema } from "$server/models/courseBook";
 import type { BookActivitySchema } from "$server/models/bookActivity";
 import prisma from "$server/utils/prisma";
 import { bookIncludingTopicsArg } from "$server/utils/book/bookToBookSchema";
 import { toSchema } from "./bookWithActivity";
+import { isInstructor } from "$server/utils/session";
 
 /** 受講者の取得 */
 async function findLtiMembers(
-  instructor: Pick<UserSchema, "id">,
+  session: SessionSchema,
   {
     consumerId,
     contextId,
@@ -20,6 +20,15 @@ async function findLtiMembers(
   const activityScope = currentLtiContextOnly
     ? { ltiConsumerId: consumerId, ltiContextId: contextId }
     : { ltiConsumerId: "", ltiContextId: "" };
+
+  // NOTE: 表示可能な範囲
+  // 教員・TAの場合…すべて表示
+  // それ以外… 共有されている範囲または著者に含まれる範
+  const displayable = isInstructor(session) ? undefined : [
+      { shared: true },
+      { authors: { some: { userId: session.user.id } } },
+  ];
+
   const learners = await prisma.user.findMany({
     orderBy: { name: "asc" },
     select: {
@@ -35,11 +44,7 @@ async function findLtiMembers(
                 section: {
                   book: {
                     ltiResourceLinks: { some: { consumerId, contextId } },
-                    // NOTE: 表示可能な範囲 … 共有されている範囲または著者に含まれる範囲
-                    OR: [
-                      { shared: true },
-                      { authors: { some: { userId: instructor.id } } },
-                    ],
+                    OR: displayable
                   },
                 },
               },
@@ -75,11 +80,11 @@ async function findAllActivity(
   courseBooks: Array<CourseBookSchema>;
   bookActivities: Array<BookActivitySchema>;
 }> {
-  const user = session.user;
+//  const user = session.user;
   const consumerId = session.oauthClient.id;
   const contextId = session.ltiContext.id;
   const ltiMembers = await findLtiMembers(
-    user,
+    session,
     { consumerId, contextId },
     currentLtiContextOnly
   );
@@ -91,7 +96,7 @@ async function findAllActivity(
   const books = ltiResourceLinks.map(({ book }) => book);
   const activities = ltiMembers.flatMap(({ activities }) => activities);
   const { courseBooks, bookActivities } = toSchema({
-    user,
+    session,
     books,
     activities,
   });
