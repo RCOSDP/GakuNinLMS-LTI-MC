@@ -46,9 +46,7 @@ export function toSchema({
     book.sections.flatMap(({ topics }) =>
       topics.flatMap((topic) =>
         activities.flatMap((activity) => {
-	  if (!isInstructor(session)) {
-            if (activity.topic.id !== topic.id) return [];
-	  }
+          if (!isInstructor(session) && activity.topic.id !== topic.id) return [];
           return [
             {
               ...activity,

@@ -26,10 +26,8 @@ export function getDisplayableBook<
   isInstructor?: boolean | false,
 ): Book | undefined {
   if (book === undefined) return;
-  if (!isInstructor){
-    if (!isDisplayableBook(book, isContentEditable, ltiResourceLink, publicBook))
-      return;
-  }
+  if (!isInstructor && !isDisplayableBook(book, isContentEditable, ltiResourceLink, publicBook))
+    return;
 
   const sections = book.sections.flatMap((section) => {
     const topics = section.topics.filter(
