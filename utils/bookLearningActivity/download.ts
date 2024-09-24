@@ -15,7 +15,19 @@ function download(
   session: SessionSchema
 ) {
   if (data.length === 0) return;
-  const decoratedData = data.map((a) => getLocaleEntries(a, session));
+
+  const decoratedData = data
+    .filter(
+      (obj, index, self) =>
+        index ===
+        self.findIndex(
+          (t) =>
+            t.learner.id === obj.learner.id &&
+            t.book.id === obj.book.id &&
+            t.topic.id === obj.topic.id
+        )
+    )
+    .map((a) => getLocaleEntries(a, session));
   csv.download(decoratedData, filename);
 }
 
