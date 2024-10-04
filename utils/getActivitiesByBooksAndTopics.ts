@@ -37,15 +37,31 @@ function getActivitiesByBooksAndTopics({
     const topics: Array<Pick<TopicSchema, "id" | "name" | "timeRequired">> =
       book.sections.map((section) => section.topics).flat();
     for (const topic of topics) {
-      const activities = bookActivities.filter(
-        (a: BookActivitySchema) =>
-          a.book.id === book.id && a.topic.id === topic.id
-      );
+      const activities = bookActivities
+        .filter(
+          (a: BookActivitySchema) =>
+            a.book.id === book.id && a.topic.id === topic.id
+        )
+        .filter(
+          (obj, index, self) =>
+            index ===
+            self.findIndex(
+              (t) =>
+                t.id === obj.id &&
+                t.book.id === obj.book.id &&
+                t.topic.id === obj.topic.id
+            )
+        );
       const totalTimeMs =
         activities
           .map((a: BookActivitySchema) => a.totalTimeMs ?? 0)
-          .reduce((a, b) => {return a + b}, 0) ?? 0;
-      const averageTime = activities.length > 0 ? round(totalTimeMs / activities.length / 1000) : 0;
+          .reduce((a, b) => {
+            return a + b;
+          }, 0) ?? 0;
+      const averageTime =
+        activities.length > 0
+          ? round(totalTimeMs / activities.length / 1000)
+          : 0;
       const timeRatio = round(totalTimeMs / 1000 / topic?.timeRequired) ?? 0;
 
       activitiesByTopics.push({ ...topic, averageTime, timeRatio });
