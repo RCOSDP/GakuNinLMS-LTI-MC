@@ -10,6 +10,9 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
   },
+  row: {
+    width: "100%",
+  },
   name: {
     flex: 1,
     display: "flex",
@@ -58,7 +61,7 @@ export default function BookAndTopicActivityItem(props: BookAndTopicProps) {
 
   return (
     <div className={classes.root}>
-      <div>
+      <div className={classes.row}>
         <h4>{book.name}</h4>
         {book.activitiesByTopics.map((topic, index) => (
           <TopicActivityItem key={index} topic={topic} />
