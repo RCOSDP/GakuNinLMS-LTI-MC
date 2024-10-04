@@ -44,7 +44,7 @@ function getActivitiesByBooksAndTopics({
       const totalTimeMs =
         activities
           .map((a: BookActivitySchema) => a.totalTimeMs ?? 0)
-          .reduce((a, b) => {a + b}, 0) ?? 0;
+          .reduce((a, b) => {return a + b}, 0) ?? 0;
       const averageTime = activities.length > 0 ? round(totalTimeMs / activities.length / 1000) : 0;
       const timeRatio = round(totalTimeMs / 1000 / topic?.timeRequired) ?? 0;
 
