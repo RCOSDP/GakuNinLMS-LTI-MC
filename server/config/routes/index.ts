@@ -20,6 +20,7 @@ import * as bookmarkTagMenu from "./bookmarkTagMenu";
 import * as bookmarkMemoContent from "./bookmarkMemoContent";
 import * as wordCloud from "./wordCloud";
 import * as activityTimeRangeCount from "./activityTimeRangeCount";
+import * as activityRewatchRate from "./activityRewatchRate";
 
 const routers = [
   lti,
@@ -42,6 +43,7 @@ const routers = [
   bookmarkMemoContent,
   wordCloud,
   activityTimeRangeCount,
+  activityRewatchRate,
 ];
 
 async function routes(fastify: FastifyInstance) {
