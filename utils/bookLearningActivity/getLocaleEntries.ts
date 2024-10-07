@@ -3,6 +3,7 @@ import { fromS, fromMs } from "hh-mm-ss";
 import learningStatusLabel from "$utils/learningStatusLabel";
 import type { BookActivitySchema } from "$server/models/bookActivity";
 import type { SessionSchema } from "$server/models/session";
+import type { ActivityRewatchRateProps } from "$server/validators/activityRewatchRate";
 
 export const keyOrder = [
   "learner.id",
@@ -18,6 +19,7 @@ export const keyOrder = [
   "totalTimeMs",
   "status",
   "completionRate",
+  "rewatchRate",
   "createdAt",
   "updatedAt",
 ] as const;
@@ -36,6 +38,7 @@ export const label: Readonly<{ [key in (typeof keyOrder)[number]]: string }> = {
   totalTimeMs: "ユニーク視聴時間",
   status: "学習状況",
   completionRate: "学習完了率",
+  rewatchRate: "繰り返し見た割合",
   createdAt: "初回アクセス",
   updatedAt: "最終アクセス",
 };
@@ -47,6 +50,7 @@ export const label: Readonly<{ [key in (typeof keyOrder)[number]]: string }> = {
  */
 export function getLocaleEntries(
   activity: BookActivitySchema,
+  rewatchRate: ActivityRewatchRateProps | undefined,
   session: SessionSchema
 ): Record<string, string | number | undefined> {
   const flattenActivity: Record<
@@ -56,6 +60,7 @@ export function getLocaleEntries(
     ...activity,
     session,
   });
+
   const a = {
     ...flattenActivity,
     "topic.timeRequired": fromS(
@@ -69,9 +74,11 @@ export function getLocaleEntries(
       (activity.totalTimeMs ?? 0) / (activity.topic.timeRequired * 1000)
     ),
     status: learningStatusLabel[activity.status],
+    rewatchRate: rewatchRate?.rewatchRate ?? 0,
     createdAt: activity.createdAt?.toLocaleString(),
     updatedAt: activity.updatedAt?.toLocaleString(),
   };
+
   const data = keyOrder
     .map((key) => [label[key], a[key] as string | number | undefined])
     .filter(([, value]) => value !== undefined);

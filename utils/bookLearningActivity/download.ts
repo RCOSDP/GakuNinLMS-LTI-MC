@@ -2,6 +2,7 @@ import getLocaleEntries from "./getLocaleEntries";
 import type { BookActivitySchema } from "$server/models/bookActivity";
 import type { SessionSchema } from "$server/models/session";
 import * as csv from "$utils/csv";
+import fetchRewatchRate from "$utils/fetchRewatchRate";
 
 /**
  * ブラウザーで視聴分析データをCSVファイル(BOM付きUTF-8)に変換しエクスポート
@@ -9,12 +10,14 @@ import * as csv from "$utils/csv";
  * @param filename ダウンロードするファイル名
  * @param session 教員のセッション
  */
-function download(
+async function download(
   data: BookActivitySchema[],
   filename: string,
   session: SessionSchema
 ) {
   if (data.length === 0) return;
+
+  const rewatchRate = await fetchRewatchRate();
 
   const decoratedData = data
     .filter(
@@ -27,7 +30,15 @@ function download(
             t.topic.id === obj.topic.id
         )
     )
-    .map((a) => getLocaleEntries(a, session));
+    .map((a) =>
+      getLocaleEntries(
+        a,
+        rewatchRate.activityRewatchRate.find(
+          (r) => r.learnerId === a.learner.id && r.topicId === a.topic.id
+        ),
+        session
+      )
+    );
   csv.download(decoratedData, filename);
 }
 
