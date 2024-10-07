@@ -38,7 +38,7 @@ export const label: Readonly<{ [key in (typeof keyOrder)[number]]: string }> = {
   totalTimeMs: "ユニーク視聴時間",
   status: "学習状況",
   completionRate: "学習完了率",
-  rewatchRate: "繰り返し見た割合",
+  rewatchRate: "繰返視聴割合",
   createdAt: "初回アクセス",
   updatedAt: "最終アクセス",
 };

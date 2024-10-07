@@ -11,9 +11,9 @@ export type Query = ActivityQuery;
 
 export const method = {
   get: {
-    summary: "受講者の繰り返し視聴した割合の取得",
+    summary: "受講者の繰返視聴割合の取得",
     description: outdent`
-      受講者の繰り返し視聴した割合を取得します。
+      受講者の繰返視聴割合を取得します。
       教員または管理者でなければなりません。`,
     response: {
       200: {

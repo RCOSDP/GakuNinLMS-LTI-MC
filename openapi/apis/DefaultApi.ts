@@ -472,8 +472,8 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * 受講者の繰り返し視聴した割合を取得します。 教員または管理者でなければなりません。
-     * 受講者の繰り返し視聴した割合の取得
+     * 受講者の繰返視聴割合を取得します。 教員または管理者でなければなりません。
+     * 受講者の繰返視聴割合の取得
      */
     async apiV2ActivityRewatchRateGetRaw(): Promise<runtime.ApiResponse<InlineResponse20020>> {
         const queryParameters: runtime.HTTPQuery = {};
@@ -491,8 +491,8 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * 受講者の繰り返し視聴した割合を取得します。 教員または管理者でなければなりません。
-     * 受講者の繰り返し視聴した割合の取得
+     * 受講者の繰返視聴割合を取得します。 教員または管理者でなければなりません。
+     * 受講者の繰返視聴割合の取得
      */
     async apiV2ActivityRewatchRateGet(): Promise<InlineResponse20020> {
         const response = await this.apiV2ActivityRewatchRateGetRaw();
