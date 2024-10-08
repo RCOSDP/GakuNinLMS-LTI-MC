@@ -6,6 +6,7 @@ import { isInstructor } from "$server/utils/session";
 import { ActivityRewatchRateProps } from "$server/validators/activityRewatchRate";
 import findAllActivityWithTimeRangeCount from "$server/utils/activity/findAllActivityWithTimeRangeCount";
 import { ActivityQuery } from "$server/validators/activityQuery";
+import { round } from "$server/utils/math";
 
 export type Query = ActivityQuery;
 
@@ -63,10 +64,10 @@ export async function index({
     return {
       topicId: activity.topic.id,
       learnerId: activity.learner.id,
-      rewatchRate: Math.round(
-        (rewatchRanges.length /
-          (activity.topic.timeRequired / ACTIVITY_COUNT_INTERVAL2)) *
-          100
+      rewatchRate: round(
+        rewatchRanges.length /
+          (activity.topic.timeRequired / ACTIVITY_COUNT_INTERVAL2),
+        -3
       ),
     };
   });

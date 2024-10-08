@@ -4,6 +4,7 @@ import learningStatusLabel from "$utils/learningStatusLabel";
 import type { BookActivitySchema } from "$server/models/bookActivity";
 import type { SessionSchema } from "$server/models/session";
 import type { ActivityRewatchRateProps } from "$server/validators/activityRewatchRate";
+import { round } from "$server/utils/math";
 
 export const keyOrder = [
   "learner.id",
@@ -68,10 +69,9 @@ export function getLocaleEntries(
       "hh:mm:ss.sss"
     ),
     totalTimeMs: fromMs(activity.totalTimeMs ?? 0, "hh:mm:ss.sss"),
-    completionRate: new Intl.NumberFormat("ja-JP", {
-      style: "percent",
-    }).format(
-      (activity.totalTimeMs ?? 0) / (activity.topic.timeRequired * 1000)
+    completionRate: round(
+      (activity.totalTimeMs ?? 0) / (activity.topic.timeRequired * 1000),
+      -3 // 小数点3桁以下を四捨五入
     ),
     status: learningStatusLabel[activity.status],
     rewatchRate: rewatchRate?.rewatchRate ?? 0,
