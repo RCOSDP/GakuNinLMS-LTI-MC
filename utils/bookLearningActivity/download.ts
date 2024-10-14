@@ -13,11 +13,12 @@ import fetchRewatchRate from "$utils/fetchRewatchRate";
 async function download(
   data: BookActivitySchema[],
   filename: string,
-  session: SessionSchema
+  session: SessionSchema,
+  currentLtiContextOnly: boolean
 ) {
   if (data.length === 0) return;
 
-  const rewatchRate = await fetchRewatchRate();
+  const rewatchRate = await fetchRewatchRate(currentLtiContextOnly);
 
   const decoratedData = data
     .filter(

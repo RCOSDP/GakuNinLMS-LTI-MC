@@ -71,7 +71,7 @@ export function getLocaleEntries(
     totalTimeMs: fromMs(activity.totalTimeMs ?? 0, "hh:mm:ss.sss"),
     completionRate: round(
       (activity.totalTimeMs ?? 0) / (activity.topic.timeRequired * 1000),
-      -3 // 小数点3桁以下を四捨五入
+      -3 // 小数点第4位で四捨五入
     ),
     status: learningStatusLabel[activity.status],
     rewatchRate: rewatchRate?.rewatchRate ?? 0,

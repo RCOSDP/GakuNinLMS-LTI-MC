@@ -1,7 +1,9 @@
 import { api } from "./api";
 
-export async function fetchRewatchRate() {
-  const res = await api.apiV2ActivityRewatchRateGet();
+export async function fetchRewatchRate(currentLtiContextOnly: boolean) {
+  const res = await api.apiV2ActivityRewatchRateGet({
+    currentLtiContextOnly: currentLtiContextOnly,
+  });
   return res;
 }
 

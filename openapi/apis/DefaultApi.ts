@@ -162,6 +162,10 @@ export interface ApiV2ActivityGetRequest {
     currentLtiContextOnly?: boolean;
 }
 
+export interface ApiV2ActivityRewatchRateGetRequest {
+    currentLtiContextOnly?: boolean;
+}
+
 export interface ApiV2ActivityTimeRangeCountActivityIdGetRequest {
     activityId: number;
 }
@@ -475,8 +479,12 @@ export class DefaultApi extends runtime.BaseAPI {
      * 受講者の繰返視聴割合を取得します。 教員または管理者でなければなりません。
      * 受講者の繰返視聴割合の取得
      */
-    async apiV2ActivityRewatchRateGetRaw(): Promise<runtime.ApiResponse<InlineResponse20020>> {
+    async apiV2ActivityRewatchRateGetRaw(requestParameters: ApiV2ActivityRewatchRateGetRequest): Promise<runtime.ApiResponse<InlineResponse20020>> {
         const queryParameters: runtime.HTTPQuery = {};
+
+        if (requestParameters.currentLtiContextOnly !== undefined) {
+            queryParameters['current_lti_context_only'] = requestParameters.currentLtiContextOnly;
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -494,8 +502,8 @@ export class DefaultApi extends runtime.BaseAPI {
      * 受講者の繰返視聴割合を取得します。 教員または管理者でなければなりません。
      * 受講者の繰返視聴割合の取得
      */
-    async apiV2ActivityRewatchRateGet(): Promise<InlineResponse20020> {
-        const response = await this.apiV2ActivityRewatchRateGetRaw();
+    async apiV2ActivityRewatchRateGet(requestParameters: ApiV2ActivityRewatchRateGetRequest): Promise<InlineResponse20020> {
+        const response = await this.apiV2ActivityRewatchRateGetRaw(requestParameters);
         return await response.value();
     }
 

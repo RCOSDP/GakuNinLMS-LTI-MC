@@ -131,8 +131,13 @@ export default function Dashboard(props: Props) {
     setTabIndex(value);
   };
   const handleBookActivityDownloadClick = useCallback(() => {
-    void downloadBookActivity(bookActivities, "視聴分析データ.csv", session);
-  }, [bookActivities, session]);
+    void downloadBookActivity(
+      bookActivities,
+      "視聴分析データ.csv",
+      session,
+      scope === "current-lti-context-only"
+    );
+  }, [bookActivities, session, scope]);
   const handleBookmarkStatsDownloadClick = useCallback(async () => {
     await downloadBookmarkStats(
       "ブックマークの統計情報.csv",

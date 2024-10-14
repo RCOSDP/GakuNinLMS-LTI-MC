@@ -16,10 +16,10 @@ export const method = {
     description: outdent`
       受講者の繰返視聴割合を取得します。
       教員または管理者でなければなりません。`,
+    querystring: ActivityQuery,
     response: {
       200: {
         type: "object",
-        querystring: ActivityQuery,
         properties: {
           activityRewatchRate: {
             type: "array",
