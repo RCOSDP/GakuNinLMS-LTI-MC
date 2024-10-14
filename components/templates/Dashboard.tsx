@@ -33,6 +33,7 @@ import MembersDialog from "$organisms/MembersDialog";
 import BookmarkStatsDialog from "$organisms/BookmarkStatsDialog";
 import useLtiMembersHandler from "$utils/useLtiMembersHandler";
 import type { LtiNrpsContextMemberSchema } from "$server/models/ltiNrpsContextMember";
+import useRewatchRate from "$utils/useRewatchRate";
 
 type TabPanelProps = {
   className?: string;
@@ -161,6 +162,11 @@ export default function Dashboard(props: Props) {
       }),
     [courseBooks, bookActivities]
   );
+
+  const { data: rewatchRates } = useRewatchRate(
+    scope === "current-lti-context-only"
+  );
+
   const { data, dispatch, ...dialogProps } = useDialogProps<{
     learner: LearnerSchema;
     bookActivities: Array<BookActivitySchema>;
@@ -290,6 +296,7 @@ export default function Dashboard(props: Props) {
               activities={activities}
               onActivityClick={handleActivityClick(learner, activities)}
               session={session}
+              rewatchRates={rewatchRates?.activityRewatchRate ?? []}
             />
           ))}
         </TabPanel>

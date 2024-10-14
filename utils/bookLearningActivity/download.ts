@@ -18,7 +18,7 @@ async function download(
 ) {
   if (data.length === 0) return;
 
-  const rewatchRate = await fetchRewatchRate(currentLtiContextOnly);
+  const rewatchRate = await fetchRewatchRate({ currentLtiContextOnly });
 
   const decoratedData = data
     .filter(
