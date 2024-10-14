@@ -11,7 +11,6 @@ function findActivityTimeRangeCount(activityId: Activity["id"]) {
     },
     where: {
       activityId: activityId,
-      count: { not: 0 },
     },
     orderBy: { startMs: "asc" },
   });

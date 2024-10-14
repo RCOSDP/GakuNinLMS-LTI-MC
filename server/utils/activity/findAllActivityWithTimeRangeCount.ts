@@ -18,11 +18,7 @@ function findAllActivityWithTimeRangeCount(
       totalTimeMs: true,
       topic: true,
       learner: true,
-      timeRangeCounts: {
-        where: {
-          count: { not: 0 },
-        },
-      },
+      timeRangeCounts: true,
     },
     where: {
       ...activityScope,
