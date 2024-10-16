@@ -13,6 +13,7 @@ import LearningStatusDot from "$atoms/LearningStatusDot";
 import type { ActivityScope } from "$types/activityScope";
 import ActivityScopeSelect from "$molecules/ActivityScopeSelect";
 import LearningActivityItem from "$molecules/LearningActivityItem";
+import BookAndTopicActivityItem from "$molecules/BookAndTopicActivityItem";
 import LearnerActivityItem from "$molecules/LearnerActivityItem";
 import LearnerActivityDialog from "$organisms/LearnerActivityDialog";
 import useCardStyles from "$styles/card";
@@ -27,6 +28,7 @@ import downloadBookmarkStats from "$utils/bookmark/download";
 import label from "$utils/learningStatusLabel";
 import getLearnerActivities from "$utils/getLearnerActivities";
 import getActivitiesByBooks from "$utils/getActivitiesByBooks";
+import getActivitiesByBooksAndTopics from "$utils/getActivitiesByBooksAndTopics";
 import useDialogProps from "$utils/useDialogProps";
 import useMemberships from "$utils/useMemberships";
 import MembersDialog from "$organisms/MembersDialog";
@@ -99,6 +101,20 @@ const useStyles = makeStyles((theme) => ({
       },
     },
   },
+  topicLabel: {
+    flex: 1,
+    display: "flex",
+  },
+  topicTitleColumn: {
+    width: "70%",
+    marginRight: theme.spacing(1),
+    alignItems: "center",
+  },
+  topicColumn: {
+    display: "flex",
+    width: "10%",
+    justifyContent: "center",
+  },
 }));
 
 type Props = {
@@ -165,6 +181,15 @@ export default function Dashboard(props: Props) {
 
   const { data: rewatchRates } = useRewatchRate(
     scope === "current-lti-context-only"
+　);
+  
+  const activitiesByBooksAndTopics = useMemo(
+    () =>
+      getActivitiesByBooksAndTopics({
+        courseBooks,
+        bookActivities,
+      }),
+    [courseBooks, bookActivities]
   );
 
   const { data, dispatch, ...dialogProps } = useDialogProps<{
@@ -259,6 +284,7 @@ export default function Dashboard(props: Props) {
           onChange={handleChange}
         >
           <Tab label="ブック" />
+          <Tab label="トピック" />
           <Tab label="学習者" />
           <Tab label="タグ" />
         </Tabs>
@@ -274,7 +300,23 @@ export default function Dashboard(props: Props) {
             />
           ))}
         </TabPanel>
-        <TabPanel className={classes.learners} value={tabIndex} index={1}>
+        <TabPanel value={tabIndex} index={1}>
+          <div className={classes.topicLabel}>
+            <div className={classes.topicTitleColumn}></div>
+            <div className={classes.topicColumn}>動画の長さ（秒）</div>
+            <div className={classes.topicColumn}>平均視聴時間（秒）</div>
+            <div className={classes.topicColumn}>平均視聴割合</div>
+          </div>
+          {activitiesByBooksAndTopics.map(
+            (activitiesByBookAndTopics, index) => (
+              <BookAndTopicActivityItem
+                key={index}
+                book={activitiesByBookAndTopics}
+              />
+            )
+          )}
+        </TabPanel>
+        <TabPanel className={classes.learners} value={tabIndex} index={2}>
           <div className={classes.learnersLabel}>
             <div>
               <LearningStatusDot status="completed" />
@@ -300,7 +342,7 @@ export default function Dashboard(props: Props) {
             />
           ))}
         </TabPanel>
-        <TabPanel className={classes.items} value={tabIndex} index={2}>
+        <TabPanel className={classes.items} value={tabIndex} index={3}>
           {activitiesByBooks.map((book, index) => (
             <BookmarkStatsDialog key={index} book={book} />
           ))}
