@@ -35,6 +35,7 @@ import MembersDialog from "$organisms/MembersDialog";
 import BookmarkStatsDialog from "$organisms/BookmarkStatsDialog";
 import useLtiMembersHandler from "$utils/useLtiMembersHandler";
 import type { LtiNrpsContextMemberSchema } from "$server/models/ltiNrpsContextMember";
+import useRewatchRate from "$utils/useRewatchRate";
 
 type TabPanelProps = {
   className?: string;
@@ -147,8 +148,13 @@ export default function Dashboard(props: Props) {
     setTabIndex(value);
   };
   const handleBookActivityDownloadClick = useCallback(() => {
-    void downloadBookActivity(bookActivities, "視聴分析データ.csv", session);
-  }, [bookActivities, session]);
+    void downloadBookActivity(
+      bookActivities,
+      "視聴分析データ.csv",
+      session,
+      scope === "current-lti-context-only"
+    );
+  }, [bookActivities, session, scope]);
   const handleBookmarkStatsDownloadClick = useCallback(async () => {
     await downloadBookmarkStats(
       "ブックマークの統計情報.csv",
@@ -172,6 +178,11 @@ export default function Dashboard(props: Props) {
       }),
     [courseBooks, bookActivities]
   );
+
+  const { data: rewatchRates } = useRewatchRate(
+    scope === "current-lti-context-only"
+　);
+  
   const activitiesByBooksAndTopics = useMemo(
     () =>
       getActivitiesByBooksAndTopics({
@@ -327,6 +338,7 @@ export default function Dashboard(props: Props) {
               activities={activities}
               onActivityClick={handleActivityClick(learner, activities)}
               session={session}
+              rewatchRates={rewatchRates?.activityRewatchRate ?? []}
             />
           ))}
         </TabPanel>

@@ -4,6 +4,7 @@ import LearningStatusDot from "$atoms/LearningStatusDot";
 import getLocaleEntries from "$utils/bookLearningActivity/getLocaleEntries";
 import type { BookActivitySchema } from "$server/models/bookActivity";
 import type { SessionSchema } from "$server/models/session";
+import type { ActivityRewatchRateProps } from "$server/validators/activityRewatchRate";
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -32,13 +33,16 @@ type Props = {
   activity: BookActivitySchema;
   onActivityClick?(activity: BookActivitySchema): void;
   session: SessionSchema;
+  rewatchRate: ActivityRewatchRateProps | undefined;
 };
 
 export default function LearnerActivityDot(props: Props) {
-  const { activity, onActivityClick, session } = props;
+  const { activity, onActivityClick, session, rewatchRate } = props;
   const classes = useStyles();
   const handleActivityClick = () => onActivityClick?.(activity);
-  const items = Object.entries(getLocaleEntries(activity, session));
+  const items = Object.entries(
+    getLocaleEntries(activity, rewatchRate, session)
+  );
   return (
     <Tooltip
       title={
