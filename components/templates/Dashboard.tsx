@@ -181,8 +181,8 @@ export default function Dashboard(props: Props) {
 
   const { data: rewatchRates } = useRewatchRate(
     scope === "current-lti-context-only"
-　);
-  
+  );
+
   const activitiesByBooksAndTopics = useMemo(
     () =>
       getActivitiesByBooksAndTopics({
