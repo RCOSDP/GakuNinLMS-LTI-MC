@@ -6,6 +6,8 @@ import type { BookActivitySchema } from "$server/models/bookActivity";
 import type { SessionSchema } from "$server/models/session";
 import type { ActivityRewatchRateProps } from "$server/validators/activityRewatchRate";
 
+import { NEXT_PUBLIC_ACTIVITY_REWATCH_RATE_THRESHOLD } from "$utils/env";
+
 const useStyles = makeStyles((theme) => ({
   button: {
     appearance: "none",
@@ -37,7 +39,7 @@ type Props = {
 };
 
 function isRewatched(rewatchRate: number) {
-  return rewatchRate >= 0.3;
+  return rewatchRate >= NEXT_PUBLIC_ACTIVITY_REWATCH_RATE_THRESHOLD;
 }
 
 export default function LearnerActivityDot(props: Props) {
