@@ -2,10 +2,7 @@ import type { BookSchema } from "$server/models/book";
 import type { TopicSchema } from "$server/models/topic";
 import type { BookActivitySchema } from "$server/models/bookActivity";
 import type { CourseBookSchema } from "$server/models/courseBook";
-
-function round(number: number) {
-  return Math.round(number * 10) / 10;
-}
+import { round } from "$server/utils/math";
 
 function getActivitiesByBooksAndTopics({
   courseBooks,
@@ -60,7 +57,8 @@ function getActivitiesByBooksAndTopics({
             )
             .reduce((a, b) => {
               return a + b;
-            }, 0) / activities.length
+            }, 0) / activities.length,
+          -3
         ) ?? 0;
 
       activitiesByTopics.push({ ...topic, averageCompleteRate });
