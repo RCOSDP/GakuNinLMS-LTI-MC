@@ -3,6 +3,7 @@ import makeStyles from "@mui/styles/makeStyles";
 import { gray } from "$theme/colors";
 import type { BookSchema } from "$server/models/book";
 import type { TopicSchema } from "$server/models/topic";
+import type { ActivityRewatchRateProps } from "$server/validators/activityRewatchRate";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -46,6 +47,7 @@ type BookAndTopicProps = {
       }
     >;
   };
+  rewatchRates: Array<ActivityRewatchRateProps>;
 };
 
 type TopicProps = {
@@ -53,10 +55,28 @@ type TopicProps = {
     averageTime: number;
     timeRatio: number;
   };
+  averageRewatchRate: number;
 };
 
+function getAverageRewatchRate(
+  rewatchRates: Array<ActivityRewatchRateProps>,
+  topicId: number
+) {
+  const topicRewatchRates =
+    rewatchRates.filter((r) => topicId === r.topicId) ?? [];
+
+  const averageRewatchRate =
+    topicRewatchRates
+      ?.map((r: ActivityRewatchRateProps) => r.rewatchRate ?? 0)
+      .reduce((a, b) => {
+        return a + b;
+      }, 0) / topicRewatchRates.length ?? 0;
+
+  return averageRewatchRate;
+}
+
 export default function BookAndTopicActivityItem(props: BookAndTopicProps) {
-  const { book } = props;
+  const { book, rewatchRates } = props;
   const classes = useStyles();
 
   return (
@@ -64,7 +84,11 @@ export default function BookAndTopicActivityItem(props: BookAndTopicProps) {
       <div className={classes.row}>
         <h4>{book.name}</h4>
         {book.activitiesByTopics.map((topic, index) => (
-          <TopicActivityItem key={index} topic={topic} />
+          <TopicActivityItem
+            key={index}
+            topic={topic}
+            averageRewatchRate={getAverageRewatchRate(rewatchRates, topic.id)}
+          />
         ))}
       </div>
     </div>
@@ -72,7 +96,7 @@ export default function BookAndTopicActivityItem(props: BookAndTopicProps) {
 }
 
 export function TopicActivityItem(props: TopicProps) {
-  const { topic } = props;
+  const { topic, averageRewatchRate } = props;
   const classes = useStyles();
 
   return (
@@ -82,7 +106,7 @@ export function TopicActivityItem(props: TopicProps) {
       </div>
       <div className={clsx(classes.column)}>{topic.timeRequired}</div>
       <div className={clsx(classes.column)}>{topic.averageTime}</div>
-      <div className={clsx(classes.column)}>{topic.timeRatio}</div>
+      <div className={clsx(classes.column)}>{averageRewatchRate}</div>
     </div>
   );
 }
