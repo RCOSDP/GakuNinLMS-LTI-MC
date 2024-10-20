@@ -4,6 +4,7 @@ import { gray } from "$theme/colors";
 import type { BookSchema } from "$server/models/book";
 import type { TopicSchema } from "$server/models/topic";
 import type { ActivityRewatchRateProps } from "$server/validators/activityRewatchRate";
+import { round } from "$server/utils/math";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -70,7 +71,7 @@ function getAverageRewatchRate(
         return a + b;
       }, 0) / topicRewatchRates.length ?? 0;
 
-  return averageRewatchRate;
+  return round(averageRewatchRate, -3);
 }
 
 export default function BookAndTopicActivityItem(props: BookAndTopicProps) {
