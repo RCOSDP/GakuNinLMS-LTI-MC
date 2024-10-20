@@ -16,8 +16,7 @@ function getActivitiesByBooksAndTopics({
 }) {
   const activitiesByTopics: Array<
     Pick<TopicSchema, "id" | "name" | "timeRequired"> & {
-      averageTime: number;
-      timeRatio: number;
+      averageCompleteRate: number;
     }
   > = [];
 
@@ -25,8 +24,7 @@ function getActivitiesByBooksAndTopics({
     Pick<BookSchema, "id" | "name"> & {
       activitiesByTopics: Array<
         Pick<TopicSchema, "id" | "name" | "timeRequired"> & {
-          averageTime: number;
-          timeRatio: number;
+          averageCompleteRate: number;
         }
       >;
     }
@@ -52,19 +50,20 @@ function getActivitiesByBooksAndTopics({
                 t.topic.id === obj.topic.id
             )
         );
-      const totalTimeMs =
-        activities
-          .map((a: BookActivitySchema) => a.totalTimeMs ?? 0)
-          .reduce((a, b) => {
-            return a + b;
-          }, 0) ?? 0;
-      const averageTime =
-        activities.length > 0
-          ? round(totalTimeMs / activities.length / 1000)
-          : 0;
-      const timeRatio = round(totalTimeMs / 1000 / topic?.timeRequired) ?? 0;
 
-      activitiesByTopics.push({ ...topic, averageTime, timeRatio });
+      const averageCompleteRate =
+        round(
+          activities
+            .map(
+              (a: BookActivitySchema) =>
+                (a?.totalTimeMs ?? 0) / 1000 / topic.timeRequired ?? 0
+            )
+            .reduce((a, b) => {
+              return a + b;
+            }, 0) / activities.length
+        ) ?? 0;
+
+      activitiesByTopics.push({ ...topic, averageCompleteRate });
     }
     activitiesByBooksAndTopics.push({ ...book, activitiesByTopics });
   }

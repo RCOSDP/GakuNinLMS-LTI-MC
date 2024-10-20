@@ -42,8 +42,7 @@ type BookAndTopicProps = {
   book: Pick<BookSchema, "id" | "name"> & {
     activitiesByTopics: Array<
       Pick<TopicSchema, "id" | "name" | "timeRequired"> & {
-        averageTime: number;
-        timeRatio: number;
+        averageCompleteRate: number;
       }
     >;
   };
@@ -52,8 +51,7 @@ type BookAndTopicProps = {
 
 type TopicProps = {
   topic: Pick<TopicSchema, "id" | "name" | "timeRequired"> & {
-    averageTime: number;
-    timeRatio: number;
+    averageCompleteRate: number;
   };
   averageRewatchRate: number;
 };
@@ -105,7 +103,7 @@ export function TopicActivityItem(props: TopicProps) {
         {topic.name}
       </div>
       <div className={clsx(classes.column)}>{topic.timeRequired}</div>
-      <div className={clsx(classes.column)}>{topic.averageTime}</div>
+      <div className={clsx(classes.column)}>{topic.averageCompleteRate}</div>
       <div className={clsx(classes.column)}>{averageRewatchRate}</div>
     </div>
   );
