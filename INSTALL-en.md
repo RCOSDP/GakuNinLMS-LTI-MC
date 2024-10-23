@@ -17,7 +17,7 @@ When changing the information of the connection destination of API, .env must be
 | `NEXT_PUBLIC_ACTIVITY_SEND_INTERVAL`          | 学習活動の送信間隔 (秒) (デフォルト: `10`)                                                                                |
 | `NEXT_PUBLIC_VIDEO_MAX_HEIGHT`                | max-height for scroll-following video player (デフォルト: `40vh`)                                                         |
 | `NEXT_PUBLIC_NO_EMBED`                        | Do not allow anyone to embed. Disabled by default.                                                                        |
-| `NEXT_PUBLIC_ACTIVITY_REWATCH_RATE_THRESHOLD` | Threshold for visualizing rewatched activities based on activity rewatch rate (between `0` and `1`) (Default: `0.3`)      |
+| `NEXT_PUBLIC_ACTIVITY_REWATCH_RATE_THRESHOLD` | Threshold for visualizing rewatched activities based on activity rewatch rate (between `0` and `1`) (Default: `0.1`)      |
 
 ## Build front-ends
 
