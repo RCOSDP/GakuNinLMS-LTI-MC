@@ -57,7 +57,7 @@ function getActivitiesByBooksAndTopics({
             )
             .reduce((a, b) => {
               return a + b;
-            }, 0) / activities.length,
+            }, 0) ?? 0 / activities.length,
           -3
         ) ?? 0;
 
