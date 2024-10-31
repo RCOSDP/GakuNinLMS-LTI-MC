@@ -181,8 +181,8 @@ export default function Dashboard(props: Props) {
 
   const { data: rewatchRates } = useRewatchRate(
     scope === "current-lti-context-only"
-　);
-  
+  );
+
   const activitiesByBooksAndTopics = useMemo(
     () =>
       getActivitiesByBooksAndTopics({
@@ -304,14 +304,15 @@ export default function Dashboard(props: Props) {
           <div className={classes.topicLabel}>
             <div className={classes.topicTitleColumn}></div>
             <div className={classes.topicColumn}>動画の長さ（秒）</div>
-            <div className={classes.topicColumn}>平均視聴時間（秒）</div>
-            <div className={classes.topicColumn}>平均視聴割合</div>
+            <div className={classes.topicColumn}>平均学習完了率</div>
+            <div className={classes.topicColumn}>平均繰返視聴割合</div>
           </div>
           {activitiesByBooksAndTopics.map(
             (activitiesByBookAndTopics, index) => (
               <BookAndTopicActivityItem
                 key={index}
                 book={activitiesByBookAndTopics}
+                rewatchRates={rewatchRates?.activityRewatchRate ?? []}
               />
             )
           )}
