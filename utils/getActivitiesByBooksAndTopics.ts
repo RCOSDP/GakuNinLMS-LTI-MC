@@ -48,18 +48,17 @@ function getActivitiesByBooksAndTopics({
             )
         );
 
-      const averageCompleteRate =
-        round(
-          activities
-            .map(
-              (a: BookActivitySchema) =>
-                (a?.totalTimeMs ?? 0) / 1000 / topic.timeRequired ?? 0
-            )
-            .reduce((a, b) => {
-              return a + b;
-            }, 0) ?? 0 / activities.length,
-          -3
-        ) ?? 0;
+      const averageCompleteRate = round(
+        activities
+          .map(
+            (a: BookActivitySchema) =>
+              (a?.totalTimeMs ?? 0) / 1000 / topic.timeRequired ?? 0
+          )
+          .reduce((a, b) => {
+            return a + b;
+          }, 0) / activities.length || 0,
+        -3
+      );
 
       activitiesByTopics.push({ ...topic, averageCompleteRate });
     }
