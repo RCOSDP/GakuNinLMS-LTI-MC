@@ -16,6 +16,8 @@ import useSticky from "$utils/useSticky";
 import { useTopic } from "$utils/topic";
 import { useTheme } from "@mui/material/styles";
 
+import ActivityRewatchGraph from "$components/organisms/ActivityRewatchGraph";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flex: 4,
@@ -160,7 +162,9 @@ export function TopicActivityViewer(props: Pick<TopicProps, "topic">) {
                 identifier={String(topic_detail.id)}
               />
             </Box>
-            <Box></Box>
+            <Box>
+              <ActivityRewatchGraph topicId={topic.id} />
+            </Box>
           </Box>
         )}
       </Dialog>
