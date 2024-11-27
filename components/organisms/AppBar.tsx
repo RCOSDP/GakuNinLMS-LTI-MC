@@ -21,7 +21,7 @@ import type { UserSettingsProps } from "$server/models/userSettings";
 import { gray } from "$theme/colors";
 import { isAdministrator, isInstructor } from "$utils/session";
 import { updateUserSettings } from "$utils/userSettings";
-import { NEXT_PUBLIC_BASE_PATH } from "$utils/env";
+import { NEXT_PUBLIC_BASE_PATH, NEXT_PUBLIC_NO_DEEP_LINK } from "$utils/env";
 import { useRouter } from "next/router";
 import { pagesPath } from "$utils/$path";
 
@@ -94,7 +94,8 @@ function AppBar(props: Props, ref: Ref<HTMLDivElement>) {
     onBookmarksClick,
     ...others
   } = props;
-  const isDeepLink = !!session.ltiDlSettings?.deep_link_return_url;
+  const isDeepLink =
+    !!session.ltiDlSettings?.deep_link_return_url && NEXT_PUBLIC_NO_DEEP_LINK;
   const appBarClasses = useAppBarStyles();
   const classes = useStyles();
   const [open, setOpen] = useState(false);

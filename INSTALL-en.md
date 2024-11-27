@@ -17,6 +17,7 @@ When changing the information of the connection destination of API, .env must be
 | `NEXT_PUBLIC_ACTIVITY_SEND_INTERVAL`    | 学習活動の送信間隔 (秒) (デフォルト: `10`)                                                                                |
 | `NEXT_PUBLIC_VIDEO_MAX_HEIGHT`          | max-height for scroll-following video player (デフォルト: `40vh`)                                                         |
 | `NEXT_PUBLIC_NO_EMBED`                  | Do not allow anyone to embed. Disabled by default.                                                                        |
+| `NEXT_PUBLIC_NO_DEEP_LINK`              | Do not allow anyone to DeepLink UI. Disabled by default.                                                                  |
 
 ## Build front-ends
 

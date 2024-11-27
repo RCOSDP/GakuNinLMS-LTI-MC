@@ -16,7 +16,7 @@ import Placeholder from "$templates/Placeholder";
 import AppBar from "$organisms/AppBar";
 import Problem from "$organisms/Problem";
 import EmbedProblem from "$templates/EmbedProblem";
-import { NEXT_PUBLIC_NO_EMBED } from "$utils/env";
+import { NEXT_PUBLIC_NO_DEEP_LINK, NEXT_PUBLIC_NO_EMBED } from "$utils/env";
 import inIframe from "$utils/inIframe";
 import { useSessionInit } from "$utils/session";
 import { pagesPath } from "$utils/$path";
@@ -40,7 +40,9 @@ function Content({ children }: { children: ReactNode }) {
     );
   }
   if (!session) return <Placeholder />;
-  const isDeepLink = session?.ltiDlSettings?.deep_link_return_url !== undefined;
+  const isDeepLink =
+    session?.ltiDlSettings?.deep_link_return_url !== undefined &&
+    NEXT_PUBLIC_NO_DEEP_LINK;
   if (!isDeepLink && NEXT_PUBLIC_NO_EMBED && inIframe()) {
     return <EmbedProblem />;
   }
