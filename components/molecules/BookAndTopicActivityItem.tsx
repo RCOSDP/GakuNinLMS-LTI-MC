@@ -118,7 +118,6 @@ export function TopicActivityViewer(props: Pick<TopicProps, "topic">) {
   const { topic } = props;
   const topic_detail = useTopic(topic.id);
 
-  // TODO: 動画の下にグラフを設置
   return (
     <Box
       sx={{
