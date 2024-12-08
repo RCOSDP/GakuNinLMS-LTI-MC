@@ -42,8 +42,9 @@ const useStyles = makeStyles({
     alignItems: "center",
     justifyContent: "center",
     "&::before": {
-      content: '"👀"',
-      fontSize: 10,
+      content: "'↻'",
+      fontSize: 14,
+      fontWeight: "bold",
     },
   },
 });
