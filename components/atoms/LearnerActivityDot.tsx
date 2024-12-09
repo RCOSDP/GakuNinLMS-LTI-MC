@@ -6,6 +6,8 @@ import type { BookActivitySchema } from "$server/models/bookActivity";
 import type { SessionSchema } from "$server/models/session";
 import type { ActivityRewatchRateProps } from "$server/validators/activityRewatchRate";
 
+import { NEXT_PUBLIC_ACTIVITY_REWATCH_RATE_THRESHOLD } from "$utils/env";
+
 const useStyles = makeStyles((theme) => ({
   button: {
     appearance: "none",
@@ -36,6 +38,10 @@ type Props = {
   rewatchRate: ActivityRewatchRateProps | undefined;
 };
 
+function isRewatched(rewatchRate: number) {
+  return rewatchRate >= NEXT_PUBLIC_ACTIVITY_REWATCH_RATE_THRESHOLD;
+}
+
 export default function LearnerActivityDot(props: Props) {
   const { activity, onActivityClick, session, rewatchRate } = props;
   const classes = useStyles();
@@ -43,6 +49,11 @@ export default function LearnerActivityDot(props: Props) {
   const items = Object.entries(
     getLocaleEntries(activity, rewatchRate, session)
   );
+
+  const rewatchLabel = isRewatched(rewatchRate?.rewatchRate ?? 0)
+    ? "rewatch"
+    : "default";
+
   return (
     <Tooltip
       title={
@@ -63,7 +74,11 @@ export default function LearnerActivityDot(props: Props) {
       arrow
     >
       <button className={classes.button} onClick={handleActivityClick}>
-        <LearningStatusDot status={activity.status} size="large" />
+        <LearningStatusDot
+          status={activity.status}
+          size="large"
+          isRewatched={rewatchLabel}
+        />
       </button>
     </Tooltip>
   );

@@ -11,6 +11,12 @@ function getActivitiesByBooksAndTopics({
   courseBooks: Array<CourseBookSchema>;
   bookActivities: Array<BookActivitySchema>;
 }) {
+  const activitiesByTopics: Array<
+    Pick<TopicSchema, "id" | "name" | "timeRequired"> & {
+      averageCompleteRate: number;
+    }
+  > = [];
+
   const activitiesByBooksAndTopics: Array<
     Pick<BookSchema, "id" | "name"> & {
       activitiesByTopics: Array<
