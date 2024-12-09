@@ -28,7 +28,11 @@ function getActivitiesByBooksAndTopics({
   > = [];
 
   for (const book of courseBooks) {
-    activitiesByTopics.splice(0);
+    const activitiesByTopics: Array<
+      Pick<TopicSchema, "id" | "name" | "timeRequired"> & {
+        averageCompleteRate: number;
+      }
+    > = [];
     const topics: Array<Pick<TopicSchema, "id" | "name" | "timeRequired">> =
       book.sections.map((section) => section.topics).flat();
     for (const topic of topics) {
