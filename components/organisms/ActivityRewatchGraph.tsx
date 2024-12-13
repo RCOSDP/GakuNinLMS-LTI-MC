@@ -41,12 +41,13 @@ export function PlotAndLineChart({
   const svgRef = useRef<SVGSVGElement>(null);
 
   useEffect(() => {
-    d3.selectAll("svg > *").remove();
+    d3.selectAll("svg#rewatch-graph > *").remove();
 
     const svg = d3.select(svgRef.current);
     const width = divRef.current?.offsetWidth || 1000;
 
     svg
+      .attr("id", "rewatch-graph")
       .attr("width", width)
       .attr("height", height)
       .style("overflow", "visible");
