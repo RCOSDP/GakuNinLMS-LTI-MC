@@ -1,10 +1,22 @@
+import { useState } from "react";
+import { Box, Button } from "@mui/material";
+import Dialog from "@mui/material/Dialog";
 import clsx from "clsx";
 import makeStyles from "@mui/styles/makeStyles";
+import useCardStyles from "$styles/card";
 import { gray } from "$theme/colors";
 import type { BookSchema } from "$server/models/book";
 import type { TopicSchema } from "$server/models/topic";
 import type { ActivityRewatchRateProps } from "$server/validators/activityRewatchRate";
 import { round } from "$server/utils/math";
+
+import VideoResource from "$organisms/Video/VideoResource";
+import type { VideoResourceSchema } from "$server/models/videoResource";
+import useSticky from "$utils/useSticky";
+import { useTopic } from "$utils/topic";
+import { useTheme } from "@mui/material/styles";
+
+import ActivityRewatchGraph from "$components/organisms/ActivityRewatchGraph";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -94,6 +106,71 @@ export default function BookAndTopicActivityItem(props: BookAndTopicProps) {
   );
 }
 
+export function TopicActivityViewer(props: Pick<TopicProps, "topic">) {
+  const [open, setOpen] = useState(false);
+  const cardClasses = useCardStyles();
+  const theme = useTheme();
+  const sticky = useSticky({
+    offset: theme.spacing(-2),
+    backgroundColor: gray[800],
+  });
+
+  const { topic } = props;
+  const topic_detail = useTopic(topic.id);
+
+  return (
+    <Box
+      sx={{
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        display: "-webkit-box",
+        WebkitLineClamp: "2",
+        WebkitBoxOrient: "vertical",
+      }}
+    >
+      <Button variant="text" onClick={() => setOpen(true)}>
+        {topic.name}
+      </Button>
+      <Dialog
+        open={open}
+        onClose={() => setOpen(false)}
+        PaperProps={{ classes: cardClasses }}
+        fullWidth
+      >
+        {topic_detail === undefined ? (
+          <div
+            style={{
+              width: "80%",
+              height: 600,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              textAlign: "center",
+            }}
+          >
+            <p>Loading...</p>
+          </div>
+        ) : (
+          <Box sx={{ margin: "0 32px" }}>
+            <h2>{topic.name}</h2>
+            <Box>
+              <VideoResource
+                className={sticky}
+                sx={{ mx: -3 }}
+                {...(topic_detail.resource as VideoResourceSchema)}
+                identifier={String(topic_detail.id)}
+              />
+            </Box>
+            <Box>
+              <ActivityRewatchGraph topicId={topic.id} />
+            </Box>
+          </Box>
+        )}
+      </Dialog>
+    </Box>
+  );
+}
+
 export function TopicActivityItem(props: TopicProps) {
   const { topic, averageRewatchRate } = props;
   const classes = useStyles();
@@ -101,7 +178,7 @@ export function TopicActivityItem(props: TopicProps) {
   return (
     <div className={classes.topic}>
       <div className={clsx(classes.name, classes.titleColumn)}>
-        {topic.name}
+        <TopicActivityViewer topic={topic} />
       </div>
       <div className={clsx(classes.column)}>{topic.timeRequired}</div>
       <div className={clsx(classes.column)}>{topic.averageCompleteRate}</div>
