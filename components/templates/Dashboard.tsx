@@ -311,6 +311,7 @@ export default function Dashboard(props: Props) {
             (activitiesByBookAndTopics, index) => (
               <BookAndTopicActivityItem
                 key={index}
+                scope={scope === "current-lti-context-only"}
                 book={activitiesByBookAndTopics}
                 rewatchRates={rewatchRates?.activityRewatchRate ?? []}
               />

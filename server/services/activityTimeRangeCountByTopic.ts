@@ -6,7 +6,9 @@ import { isInstructor } from "$server/utils/session";
 import { ActivityTimeRangeCountProps } from "$server/validators/activityTimeRangeCount";
 import { ActivityTimeRangeCountByTopicParams } from "$server/validators/activityTimeRangeCountByTopicParams";
 import findActivityTimeRangeCountByTopic from "$server/utils/activity/findActivityTimeRangeCountByTopic";
+import { ActivityQuery } from "$server/validators/activityQuery";
 
+export type Query = ActivityQuery;
 export type Params = ActivityTimeRangeCountByTopicParams;
 
 export const method = {
@@ -16,6 +18,7 @@ export const method = {
       トピックごとの受講者の視聴行動回数を取得します。
       教員または管理者でなければなりません。`,
     params: ActivityTimeRangeCountByTopicParams,
+    querystring: ActivityQuery,
     response: {
       200: {
         type: "array",
@@ -32,15 +35,19 @@ export const hooks = {
 export async function show({
   session,
   params,
-}: FastifyRequest<{ Params: ActivityTimeRangeCountByTopicParams }>) {
+  query,
+}: FastifyRequest<{ Params: Params; Querystring: Query }>) {
   const { topicId } = params;
 
   if (!isInstructor(session)) {
     return { status: 403 };
   }
 
-  const activityTimeRangeCounts =
-    await findActivityTimeRangeCountByTopic(topicId);
+  const activityTimeRangeCounts = await findActivityTimeRangeCountByTopic(
+    topicId,
+    session,
+    query.current_lti_context_only ?? false
+  );
 
   return {
     status: activityTimeRangeCounts == null ? 404 : 200,

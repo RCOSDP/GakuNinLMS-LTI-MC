@@ -7,6 +7,7 @@ import * as d3 from "d3";
 import { NEXT_PUBLIC_REWATCH_GRAPH_COUNT_THRESHOLD } from "$utils/env";
 
 type Props = {
+  scope: boolean;
   topicId: number;
 };
 
@@ -110,8 +111,8 @@ export function PlotAndLineChart({
   );
 }
 export default function ActivityRewatchGraph(props: Props) {
-  const { topicId } = props;
-  const { data: counts } = useActivityTimeRangeCountByTopic(topicId);
+  const { scope, topicId } = props;
+  const { data: counts } = useActivityTimeRangeCountByTopic(topicId, scope);
 
   const plot: PlotSchema[] =
     counts

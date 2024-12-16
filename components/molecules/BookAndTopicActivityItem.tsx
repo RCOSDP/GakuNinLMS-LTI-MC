@@ -52,6 +52,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type BookAndTopicProps = {
+  scope: boolean;
   book: Pick<BookSchema, "id" | "name"> & {
     activitiesByTopics: Array<
       Pick<TopicSchema, "id" | "name" | "timeRequired"> & {
@@ -63,6 +64,7 @@ type BookAndTopicProps = {
 };
 
 type TopicProps = {
+  scope: boolean;
   topic: Pick<TopicSchema, "id" | "name" | "timeRequired"> & {
     averageCompleteRate: number;
   };
@@ -87,7 +89,7 @@ function getAverageRewatchRate(
 }
 
 export default function BookAndTopicActivityItem(props: BookAndTopicProps) {
-  const { book, rewatchRates } = props;
+  const { scope, book, rewatchRates } = props;
   const classes = useStyles();
 
   return (
@@ -97,6 +99,7 @@ export default function BookAndTopicActivityItem(props: BookAndTopicProps) {
         {book.activitiesByTopics.map((topic, index) => (
           <TopicActivityItem
             key={index}
+            scope={scope}
             topic={topic}
             averageRewatchRate={getAverageRewatchRate(rewatchRates, topic.id)}
           />
@@ -106,7 +109,9 @@ export default function BookAndTopicActivityItem(props: BookAndTopicProps) {
   );
 }
 
-export function TopicActivityViewer(props: Pick<TopicProps, "topic">) {
+export function TopicActivityViewer(
+  props: Pick<TopicProps, "scope" | "topic">
+) {
   const [open, setOpen] = useState(false);
   const cardClasses = useCardStyles();
   const theme = useTheme();
@@ -115,7 +120,7 @@ export function TopicActivityViewer(props: Pick<TopicProps, "topic">) {
     backgroundColor: gray[800],
   });
 
-  const { topic } = props;
+  const { scope, topic } = props;
   const topic_detail = useTopic(topic.id);
 
   return (
@@ -162,7 +167,7 @@ export function TopicActivityViewer(props: Pick<TopicProps, "topic">) {
               />
             </Box>
             <Box>
-              <ActivityRewatchGraph topicId={topic.id} />
+              <ActivityRewatchGraph scope={scope} topicId={topic.id} />
             </Box>
           </Box>
         )}
@@ -172,13 +177,13 @@ export function TopicActivityViewer(props: Pick<TopicProps, "topic">) {
 }
 
 export function TopicActivityItem(props: TopicProps) {
-  const { topic, averageRewatchRate } = props;
+  const { scope, topic, averageRewatchRate } = props;
   const classes = useStyles();
 
   return (
     <div className={classes.topic}>
       <div className={clsx(classes.name, classes.titleColumn)}>
-        <TopicActivityViewer topic={topic} />
+        <TopicActivityViewer scope={scope} topic={topic} />
       </div>
       <div className={clsx(classes.column)}>{topic.timeRequired}</div>
       <div className={clsx(classes.column)}>{topic.averageCompleteRate}</div>
