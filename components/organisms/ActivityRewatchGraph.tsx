@@ -4,6 +4,8 @@ import type { FromSchema } from "json-schema-to-ts";
 
 import * as d3 from "d3";
 
+import { NEXT_PUBLIC_REWATCH_GRAPH_COUNT_THRESHOLD } from "$utils/env";
+
 type Props = {
   topicId: number;
 };
@@ -52,9 +54,11 @@ export function PlotAndLineChart({
       .attr("height", height)
       .style("overflow", "visible");
 
+    const maxStartMs = Math.max(...average.map((a) => a.startMs));
+
     const x = d3
       .scaleLinear()
-      .domain([0, average.length - 1])
+      .domain([0, maxStartMs / 1000])
       .range([marginLeft, width - marginRight]);
 
     const y = d3
@@ -110,7 +114,10 @@ export default function ActivityRewatchGraph(props: Props) {
   const { data: counts } = useActivityTimeRangeCountByTopic(topicId);
 
   const plot: PlotSchema[] =
-    counts?.map((c) => ({ startMs: c.startMs, count: c?.count || 0 })) || [];
+    counts
+      ?.map((c) => ({ startMs: c.startMs, count: c?.count || 0 }))
+      .filter((c) => c.count <= NEXT_PUBLIC_REWATCH_GRAPH_COUNT_THRESHOLD) ||
+    [];
 
   const plotEachStartMs = Object.groupBy(plot, (p: PlotSchema) => p.startMs); // ES2024
   const average: PlotSchema[] = [];

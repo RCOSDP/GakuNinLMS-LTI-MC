@@ -28,6 +28,7 @@ API の接続先の情報を変更する場合 .env を適宜書き換える必�
 | `NEXT_PUBLIC_VIDEO_MAX_HEIGHT`                | スクロール追従する動画プレイヤーの max-height (デフォルト: `40vh`)                                                        |
 | `NEXT_PUBLIC_NO_EMBED`                        | 埋め込みを許可しない (フォーマット: [YAML 1.1 真偽値](https://yaml.org/type/bool.html)) (デフォルト: 無効)                |
 | `NEXT_PUBLIC_ACTIVITY_REWATCH_RATE_THRESHOLD` | 繰返視聴割合に基づく可視化のための閾値 (0〜1の値) (デフォルト: `0.1`)                                                     |
+| `NEXT_PUBLIC_REWATCH_GRAPH_COUNT_THRESHOLD`   | グラフにプロットする視聴回数の上限閾値 (回数) (デフォルト: `20`)                                                          |
 
 ## フロントエンド周りのビルド
 
