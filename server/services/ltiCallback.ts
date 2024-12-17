@@ -40,12 +40,15 @@ export async function post(req: FastifyRequest<{ Body: Props }>) {
   }
 
   try {
+    console.log("req.body", JSON.stringify(req.body, null, 2));
     const token = await client.callback(callbackUrl, req.body, {
       state: req.session.state,
       nonce: req.session.oauthClient.nonce,
     });
     const claims = token.claims();
+    console.log("claims", JSON.stringify(claims, null, 2));
     const ltiClaims = new LtiClaims(claims as Partial<LtiClaims>);
+    console.log("ltiClaims", JSON.stringify(ltiClaims, null, 2));
     await validateOrReject(ltiClaims);
     const session = {
       oauthClient: req.session.oauthClient,
@@ -82,6 +85,7 @@ export async function post(req: FastifyRequest<{ Body: Props }>) {
     }
     const ltiAgsEndpoint: undefined | LtiAgsEndpointSchema =
       ltiClaims["https://purl.imsglobal.org/spec/lti-ags/claim/endpoint"];
+    console.log("ltiAgsEndpoint", JSON.stringify(ltiAgsEndpoint, null, 2));
     const ltiNrpsParameter: undefined | LtiNrpsParameterSchema =
       ltiClaims[
         "https://purl.imsglobal.org/spec/lti-nrps/claim/namesroleservice"
