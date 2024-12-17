@@ -1,8 +1,19 @@
 import type { Topic } from "@prisma/client";
-
+import type { SessionSchema } from "$server/models/session";
 import prisma from "$server/utils/prisma";
 
-function findActivityTimeRangeCountByTopic(topicId: Topic["id"]) {
+function findActivityTimeRangeCountByTopic(
+  topicId: Topic["id"],
+  session: SessionSchema,
+  currentLtiContextOnly: boolean
+) {
+  const activityScope = currentLtiContextOnly
+    ? {
+        ltiConsumerId: session.oauthClient.id,
+        ltiContextId: session.ltiContext.id,
+      }
+    : { ltiConsumerId: "", ltiContextId: "" };
+
   return prisma.activityTimeRangeCount.findMany({
     select: {
       activityId: true,
@@ -11,7 +22,7 @@ function findActivityTimeRangeCountByTopic(topicId: Topic["id"]) {
       count: true,
     },
     where: {
-      activity: { topicId: topicId },
+      activity: { ...activityScope, topicId: topicId },
     },
     orderBy: { activityId: "asc" },
   });

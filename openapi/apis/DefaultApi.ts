@@ -175,6 +175,7 @@ export interface ApiV2ActivityTimeRangeCountActivityIdGetRequest {
 
 export interface ApiV2ActivityTimeRangeCountByTopicTopicIdGetRequest {
     topicId: number;
+    currentLtiContextOnly?: boolean;
 }
 
 export interface ApiV2BookBookIdActivityGetRequest {
@@ -556,6 +557,10 @@ export class DefaultApi extends runtime.BaseAPI {
         }
 
         const queryParameters: runtime.HTTPQuery = {};
+
+        if (requestParameters.currentLtiContextOnly !== undefined) {
+            queryParameters['current_lti_context_only'] = requestParameters.currentLtiContextOnly;
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 

@@ -7,9 +7,12 @@ const key = "/api/v2/activityTimeRangeCountByTopic";
 /**
  *繰返視聴割合を取得する
  */
-function useActivityTimeRangeCountByTopic(topicId: TopicSchema["id"]) {
+function useActivityTimeRangeCountByTopic(
+  topicId: TopicSchema["id"],
+  currentLtiContextOnly: boolean
+) {
   const { data, error } = useSWR(
-    { key, topicId },
+    { key, topicId, currentLtiContextOnly },
     fetchActivityTimeRangeCountByTopic
   );
   return { data, error };
