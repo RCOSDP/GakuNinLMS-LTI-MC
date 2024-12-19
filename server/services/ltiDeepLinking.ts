@@ -7,7 +7,10 @@ import findBook from "$server/utils/book/findBook";
 import { FRONTEND_ORIGIN } from "$server/utils/env";
 import { createPrivateKey } from "$server/utils/ltiv1p3/jwk";
 import findClient from "$server/utils/ltiv1p3/findClient";
-import { getDlResponseJwt } from "$server/utils/ltiv1p3/deepLinking";
+import {
+  getDlResponseJwt,
+  getLineItems,
+} from "$server/utils/ltiv1p3/deepLinking";
 
 const Query = {
   type: "object",
@@ -64,20 +67,27 @@ export async function index(req: FastifyRequest<{ Querystring: Query }>) {
 
   if (!book) return { status: 404 };
 
+  const lineItems = await getLineItems(
+    client,
+    req.session.ltiAgsEndpoint?.lineitem
+  );
+
+  const contentItems = lineItems.map((lineItem) => ({
+    type: "ltiResourceLink",
+    title: req.session.ltiDlSettings?.title || "",
+    text: req.session.ltiDlSettings?.text || "",
+    url: `${
+      FRONTEND_ORIGIN || `${req.protocol}://${req.hostname}`
+    }/book?bookId=${book.id}`,
+    lineItem: lineItem,
+  }));
+
   const jwt = await getDlResponseJwt(client, {
     privateKey,
     deploymentId: req.session.ltiDeploymentId,
     data: req.session.ltiDlSettings?.data,
-    contentItems: [
-      {
-        type: "ltiResourceLink",
-        title: req.session.ltiDlSettings?.title || "",
-        text: req.session.ltiDlSettings?.text || "",
-        url: `${
-          FRONTEND_ORIGIN || `${req.protocol}://${req.hostname}`
-        }/book?bookId=${book.id}`,
-      },
-    ],
+    // @ts-expect-error TODO: fix type
+    contentItems,
   });
 
   return {
