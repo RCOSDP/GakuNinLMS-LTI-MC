@@ -155,7 +155,7 @@ const authFailureCode = [401];
 
 /**
  * LTI-NRPS 2.0 lineItems の取得
- * https://www.imsglobal.org/spec/lti-nrps/v2p0
+ * https://www.imsglobal.org/spec/lti-dl/v2p0
  * @param client OpenID Connect Client
  * @param contextLineItemsUrl LTI claim に含まれる context_memberships_url
  * @param retry リトライを行うか否か (デフォルト: true 行う)
@@ -172,7 +172,13 @@ export async function getLineItems(
 
   const { accessToken } = await createAccessToken(client);
 
-  const res = await client.requestResource(contextLineItemsUrl, accessToken);
+  const url = new URL(contextLineItemsUrl);
+  const res = await client.requestResource(url, accessToken, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/vnd.ims.lis.v2.lineitemcontainer+json",
+    },
+  });
 
   const statusCode = Number(res.statusCode);
 
@@ -196,7 +202,6 @@ export async function getLineItems(
   }
 
   const lineItems = JSON.parse(res.body.toString()) as LineItem[];
-  console.log("lineItems", lineItems);
 
   return lineItems;
 }

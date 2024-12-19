@@ -69,7 +69,7 @@ export async function index(req: FastifyRequest<{ Querystring: Query }>) {
 
   const lineItems = await getLineItems(
     client,
-    req.session.ltiAgsEndpoint?.lineitem
+    req.session.ltiAgsEndpoint?.lineitems
   );
 
   const contentItems = lineItems.map((lineItem) => ({
