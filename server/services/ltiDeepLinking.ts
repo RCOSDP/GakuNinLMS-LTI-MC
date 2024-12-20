@@ -82,6 +82,8 @@ export async function index(req: FastifyRequest<{ Querystring: Query }>) {
     lineItem: lineItem,
   }));
 
+  console.log("contentItems", contentItems);
+  console.log("req.session.ltiDlSettings", req.session.ltiDlSettings);
   const jwt = await getDlResponseJwt(client, {
     privateKey,
     deploymentId: req.session.ltiDeploymentId,

@@ -44,6 +44,7 @@ export async function publishScore(
   const { accessToken } = await createAccessToken(client);
 
   const url = new URL(lineItemUrl);
+  console.log("grade.url", url);
   url.pathname = `${url.pathname}/scores`;
   const res = await client.requestResource(url, accessToken, {
     method: "POST",
