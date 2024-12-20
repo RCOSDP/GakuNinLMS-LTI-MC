@@ -72,6 +72,7 @@ export async function index(req: FastifyRequest<{ Querystring: Query }>) {
     req.session.ltiAgsEndpoint?.lineitems
   );
 
+  console.log("lineItems", lineItems);
   const contentItems = lineItems.map((lineItem) => ({
     type: "ltiResourceLink",
     title: req.session.ltiDlSettings?.title || "",
