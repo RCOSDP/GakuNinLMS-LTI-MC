@@ -28,9 +28,11 @@ export function PlotAndLineChart({
   average,
   height = 250,
   marginTop = 20,
-  marginRight = 20,
+  //  marginRight = 20,  // 横幅いっぱいのとき
+  marginRight = 110, // シークバーに合わせるとき
   marginBottom = 20,
-  marginLeft = 20,
+  //  marginLeft = 20,   // 横幅いっぱいのとき
+  marginLeft = 150, // シークバーに合わせるとき
 }: {
   plot: PlotSchema[];
   average: PlotSchema[];
