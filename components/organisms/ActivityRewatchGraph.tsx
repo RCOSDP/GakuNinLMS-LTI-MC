@@ -77,6 +77,25 @@ export function PlotAndLineChart({
       .attr("transform", `translate(${marginLeft}, 0)`)
       .call(d3.axisLeft(y));
 
+    // X軸ラベル
+    svg
+      .append("text")
+      .attr("class", "x-label")
+      .attr("text-anchor", "end")
+      .attr("x", width / 2 + marginLeft)
+      .attr("y", height + marginBottom)
+      .text("second");
+
+    // Y軸ラベル
+    svg
+      .append("text")
+      .attr("class", "y-label")
+      .attr("text-anchor", "end")
+      .attr("x", 0 - height / 2 + marginTop)
+      .attr("y", 0 - marginBottom)
+      .attr("transform", "rotate(-90)")
+      .text("count");
+
     svg
       .selectAll("circle")
       .data(plot)
