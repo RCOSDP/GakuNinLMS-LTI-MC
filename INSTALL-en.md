@@ -19,6 +19,7 @@ When changing the information of the connection destination of API, .env must be
 | `NEXT_PUBLIC_NO_EMBED`                        | Do not allow anyone to embed. Disabled by default.                                                                        |
 | `NEXT_PUBLIC_ACTIVITY_REWATCH_RATE_THRESHOLD` | Threshold for visualizing rewatched activities based on activity rewatch rate (between `0` and `1`) (Default: `0.1`)      |
 | `NEXT_PUBLIC_REWATCH_GRAPH_COUNT_THRESHOLD`   | Threshold for plotting learners' activity counts on a rewatch graph (Default: `20`)                                       |
+| `NEXT_PUBLIC_REWATCH_GRAPH_PLOT_SIZE`         | Radius size of plot points on a rewatch graph (Default: `5.0`)                                                            |
 
 ## Build front-ends
 

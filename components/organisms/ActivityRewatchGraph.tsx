@@ -5,6 +5,7 @@ import type { FromSchema } from "json-schema-to-ts";
 import * as d3 from "d3";
 
 import { NEXT_PUBLIC_REWATCH_GRAPH_COUNT_THRESHOLD } from "$utils/env";
+import { NEXT_PUBLIC_REWATCH_GRAPH_PLOT_SIZE } from "$utils/env";
 
 type Props = {
   scope: boolean;
@@ -134,7 +135,7 @@ export function PlotAndLineChart({
       .append("circle")
       .attr("cx", (d) => x(d.startMs / 1000))
       .attr("cy", (d) => y(d.count))
-      .attr("r", 2.5)
+      .attr("r", NEXT_PUBLIC_REWATCH_GRAPH_PLOT_SIZE)
       .attr("fill", "gray")
       .attr("opacity", 0.3)
       .on("mouseover", mouseover)
