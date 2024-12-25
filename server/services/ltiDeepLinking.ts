@@ -74,36 +74,23 @@ export async function index(req: FastifyRequest<{ Querystring: Query }>) {
   );
 
   console.log("lineItems", lineItems);
-  let contentItems = [];
-  if (lineItems.length > 0) {
-    contentItems = lineItems.map((lineItem) => ({
+  const topics =
+    getDisplayableBook(
+      book,
+      undefined,
+      req.session.ltiResourceLink ?? undefined
+    )?.sections.flatMap((section) => section.topics.flat()) ?? [];
+  const contentItems = [
+    {
       type: "ltiResourceLink",
       title: req.session.ltiDlSettings?.title || "",
       text: req.session.ltiDlSettings?.text || "",
       url: `${
         FRONTEND_ORIGIN || `${req.protocol}://${req.hostname}`
       }/book?bookId=${book.id}`,
-      lineItem: lineItem,
-    }));
-  } else {
-    const topics =
-      getDisplayableBook(
-        book,
-        undefined,
-        req.session.ltiResourceLink ?? undefined
-      )?.sections.flatMap((section) => section.topics.flat()) ?? [];
-    contentItems = [
-      {
-        type: "ltiResourceLink",
-        title: req.session.ltiDlSettings?.title || "",
-        text: req.session.ltiDlSettings?.text || "",
-        url: `${
-          FRONTEND_ORIGIN || `${req.protocol}://${req.hostname}`
-        }/book?bookId=${book.id}`,
-        lineItems: { scoreMaximum: topics.length },
-      },
-    ];
-  }
+      lineItems: { scoreMaximum: topics.length },
+    },
+  ];
 
   console.log("contentItems", contentItems);
   console.log("req.session.ltiDlSettings", req.session.ltiDlSettings);
