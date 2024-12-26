@@ -116,8 +116,8 @@ export function PlotAndLineChart({
       .append("text")
       .attr("class", "x-label")
       .attr("text-anchor", "end")
-      .attr("x", width / 2 + marginLeft)
-      .attr("y", height + marginBottom)
+      .attr("x", (width - marginRight - marginLeft) / 2 + marginLeft)
+      .attr("y", height + 20)
       .text("second");
 
     // Y軸ラベル
@@ -126,7 +126,7 @@ export function PlotAndLineChart({
       .attr("class", "y-label")
       .attr("text-anchor", "end")
       .attr("x", 0 - height / 2 + marginTop)
-      .attr("y", 0 - marginBottom)
+      .attr("y", marginLeft - 50)
       .attr("transform", "rotate(-90)")
       .text("count");
 
