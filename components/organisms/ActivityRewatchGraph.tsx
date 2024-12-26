@@ -5,6 +5,7 @@ import type { FromSchema } from "json-schema-to-ts";
 import * as d3 from "d3";
 
 import { NEXT_PUBLIC_REWATCH_GRAPH_COUNT_THRESHOLD } from "$utils/env";
+import { NEXT_PUBLIC_REWATCH_GRAPH_PLOT_SIZE } from "$utils/env";
 
 type Props = {
   scope: boolean;
@@ -45,6 +46,7 @@ export function PlotAndLineChart({
 
   useEffect(() => {
     d3.selectAll("svg#rewatch-graph > *").remove();
+    d3.selectAll("div#tooltip > *").remove();
 
     const svg = d3.select(svgRef.current);
     const width = divRef.current?.offsetWidth || 1000;
@@ -56,6 +58,36 @@ export function PlotAndLineChart({
       .style("overflow", "visible");
 
     const maxStartMs = Math.max(...average.map((a) => a.startMs));
+
+    // ツールチップ（初期値は透明）
+    const tooltip = d3
+      .select("#tooltip")
+      .append("div")
+      .style("opacity", 0)
+      .style("background-color", "#666")
+      .style("color", "white")
+      .style("border-radius", "5px")
+      .style("padding", "10px")
+      .style("z-index", 100)
+      .style("position", "absolute");
+
+    // マウスカーソルがプロット上で動いているときは表示したまま
+    const mousemove = function () {
+      tooltip.style("opacity", 1);
+    };
+
+    // マウスカーソルから15px右・下の場所に表示
+    const mouseover = function (e: MouseEvent, d: PlotSchema) {
+      tooltip
+        .html(d.startMs / 1000 + " sec.")
+        .style("left", e.offsetX + 15 + "px")
+        .style("top", e.offsetY + 15 + "px");
+    };
+
+    // マウスカーソルをプロットから外すと透明化
+    const mouseleave = function () {
+      tooltip.transition().duration(200).style("opacity", 0);
+    };
 
     const x = d3
       .scaleLinear()
@@ -103,9 +135,12 @@ export function PlotAndLineChart({
       .append("circle")
       .attr("cx", (d) => x(d.startMs / 1000))
       .attr("cy", (d) => y(d.count))
-      .attr("r", 2.5)
+      .attr("r", NEXT_PUBLIC_REWATCH_GRAPH_PLOT_SIZE)
       .attr("fill", "gray")
-      .attr("opacity", 0.3);
+      .attr("opacity", 0.3)
+      .on("mouseover", mouseover)
+      .on("mousemove", mousemove)
+      .on("mouseleave", mouseleave);
 
     svg
       .append("path")
@@ -154,7 +189,10 @@ export default function ActivityRewatchGraph(props: Props) {
 
   return (
     <>
-      <PlotAndLineChart plot={plot} average={average} />
+      <div style={{ position: "relative" }}>
+        <div id="tooltip"></div>
+        <PlotAndLineChart plot={plot} average={average} />
+      </div>
     </>
   );
 }
