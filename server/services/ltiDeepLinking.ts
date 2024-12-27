@@ -7,10 +7,7 @@ import findBook from "$server/utils/book/findBook";
 import { FRONTEND_ORIGIN } from "$server/utils/env";
 import { createPrivateKey } from "$server/utils/ltiv1p3/jwk";
 import findClient from "$server/utils/ltiv1p3/findClient";
-import {
-  getDlResponseJwt,
-  getLineItems,
-} from "$server/utils/ltiv1p3/deepLinking";
+import { getDlResponseJwt } from "$server/utils/ltiv1p3/deepLinking";
 import { getDisplayableBook } from "$utils/displayableBook";
 
 const Query = {
@@ -68,18 +65,14 @@ export async function index(req: FastifyRequest<{ Querystring: Query }>) {
 
   if (!book) return { status: 404 };
 
-  const lineItems = await getLineItems(
-    client,
-    req.session.ltiAgsEndpoint?.lineitems
-  );
-
-  console.log("lineItems", lineItems);
   const topics =
     getDisplayableBook(
       book,
-      undefined,
-      req.session.ltiResourceLink ?? undefined
+      (content) =>
+        content.authors.some((author) => author.id === req.session.user.id),
+      { bookId: book.id, creatorId: req.session.user.id }
     )?.sections.flatMap((section) => section.topics.flat()) ?? [];
+  console.log("topics", topics.length);
   const contentItems = [
     {
       type: "ltiResourceLink",
@@ -91,9 +84,7 @@ export async function index(req: FastifyRequest<{ Querystring: Query }>) {
       lineItems: { scoreMaximum: topics.length },
     },
   ];
-
   console.log("contentItems", contentItems);
-  console.log("req.session.ltiDlSettings", req.session.ltiDlSettings);
   const jwt = await getDlResponseJwt(client, {
     privateKey,
     deploymentId: req.session.ltiDeploymentId,
