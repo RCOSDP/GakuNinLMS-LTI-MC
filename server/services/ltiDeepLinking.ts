@@ -72,7 +72,6 @@ export async function index(req: FastifyRequest<{ Querystring: Query }>) {
         content.authors.some((author) => author.id === req.session.user.id),
       { bookId: book.id, creatorId: req.session.user.id }
     )?.sections.flatMap((section) => section.topics.flat()) ?? [];
-  console.log("topics", topics.length);
   const contentItems = [
     {
       type: "ltiResourceLink",
@@ -84,7 +83,6 @@ export async function index(req: FastifyRequest<{ Querystring: Query }>) {
       lineItems: { scoreMaximum: topics.length },
     },
   ];
-  console.log("contentItems", contentItems);
   const jwt = await getDlResponseJwt(client, {
     privateKey,
     deploymentId: req.session.ltiDeploymentId,
