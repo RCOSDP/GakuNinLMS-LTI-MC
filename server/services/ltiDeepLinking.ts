@@ -4,10 +4,12 @@ import authUser from "$server/auth/authUser";
 import authInstructor from "$server/auth/authInstructor";
 import type { FromSchema, JSONSchema } from "json-schema-to-ts";
 import findBook from "$server/utils/book/findBook";
-import { FRONTEND_ORIGIN } from "$server/utils/env";
 import { createPrivateKey } from "$server/utils/ltiv1p3/jwk";
 import findClient from "$server/utils/ltiv1p3/findClient";
-import { getDlResponseJwt } from "$server/utils/ltiv1p3/deepLinking";
+import {
+  createLtiResourceLinkContentItem,
+  getDlResponseJwt,
+} from "$server/utils/ltiv1p3/deepLinking";
 import { getDisplayableBook } from "$utils/displayableBook";
 
 const Query = {
@@ -72,22 +74,20 @@ export async function index(req: FastifyRequest<{ Querystring: Query }>) {
         content.authors.some((author) => author.id === req.session.user.id),
       { bookId: book.id, creatorId: req.session.user.id }
     )?.sections.flatMap((section) => section.topics.flat()) ?? [];
+
   const contentItems = [
-    {
-      type: "ltiResourceLink",
-      title: req.session.ltiDlSettings?.title || "",
-      text: req.session.ltiDlSettings?.text || "",
-      url: `${
-        FRONTEND_ORIGIN || `${req.protocol}://${req.hostname}`
-      }/book?bookId=${book.id}`,
-      lineItem: { scoreMaximum: topics.length },
-    },
+    createLtiResourceLinkContentItem(
+      book.id,
+      topics.length,
+      req.session.ltiDlSettings?.title,
+      req.session.ltiDlSettings?.text
+    ),
   ];
+
   const jwt = await getDlResponseJwt(client, {
     privateKey,
     deploymentId: req.session.ltiDeploymentId,
     data: req.session.ltiDlSettings?.data,
-    // @ts-expect-error TODO: fix type
     contentItems,
   });
 

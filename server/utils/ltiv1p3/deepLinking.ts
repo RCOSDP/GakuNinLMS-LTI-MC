@@ -1,6 +1,7 @@
 import type { Client } from "openid-client";
 import { SignJWT, importJWK, type JWK } from "jose";
 import { generators } from "openid-client";
+import { FRONTEND_ORIGIN } from "$server/utils/env";
 
 type LineItem = {
   label?: string;
@@ -147,6 +148,26 @@ export type DlResponseMessagePrivateClaim = {
   "https://purl.imsglobal.org/spec/lti-dl/claim/errormsg"?: string;
   "https://purl.imsglobal.org/spec/lti-dl/claim/errorlog"?: string;
 };
+
+/**
+ * LTI Resource Link のContentItem の作成
+ */
+export function createLtiResourceLinkContentItem(
+  bookId: number,
+  scoreMaximum: number,
+  title?: string,
+  text?: string
+): Extract<ContentItem, { type: "ltiResourceLink" }> {
+  return {
+    type: "ltiResourceLink",
+    title: title || "",
+    text: text || "",
+    url: `${FRONTEND_ORIGIN || "http://localhost"}/book?bookId=${bookId}`,
+    lineItem: {
+      scoreMaximum,
+    },
+  };
+}
 
 /**
  * LTI-DL 2.0 Deep Linking Response Message JWT の取得
