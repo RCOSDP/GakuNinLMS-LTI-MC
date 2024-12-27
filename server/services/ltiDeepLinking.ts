@@ -80,7 +80,7 @@ export async function index(req: FastifyRequest<{ Querystring: Query }>) {
       url: `${
         FRONTEND_ORIGIN || `${req.protocol}://${req.hostname}`
       }/book?bookId=${book.id}`,
-      lineItems: { scoreMaximum: topics.length },
+      lineItem: { scoreMaximum: topics.length },
     },
   ];
   const jwt = await getDlResponseJwt(client, {
