@@ -150,7 +150,8 @@ export type DlResponseMessagePrivateClaim = {
 };
 
 /**
- * LTI Resource Link のContentItem の作成
+ * Deep linking responseに含めるltiResourceLink型のcontentItemを作成するファクトリ関数
+ * @see https://www.imsglobal.org/spec/lti-dl/v2p0#deep-linking-response-example
  */
 export function createLtiResourceLinkContentItem(
   bookId: number,
