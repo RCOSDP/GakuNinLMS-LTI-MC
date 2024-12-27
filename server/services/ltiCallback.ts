@@ -82,7 +82,6 @@ export async function post(req: FastifyRequest<{ Body: Props }>) {
     }
     const ltiAgsEndpoint: undefined | LtiAgsEndpointSchema =
       ltiClaims["https://purl.imsglobal.org/spec/lti-ags/claim/endpoint"];
-    console.log("ltiAgsEndpoint", JSON.stringify(ltiAgsEndpoint, null, 2));
     const ltiNrpsParameter: undefined | LtiNrpsParameterSchema =
       ltiClaims[
         "https://purl.imsglobal.org/spec/lti-nrps/claim/namesroleservice"
