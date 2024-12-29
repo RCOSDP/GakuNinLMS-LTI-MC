@@ -1,7 +1,6 @@
 import type { Client } from "openid-client";
 import { SignJWT, importJWK, type JWK } from "jose";
 import { generators } from "openid-client";
-import { FRONTEND_ORIGIN } from "$server/utils/env";
 
 type LineItem = {
   label?: string;
@@ -154,7 +153,7 @@ export type DlResponseMessagePrivateClaim = {
  * @see https://www.imsglobal.org/spec/lti-dl/v2p0#deep-linking-response-example
  */
 export function createLtiResourceLinkContentItem(
-  bookId: number,
+  url: string,
   scoreMaximum: number,
   title?: string,
   text?: string
@@ -163,7 +162,7 @@ export function createLtiResourceLinkContentItem(
     type: "ltiResourceLink",
     title: title || "",
     text: text || "",
-    url: `${FRONTEND_ORIGIN || "http://localhost"}/book?bookId=${bookId}`,
+    url: url,
     lineItem: {
       scoreMaximum,
     },

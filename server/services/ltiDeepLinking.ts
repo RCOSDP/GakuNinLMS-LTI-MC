@@ -11,6 +11,7 @@ import {
   getDlResponseJwt,
 } from "$server/utils/ltiv1p3/deepLinking";
 import { getDisplayableBook } from "$utils/displayableBook";
+import { FRONTEND_ORIGIN } from "$server/utils/env";
 
 const Query = {
   type: "object",
@@ -77,7 +78,9 @@ export async function index(req: FastifyRequest<{ Querystring: Query }>) {
 
   const contentItems = [
     createLtiResourceLinkContentItem(
-      book.id,
+      `${FRONTEND_ORIGIN || `${req.protocol}://${req.hostname}`}/book?bookId=${
+        book.id
+      }`,
       topics.length,
       req.session.ltiDlSettings?.title,
       req.session.ltiDlSettings?.text
