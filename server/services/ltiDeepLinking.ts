@@ -77,14 +77,14 @@ export async function index(req: FastifyRequest<{ Querystring: Query }>) {
     )?.sections.flatMap((section) => section.topics.flat()) ?? [];
 
   const contentItems = [
-    createLtiResourceLinkContentItem(
-      `${FRONTEND_ORIGIN || `${req.protocol}://${req.hostname}`}/book?bookId=${
-        book.id
-      }`,
-      topics.length,
-      req.session.ltiDlSettings?.title,
-      req.session.ltiDlSettings?.text
-    ),
+    createLtiResourceLinkContentItem({
+      url: `${
+        FRONTEND_ORIGIN || `${req.protocol}://${req.hostname}`
+      }/book?bookId=${book.id}`,
+      scoreMaximum: topics.length,
+      title: req.session.ltiDlSettings?.title,
+      text: req.session.ltiDlSettings?.text,
+    }),
   ];
 
   const jwt = await getDlResponseJwt(client, {

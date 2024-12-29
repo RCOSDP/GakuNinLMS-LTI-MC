@@ -152,12 +152,17 @@ export type DlResponseMessagePrivateClaim = {
  * Deep linking responseに含めるltiResourceLink型のcontentItemを作成するファクトリ関数
  * @see https://www.imsglobal.org/spec/lti-dl/v2p0#deep-linking-response-example
  */
-export function createLtiResourceLinkContentItem(
-  url: string,
-  scoreMaximum: number,
-  title?: string,
-  text?: string
-): Extract<ContentItem, { type: "ltiResourceLink" }> {
+export function createLtiResourceLinkContentItem({
+  url,
+  scoreMaximum,
+  title,
+  text,
+}: {
+  url: string;
+  scoreMaximum: number;
+  title?: string;
+  text?: string;
+}): Extract<ContentItem, { type: "ltiResourceLink" }> {
   return {
     type: "ltiResourceLink",
     title: title || "",
