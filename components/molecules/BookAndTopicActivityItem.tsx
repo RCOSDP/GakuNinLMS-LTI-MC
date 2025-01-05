@@ -167,7 +167,13 @@ export function TopicActivityViewer(
               />
             </Box>
             <Box>
-              <ActivityRewatchGraph scope={scope} topicId={topic.id} />
+              <ActivityRewatchGraph
+                scope={scope}
+                topicId={topic.id}
+                topicTimeRequired={topic_detail.timeRequired}
+                topicStartTime={topic_detail.startTime}
+                topicStopTime={topic_detail.stopTime}
+              />
             </Box>
           </Box>
         )}

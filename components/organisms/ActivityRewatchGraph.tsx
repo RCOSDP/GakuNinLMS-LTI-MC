@@ -7,9 +7,16 @@ import * as d3 from "d3";
 import { NEXT_PUBLIC_REWATCH_GRAPH_COUNT_THRESHOLD } from "$utils/env";
 import { NEXT_PUBLIC_REWATCH_GRAPH_PLOT_SIZE } from "$utils/env";
 
+const ACTIVITY_COUNT_INTERVAL2 = Number(
+  process.env.ACTIVITY_COUNT_INTERVAL ?? 1
+);
+
 type Props = {
   scope: boolean;
   topicId: number;
+  topicTimeRequired: number;
+  topicStartTime: number | null;
+  topicStopTime: number | null;
 };
 
 const PlotSchema = {
@@ -166,15 +173,47 @@ export function PlotAndLineChart({
     </div>
   );
 }
+
+function padZeroTimeRangeCount(
+  plot: PlotSchema[],
+  topicTimeRequired: number,
+  topicStartTime: number | null,
+  topicStopTime: number | null
+): PlotSchema[] {
+  const startTime = topicStartTime ?? 0;
+  const stopTime = topicStopTime ?? topicTimeRequired;
+
+  console.log(plot);
+
+  for (let t = startTime; t < stopTime; t += ACTIVITY_COUNT_INTERVAL2) {
+    if (
+      plot.find((c) => {
+        return c.startMs === t * 1000;
+      })
+    )
+      continue;
+
+    plot.push({
+      startMs: t * 1000,
+      count: 0,
+    });
+  }
+
+  return plot;
+}
+
 export default function ActivityRewatchGraph(props: Props) {
-  const { scope, topicId } = props;
+  const { scope, topicId, topicTimeRequired, topicStartTime, topicStopTime } =
+    props;
   const { data: counts } = useActivityTimeRangeCountByTopic(topicId, scope);
 
   const plot: PlotSchema[] =
-    counts
-      ?.map((c) => ({ startMs: c.startMs, count: c?.count || 0 }))
-      .filter((c) => c.count <= NEXT_PUBLIC_REWATCH_GRAPH_COUNT_THRESHOLD) ||
-    [];
+    padZeroTimeRangeCount(
+      counts?.map((c) => ({ startMs: c.startMs, count: c?.count || 0 })) ?? [],
+      topicTimeRequired,
+      topicStartTime,
+      topicStopTime
+    ).filter((c) => c.count <= NEXT_PUBLIC_REWATCH_GRAPH_COUNT_THRESHOLD) || [];
 
   const plotEachStartMs = Object.groupBy(plot, (p: PlotSchema) => p.startMs); // ES2024
   const average: PlotSchema[] = [];
