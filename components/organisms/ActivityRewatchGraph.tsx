@@ -1,3 +1,4 @@
+import type { ActivityTimeRangeCountProps } from "$server/validators/activityTimeRangeCount";
 import useActivityTimeRangeCountByTopic from "$utils/useActivityTimeRangeCountByTopic";
 import React, { useRef, useEffect } from "react";
 import type { FromSchema } from "json-schema-to-ts";
@@ -175,31 +176,37 @@ export function PlotAndLineChart({
 }
 
 function padZeroTimeRangeCount(
-  plot: PlotSchema[],
+  counts: ActivityTimeRangeCountProps[],
   topicTimeRequired: number,
   topicStartTime: number | null,
   topicStopTime: number | null
-): PlotSchema[] {
+): ActivityTimeRangeCountProps[] {
   const startTime = topicStartTime ?? 0;
   const stopTime = topicStopTime ?? topicTimeRequired;
+  const activityIds = [...new Set(counts.map((c) => c.activityId))];
 
-  console.log(plot);
+  activityIds.forEach((activityId) => {
+    for (let t = startTime; t < stopTime; t += ACTIVITY_COUNT_INTERVAL2) {
+      if (
+        counts.find((c) => {
+          return (
+            c.activityId === activityId &&
+            c.startMs === t * 1000 &&
+            c.endMs === (t + ACTIVITY_COUNT_INTERVAL2) * 1000
+          );
+        })
+      )
+        continue;
 
-  for (let t = startTime; t < stopTime; t += ACTIVITY_COUNT_INTERVAL2) {
-    if (
-      plot.find((c) => {
-        return c.startMs === t * 1000;
-      })
-    )
-      continue;
-
-    plot.push({
-      startMs: t * 1000,
-      count: 0,
-    });
-  }
-
-  return plot;
+      counts.push({
+        activityId: activityId,
+        startMs: t * 1000,
+        endMs: (t + ACTIVITY_COUNT_INTERVAL2) * 1000,
+        count: 0,
+      });
+    }
+  });
+  return counts;
 }
 
 export default function ActivityRewatchGraph(props: Props) {
@@ -209,11 +216,14 @@ export default function ActivityRewatchGraph(props: Props) {
 
   const plot: PlotSchema[] =
     padZeroTimeRangeCount(
-      counts?.map((c) => ({ startMs: c.startMs, count: c?.count || 0 })) ?? [],
+      counts ?? [],
       topicTimeRequired,
       topicStartTime,
       topicStopTime
-    ).filter((c) => c.count <= NEXT_PUBLIC_REWATCH_GRAPH_COUNT_THRESHOLD) || [];
+    )
+      .map((c) => ({ startMs: c.startMs, count: c?.count || 0 }))
+      .filter((c) => c.count <= NEXT_PUBLIC_REWATCH_GRAPH_COUNT_THRESHOLD) ||
+    [];
 
   const plotEachStartMs = Object.groupBy(plot, (p: PlotSchema) => p.startMs); // ES2024
   const average: PlotSchema[] = [];
