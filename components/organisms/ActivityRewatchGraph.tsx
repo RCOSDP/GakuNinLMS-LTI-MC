@@ -126,7 +126,7 @@ export function PlotAndLineChart({
       .attr("text-anchor", "end")
       .attr("x", (width - marginRight - marginLeft) / 2 + marginLeft)
       .attr("y", height + 20)
-      .text("second");
+      .text("time");
 
     // Y軸ラベル
     svg
