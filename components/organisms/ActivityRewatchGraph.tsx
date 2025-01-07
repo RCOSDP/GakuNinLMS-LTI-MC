@@ -89,7 +89,7 @@ export function PlotAndLineChart({
     // マウスカーソルから15px右・下の場所に表示
     const mouseover = function (e: MouseEvent, d: PlotSchema) {
       tooltip
-        .html(d.startMs / 1000 + " sec.")
+        .html(convertTimeString(d.startMs / 1000))
         .style("left", e.offsetX + 15 + "px")
         .style("top", e.offsetY + 15 + "px");
     };
@@ -172,6 +172,20 @@ export function PlotAndLineChart({
     <div ref={divRef}>
       <svg ref={svgRef}></svg>
     </div>
+  );
+}
+
+function convertTimeString(seconds: number): string {
+  const sec = seconds % 60;
+  const min = Math.floor(seconds / 60) % 60;
+  const hour = Math.floor(seconds / 60 / 60) % 60;
+
+  return (
+    hour +
+    ":" +
+    String(min).padStart(2, "0") +
+    ":" +
+    String(sec).padStart(2, "0")
   );
 }
 
