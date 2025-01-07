@@ -45,6 +45,7 @@ function findActivity({
     },
     select: {
       id: true,
+      topic: true,
       timeRanges: { orderBy: { startMs: "asc" } },
       timeRangeCounts: { orderBy: { startMs: "asc" } },
     },
@@ -318,6 +319,34 @@ function upsert({
   });
 }
 
+function padZeroTimeRangeCount(
+  timeRangeCounts: ActivityTimeRangeCountProps[],
+  topic: Topic
+): ActivityTimeRangeCountProps[] {
+  const startTime = topic.startTime ?? 0;
+  const stopTime = topic.stopTime ?? topic.timeRequired;
+
+  for (let t = startTime; t < stopTime; t += ACTIVITY_COUNT_INTERVAL2) {
+    if (
+      timeRangeCounts.find((c) => {
+        return (
+          c.startMs === t * 1000 &&
+          c.endMs === (t + ACTIVITY_COUNT_INTERVAL2) * 1000
+        );
+      })
+    )
+      continue;
+
+    timeRangeCounts.push({
+      startMs: t * 1000,
+      endMs: (t + ACTIVITY_COUNT_INTERVAL2) * 1000,
+      count: 0,
+    });
+  }
+
+  return timeRangeCounts;
+}
+
 async function upsertActivity({
   learnerId,
   topicId,
@@ -342,7 +371,8 @@ async function upsertActivity({
   let timeRangeCounts: ActivityTimeRangeCountProps[] = [];
   if (exists?.id) {
     recentTimeRangeLogs = await findRecentActivityTimeRangeLog(exists.id);
-    timeRangeCounts = await findActivityTimeRangeCount(exists.id);
+    const tempTimeRangeCounts = await findActivityTimeRangeCount(exists.id);
+    timeRangeCounts = padZeroTimeRangeCount(tempTimeRangeCounts, exists.topic);
   }
 
   if (!timeRangeCounts.length) {
@@ -350,10 +380,17 @@ async function upsertActivity({
   }
 
   const timeRanges = merge(exists?.timeRanges ?? [], activity.timeRanges);
-  const timeRangeLogs = concatAndMerge(recentTimeRangeLogs, activity.timeRanges);
+  const timeRangeLogs = concatAndMerge(
+    recentTimeRangeLogs,
+    activity.timeRanges
+  );
   const purgedTimeRangeLogs = purge(recentTimeRangeLogs, activity.timeRanges);
 
-  timeRangeCounts = countTimeRange(timeRangeCounts, purgedTimeRangeLogs);
+  timeRangeCounts = countTimeRange(timeRangeCounts, purgedTimeRangeLogs).filter(
+    (c) => {
+      return c.count != 0;
+    }
+  );
 
   await prisma.$transaction([
     ...(exists ? [cleanupTimeRangeCounts(exists.id)] : []),

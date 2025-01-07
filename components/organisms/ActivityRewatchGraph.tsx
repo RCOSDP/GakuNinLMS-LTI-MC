@@ -1,3 +1,4 @@
+import type { ActivityTimeRangeCountProps } from "$server/validators/activityTimeRangeCount";
 import useActivityTimeRangeCountByTopic from "$utils/useActivityTimeRangeCountByTopic";
 import React, { useRef, useEffect } from "react";
 import type { FromSchema } from "json-schema-to-ts";
@@ -7,9 +8,16 @@ import * as d3 from "d3";
 import { NEXT_PUBLIC_REWATCH_GRAPH_COUNT_THRESHOLD } from "$utils/env";
 import { NEXT_PUBLIC_REWATCH_GRAPH_PLOT_SIZE } from "$utils/env";
 
+const ACTIVITY_COUNT_INTERVAL2 = Number(
+  process.env.ACTIVITY_COUNT_INTERVAL ?? 1
+);
+
 type Props = {
   scope: boolean;
   topicId: number;
+  topicTimeRequired: number;
+  topicStartTime: number | null;
+  topicStopTime: number | null;
 };
 
 const PlotSchema = {
@@ -166,13 +174,54 @@ export function PlotAndLineChart({
     </div>
   );
 }
+
+function padZeroTimeRangeCount(
+  counts: ActivityTimeRangeCountProps[],
+  topicTimeRequired: number,
+  topicStartTime: number | null,
+  topicStopTime: number | null
+): ActivityTimeRangeCountProps[] {
+  const startTime = topicStartTime ?? 0;
+  const stopTime = topicStopTime ?? topicTimeRequired;
+  const activityIds = [...new Set(counts.map((c) => c.activityId))];
+
+  activityIds.forEach((activityId) => {
+    for (let t = startTime; t < stopTime; t += ACTIVITY_COUNT_INTERVAL2) {
+      if (
+        counts.find((c) => {
+          return (
+            c.activityId === activityId &&
+            c.startMs === t * 1000 &&
+            c.endMs === (t + ACTIVITY_COUNT_INTERVAL2) * 1000
+          );
+        })
+      )
+        continue;
+
+      counts.push({
+        activityId: activityId,
+        startMs: t * 1000,
+        endMs: (t + ACTIVITY_COUNT_INTERVAL2) * 1000,
+        count: 0,
+      });
+    }
+  });
+  return counts;
+}
+
 export default function ActivityRewatchGraph(props: Props) {
-  const { scope, topicId } = props;
+  const { scope, topicId, topicTimeRequired, topicStartTime, topicStopTime } =
+    props;
   const { data: counts } = useActivityTimeRangeCountByTopic(topicId, scope);
 
   const plot: PlotSchema[] =
-    counts
-      ?.map((c) => ({ startMs: c.startMs, count: c?.count || 0 }))
+    padZeroTimeRangeCount(
+      counts ?? [],
+      topicTimeRequired,
+      topicStartTime,
+      topicStopTime
+    )
+      .map((c) => ({ startMs: c.startMs, count: c?.count || 0 }))
       .filter((c) => c.count <= NEXT_PUBLIC_REWATCH_GRAPH_COUNT_THRESHOLD) ||
     [];
 
