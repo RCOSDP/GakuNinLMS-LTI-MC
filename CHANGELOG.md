@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2025]
+
+### Added
+- Deep Linking support from Blackboard (OU)
+
 ## [2024]
 
 ### Added
