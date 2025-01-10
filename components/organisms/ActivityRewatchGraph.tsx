@@ -112,7 +112,11 @@ export function PlotAndLineChart({
     svg
       .append("g")
       .attr("transform", `translate(0, ${height - marginBottom})`)
-      .call(d3.axisBottom(x));
+      .call(
+        d3.axisBottom(x).tickFormat((d) => {
+          return convertTimeString(d as number);
+        })
+      );
 
     svg
       .append("g")
