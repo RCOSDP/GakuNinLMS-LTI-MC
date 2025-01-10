@@ -14,6 +14,7 @@ function send(eventType: EventType, event: PlayerStats, detail?: string) {
   const session = load();
   if (!session) return;
   const idPrefix = session.oauthClient.id;
+  const playbackRate = loadPlaybackRate();
   const id = (id: string) => [idPrefix, id].join(":");
   const body = {
     event: eventType,
@@ -27,6 +28,7 @@ function send(eventType: EventType, event: PlayerStats, detail?: string) {
     nonce: session.oauthClient.nonce,
     videoType: getVideoType(event.providerUrl),
     path: location.pathname,
+    playbackRate: playbackRate,
   };
   return api.apiV2EventPost({ body });
 }

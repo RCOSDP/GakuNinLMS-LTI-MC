@@ -84,4 +84,27 @@ OauthClient["id"] + ":" + LtiContext["id"]
   },
 } as const satisfies JSONSchema;
 
+export const EventActivitySchema = {
+  title: "syslogに記録するための視聴ログオブジェクト (v1互換)のActivity拡張",
+  description: `無効値 ("", null, undefined, [], false, 0, "0") ならば "-" として記録`,
+  type: "object",
+  properties: {
+    // // TODO: 将来追加予定
+    // topicId: {
+    //   title: "playbackRate",
+    //   type: "number",
+    // },
+    // // TODO: 将来追加予定
+    // bookId: {
+    //   title: "playbackRate",
+    //   type: "number",
+    // },
+    playbackRate: {
+      title: "playbackRate",
+      type: "number",
+    },
+  },
+} as const satisfies JSONSchema;
+
 export type EventSchema = FromSchema<typeof EventSchema>;
+export type EventActivitySchema = FromSchema<typeof EventSchema>;
