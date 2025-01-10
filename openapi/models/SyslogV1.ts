@@ -91,16 +91,22 @@ export interface SyslogV1 {
     path?: string;
     /**
      * 
-     * @type {string}
+     * @type {number}
+     * @memberof SyslogV1
+     */
+    topicId?: number;
+    /**
+     * 
+     * @type {number}
      * @memberof SyslogV1
      */
     bookId?: number;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof SyslogV1
      */
-    playbackRate?: string;
+    playbackRate?: number;
 }
 
 export function SyslogV1FromJSON(json: any): SyslogV1 {
@@ -124,6 +130,7 @@ export function SyslogV1FromJSONTyped(json: any, ignoreDiscriminator: boolean): 
         'nonce': !exists(json, 'nonce') ? undefined : json['nonce'],
         'videoType': !exists(json, 'videoType') ? undefined : json['videoType'],
         'path': !exists(json, 'path') ? undefined : json['path'],
+        'topicId': !exists(json, 'topicId') ? undefined : json['topicId'],
         'bookId': !exists(json, 'bookId') ? undefined : json['bookId'],
         'playbackRate': !exists(json, 'playbackRate') ? undefined : json['playbackRate'],
     };
@@ -149,6 +156,7 @@ export function SyslogV1ToJSON(value?: SyslogV1 | null): any {
         'nonce': value.nonce,
         'videoType': value.videoType,
         'path': value.path,
+        'topicId': value.topicId,
         'bookId': value.bookId,
         'playbackRate': value.playbackRate,
     };

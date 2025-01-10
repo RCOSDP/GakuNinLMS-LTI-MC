@@ -89,21 +89,20 @@ export const EventActivitySchema = {
   description: `無効値 ("", null, undefined, [], false, 0, "0") ならば "-" として記録`,
   type: "object",
   properties: {
-    // // TODO: 将来追加予定
-    // topicId: {
-    //   title: "playbackRate",
-    //   type: "number",
-    // },
+    topicId: {
+      title: "topicId",
+      type: "string",
+    },
     bookId: {
       title: "bookId",
-      type: "number",
+      type: "string",
     },
     playbackRate: {
       title: "playbackRate",
-      type: "number",
+      type: "string",
     },
   },
 } as const satisfies JSONSchema;
 
 export type EventSchema = FromSchema<typeof EventSchema>;
-export type EventActivitySchema = FromSchema<typeof EventSchema>;
+export type EventActivitySchema = FromSchema<typeof EventActivitySchema>;

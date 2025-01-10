@@ -23,9 +23,9 @@ const eventFieldKeys = [
   "keyword",
   "videoType",
   "path",
+  "topicId",
   "bookId",
   "playbackRate",
-  "topicId",
 ] as const;
 const keyword = "videoplayerlog";
 
@@ -50,8 +50,6 @@ function eventLogger(
     zone: "JST",
     keyword,
     ...event,
-    // TODO: 将来追加予定
-    topicId: "",
   };
 
   const entries: string[] = [];
