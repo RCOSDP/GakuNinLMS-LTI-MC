@@ -28,6 +28,7 @@ function send(eventType: EventType, event: PlayerStats, detail?: string) {
     nonce: session.oauthClient.nonce,
     videoType: getVideoType(event.providerUrl),
     path: location.pathname,
+    bookId: session.ltiResourceLink.bookId,
     playbackRate: playbackRate,
   };
   return api.apiV2EventPost({ body });

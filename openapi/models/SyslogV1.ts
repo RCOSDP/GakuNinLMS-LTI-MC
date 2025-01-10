@@ -94,6 +94,12 @@ export interface SyslogV1 {
      * @type {string}
      * @memberof SyslogV1
      */
+    bookId?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof SyslogV1
+     */
     playbackRate?: string;
 }
 
@@ -118,6 +124,7 @@ export function SyslogV1FromJSONTyped(json: any, ignoreDiscriminator: boolean): 
         'nonce': !exists(json, 'nonce') ? undefined : json['nonce'],
         'videoType': !exists(json, 'videoType') ? undefined : json['videoType'],
         'path': !exists(json, 'path') ? undefined : json['path'],
+        'bookId': !exists(json, 'bookId') ? undefined : json['bookId'],
         'playbackRate': !exists(json, 'playbackRate') ? undefined : json['playbackRate'],
     };
 }
@@ -142,6 +149,7 @@ export function SyslogV1ToJSON(value?: SyslogV1 | null): any {
         'nonce': value.nonce,
         'videoType': value.videoType,
         'path': value.path,
+        'bookId': value.bookId,
         'playbackRate': value.playbackRate,
     };
 }

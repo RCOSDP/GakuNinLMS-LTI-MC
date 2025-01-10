@@ -94,11 +94,10 @@ export const EventActivitySchema = {
     //   title: "playbackRate",
     //   type: "number",
     // },
-    // // TODO: 将来追加予定
-    // bookId: {
-    //   title: "playbackRate",
-    //   type: "number",
-    // },
+    bookId: {
+      title: "bookId",
+      type: "number",
+    },
     playbackRate: {
       title: "playbackRate",
       type: "number",

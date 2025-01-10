@@ -23,9 +23,9 @@ const eventFieldKeys = [
   "keyword",
   "videoType",
   "path",
+  "bookId",
   "playbackRate",
   "topicId",
-  "bookId",
 ] as const;
 const keyword = "videoplayerlog";
 
@@ -52,8 +52,6 @@ function eventLogger(
     ...event,
     // TODO: 将来追加予定
     topicId: "",
-    // TODO: 将来追加予定
-    bookId: "",
   };
 
   const entries: string[] = [];
