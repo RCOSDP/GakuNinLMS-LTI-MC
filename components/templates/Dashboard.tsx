@@ -37,6 +37,8 @@ import useLtiMembersHandler from "$utils/useLtiMembersHandler";
 import type { LtiNrpsContextMemberSchema } from "$server/models/ltiNrpsContextMember";
 import useRewatchRate from "$utils/useRewatchRate";
 
+import { NEXT_PUBLIC_ENABLE_TOPIC_VIEW_RECORD } from "$utils/env";
+
 type TabPanelProps = {
   className?: string;
   children?: React.ReactNode;
@@ -107,6 +109,11 @@ const useStyles = makeStyles((theme) => ({
   },
   topicTitleColumn: {
     width: "70%",
+    marginRight: theme.spacing(1),
+    alignItems: "center",
+  },
+  topicTitleColumnLong: {
+    width: "80%",
     marginRight: theme.spacing(1),
     alignItems: "center",
   },
@@ -302,10 +309,19 @@ export default function Dashboard(props: Props) {
         </TabPanel>
         <TabPanel value={tabIndex} index={1}>
           <div className={classes.topicLabel}>
-            <div className={classes.topicTitleColumn}></div>
+            {NEXT_PUBLIC_ENABLE_TOPIC_VIEW_RECORD ? (
+              <div className={classes.topicTitleColumn}></div>
+            ) : (
+              <div className={classes.topicTitleColumnLong}></div>
+            )}
+
             <div className={classes.topicColumn}>動画の長さ（秒）</div>
             <div className={classes.topicColumn}>平均学習完了率</div>
-            <div className={classes.topicColumn}>平均繰返視聴割合</div>
+            {NEXT_PUBLIC_ENABLE_TOPIC_VIEW_RECORD ? (
+              <div className={classes.topicColumn}>平均繰返視聴割合</div>
+            ) : (
+              ""
+            )}
           </div>
           {activitiesByBooksAndTopics.map(
             (activitiesByBookAndTopics, index) => (

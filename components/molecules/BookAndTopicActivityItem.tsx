@@ -18,6 +18,8 @@ import { useTheme } from "@mui/material/styles";
 
 import ActivityRewatchGraph from "$components/organisms/ActivityRewatchGraph";
 
+import { NEXT_PUBLIC_ENABLE_TOPIC_VIEW_RECORD } from "$utils/env";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flex: 4,
@@ -101,7 +103,11 @@ export default function BookAndTopicActivityItem(props: BookAndTopicProps) {
             key={index}
             scope={scope}
             topic={topic}
-            averageRewatchRate={getAverageRewatchRate(rewatchRates, topic.id)}
+            averageRewatchRate={
+              NEXT_PUBLIC_ENABLE_TOPIC_VIEW_RECORD
+                ? getAverageRewatchRate(rewatchRates, topic.id)
+                : 0
+            }
           />
         ))}
       </div>
@@ -193,7 +199,11 @@ export function TopicActivityItem(props: TopicProps) {
       </div>
       <div className={clsx(classes.column)}>{topic.timeRequired}</div>
       <div className={clsx(classes.column)}>{topic.averageCompleteRate}</div>
-      <div className={clsx(classes.column)}>{averageRewatchRate}</div>
+      {NEXT_PUBLIC_ENABLE_TOPIC_VIEW_RECORD ? (
+        <div className={clsx(classes.column)}>{averageRewatchRate}</div>
+      ) : (
+        <></>
+      )}
     </div>
   );
 }
