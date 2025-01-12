@@ -6,6 +6,8 @@ import type { SessionSchema } from "$server/models/session";
 import type { ActivityRewatchRateProps } from "$server/validators/activityRewatchRate";
 import { round } from "$server/utils/math";
 
+import { NEXT_PUBLIC_ENABLE_TOPIC_VIEW_RECORD } from "$utils/env";
+
 export const keyOrder = [
   "learner.id",
   "learner.name",
@@ -61,6 +63,10 @@ export function getLocaleEntries(
     ...activity,
     session,
   });
+
+  if (!NEXT_PUBLIC_ENABLE_TOPIC_VIEW_RECORD) {
+    rewatchRate = undefined;
+  }
 
   const a = {
     ...flattenActivity,

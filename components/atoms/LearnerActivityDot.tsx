@@ -52,7 +52,7 @@ export default function LearnerActivityDot(props: Props) {
   );
 
   const rewatchLabel =
-    NEXT_PUBLIC_ENABLE_TOPIC_VIEW_RECORD ??
+    NEXT_PUBLIC_ENABLE_TOPIC_VIEW_RECORD &&
     isRewatched(rewatchRate?.rewatchRate ?? 0)
       ? "rewatch"
       : "default";
