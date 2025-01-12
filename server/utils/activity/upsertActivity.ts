@@ -12,6 +12,8 @@ import type { ActivityTimeRangeLogProps } from "$server/validators/activityTimeR
 import type { ActivityTimeRangeCountProps } from "$server/validators/activityTimeRangeCount";
 import prisma from "$server/utils/prisma";
 
+import { NEXT_PUBLIC_ENABLE_TOPIC_VIEW_RECORD } from "$utils/env";
+
 const NEXT_PUBLIC_ACTIVITY_SEND_INTERVAL2 = Number(
   process.env.NEXT_PUBLIC_ACTIVITY_SEND_INTERVAL ?? 10
 );
@@ -368,33 +370,39 @@ async function upsertActivity({
   });
 
   let recentTimeRangeLogs: ActivityTimeRangeLogProps[] = [];
+  let timeRangeLogs: ActivityTimeRangeLogProps[] = [];
   let timeRangeCounts: ActivityTimeRangeCountProps[] = [];
-  if (exists?.id) {
+  if (NEXT_PUBLIC_ENABLE_TOPIC_VIEW_RECORD && exists?.id) {
     recentTimeRangeLogs = await findRecentActivityTimeRangeLog(exists.id);
     const tempTimeRangeCounts = await findActivityTimeRangeCount(exists.id);
     timeRangeCounts = padZeroTimeRangeCount(tempTimeRangeCounts, exists.topic);
   }
 
-  if (!timeRangeCounts.length) {
+  if (NEXT_PUBLIC_ENABLE_TOPIC_VIEW_RECORD && !timeRangeCounts.length) {
     timeRangeCounts = await initActivityTimeRangeCount(topicId);
   }
 
   const timeRanges = merge(exists?.timeRanges ?? [], activity.timeRanges);
-  const timeRangeLogs = concatAndMerge(
-    recentTimeRangeLogs,
-    activity.timeRanges
-  );
-  const purgedTimeRangeLogs = purge(recentTimeRangeLogs, activity.timeRanges);
 
-  timeRangeCounts = countTimeRange(timeRangeCounts, purgedTimeRangeLogs).filter(
-    (c) => {
+  if (NEXT_PUBLIC_ENABLE_TOPIC_VIEW_RECORD) {
+    timeRangeLogs = concatAndMerge(recentTimeRangeLogs, activity.timeRanges);
+    const purgedTimeRangeLogs = purge(recentTimeRangeLogs, activity.timeRanges);
+
+    timeRangeCounts = countTimeRange(
+      timeRangeCounts,
+      purgedTimeRangeLogs
+    ).filter((c) => {
       return c.count != 0;
-    }
-  );
+    });
+  }
 
   await prisma.$transaction([
-    ...(exists ? [cleanupTimeRangeCounts(exists.id)] : []),
-    ...(exists ? [cleanupRecentTimeRangeLogs(recentTimeRangeLogs)] : []),
+    ...(NEXT_PUBLIC_ENABLE_TOPIC_VIEW_RECORD && exists
+      ? [cleanupTimeRangeCounts(exists.id)]
+      : []),
+    ...(NEXT_PUBLIC_ENABLE_TOPIC_VIEW_RECORD && exists
+      ? [cleanupRecentTimeRangeLogs(recentTimeRangeLogs)]
+      : []),
     ...(exists ? [cleanup(exists.id)] : []),
     upsert({
       learnerId,
