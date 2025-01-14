@@ -235,6 +235,9 @@ function countTimeRange(
           log.endMs < range.endMs &&
           log.endMs - range.startMs > ACTIVITY_COUNT_INTERVAL_THRESHOLD_MS)
       ) {
+        if (range.count === undefined) {
+          range.count = 0;
+        }
         range.count += 1;
       }
     });
@@ -350,7 +353,10 @@ async function upsertActivity({
   }
 
   const timeRanges = merge(exists?.timeRanges ?? [], activity.timeRanges);
-  const timeRangeLogs = concatAndMerge(recentTimeRangeLogs, activity.timeRanges);
+  const timeRangeLogs = concatAndMerge(
+    recentTimeRangeLogs,
+    activity.timeRanges
+  );
   const purgedTimeRangeLogs = purge(recentTimeRangeLogs, activity.timeRanges);
 
   timeRangeCounts = countTimeRange(timeRangeCounts, purgedTimeRangeLogs);
