@@ -9,7 +9,7 @@ jobs:
           ref: ${{ github.head_ref }}
       - uses: actions/setup-node@v3
         with:
-          node-version: "10.13.0"
+          node-version: "22.13.0"
           cache: yarn
       - name: install
         run: yarn
