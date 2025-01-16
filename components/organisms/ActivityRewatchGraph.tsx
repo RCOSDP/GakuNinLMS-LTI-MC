@@ -7,6 +7,7 @@ import * as d3 from "d3";
 
 import { NEXT_PUBLIC_REWATCH_GRAPH_COUNT_THRESHOLD } from "$utils/env";
 import { NEXT_PUBLIC_REWATCH_GRAPH_PLOT_SIZE } from "$utils/env";
+import { NEXT_PUBLIC_ENABLE_TOPIC_VIEW_RECORD } from "$utils/env";
 
 const ACTIVITY_COUNT_INTERVAL2 = Number(
   process.env.ACTIVITY_COUNT_INTERVAL ?? 1
@@ -228,6 +229,9 @@ function padZeroTimeRangeCount(
 }
 
 export default function ActivityRewatchGraph(props: Props) {
+  if (!NEXT_PUBLIC_ENABLE_TOPIC_VIEW_RECORD) {
+    return <></>;
+  }
   const { scope, topicId, topicTimeRequired, topicStartTime, topicStopTime } =
     props;
   const { data: counts } = useActivityTimeRangeCountByTopic(topicId, scope);

@@ -7,6 +7,7 @@ import type { SessionSchema } from "$server/models/session";
 import type { ActivityRewatchRateProps } from "$server/validators/activityRewatchRate";
 
 import { NEXT_PUBLIC_ACTIVITY_REWATCH_RATE_THRESHOLD } from "$utils/env";
+import { NEXT_PUBLIC_ENABLE_TOPIC_VIEW_RECORD } from "$utils/env";
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -50,9 +51,11 @@ export default function LearnerActivityDot(props: Props) {
     getLocaleEntries(activity, rewatchRate, session)
   );
 
-  const rewatchLabel = isRewatched(rewatchRate?.rewatchRate ?? 0)
-    ? "rewatch"
-    : "default";
+  const rewatchLabel =
+    NEXT_PUBLIC_ENABLE_TOPIC_VIEW_RECORD &&
+    isRewatched(rewatchRate?.rewatchRate ?? 0)
+      ? "rewatch"
+      : "default";
 
   return (
     <Tooltip
