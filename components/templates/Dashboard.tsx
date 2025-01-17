@@ -38,6 +38,7 @@ import type { LtiNrpsContextMemberSchema } from "$server/models/ltiNrpsContextMe
 import useRewatchRate from "$utils/useRewatchRate";
 
 import { NEXT_PUBLIC_ENABLE_TOPIC_VIEW_RECORD } from "$utils/env";
+import { NEXT_PUBLIC_ENABLE_TAG_AND_BOOKMARK } from "$utils/env";
 
 type TabPanelProps = {
   className?: string;
@@ -293,7 +294,7 @@ export default function Dashboard(props: Props) {
           <Tab label="ブック" />
           <Tab label="トピック" />
           <Tab label="学習者" />
-          <Tab label="タグ" />
+          {NEXT_PUBLIC_ENABLE_TAG_AND_BOOKMARK ? <Tab label="タグ" /> : ""}
         </Tabs>
         <TabPanel className={classes.items} value={tabIndex} index={0}>
           {activitiesByBooks.map((activitiesByBook, index) => (
@@ -360,11 +361,15 @@ export default function Dashboard(props: Props) {
             />
           ))}
         </TabPanel>
-        <TabPanel className={classes.items} value={tabIndex} index={3}>
-          {activitiesByBooks.map((book, index) => (
-            <BookmarkStatsDialog key={index} book={book} />
-          ))}
-        </TabPanel>
+        {NEXT_PUBLIC_ENABLE_TAG_AND_BOOKMARK ? (
+          <TabPanel className={classes.items} value={tabIndex} index={3}>
+            {activitiesByBooks.map((book, index) => (
+              <BookmarkStatsDialog key={index} book={book} />
+            ))}
+          </TabPanel>
+        ) : (
+          ""
+        )}
       </Card>
       {data && (
         <LearnerActivityDialog
