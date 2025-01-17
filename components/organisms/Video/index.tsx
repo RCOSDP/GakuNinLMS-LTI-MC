@@ -294,9 +294,12 @@ export default function Video({
   const isStudent =
     session && !isInstructor(session) && !isAdministrator(session);
 
-  const { bookmarks, bookmarkTagMenu, isLoading } = useBookmarksByTopicId({
-    topicId: topic.id,
-  });
+  const { bookmarks, bookmarkTagMenu, isLoading } =
+    NEXT_PUBLIC_ENABLE_TAG_AND_BOOKMARK
+      ? useBookmarksByTopicId({
+          topicId: topic.id,
+        })
+      : { bookmarks: [], bookmarkTagMenu: [], isLoading: false };
 
   return (
     <>
