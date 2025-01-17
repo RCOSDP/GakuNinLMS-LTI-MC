@@ -25,6 +25,8 @@ import { NEXT_PUBLIC_BASE_PATH } from "$utils/env";
 import { useRouter } from "next/router";
 import { pagesPath } from "$utils/$path";
 
+import { NEXT_PUBLIC_ENABLE_TAG_AND_BOOKMARK } from "$utils/env";
+
 const useStyles = makeStyles((theme) => ({
   inner: {
     display: "flex",
@@ -198,12 +200,14 @@ function AppBar(props: Props, ref: Ref<HTMLDivElement>) {
                   onClick={onDashboardClick}
                 />
               )}
-              <AppBarNavButton
-                color="inherit"
-                icon={<StyleIcon />}
-                label="タグ管理"
-                onClick={onBookmarksClick}
-              />
+              {NEXT_PUBLIC_ENABLE_TAG_AND_BOOKMARK && (
+                <AppBarNavButton
+                  color="inherit"
+                  icon={<StyleIcon />}
+                  label="タグ管理"
+                  onClick={onBookmarksClick}
+                />
+              )}
             </div>
           )}
           {isInstructor && (
