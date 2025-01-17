@@ -31,6 +31,8 @@ import { authors } from "$utils/descriptionList";
 import TagList from "$molecules/TagList";
 import { useBookmarksByTopicId } from "$utils/bookmark/useBookmarks";
 
+import { NEXT_PUBLIC_ENABLE_TAG_AND_BOOKMARK } from "$utils/env";
+
 const videoStyle = {
   "& > *": {
     /* NOTE: 各動画プレイヤーのレスポンシブ対応により、高さはpaddingTopによってwidthのpercentage分
@@ -320,14 +322,17 @@ export default function Video({
           thumbnailUrl={oembed && oembed.thumbnail_url}
         />
       )}
-      {!isLoading && isPrivateBook && bookmarkTagMenu.length !== 0 && (
-        <TagList
-          key={topic.id}
-          topicId={topic.id}
-          bookmarks={bookmarks}
-          tagMenu={bookmarkTagMenu}
-        />
-      )}
+      {NEXT_PUBLIC_ENABLE_TAG_AND_BOOKMARK &&
+        !isLoading &&
+        isPrivateBook &&
+        bookmarkTagMenu.length !== 0 && (
+          <TagList
+            key={topic.id}
+            topicId={topic.id}
+            bookmarks={bookmarks}
+            tagMenu={bookmarkTagMenu}
+          />
+        )}
       <Tabs
         aria-label="トピックビデオの詳細情報"
         className={tabsStyle}
