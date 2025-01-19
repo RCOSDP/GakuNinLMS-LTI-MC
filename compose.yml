@@ -1,7 +1,7 @@
 # NOTE: DON'T USE IT IN PRODUCTION. 本番環境で使用しないで。
 services:
   mariadb:
-    image: "mariadb:11.1.2-jammy"
+    image: "mariadb:11.2.6-jammy"
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
       MYSQL_DATABASE: bitnami_moodle
@@ -22,7 +22,7 @@ services:
       - moodle_data_v4:/bitnami/moodle
       - moodledata_data_v4:/bitnami/moodledata
   db:
-    image: "postgres:15.4-alpine3.18"
+    image: "postgres:15.10-alpine3.21"
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
