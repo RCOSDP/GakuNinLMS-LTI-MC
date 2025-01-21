@@ -96,6 +96,13 @@ function AppBar(props: Props, ref: Ref<HTMLDivElement>) {
     onBookmarksClick,
     ...others
   } = props;
+  if (
+    !NEXT_PUBLIC_ENABLE_TAG_AND_BOOKMARK &&
+    !isAdministrator(session) &&
+    !isInstructor
+  ) {
+    return <></>;
+  }
   const isDeepLink = !!session.ltiDlSettings?.deep_link_return_url;
   const appBarClasses = useAppBarStyles();
   const classes = useStyles();
