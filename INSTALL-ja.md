@@ -31,6 +31,7 @@ API の接続先の情報を変更する場合 .env を適宜書き換える必�
 | `NEXT_PUBLIC_REWATCH_GRAPH_COUNT_THRESHOLD`   | グラフにプロットする視聴回数の上限閾値 (回数) (デフォルト: `20`)                                                          |
 | `NEXT_PUBLIC_REWATCH_GRAPH_PLOT_SIZE`         | グラフのプロットの点の半径の大きさ (デフォルト: `5.0`)                                                                    |
 | `NEXT_PUBLIC_ENABLE_TOPIC_VIEW_RECORD`        | 視聴記録の有効化 (フォーマット: [YAML 1.1 真偽値](https://yaml.org/type/bool.html)) (デフォルト: 有効)                    |
+| `NEXT_PUBLIC_ENABLE_TAG_AND_BOOKMARK`         | タグ・感想機能の有効化 (フォーマット: [YAML 1.1 真偽値](https://yaml.org/type/bool.html)) (デフォルト: 有効)              |
 
 ## フロントエンド周りのビルド
 
