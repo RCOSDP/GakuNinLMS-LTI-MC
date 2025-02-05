@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+// @ts-nocheck TODO: react-beautiful-dndの型定義がReact18系に対応していないため別途対応する
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import type { DraggableId, DropResult } from "react-beautiful-dnd";
 import clsx from "clsx";

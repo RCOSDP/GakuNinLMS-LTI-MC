@@ -2,7 +2,7 @@ import clsx from "clsx";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import Divider from "@mui/material/Divider";
-import TreeView from "@mui/lab/TreeView";
+import { SimpleTreeView } from "@mui/x-tree-view/SimpleTreeView";
 import Alert from "@mui/material/Alert";
 import Switch from "@mui/material/Switch";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -199,9 +199,11 @@ export default function SectionsEdit(props: Props) {
         </p>
       )}
       {!sortable && sections.length > 0 && (
-        <TreeView
-          defaultCollapseIcon={<ExpandMoreIcon />}
-          defaultExpandIcon={<ChevronRightIcon />}
+        <SimpleTreeView
+          slots={{
+            expandIcon: ChevronRightIcon,
+            collapseIcon: ExpandMoreIcon,
+          }}
           disableSelection
         >
           <SectionsTree
@@ -210,7 +212,7 @@ export default function SectionsEdit(props: Props) {
             onItemEditClick={handleItem(onTopicEditClick)}
             isContentEditable={isContentEditable}
           />
-        </TreeView>
+        </SimpleTreeView>
       )}
     </Card>
   );

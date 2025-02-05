@@ -1,4 +1,4 @@
-import TreeItem from "@mui/lab/TreeItem";
+import { TreeItem } from "@mui/x-tree-view/TreeItem";
 import makeStyles from "@mui/styles/makeStyles";
 import PreviewButton from "$atoms/PreviewButton";
 import EditButton from "$atoms/EditButton";
@@ -60,7 +60,7 @@ export default function BookTree(props: Props) {
   */
   return (
     <TreeItem
-      nodeId={nodeId}
+      itemId={nodeId}
       classes={treeItemClasses}
       label={
         <>

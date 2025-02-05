@@ -18,16 +18,17 @@
     "@meikidd/videojs-hlsjs-plugin": "^1.0.18",
     "@mui/base": "^5.0.0-beta.20",
     "@mui/icons-material": "^5.14.7",
-    "@mui/lab": "^5.0.0-alpha.142",
     "@mui/material": "^5.14.7",
     "@mui/styles": "^5.14.7",
     "@mui/x-date-pickers": "^6.12.1",
+    "@mui/x-tree-view": "^7.25.0",
     "@openapitools/openapi-generator-cli": "^2.7.0",
     "@rooks/use-previous": "^4.11.2",
     "@storybook/addon-a11y": "^7.4.0",
     "@storybook/addon-essentials": "^7.4.0",
     "@storybook/nextjs": "^7.4.0",
     "@storybook/react": "^7.4.0",
+    "@twemoji/api": "^15.1.0",
     "@types/events": "^3.0.0",
     "@types/flat": "^5.0.2",
     "@types/hh-mm-ss": "^1.2.1",
@@ -38,6 +39,7 @@
     "@types/node": "^20.5.9",
     "@types/react": "^18.2.21",
     "@types/react-beautiful-dnd": "^13.1.4",
+    "@types/react-dom": "^18.2.21",
     "@types/vimeo__player": "^2.18.0",
     "@typescript-eslint/eslint-plugin": "^6.6.0",
     "@typescript-eslint/parser": "^6.6.0",
@@ -70,10 +72,10 @@
     "outdent": "^0.8.0",
     "pathpida": "^0.22.0",
     "prettier": "^3.0.3",
-    "react": "^18.2.0",
+    "react": "^18.2.21",
     "react-beautiful-dnd": "^13.1.1",
     "react-d3-cloud": "^1.0.6",
-    "react-dom": "^18.2.0",
+    "react-dom": "^18.2.21",
     "react-hook-form": "^7.46.1",
     "react-infinite-scroll-hook": "^4.1.1",
     "react-markdown": "^8.0.7",
@@ -122,8 +124,5 @@
   },
   "engines": {
     "node": "^18.12.0 || ^20.0.0 || ^22.13.1"
-  },
-  "dependencies": {
-    "@twemoji/api": "^15.0.3"
   }
 }
