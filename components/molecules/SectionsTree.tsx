@@ -1,5 +1,5 @@
 import type { ReactNode, MouseEvent } from "react";
-import { TreeItem } from "@mui/x-tree-view/TreeItem";
+import TreeItem from "@mui/lab/TreeItem";
 import Checkbox from "@mui/material/Checkbox";
 import makeStyles from "@mui/styles/makeStyles";
 import PreviewButton from "$atoms/PreviewButton";
@@ -44,7 +44,7 @@ function SectionTree({
   if (!isNamedSection(section)) return <>{children}</>;
   return (
     <TreeItem
-      itemId={nodeId}
+      nodeId={nodeId}
       classes={treeItemClasses}
       label={
         <>
@@ -118,7 +118,7 @@ export default function SectionsTree(props: Props) {
             return (
               <TreeItem
                 key={nodeId}
-                itemId={nodeId}
+                nodeId={nodeId}
                 classes={treeItemClasses}
                 label={
                   <>

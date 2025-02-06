@@ -4,7 +4,7 @@ import Skeleton from "@mui/material/Skeleton";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { SimpleTreeView } from "@mui/x-tree-view/SimpleTreeView";
+import TreeView from "@mui/lab/TreeView";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import TopicPreviewDialog from "$organisms/TopicPreviewDialog";
@@ -126,11 +126,9 @@ export default function BookImport(props: Props) {
       </ActionHeader>
       <FilterColumn sx={{ gridArea: "side" }} variant="book" />
       <Box gridArea="items">
-        <SimpleTreeView
-          slots={{
-            expandIcon: ChevronRightIcon,
-            collapseIcon: ExpandMoreIcon,
-          }}
+        <TreeView
+          defaultCollapseIcon={<ExpandMoreIcon />}
+          defaultExpandIcon={<ChevronRightIcon />}
         >
           {contents.map((content) => {
             if (content.type !== "book") return null;
@@ -154,7 +152,7 @@ export default function BookImport(props: Props) {
               />
             );
           })}
-        </SimpleTreeView>
+        </TreeView>
         {loading &&
           [...Array(5)].map((_, i) => <Skeleton key={i} height={40} />)}
       </Box>

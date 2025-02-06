@@ -1,7 +1,6 @@
 import type { Story } from "@storybook/react";
 import SectionsTree from "./SectionsTree";
-import { SimpleTreeView } from "@mui/x-tree-view/SimpleTreeView";
-
+import TreeView from "@mui/lab/TreeView";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { sections } from "$samples";
@@ -22,17 +21,15 @@ const Template: Story<Parameters<typeof SectionsTree>[0] & ArgTypes> = ({
   ...args
 }) => {
   return (
-    <SimpleTreeView
-      slots={{
-        collapseIcon: ChevronRightIcon,
-        expandIcon: ExpandMoreIcon,
-      }}
+    <TreeView
+      defaultCollapseIcon={<ExpandMoreIcon />}
+      defaultExpandIcon={<ChevronRightIcon />}
     >
       <SectionsTree
         {...args}
         onTreeChange={selectable ? onTreeChange : undefined}
       />
-    </SimpleTreeView>
+    </TreeView>
   );
 };
 
