@@ -328,23 +328,49 @@ export default function Video({
           tagMenu={bookmarkTagMenu}
         />
       )}
-      <Tabs
-        aria-label="トピックビデオの詳細情報"
-        className={tabsStyle}
-        indicatorColor="primary"
-        value={tabIndex}
-        onChange={handleTabIndexChange}
-      >
-        <Tab label="解説" id="tab-0" aria-controls="panel-0" />
-        {isStudent && isBookPage && (
-          <Tab label="視聴時間詳細" id="tab-1" aria-controls="panel-1" />
+      <Box sx={{ 
+        display: 'flex',
+        flexDirection: 'column', 
+        position: 'relative'
+      }}>
+        <Tabs
+          aria-label="トピックビデオの詳細情報"
+          className={tabsStyle}
+          indicatorColor="primary"
+          value={tabIndex}
+          onChange={handleTabIndexChange}
+          sx={{
+            width: '80%' 
+          }}
+        >
+          <Tab label="解説" id="tab-0" aria-controls="panel-0" />
+          {isStudent && isBookPage && (
+            <Tab label="視聴時間詳細" id="tab-1" aria-controls="panel-1" />
+          )}
+          <Tab
+            label="トピックの詳細"
+            id={`tab-${isStudent ? 2 : 1}`}
+            aria-controls={`panel-${isStudent ? 2 : 1}`}
+          />
+        </Tabs>
+        {topic.license && (
+          <Box sx={{ 
+            display: 'flex', 
+            justifyContent: 'flex-end',
+            alignItems: 'center',
+            height: '72px',
+            mt: '-72px', 
+          }}>
+            <License 
+              sx={{ 
+                display: 'inline-flex',
+                alignItems: 'center',
+              }} 
+              license={topic.license} 
+            />
+          </Box>
         )}
-        <Tab
-          label="トピックの詳細"
-          id={`tab-${isStudent ? 2 : 1}`}
-          aria-controls={`panel-${isStudent ? 2 : 1}`}
-        />
-      </Tabs>
+      </Box>
       <TabPanel value={tabIndex} index={0}>
         <article>
           <Markdown>{topic.description}</Markdown>
@@ -396,9 +422,6 @@ export default function Video({
           sx={{ mr: 1, mb: 0.5 }}
           label={`学習時間 ${formatInterval(0, topic.timeRequired * 1000)}`}
         />
-        {topic.license && (
-          <License sx={{ mr: 1, mb: 0.5 }} license={topic.license} />
-        )}
         <DescriptionList
           inline
           value={[
