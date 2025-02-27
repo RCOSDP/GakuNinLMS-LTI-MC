@@ -7,7 +7,7 @@ import { isAdministrator } from "$utils/session";
 
 function Index() {
   const { session } = useSessionAtom();
-  const { data, error } = useActivity(true);
+  const { data, error } = useActivity();
 
   if (error) return <Problem title="学習分析データの取得に失敗しました" />;
   if (!session || !isAdministrator(session))

@@ -33,7 +33,7 @@ export default function Download(props: Props) {
   const classes = useStyles();
   const cardClasses = useCardStyles();
   const handleBookActivityDownloadClick = useCallback(() => {
-    void downloadBookActivity(bookActivities, "視聴分析データ.csv", session);
+    void downloadBookActivity(bookActivities, "全コース視聴分析データ.csv", session);
     void send("admin-download", session, "book-activity");
   }, [bookActivities, session]);
 
