@@ -13,6 +13,10 @@ import type { EventType } from "$server/models/event";
 import { api } from "$utils/api";
 
 const useStyles = makeStyles(() => ({
+  title: {
+    fontSize: 32,
+    marginBottom: 32,
+  },
   card: {
     border: `1px solid ${gray[300]}`,
     borderRadius: 12,
@@ -33,13 +37,17 @@ export default function Download(props: Props) {
   const classes = useStyles();
   const cardClasses = useCardStyles();
   const handleBookActivityDownloadClick = useCallback(() => {
-    void downloadBookActivity(bookActivities, "全コース視聴分析データ.csv", session);
+    void downloadBookActivity(
+      bookActivities,
+      "全コース視聴分析データ.csv",
+      session
+    );
     void send("admin-download", session, "book-activity");
   }, [bookActivities, session]);
 
   return (
-    <Container maxWidth="md">
-      <Typography sx={{ mt: 5 }} variant="h4">
+    <Container sx={{ mt: 5, gridArea: "title" }} maxWidth="md">
+      <Typography variant="h4" className={classes.title}>
         ダウンロード
       </Typography>
       <Card classes={cardClasses} className={classes.card}>
