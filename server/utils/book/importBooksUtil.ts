@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import unzipper from "unzipper";
+import yauzl from "yauzl";
 // @ts-expect-error Could not find a declaration file for module 'recursive-readdir-synchronous'
 import recursive from "recursive-readdir-synchronous";
 import { Buffer } from "buffer";
@@ -507,65 +507,92 @@ class ImportBooksUtil {
     fs.writeFileSync(file, Buffer.from(this.params.file as string, "base64"));
 
     return new Promise((resolve) => {
-      fs.createReadStream(file)
-        .pipe(unzipper.Parse())
-        .on("entry", (entry) => {
-          if (entry.type === "File") {
-            const filename = path.join(this.tmpdir, entry.path);
-            const dirname = path.dirname(filename);
-            try {
-              if (!fs.existsSync(dirname)) {
-                fs.mkdirSync(dirname, { recursive: true });
-              }
-              const ws = fs.createWriteStream(filename);
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              entry.pipe(ws).on("error", (e: any) => {
-                this.errors.push(
-                  `zip解凍中にファイルの書き込みに失敗しました。\n${e}`
-                );
+      const options = {
+        lazyEntries: true,
+      };
+      yauzl.open(file, options, (err, zipfile) => {
+        if (err) {
+          this.errors.push(`zipファイルのopenでエラーが発生しました。\n${err}`);
+          resolve({});
+          return;
+        }
+        zipfile.readEntry();
+        zipfile
+          .on("entry", (entry) => {
+            // ディレクトリは fileName が '/' で終わっている
+            if (/\/$/.test(entry.fileName)) {
+              zipfile.readEntry();
+            } else {
+              const filename = path.join(this.tmpdir, entry.fileName);
+              const dirname = path.dirname(filename);
+              zipfile.openReadStream(entry, (err, readStream) => {
+                if (err) {
+                  this.errors.push(
+                    `openReadStreamでエラーが発生しました。\n${err}`
+                  );
+                  zipfile.readEntry();
+                  return;
+                }
+                try {
+                  if (!fs.existsSync(dirname)) {
+                    fs.mkdirSync(dirname, { recursive: true });
+                  }
+                  readStream.on("end", () => {
+                    zipfile.readEntry();
+                  });
+                  const ws = fs.createWriteStream(filename);
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  readStream.pipe(ws).on("error", (err: any) => {
+                    this.errors.push(
+                      `zip解凍中にファイルの書き込みに失敗しました。\n${err}`
+                    );
+                    readStream.destroy();
+                    zipfile.readEntry();
+                  });
+                } catch (err) {
+                  this.errors.push(`zip解凍中に例外が発生しました。\n${err}`);
+                  readStream.destroy();
+                  zipfile.readEntry();
+                }
               });
-            } catch (e) {
-              this.errors.push(`zip解凍中に例外が発生しました。\n${e}`);
             }
-          } else {
-            entry.autodrain();
-          }
-        })
-        .on("close", () => {
-          this.unzippedFiles = recursive(this.tmpdir);
-          const jsonfiles: string[] = this.unzippedFiles.filter((filename) =>
-            filename.toLowerCase().endsWith(".json")
-          );
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const jsons: any[] = [];
-          if (jsonfiles.length) {
-            for (const jsonfile of jsonfiles) {
-              try {
-                const json = JSON.parse(fs.readFileSync(jsonfile).toString());
-                jsons.push(...(Array.isArray(json) ? json : [json]));
-              } catch (e) {
-                this.errors.push(
-                  `入力されたjsonテキストを解釈できません。\n${e}`
-                );
+          })
+          .on("close", () => {
+            this.unzippedFiles = recursive(this.tmpdir);
+            const jsonfiles: string[] = this.unzippedFiles.filter((filename) =>
+              filename.toLowerCase().endsWith(".json")
+            );
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const jsons: any[] = [];
+            if (jsonfiles.length) {
+              for (const jsonfile of jsonfiles) {
+                try {
+                  const json = JSON.parse(fs.readFileSync(jsonfile).toString());
+                  jsons.push(...(Array.isArray(json) ? json : [json]));
+                } catch (e) {
+                  this.errors.push(
+                    `入力されたjsonテキストを解釈できません。\n${e}`
+                  );
+                }
               }
+            } else {
+              this.errors.push("jsonファイルがありません。");
             }
-          } else {
-            this.errors.push("jsonファイルがありません。");
-          }
-          if (this.errors.length) {
-            resolve({});
-          } else {
-            resolve(jsons);
-          }
-        })
-        .on("error", (error) => {
-          try {
-            resolve(JSON.parse(fs.readFileSync(file).toString()));
-          } catch (e) {
-            this.errors.push(`ファイルがzipではありません。\n${error}`);
-            resolve({});
-          }
-        });
+            if (this.errors.length) {
+              resolve({});
+            } else {
+              resolve(jsons);
+            }
+          })
+          .on("error", (error) => {
+            try {
+              resolve(JSON.parse(fs.readFileSync(file).toString()));
+            } catch (e) {
+              this.errors.push(`ファイルがzipではありません。\n${error}`);
+              resolve({});
+            }
+          });
+      });
     });
   }
 
