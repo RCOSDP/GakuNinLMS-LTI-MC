@@ -9,6 +9,8 @@ import type { BookActivitySchema } from "$server/models/bookActivity";
 import type { SessionSchema } from "$server/models/session";
 import { gray } from "$theme/colors";
 import downloadBookActivity from "$utils/bookLearningActivity/download";
+import type { EventType } from "$server/models/event";
+import { api } from "$utils/api";
 
 const useStyles = makeStyles(() => ({
   card: {
@@ -32,6 +34,7 @@ export default function Download(props: Props) {
   const cardClasses = useCardStyles();
   const handleBookActivityDownloadClick = useCallback(() => {
     void downloadBookActivity(bookActivities, "視聴分析データ.csv", session);
+    void send("admin-download", session, "book-activity");
   }, [bookActivities, session]);
 
   return (
@@ -56,4 +59,20 @@ export default function Download(props: Props) {
       </Card>
     </Container>
   );
+}
+
+/** $utils/eventLoger/logger.tsよりダウンロードページ用に移植 */
+function send(eventType: EventType, session: SessionSchema, detail?: string) {
+  const idPrefix = session.oauthClient.id;
+  const id = (id: string) => [idPrefix, id].join(":");
+  const body = {
+    event: eventType,
+    detail,
+    rid: id(session?.ltiResourceLinkRequest?.id || ""),
+    uid: id(session.ltiUser.id),
+    cid: id(session.ltiContext.id),
+    nonce: session.oauthClient.nonce,
+    path: location.pathname,
+  };
+  return api.apiV2EventPost({ body });
 }
