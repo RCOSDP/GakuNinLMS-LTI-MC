@@ -154,16 +154,19 @@ import {
 
 export interface ApiV2ActivityGetRequest {
     currentLtiContextOnly?: boolean;
+    ltiConsumerId?: string;
 }
 
 export interface ApiV2BookBookIdActivityGetRequest {
     bookId: number;
     currentLtiContextOnly?: boolean;
+    ltiConsumerId?: string;
 }
 
 export interface ApiV2BookBookIdActivityPutRequest {
     bookId: number;
     currentLtiContextOnly?: boolean;
+    ltiConsumerId?: string;
 }
 
 export interface ApiV2BookBookIdAuthorsPutRequest {
@@ -361,6 +364,7 @@ export interface ApiV2TopicPostRequest {
 export interface ApiV2TopicTopicIdActivityPutRequest {
     topicId: number;
     currentLtiContextOnly?: boolean;
+    ltiConsumerId?: string;
     body?: InlineObject9;
 }
 
@@ -440,6 +444,10 @@ export class DefaultApi extends runtime.BaseAPI {
             queryParameters['current_lti_context_only'] = requestParameters.currentLtiContextOnly;
         }
 
+        if (requestParameters.ltiConsumerId !== undefined) {
+            queryParameters['lti_consumer_id'] = requestParameters.ltiConsumerId;
+        }
+
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
@@ -476,6 +484,10 @@ export class DefaultApi extends runtime.BaseAPI {
             queryParameters['current_lti_context_only'] = requestParameters.currentLtiContextOnly;
         }
 
+        if (requestParameters.ltiConsumerId !== undefined) {
+            queryParameters['lti_consumer_id'] = requestParameters.ltiConsumerId;
+        }
+
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
@@ -510,6 +522,10 @@ export class DefaultApi extends runtime.BaseAPI {
 
         if (requestParameters.currentLtiContextOnly !== undefined) {
             queryParameters['current_lti_context_only'] = requestParameters.currentLtiContextOnly;
+        }
+
+        if (requestParameters.ltiConsumerId !== undefined) {
+            queryParameters['lti_consumer_id'] = requestParameters.ltiConsumerId;
         }
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -2132,6 +2148,10 @@ export class DefaultApi extends runtime.BaseAPI {
 
         if (requestParameters.currentLtiContextOnly !== undefined) {
             queryParameters['current_lti_context_only'] = requestParameters.currentLtiContextOnly;
+        }
+
+        if (requestParameters.ltiConsumerId !== undefined) {
+            queryParameters['lti_consumer_id'] = requestParameters.ltiConsumerId;
         }
 
         const headerParameters: runtime.HTTPHeaders = {};

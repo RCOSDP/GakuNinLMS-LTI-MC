@@ -61,7 +61,7 @@ export default function Download(props: Props) {
             title="事前に[受講者の同期]ボタンを押してからダウンロードしてください"
           >
             <GetAppOutlinedIcon fontSize="small" />
-            視聴分析データをダウンロード
+            全コース視聴分析データをダウンロード
           </Button>
         </Box>
       </Card>

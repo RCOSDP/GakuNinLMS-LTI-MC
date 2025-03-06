@@ -48,6 +48,11 @@ async function findLtiMembers(
         }
       : { ltiConsumerId: "", ltiContextId: "", ...topicActivityScope };
 
+  const ltiMembersTarget =
+    currentLtiContextOnly === undefined
+      ? { ltiMembers: { some: { consumerId } } }
+      : { ltiMembers: { some: { consumerId, contextId } } };
+
   const learners = await prisma.user.findMany({
     orderBy: { name: "asc" },
     select: {
@@ -76,7 +81,7 @@ async function findLtiMembers(
       },
     },
     where: {
-      ltiMembers: { some: { consumerId, contextId } },
+      ...ltiMembersTarget,
     },
   });
 
@@ -90,22 +95,24 @@ async function findLtiMembers(
  */
 async function findAllActivity(
   session: SessionSchema,
-  currentLtiContextOnly?: boolean | undefined
+  currentLtiContextOnly?: boolean | undefined,
+  ltiConsumerId?: string | undefined
 ): Promise<{
   learners: Array<LearnerSchema>;
   courseBooks: Array<CourseBookSchema>;
   bookActivities: Array<BookActivitySchema>;
 }> {
+  const isDownloadPage =
+    isAdministrator(session) && currentLtiContextOnly === undefined;
   const user = session.user;
-  const consumerId = session.oauthClient.id;
-  const contextId = session.ltiContext.id;
+  const consumerId =
+    isDownloadPage && ltiConsumerId ? ltiConsumerId : session.oauthClient.id;
+  const contextId = isDownloadPage ? "" : session.ltiContext.id;
   const ltiMembers = await findLtiMembers(
     user,
     { consumerId, contextId },
     currentLtiContextOnly
   );
-  const isDownloadPage =
-    isAdministrator(session) && currentLtiContextOnly === undefined;
 
   let books;
   if (isDownloadPage) {
