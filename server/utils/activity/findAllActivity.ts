@@ -137,6 +137,11 @@ async function findAllActivity(
           },
         },
       },
+      where: {
+        authors: {
+          some: { user: { ltiConsumerId: { equals: ltiConsumerId } } },
+        },
+      },
     });
   } else {
     const ltiResourceLinks = await prisma.ltiResourceLink.findMany({
