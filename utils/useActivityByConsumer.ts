@@ -1,3 +1,4 @@
+import useSWRImmutable from 'swr/immutable';
 import useSWR from "swr";
 import { api } from "./api";
 
@@ -39,7 +40,7 @@ function useActivityByConsumer(
   ltiConsumerIds?: Array<string> | undefined,
   ltiContextIds?: Array<string> | undefined
 ) {
-  const { data, error } = useSWR(
+  const { data, error } = useSWRImmutable(
     { key, currentLtiContextOnly, ltiConsumerIds, ltiContextIds },
     fetchActivityByConsumer
   );
