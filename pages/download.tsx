@@ -3,7 +3,7 @@ import Placeholder from "$templates/Placeholder";
 import Problem from "$organisms/Problem";
 import { useSessionAtom } from "$store/session";
 import useActivityByConsumer from "$utils/useActivityByConsumer";
-import useClientIds from "$utils/courses/useClientIds";
+import useContext from "$utils/courses/useContext";
 import { isAdministrator } from "$utils/session";
 import type { LearnerSchema } from "$server/models/learner";
 import type { CourseBookSchema } from "$server/models/courseBook";
@@ -11,10 +11,16 @@ import type { BookActivitySchema } from "$server/models/bookActivity";
 
 function Index() {
   const { session } = useSessionAtom();
-  const clients = useClientIds();
+  const contexts = useContext();
+  const ltiConsumerIds = contexts.flatMap(({ consumerId }) => consumerId);
+  const ltiContextIds = contexts.flatMap(({ id }) => id);
 
   // ltiConsumerId/ltiContextId毎に分割して取得
-  const { data, error } = useActivityByConsumer(undefined, clients);
+  const { data, error } = useActivityByConsumer(
+    undefined,
+    ltiConsumerIds,
+    ltiContextIds
+  );
 
   const learners = data
     ? ([

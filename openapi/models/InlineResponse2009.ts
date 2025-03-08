@@ -13,6 +13,13 @@
  */
 
 import { exists, mapValues } from '../runtime';
+import {
+    InlineResponse2009Activity,
+    InlineResponse2009ActivityFromJSON,
+    InlineResponse2009ActivityFromJSONTyped,
+    InlineResponse2009ActivityToJSON,
+} from './';
+
 /**
  * 
  * @export
@@ -21,10 +28,10 @@ import { exists, mapValues } from '../runtime';
 export interface InlineResponse2009 {
     /**
      * 
-     * @type {string}
+     * @type {Array<InlineResponse2009Activity>}
      * @memberof InlineResponse2009
      */
-    publicToken: string;
+    activity: Array<InlineResponse2009Activity>;
 }
 
 export function InlineResponse2009FromJSON(json: any): InlineResponse2009 {
@@ -37,7 +44,7 @@ export function InlineResponse2009FromJSONTyped(json: any, ignoreDiscriminator: 
     }
     return {
         
-        'publicToken': json['publicToken'],
+        'activity': ((json['activity'] as Array<any>).map(InlineResponse2009ActivityFromJSON)),
     };
 }
 
@@ -50,7 +57,7 @@ export function InlineResponse2009ToJSON(value?: InlineResponse2009 | null): any
     }
     return {
         
-        'publicToken': value.publicToken,
+        'activity': ((value.activity as Array<any>).map(InlineResponse2009ActivityToJSON)),
     };
 }
 

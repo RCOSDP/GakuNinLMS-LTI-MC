@@ -16,32 +16,39 @@ import { exists, mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface InlineResponse2003
+ * @interface InlineResponse20015Book
  */
-export interface InlineResponse2003 {
+export interface InlineResponse20015Book {
+    /**
+     * 
+     * @type {number}
+     * @memberof InlineResponse20015Book
+     */
+    id: number;
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse2003
+     * @memberof InlineResponse20015Book
      */
-    jwt?: string;
+    name: string;
 }
 
-export function InlineResponse2003FromJSON(json: any): InlineResponse2003 {
-    return InlineResponse2003FromJSONTyped(json, false);
+export function InlineResponse20015BookFromJSON(json: any): InlineResponse20015Book {
+    return InlineResponse20015BookFromJSONTyped(json, false);
 }
 
-export function InlineResponse2003FromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse2003 {
+export function InlineResponse20015BookFromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse20015Book {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
-        'jwt': !exists(json, 'jwt') ? undefined : json['jwt'],
+        'id': json['id'],
+        'name': json['name'],
     };
 }
 
-export function InlineResponse2003ToJSON(value?: InlineResponse2003 | null): any {
+export function InlineResponse20015BookToJSON(value?: InlineResponse20015Book | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -50,7 +57,8 @@ export function InlineResponse2003ToJSON(value?: InlineResponse2003 | null): any
     }
     return {
         
-        'jwt': value.jwt,
+        'id': value.id,
+        'name': value.name,
     };
 }
 

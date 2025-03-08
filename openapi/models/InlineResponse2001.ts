@@ -21,10 +21,10 @@ import { exists, mapValues } from '../runtime';
 export interface InlineResponse2001 {
     /**
      * 
-     * @type {Array<object>}
+     * @type {Array<string>}
      * @memberof InlineResponse2001
      */
-    keys?: Array<object>;
+    ltiContexts?: Array<string>;
 }
 
 export function InlineResponse2001FromJSON(json: any): InlineResponse2001 {
@@ -37,7 +37,7 @@ export function InlineResponse2001FromJSONTyped(json: any, ignoreDiscriminator: 
     }
     return {
         
-        'keys': !exists(json, 'keys') ? undefined : json['keys'],
+        'ltiContexts': !exists(json, 'ltiContexts') ? undefined : json['ltiContexts'],
     };
 }
 
@@ -50,7 +50,7 @@ export function InlineResponse2001ToJSON(value?: InlineResponse2001 | null): any
     }
     return {
         
-        'keys': value.keys,
+        'ltiContexts': value.ltiContexts,
     };
 }
 

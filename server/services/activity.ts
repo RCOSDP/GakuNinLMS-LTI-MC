@@ -46,7 +46,8 @@ export async function index({
   const body = await findAllActivity(
     session,
     query.current_lti_context_only,
-    query.lti_consumer_id
+    query.lti_consumer_id,
+    query.lti_context_id
   );
 
   return { status: 200, body };

@@ -39,7 +39,10 @@ async function findLtiMembers(
 
   const activityScope =
     currentLtiContextOnly === undefined
-      ? {}
+      ? {
+          ltiConsumerId: consumerId,
+          ltiContextId: contextId,
+        }
       : currentLtiContextOnly
       ? {
           ltiConsumerId: consumerId,
@@ -49,8 +52,8 @@ async function findLtiMembers(
       : { ltiConsumerId: "", ltiContextId: "", ...topicActivityScope };
 
   const ltiMembersTarget =
-    currentLtiContextOnly === undefined
-      ? { ltiMembers: { some: { consumerId } } }
+    currentLtiContextOnly === undefined && consumerId == "" && contextId == ""
+      ? {}
       : { ltiMembers: { some: { consumerId, contextId } } };
 
   const learners = await prisma.user.findMany({
@@ -96,7 +99,8 @@ async function findLtiMembers(
 async function findAllActivity(
   session: SessionSchema,
   currentLtiContextOnly?: boolean | undefined,
-  ltiConsumerId?: string | undefined
+  ltiConsumerId?: string | undefined,
+  ltiContextId?: string | undefined
 ): Promise<{
   learners: Array<LearnerSchema>;
   courseBooks: Array<CourseBookSchema>;
@@ -105,21 +109,49 @@ async function findAllActivity(
   const isDownloadPage =
     isAdministrator(session) && currentLtiContextOnly === undefined;
   const user = session.user;
-  const consumerId =
-    isDownloadPage && ltiConsumerId ? ltiConsumerId : session.oauthClient.id;
-  const contextId = isDownloadPage ? "" : session.ltiContext.id;
+  const consumerId = isDownloadPage
+    ? ltiConsumerId !== undefined
+      ? ltiConsumerId
+      : ""
+    : session.oauthClient.id;
+  const contextId = isDownloadPage
+    ? ltiContextId !== undefined
+      ? ltiContextId
+      : ""
+    : session.ltiContext.id;
   const ltiMembers = await findLtiMembers(
     user,
     { consumerId, contextId },
     currentLtiContextOnly
   );
 
+  const bookTarget =
+    consumerId && contextId
+      ? {
+          OR: [
+            { shared: true },
+            {
+              authors: {
+                some: { user: { ltiConsumerId: { equals: ltiConsumerId } } },
+              },
+            },
+          ],
+        }
+	: { };
+
   let books;
   if (isDownloadPage) {
     // ダウンロードページであればltiResourceLinkに依存せずに取得
     books = await prisma.book.findMany({
       include: {
-        authors: { include: { user: true, role: true } },
+        authors: {
+          include: {
+            user: {
+              include: { activities: true },
+            },
+            role: true,
+          },
+        },
         ltiResourceLinks: { include: { context: true } },
         keywords: true,
         sections: {
@@ -128,6 +160,12 @@ async function findAllActivity(
               include: {
                 topic: {
                   include: {
+                    activities: {
+                      where: {
+                        ltiConsumerId: { equals: consumerId },
+                        ltiContextId: { equals: contextId },
+                      },
+                    },
                     authors: { include: { user: true, role: true } },
                     resource: true,
                   },
@@ -138,14 +176,7 @@ async function findAllActivity(
         },
       },
       where: {
-        OR: [
-          { shared: true },
-          {
-            authors: {
-              some: { user: { ltiConsumerId: { equals: ltiConsumerId } } },
-            },
-          },
-        ],
+        ...bookTarget,
       },
     });
   } else {

@@ -16,32 +16,39 @@ import { exists, mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface InlineResponse2003
+ * @interface InlineResponse20019
  */
-export interface InlineResponse2003 {
+export interface InlineResponse20019 {
     /**
      * 
      * @type {string}
-     * @memberof InlineResponse2003
+     * @memberof InlineResponse20019
      */
-    jwt?: string;
+    text: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof InlineResponse20019
+     */
+    value: number;
 }
 
-export function InlineResponse2003FromJSON(json: any): InlineResponse2003 {
-    return InlineResponse2003FromJSONTyped(json, false);
+export function InlineResponse20019FromJSON(json: any): InlineResponse20019 {
+    return InlineResponse20019FromJSONTyped(json, false);
 }
 
-export function InlineResponse2003FromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse2003 {
+export function InlineResponse20019FromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse20019 {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
-        'jwt': !exists(json, 'jwt') ? undefined : json['jwt'],
+        'text': json['text'],
+        'value': json['value'],
     };
 }
 
-export function InlineResponse2003ToJSON(value?: InlineResponse2003 | null): any {
+export function InlineResponse20019ToJSON(value?: InlineResponse20019 | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -50,7 +57,8 @@ export function InlineResponse2003ToJSON(value?: InlineResponse2003 | null): any
     }
     return {
         
-        'jwt': value.jwt,
+        'text': value.text,
+        'value': value.value,
     };
 }
 

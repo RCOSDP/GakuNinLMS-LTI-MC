@@ -6,14 +6,25 @@ const key = "/api/v2/activity";
 async function fetchActivityByConsumer({
   currentLtiContextOnly,
   ltiConsumerIds,
+  ltiContextIds,
 }: {
   key: typeof key;
   currentLtiContextOnly?: boolean | undefined;
   ltiConsumerIds?: Array<string> | undefined;
+  ltiContextIds?: Array<string> | undefined;
 }) {
+  const courses =
+    ltiConsumerIds?.map((consumerId, i) => [
+      consumerId,
+      ltiContextIds ? ltiContextIds[i] : "",
+    ]) ?? [];
   return Promise.all(
-    ltiConsumerIds?.map((ltiConsumerId) =>
-      api.apiV2ActivityGet({ currentLtiContextOnly, ltiConsumerId })
+    courses?.map(([ltiConsumerId, ltiContextId]) =>
+      api.apiV2ActivityGet({
+        currentLtiContextOnly,
+        ltiConsumerId,
+        ltiContextId,
+      })
     ) ?? []
   );
 }
@@ -25,10 +36,11 @@ async function fetchActivityByConsumer({
  */
 function useActivityByConsumer(
   currentLtiContextOnly?: boolean | undefined,
-  ltiConsumerIds?: Array<string> | undefined
+  ltiConsumerIds?: Array<string> | undefined,
+  ltiContextIds?: Array<string> | undefined
 ) {
   const { data, error } = useSWR(
-    { key, currentLtiContextOnly, ltiConsumerIds },
+    { key, currentLtiContextOnly, ltiConsumerIds, ltiContextIds },
     fetchActivityByConsumer
   );
   return { data, error };
