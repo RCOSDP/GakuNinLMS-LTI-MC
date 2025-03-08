@@ -16,32 +16,39 @@ import { exists, mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface InlineResponse20011
+ * @interface InlineResponse20016Book
  */
-export interface InlineResponse20011 {
+export interface InlineResponse20016Book {
     /**
      * 
-     * @type {Array<string>}
-     * @memberof InlineResponse20011
+     * @type {number}
+     * @memberof InlineResponse20016Book
      */
-    bookIds?: Array<string>;
+    id: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineResponse20016Book
+     */
+    name: string;
 }
 
-export function InlineResponse20011FromJSON(json: any): InlineResponse20011 {
-    return InlineResponse20011FromJSONTyped(json, false);
+export function InlineResponse20016BookFromJSON(json: any): InlineResponse20016Book {
+    return InlineResponse20016BookFromJSONTyped(json, false);
 }
 
-export function InlineResponse20011FromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse20011 {
+export function InlineResponse20016BookFromJSONTyped(json: any, ignoreDiscriminator: boolean): InlineResponse20016Book {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
-        'bookIds': !exists(json, 'bookIds') ? undefined : json['bookIds'],
+        'id': json['id'],
+        'name': json['name'],
     };
 }
 
-export function InlineResponse20011ToJSON(value?: InlineResponse20011 | null): any {
+export function InlineResponse20016BookToJSON(value?: InlineResponse20016Book | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -50,7 +57,8 @@ export function InlineResponse20011ToJSON(value?: InlineResponse20011 | null): a
     }
     return {
         
-        'bookIds': value.bookIds,
+        'id': value.id,
+        'name': value.name,
     };
 }
 
