@@ -138,9 +138,14 @@ async function findAllActivity(
         },
       },
       where: {
-        authors: {
-          some: { user: { ltiConsumerId: { equals: ltiConsumerId } } },
-        },
+        OR: [
+          { shared: true },
+          {
+            authors: {
+              some: { user: { ltiConsumerId: { equals: ltiConsumerId } } },
+            },
+          },
+        ],
       },
     });
   } else {
