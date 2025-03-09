@@ -32,7 +32,8 @@ async function fetchActivityByConsumer({
 /**
  * 学習活動を取得する
  * @param currentLtiContextOnly 学習活動の LTI Context ごとでの取得
- * @param ltiConsumerIds
+ * @param ltiConsumerIds 学習活動のConsumer IDリスト
+ * @param ltiContextIds 学習活動のContext IDリスト
  */
 function useActivityByConsumer(
   currentLtiContextOnly?: boolean | undefined,

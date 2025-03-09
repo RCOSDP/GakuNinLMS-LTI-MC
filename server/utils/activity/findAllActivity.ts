@@ -95,6 +95,8 @@ async function findLtiMembers(
  * LTI Context に紐づくブックに含まれる表示可能なトピックの学習活動の取得
  * @param session セッション
  * @param currentLtiContextOnly 現在の LTI Context ごとでの学習状況を取得するか否か (true: LTI Context ごと, それ以外: すべて)
+ * @param ltiConsumerId 学習活動のConsumer ID
+ * @param ltiContextId 学習活動のContext ID
  */
 async function findAllActivity(
   session: SessionSchema,
