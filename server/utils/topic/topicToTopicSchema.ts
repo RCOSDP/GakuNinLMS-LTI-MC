@@ -30,7 +30,7 @@ export type TopicWithResource = Prisma.TopicGetPayload<
  * @param options.relatedBooksMap トピックに関連するブックの集合
  */
 export function topicToTopicSchema(
-  { topicSection, ...topic }: TopicWithResource | undefined,
+  { topicSection, ...topic }: TopicWithResource,
   options?: {
     relatedBooksMap: Map<Book["id"], Book>;
   }

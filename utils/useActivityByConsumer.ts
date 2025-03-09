@@ -1,5 +1,4 @@
-import useSWRImmutable from 'swr/immutable';
-import useSWR from "swr";
+import useSWRImmutable from "swr/immutable";
 import { api } from "./api";
 
 const key = "/api/v2/activity";

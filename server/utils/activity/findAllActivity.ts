@@ -143,38 +143,7 @@ async function findAllActivity(
   if (isDownloadPage) {
     // ダウンロードページであればltiResourceLinkに依存せずに取得
     books = await prisma.book.findMany({
-      include: {
-        authors: {
-          include: {
-            user: {
-              include: { activities: true },
-            },
-            role: true,
-          },
-        },
-        ltiResourceLinks: { include: { context: true } },
-        keywords: true,
-        sections: {
-          include: {
-            topicSections: {
-              include: {
-                topic: {
-                  include: {
-                    activities: {
-                      where: {
-                        ltiConsumerId: { equals: consumerId },
-                        ltiContextId: { equals: contextId },
-                      },
-                    },
-                    authors: { include: { user: true, role: true } },
-                    resource: true,
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
+      ...bookIncludingTopicsArg,
       where: {
         ...bookTarget,
       },

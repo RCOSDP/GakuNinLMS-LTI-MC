@@ -19,7 +19,7 @@ export const method = {
         properties: {
           ltiContexts: {
             type: "array",
-            item: LtiContextSchema,
+            items: LtiContextSchema,
           },
         },
       },
