@@ -137,7 +137,7 @@ async function findAllActivity(
             },
           ],
         }
-	: { };
+      : {};
 
   let books;
   if (isDownloadPage) {
@@ -197,7 +197,11 @@ async function findAllActivity(
     isDownloadPage,
   });
 
-  return { learners: ltiMembers, courseBooks, bookActivities };
+  return {
+    learners: isDownloadPage ? [] : ltiMembers,
+    courseBooks: isDownloadPage ? [] : courseBooks,
+    bookActivities,
+  };
 }
 
 export default findAllActivity;
