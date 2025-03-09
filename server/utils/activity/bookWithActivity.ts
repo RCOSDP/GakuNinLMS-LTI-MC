@@ -21,6 +21,7 @@ export function toSchema({
   user,
   books,
   activities,
+  isDownloadPage = false,
 }: {
   user: Pick<UserSchema, "id">;
   books: Array<BookWithTopics>;
@@ -30,14 +31,18 @@ export function toSchema({
       "learner" | "topic" | "totalTimeMs" | "createdAt" | "updatedAt"
     >
   >;
+  isDownloadPage: boolean;
 }): {
   courseBooks: Array<CourseBookSchema>;
   bookActivities: Array<BookActivitySchema>;
 } {
   const courseBooks = books.flatMap((book) => {
-    const courseBook = bookToCourseBook(user, book);
+    const courseBook = isDownloadPage
+      ? getDisplayableBook(bookToBookSchema(book), () => true)
+      : bookToCourseBook(user, book);
     return courseBook ? [courseBook] : [];
   });
+
   const bookActivities = courseBooks.flatMap((book) =>
     book.sections.flatMap(({ topics }) =>
       topics.flatMap((topic) =>
