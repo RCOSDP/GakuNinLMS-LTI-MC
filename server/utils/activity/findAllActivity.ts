@@ -8,6 +8,7 @@ import prisma from "$server/utils/prisma";
 import { bookIncludingTopicsArg } from "$server/utils/book/bookToBookSchema";
 import { toSchema } from "./bookWithActivity";
 import { isAdministrator } from "$utils/session";
+import type { LtiContextSchema } from "$server/models/ltiContext";
 
 /** 受講者の取得 */
 async function findLtiMembers(
@@ -60,6 +61,7 @@ async function findLtiMembers(
     orderBy: { name: "asc" },
     select: {
       id: true,
+      ltiUserId: true,
       name: true,
       email: true,
       activities: {
@@ -161,10 +163,22 @@ async function findAllActivity(
 
   const activities = ltiMembers.flatMap(({ activities }) => activities);
 
+  const ltiContext = (await prisma.ltiContext.findUnique({
+    where: {
+      consumerId_id:
+        currentLtiContextOnly || isDownloadPage
+          ? { consumerId, id: contextId }
+          : { consumerId: "", id: "" },
+    },
+  })) as LtiContextSchema;
+
   const { courseBooks, bookActivities } = toSchema({
     user,
     books,
     activities,
+    learners: ltiMembers,
+    ltiConsumerId: consumerId,
+    ltiContext,
     isDownloadPage,
   });
 
