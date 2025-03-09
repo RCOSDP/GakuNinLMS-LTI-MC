@@ -28,7 +28,7 @@ export const hooks = {
   get: { auth: [authUser, authInstructor] },
 };
 
-export async function index( _ : FastifyRequest) {
+export async function index(_: FastifyRequest) {
   const books = await prisma.book.findMany({
     select: { id: true },
   });
