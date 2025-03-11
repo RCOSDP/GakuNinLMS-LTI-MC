@@ -14,10 +14,13 @@ async function fetchActivityByConsumer({
   ltiContextIds?: Array<string> | undefined;
 }) {
   const courses =
-    ltiConsumerIds?.map((consumerId, i) => [
-      consumerId,
-      ltiContextIds ? ltiContextIds[i] : "",
-    ]) ?? [];
+    ltiConsumerIds
+      ?.map((consumerId, i) => [
+        consumerId,
+        ltiContextIds ? ltiContextIds[i] : "",
+      ])
+      .filter(([consumer, context]) => consumer && context) ?? [];
+
   return Promise.all(
     courses?.map(([ltiConsumerId, ltiContextId]) =>
       api.apiV2ActivityGet({
