@@ -129,37 +129,12 @@ async function findAllActivity(
     currentLtiContextOnly
   );
 
-  const bookTarget =
-    consumerId && contextId
-      ? {
-          OR: [
-            { shared: true },
-            {
-              authors: {
-                some: { user: { ltiConsumerId: { equals: ltiConsumerId } } },
-              },
-            },
-          ],
-        }
-      : {};
-
-  let books;
-  if (isDownloadPage) {
-    // ダウンロードページであればltiResourceLinkに依存せずに取得
-    books = await prisma.book.findMany({
-      ...bookIncludingTopicsArg,
-      where: {
-        ...bookTarget,
-      },
-    });
-  } else {
-    const ltiResourceLinks = await prisma.ltiResourceLink.findMany({
-      where: { consumerId, contextId },
-      orderBy: { title: "asc" },
-      select: { book: bookIncludingTopicsArg },
-    });
-    books = ltiResourceLinks.map(({ book }) => book);
-  }
+  const ltiResourceLinks = await prisma.ltiResourceLink.findMany({
+    where: { consumerId, contextId },
+    orderBy: { title: "asc" },
+    select: { book: bookIncludingTopicsArg },
+  });
+  const books = ltiResourceLinks.map(({ book }) => book);
 
   const activities = ltiMembers.flatMap(({ activities }) => activities);
 
