@@ -31,9 +31,9 @@ export default function MoveDownloadPageDialog(props: Props) {
           キャンセル
         </Button>
         <Button
-          onClick={() => {
-            handleDownload();
-            onClose();
+          onClick={async () => {
+            await handleDownload();
+            await onClose();
           }}
           color="primary"
           size="small"
