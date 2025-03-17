@@ -13,24 +13,35 @@
  */
 
 import { exists, mapValues } from '../runtime';
+import {
+    InlineResponse20018Bookmark,
+    InlineResponse20018BookmarkFromJSON,
+    InlineResponse20018BookmarkFromJSONTyped,
+    InlineResponse20018BookmarkToJSON,
+    InlineResponse20018BookmarkTagMenu,
+    InlineResponse20018BookmarkTagMenuFromJSON,
+    InlineResponse20018BookmarkTagMenuFromJSONTyped,
+    InlineResponse20018BookmarkTagMenuToJSON,
+} from './';
+
 /**
- * 
+ * 成功時
  * @export
  * @interface InlineResponse20018
  */
 export interface InlineResponse20018 {
     /**
      * 
-     * @type {string}
+     * @type {Array<InlineResponse20018Bookmark>}
      * @memberof InlineResponse20018
      */
-    text: string;
+    bookmark: Array<InlineResponse20018Bookmark>;
     /**
      * 
-     * @type {number}
+     * @type {Array<InlineResponse20018BookmarkTagMenu>}
      * @memberof InlineResponse20018
      */
-    value: number;
+    bookmarkTagMenu?: Array<InlineResponse20018BookmarkTagMenu>;
 }
 
 export function InlineResponse20018FromJSON(json: any): InlineResponse20018 {
@@ -43,8 +54,8 @@ export function InlineResponse20018FromJSONTyped(json: any, ignoreDiscriminator:
     }
     return {
         
-        'text': json['text'],
-        'value': json['value'],
+        'bookmark': ((json['bookmark'] as Array<any>).map(InlineResponse20018BookmarkFromJSON)),
+        'bookmarkTagMenu': !exists(json, 'bookmarkTagMenu') ? undefined : ((json['bookmarkTagMenu'] as Array<any>).map(InlineResponse20018BookmarkTagMenuFromJSON)),
     };
 }
 
@@ -57,8 +68,8 @@ export function InlineResponse20018ToJSON(value?: InlineResponse20018 | null): a
     }
     return {
         
-        'text': value.text,
-        'value': value.value,
+        'bookmark': ((value.bookmark as Array<any>).map(InlineResponse20018BookmarkToJSON)),
+        'bookmarkTagMenu': value.bookmarkTagMenu === undefined ? undefined : ((value.bookmarkTagMenu as Array<any>).map(InlineResponse20018BookmarkTagMenuToJSON)),
     };
 }
 
