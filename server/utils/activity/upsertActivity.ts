@@ -238,6 +238,7 @@ function countTimeRange(
           log.endMs < range.endMs &&
           log.endMs - range.startMs > ACTIVITY_COUNT_INTERVAL_THRESHOLD_MS)
       ) {
+        range.count ??= 0;
         range.count += 1;
       }
     });

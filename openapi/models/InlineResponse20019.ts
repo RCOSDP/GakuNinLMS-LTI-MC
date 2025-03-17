@@ -14,30 +14,24 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    InlineResponse20019ActivityTimeRangeCounts,
-    InlineResponse20019ActivityTimeRangeCountsFromJSON,
-    InlineResponse20019ActivityTimeRangeCountsFromJSONTyped,
-    InlineResponse20019ActivityTimeRangeCountsToJSON,
+    InlineResponse20018BookmarkTagMenu,
+    InlineResponse20018BookmarkTagMenuFromJSON,
+    InlineResponse20018BookmarkTagMenuFromJSONTyped,
+    InlineResponse20018BookmarkTagMenuToJSON,
 } from './';
 
 /**
- * 
+ * 成功時
  * @export
  * @interface InlineResponse20019
  */
 export interface InlineResponse20019 {
     /**
      * 
-     * @type {number}
+     * @type {Array<InlineResponse20018BookmarkTagMenu>}
      * @memberof InlineResponse20019
      */
-    activityId?: number;
-    /**
-     * 
-     * @type {Array<InlineResponse20019ActivityTimeRangeCounts>}
-     * @memberof InlineResponse20019
-     */
-    activityTimeRangeCounts: Array<InlineResponse20019ActivityTimeRangeCounts>;
+    bookmarkTagMenu: Array<InlineResponse20018BookmarkTagMenu>;
 }
 
 export function InlineResponse20019FromJSON(json: any): InlineResponse20019 {
@@ -50,8 +44,7 @@ export function InlineResponse20019FromJSONTyped(json: any, ignoreDiscriminator:
     }
     return {
         
-        'activityId': !exists(json, 'activityId') ? undefined : json['activityId'],
-        'activityTimeRangeCounts': ((json['activityTimeRangeCounts'] as Array<any>).map(InlineResponse20019ActivityTimeRangeCountsFromJSON)),
+        'bookmarkTagMenu': ((json['bookmarkTagMenu'] as Array<any>).map(InlineResponse20018BookmarkTagMenuFromJSON)),
     };
 }
 
@@ -64,8 +57,7 @@ export function InlineResponse20019ToJSON(value?: InlineResponse20019 | null): a
     }
     return {
         
-        'activityId': value.activityId,
-        'activityTimeRangeCounts': ((value.activityTimeRangeCounts as Array<any>).map(InlineResponse20019ActivityTimeRangeCountsToJSON)),
+        'bookmarkTagMenu': ((value.bookmarkTagMenu as Array<any>).map(InlineResponse20018BookmarkTagMenuToJSON)),
     };
 }
 

@@ -13,13 +13,6 @@
  */
 
 import { exists, mapValues } from '../runtime';
-import {
-    InlineResponse20020ActivityRewatchRate,
-    InlineResponse20020ActivityRewatchRateFromJSON,
-    InlineResponse20020ActivityRewatchRateFromJSONTyped,
-    InlineResponse20020ActivityRewatchRateToJSON,
-} from './';
-
 /**
  * 
  * @export
@@ -28,10 +21,16 @@ import {
 export interface InlineResponse20020 {
     /**
      * 
-     * @type {Array<InlineResponse20020ActivityRewatchRate>}
+     * @type {string}
      * @memberof InlineResponse20020
      */
-    activityRewatchRate: Array<InlineResponse20020ActivityRewatchRate>;
+    text: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof InlineResponse20020
+     */
+    value: number;
 }
 
 export function InlineResponse20020FromJSON(json: any): InlineResponse20020 {
@@ -44,7 +43,8 @@ export function InlineResponse20020FromJSONTyped(json: any, ignoreDiscriminator:
     }
     return {
         
-        'activityRewatchRate': ((json['activityRewatchRate'] as Array<any>).map(InlineResponse20020ActivityRewatchRateFromJSON)),
+        'text': json['text'],
+        'value': json['value'],
     };
 }
 
@@ -57,7 +57,8 @@ export function InlineResponse20020ToJSON(value?: InlineResponse20020 | null): a
     }
     return {
         
-        'activityRewatchRate': ((value.activityRewatchRate as Array<any>).map(InlineResponse20020ActivityRewatchRateToJSON)),
+        'text': value.text,
+        'value': value.value,
     };
 }
 
