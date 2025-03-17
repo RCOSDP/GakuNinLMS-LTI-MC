@@ -40,7 +40,7 @@ async function download(
         a,
         rewatchRate?.activityRewatchRate.find(
           (r) => r.learnerId === a.learner.id && r.topicId === a.topic.id
-        ) ?? undefined,
+        ) ?? 0,
         session
       )
     );

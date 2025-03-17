@@ -84,7 +84,7 @@ export function getLocaleEntries(
       -3 // 小数点第4位で四捨五入
     ),
     status: learningStatusLabel[activity.status],
-    rewatchRate: rewatchRate?.rewatchRate ?? undefined,
+    rewatchRate: rewatchRate?.rewatchRate ?? 0,
     createdAt: activity.createdAt?.toLocaleString(),
     updatedAt: activity.updatedAt?.toLocaleString(),
   };
