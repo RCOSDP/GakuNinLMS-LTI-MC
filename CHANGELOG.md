@@ -7,6 +7,11 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 - Deep Linking support from Blackboard (OU)
+- Bulk learning analytics export for administrators (NII)
+
+### Changed
+
+- Enhanced learning analytics export with additional LMS identifiers (NII)
 
 ## [2024]
 
