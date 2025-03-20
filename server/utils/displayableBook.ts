@@ -22,10 +22,14 @@ export function getDisplayableBook<
   book: Book | undefined,
   isContentEditable: IsContentEditable | undefined,
   ltiResourceLink?: Pick<LtiResourceLinkSchema, "bookId" | "creatorId">,
-  publicBook?: PublicBookSchema
+  publicBook?: PublicBookSchema,
+  isInstructor?: boolean | false
 ): Book | undefined {
   if (book === undefined) return;
-  if (!isDisplayableBook(book, isContentEditable, ltiResourceLink, publicBook))
+  if (
+    !isInstructor &&
+    !isDisplayableBook(book, isContentEditable, ltiResourceLink, publicBook)
+  )
     return;
 
   const sections = book.sections.flatMap((section) => {
@@ -34,7 +38,8 @@ export function getDisplayableBook<
         topic.shared ||
         contentBy(topic, { id: ltiResourceLink?.creatorId }) ||
         (publicBook && contentBy(topic, { id: publicBook.userId })) ||
-        isContentEditable?.(topic)
+        isContentEditable?.(topic) ||
+        isInstructor
     );
     return topics.length > 0 ? [{ ...section, topics }] : [];
   });

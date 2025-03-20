@@ -1,4 +1,4 @@
-import type { UserSchema } from "$server/models/user";
+import type { SessionSchema } from "$server/models/session";
 import type { BookActivitySchema } from "$server/models/bookActivity";
 import type { LearnerSchema } from "$server/models/learner";
 import type { CourseBookSchema } from "$server/models/courseBook";
@@ -8,11 +8,16 @@ import { bookToBookSchema } from "$server/utils/book/bookToBookSchema";
 import { getDisplayableBook } from "$server/utils/displayableBook";
 import contentBy from "$server/utils/contentBy";
 import isCompleted from "./isCompleted";
+import { isInstructor } from "$server/utils/session";
 import type { LtiContextSchema } from "$server/models/ltiContext";
 
-function bookToCourseBook(user: Pick<UserSchema, "id">, book: BookWithTopics) {
-  const courseBook = getDisplayableBook(bookToBookSchema(book), (content) =>
-    contentBy(content, user)
+function bookToCourseBook(session: SessionSchema, book: BookWithTopics) {
+  const courseBook = getDisplayableBook(
+    bookToBookSchema(book),
+    (content) => contentBy(content, session.user),
+    undefined,
+    undefined,
+    isInstructor(session)
   );
 
   return courseBook;
@@ -20,7 +25,7 @@ function bookToCourseBook(user: Pick<UserSchema, "id">, book: BookWithTopics) {
 
 /** BookActivitySchema への変換 */
 export function toSchema({
-  user,
+  session,
   books,
   activities,
   learners,
@@ -28,7 +33,7 @@ export function toSchema({
   ltiContext,
   isDownloadPage = false,
 }: {
-  user: Pick<UserSchema, "id">;
+  session: SessionSchema;
   books: Array<BookWithTopics>;
   activities: Array<
     Pick<
@@ -46,8 +51,14 @@ export function toSchema({
 } {
   const courseBooks = books.flatMap((book) => {
     const courseBook = isDownloadPage
-      ? getDisplayableBook(bookToBookSchema(book), () => true)
-      : bookToCourseBook(user, book);
+      ? getDisplayableBook(
+          bookToBookSchema(book),
+          () => true,
+          undefined,
+          undefined,
+          isInstructor(session)
+        )
+      : bookToCourseBook(session, book);
     return courseBook ? [courseBook] : [];
   });
 
