@@ -24,15 +24,27 @@ async function download(
     ? await fetchRewatchRate({ currentLtiContextOnly })
     : undefined;
 
-  const decoratedData = data.map((a) =>
-    getLocaleEntries(
-      a,
-      rewatchRate?.activityRewatchRate.find(
-        (r) => r.learnerId === a.learner.id && r.topicId === a.topic.id
-      ) ?? undefined,
-      session
+  const decoratedData = data
+    .filter(
+      (obj, index, self) =>
+        index ===
+        self.findIndex(
+          (t) =>
+            t.ltiContext.id === obj.ltiContext.id &&
+            t.learner.id === obj.learner.id &&
+            t.book.id === obj.book.id &&
+            t.topic.id === obj.topic.id
+        )
     )
-  );
+    .map((a) =>
+      getLocaleEntries(
+        a,
+        rewatchRate?.activityRewatchRate.find(
+          (r) => r.learnerId === a.learner.id && r.topicId === a.topic.id
+        ) ?? undefined,
+        session
+      )
+    );
   csv.download(decoratedData, filename);
 }
 
