@@ -105,8 +105,7 @@ docker compose down
 | `ACTIVITY_RATE_MIN`                  | 学習活動の完了とみなす最小の視聴時間の割合 (デフォルト:`0.9`)                                                                                                      |
 | `VTT_ACCESS_TOKEN_EXPIRES_IN`        | 字幕を取得する際のアクセストークンの有効期限 (秒) (デフォルト: `5400`)                                                                                             |
 | `ACTIVITY_COUNT_INTERVAL`            | 実視聴回数を記録する際の区間の長さ (秒) (デフォルト:`1`)                                                                                                           |
-| `ACTIVITY_REWATCH_THRESHOLD`         | 繰り返し視聴したと判定する閾値 (回) (デフォルト:`2`)                                                                                                           |
-
+| `ACTIVITY_REWATCH_THRESHOLD`         | 繰り返し視聴したと判定する閾値 (回) (デフォルト:`2`)                                                                                                               |
 
 [database_connection_url]: https://www.prisma.io/docs/reference/database-connectors/connection-urls/
 
