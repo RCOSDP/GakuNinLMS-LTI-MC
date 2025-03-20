@@ -51,7 +51,13 @@ export function toSchema({
 } {
   const courseBooks = books.flatMap((book) => {
     const courseBook = isDownloadPage
-      ? getDisplayableBook(bookToBookSchema(book), () => true)
+      ? getDisplayableBook(
+          bookToBookSchema(book),
+          () => true,
+          undefined,
+          undefined,
+          isInstructor(session)
+        )
       : bookToCourseBook(session, book);
     return courseBook ? [courseBook] : [];
   });
