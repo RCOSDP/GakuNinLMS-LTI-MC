@@ -23,10 +23,13 @@ export function getDisplayableBook<
   isContentEditable: IsContentEditable | undefined,
   ltiResourceLink?: Pick<LtiResourceLinkSchema, "bookId" | "creatorId">,
   publicBook?: PublicBookSchema,
-  isInstructor?: boolean | false,
+  isInstructor?: boolean | false
 ): Book | undefined {
   if (book === undefined) return;
-  if (!isInstructor && !isDisplayableBook(book, isContentEditable, ltiResourceLink, publicBook))
+  if (
+    !isInstructor &&
+    !isDisplayableBook(book, isContentEditable, ltiResourceLink, publicBook)
+  )
     return;
 
   const sections = book.sections.flatMap((section) => {

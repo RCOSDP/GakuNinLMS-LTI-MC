@@ -265,15 +265,17 @@ export default function Dashboard(props: Props) {
           <GetAppOutlinedIcon fontSize="small" />
           視聴分析データをダウンロード
         </Button>
-        <Button
-          onClick={handleBookmarkStatsDownloadClick}
-          color="secondary"
-          variant="contained"
-          size="small"
-        >
-          <GetAppOutlinedIcon fontSize="small" />
-          ブックマークの統計情報をダウンロード
-        </Button>
+        {NEXT_PUBLIC_ENABLE_TAG_AND_BOOKMARK && (
+          <Button
+            onClick={handleBookmarkStatsDownloadClick}
+            color="secondary"
+            variant="contained"
+            size="small"
+          >
+            <GetAppOutlinedIcon fontSize="small" />
+            ブックマークの統計情報をダウンロード
+          </Button>
+        )}
         <Button
           onClick={handleMembershipClick(memberships?.members || [])}
           color="primary"

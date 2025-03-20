@@ -14,10 +14,10 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    InlineResponse20016BookmarkTagMenu,
-    InlineResponse20016BookmarkTagMenuFromJSON,
-    InlineResponse20016BookmarkTagMenuFromJSONTyped,
-    InlineResponse20016BookmarkTagMenuToJSON,
+    InlineResponse20017Stats,
+    InlineResponse20017StatsFromJSON,
+    InlineResponse20017StatsFromJSONTyped,
+    InlineResponse20017StatsToJSON,
 } from './';
 
 /**
@@ -28,10 +28,10 @@ import {
 export interface InlineResponse20017 {
     /**
      * 
-     * @type {Array<InlineResponse20016BookmarkTagMenu>}
+     * @type {Array<InlineResponse20017Stats>}
      * @memberof InlineResponse20017
      */
-    bookmarkTagMenu: Array<InlineResponse20016BookmarkTagMenu>;
+    stats?: Array<InlineResponse20017Stats>;
 }
 
 export function InlineResponse20017FromJSON(json: any): InlineResponse20017 {
@@ -44,7 +44,7 @@ export function InlineResponse20017FromJSONTyped(json: any, ignoreDiscriminator:
     }
     return {
         
-        'bookmarkTagMenu': ((json['bookmarkTagMenu'] as Array<any>).map(InlineResponse20016BookmarkTagMenuFromJSON)),
+        'stats': !exists(json, 'stats') ? undefined : ((json['stats'] as Array<any>).map(InlineResponse20017StatsFromJSON)),
     };
 }
 
@@ -57,7 +57,7 @@ export function InlineResponse20017ToJSON(value?: InlineResponse20017 | null): a
     }
     return {
         
-        'bookmarkTagMenu': ((value.bookmarkTagMenu as Array<any>).map(InlineResponse20016BookmarkTagMenuToJSON)),
+        'stats': value.stats === undefined ? undefined : ((value.stats as Array<any>).map(InlineResponse20017StatsToJSON)),
     };
 }
 

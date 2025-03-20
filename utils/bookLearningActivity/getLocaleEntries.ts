@@ -9,11 +9,13 @@ import { round } from "$server/utils/math";
 import { NEXT_PUBLIC_ENABLE_TOPIC_VIEW_RECORD } from "$utils/env";
 
 export const keyOrder = [
+  "learner.ltiConsumerId",
+  "ltiContext.id",
+  "ltiContext.title",
+  "learner.ltiUserId",
   "learner.id",
   "learner.name",
   "learner.email",
-  "ltiContext.label",
-  "ltiContext.title",
   "book.id",
   "book.name",
   "topic.id",
@@ -28,11 +30,13 @@ export const keyOrder = [
 ] as const;
 
 export const label: Readonly<{ [key in (typeof keyOrder)[number]]: string }> = {
+  "learner.ltiConsumerId": "LMSクライアントID",
+  "ltiContext.id": "LMSコースID",
+  "ltiContext.title": "LMSコース名",
+  "learner.ltiUserId": "LMSユーザID",
   "learner.id": "ユーザID",
   "learner.name": "ユーザ名",
   "learner.email": "メールアドレス",
-  "ltiContext.label": "コースID",
-  "ltiContext.title": "コース名",
   "book.id": "ブックID",
   "book.name": "ブック名",
   "topic.id": "トピックID",
@@ -80,7 +84,9 @@ export function getLocaleEntries(
       -3 // 小数点第4位で四捨五入
     ),
     status: learningStatusLabel[activity.status],
-    rewatchRate: rewatchRate?.rewatchRate ?? undefined,
+    rewatchRate: NEXT_PUBLIC_ENABLE_TOPIC_VIEW_RECORD
+      ? rewatchRate?.rewatchRate ?? 0
+      : undefined,
     createdAt: activity.createdAt?.toLocaleString(),
     updatedAt: activity.updatedAt?.toLocaleString(),
   };
