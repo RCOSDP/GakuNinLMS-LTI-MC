@@ -27,6 +27,8 @@ import { useRouter } from "next/router";
 import { pagesPath } from "$utils/$path";
 import MoveDownloadPageDialog from "$organisms/MoveDownloadPageDialog";
 
+import { NEXT_PUBLIC_ENABLE_TAG_AND_BOOKMARK } from "$utils/env";
+
 const useStyles = makeStyles((theme) => ({
   inner: {
     display: "flex",
@@ -98,9 +100,11 @@ function AppBar(props: Props, ref: Ref<HTMLDivElement>) {
     onDownloadClick,
     ...others
   } = props;
+
   const isDeepLink =
     !!session.ltiDlSettings?.deep_link_return_url &&
     !NEXT_PUBLIC_NO_DEEP_LINK_UI;
+
   const appBarClasses = useAppBarStyles();
   const classes = useStyles();
   const [open, setOpen] = useState(false);
@@ -133,6 +137,14 @@ function AppBar(props: Props, ref: Ref<HTMLDivElement>) {
     session?.systemSettings?.zoomImportEnabled &&
       userSettings?.zoomImportEnabled == undefined
   );
+
+  if (
+    !NEXT_PUBLIC_ENABLE_TAG_AND_BOOKMARK &&
+    !isAdministrator(session) &&
+    !isInstructor
+  ) {
+    return <></>;
+  }
 
   const actionZoomImportNotice = (
     <>
@@ -213,12 +225,14 @@ function AppBar(props: Props, ref: Ref<HTMLDivElement>) {
                   onClick={onDashboardClick}
                 />
               )}
-              <AppBarNavButton
-                color="inherit"
-                icon={<StyleIcon />}
-                label="タグ管理"
-                onClick={onBookmarksClick}
-              />
+              {NEXT_PUBLIC_ENABLE_TAG_AND_BOOKMARK && (
+                <AppBarNavButton
+                  color="inherit"
+                  icon={<StyleIcon />}
+                  label="タグ管理"
+                  onClick={onBookmarksClick}
+                />
+              )}
               {onDownloadClick && isAdministrator(session) && (
                 <>
                   <AppBarNavButton
