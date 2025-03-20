@@ -229,12 +229,12 @@ function padZeroTimeRangeCount(
 }
 
 export default function ActivityRewatchGraph(props: Props) {
-  if (!NEXT_PUBLIC_ENABLE_TOPIC_VIEW_RECORD) {
-    return <></>;
-  }
   const { scope, topicId, topicTimeRequired, topicStartTime, topicStopTime } =
     props;
   const { data: counts } = useActivityTimeRangeCountByTopic(topicId, scope);
+  if (!NEXT_PUBLIC_ENABLE_TOPIC_VIEW_RECORD) {
+    return <></>;
+  }
 
   const plot: PlotSchema[] =
     padZeroTimeRangeCount(
@@ -247,7 +247,9 @@ export default function ActivityRewatchGraph(props: Props) {
       .filter((c) => c.count <= NEXT_PUBLIC_REWATCH_GRAPH_COUNT_THRESHOLD) ||
     [];
 
-  const plotEachStartMs = Object.groupBy(plot, (p: PlotSchema) => p.startMs); // ES2024
+  // ES2024: https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Object/groupBy
+  // eslint-disable-next-line
+  const plotEachStartMs = Object.groupBy(plot, (p: PlotSchema) => p.startMs);
   const average: PlotSchema[] = [];
   for (const key of Object.keys(plotEachStartMs)) {
     const startMs = key;

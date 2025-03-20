@@ -30,6 +30,8 @@ async function download(
         index ===
         self.findIndex(
           (t) =>
+            t.ltiContext &&
+            obj.ltiContext &&
             t.ltiContext.id === obj.ltiContext.id &&
             t.learner.id === obj.learner.id &&
             t.book.id === obj.book.id &&
