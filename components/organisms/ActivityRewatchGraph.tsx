@@ -229,12 +229,12 @@ function padZeroTimeRangeCount(
 }
 
 export default function ActivityRewatchGraph(props: Props) {
-  if (!NEXT_PUBLIC_ENABLE_TOPIC_VIEW_RECORD) {
-    return <></>;
-  }
   const { scope, topicId, topicTimeRequired, topicStartTime, topicStopTime } =
     props;
   const { data: counts } = useActivityTimeRangeCountByTopic(topicId, scope);
+  if (!NEXT_PUBLIC_ENABLE_TOPIC_VIEW_RECORD) {
+    return <></>;
+  }
 
   const plot: PlotSchema[] =
     padZeroTimeRangeCount(
