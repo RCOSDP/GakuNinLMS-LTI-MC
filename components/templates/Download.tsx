@@ -40,7 +40,8 @@ export default function Download(props: Props) {
     void downloadBookActivity(
       bookActivities,
       "全コース視聴分析データ.csv",
-      session
+      session,
+      true // ダウンロードページでは「このコースでの〜」相当のデータを得る
     );
     void send("admin-download", session, "book-activity");
   }, [bookActivities, session]);
