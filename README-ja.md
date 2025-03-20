@@ -1,4 +1,4 @@
-# CHiBi-CHiLO
+# LTI-MC
 
 [English](README-en.md) | 日本語
 
