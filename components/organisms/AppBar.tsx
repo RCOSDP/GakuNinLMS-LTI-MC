@@ -101,14 +101,6 @@ function AppBar(props: Props, ref: Ref<HTMLDivElement>) {
     ...others
   } = props;
 
-  if (
-    !NEXT_PUBLIC_ENABLE_TAG_AND_BOOKMARK &&
-    !isAdministrator(session) &&
-    !isInstructor
-  ) {
-    return <></>;
-  }
-
   const isDeepLink =
     !!session.ltiDlSettings?.deep_link_return_url &&
     !NEXT_PUBLIC_NO_DEEP_LINK_UI;
@@ -145,6 +137,14 @@ function AppBar(props: Props, ref: Ref<HTMLDivElement>) {
     session?.systemSettings?.zoomImportEnabled &&
       userSettings?.zoomImportEnabled == undefined
   );
+
+  if (
+    !NEXT_PUBLIC_ENABLE_TAG_AND_BOOKMARK &&
+    !isAdministrator(session) &&
+    !isInstructor
+  ) {
+    return <></>;
+  }
 
   const actionZoomImportNotice = (
     <>
@@ -231,7 +231,8 @@ function AppBar(props: Props, ref: Ref<HTMLDivElement>) {
                   icon={<StyleIcon />}
                   label="タグ管理"
                   onClick={onBookmarksClick}
-                />)}
+                />
+              )}
               {onDownloadClick && isAdministrator(session) && (
                 <>
                   <AppBarNavButton

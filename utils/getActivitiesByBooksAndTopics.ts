@@ -45,7 +45,6 @@ function getActivitiesByBooksAndTopics({
                 t.topic.id === obj.topic.id
             )
         );
-
       const averageCompleteRate = round(
         activities
           .map(
