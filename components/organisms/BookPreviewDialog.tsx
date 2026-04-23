@@ -1,5 +1,5 @@
 import type { ComponentProps } from "react";
-import { useCallback, forwardRef } from "react";
+import { useCallback, forwardRef, useEffect } from "react";
 import Dialog from "@mui/material/Dialog";
 import CloseIcon from "@mui/icons-material/Close";
 import makeStyles from "@mui/styles/makeStyles";
@@ -47,6 +47,7 @@ type Props = {
       | "onTopicEnded"
       | "onItemClick"
       | "considerAppBar"
+      | "onContentLinkClick"
     >
   ): React.ReactNode;
 };
@@ -57,6 +58,9 @@ export default function BookPreviewDialog(props: Props) {
   const classes = useStyles();
   const { itemIndex, nextItemIndex, itemExists, updateItemIndex } =
     useBookAtom(book);
+  useEffect(() => {
+    updateItemIndex([0, 0]);
+  }, [book, updateItemIndex]);
   const { session } = useSessionAtom();
   const handleTopicNext = useCallback(
     (index: ItemIndex = nextItemIndex) => {
