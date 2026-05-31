@@ -43,10 +43,8 @@ import updateBookTimeRequired from "../topic/updateBookTimeRequired";
 import type { SessionSchema } from "$server/models/session";
 import topicExists from "../topic/topicExists";
 import { isUsersOrAdmin } from "../session";
-import { importLog } from "./importLog";
 
 const ZIP_ENTRY_EXTRACT_TIMEOUT_MS = 10 * 60 * 1000;
-const ZIP_STREAM_HEARTBEAT_MS = 2_000;
 
 const execFileAsync = promisify(execFile);
 
@@ -97,163 +95,42 @@ async function tryExtractZipWithSystemUnzip(
   destDir: string
 ): Promise<boolean> {
   try {
-    const startedAtMs = getPerfNowMs();
     await execFileAsync("unzip", ["-qq", "-o", zipPath, "-d", destDir]);
-    importLog("parseJsonFromFile:systemUnzip:done", {
-      elapsedMs: getPerfNowMs() - startedAtMs,
-      ...getMemoryUsageMB(),
-    });
     return true;
-  } catch (err) {
-    const code =
-      err && typeof err === "object" && "code" in err
-        ? String((err as NodeJS.ErrnoException).code)
-        : undefined;
-    importLog("parseJsonFromFile:systemUnzip:skip", {
-      message: err instanceof Error ? err.message : String(err),
-      code,
-    });
+  } catch {
     return false;
   }
-}
-
-function getPerfNowMs(): number {
-  return Number(process.hrtime.bigint() / 1_000_000n);
-}
-
-function bytesToMB(bytes: number): number {
-  return Number((bytes / (1024 * 1024)).toFixed(2));
-}
-
-function safeThroughputMBps(bytes: number, elapsedMs: number): number {
-  if (elapsedMs <= 0) return 0;
-  return Number((((bytes / 1024 / 1024) * 1000) / elapsedMs).toFixed(2));
-}
-
-function getMemoryUsageMB() {
-  const m = process.memoryUsage();
-  return {
-    rssMB: bytesToMB(m.rss),
-    heapUsedMB: bytesToMB(m.heapUsed),
-    heapTotalMB: bytesToMB(m.heapTotal),
-    externalMB: bytesToMB(m.external),
-    arrayBuffersMB: bytesToMB(m.arrayBuffers),
-  };
-}
-
-function getReadStreamDiagnostics(readStream: Readable) {
-  return {
-    readableFlowing: readStream.readableFlowing,
-    readableLength: readStream.readableLength,
-    readableEnded: readStream.readableEnded,
-    destroyed: readStream.destroyed,
-    readable: readStream.readable,
-  };
 }
 
 async function writeZipEntryStream(
   readStream: Readable,
   filename: string,
-  uncompressedSize: number,
-  fileName?: string
-): Promise<number> {
+  uncompressedSize: number
+): Promise<void> {
   if (uncompressedSize <= 0) {
     readStream.resume();
     const data = await buffer(readStream);
     await fs.promises.writeFile(filename, data);
-    return data.length;
+    return;
   }
 
-  const startedAtMs = getPerfNowMs();
-  let heartbeatCount = 0;
   const { stream: limiter, state: limiterState } =
     createZipEntryByteLimitTransform(uncompressedSize);
   const writeStream = fs.createWriteStream(filename);
 
-  importLog("parseJsonFromFile:entryExtract:streamAttached", {
-    fileName,
-    expectedBytes: uncompressedSize,
-    ...getReadStreamDiagnostics(readStream),
-    ...getMemoryUsageMB(),
-  });
-
-  const heartbeatId = setInterval(() => {
-    const elapsedMs = getPerfNowMs() - startedAtMs;
-    heartbeatCount += 1;
-    importLog("parseJsonFromFile:entryExtract:streamHeartbeat", {
-      fileName,
-      heartbeatCount,
-      writtenBytes: limiterState.written,
-      expectedBytes: uncompressedSize,
-      draining: limiterState.draining,
-      elapsedMs,
-      ...getReadStreamDiagnostics(readStream),
-      ...getMemoryUsageMB(),
-    });
-  }, ZIP_STREAM_HEARTBEAT_MS);
-
-  try {
-    await pipeline(readStream, limiter, writeStream);
-    clearInterval(heartbeatId);
-    const elapsedMs = getPerfNowMs() - startedAtMs;
-    if (limiterState.written < uncompressedSize) {
-      throw new Error(
-        `zip解凍が不完全です (${limiterState.written}/${uncompressedSize} bytes)`
-      );
-    }
-    importLog("parseJsonFromFile:entryExtract:streamDone", {
-      fileName,
-      reason: "pipelineComplete",
-      writtenBytes: limiterState.written,
-      expectedBytes: uncompressedSize,
-      elapsedMs,
-      throughputMBps: safeThroughputMBps(limiterState.written, elapsedMs),
-      ...getReadStreamDiagnostics(readStream),
-      ...getMemoryUsageMB(),
-    });
-    return limiterState.written;
-  } catch (err) {
-    clearInterval(heartbeatId);
-    const elapsedMs = getPerfNowMs() - startedAtMs;
-    importLog("parseJsonFromFile:entryExtract:streamError", {
-      fileName,
-      reason: "pipelineError",
-      message: err instanceof Error ? err.message : String(err),
-      writtenBytes: limiterState.written,
-      expectedBytes: uncompressedSize,
-      elapsedMs,
-      ...getReadStreamDiagnostics(readStream),
-      ...getMemoryUsageMB(),
-    });
-    throw err;
+  await pipeline(readStream, limiter, writeStream);
+  if (limiterState.written < uncompressedSize) {
+    throw new Error(
+      `zip解凍が不完全です (${limiterState.written}/${uncompressedSize} bytes)`
+    );
   }
 }
 
-function collectJsonFromUnzippedDir(
-  ctx: ImportFileParseContext,
-  parseStartedAtMs: number,
-  step: string
-) {
+function collectJsonFromUnzippedDir(ctx: ImportFileParseContext) {
   ctx.unzippedFiles = recursive(ctx.tmpdir);
   const jsonfiles: string[] = ctx.unzippedFiles.filter((filename) =>
     filename.toLowerCase().endsWith(".json")
   );
-  const totalUnzippedBytes = ctx.unzippedFiles.reduce((total, file) => {
-    try {
-      return total + fs.statSync(file).size;
-    } catch {
-      return total;
-    }
-  }, 0);
-  importLog("parseJsonFromFile:unzipped", {
-    step,
-    fileCount: ctx.unzippedFiles.length,
-    jsonFileCount: jsonfiles.length,
-    totalUnzippedBytes,
-    totalUnzippedMB: bytesToMB(totalUnzippedBytes),
-    elapsedMs: getPerfNowMs() - parseStartedAtMs,
-    ...getMemoryUsageMB(),
-  });
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const jsons: any[] = [];
   if (jsonfiles.length) {
@@ -268,13 +145,6 @@ function collectJsonFromUnzippedDir(
   } else {
     ctx.errors.push("jsonファイルがありません。");
   }
-  importLog("parseJsonFromFile:collected", {
-    step,
-    jsonFileCount: jsonfiles.length,
-    errorCount: ctx.errors.length,
-    elapsedMs: getPerfNowMs() - parseStartedAtMs,
-    ...getMemoryUsageMB(),
-  });
   if (ctx.errors.length) return {};
   return jsons;
 }
@@ -288,23 +158,12 @@ async function extractZipEntry(
   readNextEntry: () => void
 ) {
   try {
-    const extractStartedAtMs = getPerfNowMs();
     if (!fs.existsSync(dirname)) {
       fs.mkdirSync(dirname, { recursive: true });
     }
-    importLog("parseJsonFromFile:entryExtract:start", {
-      fileName: entry.fileName,
-      uncompressedSize: entry.uncompressedSize,
-      ...getMemoryUsageMB(),
-    });
     let timeoutId: ReturnType<typeof setTimeout> | undefined;
-    const bytesWritten = await Promise.race([
-      writeZipEntryStream(
-        readStream,
-        filename,
-        entry.uncompressedSize,
-        entry.fileName
-      ),
+    await Promise.race([
+      writeZipEntryStream(readStream, filename, entry.uncompressedSize),
       new Promise<never>((_, reject) => {
         timeoutId = setTimeout(() => {
           readStream.destroy();
@@ -314,53 +173,20 @@ async function extractZipEntry(
     ]).finally(() => {
       if (timeoutId !== undefined) clearTimeout(timeoutId);
     });
-    const elapsedMs = getPerfNowMs() - extractStartedAtMs;
-    importLog("parseJsonFromFile:entryExtract:done", {
-      fileName: entry.fileName,
-      bytesWritten,
-      elapsedMs,
-      throughputMBps: safeThroughputMBps(bytesWritten, elapsedMs),
-      ...getMemoryUsageMB(),
-    });
   } catch (err) {
     ctx.errors.push(`zip解凍中に例外が発生しました。\n${err}`);
-    importLog("parseJsonFromFile:entryExtract:error", {
-      fileName: entry.fileName,
-      message: err instanceof Error ? err.message : String(err),
-      ...getMemoryUsageMB(),
-    });
     readStream.destroy();
   } finally {
-    importLog("parseJsonFromFile:readEntry:next", {
-      fileName: entry.fileName,
-      streamDestroyed: readStream.destroyed,
-      streamReadableEnded: readStream.readableEnded,
-    });
     readNextEntry();
   }
 }
 
-function parseJsonFromZipWithYauzl(
-  ctx: ImportFileParseContext,
-  file: string,
-  parseStartedAtMs: number
-) {
+function parseJsonFromZipWithYauzl(ctx: ImportFileParseContext, file: string) {
   return new Promise((resolve) => {
-    let entryCount = 0;
     let resolved = false;
-    const finish = (step: string, value: unknown) => {
-      if (resolved) {
-        importLog("parseJsonFromFile:resolve:duplicate", { step });
-        return;
-      }
+    const finish = (value: unknown) => {
+      if (resolved) return;
       resolved = true;
-      importLog("parseJsonFromFile:resolve", {
-        step,
-        entryCount,
-        errorCount: ctx.errors.length,
-        elapsedMs: getPerfNowMs() - parseStartedAtMs,
-        ...getMemoryUsageMB(),
-      });
       resolve(value);
     };
 
@@ -369,34 +195,17 @@ function parseJsonFromZipWithYauzl(
     };
     yauzl.open(file, options, (err, zipfile) => {
       if (err) {
-        importLog("parseJsonFromFile:yauzlOpen:error", {
-          message: String(err),
-        });
         try {
-          finish("notZip", JSON.parse(fs.readFileSync(file).toString()));
+          finish(JSON.parse(fs.readFileSync(file).toString()));
         } catch (e) {
           ctx.errors.push(`ファイルがzipではありません。\n${err}`);
-          finish("notZipFailed", {});
+          finish({});
         }
         return;
       }
-      importLog("parseJsonFromFile:yauzlOpen:ok");
       zipfile
         .on("entry", (entry) => {
-          entryCount += 1;
-          importLog("parseJsonFromFile:entry", {
-            fileName: entry.fileName,
-            compressedSize: entry.compressedSize,
-            uncompressedSize: entry.uncompressedSize,
-            compressionMethod: entry.compressionMethod,
-            elapsedMs: getPerfNowMs() - parseStartedAtMs,
-          });
           const readNextEntry = () => {
-            importLog("parseJsonFromFile:readEntry", {
-              afterFileName: entry.fileName,
-              entryCount,
-              elapsedMs: getPerfNowMs() - parseStartedAtMs,
-            });
             zipfile.readEntry();
           };
           // ディレクトリは fileName が '/' で終わっている
@@ -407,23 +216,12 @@ function parseJsonFromZipWithYauzl(
             const dirname = path.dirname(filename);
             zipfile.openReadStream(entry, async (err, readStream) => {
               if (err) {
-                importLog("parseJsonFromFile:openReadStream:error", {
-                  fileName: entry.fileName,
-                  message: String(err),
-                });
                 ctx.errors.push(
                   `openReadStreamでエラーが発生しました。\n${err}`
                 );
                 readNextEntry();
                 return;
               }
-              importLog("parseJsonFromFile:openReadStream:ok", {
-                fileName: entry.fileName,
-                compressionMethod: entry.compressionMethod,
-                compressedSize: entry.compressedSize,
-                uncompressedSize: entry.uncompressedSize,
-                ...getReadStreamDiagnostics(readStream),
-              });
               await extractZipEntry(
                 ctx,
                 entry,
@@ -436,34 +234,19 @@ function parseJsonFromZipWithYauzl(
           }
         })
         .on("close", () => {
-          importLog("parseJsonFromFile:zipClose", {
-            entryCount,
-            elapsedMs: getPerfNowMs() - parseStartedAtMs,
-            ...getMemoryUsageMB(),
-          });
-          const jsons = collectJsonFromUnzippedDir(
-            ctx,
-            parseStartedAtMs,
-            "yauzlZipClose"
-          );
+          const jsons = collectJsonFromUnzippedDir(ctx);
           if (ctx.errors.length) {
-            finish("zipCloseWithErrors", {});
+            finish({});
           } else {
-            finish("zipClose", jsons);
+            finish(jsons);
           }
         })
         .on("error", (error) => {
-          importLog("parseJsonFromFile:zipError", {
-            message: String(error),
-          });
           try {
-            finish(
-              "zipErrorFallback",
-              JSON.parse(fs.readFileSync(file).toString())
-            );
+            finish(JSON.parse(fs.readFileSync(file).toString()));
           } catch (e) {
             ctx.errors.push(`ファイルがzipではありません。\n${error}`);
-            finish("zipErrorFailed", {});
+            finish({});
           }
         });
       zipfile.readEntry();
@@ -480,69 +263,24 @@ async function parseImportJsonFromFile(ctx: ImportFileParseContext) {
   ctx.tmpdir = fs.mkdtempSync("/tmp/chibichilo-import-");
   const file = `${ctx.tmpdir}/file`;
   const base64 = ctx.params.file as string;
-  importLog("parseJsonFromFile:decodeBase64:start", {
-    base64Chars: base64.length,
-    base64MB: bytesToMB(base64.length),
-    ...getMemoryUsageMB(),
-  });
-  const decodeStartedAtMs = getPerfNowMs();
   const fileBuffer = Buffer.from(base64, "base64");
-  importLog("parseJsonFromFile:decodeBase64:done", {
-    elapsedMs: getPerfNowMs() - decodeStartedAtMs,
-    fileBytes: fileBuffer.length,
-    fileMB: bytesToMB(fileBuffer.length),
-    ...getMemoryUsageMB(),
-  });
-  const writeStartedAtMs = getPerfNowMs();
   fs.writeFileSync(file, fileBuffer);
-  importLog("parseJsonFromFile:writeFile:done", {
-    elapsedMs: getPerfNowMs() - writeStartedAtMs,
-    fileBytes: fileBuffer.length,
-    ...getMemoryUsageMB(),
-  });
   ctx.params.file = undefined;
-  const parseStartedAtMs = getPerfNowMs();
-  importLog("parseJsonFromFile:start", {
-    tmpdir: ctx.tmpdir,
-    fileBytes: fileBuffer.length,
-    fileMB: bytesToMB(fileBuffer.length),
-    ...getMemoryUsageMB(),
-  });
 
   if (await tryExtractZipWithSystemUnzip(file, ctx.tmpdir)) {
-    const jsons = collectJsonFromUnzippedDir(
-      ctx,
-      parseStartedAtMs,
-      "systemUnzip"
-    );
-    importLog("parseJsonFromFile:resolve", {
-      step: "systemUnzip",
-      errorCount: ctx.errors.length,
-      elapsedMs: getPerfNowMs() - parseStartedAtMs,
-      ...getMemoryUsageMB(),
-    });
-    return jsons;
+    return collectJsonFromUnzippedDir(ctx);
   }
 
-  return parseJsonFromZipWithYauzl(ctx, file, parseStartedAtMs);
+  return parseJsonFromZipWithYauzl(ctx, file);
 }
 
 async function importBooksUtil(
   user: UserSchema,
   params: BooksImportParams
 ): Promise<BooksImportResult> {
-  importLog("importBooksUtil:start", {
-    userId: user.id,
-    hasFile: Boolean(params.file),
-  });
   const util = new ImportBooksUtil(user, params);
   await util.importBooks();
-  const result = util.result();
-  importLog("importBooksUtil:done", {
-    errorCount: result.errors.length,
-    bookCount: result.books.length,
-  });
-  return result;
+  return util.result();
 }
 
 export async function importTopicUtil(
@@ -550,19 +288,9 @@ export async function importTopicUtil(
   params: BooksImportParams,
   topicId: Topic["id"]
 ): Promise<BooksImportResult> {
-  importLog("importTopicUtil:start", {
-    topicId,
-    userId: user.id,
-    hasFile: Boolean(params.file),
-  });
   const util = new ImportBooksUtil(user, params);
   await util.importTopic(topicId);
-  const result = util.result();
-  importLog("importTopicUtil:done", {
-    topicId,
-    errorCount: result.errors.length,
-  });
-  return result;
+  return util.result();
 }
 
 export async function importBookUtil(
@@ -570,19 +298,9 @@ export async function importBookUtil(
   params: BooksImportParams,
   bookId: Book["id"]
 ): Promise<BooksImportResult> {
-  importLog("importBookUtil:start", {
-    bookId,
-    userId: session.user.id,
-    hasFile: Boolean(params.file),
-  });
   const util = new ImportBooksUtil(session.user, params);
   await util.importBook(session, bookId);
-  const result = util.result();
-  importLog("importBookUtil:done", {
-    bookId,
-    errorCount: result.errors.length,
-  });
-  return result;
+  return util.result();
 }
 
 class ImportBooksUtil {
@@ -605,39 +323,20 @@ class ImportBooksUtil {
   }
 
   async importBooks() {
-    importLog("importBooks:start", { userId: this.user.id });
     try {
-      importLog("importBooks:parseJsonFromFile");
       const importBooks = ImportBooks.init(await this.parseJsonFromFile());
-      importLog("importBooks:parseJsonFromFile:done", {
-        errorCount: this.errors.length,
-        bookCount: importBooks.books?.length ?? 0,
-      });
       if (this.errors.length) return;
-
-      importLog("importBooks:validate");
       const results = await validate(importBooks, {
         whitelist: true,
         forbidNonWhitelisted: true,
       });
       this.parseError(results);
-      importLog("importBooks:validate:done", {
-        errorCount: this.errors.length,
-      });
       if (this.errors.length) return;
 
       if (this.tmpdir) {
-        importLog("importBooks:uploadFiles:start");
         await this.uploadFiles(importBooks);
-        importLog("importBooks:uploadFiles:done", {
-          errorCount: this.errors.length,
-        });
       }
       if (this.errors.length) return;
-
-      importLog("importBooks:dbTransaction:start", {
-        bookCount: importBooks.books.length,
-      });
       const transactions = [];
       for (const importBook of importBooks.books) {
         transactions.push(
@@ -673,16 +372,11 @@ class ImportBooksUtil {
         const res = await findBook(book.id, this.user.id);
         if (res) this.books.push(res as BookSchema);
       }
-      importLog("importBooks:success", { bookCount: this.books.length });
     } catch (e) {
       console.error(e);
-      importLog("importBooks:error", {
-        message: e instanceof Error ? e.message : String(e),
-      });
       this.errors.push(...(Array.isArray(e) ? e : [String(e)]));
     } finally {
       await this.cleanUp();
-      importLog("importBooks:end", { errorCount: this.errors.length });
     }
   }
 
@@ -761,7 +455,7 @@ class ImportBooksUtil {
       sections: _sections,
       publicBooks: _publicBooks,
       ...book
-    }: BookProps & Pick<Book, "language">
+    }: BookProps & Pick
   ) {
     const keywordsBeforeUpdate = await prisma.keyword.findMany({
       where: { books: { some: { id } } },
@@ -781,13 +475,8 @@ class ImportBooksUtil {
   }
 
   async importTopic(topicId: Topic["id"]) {
-    importLog("importTopic:start", { topicId, userId: this.user.id });
     try {
-      importLog("importTopic:parseJsonFromFile");
       const importBooks = ImportBooks.init(await this.parseJsonFromFile());
-      importLog("importTopic:parseJsonFromFile:done", {
-        errorCount: this.errors.length,
-      });
       if (this.errors.length) return;
 
       const results = await validate(importBooks, {
@@ -828,23 +517,17 @@ class ImportBooksUtil {
         },
       ];
       if (this.tmpdir) {
-        importLog("importTopic:uploadFiles:start");
         await this.uploadFiles(importBooks);
-        importLog("importTopic:uploadFiles:done", {
-          errorCount: this.errors.length,
-        });
       }
       if (this.errors.length) return;
 
       // トピックを上書きする
-      importLog("importTopic:dbUpdate:start");
       const updateInput = await this.updateTopic(
         topicId,
         importTopics[0],
         orig
       );
       const created = await prisma.topic.update(updateInput);
-      importLog("importTopic:dbUpdate:done", { created: Boolean(created) });
       if (!created) {
         this.errors.push("トピックの上書きに失敗しました。\n");
         return;
@@ -854,28 +537,17 @@ class ImportBooksUtil {
       if (importTopics[0].timeRequired > 0) {
         await updateBookTimeRequired(topicId);
       }
-      importLog("importTopic:success", { topicId });
     } catch (e) {
       console.error(e);
-      importLog("importTopic:error", {
-        message: e instanceof Error ? e.message : String(e),
-      });
       this.errors.push(...(Array.isArray(e) ? e : [String(e)]));
     } finally {
       await this.cleanUp();
-      importLog("importTopic:end", { topicId, errorCount: this.errors.length });
     }
   }
 
   async importBook(session: SessionSchema, bookId: Book["id"]) {
-    importLog("importBook:start", { bookId, userId: this.user.id });
     try {
-      importLog("importBook:parseJsonFromFile");
       const importBooks = ImportBooks.init(await this.parseJsonFromFile());
-      importLog("importBook:parseJsonFromFile:done", {
-        errorCount: this.errors.length,
-        bookCount: importBooks.books?.length ?? 0,
-      });
       if (this.errors.length) return;
 
       const results = await validate(importBooks, {
@@ -960,11 +632,7 @@ class ImportBooksUtil {
         },
       ];
       if (this.tmpdir) {
-        importLog("importBook:uploadFiles:start", { topicCount: jobs.length });
         await this.uploadFiles(importBooks);
-        importLog("importBook:uploadFiles:done", {
-          errorCount: this.errors.length,
-        });
       }
       if (this.errors.length) return;
 
@@ -993,16 +661,10 @@ class ImportBooksUtil {
       });
 
       // DB更新
-      importLog("importBook:dbTransaction:start", {
-        topicUpdateCount: topicInputArray.length,
-      });
       const created = await prisma.$transaction([
         ...topicInputArray.map((topicInput) => prisma.topic.update(topicInput)),
         prisma.book.update(bookInput),
       ]);
-      importLog("importBook:dbTransaction:done", {
-        createdCount: Array.isArray(created) ? created.length : 0,
-      });
       if (!created) {
         this.errors.push("ブックの上書きに失敗しました。\n");
         return;
@@ -1012,16 +674,11 @@ class ImportBooksUtil {
       if (timeRequiredTopicIds.length > 0) {
         await updateBookTimeRequired(timeRequiredTopicIds);
       }
-      importLog("importBook:success", { bookId });
     } catch (e) {
       console.error(e);
-      importLog("importBook:error", {
-        message: e instanceof Error ? e.message : String(e),
-      });
       this.errors.push(...(Array.isArray(e) ? e : [String(e)]));
     } finally {
       await this.cleanUp();
-      importLog("importBook:end", { bookId, errorCount: this.errors.length });
     }
   }
 
@@ -1061,10 +718,8 @@ class ImportBooksUtil {
 
   async cleanUp() {
     if (this.tmpdir) {
-      importLog("cleanUp:start", { tmpdir: this.tmpdir });
       await fs.promises.rm(this.tmpdir, { recursive: true });
       this.tmpdir = "";
-      importLog("cleanUp:done");
     }
   }
 
@@ -1089,22 +744,15 @@ class ImportBooksUtil {
     const uploadEnabled =
       this.params.provider == "https://www.wowza.com/" &&
       validateWowzaSettings(false);
-    const uploadStartedAtMs = getPerfNowMs();
-    importLog("uploadFiles:start", {
-      uploadEnabled,
-      ...getMemoryUsageMB(),
-    });
     const now = new Date();
     const filenames = [];
     let wowzaUpload;
 
     try {
-      importLog("uploadFiles:startWowzaUpload");
       wowzaUpload = await startWowzaUpload(
         this.user.ltiConsumerId,
         this.user.id
       );
-      importLog("uploadFiles:startWowzaUpload:done");
       for (const importBook of importBooks.books) {
         for (const bookSection of importBook.sections) {
           for (const sectionTopic of bookSection.topics) {
@@ -1130,29 +778,10 @@ class ImportBooksUtil {
               }
 
               filenames.push(filename);
-              const moveStartedAtMs = getPerfNowMs();
               const uploadpath = await wowzaUpload.moveFileToUpload(
                 fullpath,
                 now
               );
-              const moveElapsedMs = getPerfNowMs() - moveStartedAtMs;
-              let movedFileBytes = 0;
-              try {
-                movedFileBytes = fs.statSync(fullpath).size;
-              } catch {
-                // nop
-              }
-              importLog("uploadFiles:moveFileToUpload:done", {
-                filename,
-                moveElapsedMs,
-                movedFileBytes,
-                movedFileMB: bytesToMB(movedFileBytes),
-                throughputMBps: safeThroughputMBps(
-                  movedFileBytes,
-                  moveElapsedMs
-                ),
-                ...getMemoryUsageMB(),
-              });
               sectionTopic.resource.providerUrl = this.params.provider;
               sectionTopic.resource.url = `${this.params.wowzaBaseUrl}${uploadpath}`;
             } else {
@@ -1175,35 +804,15 @@ class ImportBooksUtil {
 
       if (this.errors.length) return;
       if (!filenames.length) {
-        importLog("uploadFiles:skipped", { reason: "no video files" });
         return;
       }
-      importLog("uploadFiles:wowzaUpload", {
-        fileCount: filenames.length,
-        filenames,
-      });
       await wowzaUpload.upload();
-      importLog("uploadFiles:wowzaUpload:done", {
-        elapsedMs: getPerfNowMs() - uploadStartedAtMs,
-        ...getMemoryUsageMB(),
-      });
     } catch (e) {
-      importLog("uploadFiles:error", {
-        message: e instanceof Error ? e.message : String(e),
-      });
       this.errors.push(`サーバーにアップロードできませんでした。\n${e}`);
     } finally {
       if (wowzaUpload) {
-        importLog("uploadFiles:wowzaCleanUp");
         await wowzaUpload.cleanUp();
-        importLog("uploadFiles:wowzaCleanUp:done");
       }
-      importLog("uploadFiles:end", { errorCount: this.errors.length });
-      importLog("uploadFiles:metrics", {
-        elapsedMs: getPerfNowMs() - uploadStartedAtMs,
-        movedFileCount: filenames.length,
-        ...getMemoryUsageMB(),
-      });
     }
   }
 
