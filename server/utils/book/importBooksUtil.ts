@@ -455,7 +455,7 @@ class ImportBooksUtil {
       sections: _sections,
       publicBooks: _publicBooks,
       ...book
-    }: BookProps & Pick
+    }: BookProps & Pick<Book, "language">
   ) {
     const keywordsBeforeUpdate = await prisma.keyword.findMany({
       where: { books: { some: { id } } },
