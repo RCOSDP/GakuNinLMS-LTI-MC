@@ -7,6 +7,7 @@ import type { LtiAgsEndpointSchema } from "$server/models/ltiAgsEndpoint";
 import type { LtiNrpsParameterSchema } from "$server/models/ltiNrpsParameter";
 import { LtiDlSettingsSchema } from "$server/models/ltiDlSettings";
 import findClient from "$server/utils/ltiv1p3/findClient";
+import { ltiCallbackUrl } from "$server/utils/ltiv1p3/callbackUrl";
 import { implicitAuthentication } from "openid-client";
 import init from "./init";
 import { LtiCallbackBody } from "$server/validators/ltiCallbackBody";
@@ -30,7 +31,7 @@ export const method = {
 };
 
 export async function post(req: FastifyRequest<{ Body: Props }>) {
-  const callbackUrl = `${req.protocol}://${req.hostname}/api/v2/lti/callback`;
+  const callbackUrl = ltiCallbackUrl(req);
   const client = await findClient(req.session.oauthClient.id);
 
   if (!client) {

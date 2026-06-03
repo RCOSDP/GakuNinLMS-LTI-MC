@@ -4,6 +4,7 @@ import type { LtiVersionSchema } from "$server/models/ltiVersion";
 import type { OauthClientSchema } from "$server/models/oauthClient";
 import { LtiLoginProps } from "$server/validators/ltiLoginProps";
 import createAccount from "$server/utils/ltiv1p3/createAccount";
+import { ltiCallbackUrl } from "$server/utils/ltiv1p3/callbackUrl";
 
 export type Props = LtiLoginProps;
 
@@ -30,7 +31,7 @@ export const method = {
 };
 
 async function baseAction(req: FastifyRequest, props: Props) {
-  const callbackUrl = `${req.protocol}://${req.hostname}/api/v2/lti/callback`;
+  const callbackUrl = ltiCallbackUrl(req);
   const { state, nonce, authorizationUrl } = await createAccount(
     props,
     callbackUrl

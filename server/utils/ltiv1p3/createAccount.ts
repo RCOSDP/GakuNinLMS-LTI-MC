@@ -36,6 +36,7 @@ async function createAccount(
 
   const authorizationUrl = buildAuthorizationUrl(client, {
     redirect_uri: callbackUrl,
+    scope: "openid",
     state,
     nonce,
     login_hint,

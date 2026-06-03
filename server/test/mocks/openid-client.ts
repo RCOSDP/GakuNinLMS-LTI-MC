@@ -10,6 +10,7 @@ export class Configuration {
 export const None = () => () => {};
 export const PrivateKeyJwt = () => () => {};
 export const useIdTokenResponseType = () => {};
+export const allowInsecureRequests = () => {};
 export const buildAuthorizationUrl = () => new URL("https://example.com/auth");
 export const randomNonce = () => "nonce";
 export const randomState = () => "state";

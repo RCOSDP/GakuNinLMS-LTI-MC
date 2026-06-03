@@ -1,4 +1,5 @@
 import {
+  allowInsecureRequests,
   Configuration,
   None,
   PrivateKeyJwt,
@@ -10,6 +11,26 @@ import prisma from "$server/utils/prisma";
 import { createPrivateKey } from "$server/utils/ltiv1p3/jwk";
 
 export type OidcClient = Configuration;
+
+function isHttpUrl(value: unknown): boolean {
+  return typeof value === "string" && value.startsWith("http://");
+}
+
+function metadataHasHttpUrl(metadata: unknown): boolean {
+  if (isHttpUrl(metadata)) return true;
+  if (!metadata || typeof metadata !== "object") return false;
+  return Object.values(metadata).some(metadataHasHttpUrl);
+}
+
+function shouldAllowInsecureRequests(
+  metadata: ServerMetadata,
+  redirectUris?: string[]
+): boolean {
+  if (process.env.OAUTH_ALLOW_INSECURE_REQUESTS === "true") return true;
+  if (process.env.NODE_ENV !== "production") return true;
+  if (redirectUris?.some(isHttpUrl)) return true;
+  return metadataHasHttpUrl(metadata);
+}
 
 /** OpenID Connect Client を得る */
 async function findClient(clientId: string, redirectUris?: string[]) {
@@ -43,6 +64,10 @@ async function findClient(clientId: string, redirectUris?: string[]) {
     clientAuth
   );
   useIdTokenResponseType(config);
+
+  if (shouldAllowInsecureRequests(server, redirectUris)) {
+    allowInsecureRequests(config);
+  }
 
   return config;
 }
