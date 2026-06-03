@@ -1,8 +1,4 @@
-import {
-  buildAuthorizationUrl,
-  randomNonce,
-  randomState,
-} from "openid-client";
+import { buildAuthorizationUrl, randomNonce, randomState } from "openid-client";
 import { getUnixTime } from "date-fns";
 import prisma from "$server/utils/prisma";
 import findClient from "./findClient";

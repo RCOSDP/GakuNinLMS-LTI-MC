@@ -1,7 +1,11 @@
 import { getGradeTargets } from "./getGradeTargets";
 import type { SessionSchema } from "$server/models/session";
 import type { ActivityQuery } from "$server/validators/activityQuery";
-import type { LtiResourceLink, LtiMember, User } from "$server/generated/prisma/client";
+import type {
+  LtiResourceLink,
+  LtiMember,
+  User,
+} from "$server/generated/prisma/client";
 
 jest.mock("$server/utils/prisma", () => ({
   __esModule: true,

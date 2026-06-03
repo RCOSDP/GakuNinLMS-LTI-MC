@@ -5,7 +5,12 @@ import { format } from "date-fns";
 import { toZonedTime } from "date-fns-tz";
 
 import prisma from "$server/utils/prisma";
-import type { Prisma, User, Book, ZoomMeeting } from "$server/generated/prisma/client";
+import type {
+  Prisma,
+  User,
+  Book,
+  ZoomMeeting,
+} from "$server/generated/prisma/client";
 import type { UserSettingsProps } from "$server/models/userSettings";
 import { findUserByEmailAndLtiConsumerId } from "$server/utils/user";
 import keywordsConnectOrCreateInput from "$server/utils/keyword/keywordsConnectOrCreateInput";
