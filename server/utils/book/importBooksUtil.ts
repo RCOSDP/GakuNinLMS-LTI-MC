@@ -24,7 +24,7 @@ import { startWowzaUpload } from "$server/utils/wowza/upload";
 import { validateWowzaSettings } from "$server/utils/wowza/env";
 import findRoles from "$server/utils/author/findRoles";
 import insertAuthors from "$server/utils/author/insertAuthors";
-import type { Book, Topic } from "@prisma/client";
+import type { Book, Topic } from "$server/generated/prisma/client";
 import findTopic from "$server/utils/topic/findTopic";
 import type { TopicProps, TopicSchema } from "$server/models/topic";
 import keywordsConnectOrCreateInput from "../keyword/keywordsConnectOrCreateInput";

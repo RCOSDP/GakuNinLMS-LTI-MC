@@ -21,12 +21,10 @@ const baseSchema = {
 export const method = {
   get: {
     ...baseSchema,
-    consumes: [],
     querystring: LtiLoginProps,
   },
   post: {
     ...baseSchema,
-    consumes: ["application/x-www-form-urlencoded"],
     body: LtiLoginProps,
   },
 };

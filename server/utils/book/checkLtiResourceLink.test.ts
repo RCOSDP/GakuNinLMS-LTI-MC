@@ -2,7 +2,7 @@ import checkLtiResourceLink from "$server/utils/book/checkLtiResourceLink";
 import type { FastifySessionObject } from "@fastify/session";
 import prisma from "$server/utils/prisma";
 import type { SessionSchema } from "$server/models/session";
-import type { LtiResourceLink } from "@prisma/client";
+import type { LtiResourceLink } from "$server/generated/prisma/client";
 import type { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
 
 jest.mock("$server/utils/prisma", () => ({

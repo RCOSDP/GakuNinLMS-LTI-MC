@@ -7,6 +7,7 @@ import type { LtiAgsEndpointSchema } from "$server/models/ltiAgsEndpoint";
 import type { LtiNrpsParameterSchema } from "$server/models/ltiNrpsParameter";
 import { LtiDlSettingsSchema } from "$server/models/ltiDlSettings";
 import findClient from "$server/utils/ltiv1p3/findClient";
+import { implicitAuthentication } from "openid-client";
 import init from "./init";
 import { LtiCallbackBody } from "$server/validators/ltiCallbackBody";
 import { LtiClaims } from "$server/validators/ltiClaims";
@@ -20,7 +21,6 @@ export const method = {
       LTIツールとして起動するためのエンドポイントです。
       このエンドポイントをLMSのLTIツールのリダイレクトURIに指定して利用します。
       成功時 ${init.frontendUrl} にリダイレクトします。`,
-    consumes: ["application/x-www-form-urlencoded"],
     body: LtiCallbackBody,
     response: {
       ...init.response,
@@ -40,11 +40,16 @@ export async function post(req: FastifyRequest<{ Body: Props }>) {
   }
 
   try {
-    const token = await client.callback(callbackUrl, req.body, {
-      state: req.session.state,
-      nonce: req.session.oauthClient.nonce,
-    });
-    const claims = token.claims();
+    const url = new URL(callbackUrl);
+    url.hash = new URLSearchParams(
+      req.body as Record<string, string>
+    ).toString();
+    const claims = await implicitAuthentication(
+      client,
+      url,
+      req.session.oauthClient.nonce,
+      { expectedState: req.session.state }
+    );
     const ltiClaims = new LtiClaims(claims as Partial<LtiClaims>);
     await validateOrReject(ltiClaims);
     const session = {
@@ -58,8 +63,8 @@ export async function post(req: FastifyRequest<{ Body: Props }>) {
         ltiClaims["https://purl.imsglobal.org/spec/lti/claim/target_link_uri"],
       ltiUser: {
         id: claims.sub,
-        name: claims.name,
-        email: claims.email,
+        name: claims.name as string | undefined,
+        email: claims.email as string | undefined,
       },
       ltiRoles: ltiClaims["https://purl.imsglobal.org/spec/lti/claim/roles"],
       ltiResourceLinkRequest:

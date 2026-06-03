@@ -1,5 +1,5 @@
-import format from "date-fns/format";
-import utcToZoneTime from "date-fns-tz/utcToZonedTime";
+import { format } from "date-fns";
+import { toZonedTime } from "date-fns-tz";
 import { validateWowzaSettings } from "$server/utils/wowza/env";
 
 import {
@@ -48,7 +48,7 @@ function validateZoomWowzaSettings(logging = true) {
 
 export function logger(level: string, output: string, error?: Error | unknown) {
   console.log(
-    format(utcToZoneTime(new Date(), "Asia/Tokyo"), "yyyy-MM-dd HH:mm:ss"),
+    format(toZonedTime(new Date(), "Asia/Tokyo"), "yyyy-MM-dd HH:mm:ss"),
     level,
     output,
     "ZoomImportLog"

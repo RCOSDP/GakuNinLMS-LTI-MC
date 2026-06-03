@@ -15,7 +15,6 @@ export const method = {
       LTI v1.1 ツールとして起動するためのエンドポイントです。
       このエンドポイントをLMSのLTIツールのURLに指定して利用します。
       成功時 ${init.frontendUrl} にリダイレクトします。`,
-    consumes: ["application/x-www-form-urlencoded"],
     body: ltiLaunchBodySchema,
     response: init.response,
   },

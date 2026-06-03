@@ -9,5 +9,6 @@
 /utils/$path.ts
 node_modules/
 .pnpm-store/
+server/generated/
 .env*
 .*.swp

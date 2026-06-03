@@ -24,7 +24,7 @@ async function app(fastify: FastifyInstance, options: Options) {
   const { basePath, allowOrigin, sessionSecret, sessionStore } = options;
 
   await fastify.register(swagger, {
-    swagger: {
+    openapi: {
       info: {
         title: pkg.name,
         version: pkg.version,
