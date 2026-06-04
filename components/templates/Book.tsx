@@ -29,6 +29,9 @@ import sumPixels from "$utils/sumPixels";
 import type { ActivitySchema } from "$server/models/activity";
 import Chip from "@mui/material/Chip";
 import formatInterval from "$utils/formatInterval";
+import type { ReleaseItemSchema } from "$server/models/releaseResult";
+import License from "$atoms/License";
+import type { ContentSchema } from "$server/models/content";
 
 const useStyles = makeStyles((theme) => ({
   header: {
@@ -42,6 +45,9 @@ const useStyles = makeStyles((theme) => ({
     "& > $title ~ *": {
       flexShrink: 0,
     },
+  },
+  headerHidden: {
+    visibility: "hidden",
   },
   title: {
     fontSize: "1.75rem",
@@ -93,6 +99,7 @@ const useStyles = makeStyles((theme) => ({
   },
   side: {
     gridArea: "side",
+    overflowY: "auto",
     "&$mobile": {
       marginBottom: theme.spacing(2),
     },
@@ -108,6 +115,7 @@ const useStyles = makeStyles((theme) => ({
 type Props = {
   linked?: boolean;
   book: BookSchema | null;
+  parent?: ReleaseItemSchema;
   bookActivity?: ActivitySchema[];
   index: ItemIndex;
   isPrivateBook?: boolean;
@@ -118,12 +126,18 @@ type Props = {
   onTopicEnded(): void;
   onItemClick(index: ItemIndex): void;
   considerAppBar?: boolean;
+  onContentLinkClick?(
+    content: Pick<BookSchema, "id"> | ContentSchema,
+    checked: boolean,
+    topicId?: TopicSchema["id"]
+  ): void;
 };
 
 export default function Book(props: Props) {
   const {
     linked,
     book,
+    parent,
     bookActivity,
     index: [sectionIndex, topicIndex],
     isPrivateBook = false,
@@ -134,7 +148,9 @@ export default function Book(props: Props) {
     onTopicEnded,
     onItemClick,
     considerAppBar = true,
+    onContentLinkClick,
   } = props;
+
   const topic = book?.sections[sectionIndex]?.topics[topicIndex];
   const { isInstructor, isContentEditable } = useSessionAtom();
   const [expanded, setExpanded] = useState(false);
@@ -171,9 +187,13 @@ export default function Book(props: Props) {
       : undefined;
 
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth={matches ? "lg" : false} disableGutters={!matches}>
       <ActionHeader sx={{ pb: 0 }} considerAppBar={considerAppBar}>
-        <header className={classes.header}>
+        <header
+          className={clsx(classes.header, {
+            [classes.headerHidden]: trigger,
+          })}
+        >
           <Typography
             className={clsx(classes.title, { [classes.mobile]: !matches })}
             variant="h4"
@@ -187,7 +207,8 @@ export default function Book(props: Props) {
               (book?.timeRequired ?? 0) * 1000
             )}`}
           />
-          {book?.shared && <SharedIndicator />}
+          {book?.license && <License license={book?.license} />}
+          {book?.release?.shared && <SharedIndicator />}
           {isInstructor &&
             book &&
             onBookEditClick &&
@@ -217,6 +238,21 @@ export default function Book(props: Props) {
               inline
               nowrap
               value={[
+                ...(book.release?.releasedAt
+                  ? [
+                      {
+                        key: "バージョン",
+                        value: book.release.version,
+                      },
+                      {
+                        key: "リリース日",
+                        value: getLocaleDateString(
+                          book.release.releasedAt,
+                          "ja"
+                        ),
+                      },
+                    ]
+                  : []),
                 {
                   key: "作成日",
                   value: getLocaleDateString(book.createdAt, "ja"),
@@ -225,7 +261,10 @@ export default function Book(props: Props) {
                   key: "更新日",
                   value: getLocaleDateString(book.updatedAt, "ja"),
                 },
-                ...authors(book),
+                // 著作権者または作成者
+                ...(book.licenser
+                  ? [{ key: "", value: book.licenser }]
+                  : authors(book)),
               ]}
             />
             <Link
@@ -238,7 +277,12 @@ export default function Book(props: Props) {
             </Link>
           </div>
           <CollapsibleContent expanded={expanded}>
-            <BookInfo id="book-info" className={classes.info} book={book} />
+            <BookInfo
+              id="book-info"
+              className={classes.info}
+              book={book}
+              parent={parent}
+            />
           </CollapsibleContent>
         </>
       )}
@@ -252,6 +296,7 @@ export default function Book(props: Props) {
           {topic && (
             <TopicViewer
               topic={topic}
+              book={book}
               bookActivity={bookActivity}
               onEnded={onTopicEnded}
               offset={offset}
@@ -269,11 +314,13 @@ export default function Book(props: Props) {
         >
           <Sections
             index={[sectionIndex, topicIndex]}
+            bookId={book?.id ?? -1}
             sections={book?.sections ?? []}
             onItemClick={handleItemClick}
             onItemEditClick={handleItemEditClick}
             isContentEditable={isContentEditable}
             isPrivateBook={isPrivateBook}
+            onContentLinkClick={onContentLinkClick}
           />
         </div>
       </div>

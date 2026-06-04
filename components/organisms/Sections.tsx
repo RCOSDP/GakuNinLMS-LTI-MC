@@ -1,4 +1,4 @@
-import type { ReactNode, MouseEvent } from "react";
+import type { ReactNode, MouseEvent, ChangeEvent } from "react";
 import clsx from "clsx";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -8,7 +8,7 @@ import Typography from "@mui/material/Typography";
 import { makeStyles, createStyles } from "@mui/styles";
 import type { Theme } from "@mui/material/styles";
 import EditButton from "$atoms/EditButton";
-import type { ContentAuthors } from "$server/models/content";
+import type { ContentAuthors, ContentSchema } from "$server/models/content";
 import type { SectionSchema } from "$server/models/book/section";
 import { primary, gray } from "$theme/colors";
 import { isNamedSection, getOutlineNumber } from "$utils/outline";
@@ -17,8 +17,11 @@ import LearningStatusChip from "$atoms/LearningStatusChip";
 import formatInterval from "$utils/formatInterval";
 import TagCount from "$molecules/TagCount";
 import { Box } from "@mui/material";
+import LinkSwitch from "$atoms/LinkSwitch";
 
 import { NEXT_PUBLIC_ENABLE_TAG_AND_BOOKMARK } from "$utils/env";
+import type { TopicSchema } from "$server/models/topic";
+import type { BookSchema } from "$server/models/book";
 
 function SectionItem({
   section,
@@ -86,22 +89,30 @@ const useStyles = makeStyles((theme: Theme) =>
 
 type Props = {
   className?: string;
+  bookId?: number | undefined;
   sections: SectionSchema[];
   index: ItemIndex;
   isContentEditable(topic: ContentAuthors): boolean;
   isPrivateBook: boolean;
   onItemClick(index: ItemIndex): void;
   onItemEditClick?(index: ItemIndex): void;
+  onContentLinkClick?(
+    content: Pick<BookSchema, "id"> | ContentSchema,
+    checked: boolean,
+    topicId?: TopicSchema["id"]
+  ): void;
 };
 
 export default function Sections({
   className,
+  bookId,
   sections,
   index: [sectionIndex, topicIndex],
   isContentEditable,
   isPrivateBook,
   onItemClick,
   onItemEditClick,
+  onContentLinkClick,
 }: Props) {
   const classes = useStyles();
   const handleItemClick = (index: ItemIndex) => () => onItemClick(index);
@@ -109,6 +120,14 @@ export default function Sections({
     (index: ItemIndex) => (event: MouseEvent<HTMLButtonElement>) => {
       event.stopPropagation();
       onItemEditClick?.(index);
+    };
+  const handleItemLinkClick =
+    (topic: TopicSchema) =>
+    (event: ChangeEvent<HTMLInputElement>, checked: boolean) => {
+      event.stopPropagation();
+      if (bookId) {
+        onContentLinkClick?.({ id: bookId }, checked, topic.id);
+      }
     };
   const { isCompleted } = useActivityAtom();
   return (
@@ -155,10 +174,24 @@ export default function Sections({
                     {formatInterval(0, topic.timeRequired * 1000)}
                   </Typography>
                   {NEXT_PUBLIC_ENABLE_TAG_AND_BOOKMARK && isPrivateBook && (
-                    <TagCount topicId={topic.id} />
+                    <TagCount topicId={topic.id} bookId={bookId ?? 0} />
                   )}
                 </Box>
               </ListItemText>
+              {onContentLinkClick && (
+                <LinkSwitch
+                  sx={{
+                    position: "absolute",
+                    bottom: 30,
+                    right: 8,
+                    transform: "translateY(50%)",
+                    filter: "none",
+                  }}
+                  disabled={false}
+                  checked={false}
+                  onChange={handleItemLinkClick(topic)}
+                />
+              )}
               {!isContentEditable(topic) && isCompleted(topic.id) && (
                 <LearningStatusChip type="completed" size="small" />
               )}
