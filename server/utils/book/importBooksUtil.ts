@@ -9,8 +9,6 @@ import type { Readable } from "node:stream";
 import { pipeline } from "node:stream/promises";
 import yauzl from "yauzl";
 import type { Entry } from "yauzl";
-// @ts-expect-error Could not find a declaration file for module 'recursive-readdir-synchronous'
-import recursive from "recursive-readdir-synchronous";
 import type { ValidationError } from "class-validator";
 import { validate } from "class-validator";
 import type { UserSchema } from "$server/models/user";
@@ -93,7 +91,7 @@ type ImportFileParseContext = {
 async function tryExtractZipWithSystemUnzip(
   zipPath: string,
   destDir: string
-): Promise<boolean> {
+): Promise {
   try {
     await execFileAsync("unzip", ["-qq", "-o", zipPath, "-d", destDir]);
     return true;
@@ -106,7 +104,7 @@ async function writeZipEntryStream(
   readStream: Readable,
   filename: string,
   uncompressedSize: number
-): Promise<void> {
+): Promise {
   if (uncompressedSize <= 0) {
     readStream.resume();
     const data = await buffer(readStream);
@@ -126,8 +124,17 @@ async function writeZipEntryStream(
   }
 }
 
+function listFilesRecursively(dir: string): string[] {
+  return fs
+    .globSync("**/*", { cwd: dir })
+    .filter((relativePath) =>
+      fs.statSync(path.join(dir, relativePath)).isFile()
+    )
+    .map((relativePath) => path.join(dir, relativePath));
+}
+
 function collectJsonFromUnzippedDir(ctx: ImportFileParseContext) {
-  ctx.unzippedFiles = recursive(ctx.tmpdir);
+  ctx.unzippedFiles = listFilesRecursively(ctx.tmpdir);
   const jsonfiles: string[] = ctx.unzippedFiles.filter((filename) =>
     filename.toLowerCase().endsWith(".json")
   );
@@ -161,7 +168,7 @@ async function extractZipEntry(
     if (!fs.existsSync(dirname)) {
       fs.mkdirSync(dirname, { recursive: true });
     }
-    let timeoutId: ReturnType<typeof setTimeout> | undefined;
+    let timeoutId: ReturnType | undefined;
     await Promise.race([
       writeZipEntryStream(readStream, filename, entry.uncompressedSize),
       new Promise<never>((_, reject) => {
@@ -277,7 +284,7 @@ async function parseImportJsonFromFile(ctx: ImportFileParseContext) {
 async function importBooksUtil(
   user: UserSchema,
   params: BooksImportParams
-): Promise<BooksImportResult> {
+): Promise {
   const util = new ImportBooksUtil(user, params);
   await util.importBooks();
   return util.result();
@@ -287,7 +294,7 @@ export async function importTopicUtil(
   user: UserSchema,
   params: BooksImportParams,
   topicId: Topic["id"]
-): Promise<BooksImportResult> {
+): Promise {
   const util = new ImportBooksUtil(user, params);
   await util.importTopic(topicId);
   return util.result();
@@ -297,7 +304,7 @@ export async function importBookUtil(
   session: SessionSchema,
   params: BooksImportParams,
   bookId: Book["id"]
-): Promise<BooksImportResult> {
+): Promise {
   const util = new ImportBooksUtil(session.user, params);
   await util.importBook(session, bookId);
   return util.result();
@@ -455,7 +462,7 @@ class ImportBooksUtil {
       sections: _sections,
       publicBooks: _publicBooks,
       ...book
-    }: BookProps & Pick<Book, "language">
+    }: BookProps & Pick
   ) {
     const keywordsBeforeUpdate = await prisma.keyword.findMany({
       where: { books: { some: { id } } },
