@@ -1,8 +1,8 @@
 import fs from "node:fs";
 import path from "node:path";
 import stream from "node:stream/promises";
+import { TZDate } from "@date-fns/tz";
 import { format } from "date-fns";
-import { toZonedTime } from "date-fns-tz";
 
 import prisma from "$server/utils/prisma";
 import type {
@@ -245,7 +245,7 @@ class ZoomImport {
 
       const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
       const datetimeForTitle = format(
-        toZonedTime(startTime, timezone),
+        new TZDate(startTime, timezone),
         "yyyy/MM/dd HH:mm"
       );
       const meetingDetail = await this.getMeetingDetail(meeting);

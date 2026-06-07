@@ -1,6 +1,6 @@
 import type { EventSchema, EventActivitySchema } from "$server/models/event";
+import { TZDate } from "@date-fns/tz";
 import { format } from "date-fns";
-import { toZonedTime } from "date-fns-tz";
 
 // TODO: 大量に console.log を呼び出すのはブロッキングが発生しうるので避けたほうが望ましい
 const logger = console.log;
@@ -43,7 +43,7 @@ function eventLogger(
     EventActivitySchema
 ) {
   // NOTE: JST (≒UTC+9) 固定
-  const date = toZonedTime(new Date(), "Asia/Tokyo");
+  const date = new TZDate(new Date(), "Asia/Tokyo");
   const eventFields = {
     date: format(date, "yyyy-MM-dd"),
     time: format(date, "HH:mm:ss"),

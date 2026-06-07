@@ -1,8 +1,8 @@
 import dotenv from "dotenv";
 import fs from "fs";
 
+import { TZDate } from "@date-fns/tz";
 import { format } from "date-fns";
-import { toZonedTime } from "date-fns-tz";
 import prisma from "$server/utils/prisma";
 import { nullSession } from "$server/services/session";
 import findAllActivity from "./findAllActivity";
@@ -142,7 +142,7 @@ function download(
 
 function logger(level: string, output: string, error?: Error | unknown) {
   console.log(
-    format(toZonedTime(new Date(), "Asia/Tokyo"), "yyyy-MM-dd HH:mm:ss"),
+    format(new TZDate(new Date(), "Asia/Tokyo"), "yyyy-MM-dd HH:mm:ss"),
     level,
     output,
     "ActivityDownloadLog"
