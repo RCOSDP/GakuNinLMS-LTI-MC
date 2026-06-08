@@ -26,18 +26,16 @@ export async function getMemberships(
   if (!contextMembershipsUrl) {
     throw new Error(`Failed to get contextMembershipsUrl`);
   }
+
+  const url = new URL(contextMembershipsUrl);
   if (query) {
-    contextMembershipsUrl +=
-      (contextMembershipsUrl.includes("?") ? "&" : "?") + query;
+    const params = new URLSearchParams(query);
+    params.forEach((value, key) => url.searchParams.set(key, value));
   }
+
   const { accessToken } = await createAccessToken(client);
 
-  const res = await fetchProtectedResource(
-    client,
-    accessToken,
-    new URL(contextMembershipsUrl),
-    "GET"
-  );
+  const res = await fetchProtectedResource(client, accessToken, url, "GET");
 
   const statusCode = res.status;
 
@@ -56,19 +54,14 @@ export async function getMemberships(
     throw new Error(`${statusCode} ${res.statusText}`);
   }
 
-  const body = await res.text();
-  if (!body) {
-    throw new Error("Failed to request memberships resource");
-  }
-
-  const memberships = JSON.parse(body) as LtiNrpsContextMembershipSchema;
+  const memberships = (await res.json()) as LtiNrpsContextMembershipSchema;
 
   if (query) {
     return memberships;
   }
 
   // 教師を除く、学習者のみのデータを返す
-  const learnerMemberships = {
+  return {
     ...memberships,
     members: memberships.members.filter(
       (member) =>
@@ -77,7 +70,6 @@ export async function getMemberships(
         !member.roles.includes("Instructor")
     ),
   };
-  return learnerMemberships;
 }
 
 /**
