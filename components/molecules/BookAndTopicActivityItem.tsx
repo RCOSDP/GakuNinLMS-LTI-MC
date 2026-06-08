@@ -87,11 +87,11 @@ function getAverageRewatchRate(
     [];
 
   const averageRewatchRate =
-    (topicRewatchRates
+    topicRewatchRates
       ?.map((r: ActivityRewatchRateProps) => r.rewatchRate ?? 0)
       .reduce((a, b) => {
         return a + b;
-      }, 0) ?? 0) / (topicRewatchRates.length || 1);
+      }, 0) / topicRewatchRates.length ?? 0;
 
   return round(averageRewatchRate || 0, -3);
 }

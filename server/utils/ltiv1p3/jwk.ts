@@ -16,7 +16,7 @@ async function readKey() {
 }
 
 /** Private Key 作成 */
-export async function createPrivateKey(): Promise {
+export async function createPrivateKey(): Promise<JWK | null> {
   const key = await readKey();
   if (!key) return null;
 
@@ -28,7 +28,7 @@ export async function createPrivateKey(): Promise {
 }
 
 /** Public Key 作成 */
-export async function createPublicKey(): Promise {
+export async function createPublicKey(): Promise<JWK | null> {
   const key = await readKey();
   if (!key) return null;
 

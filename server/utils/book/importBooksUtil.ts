@@ -91,7 +91,7 @@ type ImportFileParseContext = {
 async function tryExtractZipWithSystemUnzip(
   zipPath: string,
   destDir: string
-): Promise {
+): Promise<boolean> {
   try {
     await execFileAsync("unzip", ["-qq", "-o", zipPath, "-d", destDir]);
     return true;
@@ -104,7 +104,7 @@ async function writeZipEntryStream(
   readStream: Readable,
   filename: string,
   uncompressedSize: number
-): Promise {
+): Promise<void> {
   if (uncompressedSize <= 0) {
     readStream.resume();
     const data = await buffer(readStream);
@@ -168,7 +168,7 @@ async function extractZipEntry(
     if (!fs.existsSync(dirname)) {
       fs.mkdirSync(dirname, { recursive: true });
     }
-    let timeoutId: ReturnType | undefined;
+    let timeoutId: ReturnType<typeof setTimeout> | undefined;
     await Promise.race([
       writeZipEntryStream(readStream, filename, entry.uncompressedSize),
       new Promise<never>((_, reject) => {
@@ -284,7 +284,7 @@ async function parseImportJsonFromFile(ctx: ImportFileParseContext) {
 async function importBooksUtil(
   user: UserSchema,
   params: BooksImportParams
-): Promise {
+): Promise<BooksImportResult> {
   const util = new ImportBooksUtil(user, params);
   await util.importBooks();
   return util.result();
@@ -294,7 +294,7 @@ export async function importTopicUtil(
   user: UserSchema,
   params: BooksImportParams,
   topicId: Topic["id"]
-): Promise {
+): Promise<BooksImportResult> {
   const util = new ImportBooksUtil(user, params);
   await util.importTopic(topicId);
   return util.result();
@@ -304,7 +304,7 @@ export async function importBookUtil(
   session: SessionSchema,
   params: BooksImportParams,
   bookId: Book["id"]
-): Promise {
+): Promise<BooksImportResult> {
   const util = new ImportBooksUtil(session.user, params);
   await util.importBook(session, bookId);
   return util.result();
@@ -462,7 +462,7 @@ class ImportBooksUtil {
       sections: _sections,
       publicBooks: _publicBooks,
       ...book
-    }: BookProps & Pick
+    }: BookProps & Pick<Book, "language">
   ) {
     const keywordsBeforeUpdate = await prisma.keyword.findMany({
       where: { books: { some: { id } } },
