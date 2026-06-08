@@ -20,9 +20,9 @@ import prisma from "$server/utils/prisma";
 type MockUser = Partial<User> & {
   ltiMembers?: Partial<LtiMember>[];
 };
-const mockUserFindUnique = vi.mocked(
-  prisma.user.findUnique
-) as unknown as Mock<Promise<MockUser | null>>;
+const mockUserFindUnique = vi.mocked(prisma.user.findUnique) as unknown as Mock<
+  Promise<MockUser | null>
+>;
 
 type MockResourceLink = Partial<LtiResourceLink> &
   Pick<LtiResourceLink, "consumerId" | "contextId" | "lineItem">;

@@ -104,9 +104,9 @@ describe("update() - LTI成績送信ロジックの検証", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     vi.mocked(findBook).mockResolvedValue(createMockBook({ id: 1 }));
-    vi
-      .mocked(findClient)
-      .mockResolvedValue({ id: "client-id" } as unknown as ClientType);
+    vi.mocked(findClient).mockResolvedValue({
+      id: "client-id",
+    } as unknown as ClientType);
   });
 
   it("クエリで指定されたコンテキストの活動内容に基づいて成績を算出し、正しい宛先に送信すること", async () => {
@@ -174,8 +174,7 @@ describe("update() - LTI成績送信ロジックの検証", () => {
       },
     ];
     vi.mocked(getGradeTargets).mockResolvedValue(mockTargets);
-    vi
-      .mocked(publishScore)
+    vi.mocked(publishScore)
       .mockResolvedValueOnce(undefined)
       .mockRejectedValueOnce(new Error("LTI Error"));
 

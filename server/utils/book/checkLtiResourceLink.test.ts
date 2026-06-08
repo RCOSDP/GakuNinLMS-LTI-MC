@@ -73,9 +73,9 @@ describe("checkLtiResourceLink()検証", () => {
     });
 
     it("lti_consumer_id がクエリにある場合、セッションの値ではなくクエリの値を優先して検索すること", async () => {
-      vi
-        .mocked(prisma.ltiResourceLink.findFirst)
-        .mockResolvedValue(createMockResourceLink({ id: "1" }));
+      vi.mocked(prisma.ltiResourceLink.findFirst).mockResolvedValue(
+        createMockResourceLink({ id: "1" })
+      );
       const query = {
         lti_context_id: VALID_CONTEXT_ID,
         lti_consumer_id: OTHER_CONSUMER_ID,
@@ -121,9 +121,9 @@ describe("checkLtiResourceLink()検証", () => {
 
   describe("リソースリンク(ltiMembers)", () => {
     it("セッション情報が不一致でも、DBに有効なリソースリンクがあれば承認すること", async () => {
-      vi
-        .mocked(prisma.ltiResourceLink.findFirst)
-        .mockResolvedValue(createMockResourceLink({ id: "888" }));
+      vi.mocked(prisma.ltiResourceLink.findFirst).mockResolvedValue(
+        createMockResourceLink({ id: "888" })
+      );
 
       const result = await checkLtiResourceLink(
         VALID_BOOK_ID,

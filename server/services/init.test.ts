@@ -15,10 +15,12 @@ vi.mock("$server/utils/prisma", () => ({}));
 const mockedUserServices = userServices as unknown as Mocked<
   typeof userServices
 >;
-const mockedResourceLinkServices =
-  resourceLinkServices as unknown as Mocked<typeof resourceLinkServices>;
-const mockedGetSystemSettings =
-  getSystemSettings as unknown as MockedFunction<typeof getSystemSettings>;
+const mockedResourceLinkServices = resourceLinkServices as unknown as Mocked<
+  typeof resourceLinkServices
+>;
+const mockedGetSystemSettings = getSystemSettings as unknown as MockedFunction<
+  typeof getSystemSettings
+>;
 
 describe("init()", () => {
   beforeEach(() => {
