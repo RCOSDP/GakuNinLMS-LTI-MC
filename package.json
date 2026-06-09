@@ -102,7 +102,7 @@
     "compile": "run-p compile:*",
     "compile:prisma": "pnpm --dir server build:prisma",
     "compile:pathpida": "pathpida",
-    "build": "run-s compile build:static build:export build:server",
+    "build": "run-s compile build:static build:server build:export",
     "build:static": "run-p build:{license,storybook,next}",
     "build:license": "NODE_ENV=development pnpm licenses list -r --json | pnpm-licenses generate-disclaimer --json-input --output-file public/LICENSE",
     "build:storybook": "storybook build -o public/storybook",
