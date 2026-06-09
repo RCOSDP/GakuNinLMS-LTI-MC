@@ -3,9 +3,7 @@ import type { RouteGenericInterface } from "fastify/types/route";
 
 export type ControllerMethod<
   RouteGeneric extends RouteGenericInterface = RouteGenericInterface,
-> = (
-  req: FastifyRequest<RouteGeneric>
-) => Promise<{
+> = (req: FastifyRequest<RouteGeneric>) => Promise<{
   status: number;
   body?: unknown;
   headers?: Record<string, string>;
