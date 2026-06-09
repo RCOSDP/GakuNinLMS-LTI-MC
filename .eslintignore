@@ -10,5 +10,4 @@ node_modules/
 /public/storybook/
 /public/LICENSE
 /utils/$path.ts
-vitest.config.ts
 next.config.js
