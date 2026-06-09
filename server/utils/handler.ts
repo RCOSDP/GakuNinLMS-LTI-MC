@@ -1,13 +1,13 @@
 import type { FastifyRequest, FastifyReply } from "fastify";
 import type { RouteGenericInterface } from "fastify/types/route";
-import type Controller from "$server/types/controller";
+import type { ControllerMethod } from "$server/types/controller";
 
 const handler =
   <RouteGeneric extends RouteGenericInterface = RouteGenericInterface>(
-    method: Required<Controller<RouteGeneric>>[keyof Controller<RouteGeneric>]
+    method: ControllerMethod<RouteGeneric>
   ) =>
   async (request: FastifyRequest<RouteGeneric>, reply: FastifyReply) => {
-    const { status, headers, body } = await method!(request);
+    const { status, headers, body } = await method(request);
     if (headers != null) void reply.headers(headers);
     void reply.code(status);
     return body;
