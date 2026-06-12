@@ -1,8 +1,8 @@
 import dotenv from "dotenv";
 import fs from "fs";
 
-import format from "date-fns/format";
-import utcToZoneTime from "date-fns-tz/utcToZonedTime";
+import { TZDate } from "@date-fns/tz";
+import { format } from "date-fns";
 import prisma from "$server/utils/prisma";
 import { nullSession } from "$server/services/session";
 import findAllActivity from "./findAllActivity";
@@ -14,7 +14,7 @@ import type { BookActivitySchema } from "$server/models/bookActivity";
 import type { SessionSchema } from "$server/models/session";
 import { getActivityRewatchRate } from "$server/services/activityRewatchRate";
 import type { ActivityRewatchRateProps } from "$server/validators/activityRewatchRate";
-import json2csv from "json2csv";
+import { Parser } from "@json2csv/plainjs";
 
 import { NEXT_PUBLIC_ENABLE_TOPIC_VIEW_RECORD } from "$utils/env";
 import findClient from "../ltiv1p3/findClient";
@@ -94,10 +94,10 @@ function appendCsv(
   });
   const fileExists = fs.existsSync(filename);
   if (!fileExists) {
-    const csv = json2csv.parse(filterd, { fields });
+    const csv = new Parser({ fields }).parse(filterd);
     fs.writeFileSync(filename, "\uFEFF" + csv, "utf-8");
   } else {
-    const csv = json2csv.parse(filterd, { fields, header: false });
+    const csv = new Parser({ fields, header: false }).parse(filterd);
     fs.appendFileSync(filename, "\n" + csv, "utf-8");
   }
 }
@@ -142,7 +142,7 @@ function download(
 
 function logger(level: string, output: string, error?: Error | unknown) {
   console.log(
-    format(utcToZoneTime(new Date(), "Asia/Tokyo"), "yyyy-MM-dd HH:mm:ss"),
+    format(new TZDate(new Date(), "Asia/Tokyo"), "yyyy-MM-dd HH:mm:ss"),
     level,
     output,
     "ActivityDownloadLog"

@@ -9,8 +9,6 @@ import type { Readable } from "node:stream";
 import { pipeline } from "node:stream/promises";
 import yauzl from "yauzl";
 import type { Entry } from "yauzl";
-// @ts-expect-error Could not find a declaration file for module 'recursive-readdir-synchronous'
-import recursive from "recursive-readdir-synchronous";
 import type { ValidationError } from "class-validator";
 import { validate } from "class-validator";
 import type { UserSchema } from "$server/models/user";
@@ -30,7 +28,7 @@ import { startWowzaUpload } from "$server/utils/wowza/upload";
 import { validateWowzaSettings } from "$server/utils/wowza/env";
 import findRoles from "$server/utils/author/findRoles";
 import insertAuthors from "$server/utils/author/insertAuthors";
-import type { Book, Topic } from "@prisma/client";
+import type { Book, Topic } from "$server/generated/prisma/client";
 import findTopic from "$server/utils/topic/findTopic";
 import type { TopicProps, TopicSchema } from "$server/models/topic";
 import keywordsConnectOrCreateInput from "../keyword/keywordsConnectOrCreateInput";
@@ -126,8 +124,17 @@ async function writeZipEntryStream(
   }
 }
 
+function listFilesRecursively(dir: string): string[] {
+  return fs
+    .globSync("**/*", { cwd: dir })
+    .filter((relativePath) =>
+      fs.statSync(path.join(dir, relativePath)).isFile()
+    )
+    .map((relativePath) => path.join(dir, relativePath));
+}
+
 function collectJsonFromUnzippedDir(ctx: ImportFileParseContext) {
-  ctx.unzippedFiles = recursive(ctx.tmpdir);
+  ctx.unzippedFiles = listFilesRecursively(ctx.tmpdir);
   const jsonfiles: string[] = ctx.unzippedFiles.filter((filename) =>
     filename.toLowerCase().endsWith(".json")
   );

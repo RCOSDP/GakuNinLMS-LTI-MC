@@ -10,7 +10,6 @@ export const createSchema = {
   description: outdent`
       動画ファイルを与えてアップロードします。
       教員または管理者でなければなりません。`,
-  consumes: ["multipart/form-data"],
   response: {
     201: {
       type: "object",
