@@ -1,5 +1,5 @@
 import type { FastifyRequest } from "fastify";
-import { outdent } from "outdent";
+import outdent from "$utils/outdent";
 import { validateOrReject } from "class-validator";
 import type { SessionSchema } from "$server/models/session";
 import type { LtiLaunchPresentationSchema } from "$server/models/ltiLaunchPresentation";

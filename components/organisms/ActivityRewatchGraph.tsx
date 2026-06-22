@@ -14,7 +14,7 @@ import {
 } from "$utils/env";
 import { NEXT_PUBLIC_ENABLE_TOPIC_VIEW_RECORD } from "$utils/env";
 import { NEXT_PUBLIC_ACTIVITY_COUNT_INTERVAL } from "$utils/env";
-import groupBy from "lodash.groupby";
+import groupBy from "$utils/groupBy";
 
 const useStyles = makeStyles(() => ({
   outilerDescriptionArea: {
@@ -307,7 +307,7 @@ export default function ActivityRewatchGraph(props: Props) {
       .filter((c) => c.count <= NEXT_PUBLIC_REWATCH_GRAPH_COUNT_THRESHOLD) ||
     [];
 
-  const plotEachStartMs = groupBy(plot, (p: PlotSchema) => p.startMs);
+  const plotEachStartMs = groupBy(plot, (p: PlotSchema) => String(p.startMs));
   const average: PlotSchema[] = [];
   for (const key of Object.keys(plotEachStartMs)) {
     const startMs = key;

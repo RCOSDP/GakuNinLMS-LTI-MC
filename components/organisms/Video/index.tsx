@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import usePrevious from "@rooks/use-previous";
+import usePrevious from "$utils/usePrevious";
 import { css } from "@emotion/css";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";

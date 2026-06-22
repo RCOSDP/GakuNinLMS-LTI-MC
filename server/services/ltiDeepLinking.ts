@@ -1,5 +1,5 @@
 import type { FastifyRequest, FastifySchema } from "fastify";
-import { outdent } from "outdent";
+import outdent from "$utils/outdent";
 import authUser from "$server/auth/authUser";
 import authInstructor from "$server/auth/authInstructor";
 import type { FromSchema, JSONSchema } from "json-schema-to-ts";

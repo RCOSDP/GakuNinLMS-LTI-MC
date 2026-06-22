@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from "react";
 import { useAtom } from "jotai";
 import useSWRImmutable from "swr/immutable";
-import { useDebouncedCallback } from "use-debounce";
+import useDebouncedCallback from "$utils/useDebouncedCallback";
 import type { VideoJsPlayer } from "$types/videoJsPlayer";
 import VimeoPlayer from "@vimeo/player";
 import type { Muted, PlaybackRate, TextTrack, Volume } from "./storage";

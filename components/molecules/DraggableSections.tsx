@@ -1,7 +1,23 @@
-import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
-import type { DraggableId, DropResult } from "react-beautiful-dnd";
+import {
+  DndContext,
+  KeyboardSensor,
+  PointerSensor,
+  closestCenter,
+  useDroppable,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+  type Over,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import clsx from "clsx";
-import { useDebouncedCallback } from "use-debounce";
+import useDebouncedCallback from "$utils/useDebouncedCallback";
 import AddIcon from "@mui/icons-material/Add";
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import makeStyles from "@mui/styles/makeStyles";
@@ -11,6 +27,36 @@ import type { SectionSchema } from "$server/models/book/section";
 import type { TopicSchema } from "$server/models/topic";
 import { gray, primary } from "$theme/colors";
 import reorder, { insert, update, remove } from "$utils/reorder";
+
+type SectionDragData = {
+  type: "section";
+  sectionId: number;
+};
+
+type TopicDragData = {
+  type: "topic";
+  sectionId: number;
+  topicId: number;
+};
+
+type SectionTopicsDragData = {
+  type: "section-topics";
+  sectionId: number;
+};
+
+type DragData = SectionDragData | TopicDragData | SectionTopicsDragData;
+
+function sectionSortableId(sectionId: number) {
+  return `section-${sectionId}`;
+}
+
+function topicSortableId(sectionId: number, topicId: number) {
+  return `topic-${sectionId}-${topicId}`;
+}
+
+function sectionDroppableId(sectionId: number) {
+  return `droppable-${sectionId}`;
+}
 
 const useSectionCreateButtonStyles = makeStyles((theme) => ({
   root: {
@@ -56,7 +102,7 @@ const useDraggableSectionStyles = makeStyles((theme) => ({
     "&:hover > $tab": {
       backgroundColor: gray[200],
     },
-    "&:hover > [data-rbd-droppable-id]:not(:hover) ~ $tab > $icon": {
+    "&:hover > [data-section-topics]:not(:hover) ~ $tab > $icon": {
       color: gray[700],
     },
   },
@@ -93,85 +139,98 @@ const useDraggableSectionStyles = makeStyles((theme) => ({
 type DraggableSectionProps = {
   section: SectionSchema;
   children: React.ReactNode;
-  index: number;
   onSectionUpdate(section: SectionSchema): void;
 };
 
-function DraggableSection({
+function SortableSection({
   section,
-  index,
   children,
   onSectionUpdate,
 }: DraggableSectionProps) {
   const classes = useDraggableSectionStyles();
-  const draggableId = `draggable-${section.id}`;
+  const id = sectionSortableId(section.id);
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
+    id,
+    data: { type: "section", sectionId: section.id } satisfies SectionDragData,
+  });
   const handleSectionNameChange = useDebouncedCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       onSectionUpdate({ ...section, name: event.target.value || null });
     },
     500
   );
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
   return (
-    <Draggable draggableId={draggableId} index={index}>
-      {(provided, snapshot) => (
-        <div
-          className={clsx(classes.root, {
-            [classes.drag]: snapshot.isDragging,
-          })}
-          ref={provided.innerRef}
-          {...provided.draggableProps}
-          {...provided.dragHandleProps}
-        >
-          {section.topics.length > 1 && (
-            <SectionTextField
-              label="セクション"
-              fullWidth
-              onChange={handleSectionNameChange}
-              disabled={snapshot.isDragging}
-              defaultValue={section.name}
-            />
-          )}
-          {children}
-          <div className={classes.tab}>
-            <DragIndicatorIcon className={classes.icon} fontSize="small" />
-          </div>
-        </div>
+    <div
+      ref={setNodeRef}
+      style={style}
+      className={clsx(classes.root, {
+        [classes.drag]: isDragging,
+      })}
+      {...attributes}
+      {...listeners}
+    >
+      {section.topics.length > 1 && (
+        <SectionTextField
+          label="セクション"
+          fullWidth
+          onChange={handleSectionNameChange}
+          disabled={isDragging}
+          defaultValue={section.name}
+        />
       )}
-    </Draggable>
+      {children}
+      <div className={classes.tab}>
+        <DragIndicatorIcon className={classes.icon} fontSize="small" />
+      </div>
+    </div>
   );
 }
 
-function DroppableSection({
+function SectionTopicsDroppable({
   section,
   children,
-}: Omit<DraggableSectionProps, "index" | "onSectionUpdate">) {
-  const droppableId = `droppable-${section.id}`;
+}: Omit<DraggableSectionProps, "onSectionUpdate">) {
+  const { setNodeRef } = useDroppable({
+    id: sectionDroppableId(section.id),
+    data: {
+      type: "section-topics",
+      sectionId: section.id,
+    } satisfies SectionTopicsDragData,
+  });
   return (
-    <Droppable droppableId={droppableId} type="topic">
-      {(provided) => (
-        <div ref={provided.innerRef} {...provided.droppableProps}>
-          {children}
-          {provided.placeholder}
-        </div>
-      )}
-    </Droppable>
+    <div ref={setNodeRef} data-section-topics>
+      {children}
+    </div>
   );
 }
 
 function DragDropSection({
   section,
-  index,
   children,
   onSectionUpdate,
 }: DraggableSectionProps) {
+  const topicIds = section.topics.map((topic) =>
+    topicSortableId(section.id, topic.id)
+  );
   return (
-    <DraggableSection
-      section={section}
-      index={index}
-      onSectionUpdate={onSectionUpdate}
-    >
-      <DroppableSection section={section}>{children}</DroppableSection>
-    </DraggableSection>
+    <SortableSection section={section} onSectionUpdate={onSectionUpdate}>
+      <SectionTopicsDroppable section={section}>
+        <SortableContext items={topicIds} strategy={verticalListSortingStrategy}>
+          {children}
+        </SortableContext>
+      </SectionTopicsDroppable>
+    </SortableSection>
   );
 }
 
@@ -195,43 +254,56 @@ const useDraggableTopicStyles = makeStyles((theme) => ({
   },
 }));
 
-type DraggableTopicProps = Omit<
-  DraggableSectionProps,
-  "children" | "onSectionUpdate"
-> & {
+type DraggableTopicProps = {
+  section: SectionSchema;
   topic: TopicSchema;
-  onTopicRemove(draggableId: DraggableId): void;
+  onTopicRemove(topicSortableId: string): void;
 };
 
-function DraggableTopic({
+function SortableTopic({
   section,
   topic,
-  index,
   onTopicRemove,
 }: DraggableTopicProps) {
   const classes = useDraggableTopicStyles();
-  const draggableId = `draggable-${section.id}-${topic.id}:${index}`;
+  const id = topicSortableId(section.id, topic.id);
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
+    id,
+    data: {
+      type: "topic",
+      sectionId: section.id,
+      topicId: topic.id,
+    } satisfies TopicDragData,
+  });
   const handleTopicRemove = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
-    onTopicRemove(draggableId);
+    onTopicRemove(id);
+  };
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
   };
   return (
-    <Draggable draggableId={draggableId} index={index}>
-      {(provided, snapshot) => (
-        <div
-          className={clsx(classes.root, {
-            [classes.drag]: snapshot.isDragging,
-          })}
-          ref={provided.innerRef}
-          {...provided.draggableProps}
-          {...provided.dragHandleProps}
-        >
-          <DragIndicatorIcon className={classes.icon} fontSize="small" />
-          {topic.name}
-          <RemoveButton variant="topic" onClick={handleTopicRemove} />
-        </div>
-      )}
-    </Draggable>
+    <div
+      ref={setNodeRef}
+      style={style}
+      className={clsx(classes.root, {
+        [classes.drag]: isDragging,
+      })}
+      {...attributes}
+      {...listeners}
+    >
+      <DragIndicatorIcon className={classes.icon} fontSize="small" />
+      {topic.name}
+      <RemoveButton variant="topic" onClick={handleTopicRemove} />
+    </div>
   );
 }
 
@@ -303,13 +375,19 @@ const updateSection = (
 
 const removeTopic = (
   initialSections: SectionSchema[],
-  draggableTopicId: DraggableId
+  topicId: string
 ): SectionSchema[] => {
+  const match = topicId.match(/^topic-(\d+)-(\d+)$/);
+  if (!match) return initialSections;
+  const sectionId = Number(match[1]);
+  const topicNumericId = Number(match[2]);
   const sections = [...initialSections];
-  const sectionIndex = sections.findIndex(
-    ({ id }) => id === Number(draggableTopicId.split("-")[1])
+  const sectionIndex = sections.findIndex(({ id }) => id === sectionId);
+  if (sectionIndex === -1) return initialSections;
+  const topicIndex = sections[sectionIndex].topics.findIndex(
+    ({ id }) => id === topicNumericId
   );
-  const topicIndex = Number(draggableTopicId.split(":")[1]);
+  if (topicIndex === -1) return initialSections;
   const topics = remove(sections[sectionIndex].topics, topicIndex);
   sections[sectionIndex] = {
     ...sections[sectionIndex],
@@ -325,6 +403,27 @@ const removeSection = (
   const sections = remove(initialSections, index);
   return sections;
 };
+
+function getTopicDropTarget(
+  sections: SectionSchema[],
+  over: Over | null
+): { sectionId: number; index: number } | null {
+  if (!over) return null;
+  const data = over.data.current as DragData | undefined;
+  if (data?.type === "topic") {
+    const section = sections.find(({ id }) => id === data.sectionId);
+    if (!section) return null;
+    const index = section.topics.findIndex(({ id }) => id === data.topicId);
+    if (index === -1) return null;
+    return { sectionId: data.sectionId, index };
+  }
+  if (data?.type === "section-topics") {
+    const section = sections.find(({ id }) => id === data.sectionId);
+    if (!section) return null;
+    return { sectionId: data.sectionId, index: section.topics.length };
+  }
+  return null;
+}
 
 const useStyles = makeStyles((theme) => ({
   placeholder: {
@@ -342,30 +441,61 @@ type Props = {
 export default function DraggableSections(props: Props) {
   const { sections, onSectionsUpdate, onSectionCreate } = props;
   const classes = useStyles();
-  const handleDragEnd = (result: DropResult) => {
-    if (!result.destination) return;
-    const handler: {
-      [key: string]: DragEndHandler;
-    } = {
-      section: handleSectionDragEnd,
-      topic: handleTopicDragEnd,
-    } as const;
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: { distance: 8 },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+  const sectionIds = sections.map(({ id }) => sectionSortableId(id));
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+    const activeData = active.data.current as DragData | undefined;
+    const overData = over.data.current as DragData | undefined;
+    if (activeData?.type === "section" && overData?.type === "section") {
+      const startIndex = sections.findIndex(
+        ({ id }) => id === activeData.sectionId
+      );
+      const endIndex = sections.findIndex(
+        ({ id }) => id === overData.sectionId
+      );
+      if (startIndex === -1 || endIndex === -1) return;
+      onSectionsUpdate(
+        handleSectionDragEnd(
+          sections,
+          { start: startIndex, end: endIndex },
+          { start: activeData.sectionId, end: overData.sectionId }
+        )
+      );
+      return;
+    }
+    if (activeData?.type !== "topic") return;
+    const sourceSection = sections.find(
+      ({ id }) => id === activeData.sectionId
+    );
+    if (!sourceSection) return;
+    const sourceIndex = sourceSection.topics.findIndex(
+      ({ id }) => id === activeData.topicId
+    );
+    if (sourceIndex === -1) return;
+    const destination = getTopicDropTarget(sections, over);
+    if (!destination) return;
     onSectionsUpdate(
-      handler[result.type](
+      handleTopicDragEnd(
         sections,
-        { start: result.source.index, end: result.destination.index },
-        {
-          start: Number(result.draggableId.split("-")[1]),
-          end: Number(result.destination.droppableId.split("-")[1]),
-        }
+        { start: sourceIndex, end: destination.index },
+        { start: activeData.sectionId, end: destination.sectionId }
       )
     );
   };
   const handleSectionUpdate = (section: SectionSchema) => {
     onSectionsUpdate(updateSection(sections, section));
   };
-  const handleTopicRemove = (draggableId: DraggableId) => {
-    onSectionsUpdate(removeTopic(sections, draggableId));
+  const handleTopicRemove = (topicId: string) => {
+    onSectionsUpdate(removeTopic(sections, topicId));
   };
   const handleSectionRemove = (index: number) => () => {
     onSectionsUpdate(removeSection(sections, index));
@@ -373,42 +503,42 @@ export default function DraggableSections(props: Props) {
   const handleSectionCreate = () => onSectionCreate();
   return (
     <>
-      <DragDropContext onDragEnd={handleDragEnd}>
-        <Droppable droppableId="droppable-book-children" type="section">
-          {(provided) => (
-            <div ref={provided.innerRef} {...provided.droppableProps}>
-              {sections.map((section, sectionIndex) => (
-                <DragDropSection
-                  key={`${section.id}`}
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={handleDragEnd}
+      >
+        <SortableContext
+          items={sectionIds}
+          strategy={verticalListSortingStrategy}
+        >
+          {sections.map((section, sectionIndex) => (
+            <DragDropSection
+              key={`${section.id}`}
+              section={section}
+              onSectionUpdate={handleSectionUpdate}
+            >
+              {section.topics.map((topic) => (
+                <SortableTopic
+                  key={topicSortableId(section.id, topic.id)}
                   section={section}
-                  index={sectionIndex}
-                  onSectionUpdate={handleSectionUpdate}
-                >
-                  {section.topics.map((topic, topicIndex) => (
-                    <DraggableTopic
-                      key={`${section.id}-${topic.id}:${topicIndex}`}
-                      section={section}
-                      topic={topic}
-                      index={topicIndex}
-                      onTopicRemove={handleTopicRemove}
-                    />
-                  ))}
-                  {section.topics.length === 0 && (
-                    <p className={classes.placeholder}>
-                      ここにトピックをドロップ
-                      <RemoveButton
-                        variant="section"
-                        onClick={handleSectionRemove(sectionIndex)}
-                      />
-                    </p>
-                  )}
-                </DragDropSection>
+                  topic={topic}
+                  onTopicRemove={handleTopicRemove}
+                />
               ))}
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
+              {section.topics.length === 0 && (
+                <p className={classes.placeholder}>
+                  ここにトピックをドロップ
+                  <RemoveButton
+                    variant="section"
+                    onClick={handleSectionRemove(sectionIndex)}
+                  />
+                </p>
+              )}
+            </DragDropSection>
+          ))}
+        </SortableContext>
+      </DndContext>
       <SectionCreateButton onClick={handleSectionCreate} />
     </>
   );

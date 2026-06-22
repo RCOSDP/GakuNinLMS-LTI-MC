@@ -1,4 +1,4 @@
-import groupBy from "lodash.groupby";
+import groupBy from "$utils/groupBy";
 import getLocaleListString from "$utils/getLocaleListString";
 import type { ContentAuthors } from "$server/models/content";
 import type DescriptionList from "$atoms/DescriptionList";
