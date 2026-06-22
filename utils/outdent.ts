@@ -1,5 +1,8 @@
 function dedent(text: string): string {
-  const lines = text.replace(/^\n/, "").replace(/\n\s*$/, "").split("\n");
+  const lines = text
+    .replace(/^\n/, "")
+    .replace(/\n\s*$/, "")
+    .split("\n");
   const indent = lines.reduce((min, line) => {
     if (line.trim() === "") return min;
     const leading = line.match(/^ */)?.[0].length ?? 0;

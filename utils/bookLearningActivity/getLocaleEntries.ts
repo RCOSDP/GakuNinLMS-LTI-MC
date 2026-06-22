@@ -63,10 +63,7 @@ export function getLocaleEntries(
   const flattenActivity = flattenObject({
     ...activity,
     session,
-  }) as Record<
-    (typeof keyOrder)[number],
-    string | number | Date | undefined
-  >;
+  }) as Record<(typeof keyOrder)[number], string | number | Date | undefined>;
 
   if (!NEXT_PUBLIC_ENABLE_TOPIC_VIEW_RECORD) {
     rewatchRate = undefined;
@@ -74,9 +71,7 @@ export function getLocaleEntries(
 
   const a = {
     ...flattenActivity,
-    "topic.timeRequired": formatSecondsToHms(
-      activity.topic.timeRequired ?? 0
-    ),
+    "topic.timeRequired": formatSecondsToHms(activity.topic.timeRequired ?? 0),
     totalTimeMs: formatMsToHms(activity.totalTimeMs ?? 0),
     completionRate: round(
       (activity.totalTimeMs ?? 0) / (activity.topic.timeRequired * 1000),

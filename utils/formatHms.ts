@@ -14,9 +14,11 @@ export function formatMsToHms(ms: number): string {
   const seconds = Math.floor((ms % 60_000) / 1_000);
   const milliseconds = ms % 1_000;
 
-  return [
-    String(hours).padStart(2, "0"),
-    String(minutes).padStart(2, "0"),
-    String(seconds).padStart(2, "0"),
-  ].join(":") + `.${String(milliseconds).padStart(3, "0")}`;
+  return (
+    [
+      String(hours).padStart(2, "0"),
+      String(minutes).padStart(2, "0"),
+      String(seconds).padStart(2, "0"),
+    ].join(":") + `.${String(milliseconds).padStart(3, "0")}`
+  );
 }

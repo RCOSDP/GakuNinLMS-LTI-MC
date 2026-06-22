@@ -226,7 +226,10 @@ function DragDropSection({
   return (
     <SortableSection section={section} onSectionUpdate={onSectionUpdate}>
       <SectionTopicsDroppable section={section}>
-        <SortableContext items={topicIds} strategy={verticalListSortingStrategy}>
+        <SortableContext
+          items={topicIds}
+          strategy={verticalListSortingStrategy}
+        >
           {children}
         </SortableContext>
       </SectionTopicsDroppable>
@@ -260,11 +263,7 @@ type DraggableTopicProps = {
   onTopicRemove(topicSortableId: string): void;
 };
 
-function SortableTopic({
-  section,
-  topic,
-  onTopicRemove,
-}: DraggableTopicProps) {
+function SortableTopic({ section, topic, onTopicRemove }: DraggableTopicProps) {
   const classes = useDraggableTopicStyles();
   const id = topicSortableId(section.id, topic.id);
   const {
