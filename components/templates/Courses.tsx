@@ -3,7 +3,6 @@ import { useConfirm } from "material-ui-confirm";
 import Skeleton from "@mui/material/Skeleton";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import groupBy from "$utils/groupBy";
 import ContentTypeIndicator from "$atoms/ContentTypeIndicator";
 import Container from "$atoms/Container";
 import SortLinkSelect from "$atoms/SortLinkSelect";
@@ -40,7 +39,7 @@ export default function Courses({
   const courses = useMemo(
     () =>
       Object.entries(
-        groupBy(contents, (link) =>
+        Object.groupBy(contents, (link) =>
           [link.oauthClientId, link.ltiContext.id]
             .map(encodeURIComponent)
             .join(":")
@@ -88,6 +87,7 @@ export default function Courses({
       <CourseFilterColumn sx={{ gridArea: "side" }} clientIds={clientIds} />
       <Box gridArea="items">
         {courses.map(([id, links]) => {
+          if (!links) return null;
           const [course] = links;
           return (
             <CourseTree

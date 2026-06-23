@@ -14,8 +14,6 @@ import {
 } from "$utils/env";
 import { NEXT_PUBLIC_ENABLE_TOPIC_VIEW_RECORD } from "$utils/env";
 import { NEXT_PUBLIC_ACTIVITY_COUNT_INTERVAL } from "$utils/env";
-import groupBy from "$utils/groupBy";
-
 const useStyles = makeStyles(() => ({
   outilerDescriptionArea: {
     textAlign: "right",
@@ -307,11 +305,12 @@ export default function ActivityRewatchGraph(props: Props) {
       .filter((c) => c.count <= NEXT_PUBLIC_REWATCH_GRAPH_COUNT_THRESHOLD) ||
     [];
 
-  const plotEachStartMs = groupBy(plot, (p: PlotSchema) => String(p.startMs));
+  const plotEachStartMs = Object.groupBy(plot, (p: PlotSchema) =>
+    String(p.startMs)
+  );
   const average: PlotSchema[] = [];
-  for (const key of Object.keys(plotEachStartMs)) {
-    const startMs = key;
-    const group = plotEachStartMs[key];
+  for (const [startMs, group] of Object.entries(plotEachStartMs)) {
+    if (!group) continue;
     const count =
       group
         .map((p: PlotSchema) => p.count)
