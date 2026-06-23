@@ -11,7 +11,7 @@ function listChildDirectoryNames(
   baseDir: string
 ): string[] {
   return readdirSync(resolve(baseDir, relativePath), { withFileTypes: true })
-    .filter((entry) => entry.isDirectory())
+    .filter((entry) => entry.isDirectory() && !entry.name.startsWith("."))
     .map((entry) => entry.name);
 }
 
