@@ -67,8 +67,9 @@ const skipButton = css({
 });
 
 const markdownContainerStyle = css({
-  wordBreak: "break-word",
-  overflowWrap: "break-word",
+  minWidth: 0,
+  maxWidth: "100%",
+  overflowWrap: "anywhere",
 });
 
 function SkipButton(props: ButtonProps) {
@@ -315,7 +316,7 @@ export default function Video({
       : { bookmarks: [], bookmarkTagMenu: [], isLoading: false };
 
   return (
-    <>
+    <Box sx={{ minWidth: 0, maxWidth: "100%" }}>
       {isLoadedVideoInstancePool ? (
         Array.from(video.entries()).map(([id, videoInstance]) => (
           <VideoPlayer
@@ -487,6 +488,6 @@ export default function Video({
           </Box>
         )}
       </TabPanel>
-    </>
+    </Box>
   );
 }

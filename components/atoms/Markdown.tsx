@@ -16,6 +16,16 @@ const components = {
 } satisfies Components;
 
 const root = css({
+  minWidth: 0,
+  maxWidth: "100%",
+  overflowWrap: "anywhere",
+  "& p, & li, & blockquote, & td, & th": {
+    overflowWrap: "anywhere",
+  },
+  "& pre, & code": {
+    whiteSpace: "pre-wrap",
+    overflowWrap: "anywhere",
+  },
   "> :first-child": {
     marginTop: 0,
   },
