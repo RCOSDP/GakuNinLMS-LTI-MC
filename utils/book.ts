@@ -36,11 +36,9 @@ async function mutateBookCache(
   bookId: BookSchema["id"],
   data: BookSchema
 ): Promise<void> {
-  await mutate(
-    (k) => isBookCacheKey(k) && k.bookId === bookId,
-    data,
-    { revalidate: false }
-  );
+  await mutate((k) => isBookCacheKey(k) && k.bookId === bookId, data, {
+    revalidate: false,
+  });
 }
 
 async function fetchBook({

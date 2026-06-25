@@ -108,8 +108,7 @@ function getTopicInsertionIndex(
 
   const overMidY = overRect.top + overRect.height / 2;
   const isUpward = activeMidY < overMidY;
-  const topExtension =
-    baseIndex === 0 || isUpward ? TOP_INSERT_MARGIN : 0;
+  const topExtension = baseIndex === 0 || isUpward ? TOP_INSERT_MARGIN : 0;
   const effectiveTop = overRect.top - topExtension;
   const effectiveHeight = overRect.height + topExtension;
 
@@ -406,11 +405,7 @@ function TopicDragPreview({ topic }: { topic: TopicSchema }) {
   );
 }
 
-function SortableTopic({
-  section,
-  topic,
-  onTopicRemove,
-}: DraggableTopicProps) {
+function SortableTopic({ section, topic, onTopicRemove }: DraggableTopicProps) {
   const classes = useDraggableTopicStyles();
   const id = topicSortableId(section.id, topic.id);
   const {
