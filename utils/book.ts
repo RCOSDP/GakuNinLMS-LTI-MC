@@ -7,6 +7,13 @@ import type { TopicSchema } from "$server/models/topic";
 import type { IsContentEditable } from "$server/models/content";
 import { useLtiContextAtom, useSessionAtom } from "$store/session";
 import { revalidateSession } from "./session";
+import {
+  clearBookCaches,
+  clearBookIdsCache,
+  clearSearchCaches,
+  extractResourceIdsFromBook,
+  extractTopicIdsFromBook,
+} from "./invalidateBookCache";
 import type { LtiResourceLinkSchema } from "$server/models/ltiResourceLink";
 import { getDisplayableBook } from "./displayableBook";
 import type { ReleaseProps, ReleaseSchema } from "$server/models/book/release";
@@ -163,8 +170,19 @@ export async function replaceTopicInBook(
   return updateBook({ ...book, sections });
 }
 
-export async function destroyBook(id: BookSchema["id"], withtopic: boolean) {
+export async function destroyBook(
+  id: BookSchema["id"],
+  withtopic: boolean,
+  book?: BookSchema
+) {
+  const topicIds =
+    withtopic && book ? extractTopicIdsFromBook(book) : [];
+  const resourceIds =
+    withtopic && book ? extractResourceIdsFromBook(book) : [];
   await api.apiV2BookBookIdDelete({ bookId: id, withtopic });
+  await clearBookCaches(id, { topicIds, resourceIds });
+  await clearSearchCaches();
+  await clearBookIdsCache();
   await revalidateSession();
 }
 
