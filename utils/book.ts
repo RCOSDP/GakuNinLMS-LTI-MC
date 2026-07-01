@@ -175,10 +175,8 @@ export async function destroyBook(
   withtopic: boolean,
   book?: BookSchema
 ) {
-  const topicIds =
-    withtopic && book ? extractTopicIdsFromBook(book) : [];
-  const resourceIds =
-    withtopic && book ? extractResourceIdsFromBook(book) : [];
+  const topicIds = withtopic && book ? extractTopicIdsFromBook(book) : [];
+  const resourceIds = withtopic && book ? extractResourceIdsFromBook(book) : [];
   await api.apiV2BookBookIdDelete({ bookId: id, withtopic });
   await clearBookCaches(id, { topicIds, resourceIds });
   await clearSearchCaches();

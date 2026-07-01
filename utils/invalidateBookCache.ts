@@ -24,8 +24,7 @@ function isCacheKey(key: unknown): key is CacheKey {
 
 function matchesBookId(key: CacheKey, bookId: BookSchema["id"]): boolean {
   return (
-    "bookId" in key &&
-    (key as unknown as { bookId: number }).bookId === bookId
+    "bookId" in key && (key as unknown as { bookId: number }).bookId === bookId
   );
 }
 
@@ -36,7 +35,10 @@ function matchesTopicId(key: CacheKey, topicId: TopicSchema["id"]): boolean {
   );
 }
 
-function matchesAnyTopicId(key: CacheKey, topicIds: TopicSchema["id"][]): boolean {
+function matchesAnyTopicId(
+  key: CacheKey,
+  topicIds: TopicSchema["id"][]
+): boolean {
   if (topicIds.length === 0) return false;
   if (topicIds.some((topicId) => matchesTopicId(key, topicId))) {
     return true;
@@ -58,7 +60,9 @@ function matchesResourceId(key: CacheKey, resourceId: number): boolean {
 }
 
 export function extractTopicIdsFromBook(book: BookSchema): TopicSchema["id"][] {
-  return book.sections.flatMap((section) => section.topics.map((topic) => topic.id));
+  return book.sections.flatMap((section) =>
+    section.topics.map((topic) => topic.id)
+  );
 }
 
 export function extractResourceIdsFromBook(book: BookSchema): number[] {
@@ -90,7 +94,8 @@ export async function clearBookCaches(
   const resourceIds = options?.resourceIds ?? [];
 
   await clearCacheEntries(
-    (key) => isCacheKey(key) && key.key === BOOK_KEY && matchesBookId(key, bookId)
+    (key) =>
+      isCacheKey(key) && key.key === BOOK_KEY && matchesBookId(key, bookId)
   );
   await clearCacheEntries(
     (key) =>
@@ -112,7 +117,9 @@ export async function clearBookCaches(
   );
   await clearCacheEntries(
     (key) =>
-      isCacheKey(key) && key.key === WORD_CLOUD_KEY && matchesBookId(key, bookId)
+      isCacheKey(key) &&
+      key.key === WORD_CLOUD_KEY &&
+      matchesBookId(key, bookId)
   );
   await clearCacheEntries(
     (key) =>
@@ -145,9 +152,7 @@ export async function clearBookCaches(
 }
 
 export async function clearSearchCaches(): Promise<void> {
-  await clearCacheEntries(
-    (key) => isCacheKey(key) && key.key === SEARCH_KEY
-  );
+  await clearCacheEntries((key) => isCacheKey(key) && key.key === SEARCH_KEY);
 }
 
 export async function clearBookIdsCache(): Promise<void> {
