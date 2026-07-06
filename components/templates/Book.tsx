@@ -78,7 +78,7 @@ const useStyles = makeStyles((theme) => ({
       gridTemplateAreas: `
         "side main"
       `,
-      gridTemplateColumns: "30% 1fr",
+      gridTemplateColumns: "30% minmax(0, 1fr)",
       gridAutoRows: "min-content",
     },
     "&$mobile": {
@@ -93,6 +93,7 @@ const useStyles = makeStyles((theme) => ({
   },
   main: {
     gridArea: "main",
+    minWidth: 0,
     "&$desktop": {
       marginBottom: theme.spacing(2),
     },

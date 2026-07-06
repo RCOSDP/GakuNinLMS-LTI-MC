@@ -1,5 +1,5 @@
 import type { FastifyRequest } from "fastify";
-import { outdent } from "outdent";
+import outdent from "$utils/outdent";
 import authLtiLaunch from "$server/auth/authLtiLaunch";
 import type { LtiLaunchBody } from "$server/validators/ltiLaunchBody";
 import { ltiLaunchBodySchema } from "$server/validators/ltiLaunchBody";

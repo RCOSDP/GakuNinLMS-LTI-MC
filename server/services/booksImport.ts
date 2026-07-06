@@ -1,5 +1,5 @@
 import type { FastifySchema } from "fastify";
-import { outdent } from "outdent";
+import outdent from "$utils/outdent";
 import {
   BooksImportParams,
   booksImportResultSchema,

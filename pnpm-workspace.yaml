@@ -1,6 +1,9 @@
 packages:
   - server
 
+overrides:
+  normalize-package-data>resolve: 1.22.1
+
 # 公開から 7 日経過したバージョンのみ解決する（分単位: 7 * 24 * 60）
 minimumReleaseAge: 10080
 

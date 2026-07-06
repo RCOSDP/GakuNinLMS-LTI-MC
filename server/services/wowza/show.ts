@@ -1,5 +1,5 @@
 import type { FastifyRequest } from "fastify";
-import { outdent } from "outdent";
+import outdent from "$utils/outdent";
 import { getUnixTime } from "date-fns";
 import { topicResourcePropsSchema } from "$server/validators/topicResourceProps";
 import {
