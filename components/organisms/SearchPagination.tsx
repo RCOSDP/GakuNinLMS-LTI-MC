@@ -1,5 +1,5 @@
 import type { SxProps } from "@mui/system";
-import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
 import Pagination from "@mui/material/Pagination";
 import { useSearchAtom } from "$store/search";
 
@@ -17,11 +17,10 @@ function SearchPagination({ className = "", sx, totalCount }: Props) {
 
   const page = searchProps.query.page + 1;
   return (
-    <Grid
+    <Box
       className={className}
       sx={sx}
-      container
-      component="div"
+      display="flex"
       justifyContent="center"
     >
       <Pagination
@@ -30,7 +29,7 @@ function SearchPagination({ className = "", sx, totalCount }: Props) {
         count={count}
         onChange={(_, page) => searchProps.setPage(page - 1)}
       />
-    </Grid>
+    </Box>
   );
 }
 

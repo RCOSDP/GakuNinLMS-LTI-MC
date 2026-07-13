@@ -1,8 +1,12 @@
 import type { TopicSchema } from "$server/models/topic";
-import { useRouter } from "next/router";
+import { useAppRouter } from "$utils/useAppRouter";
 import TopicsTemplate from "$templates/Topics";
 import { useSessionAtom } from "$store/session";
-import { pagesPath } from "$utils/$path";
+import {
+  bookNewUrl,
+  paths,
+  topicsEditUrl,
+} from "$utils/routes";
 import useTopics from "$utils/useTopics";
 import { destroyTopic, updateTopic } from "$utils/topic";
 import { useSearchAtom } from "$store/search";
@@ -17,7 +21,7 @@ const Topics = (
 ) => <TopicsTemplate {...props} {...useTopics()} />;
 
 function Index() {
-  const router = useRouter();
+  const router = useAppRouter();
   const { isContentEditable } = useSessionAtom();
   const { query } = useSearchAtom();
   async function handleBookNewClick(topics: TopicSchema[]) {
@@ -25,7 +29,7 @@ function Index() {
     if (!ids || !ids.length) return;
 
     return router.push(
-      pagesPath.book.new.$url({ query: { context: "topics", topics: ids } })
+      bookNewUrl({ context: "topics", topics: ids })
     );
   }
   async function handleTopicsShareClick(
@@ -52,12 +56,10 @@ function Index() {
     await revalidateContents(query);
   }
   function onContentEditClick(topic: Pick<TopicSchema, "id" | "authors">) {
-    return router.push(
-      pagesPath.topics.edit.$url({ query: { topicId: topic.id } })
-    );
+    return router.push(topicsEditUrl({ topicId: topic.id }));
   }
   function handleTopicNewClick() {
-    return router.push(pagesPath.topics.new.$url({ query: {} }));
+    return router.push(paths.topicsNew);
   }
   const handlers = {
     onBookNewClick: handleBookNewClick,
